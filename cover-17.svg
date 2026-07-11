@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
+<defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#1c245e"/><stop offset=".55" stop-color="#351a55"/><stop offset="1" stop-color="#070914"/></linearGradient></defs>
+<rect width="1000" height="1000" fill="url(#g)"/><circle cx="770" cy="190" r="105" fill="#fff3c4"/>
+<g fill="white" opacity=".8"><circle cx="100" cy="110" r="3"/><circle cx="260" cy="170" r="2"/><circle cx="410" cy="90" r="3"/><circle cx="590" cy="160" r="2"/></g>
+<path d="M0 610 C180 500 350 620 520 520 C690 430 830 520 1000 390 V1000 H0Z" fill="#080910"/>
+<path d="M0 720 C220 620 420 740 650 640 C820 570 920 590 1000 550 V1000 H0Z" fill="#04050a"/>
+<path d="M420 1000 L495 590 H580 L690 1000Z" fill="#171a27"/><path d="M540 1000 L540 590" stroke="#ffc967" stroke-width="8" stroke-dasharray="55 40"/>
+<text x="70" y="860" fill="white" font-family="Arial" font-size="62" font-weight="700">Logged Back In</text><text x="72" y="970" fill="#cfd4f7" font-family="Arial" font-size="24" letter-spacing="6">ASTRALIS NOVA</text></svg>
