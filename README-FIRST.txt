@@ -1,21 +1,35 @@
-ASTRALIS NOVA — STEP 2: START MUSIC ON FIRST CLICK OR TAP
+ASTRALIS NOVA — STEP 3: ORIGINAL SONG COVER ART
 
-1. Copy index.html into your astralis-nova-website folder.
-2. Choose "Replace the file in the destination."
-3. Keep background-music.mp3 beside index.html.
-4. In GitHub Desktop, use this summary:
+WHAT THIS PACKAGE DOES
 
-   Start background music on first interaction
+- Replaces the placeholder cover-1.svg through cover-27.svg artwork
+  with optimized square JPG files made from your original images.
+- Updates index.html to load cover-1.jpg through cover-27.jpg.
+- Preserves the D1 forms and first-click background-music behavior.
 
-5. Commit to main and Push origin.
-6. Wait for the Cloudflare deployment to finish.
-7. Open the live site and press Ctrl+F5.
+HOW TO INSTALL
 
-BEHAVIOR
+1. Extract this ZIP.
+2. Copy index.html and cover-1.jpg through cover-27.jpg into your
+   astralis-nova-website folder.
+3. Choose "Replace the file in the destination" for index.html.
+4. The older cover-1.svg through cover-27.svg files may remain for now;
+   the site will no longer use them.
+5. In GitHub Desktop, commit with:
 
-- The page first attempts normal autoplay.
-- When the browser blocks autoplay, the music begins on the visitor's
-  first click, tap, or keyboard interaction.
-- Pressing Pause is remembered for future visits in that browser.
-- The selected volume is also remembered.
-- The visible play/pause control continues to work.
+   Replace placeholder covers with original artwork
+
+6. Push origin.
+7. Wait for Cloudflare to deploy.
+8. Open the live site and press Ctrl+F5.
+
+REVIEW
+
+Open COVER-PREVIEW.jpg before publishing.
+COVER-MAPPING.txt and COVER-MAPPING.csv show every best-guess match.
+
+NOTES
+
+- The DistroKid screenshot showed 24 of the 27 website songs.
+- Three logical artwork reuses were made for the songs not shown.
+- No original source image was overwritten.
