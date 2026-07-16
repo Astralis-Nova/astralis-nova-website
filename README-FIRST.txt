@@ -1,67 +1,21 @@
-ASTRALIS NOVA — STEP 1: SAVE CONTACT AND SUBSCRIBE FORMS IN D1
+ASTRALIS NOVA — STEP 2: START MUSIC ON FIRST CLICK OR TAP
 
-This removes the external FormSubmit dependency that caused the
-"Rate limit exceeded" error.
+1. Copy index.html into your astralis-nova-website folder.
+2. Choose "Replace the file in the destination."
+3. Keep background-music.mp3 beside index.html.
+4. In GitHub Desktop, use this summary:
 
-FILES TO COPY INTO YOUR WEBSITE REPOSITORY
+   Start background music on first interaction
 
-1. Replace:
-   functions\api\forms.js
+5. Commit to main and Push origin.
+6. Wait for the Cloudflare deployment to finish.
+7. Open the live site and press Ctrl+F5.
 
-2. Replace:
-   schema.sql
+BEHAVIOR
 
-3. Replace:
-   index.html
-
-The index.html change only updates the success/fine-print wording so it
-correctly says that submissions are stored privately.
-
-CLOUDFLARE DATABASE STEP
-
-1. Open Cloudflare.
-2. Open D1 SQL Database.
-3. Open astralis-nova-guestbook.
-4. Open Console.
-5. Open RUN-THIS-SQL-IN-CLOUDFLARE.sql from this package.
-6. Copy all of its contents into the Console.
-7. Click Execute/Run.
-
-The SQL creates:
-- contact_messages
-- subscribers
-
-It does not erase or change existing guestbook entries.
-
-PUBLISH
-
-In GitHub Desktop:
-
-1. Review the changed files.
-2. Summary:
-   Store contact and subscribers in D1
-3. Commit to main.
-4. Push origin.
-5. Wait for the Cloudflare deployment to show Success.
-
-TEST
-
-1. Submit one Contact message.
-2. Submit one Subscribe email.
-3. In the D1 Console, run:
-
-SELECT name, email, subject, message, status, created_at
-FROM contact_messages
-ORDER BY created_at DESC;
-
-4. Then run:
-
-SELECT email, status, created_at, updated_at
-FROM subscribers
-ORDER BY created_at DESC;
-
-IMPORTANT
-
-This step stores submissions safely in D1 and removes the third-party
-rate-limit problem. It does not send a Yahoo email notification yet.
-Email notification/admin inbox is a later checklist item.
+- The page first attempts normal autoplay.
+- When the browser blocks autoplay, the music begins on the visitor's
+  first click, tap, or keyboard interaction.
+- Pressing Pause is remembered for future visits in that browser.
+- The selected volume is also remembered.
+- The visible play/pause control continues to work.

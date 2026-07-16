@@ -439,7 +439,7 @@
     <button class="music-toggle" id="musicToggle" type="button" aria-label="Play background music">▶</button>
     <div class="music-copy">
       <strong>ASTRALIS NOVA RADIO</strong>
-      <small id="musicStatus">Tap play to enter with music</small>
+      <small id="musicStatus">Music starts with your first click or tap</small>
     </div>
     <label class="sr-only" for="musicVolume">Volume</label>
     <input class="volume" id="musicVolume" type="range" min="0" max="1" step=".05" value=".35">
@@ -620,27 +620,88 @@
     const musicToggle=document.getElementById("musicToggle");
     const musicStatus=document.getElementById("musicStatus");
     const musicVolume=document.getElementById("musicVolume");
+    const MUSIC_PREF_KEY="astralisNovaMusicPreference";
+    const MUSIC_VOLUME_KEY="astralisNovaMusicVolume";
+
+    function readStorage(key){
+      try{return localStorage.getItem(key)}catch{return null}
+    }
+
+    function writeStorage(key,value){
+      try{localStorage.setItem(key,value)}catch{}
+    }
+
+    function showMusicPlaying(){
+      musicToggle.textContent="❚❚";
+      musicToggle.setAttribute("aria-label","Pause background music");
+      musicStatus.textContent="Background music playing";
+    }
+
+    function showMusicPaused(message="Music paused"){
+      musicToggle.textContent="▶";
+      musicToggle.setAttribute("aria-label","Play background music");
+      musicStatus.textContent=message;
+    }
+
+    const savedVolume=Number(readStorage(MUSIC_VOLUME_KEY));
+    if(Number.isFinite(savedVolume)&&savedVolume>=0&&savedVolume<=1){
+      musicVolume.value=String(savedVolume);
+    }
     audio.volume=Number(musicVolume.value);
-    musicVolume.addEventListener("input",()=>{audio.volume=Number(musicVolume.value)});
+
+    musicVolume.addEventListener("input",()=>{
+      audio.volume=Number(musicVolume.value);
+      writeStorage(MUSIC_VOLUME_KEY,musicVolume.value);
+    });
+
+    async function startBackgroundMusic({remember=true}={}){
+      if(!audio.paused)return true;
+      try{
+        await audio.play();
+        showMusicPlaying();
+        if(remember)writeStorage(MUSIC_PREF_KEY,"playing");
+        return true;
+      }catch{
+        showMusicPaused("Music starts with your first click or tap");
+        return false;
+      }
+    }
+
     musicToggle.addEventListener("click",async()=>{
       if(!audio.paused){
         audio.pause();
-        musicToggle.textContent="▶";
-        musicToggle.setAttribute("aria-label","Play background music");
-        musicStatus.textContent="Music paused";
+        writeStorage(MUSIC_PREF_KEY,"paused");
+        showMusicPaused();
         return;
       }
-      try{
-        await audio.play();
-        musicToggle.textContent="❚❚";
-        musicToggle.setAttribute("aria-label","Pause background music");
-        musicStatus.textContent="Background music playing";
-      }catch(error){
-        musicStatus.textContent="Add background-music.mp3 to activate";
-      }
+      await startBackgroundMusic();
     });
-    audio.addEventListener("error",()=>{musicStatus.textContent="Add background-music.mp3 to activate"});
-    audio.addEventListener("ended",()=>{musicToggle.textContent="▶"});
+
+    async function startOnFirstInteraction(event){
+      if(event.target instanceof Element&&event.target.closest("#musicToggle"))return;
+      if(readStorage(MUSIC_PREF_KEY)==="paused")return;
+      const started=await startBackgroundMusic({remember:true});
+      if(started){
+        document.removeEventListener("pointerdown",startOnFirstInteraction,true);
+        document.removeEventListener("keydown",startOnFirstInteraction,true);
+      }
+    }
+
+    if(readStorage(MUSIC_PREF_KEY)!=="paused"){
+      startBackgroundMusic({remember:false});
+      document.addEventListener("pointerdown",startOnFirstInteraction,true);
+      document.addEventListener("keydown",startOnFirstInteraction,true);
+    }else{
+      showMusicPaused();
+    }
+
+    audio.addEventListener("play",showMusicPlaying);
+    audio.addEventListener("pause",()=>{
+      if(audio.currentTime>0&&!audio.ended)showMusicPaused();
+    });
+    audio.addEventListener("error",()=>{
+      showMusicPaused("Background music file could not be loaded");
+    });
 
     loadGuestbook();
   </script>
