@@ -1,0 +1,10 @@
+BACKGROUND MUSIC SETUP
+
+Place a legally owned MP3 in the website root and name it:
+
+background-music.mp3
+
+The new player is already wired to that filename. Browsers require the visitor
+to press Play before audio starts, so the site does not force autoplay.
+
+A lower-volume instrumental or short loop usually works best.

@@ -1,21 +1,648 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Astralis Nova — official music website by Ramon Bivens."><title>Astralis Nova — Ramon Bivens</title>
-<style>
-:root{--bg:#04060c;--panel:#08101c;--panel2:#0b1423;--line:#20324a;--text:#f5f7ff;--muted:#9ba8bb;--blue:#0a8cff;--pink:#ec168c;--shell:min(1500px,calc(100% - 36px))}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}a{color:inherit}.shell{width:var(--shell);margin:auto}
-.topbar{height:78px;display:flex;align-items:center;justify-content:space-between;gap:30px;border-bottom:1px solid #182438;background:#03060c}.logo{font-weight:900;letter-spacing:.13em;text-decoration:none;font-size:1.35rem}.logo small{display:block;color:#70bfff;font-size:.66rem}.menu{display:flex;gap:30px;font-size:.86rem}.menu a{text-decoration:none}.social{display:flex;gap:8px}.social a{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;text-decoration:none;font-size:.72rem;font-weight:900;background:#101827}
-.hero{background:url("hero.svg") center/cover no-repeat;border-bottom:1px solid #17243a}.hero-inner{min-height:430px;display:grid;grid-template-columns:.9fr 1.45fr;gap:44px;align-items:center;padding:34px 0}.eyebrow{color:#16a7ff;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px}h1{font-size:clamp(3rem,6vw,6rem);line-height:.87;letter-spacing:-.05em;margin:0 0 15px}.hero-copy h2{margin:0 0 14px;font-size:1.4rem}.hero-copy p{color:#d1d8e6;max-width:520px;line-height:1.55}.cta{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}.btn{min-height:48px;padding:12px 22px;border-radius:999px;border:1px solid #6a7da1;display:inline-flex;align-items:center;text-decoration:none;font-weight:800}.btn.primary{background:linear-gradient(90deg,#147df5,#eb1a92);border:0}.platform-row{display:flex;gap:20px;flex-wrap:wrap}.platform-row a{text-decoration:none;font-size:.78rem}.platform-row span{width:34px;height:34px;border-radius:10px;background:#111a2b;display:grid;place-items:center;margin-bottom:5px}
-.top-area h3{font-size:1rem;margin:0 0 12px}.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.feature-card{background:linear-gradient(180deg,#0a1220,#060a11);border:1px solid #405272;border-radius:16px;overflow:hidden;text-decoration:none;position:relative}.feature-card .num{position:absolute;left:12px;top:10px;z-index:2;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#ec168c;font-weight:900}.feature-card img{width:100%;aspect-ratio:1.45;object-fit:cover;display:block}.feature-copy{padding:14px}.feature-copy h4{font-size:1.18rem;margin:0 0 5px}.feature-copy p{margin:0;color:#aab6c8;font-size:.83rem}.feature-links{display:flex;gap:8px;margin-top:12px}.feature-links span{padding:6px 9px;border-radius:999px;background:#101b2b;font-size:.72rem}
-.main{display:grid;grid-template-columns:210px 1fr 320px;gap:18px;padding:18px 0 36px}.panel{background:linear-gradient(180deg,#08111e,#06101a);border:1px solid #1f334d;border-radius:14px}.sidebar{padding:16px}.sidebar h3,.right h3{margin:0 0 12px;font-size:.96rem}.filter{display:flex;justify-content:space-between;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:.86rem}.filter.active,.filter:hover{background:#0c72dc}.connect{margin-top:18px;padding-top:14px;border-top:1px solid #1d2c42}.connect a{display:block;text-decoration:none;color:#c8d1e1;padding:6px 0;font-size:.83rem}
-.catalog{padding:16px}.catalog-head{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:10px}.catalog-head h2{margin:0;font-size:1.6rem}.search{min-height:40px;padding:0 12px;border-radius:8px;border:1px solid #1f334d;background:#0c1727;color:white}.song{display:grid;grid-template-columns:42px 58px 1fr 64px 180px;gap:12px;align-items:center;padding:10px 4px;border-bottom:1px solid #18273b}.play{width:32px;height:32px;border:1px solid #425572;border-radius:50%;display:grid;place-items:center;text-decoration:none}.song img{width:54px;height:54px;border-radius:7px;object-fit:cover}.song h4{margin:0 0 3px;font-size:1rem}.song small{color:var(--muted)}.duration{color:#b9c5d6;font-size:.83rem}.song-links{display:flex;gap:7px;justify-content:flex-end}.song-links a{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;text-decoration:none;font-size:.65rem;font-weight:900;background:#142033}.sp{background:#00d66b!important}.yt{background:#ff1e2d!important}.ap{background:#ff3f73!important}.am{background:#5137c9!important}
-.right{display:flex;flex-direction:column;gap:14px}.right .panel{padding:14px}.about-card{display:grid;grid-template-columns:90px 1fr;gap:12px}.portrait{width:90px;height:110px;border-radius:10px;background:linear-gradient(145deg,#2d3955,#111827);display:grid;place-items:center;font-size:2rem}.right p{color:#bdc7d8;font-size:.84rem;line-height:1.45}.latest{display:grid;grid-template-columns:90px 1fr;gap:12px}.latest img{width:90px;height:90px;border-radius:8px}.subscribe input{width:100%;min-height:40px;border-radius:8px;border:1px solid #1f334d;background:#0c1727;color:#fff;padding:0 10px}.subscribe button{width:100%;margin-top:8px;min-height:40px;border:0;border-radius:8px;background:#0b83ff;color:white;font-weight:800}footer{border-top:1px solid #182438;padding:18px 0;color:#8f9cb0;font-size:.8rem}
-@media(max-width:1150px){.hero-inner{grid-template-columns:1fr}.main{grid-template-columns:180px 1fr}.right{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr)}}@media(max-width:800px){.menu{display:none}.feature-grid{grid-template-columns:1fr}.main{grid-template-columns:1fr}.right{grid-template-columns:1fr}.song{grid-template-columns:36px 50px 1fr 50px}.song-links{grid-column:3/5;justify-content:flex-start}.catalog-head{align-items:flex-start;flex-direction:column}.search{width:100%}}
-</style></head><body>
-<header><div class="topbar shell"><a class="logo" href="#">✦ ASTRALIS NOVA<small>Music by Ramon Bivens</small></a><nav class="menu"><a href="#">HOME</a><a href="#music">MUSIC</a><a href="#about">ABOUT</a><a href="#contact">CONTACT</a></nav><div class="social"><a href="https://open.spotify.com/search/Astralis%20Nova" target="_blank">S</a><a href="https://music.apple.com/us/search?term=Astralis%20Nova" target="_blank">A</a><a href="https://www.youtube.com/results?search_query=Astralis%20Nova" target="_blank">Y</a></div></div></header>
-<section class="hero"><div class="hero-inner shell"><div class="hero-copy"><p class="eyebrow">NEW RELEASE</p><h1>OUR FIRST NIGHT</h1><h2>Astralis Nova</h2><p>A night that changed everything. Stream it now and enter the Astralis Nova universe.</p><div class="cta"><a class="btn primary" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank">▶ LISTEN NOW</a><a class="btn" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank">▷ WATCH VIDEO</a></div><div class="platform-row"><a href="https://open.spotify.com/album/4LZI8pGNQxySSPl510jtF7" target="_blank"><span>●</span>Spotify</a><a href="https://music.apple.com/us/album/our-first-night-single/6780201672?uo=4" target="_blank"><span>♪</span>Apple Music</a><a href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank"><span>▶</span>YouTube</a><a href="https://music.amazon.com/artists/B0GXKS99NG/astralis-nova" target="_blank"><span>a</span>Amazon</a><a href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank"><span>✦</span>HyperFollow</a></div></div><div class="top-area"><h3>🔥 TOP SONGS</h3><div class="feature-grid" id="features"></div></div></div></section>
-<main class="main shell" id="music"><aside class="panel sidebar"><h3>BROWSE MUSIC</h3><div class="filter active" data-filter="all"><span>All Songs</span><b>27</b></div><div class="filter" data-filter="June 2026"><span>June 2026</span><b>8</b></div><div class="filter" data-filter="May 2026"><span>May 2026</span><b>5</b></div><div class="filter" data-filter="April 2026"><span>April 2026</span><b>11</b></div><div class="filter" data-filter="Earlier 2026"><span>Earlier</span><b>3</b></div><div class="connect"><h3>CONNECT</h3><a href="https://open.spotify.com/search/Astralis%20Nova" target="_blank">● Follow on Spotify</a><a href="https://www.youtube.com/results?search_query=Astralis%20Nova" target="_blank">▶ Subscribe on YouTube</a><a href="#">◎ Instagram</a><a href="#">f Facebook</a><a href="#">♪ TikTok</a></div></aside>
-<section class="panel catalog"><div class="catalog-head"><h2>ALL SONGS <small style="color:#8492a7">(27)</small></h2><input id="search" class="search" placeholder="Search songs..."></div><div id="songList"></div></section>
-<aside class="right"><div class="panel" id="about"><h3>ABOUT ASTRALIS NOVA</h3><div class="about-card"><div class="portrait">✦</div><div><strong>Ramon Bivens</strong><p>Astralis Nova is the musical expression of Ramon Bivens—blending heart, soul, memory, Arizona imagery, and storytelling into every song.</p></div></div></div><div class="panel"><h3>LATEST RELEASE</h3><div class="latest"><img src="cover-1.svg" alt=""><div><strong>Our First Night</strong><p>Released June 2026</p><a class="btn primary" style="min-height:36px;padding:8px 12px;font-size:.75rem" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank">PLAY NOW</a></div></div></div><div class="panel subscribe"><h3>STAY UPDATED</h3><p>Get notified about new releases and updates.</p><input placeholder="Your email address"><button type="button">SUBSCRIBE</button></div></aside></main>
-<footer><div class="shell">© 2026 Astralis Nova Music by Ramon Bivens. All rights reserved.</div></footer>
-<script>
-const songs=[{"title": "Our First Night", "period": "June 2026", "duration": "5:03", "cover": "cover-1.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Our%20First%20Night", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Our%20First%20Night", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Our%20First%20Night", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Our%20First%20Night"}, {"title": "Run With The Light", "period": "May 2026", "duration": "4:42", "cover": "cover-2.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Run%20With%20The%20Light", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Run%20With%20The%20Light", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Run%20With%20The%20Light", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Run%20With%20The%20Light"}, {"title": "Cactus Forest Moonlight", "period": "June 2026", "duration": "4:58", "cover": "cover-3.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Cactus%20Forest%20Moonlight", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Cactus%20Forest%20Moonlight", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Cactus%20Forest%20Moonlight", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Cactus%20Forest%20Moonlight"}, {"title": "Under the NightSky", "period": "June 2026", "duration": "5:11", "cover": "cover-4.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Under%20the%20NightSky", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Under%20the%20NightSky", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Under%20the%20NightSky", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Under%20the%20NightSky"}, {"title": "We are the Universe (Remix)", "period": "June 2026", "duration": "5:05", "cover": "cover-5.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20We%20are%20the%20Universe%20%28Remix%29", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20We%20are%20the%20Universe%20%28Remix%29", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20We%20are%20the%20Universe%20%28Remix%29", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20We%20are%20the%20Universe%20%28Remix%29"}, {"title": "Military Brats", "period": "June 2026", "duration": "4:21", "cover": "cover-6.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Military%20Brats", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Military%20Brats", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Military%20Brats", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Military%20Brats"}, {"title": "Starlight in My Boots Original", "period": "June 2026", "duration": "4:47", "cover": "cover-7.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Starlight%20in%20My%20Boots%20Original", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Starlight%20in%20My%20Boots%20Original", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Starlight%20in%20My%20Boots%20Original", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Starlight%20in%20My%20Boots%20Original"}, {"title": "Starlight in my Boots (Remix)", "period": "June 2026", "duration": "4:36", "cover": "cover-8.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Starlight%20in%20my%20Boots%20%28Remix%29", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Starlight%20in%20my%20Boots%20%28Remix%29", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Starlight%20in%20my%20Boots%20%28Remix%29", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Starlight%20in%20my%20Boots%20%28Remix%29"}, {"title": "We are the Universe Original", "period": "June 2026", "duration": "5:02", "cover": "cover-9.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20We%20are%20the%20Universe%20Original", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20We%20are%20the%20Universe%20Original", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20We%20are%20the%20Universe%20Original", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20We%20are%20the%20Universe%20Original"}, {"title": "That Look", "period": "May 2026", "duration": "4:11", "cover": "cover-10.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20That%20Look", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20That%20Look", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20That%20Look", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20That%20Look"}, {"title": "Let This Day Be Kind", "period": "May 2026", "duration": "4:09", "cover": "cover-11.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Let%20This%20Day%20Be%20Kind", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Let%20This%20Day%20Be%20Kind", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Let%20This%20Day%20Be%20Kind", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Let%20This%20Day%20Be%20Kind"}, {"title": "Just A Little Time", "period": "May 2026", "duration": "4:18", "cover": "cover-12.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Just%20A%20Little%20Time", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Just%20A%20Little%20Time", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Just%20A%20Little%20Time", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Just%20A%20Little%20Time"}, {"title": "When The Lights Were Golden", "period": "May 2026", "duration": "4:45", "cover": "cover-13.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20When%20The%20Lights%20Were%20Golden", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20When%20The%20Lights%20Were%20Golden", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20When%20The%20Lights%20Were%20Golden", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20When%20The%20Lights%20Were%20Golden"}, {"title": "We are the Universe", "period": "Earlier 2026", "duration": "5:06", "cover": "cover-14.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20We%20are%20the%20Universe", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20We%20are%20the%20Universe", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20We%20are%20the%20Universe", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20We%20are%20the%20Universe"}, {"title": "Back When She Was Little Growing Up", "period": "April 2026", "duration": "4:56", "cover": "cover-15.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Back%20When%20She%20Was%20Little%20Growing%20Up", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Back%20When%20She%20Was%20Little%20Growing%20Up", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Back%20When%20She%20Was%20Little%20Growing%20Up", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Back%20When%20She%20Was%20Little%20Growing%20Up"}, {"title": "Darktide", "period": "April 2026", "duration": "4:37", "cover": "cover-16.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Darktide", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Darktide", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Darktide", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Darktide"}, {"title": "Logged Back In", "period": "April 2026", "duration": "4:12", "cover": "cover-17.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Logged%20Back%20In", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Logged%20Back%20In", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Logged%20Back%20In", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Logged%20Back%20In"}, {"title": "My Girl Alexis", "period": "April 2026", "duration": "4:31", "cover": "cover-18.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20My%20Girl%20Alexis", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20My%20Girl%20Alexis", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20My%20Girl%20Alexis", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20My%20Girl%20Alexis"}, {"title": "One Outcome (Peace)", "period": "April 2026", "duration": "4:44", "cover": "cover-19.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20One%20Outcome%20%28Peace%29", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20One%20Outcome%20%28Peace%29", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20One%20Outcome%20%28Peace%29", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20One%20Outcome%20%28Peace%29"}, {"title": "Born Right Here", "period": "April 2026", "duration": "4:24", "cover": "cover-20.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Born%20Right%20Here", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Born%20Right%20Here", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Born%20Right%20Here", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Born%20Right%20Here"}, {"title": "Searching Through the Light", "period": "Earlier 2026", "duration": "4:53", "cover": "cover-21.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Searching%20Through%20the%20Light", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Searching%20Through%20the%20Light", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Searching%20Through%20the%20Light", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Searching%20Through%20the%20Light"}, {"title": "Till We Meet Again", "period": "April 2026", "duration": "4:41", "cover": "cover-22.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Till%20We%20Meet%20Again", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Till%20We%20Meet%20Again", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Till%20We%20Meet%20Again", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Till%20We%20Meet%20Again"}, {"title": "We Let It Pass Us By", "period": "April 2026", "duration": "4:17", "cover": "cover-23.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20We%20Let%20It%20Pass%20Us%20By", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20We%20Let%20It%20Pass%20Us%20By", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20We%20Let%20It%20Pass%20Us%20By", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20We%20Let%20It%20Pass%20Us%20By"}, {"title": "Heart of Gold", "period": "April 2026", "duration": "4:28", "cover": "cover-24.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Heart%20of%20Gold", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Heart%20of%20Gold", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Heart%20of%20Gold", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Heart%20of%20Gold"}, {"title": "My Dad’s Last Day on This Earth", "period": "April 2026", "duration": "5:01", "cover": "cover-25.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20My%20Dad%E2%80%99s%20Last%20Day%20on%20This%20Earth", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20My%20Dad%E2%80%99s%20Last%20Day%20on%20This%20Earth", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20My%20Dad%E2%80%99s%20Last%20Day%20on%20This%20Earth", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20My%20Dad%E2%80%99s%20Last%20Day%20on%20This%20Earth"}, {"title": "My Whole World", "period": "April 2026", "duration": "4:35", "cover": "cover-26.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20My%20Whole%20World", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20My%20Whole%20World", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20My%20Whole%20World", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20My%20Whole%20World"}, {"title": "Starlight in My Boots", "period": "Earlier 2026", "duration": "4:40", "cover": "cover-27.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Starlight%20in%20My%20Boots", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Starlight%20in%20My%20Boots", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Starlight%20in%20My%20Boots", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Starlight%20in%20My%20Boots"}];const features=document.getElementById("features");[0,1,2].forEach((i,n)=>{const s=songs[i];features.innerHTML+=`<a class="feature-card" href="${s.youtube}" target="_blank"><span class="num">${n+1}</span><img src="${s.cover}" alt="${s.title} cover"><div class="feature-copy"><h4>${s.title}</h4><p>Astralis Nova · ${s.duration}</p><div class="feature-links"><span>Spotify</span><span>Apple</span><span>YouTube</span></div></div></a>`});const list=document.getElementById("songList");let filter="all";function render(){const q=document.getElementById("search").value.toLowerCase().trim();list.innerHTML="";songs.forEach(s=>{if((filter!=="all"&&s.period!==filter)||!s.title.toLowerCase().includes(q))return;list.innerHTML+=`<div class="song"><a class="play" href="${s.youtube}" target="_blank">▶</a><img src="${s.cover}" alt=""><div><h4>${s.title}</h4><small>Astralis Nova · ${s.period}</small></div><div class="duration">${s.duration}</div><div class="song-links"><a class="sp" href="${s.spotify}" target="_blank">S</a><a class="yt" href="${s.youtube}" target="_blank">Y</a><a class="ap" href="${s.apple}" target="_blank">A</a><a class="am" href="${s.amazon}" target="_blank">M</a></div></div>`})}document.getElementById("search").addEventListener("input",render);document.querySelectorAll(".filter").forEach(el=>el.addEventListener("click",()=>{document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));el.classList.add("active");filter=el.dataset.filter;render()}));render();
-</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Astralis Nova — official music website by Ramon Bivens.">
+  <title>Astralis Nova — Ramon Bivens</title>
+  <style>
+    :root{
+      --bg:#04060c;--panel:#08101c;--panel2:#0b1423;--line:#20324a;
+      --text:#f5f7ff;--muted:#9ba8bb;--blue:#0a8cff;--pink:#ec168c;
+      --green:#14d990;--danger:#ff5470;--shell:min(1500px,calc(100% - 36px));
+      --shadow:0 18px 60px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;background:
+      radial-gradient(circle at 12% 8%,rgba(10,140,255,.07),transparent 25rem),
+      radial-gradient(circle at 90% 18%,rgba(236,22,140,.05),transparent 24rem),
+      var(--bg);
+      color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+    }
+    button,input,select,textarea{font:inherit}
+    a{color:inherit}
+    .shell{width:var(--shell);margin:auto}
+    .sr-only{
+      position:absolute!important;width:1px!important;height:1px!important;padding:0!important;
+      margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;
+      white-space:nowrap!important;border:0!important
+    }
+    .topbar{
+      min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:30px;
+      border-bottom:1px solid #182438;background:rgba(3,6,12,.96);position:sticky;top:0;z-index:50;
+      backdrop-filter:blur(14px)
+    }
+    .logo{font-weight:900;letter-spacing:.13em;text-decoration:none;font-size:1.35rem}
+    .logo small{display:block;color:#70bfff;font-size:.66rem}
+    .menu{display:flex;gap:26px;font-size:.82rem}
+    .menu a{text-decoration:none;padding:29px 0 24px;border-bottom:2px solid transparent}
+    .menu a:hover,.menu a:focus-visible{border-bottom-color:#2c9eff}
+    .social{display:flex;gap:8px}
+    .social a{
+      width:30px;height:30px;border-radius:50%;display:grid;place-items:center;text-decoration:none;
+      font-size:.72rem;font-weight:900;background:#101827;border:1px solid #1b2a41
+    }
+    .hero{background:url("hero.svg") center/cover no-repeat;border-bottom:1px solid #17243a}
+    .hero-inner{
+      min-height:430px;display:grid;grid-template-columns:.9fr 1.45fr;gap:44px;
+      align-items:center;padding:34px 0
+    }
+    .eyebrow{color:#16a7ff;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;margin:0 0 10px}
+    h1{font-size:clamp(3rem,6vw,6rem);line-height:.87;letter-spacing:-.05em;margin:0 0 15px}
+    .hero-copy h2{margin:0 0 14px;font-size:1.4rem}
+    .hero-copy p{color:#d1d8e6;max-width:520px;line-height:1.55}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}
+    .btn{
+      min-height:48px;padding:12px 22px;border-radius:999px;border:1px solid #6a7da1;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
+      font-weight:800;color:#fff;cursor:pointer;background:transparent
+    }
+    .btn.primary{background:linear-gradient(90deg,#147df5,#eb1a92);border:0}
+    .btn.secondary{background:#0c1727}
+    .platform-row{display:flex;gap:20px;flex-wrap:wrap}
+    .platform-row a{text-decoration:none;font-size:.78rem}
+    .platform-row span{
+      width:34px;height:34px;border-radius:10px;background:#111a2b;display:grid;place-items:center;
+      margin-bottom:5px;border:1px solid #1d2d45
+    }
+    .top-area h3{font-size:1rem;margin:0 0 12px}
+    .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .feature-card{
+      background:linear-gradient(180deg,#0a1220,#060a11);border:1px solid #405272;
+      border-radius:16px;overflow:hidden;text-decoration:none;position:relative;box-shadow:var(--shadow)
+    }
+    .feature-card .num{
+      position:absolute;left:12px;top:10px;z-index:2;width:32px;height:32px;border-radius:50%;
+      display:grid;place-items:center;background:#ec168c;font-weight:900
+    }
+    .feature-card img{width:100%;aspect-ratio:1.45;object-fit:cover;display:block}
+    .feature-copy{padding:14px}
+    .feature-copy h4{font-size:1.18rem;margin:0 0 5px}
+    .feature-copy p{margin:0;color:#aab6c8;font-size:.83rem}
+    .feature-links{display:flex;gap:8px;margin-top:12px}
+    .feature-links span{padding:6px 9px;border-radius:999px;background:#101b2b;font-size:.72rem}
+    .main{display:grid;grid-template-columns:210px 1fr 320px;gap:18px;padding:18px 0 36px}
+    .panel{
+      background:linear-gradient(180deg,rgba(8,17,30,.98),rgba(6,16,26,.98));
+      border:1px solid #1f334d;border-radius:14px;box-shadow:var(--shadow)
+    }
+    .sidebar{padding:16px;align-self:start;position:sticky;top:96px}
+    .sidebar h3,.right h3{margin:0 0 12px;font-size:.96rem}
+    .filter{display:flex;justify-content:space-between;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:.86rem}
+    .filter.active,.filter:hover{background:#0c72dc}
+    .connect{margin-top:18px;padding-top:14px;border-top:1px solid #1d2c42}
+    .connect a{display:block;text-decoration:none;color:#c8d1e1;padding:6px 0;font-size:.83rem}
+    .catalog{padding:16px}
+    .catalog-head{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:10px}
+    .catalog-head h2{margin:0;font-size:1.6rem}
+    .input,.search,.textarea,.select{
+      width:100%;min-height:44px;padding:10px 12px;border-radius:8px;border:1px solid #243b59;
+      background:#0c1727;color:white;outline:none
+    }
+    .input:focus,.search:focus,.textarea:focus,.select:focus{
+      border-color:#2d9dff;box-shadow:0 0 0 3px rgba(10,140,255,.16)
+    }
+    .search{width:260px}
+    .textarea{min-height:126px;resize:vertical}
+    .song{
+      display:grid;grid-template-columns:42px 58px 1fr 64px 180px;gap:12px;
+      align-items:center;padding:10px 4px;border-bottom:1px solid #18273b
+    }
+    .play{
+      width:32px;height:32px;border:1px solid #425572;border-radius:50%;display:grid;
+      place-items:center;text-decoration:none
+    }
+    .song img{width:54px;height:54px;border-radius:7px;object-fit:cover}
+    .song h4{margin:0 0 3px;font-size:1rem}
+    .song small{color:var(--muted)}
+    .duration{color:#b9c5d6;font-size:.83rem}
+    .song-links{display:flex;gap:7px;justify-content:flex-end}
+    .song-links a{
+      width:28px;height:28px;border-radius:50%;display:grid;place-items:center;text-decoration:none;
+      font-size:.65rem;font-weight:900;background:#142033
+    }
+    .sp{background:#00d66b!important}.yt{background:#ff1e2d!important}.ap{background:#ff3f73!important}.am{background:#5137c9!important}
+    .right{display:flex;flex-direction:column;gap:14px}
+    .right .panel{padding:14px}
+    .about-card{display:grid;grid-template-columns:90px 1fr;gap:12px}
+    .portrait{
+      width:90px;height:110px;border-radius:10px;background:
+      radial-gradient(circle at 50% 35%,#f5f7ff 0 2px,transparent 3px),
+      linear-gradient(145deg,#2d3955,#111827);
+      display:grid;place-items:center;font-size:2rem;border:1px solid #2a3d5e
+    }
+    .right p{color:#bdc7d8;font-size:.84rem;line-height:1.45}
+    .latest{display:grid;grid-template-columns:90px 1fr;gap:12px}
+    .latest img{width:90px;height:90px;border-radius:8px}
+    .section-shell{padding:0 0 36px}
+    .section-title{margin:0 0 8px;font-size:clamp(1.6rem,3vw,2.25rem)}
+    .section-lead{margin:0;color:#b8c5d8;line-height:1.6;max-width:760px}
+    .guestbook{
+      position:relative;overflow:hidden;padding:24px;background:
+      radial-gradient(circle at 85% 10%,rgba(236,22,140,.12),transparent 22rem),
+      radial-gradient(circle at 10% 90%,rgba(10,140,255,.12),transparent 24rem),
+      linear-gradient(180deg,#08111e,#06101a)
+    }
+    .guestbook::before{
+      content:"✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦";position:absolute;right:24px;top:20px;
+      color:#5b7ba5;letter-spacing:.55em;opacity:.55
+    }
+    .guest-grid{display:grid;grid-template-columns:minmax(300px,.85fr) minmax(360px,1.15fr);gap:22px;margin-top:22px}
+    .form-card,.entries-card{background:rgba(3,9,17,.72);border:1px solid #203651;border-radius:14px;padding:18px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field.full{grid-column:1/-1}
+    .field label{font-size:.8rem;color:#b8c5d8;font-weight:700}
+    .form-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .status{font-size:.84rem;color:#b8c5d8;min-height:1.2em}
+    .status.success{color:#60e4ae}.status.error{color:#ff8194}
+    .guest-meta{
+      display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px;
+      color:#aab7ca;font-size:.82rem
+    }
+    .counter{
+      font-family:"Courier New",monospace;background:#02060d;border:1px solid #28415f;
+      border-radius:6px;padding:6px 9px;color:#8cd6ff;letter-spacing:.15em
+    }
+    .entries{display:flex;flex-direction:column;gap:10px;max-height:620px;overflow:auto;padding-right:4px}
+    .entry{
+      background:linear-gradient(135deg,rgba(18,32,52,.92),rgba(8,15,27,.92));
+      border:1px solid #223a59;border-radius:12px;padding:14px;position:relative
+    }
+    .entry::after{content:"✦";position:absolute;right:12px;top:10px;color:#2b87d6;opacity:.65}
+    .entry h4{margin:0 28px 3px 0}
+    .entry .entry-sub{color:#91a3bb;font-size:.78rem;margin-bottom:8px}
+    .entry p{white-space:pre-wrap;margin:0;color:#d8e0ed;line-height:1.5}
+    .entry .favorite{display:inline-block;margin-top:10px;padding:4px 8px;border-radius:999px;background:#10233a;color:#8fd0ff;font-size:.72rem}
+    .community-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .community-card{padding:22px}
+    .community-card h2{margin:0 0 8px}
+    .community-card p{color:#b8c5d8;line-height:1.55}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .subscribe-row{display:grid;grid-template-columns:1fr auto;gap:10px}
+    .fineprint{color:#8594aa;font-size:.74rem;line-height:1.45}
+    .honeypot{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;overflow:hidden!important}
+    .music-dock{
+      position:fixed;right:18px;bottom:18px;z-index:60;display:flex;align-items:center;gap:9px;
+      max-width:min(430px,calc(100% - 36px));padding:9px 12px;border:1px solid #2d4667;
+      border-radius:999px;background:rgba(5,12,22,.94);backdrop-filter:blur(14px);box-shadow:var(--shadow)
+    }
+    .music-toggle{
+      width:38px;height:38px;border:0;border-radius:50%;background:linear-gradient(135deg,#138df7,#ec168c);
+      color:white;font-weight:900;cursor:pointer
+    }
+    .music-copy{min-width:0}
+    .music-copy strong{display:block;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .music-copy small{display:block;color:#9aabc1;font-size:.67rem;white-space:nowrap}
+    .volume{width:90px}
+    footer{border-top:1px solid #182438;padding:18px 0 86px;color:#8f9cb0;font-size:.8rem}
+    @media(max-width:1150px){
+      .hero-inner{grid-template-columns:1fr}
+      .main{grid-template-columns:180px 1fr}
+      .right{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr)}
+      .guest-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:800px){
+      .topbar{padding:0 2px}.menu{display:none}
+      .feature-grid{grid-template-columns:1fr}.main{grid-template-columns:1fr}
+      .sidebar{position:static}.right{grid-template-columns:1fr}
+      .song{grid-template-columns:36px 50px 1fr 50px}
+      .song-links{grid-column:3/5;justify-content:flex-start}
+      .catalog-head{align-items:flex-start;flex-direction:column}.search{width:100%}
+      .guestbook{padding:18px}.guest-grid,.community-grid{grid-template-columns:1fr}
+      .form-grid,.contact-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
+      .guestbook::before{display:none}.subscribe-row{grid-template-columns:1fr}
+      .music-dock{left:18px;right:18px}.volume{margin-left:auto}
+    }
+    @media(max-width:500px){
+      :root{--shell:min(100% - 22px,1500px)}
+      .social{display:none}.hero-inner{padding:28px 0}
+      .song{grid-template-columns:34px 46px 1fr}.duration{display:none}
+      .song-links{grid-column:3/4}.music-copy small{display:none}.volume{width:68px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar shell">
+      <a class="logo" href="#home">✦ ASTRALIS NOVA<small>Music by Ramon Bivens</small></a>
+      <nav class="menu" aria-label="Main navigation">
+        <a href="#home">HOME</a>
+        <a href="#music">MUSIC</a>
+        <a href="#guestbook">GUESTBOOK</a>
+        <a href="#about">ABOUT</a>
+        <a href="#contact">CONTACT</a>
+      </nav>
+      <div class="social" aria-label="Music platforms">
+        <a href="https://open.spotify.com/search/Astralis%20Nova" target="_blank" rel="noopener" aria-label="Spotify">S</a>
+        <a href="https://music.apple.com/us/search?term=Astralis%20Nova" target="_blank" rel="noopener" aria-label="Apple Music">A</a>
+        <a href="https://www.youtube.com/results?search_query=Astralis%20Nova" target="_blank" rel="noopener" aria-label="YouTube">Y</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-inner shell">
+      <div class="hero-copy">
+        <p class="eyebrow">NEW RELEASE</p>
+        <h1>OUR FIRST NIGHT</h1>
+        <h2>Astralis Nova</h2>
+        <p>A night that changed everything. Stream it now and enter the Astralis Nova universe.</p>
+        <div class="cta">
+          <a class="btn primary" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener">▶ LISTEN NOW</a>
+          <a class="btn" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener">▷ WATCH VIDEO</a>
+        </div>
+        <div class="platform-row">
+          <a href="https://open.spotify.com/album/4LZI8pGNQxySSPl510jtF7" target="_blank" rel="noopener"><span>●</span>Spotify</a>
+          <a href="https://music.apple.com/us/album/our-first-night-single/6780201672?uo=4" target="_blank" rel="noopener"><span>♪</span>Apple Music</a>
+          <a href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener"><span>▶</span>YouTube</a>
+          <a href="https://music.amazon.com/artists/B0GXKS99NG/astralis-nova" target="_blank" rel="noopener"><span>a</span>Amazon</a>
+          <a href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener"><span>✦</span>HyperFollow</a>
+        </div>
+      </div>
+      <div class="top-area">
+        <h3>🔥 TOP SONGS</h3>
+        <div class="feature-grid" id="features"></div>
+      </div>
+    </div>
+  </section>
+
+  <main class="main shell" id="music">
+    <aside class="panel sidebar">
+      <h3>BROWSE MUSIC</h3>
+      <div class="filter active" data-filter="all"><span>All Songs</span><b>27</b></div>
+      <div class="filter" data-filter="June 2026"><span>June 2026</span><b>8</b></div>
+      <div class="filter" data-filter="May 2026"><span>May 2026</span><b>5</b></div>
+      <div class="filter" data-filter="April 2026"><span>April 2026</span><b>11</b></div>
+      <div class="filter" data-filter="Earlier 2026"><span>Earlier</span><b>3</b></div>
+      <div class="connect">
+        <h3>CONNECT</h3>
+        <a href="https://open.spotify.com/search/Astralis%20Nova" target="_blank" rel="noopener">● Follow on Spotify</a>
+        <a href="https://www.youtube.com/results?search_query=Astralis%20Nova" target="_blank" rel="noopener">▶ Subscribe on YouTube</a>
+        <a href="#guestbook">✦ Sign the Guestbook</a>
+        <a href="#contact">✉ Contact Ramon</a>
+      </div>
+    </aside>
+
+    <section class="panel catalog">
+      <div class="catalog-head">
+        <h2>ALL SONGS <small style="color:#8492a7">(27)</small></h2>
+        <input id="search" class="search" placeholder="Search songs..." aria-label="Search songs">
+      </div>
+      <div id="songList"></div>
+    </section>
+
+    <aside class="right">
+      <div class="panel" id="about">
+        <h3>ABOUT ASTRALIS NOVA</h3>
+        <div class="about-card">
+          <div class="portrait" aria-hidden="true">✦</div>
+          <div>
+            <strong>Ramon Bivens</strong>
+            <p>Astralis Nova is the musical expression of Ramon Bivens—blending heart, soul, memory, Arizona imagery, and storytelling into every song.</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>LATEST RELEASE</h3>
+        <div class="latest">
+          <img src="cover-1.svg" alt="Our First Night cover">
+          <div>
+            <strong>Our First Night</strong>
+            <p>Released June 2026</p>
+            <a class="btn primary" style="min-height:36px;padding:8px 12px;font-size:.75rem" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener">PLAY NOW</a>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>OLD-SCHOOL WEB SPIRIT</h3>
+        <p>Music, stars, a guestbook, and a place for listeners to leave a little piece of their journey behind.</p>
+        <a class="btn secondary" style="min-height:38px;padding:8px 12px;font-size:.75rem" href="#guestbook">SIGN THE BOOK</a>
+      </div>
+    </aside>
+  </main>
+
+  <section class="section-shell shell" id="guestbook">
+    <div class="panel guestbook">
+      <p class="eyebrow">THE COSMIC LEDGER</p>
+      <h2 class="section-title">SIGN THE ASTRALIS NOVA GUESTBOOK</h2>
+      <p class="section-lead">Leave a message among the stars. Tell us where you are listening from and which song brought you here. New entries appear immediately.</p>
+      <div class="guest-grid">
+        <div class="form-card">
+          <form id="guestbookForm" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="guestName">Name or nickname</label>
+                <input class="input" id="guestName" name="name" maxlength="40" required autocomplete="name">
+              </div>
+              <div class="field">
+                <label for="guestLocation">Location</label>
+                <input class="input" id="guestLocation" name="location" maxlength="60" placeholder="Phoenix, Arizona">
+              </div>
+              <div class="field full">
+                <label for="guestFavorite">Favorite Astralis Nova song</label>
+                <select class="select" id="guestFavorite" name="favoriteSong">
+                  <option value="">Choose a song</option>
+                </select>
+              </div>
+              <div class="field full">
+                <label for="guestMessage">Message</label>
+                <textarea class="textarea" id="guestMessage" name="message" minlength="3" maxlength="500" required placeholder="Write your message among the stars..."></textarea>
+              </div>
+              <div class="honeypot" aria-hidden="true">
+                <label for="guestWebsite">Website</label>
+                <input id="guestWebsite" name="website" tabindex="-1" autocomplete="off">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn primary" id="guestSubmit" type="submit">✦ SIGN THE GUESTBOOK</button>
+              <span class="status" id="guestStatus" role="status" aria-live="polite"></span>
+            </div>
+          </form>
+        </div>
+        <div class="entries-card">
+          <div class="guest-meta">
+            <strong>RECENT SIGNATURES</strong>
+            <span class="counter" id="guestCounter">000000</span>
+          </div>
+          <div class="entries" id="guestEntries">
+            <div class="entry"><p>Loading messages from the stars…</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-shell shell" id="contact">
+    <div class="community-grid">
+      <div class="panel community-card">
+        <p class="eyebrow">CONTACT</p>
+        <h2>Send Ramon a Message</h2>
+        <p>Questions, collaborations, memories, or a simple hello—send it here.</p>
+        <form id="contactForm" novalidate>
+          <div class="contact-grid">
+            <div class="field">
+              <label for="contactName">Name</label>
+              <input class="input" id="contactName" name="name" maxlength="60" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="contactEmail">Email</label>
+              <input class="input" id="contactEmail" name="email" type="email" maxlength="120" required autocomplete="email">
+            </div>
+            <div class="field full">
+              <label for="contactSubject">Subject</label>
+              <input class="input" id="contactSubject" name="subject" maxlength="100" required>
+            </div>
+            <div class="field full">
+              <label for="contactMessage">Message</label>
+              <textarea class="textarea" id="contactMessage" name="message" minlength="5" maxlength="2000" required></textarea>
+            </div>
+            <div class="honeypot" aria-hidden="true">
+              <label for="contactWebsite">Website</label>
+              <input id="contactWebsite" name="website" tabindex="-1" autocomplete="off">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn primary" type="submit">SEND MESSAGE</button>
+            <span class="status" id="contactStatus" role="status" aria-live="polite"></span>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel community-card">
+        <p class="eyebrow">STAY UPDATED</p>
+        <h2>Join the Astralis Nova Signal</h2>
+        <p>Get notified about new releases, videos, and updates.</p>
+        <form id="subscribeForm" novalidate>
+          <div class="subscribe-row">
+            <label class="sr-only" for="subscribeEmail">Your email address</label>
+            <input class="input" id="subscribeEmail" name="email" type="email" maxlength="120" required autocomplete="email" placeholder="Your email address">
+            <button class="btn primary" type="submit">SUBSCRIBE</button>
+          </div>
+          <div class="honeypot" aria-hidden="true">
+            <label for="subscribeWebsite">Website</label>
+            <input id="subscribeWebsite" name="website" tabindex="-1" autocomplete="off">
+          </div>
+          <p class="status" id="subscribeStatus" role="status" aria-live="polite"></p>
+        </form>
+        <p class="fineprint">Messages and subscription requests are delivered to Ramon Bivens. No automatic public display.</p>
+        <hr style="border:0;border-top:1px solid #20324a;margin:22px 0">
+        <h3 style="margin:0 0 8px">Direct email</h3>
+        <a href="mailto:ramon_bivens@yahoo.com">ramon_bivens@yahoo.com</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="music-dock" aria-label="Background music player">
+    <button class="music-toggle" id="musicToggle" type="button" aria-label="Play background music">▶</button>
+    <div class="music-copy">
+      <strong>ASTRALIS NOVA RADIO</strong>
+      <small id="musicStatus">Tap play to enter with music</small>
+    </div>
+    <label class="sr-only" for="musicVolume">Volume</label>
+    <input class="volume" id="musicVolume" type="range" min="0" max="1" step=".05" value=".35">
+    <audio id="siteAudio" loop preload="metadata">
+      <source src="background-music.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <footer>
+    <div class="shell">© 2026 Astralis Nova Music by Ramon Bivens. All rights reserved.</div>
+  </footer>
+
+  <script>
+    const songs=[{"title": "Our First Night", "period": "June 2026", "duration": "5:03", "cover": "cover-1.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Our%20First%20Night", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Our%20First%20Night", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Our%20First%20Night", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Our%20First%20Night"}, {"title": "Run With The Light", "period": "May 2026", "duration": "4:42", "cover": "cover-2.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Run%20With%20The%20Light", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Run%20With%20The%20Light", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Run%20With%20The%20Light", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Run%20With%20The%20Light"}, {"title": "Cactus Forest Moonlight", "period": "June 2026", "duration": "4:58", "cover": "cover-3.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Cactus%20Forest%20Moonlight", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Cactus%20Forest%20Moonlight", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Cactus%20Forest%20Moonlight", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Cactus%20Forest%20Moonlight"}, {"title": "Under the NightSky", "period": "June 2026", "duration": "5:11", "cover": "cover-4.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Under%20the%20NightSky", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Under%20the%20NightSky", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Under%20the%20NightSky", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Under%20the%20NightSky"}, {"title": "We are the Universe (Remix)", "period": "June 2026", "duration": "5:05", "cover": "cover-5.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20We%20are%20the%20Universe%20%28Remix%29", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20We%20are%20the%20Universe%20%28Remix%29", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20We%20are%20the%20Universe%20%28Remix%29", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20We%20are%20the%20Universe%20%28Remix%29"}, {"title": "Military Brats", "period": "June 2026", "duration": "4:21", "cover": "cover-6.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Military%20Brats", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Military%20Brats", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Military%20Brats", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Military%20Brats"}, {"title": "Starlight in My Boots Original", "period": "June 2026", "duration": "4:47", "cover": "cover-7.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Starlight%20in%20My%20Boots%20Original", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Starlight%20in%20My%20Boots%20Original", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Starlight%20in%20My%20Boots%20Original", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Starlight%20in%20My%20Boots%20Original"}, {"title": "Starlight in my Boots (Remix)", "period": "June 2026", "duration": "4:36", "cover": "cover-8.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Starlight%20in%20my%20Boots%20%28Remix%29", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Starlight%20in%20my%20Boots%20%28Remix%29", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Starlight%20in%20my%20Boots%20%28Remix%29", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Starlight%20in%20my%20Boots%20%28Remix%29"}, {"title": "We are the Universe Original", "period": "June 2026", "duration": "5:02", "cover": "cover-9.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20We%20are%20the%20Universe%20Original", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20We%20are%20the%20Universe%20Original", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20We%20are%20the%20Universe%20Original", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20We%20are%20the%20Universe%20Original"}, {"title": "That Look", "period": "May 2026", "duration": "4:11", "cover": "cover-10.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20That%20Look", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20That%20Look", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20That%20Look", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20That%20Look"}, {"title": "Let This Day Be Kind", "period": "May 2026", "duration": "4:09", "cover": "cover-11.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Let%20This%20Day%20Be%20Kind", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Let%20This%20Day%20Be%20Kind", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Let%20This%20Day%20Be%20Kind", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Let%20This%20Day%20Be%20Kind"}, {"title": "Just A Little Time", "period": "May 2026", "duration": "4:18", "cover": "cover-12.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Just%20A%20Little%20Time", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Just%20A%20Little%20Time", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Just%20A%20Little%20Time", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Just%20A%20Little%20Time"}, {"title": "When The Lights Were Golden", "period": "May 2026", "duration": "4:45", "cover": "cover-13.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20When%20The%20Lights%20Were%20Golden", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20When%20The%20Lights%20Were%20Golden", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20When%20The%20Lights%20Were%20Golden", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20When%20The%20Lights%20Were%20Golden"}, {"title": "We are the Universe", "period": "Earlier 2026", "duration": "5:06", "cover": "cover-14.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20We%20are%20the%20Universe", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20We%20are%20the%20Universe", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20We%20are%20the%20Universe", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20We%20are%20the%20Universe"}, {"title": "Back When She Was Little Growing Up", "period": "April 2026", "duration": "4:56", "cover": "cover-15.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Back%20When%20She%20Was%20Little%20Growing%20Up", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Back%20When%20She%20Was%20Little%20Growing%20Up", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Back%20When%20She%20Was%20Little%20Growing%20Up", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Back%20When%20She%20Was%20Little%20Growing%20Up"}, {"title": "Darktide", "period": "April 2026", "duration": "4:37", "cover": "cover-16.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Darktide", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Darktide", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Darktide", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Darktide"}, {"title": "Logged Back In", "period": "April 2026", "duration": "4:12", "cover": "cover-17.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Logged%20Back%20In", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Logged%20Back%20In", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Logged%20Back%20In", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Logged%20Back%20In"}, {"title": "My Girl Alexis", "period": "April 2026", "duration": "4:31", "cover": "cover-18.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20My%20Girl%20Alexis", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20My%20Girl%20Alexis", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20My%20Girl%20Alexis", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20My%20Girl%20Alexis"}, {"title": "One Outcome (Peace)", "period": "April 2026", "duration": "4:44", "cover": "cover-19.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20One%20Outcome%20%28Peace%29", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20One%20Outcome%20%28Peace%29", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20One%20Outcome%20%28Peace%29", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20One%20Outcome%20%28Peace%29"}, {"title": "Born Right Here", "period": "April 2026", "duration": "4:24", "cover": "cover-20.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Born%20Right%20Here", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Born%20Right%20Here", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Born%20Right%20Here", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Born%20Right%20Here"}, {"title": "Searching Through the Light", "period": "Earlier 2026", "duration": "4:53", "cover": "cover-21.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Searching%20Through%20the%20Light", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Searching%20Through%20the%20Light", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Searching%20Through%20the%20Light", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Searching%20Through%20the%20Light"}, {"title": "Till We Meet Again", "period": "April 2026", "duration": "4:41", "cover": "cover-22.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Till%20We%20Meet%20Again", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Till%20We%20Meet%20Again", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Till%20We%20Meet%20Again", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Till%20We%20Meet%20Again"}, {"title": "We Let It Pass Us By", "period": "April 2026", "duration": "4:17", "cover": "cover-23.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20We%20Let%20It%20Pass%20Us%20By", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20We%20Let%20It%20Pass%20Us%20By", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20We%20Let%20It%20Pass%20Us%20By", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20We%20Let%20It%20Pass%20Us%20By"}, {"title": "Heart of Gold", "period": "April 2026", "duration": "4:28", "cover": "cover-24.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Heart%20of%20Gold", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Heart%20of%20Gold", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Heart%20of%20Gold", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Heart%20of%20Gold"}, {"title": "My Dad’s Last Day on This Earth", "period": "April 2026", "duration": "5:01", "cover": "cover-25.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20My%20Dad%E2%80%99s%20Last%20Day%20on%20This%20Earth", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20My%20Dad%E2%80%99s%20Last%20Day%20on%20This%20Earth", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20My%20Dad%E2%80%99s%20Last%20Day%20on%20This%20Earth", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20My%20Dad%E2%80%99s%20Last%20Day%20on%20This%20Earth"}, {"title": "My Whole World", "period": "April 2026", "duration": "4:35", "cover": "cover-26.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20My%20Whole%20World", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20My%20Whole%20World", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20My%20Whole%20World", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20My%20Whole%20World"}, {"title": "Starlight in My Boots", "period": "Earlier 2026", "duration": "4:40", "cover": "cover-27.svg", "spotify": "https://open.spotify.com/search/Astralis%20Nova%20Starlight%20in%20My%20Boots", "apple": "https://music.apple.com/us/search?term=Astralis%20Nova%20Starlight%20in%20My%20Boots", "youtube": "https://www.youtube.com/results?search_query=Astralis%20Nova%20Starlight%20in%20My%20Boots", "amazon": "https://music.amazon.com/search/Astralis%20Nova%20Starlight%20in%20My%20Boots"}];
+
+    const features=document.getElementById("features");
+    [0,1,2].forEach((i,n)=>{
+      const s=songs[i];
+      features.insertAdjacentHTML("beforeend",`<a class="feature-card" href="${s.youtube}" target="_blank" rel="noopener"><span class="num">${n+1}</span><img src="${s.cover}" alt="${escapeAttribute(s.title)} cover"><div class="feature-copy"><h4>${escapeHTML(s.title)}</h4><p>Astralis Nova · ${s.duration}</p><div class="feature-links"><span>Spotify</span><span>Apple</span><span>YouTube</span></div></div></a>`);
+    });
+
+    const list=document.getElementById("songList");
+    let filter="all";
+    function renderSongs(){
+      const q=document.getElementById("search").value.toLowerCase().trim();
+      list.innerHTML="";
+      songs.forEach(s=>{
+        if((filter!=="all"&&s.period!==filter)||!s.title.toLowerCase().includes(q))return;
+        list.insertAdjacentHTML("beforeend",`<div class="song"><a class="play" href="${s.youtube}" target="_blank" rel="noopener" aria-label="Play ${escapeAttribute(s.title)}">▶</a><img src="${s.cover}" alt="${escapeAttribute(s.title)} cover" loading="lazy"><div><h4>${escapeHTML(s.title)}</h4><small>Astralis Nova · ${s.period}</small></div><div class="duration">${s.duration}</div><div class="song-links"><a class="sp" href="${s.spotify}" target="_blank" rel="noopener" aria-label="${escapeAttribute(s.title)} on Spotify">S</a><a class="yt" href="${s.youtube}" target="_blank" rel="noopener" aria-label="${escapeAttribute(s.title)} on YouTube">Y</a><a class="ap" href="${s.apple}" target="_blank" rel="noopener" aria-label="${escapeAttribute(s.title)} on Apple Music">A</a><a class="am" href="${s.amazon}" target="_blank" rel="noopener" aria-label="${escapeAttribute(s.title)} on Amazon Music">M</a></div></div>`);
+      });
+    }
+
+    document.getElementById("search").addEventListener("input",renderSongs);
+    document.querySelectorAll(".filter").forEach(el=>el.addEventListener("click",()=>{
+      document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+      el.classList.add("active");
+      filter=el.dataset.filter;
+      renderSongs();
+    }));
+    renderSongs();
+
+    function escapeHTML(value){
+      return String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
+    }
+    function escapeAttribute(value){return escapeHTML(value).replace(/`/g,"&#096;")}
+
+    const favoriteSelect=document.getElementById("guestFavorite");
+    songs.forEach(song=>{
+      const option=document.createElement("option");
+      option.value=song.title;
+      option.textContent=song.title;
+      favoriteSelect.appendChild(option);
+    });
+
+    function setStatus(element,message,type=""){
+      element.textContent=message;
+      element.className=`status ${type}`.trim();
+    }
+
+    function renderGuestEntries(entries,total){
+      const container=document.getElementById("guestEntries");
+      container.innerHTML="";
+      document.getElementById("guestCounter").textContent=String(total||0).padStart(6,"0");
+      if(!entries.length){
+        const empty=document.createElement("div");
+        empty.className="entry";
+        empty.innerHTML="<h4>Be the first to sign</h4><p>The guestbook is waiting for its first message among the stars.</p>";
+        container.appendChild(empty);
+        return;
+      }
+      entries.forEach(entry=>container.appendChild(buildGuestEntry(entry)));
+    }
+
+    function buildGuestEntry(entry){
+      const card=document.createElement("article");
+      card.className="entry";
+      const title=document.createElement("h4");
+      title.textContent=entry.name;
+      const sub=document.createElement("div");
+      sub.className="entry-sub";
+      const date=new Date(entry.created_at);
+      const dateText=Number.isNaN(date.getTime())?entry.created_at:date.toLocaleString(undefined,{dateStyle:"medium",timeStyle:"short"});
+      sub.textContent=[entry.location,dateText].filter(Boolean).join(" · ");
+      const message=document.createElement("p");
+      message.textContent=entry.message;
+      card.append(title,sub,message);
+      if(entry.favorite_song){
+        const favorite=document.createElement("span");
+        favorite.className="favorite";
+        favorite.textContent=`♪ ${entry.favorite_song}`;
+        card.appendChild(favorite);
+      }
+      return card;
+    }
+
+    async function loadGuestbook(){
+      const container=document.getElementById("guestEntries");
+      try{
+        const response=await fetch("/api/guestbook",{headers:{"Accept":"application/json"}});
+        const data=await response.json().catch(()=>({}));
+        if(!response.ok)throw new Error(data.error||"Guestbook is unavailable.");
+        renderGuestEntries(data.entries||[],data.total||0);
+      }catch(error){
+        container.innerHTML="";
+        const card=document.createElement("div");
+        card.className="entry";
+        card.innerHTML="<h4>Guestbook setup required</h4><p>Connect the Cloudflare D1 database and redeploy. See README-SETUP.md in the update package.</p>";
+        container.appendChild(card);
+        document.getElementById("guestCounter").textContent="------";
+      }
+    }
+
+    document.getElementById("guestbookForm").addEventListener("submit",async event=>{
+      event.preventDefault();
+      const form=event.currentTarget;
+      const status=document.getElementById("guestStatus");
+      const button=document.getElementById("guestSubmit");
+      if(!form.reportValidity())return;
+      setStatus(status,"Sending your message into the stars…");
+      button.disabled=true;
+      const data=Object.fromEntries(new FormData(form).entries());
+      try{
+        const response=await fetch("/api/guestbook",{
+          method:"POST",
+          headers:{"Content-Type":"application/json","Accept":"application/json"},
+          body:JSON.stringify(data)
+        });
+        const result=await response.json().catch(()=>({}));
+        if(!response.ok)throw new Error(result.error||"Your entry could not be posted.");
+        const container=document.getElementById("guestEntries");
+        const setupCard=container.querySelector(".entry");
+        if(setupCard&&/setup required|first to sign/i.test(setupCard.textContent))container.innerHTML="";
+        container.prepend(buildGuestEntry(result.entry));
+        document.getElementById("guestCounter").textContent=String(result.total||1).padStart(6,"0");
+        form.reset();
+        setStatus(status,"Your message is now glowing in the guestbook.","success");
+      }catch(error){
+        setStatus(status,error.message||"Guestbook submission failed.","error");
+      }finally{
+        button.disabled=false;
+      }
+    });
+
+    async function submitSiteForm(form,type,statusElement){
+      if(!form.reportValidity())return;
+      setStatus(statusElement,type==="subscribe"?"Joining the signal…":"Sending your message…");
+      const button=form.querySelector("button[type='submit']");
+      button.disabled=true;
+      try{
+        const payload=Object.fromEntries(new FormData(form).entries());
+        payload.type=type;
+        const response=await fetch("/api/forms",{
+          method:"POST",
+          headers:{"Content-Type":"application/json","Accept":"application/json"},
+          body:JSON.stringify(payload)
+        });
+        const result=await response.json().catch(()=>({}));
+        if(!response.ok)throw new Error(result.error||"Submission failed.");
+        form.reset();
+        setStatus(statusElement,type==="subscribe"?"You are on the Astralis Nova signal.":"Message sent to Ramon.","success");
+      }catch(error){
+        setStatus(statusElement,error.message||"Submission failed. Please try again.","error");
+      }finally{
+        button.disabled=false;
+      }
+    }
+
+    document.getElementById("contactForm").addEventListener("submit",event=>{
+      event.preventDefault();
+      submitSiteForm(event.currentTarget,"contact",document.getElementById("contactStatus"));
+    });
+    document.getElementById("subscribeForm").addEventListener("submit",event=>{
+      event.preventDefault();
+      submitSiteForm(event.currentTarget,"subscribe",document.getElementById("subscribeStatus"));
+    });
+
+    const audio=document.getElementById("siteAudio");
+    const musicToggle=document.getElementById("musicToggle");
+    const musicStatus=document.getElementById("musicStatus");
+    const musicVolume=document.getElementById("musicVolume");
+    audio.volume=Number(musicVolume.value);
+    musicVolume.addEventListener("input",()=>{audio.volume=Number(musicVolume.value)});
+    musicToggle.addEventListener("click",async()=>{
+      if(!audio.paused){
+        audio.pause();
+        musicToggle.textContent="▶";
+        musicToggle.setAttribute("aria-label","Play background music");
+        musicStatus.textContent="Music paused";
+        return;
+      }
+      try{
+        await audio.play();
+        musicToggle.textContent="❚❚";
+        musicToggle.setAttribute("aria-label","Pause background music");
+        musicStatus.textContent="Background music playing";
+      }catch(error){
+        musicStatus.textContent="Add background-music.mp3 to activate";
+      }
+    });
+    audio.addEventListener("error",()=>{musicStatus.textContent="Add background-music.mp3 to activate"});
+    audio.addEventListener("ended",()=>{musicToggle.textContent="▶"});
+
+    loadGuestbook();
+  </script>
+</body>
+</html>

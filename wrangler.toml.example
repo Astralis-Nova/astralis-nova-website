@@ -1,0 +1,11 @@
+# Optional local/CLI configuration example.
+# Rename to wrangler.toml only after replacing the database ID.
+
+name = "astralis-nova-website"
+compatibility_date = "2026-07-16"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "astralis-nova-guestbook"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
