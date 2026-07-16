@@ -427,7 +427,7 @@
           </div>
           <p class="status" id="subscribeStatus" role="status" aria-live="polite"></p>
         </form>
-        <p class="fineprint">Messages and subscription requests are delivered to Ramon Bivens. No automatic public display.</p>
+        <p class="fineprint">Messages and subscription requests are stored privately for Ramon Bivens. Nothing is displayed publicly.</p>
         <hr style="border:0;border-top:1px solid #20324a;margin:22px 0">
         <h3 style="margin:0 0 8px">Direct email</h3>
         <a href="mailto:ramon_bivens@yahoo.com">ramon_bivens@yahoo.com</a>
@@ -599,7 +599,7 @@
         const result=await response.json().catch(()=>({}));
         if(!response.ok)throw new Error(result.error||"Submission failed.");
         form.reset();
-        setStatus(statusElement,type==="subscribe"?"You are on the Astralis Nova signal.":"Message sent to Ramon.","success");
+        setStatus(statusElement,type==="subscribe"?"You are on the Astralis Nova signal.":"Message saved for Ramon.","success");
       }catch(error){
         setStatus(statusElement,error.message||"Submission failed. Please try again.","error");
       }finally{
