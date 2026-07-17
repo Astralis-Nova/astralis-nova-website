@@ -44,7 +44,15 @@
       width:30px;height:30px;border-radius:50%;display:grid;place-items:center;text-decoration:none;
       font-size:.72rem;font-weight:900;background:#101827;border:1px solid #1b2a41
     }
-    .hero{background:url("hero.svg") center/cover no-repeat;border-bottom:1px solid #17243a}
+    .hero{
+      position:relative;isolation:isolate;
+      background:url("hero-background.webp") center 54%/cover no-repeat;
+      border-bottom:1px solid #17243a
+    }
+    .hero::before{
+      content:"";position:absolute;inset:0;z-index:-1;
+      background:linear-gradient(90deg,rgba(2,7,17,.90) 0%,rgba(2,7,17,.68) 38%,rgba(2,7,17,.28) 68%,rgba(2,7,17,.52) 100%)
+    }
     .hero-inner{
       min-height:430px;display:grid;grid-template-columns:.9fr 1.45fr;gap:44px;
       align-items:center;padding:34px 0
