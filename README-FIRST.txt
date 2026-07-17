@@ -1,15 +1,10 @@
-ASTRALIS NOVA DIRECT RELEASE LINKS UPDATE
+ASTRALIS NOVA COMPACT RADIO DOCK UPDATE
 
-Copy only index.html into the astralis-nova-website folder and replace the current file.
+Copy only index.html into your astralis-nova-website folder.
 
-This update changes the Our First Night buttons to direct release pages:
-- Spotify album
-- Apple Music single
-- YouTube track
-- Amazon Music album
-- HyperFollow all-services page remains unchanged
-
-The first song row and the matching top-song card now use the same direct links.
+The radio becomes a small round control in the bottom-right corner.
+It expands on hover or keyboard focus to show its title, status, and volume.
+All existing music behavior remains intact.
 
 Suggested commit message:
-Add direct Our First Night release links
+Make floating radio compact
