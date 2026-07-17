@@ -71,7 +71,8 @@
     h1{font-size:clamp(3rem,6vw,6rem);line-height:.87;letter-spacing:-.05em;margin:0 0 15px}
     .hero-copy h2{margin:0 0 14px;font-size:1.4rem}
     .hero-copy p{color:#d1d8e6;max-width:520px;line-height:1.55}
-    .cta{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}
+    .hero-controls{display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:22px 0 6px}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin:0}
     .btn{
       min-height:48px;padding:12px 22px;border-radius:999px;border:1px solid #6a7da1;
       display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
@@ -79,19 +80,16 @@
     }
     .btn.primary{background:linear-gradient(90deg,#147df5,#eb1a92);border:0}
     .btn.secondary{background:#0c1727}
-    .platform-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;max-width:620px}
-    .platform-row::before{
-      content:"LISTEN ON YOUR FAVORITE PLATFORM";flex-basis:100%;
-      color:#aebbd0;font-size:.66rem;letter-spacing:.12em;font-weight:800
-    }
+    .platform-row{display:flex;gap:7px;flex-wrap:wrap;margin:0;max-width:560px;align-items:center}
+    .platform-row::before{display:none}
     .platform-row a{
-      min-height:40px;padding:8px 12px;border-radius:12px;text-decoration:none;font-size:.76rem;font-weight:800;
+      min-height:34px;padding:6px 9px;border-radius:10px;text-decoration:none;font-size:.7rem;font-weight:800;
       display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.13);
       background:rgba(7,14,25,.78);box-shadow:0 8px 22px rgba(0,0,0,.2);backdrop-filter:blur(8px);
       transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease
     }
     .platform-row a:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.35);box-shadow:0 10px 26px rgba(0,0,0,.32)}
-    .platform-row .platform-icon{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:.72rem;font-weight:900;color:#fff}
+    .platform-row .platform-icon{width:19px;height:19px;border-radius:6px;display:grid;place-items:center;font-size:.66rem;font-weight:900;color:#fff}
     .platform-row .spotify .platform-icon{background:#1ed760;color:#06150b}
     .platform-row .apple .platform-icon{background:#fff;color:#111}
     .platform-row .youtube .platform-icon{background:#ff0033}
@@ -298,7 +296,9 @@
       .form-grid,.contact-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
       .guestbook::before{display:none}.subscribe-row{grid-template-columns:1fr}
       .music-dock{left:18px;right:18px}.volume{margin-left:auto}
-      .platform-row a{font-size:.72rem;padding:8px 10px}
+      .hero-controls{align-items:flex-start;gap:10px}
+      .platform-row{flex-basis:100%;margin-top:2px}
+      .platform-row a{font-size:.7rem;padding:7px 9px}
     }
     @media(max-width:500px){
       :root{--shell:min(100% - 22px,1500px)}
@@ -334,16 +334,18 @@
         <h1>OUR FIRST NIGHT</h1>
         <h2>Astralis Nova</h2>
         <p>A night that changed everything. Stream it now and enter the Astralis Nova universe.</p>
-        <div class="cta">
-          <a class="btn primary" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener">▶ LISTEN NOW</a>
-          <a class="btn" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener">▷ WATCH VIDEO</a>
-        </div>
-        <div class="platform-row" aria-label="Stream Our First Night">
-          <a class="spotify" href="https://open.spotify.com/album/4LZI8pGNQxySSPl510jtF7" target="_blank" rel="noopener"><span class="platform-icon">●</span>Spotify</a>
-          <a class="apple" href="https://music.apple.com/us/album/our-first-night-single/6780201672?uo=4" target="_blank" rel="noopener"><span class="platform-icon">♪</span>Apple Music</a>
-          <a class="youtube" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener"><span class="platform-icon">▶</span>YouTube</a>
-          <a class="amazon" href="https://music.amazon.com/albums/B0H58FGDC8" target="_blank" rel="noopener"><span class="platform-icon">a</span>Amazon Music</a>
-          <a class="hyperfollow" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener"><span class="platform-icon">✦</span>All services</a>
+        <div class="hero-controls">
+          <div class="cta">
+            <a class="btn primary" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener">▶ LISTEN NOW</a>
+            <a class="btn" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener">▷ WATCH VIDEO</a>
+          </div>
+          <div class="platform-row" aria-label="Stream Our First Night">
+            <a class="spotify" href="https://open.spotify.com/album/4LZI8pGNQxySSPl510jtF7" target="_blank" rel="noopener"><span class="platform-icon">●</span>Spotify</a>
+            <a class="apple" href="https://music.apple.com/us/album/our-first-night-single/6780201672?uo=4" target="_blank" rel="noopener"><span class="platform-icon">♪</span>Apple Music</a>
+            <a class="youtube" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener"><span class="platform-icon">▶</span>YouTube</a>
+            <a class="amazon" href="https://music.amazon.com/albums/B0H58FGDC8" target="_blank" rel="noopener"><span class="platform-icon">a</span>Amazon Music</a>
+            <a class="hyperfollow" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener"><span class="platform-icon">✦</span>All services</a>
+          </div>
         </div>
       </div>
       <div class="top-area">
