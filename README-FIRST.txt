@@ -1,10 +1,15 @@
-ASTRALIS NOVA COSMIC PAGE UPDATE V2
+ASTRALIS NOVA DIRECT RELEASE LINKS UPDATE
 
-Copy only these files into the website repository:
-- index.html
-- page-background.webp
+Copy only index.html into the astralis-nova-website folder and replace the current file.
 
-Keep hero-background.webp, background-music.mp3, all cover files, and the functions folder.
+This update changes the Our First Night buttons to direct release pages:
+- Spotify album
+- Apple Music single
+- YouTube track
+- Amazon Music album
+- HyperFollow all-services page remains unchanged
+
+The first song row and the matching top-song card now use the same direct links.
 
 Suggested commit message:
-Make cosmic page background more visible
+Add direct Our First Night release links
