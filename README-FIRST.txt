@@ -1,10 +1,10 @@
-ASTRALIS NOVA COSMIC PAGE UPDATE
+ASTRALIS NOVA COSMIC PAGE UPDATE V2
 
-Copy these two files into the astralis-nova-website repository folder:
+Copy only these files into the website repository:
 - index.html
 - page-background.webp
 
-Replace index.html when prompted. Keep hero-background.webp, background-music.mp3, all cover files, and the functions folder.
+Keep hero-background.webp, background-music.mp3, all cover files, and the functions folder.
 
-Suggested GitHub Desktop commit message:
-Extend cosmic background across website
+Suggested commit message:
+Make cosmic page background more visible
