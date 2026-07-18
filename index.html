@@ -590,6 +590,120 @@
       .song{grid-template-columns:34px 46px 1fr}.duration{display:none}
       .song-links{grid-column:3/4}.music-copy small{display:none}.volume{width:68px}
     }
+  
+    /* Martian Visitor Detector */
+    .martian-counter-wrap{
+      padding:10px 0 24px;
+    }
+    .martian-counter{
+      width:min(520px,calc(100% - 32px));
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:16px;
+      padding:14px 20px;
+      color:#dfffee;
+      background:
+        radial-gradient(circle at 18% 20%,rgba(70,255,159,.10),transparent 28%),
+        linear-gradient(145deg,rgba(2,8,14,.98),rgba(0,0,0,.98));
+      border:1px solid rgba(91,255,164,.28);
+      border-radius:18px;
+      box-shadow:
+        0 12px 32px rgba(0,0,0,.48),
+        inset 0 0 24px rgba(49,255,144,.05);
+    }
+    .martian-head{
+      position:relative;
+      flex:0 0 58px;
+      width:58px;
+      height:52px;
+      border-radius:52% 52% 46% 46% / 58% 58% 42% 42%;
+      background:linear-gradient(145deg,#93ffba,#28a866 64%,#0e5a38);
+      box-shadow:
+        0 0 18px rgba(76,255,152,.34),
+        inset 0 -8px 14px rgba(0,40,22,.32);
+      animation:martianPulse 3.8s ease-in-out infinite;
+    }
+    .martian-head::before,
+    .martian-head::after{
+      content:"";
+      position:absolute;
+      top:17px;
+      width:17px;
+      height:23px;
+      border-radius:70% 35% 70% 35%;
+      background:#020508;
+      box-shadow:inset 0 0 6px rgba(111,255,196,.25);
+    }
+    .martian-head::before{
+      left:9px;
+      transform:rotate(20deg);
+    }
+    .martian-head::after{
+      right:9px;
+      transform:rotate(-20deg) scaleX(-1);
+    }
+    .martian-mouth{
+      position:absolute;
+      left:50%;
+      bottom:8px;
+      width:12px;
+      height:3px;
+      transform:translateX(-50%);
+      background:rgba(0,35,18,.72);
+      border-radius:50%;
+    }
+    .martian-signal{
+      min-width:0;
+      text-align:left;
+    }
+    .martian-signal strong{
+      display:block;
+      color:#8dffbd;
+      font-size:.72rem;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:5px;
+    }
+    .martian-numbers{
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px 16px;
+      align-items:baseline;
+      font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    }
+    .martian-numbers b{
+      color:#fff;
+      font-size:1.12rem;
+      letter-spacing:.08em;
+      text-shadow:0 0 10px rgba(106,255,173,.28);
+    }
+    .martian-numbers span{
+      color:#92a9b6;
+      font-size:.72rem;
+    }
+    .martian-counter-status{
+      display:block;
+      min-height:1em;
+      margin-top:5px;
+      color:#718b98;
+      font-size:.68rem;
+    }
+    @keyframes martianPulse{
+      0%,100%{transform:translateY(0);filter:brightness(.95)}
+      50%{transform:translateY(-2px);filter:brightness(1.12)}
+    }
+    @media(max-width:520px){
+      .martian-counter{gap:12px;padding:12px 14px}
+      .martian-head{flex-basis:48px;width:48px;height:44px}
+      .martian-head::before,.martian-head::after{
+        top:14px;width:14px;height:20px
+      }
+      .martian-head::before{left:8px}
+      .martian-head::after{right:8px}
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
 </head>
@@ -1025,6 +1139,25 @@
       <source src="background-music.mp3" type="audio/mpeg">
     </audio>
   </div>
+
+
+  <section class="martian-counter-wrap" aria-label="Website visitor counter">
+    <div class="martian-counter">
+      <div class="martian-head" aria-hidden="true">
+        <span class="martian-mouth"></span>
+      </div>
+      <div class="martian-signal">
+        <strong>Martian Visitor Detector</strong>
+        <div class="martian-numbers">
+          <b id="martianVisitCount">000000</b>
+          <span>VISITS DETECTED</span>
+          <b id="martianUniqueCount">000000</b>
+          <span>UNIQUE EARTH SIGNALS</span>
+        </div>
+        <small class="martian-counter-status" id="martianCounterStatus">Scanning the cosmic neighborhood…</small>
+      </div>
+    </div>
+  </section>
 
   <footer>
     <div class="shell">© 2026 Astralis Nova Music by Ramon Bivens. All rights reserved.</div>
@@ -1576,6 +1709,42 @@
       const durations = [46, 52, 58, 64];
       ship.style.animationDuration = `${durations[Math.floor(Math.random() * durations.length)]}s`;
     });
+  })();
+  </script>
+
+
+  <script>
+  (() => {
+    const visits = document.getElementById("martianVisitCount");
+    const uniques = document.getElementById("martianUniqueCount");
+    const status = document.getElementById("martianCounterStatus");
+    if (!visits || !uniques || !status) return;
+
+    const format = value => String(Math.max(0, Number(value) || 0)).padStart(6, "0");
+
+    async function updateCounter() {
+      try {
+        const alreadyCounted = sessionStorage.getItem("astralisMartianVisit") === "1";
+        const response = await fetch("/api/visitor-counter", {
+          method: alreadyCounted ? "GET" : "POST",
+          headers: {"Accept":"application/json"}
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Counter unavailable");
+
+        visits.textContent = format(data.visits);
+        uniques.textContent = format(data.uniqueVisitors);
+        status.textContent = data.counted
+          ? "New Earth signal logged. Welcome aboard."
+          : "Signal scan complete.";
+        if (!alreadyCounted) sessionStorage.setItem("astralisMartianVisit", "1");
+      } catch (error) {
+        console.warn("Visitor counter unavailable", error);
+        status.textContent = "Martian receiver is temporarily offline.";
+      }
+    }
+
+    updateCounter();
   })();
   </script>
 
