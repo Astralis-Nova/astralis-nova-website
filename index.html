@@ -513,14 +513,28 @@
     .roaming-starship{
       position:fixed;z-index:35;width:clamp(100px,11vw,185px);
       left:-220px;top:18vh;pointer-events:auto;cursor:pointer;
-      filter:drop-shadow(0 8px 18px rgba(0,0,0,.46));
-      will-change:transform,left,top;opacity:.92;
+      filter:drop-shadow(0 10px 20px rgba(0,0,0,.48));
+      will-change:transform,left,top;opacity:.95;
       animation:astralisFlight 52s linear infinite;
+      background:rgba(6,12,22,.72);
+      border:1px solid rgba(105,150,255,.24);
+      padding:8px;
+      border-radius:16px;
+      box-shadow:0 10px 28px rgba(0,0,0,.35), inset 0 0 18px rgba(88,102,180,.10);
+      backdrop-filter:blur(3px);
+      appearance:none;
+      -webkit-appearance:none;
     }
-    .roaming-starship img{display:block;width:100%;height:auto}
+    .roaming-starship img{
+      display:block;
+      width:100%;
+      height:auto;
+      transform:scaleX(-1);
+      border-radius:10px;
+    }
     .roaming-starship::after{
-      content:"";position:absolute;left:-36%;top:43%;width:48%;height:12%;
-      background:linear-gradient(90deg,transparent,rgba(101,209,255,.72));
+      content:"";position:absolute;left:-34%;top:45%;width:44%;height:10%;
+      background:linear-gradient(90deg,transparent,rgba(101,209,255,.62));
       filter:blur(6px);border-radius:999px;opacity:.7
     }
     .ship-signal{
