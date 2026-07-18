@@ -318,6 +318,32 @@
       .relic-card{min-height:170px}
     }
 
+
+    .relic-links{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;margin-top:24px
+    }
+    .relic-link-card{
+      display:flex;align-items:flex-start;gap:14px;padding:18px;
+      border:1px solid rgba(112,145,199,.46);border-radius:14px;
+      background:rgba(4,11,21,.56);text-decoration:none;color:inherit;
+      transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease
+    }
+    .relic-link-card:hover,.relic-link-card:focus-visible{
+      transform:translateY(-3px);border-color:#6ea8ff;
+      box-shadow:0 14px 34px rgba(0,0,0,.28),0 0 22px rgba(91,97,255,.14)
+    }
+    .relic-icon{font-size:1.7rem;line-height:1}
+    .relic-link-card strong{display:block;margin-bottom:7px}
+    .relic-link-card small{display:block;color:#9eb0c8;line-height:1.5}
+    .archive-home-details{
+      margin-top:20px;padding:14px 16px;border:1px dashed rgba(130,155,194,.42);
+      border-radius:12px;background:rgba(3,9,17,.38)
+    }
+    .archive-home-details summary{cursor:pointer;font-weight:800;color:#c9d9ee}
+    .archive-home-details p{margin:12px 0;color:#9eb0c8}
+    @media(max-width:900px){.relic-links{grid-template-columns:1fr}}
+
     footer{border-top:1px solid rgba(87,115,153,.38);padding:18px 0 86px;color:#aab6c8;font-size:.8rem;background:rgba(2,5,11,.42);backdrop-filter:blur(10px)}
     @media(max-width:1150px){
       .hero-inner{grid-template-columns:1fr}
@@ -502,25 +528,69 @@
   </section>
 
 
+
   <section class="section-shell shell" id="first-orbit">
     <div class="panel first-orbit">
-      <div class="orbit-grid">
-        <div class="orbit-copy">
-          <p class="eyebrow">DIGITAL TIME CAPSULE</p>
-          <h2>Journey Back to the First Orbit</h2>
-          <p>Before Astralis Nova, there was Soldierboy602, my original corner of the early internet. Step through the archive and revisit a surviving fragment of the Angelfire era, including the old doorway to <em>Do You Believe in Magic?</em></p>
-          <div class="orbit-actions">
-            <a class="btn primary" href="https://web.archive.org/web/20190804224523/http://www.angelfire.com/az2/soldierboy602/" target="_blank" rel="noopener noreferrer">🕰 VISIT THE OLD SITE</a>
-            <a class="btn secondary" href="https://web.archive.org/web/20190804224336/http://www.caveofmagic.com/" target="_blank" rel="noopener noreferrer">✨ DO YOU BELIEVE IN MAGIC?</a>
-          </div>
+      <div class="orbit-copy">
+        <p class="eyebrow">PRESERVED FROM THE EARLY WEB</p>
+        <h2>Journey Back to the First Orbit</h2>
+        <p>A small curated collection from my original Soldierboy602 Angelfire site. Rather than reopening the entire old site, these surviving pages preserve a few meaningful fragments from that first corner of the internet.</p>
+
+        <div class="relic-links" aria-label="Selected archived pages">
+          <a class="relic-link-card" href="https://web.archive.org/web/20190804224338/http://www.angelfire.com/az2/soldierboy602/flowerpoem.html" target="_blank" rel="noopener noreferrer">
+            <span class="relic-icon">🌼</span>
+            <span>
+              <strong>The Flower Poem</strong>
+              <small>A reflection on courage, strength, and love.</small>
+            </span>
+          </a>
+
+          <a class="relic-link-card" href="https://web.archive.org/web/20190804224338/http://www.angelfire.com/az2/soldierboy602/child.html" target="_blank" rel="noopener noreferrer">
+            <span class="relic-icon">🕯️</span>
+            <span>
+              <strong>The Unborn Child</strong>
+              <small>A somber archived poem, author unknown.</small>
+            </span>
+          </a>
+
+          <a class="relic-link-card" href="https://web.archive.org/web/20190804224333/http://www.angelfire.com/az2/soldierboy602/river.html" target="_blank" rel="noopener noreferrer">
+            <span class="relic-icon">🌊</span>
+            <span>
+              <strong>Just A River</strong>
+              <small>A meditation on time, change, and love.</small>
+            </span>
+          </a>
+
+          <a class="relic-link-card" href="https://web.archive.org/web/20190807030903/http://caveofmagic.com/" target="_blank" rel="noopener noreferrer">
+            <span class="relic-icon">✨</span>
+            <span>
+              <strong>Cave of Magic</strong>
+              <small>The original “Do You Believe in Magic?” destination.</small>
+            </span>
+          </a>
+
+          <a class="relic-link-card" href="https://web.archive.org/web/20091023111730/http://geocities.com/Heartland/Ridge/6356/Smile4Me13.html" target="_blank" rel="noopener noreferrer">
+            <span class="relic-icon">🙂</span>
+            <span>
+              <strong>Smile for Me</strong>
+              <small>A preserved Geocities-era page from the early web.</small>
+            </span>
+          </a>
+
+          <a class="relic-link-card" href="https://web.archive.org/web/20191016191339/http://tcastle.com/dontcry.html#.Xadr4_7P32c" target="_blank" rel="noopener noreferrer">
+            <span class="relic-icon">🌧️</span>
+            <span>
+              <strong>Don’t Cry</strong>
+              <small>A preserved page carried forward from the old link collection.</small>
+            </span>
+          </a>
         </div>
-        <div class="relic-card" aria-label="Early internet archive portal">
-          <div>
-            <div class="relic-symbol">🧙‍♂️</div>
-            <strong>ANGELFIRE · SOLDIERBOY602</strong>
-            <small>Recovered from the web archive</small>
-          </div>
-        </div>
+
+        <details class="archive-home-details">
+          <summary>Original homepage archive</summary>
+          <p>The original homepage is preserved for historical reference, although many of its old links no longer work.</p>
+          <a class="btn secondary" href="https://web.archive.org/web/20190804224523/http://www.angelfire.com/az2/soldierboy602/" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL HOMEPAGE</a>
+        </details>
       </div>
     </div>
   </section>
