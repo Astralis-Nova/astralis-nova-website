@@ -389,6 +389,49 @@
     }
     @media(max-width:800px){.midi-archive-links{grid-template-columns:1fr}}
 
+
+    .culture-grid{
+      display:grid;grid-template-columns:1.05fr .95fr;gap:18px
+    }
+    .chuckle-card,.quote-card{
+      position:relative;overflow:hidden;padding:24px
+    }
+    .chuckle-card::before,.quote-card::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        radial-gradient(circle at 88% 10%,rgba(126,84,255,.16),transparent 22rem),
+        radial-gradient(circle at 8% 92%,rgba(28,157,255,.12),transparent 24rem)
+    }
+    .culture-inner{position:relative;z-index:1}
+    .chuckle-image{
+      display:block;width:100%;height:auto;margin-top:16px;border-radius:14px;
+      border:1px solid rgba(137,171,221,.42);
+      box-shadow:0 18px 46px rgba(0,0,0,.28)
+    }
+    .chuckle-tag{
+      display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+      padding:8px 12px;border:1px solid rgba(112,145,199,.42);
+      border-radius:999px;background:rgba(4,11,21,.52);
+      color:#b9cbe2;font-size:.8rem;font-weight:800
+    }
+    .quote-mark{
+      font-size:5rem;line-height:.8;color:#9f7cff;
+      text-shadow:0 0 24px rgba(159,124,255,.32)
+    }
+    .quote-text{
+      margin:18px 0 16px;font-family:Georgia,serif;
+      font-size:clamp(1.45rem,3.2vw,2.25rem);line-height:1.35;color:#f4f7ff
+    }
+    .quote-credit{color:#9eb0c8}
+    .quote-note{
+      margin-top:18px;padding:12px 14px;border-radius:10px;
+      background:rgba(4,10,20,.46);color:#8fa4bf;font-size:.84rem;line-height:1.55
+    }
+    @media(max-width:900px){
+      .culture-grid{grid-template-columns:1fr}
+      .chuckle-card,.quote-card{padding:20px}
+    }
+
     footer{border-top:1px solid rgba(87,115,153,.38);padding:18px 0 86px;color:#aab6c8;font-size:.8rem;background:rgba(2,5,11,.42);backdrop-filter:blur(10px)}
     @media(max-width:1150px){
       .hero-inner{grid-template-columns:1fr}
@@ -697,6 +740,34 @@
           <a class="btn secondary" href="https://web.archive.org/web/20190804224523/http://www.angelfire.com/az2/soldierboy602/" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL HOMEPAGE</a>
         </details>
       </div>
+    </div>
+  </section>
+
+
+  <section class="section-shell shell" id="cosmic-culture">
+    <div class="culture-grid">
+      <article class="panel chuckle-card">
+        <div class="culture-inner">
+          <p class="eyebrow">TODAY’S COSMIC CHUCKLE</p>
+          <h2>A Little Humor From This Orbit</h2>
+          <img class="chuckle-image" src="cosmic-chuckle-001.png" alt="My friend Sierra tried to throw her empty soda can in the trash. Unfortunately, Sierra Mist." loading="lazy">
+          <div class="chuckle-tag">😄 Daily laugh transmission</div>
+        </div>
+      </article>
+
+      <article class="panel quote-card">
+        <div class="culture-inner">
+          <p class="eyebrow">WORDS AMONG THE STARS</p>
+          <div class="quote-mark" aria-hidden="true">“</div>
+          <blockquote class="quote-text">
+            Remember to look up at the stars and not down at your feet.
+          </blockquote>
+          <p class="quote-credit">— Stephen Hawking</p>
+          <div class="quote-note">
+            A reminder to stay curious, keep looking outward, and never stop wondering what may be waiting beyond the next horizon.
+          </div>
+        </div>
+      </article>
     </div>
   </section>
 
