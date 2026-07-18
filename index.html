@@ -375,6 +375,20 @@
     }
     @media(max-width:900px){.midi-grid{grid-template-columns:1fr}}
 
+
+    midi-player{
+      display:block;width:100%;margin:14px 0 16px;
+      --background-color:rgba(3,9,17,.88);
+      --primary-color:#7f78ff;
+      --secondary-color:#42b8ff;
+      --font-family:inherit
+    }
+    .midi-archive-links{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;margin-top:18px
+    }
+    @media(max-width:800px){.midi-archive-links{grid-template-columns:1fr}}
+
     footer{border-top:1px solid rgba(87,115,153,.38);padding:18px 0 86px;color:#aab6c8;font-size:.8rem;background:rgba(2,5,11,.42);backdrop-filter:blur(10px)}
     @media(max-width:1150px){
       .hero-inner{grid-template-columns:1fr}
@@ -404,6 +418,7 @@
       .song-links{grid-column:3/4}.music-copy small{display:none}.volume{width:68px}
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
 </head>
 <body>
   <header>
@@ -620,39 +635,59 @@
 
         <div class="midi-relics">
           <h3>Original MIDI Relics</h3>
-          <p>These are the original music files connected to pages from the old site, preserved in their native early-web format.</p>
+          <p>Each page below is paired with the original MIDI music connected to it. Press Play to hear the restored early-web soundtrack without leaving Astralis Nova.</p>
 
           <div class="midi-grid">
             <article class="midi-card">
-              <h4>Good Vibes</h4>
-              <p>Background music associated with the archived <strong>Smile for Me</strong> page.</p>
+              <h4>Smile for Me</h4>
+              <p><strong>Good Vibes</strong> was the background MIDI attached to this archived Geocities page.</p>
+              <midi-player src="Audio/goodvib.mid" sound-font></midi-player>
               <div class="midi-actions">
-                <a href="https://web.archive.org/web/20091023111730/http://geocities.com/Heartland/Ridge/6356/Smile4Me13.html" target="_blank" rel="noopener noreferrer">OPEN PAGE</a>
-                <a href="Audio/goodvib.mid" download>DOWNLOAD MIDI</a>
+                <a href="https://web.archive.org/web/20091023111730/http://geocities.com/Heartland/Ridge/6356/Smile4Me13.html" target="_blank" rel="noopener noreferrer">OPEN SMILE FOR ME</a>
+                <a href="Audio/goodvib.mid" download>DOWNLOAD ORIGINAL MIDI</a>
               </div>
             </article>
 
             <article class="midi-card">
-              <h4>Turn Your Eyes</h4>
-              <p>Background music connected to the archived <strong>Don’t Cry</strong> page.</p>
+              <h4>Don’t Cry</h4>
+              <p><strong>Turn Your Eyes</strong> was the MIDI connected to this preserved page.</p>
+              <midi-player src="Audio/TurnYourEyes.mid" sound-font></midi-player>
               <div class="midi-actions">
-                <a href="https://web.archive.org/web/20191016191339/http://tcastle.com/dontcry.html#.Xadr4_7P32c" target="_blank" rel="noopener noreferrer">OPEN PAGE</a>
-                <a href="Audio/TurnYourEyes.mid" download>DOWNLOAD MIDI</a>
+                <a href="https://web.archive.org/web/20191016191339/http://tcastle.com/dontcry.html#.Xadr4_7P32c" target="_blank" rel="noopener noreferrer">OPEN DON’T CRY</a>
+                <a href="Audio/TurnYourEyes.mid" download>DOWNLOAD ORIGINAL MIDI</a>
               </div>
             </article>
 
             <article class="midi-card">
-              <h4>Angels Watching</h4>
-              <p>A preserved MIDI associated with the archived Sandy’s Angels page.</p>
+              <h4>Sandy’s Angels</h4>
+              <p><strong>Angels Watching</strong> was preserved with this archived page from someone connected to the original site.</p>
+              <midi-player src="Audio/angelswatching.mid" sound-font></midi-player>
               <div class="midi-actions">
-                <a href="https://web.archive.org/web/20080925142153/http://members.aol.com/Foxyla8569/index.html" target="_blank" rel="noopener noreferrer">OPEN PAGE</a>
-                <a href="Audio/angelswatching.mid" download>DOWNLOAD MIDI</a>
+                <a href="https://web.archive.org/web/20080925142153/http://members.aol.com/Foxyla8569/index.html" target="_blank" rel="noopener noreferrer">OPEN SANDY’S ANGELS</a>
+                <a href="Audio/angelswatching.mid" download>DOWNLOAD ORIGINAL MIDI</a>
               </div>
             </article>
           </div>
 
+          <div class="midi-archive-links">
+            <a class="relic-link-card" href="https://web.archive.org/web/20190804224336/http://www.angelfire.com/az2/soldierboy602/music.html" target="_blank" rel="noopener noreferrer">
+              <span class="relic-icon">🎼</span>
+              <span>
+                <strong>Original MIDI Music Collection</strong>
+                <small>Visit the preserved music page from Soldierboy602.</small>
+              </span>
+            </a>
+            <a class="relic-link-card" href="https://web.archive.org/web/20080925142153/http://members.aol.com/Foxyla8569/index.html" target="_blank" rel="noopener noreferrer">
+              <span class="relic-icon">😇</span>
+              <span>
+                <strong>Sandy’s Angels</strong>
+                <small>Visit the archived page associated with Angels Watching.</small>
+              </span>
+            </a>
+          </div>
+
           <div class="midi-note">
-            Modern browsers usually do not play MIDI files directly. These originals are preserved as downloads; playable restored versions can be added later without replacing the original files.
+            MIDI playback uses an in-browser synthesizer. Browsers require a click or tap before sound begins, so press the Play button on the relic you want to hear. Pause the Astralis Nova radio first if both tracks are audible.
           </div>
         </div>
 
