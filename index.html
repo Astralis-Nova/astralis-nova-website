@@ -432,6 +432,83 @@
       .chuckle-card,.quote-card{padding:20px}
     }
 
+
+    .live-board-panel{padding:26px;position:relative;overflow:hidden}
+    .live-board-panel::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
+        radial-gradient(circle at 86% 12%,rgba(144,77,255,.17),transparent 27rem),
+        radial-gradient(circle at 10% 90%,rgba(32,156,255,.13),transparent 28rem)
+    }
+    .live-board-inner{position:relative;z-index:1}
+    .live-board-head{
+      display:flex;justify-content:space-between;align-items:flex-start;
+      gap:18px;flex-wrap:wrap
+    }
+    .board-presence{
+      display:inline-flex;align-items:center;gap:8px;padding:9px 13px;
+      border:1px solid rgba(100,158,226,.48);border-radius:999px;
+      background:rgba(3,11,21,.58);color:#bcd2eb;font-weight:800;font-size:.83rem
+    }
+    .presence-dot{
+      width:9px;height:9px;border-radius:50%;background:#7c8796;
+      box-shadow:0 0 0 4px rgba(124,135,150,.12)
+    }
+    .board-presence.online .presence-dot{
+      background:#23d990;box-shadow:0 0 0 4px rgba(35,217,144,.14),0 0 14px rgba(35,217,144,.55)
+    }
+    .live-board-tools{
+      display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:18px 0 12px
+    }
+    .board-tool,.board-color{
+      min-height:41px;padding:8px 12px;border:1px solid rgba(112,145,199,.54);
+      border-radius:10px;background:rgba(6,17,31,.82);color:#edf5ff;
+      font:inherit;font-weight:800;cursor:pointer
+    }
+    .board-tool.active{
+      border-color:#5faeff;box-shadow:0 0 0 3px rgba(52,147,255,.15)
+    }
+    .board-tool.danger{border-color:rgba(255,92,119,.48)}
+    .board-color{width:40px;padding:0;border-radius:50%}
+    .board-color[data-color="#172033"]{background:#172033}
+    .board-color[data-color="#2368ff"]{background:#2368ff}
+    .board-color[data-color="#df2e94"]{background:#df2e94}
+    .board-color[data-color="#7b42db"]{background:#7b42db}
+    .board-color[data-color="#138f66"]{background:#138f66}
+    .board-color[data-color="#f28c28"]{background:#f28c28}
+    .board-color.active{outline:3px solid rgba(255,255,255,.88);outline-offset:2px}
+    .live-brush{
+      display:flex;align-items:center;gap:8px;color:#b9c9dc;
+      font-size:.84rem;font-weight:700
+    }
+    .live-brush input{width:115px}
+    .live-canvas-wrap{
+      border:1px solid rgba(126,151,188,.62);border-radius:14px;overflow:hidden;
+      background:#f8fbff;box-shadow:0 22px 54px rgba(0,0,0,.32)
+    }
+    #liveCosmicCanvas{
+      display:block;width:100%;height:auto;aspect-ratio:2/1;
+      touch-action:none;cursor:crosshair;
+      background:
+        linear-gradient(rgba(21,84,135,.055) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(21,84,135,.055) 1px,transparent 1px),
+        #f8fbff;
+      background-size:24px 24px
+    }
+    .live-board-foot{
+      display:flex;justify-content:space-between;gap:16px;align-items:center;
+      flex-wrap:wrap;margin-top:12px
+    }
+    .live-board-status{color:#9fb1c8;font-size:.84rem}
+    .live-board-status.good{color:#70e0a9}
+    .live-board-status.bad{color:#ff9dac}
+    .live-board-note{color:#8298b2;font-size:.79rem;line-height:1.5}
+    @media(max-width:700px){
+      .live-board-panel{padding:18px}
+      .live-brush{width:100%}
+      .live-board-head h2{font-size:1.65rem}
+    }
+
     footer{border-top:1px solid rgba(87,115,153,.38);padding:18px 0 86px;color:#aab6c8;font-size:.8rem;background:rgba(2,5,11,.42);backdrop-filter:blur(10px)}
     @media(max-width:1150px){
       .hero-inner{grid-template-columns:1fr}
@@ -768,6 +845,49 @@
           </div>
         </div>
       </article>
+    </div>
+  </section>
+
+
+  <section class="section-shell shell" id="live-board">
+    <div class="panel live-board-panel">
+      <div class="live-board-inner">
+        <div class="live-board-head">
+          <div>
+            <p class="eyebrow">LIVE SHARED CREATIVE CHANNEL</p>
+            <h2>The Cosmic Eraser Board</h2>
+            <p>Doodle with whoever is visiting right now. Every line appears live for fellow travelers across the Astralis Nova universe.</p>
+          </div>
+          <div class="board-presence" id="liveBoardPresence">
+            <span class="presence-dot"></span>
+            <span id="liveBoardCount">Connecting…</span>
+          </div>
+        </div>
+
+        <div class="live-board-tools" aria-label="Live drawing tools">
+          <button class="board-tool active" id="liveBoardPen" type="button">✏️ Pen</button>
+          <button class="board-tool" id="liveBoardEraser" type="button">🧽 Eraser</button>
+          <button class="board-color active" type="button" data-color="#172033" aria-label="Dark ink"></button>
+          <button class="board-color" type="button" data-color="#2368ff" aria-label="Blue ink"></button>
+          <button class="board-color" type="button" data-color="#df2e94" aria-label="Pink ink"></button>
+          <button class="board-color" type="button" data-color="#7b42db" aria-label="Purple ink"></button>
+          <button class="board-color" type="button" data-color="#138f66" aria-label="Green ink"></button>
+          <button class="board-color" type="button" data-color="#f28c28" aria-label="Orange ink"></button>
+          <label class="live-brush">Brush
+            <input id="liveBoardBrush" type="range" min="2" max="30" value="5">
+          </label>
+          <button class="board-tool danger" id="liveBoardClear" type="button">Clear Board</button>
+        </div>
+
+        <div class="live-canvas-wrap">
+          <canvas id="liveCosmicCanvas" width="1200" height="600" aria-label="Live shared cosmic doodle board"></canvas>
+        </div>
+
+        <div class="live-board-foot">
+          <span class="live-board-status" id="liveBoardStatus">Opening a live channel…</span>
+          <span class="live-board-note">Friendly doodles, messages, stars, aliens, and questionable starships welcome.</span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1184,5 +1304,192 @@
 
     loadGuestbook();
   </script>
+
+  <script>
+  (() => {
+    const canvas = document.getElementById("liveCosmicCanvas");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    const pen = document.getElementById("liveBoardPen");
+    const eraser = document.getElementById("liveBoardEraser");
+    const clearButton = document.getElementById("liveBoardClear");
+    const brush = document.getElementById("liveBoardBrush");
+    const status = document.getElementById("liveBoardStatus");
+    const presence = document.getElementById("liveBoardPresence");
+    const count = document.getElementById("liveBoardCount");
+    const colors = [...document.querySelectorAll(".board-color")];
+
+    let socket;
+    let reconnectTimer;
+    let mode = "pen";
+    let color = "#172033";
+    let drawing = false;
+    let activeStroke = null;
+    let lastPoint = null;
+    const remoteStrokes = new Map();
+
+    function setStatus(message, kind = "") {
+      status.textContent = message;
+      status.className = `live-board-status ${kind}`.trim();
+    }
+
+    function pointFromEvent(event) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width)),
+        y: Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height))
+      };
+    }
+
+    function renderSegment(from, to, strokeColor, width) {
+      ctx.save();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = width * (canvas.width / 1200);
+      ctx.beginPath();
+      ctx.moveTo(from.x * canvas.width, from.y * canvas.height);
+      ctx.lineTo(to.x * canvas.width, to.y * canvas.height);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function renderStroke(stroke) {
+      if (!stroke?.points?.length) return;
+      if (stroke.points.length === 1) {
+        const p = stroke.points[0];
+        renderSegment(p, {x:p.x + .0001, y:p.y + .0001}, stroke.color, stroke.width);
+        return;
+      }
+      for (let i = 1; i < stroke.points.length; i++) {
+        renderSegment(stroke.points[i - 1], stroke.points[i], stroke.color, stroke.width);
+      }
+    }
+
+    function renderBoard(strokes) {
+      clearCanvas();
+      for (const stroke of strokes || []) renderStroke(stroke);
+    }
+
+    function send(payload) {
+      if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(payload));
+    }
+
+    function connect() {
+      clearTimeout(reconnectTimer);
+      const protocol = location.protocol === "https:" ? "wss:" : "ws:";
+      socket = new WebSocket(`${protocol}//${location.host}/api/live-board`);
+
+      socket.addEventListener("open", () => {
+        presence.classList.add("online");
+        setStatus("Live channel connected.", "good");
+      });
+
+      socket.addEventListener("message", event => {
+        let message;
+        try { message = JSON.parse(event.data); } catch { return; }
+
+        if (message.type === "state") {
+          renderBoard(message.strokes);
+          count.textContent = `${message.online || 1} traveler${message.online === 1 ? "" : "s"} online`;
+        } else if (message.type === "presence") {
+          count.textContent = `${message.online || 0} traveler${message.online === 1 ? "" : "s"} online`;
+        } else if (message.type === "start") {
+          remoteStrokes.set(message.stroke.id, message.stroke);
+        } else if (message.type === "point") {
+          const stroke = remoteStrokes.get(message.id);
+          if (!stroke) return;
+          const previous = stroke.points[stroke.points.length - 1];
+          stroke.points.push(message.point);
+          renderSegment(previous, message.point, stroke.color, stroke.width);
+        } else if (message.type === "end") {
+          remoteStrokes.delete(message.stroke?.id);
+        } else if (message.type === "clear") {
+          remoteStrokes.clear();
+          clearCanvas();
+          setStatus("The board was cleared. Fresh universe!", "good");
+        }
+      });
+
+      socket.addEventListener("close", () => {
+        presence.classList.remove("online");
+        count.textContent = "Reconnecting…";
+        setStatus("Signal interrupted. Reconnecting…", "bad");
+        reconnectTimer = setTimeout(connect, 1800);
+      });
+
+      socket.addEventListener("error", () => socket.close());
+    }
+
+    function setMode(next) {
+      mode = next;
+      pen.classList.toggle("active", next === "pen");
+      eraser.classList.toggle("active", next === "eraser");
+    }
+
+    pen.addEventListener("click", () => setMode("pen"));
+    eraser.addEventListener("click", () => setMode("eraser"));
+
+    colors.forEach(button => button.addEventListener("click", () => {
+      color = button.dataset.color;
+      colors.forEach(item => item.classList.toggle("active", item === button));
+      setMode("pen");
+    }));
+
+    canvas.addEventListener("pointerdown", event => {
+      event.preventDefault();
+      canvas.setPointerCapture(event.pointerId);
+      drawing = true;
+      const point = pointFromEvent(event);
+      const width = mode === "eraser" ? Math.max(16, Number(brush.value) * 2.2) : Number(brush.value);
+      activeStroke = {
+        id: crypto.randomUUID(),
+        color: mode === "eraser" ? "#f8fbff" : color,
+        width,
+        points: [point]
+      };
+      lastPoint = point;
+      send({type:"start", stroke:activeStroke});
+    });
+
+    canvas.addEventListener("pointermove", event => {
+      if (!drawing || !activeStroke) return;
+      event.preventDefault();
+      const point = pointFromEvent(event);
+      const dx = point.x - lastPoint.x;
+      const dy = point.y - lastPoint.y;
+      if ((dx * dx + dy * dy) < 0.000008) return;
+      activeStroke.points.push(point);
+      renderSegment(lastPoint, point, activeStroke.color, activeStroke.width);
+      send({type:"point", id:activeStroke.id, point});
+      lastPoint = point;
+    });
+
+    function finishStroke() {
+      if (!drawing || !activeStroke) return;
+      drawing = false;
+      send({type:"end", stroke:activeStroke});
+      activeStroke = null;
+      lastPoint = null;
+    }
+
+    canvas.addEventListener("pointerup", finishStroke);
+    canvas.addEventListener("pointercancel", finishStroke);
+    canvas.addEventListener("lostpointercapture", finishStroke);
+
+    clearButton.addEventListener("click", () => {
+      if (!confirm("Clear the shared board for everyone?")) return;
+      send({type:"clear"});
+    });
+
+    connect();
+  })();
+  </script>
+
 </body>
 </html>
