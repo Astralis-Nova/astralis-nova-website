@@ -509,6 +509,45 @@
       .live-board-head h2{font-size:1.65rem}
     }
 
+
+    .roaming-starship{
+      position:fixed;z-index:35;width:clamp(92px,10vw,170px);
+      left:-220px;top:18vh;pointer-events:auto;cursor:pointer;
+      filter:drop-shadow(0 8px 18px rgba(0,0,0,.46));
+      will-change:transform,left,top;opacity:.92;
+      animation:astralisFlight 52s linear infinite;
+    }
+    .roaming-starship img{display:block;width:100%;height:auto}
+    .roaming-starship::after{
+      content:"";position:absolute;left:-36%;top:43%;width:48%;height:12%;
+      background:linear-gradient(90deg,transparent,rgba(101,209,255,.72));
+      filter:blur(6px);border-radius:999px;opacity:.7
+    }
+    .ship-signal{
+      position:fixed;z-index:70;max-width:min(340px,calc(100vw - 28px));
+      padding:12px 15px;border:1px solid rgba(117,164,226,.62);
+      border-radius:12px;background:rgba(4,12,23,.94);
+      color:#dceaff;box-shadow:0 14px 38px rgba(0,0,0,.38);
+      pointer-events:none;opacity:0;transform:translateY(8px);
+      transition:opacity .22s ease,transform .22s ease;
+      font-size:.86rem;line-height:1.45
+    }
+    .ship-signal.show{opacity:1;transform:none}
+    @keyframes astralisFlight{
+      0%{left:-220px;top:18vh;transform:rotate(-4deg) scale(.78)}
+      18%{top:28vh;transform:rotate(2deg) scale(.9)}
+      38%{top:14vh;transform:rotate(-1deg) scale(1)}
+      58%{top:56vh;transform:rotate(5deg) scale(.88)}
+      78%{top:36vh;transform:rotate(-3deg) scale(.96)}
+      100%{left:calc(100vw + 240px);top:20vh;transform:rotate(1deg) scale(.8)}
+    }
+    @media(max-width:700px){
+      .roaming-starship{width:92px;animation-duration:68s;opacity:.78}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .roaming-starship{display:none}
+    }
+
     footer{border-top:1px solid rgba(87,115,153,.38);padding:18px 0 86px;color:#aab6c8;font-size:.8rem;background:rgba(2,5,11,.42);backdrop-filter:blur(10px)}
     @media(max-width:1150px){
       .hero-inner{grid-template-columns:1fr}
@@ -541,6 +580,15 @@
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
 </head>
 <body>
+
+  <button class="roaming-starship" id="roamingStarship" type="button" aria-label="Astralis Nova vessel">
+    <img src="astralis-starship.svg" alt="">
+  </button>
+  <div class="ship-signal" id="shipSignal" role="status">
+    Astralis Nova vessel detected.<br>
+    Destination: somewhere beyond the next song. 🚀
+  </div>
+
   <header>
     <div class="topbar shell">
       <a class="logo" href="#home">✦ ASTRALIS NOVA<small>Music by Ramon Bivens</small></a>
@@ -1488,6 +1536,32 @@
     });
 
     connect();
+  })();
+  </script>
+
+
+  <script>
+  (() => {
+    const ship = document.getElementById("roamingStarship");
+    const signal = document.getElementById("shipSignal");
+    if (!ship || !signal) return;
+
+    let hideTimer;
+    ship.addEventListener("click", () => {
+      const rect = ship.getBoundingClientRect();
+      const left = Math.min(window.innerWidth - signal.offsetWidth - 14, Math.max(14, rect.left));
+      const top = Math.min(window.innerHeight - 90, rect.bottom + 10);
+      signal.style.left = `${left}px`;
+      signal.style.top = `${top}px`;
+      signal.classList.add("show");
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => signal.classList.remove("show"), 3200);
+    });
+
+    ship.addEventListener("animationiteration", () => {
+      const durations = [46, 52, 58, 64];
+      ship.style.animationDuration = `${durations[Math.floor(Math.random() * durations.length)]}s`;
+    });
   })();
   </script>
 
