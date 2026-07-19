@@ -705,6 +705,17 @@
       .martian-head::after{right:8px}
     }
 
+  
+    .cosmic-joke-image{
+      display:block;
+      width:min(100%,520px);
+      height:auto;
+      margin:14px auto 4px;
+      border-radius:16px;
+      border:1px solid rgba(118,154,255,.24);
+      box-shadow:0 14px 34px rgba(0,0,0,.42);
+    }
+
   </style>
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
 </head>
@@ -736,294 +747,18 @@
     </div>
   </header>
 
-  <section class="hero" id="home">
-    <div class="hero-inner shell">
-      <div class="hero-copy">
-        <p class="eyebrow">NEW RELEASE</p>
-        <h1>OUR FIRST NIGHT</h1>
-        <h2>Astralis Nova</h2>
-        <p>A night that changed everything. Stream it now and enter the Astralis Nova universe.</p>
-        <div class="hero-controls">
-          <div class="cta">
-            <a class="btn primary" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener">▶ LISTEN NOW</a>
-            <a class="btn" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener">▷ WATCH VIDEO</a>
-          </div>
-          <div class="platform-row" aria-label="Stream Our First Night">
-            <a class="spotify" href="https://open.spotify.com/album/4LZI8pGNQxySSPl510jtF7" target="_blank" rel="noopener"><span class="platform-icon">●</span>Spotify</a>
-            <a class="apple" href="https://music.apple.com/us/album/our-first-night-single/6780201672?uo=4" target="_blank" rel="noopener"><span class="platform-icon">♪</span>Apple Music</a>
-            <a class="youtube" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener"><span class="platform-icon">▶</span>YouTube</a>
-            <a class="amazon" href="https://music.amazon.com/albums/B0H58FGDC8" target="_blank" rel="noopener"><span class="platform-icon">a</span>Amazon Music</a>
-            <a class="hyperfollow" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener"><span class="platform-icon">✦</span>All services</a>
-          </div>
-        </div>
-      </div>
-      <div class="top-area">
-        <h3>🔥 TOP SONGS</h3>
-        <div class="feature-grid" id="features"></div>
-      </div>
-    </div>
+  
+  <section class="section-card cosmic-chuckle" id="cosmic-chuckle">
+    <h2>Today’s Cosmic Chuckle</h2>
+    <p class="muted">A tiny transmission from the humor quadrant.</p>
+    <img
+      class="cosmic-joke-image"
+      src="snail-sluggish-joke.png"
+      alt="A snail joke about becoming more sluggish after losing its shell."
+      loading="lazy"
+    >
   </section>
 
-  <main class="main shell" id="music">
-    <aside class="panel sidebar">
-      <h3>BROWSE MUSIC</h3>
-      <div class="filter active" data-filter="all"><span>All Songs</span><b>27</b></div>
-      <div class="filter" data-filter="June 2026"><span>June 2026</span><b>8</b></div>
-      <div class="filter" data-filter="May 2026"><span>May 2026</span><b>5</b></div>
-      <div class="filter" data-filter="April 2026"><span>April 2026</span><b>11</b></div>
-      <div class="filter" data-filter="Earlier 2026"><span>Earlier</span><b>3</b></div>
-      <div class="connect">
-        <h3>CONNECT</h3>
-        <a href="https://open.spotify.com/album/4LZI8pGNQxySSPl510jtF7" target="_blank" rel="noopener">● Follow on Spotify</a>
-        <a href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener">▶ Subscribe on YouTube</a>
-        <a href="#guestbook">✦ Sign the Guestbook</a>
-        <a href="#contact">✉ Contact Ramon</a>
-      </div>
-    </aside>
-
-    <section class="panel catalog">
-      <div class="catalog-head">
-        <h2>ALL SONGS <small style="color:#8492a7">(27)</small></h2>
-        <input id="search" class="search" placeholder="Search songs..." aria-label="Search songs">
-      </div>
-      <div id="songList"></div>
-    </section>
-
-    <aside class="right">
-      <div class="panel" id="about">
-        <h3>ABOUT ASTRALIS NOVA</h3>
-        <div class="about-card">
-          <div class="portrait" aria-hidden="true">✦</div>
-          <div>
-            <strong>Ramon Bivens</strong>
-            <p>Astralis Nova is the musical expression of Ramon Bivens—blending heart, soul, memory, Arizona imagery, and storytelling into every song.</p>
-          </div>
-        </div>
-      </div>
-      <div class="panel">
-        <h3>LATEST RELEASE</h3>
-        <div class="latest">
-          <img src="cover-1.jpg" alt="Our First Night cover">
-          <div>
-            <strong>Our First Night</strong>
-            <p>Released June 2026</p>
-            <a class="btn primary" style="min-height:36px;padding:8px 12px;font-size:.75rem" href="https://distrokid.com/hyperfollow/astralisnova/our-first-night" target="_blank" rel="noopener">PLAY NOW</a>
-          </div>
-        </div>
-      </div>
-      <div class="panel">
-        <h3>OLD-SCHOOL WEB SPIRIT</h3>
-        <p>Music, stars, a guestbook, and a place for listeners to leave a little piece of their journey behind.</p>
-        <a class="btn secondary" style="min-height:38px;padding:8px 12px;font-size:.75rem" href="#guestbook">SIGN THE BOOK</a>
-      </div>
-    </aside>
-  </main>
-
-  <section class="section-shell shell" id="guestbook">
-    <div class="panel guestbook">
-      <p class="eyebrow">THE COSMIC LEDGER</p>
-      <h2 class="section-title">SIGN THE ASTRALIS NOVA GUESTBOOK</h2>
-      <p class="section-lead">Leave a message among the stars. Tell us where you are listening from and which song brought you here. New entries appear immediately.</p>
-      <div class="guest-grid">
-        <div class="form-card">
-          <form id="guestbookForm" novalidate>
-            <div class="form-grid">
-              <div class="field">
-                <label for="guestName">Name or nickname</label>
-                <input class="input" id="guestName" name="name" maxlength="40" required autocomplete="name">
-              </div>
-              <div class="field">
-                <label for="guestLocation">Location</label>
-                <input class="input" id="guestLocation" name="location" maxlength="60" placeholder="Phoenix, Arizona">
-              </div>
-              <div class="field full">
-                <label for="guestFavorite">Favorite Astralis Nova song</label>
-                <select class="select" id="guestFavorite" name="favoriteSong">
-                  <option value="">Choose a song</option>
-                </select>
-              </div>
-              <div class="field full">
-                <label for="guestMessage">Message</label>
-                <textarea class="textarea" id="guestMessage" name="message" minlength="3" maxlength="500" required placeholder="Write your message among the stars..."></textarea>
-              </div>
-              <div class="honeypot" aria-hidden="true">
-                <label for="guestWebsite">Website</label>
-                <input id="guestWebsite" name="website" tabindex="-1" autocomplete="off">
-              </div>
-            </div>
-            <div class="form-actions">
-              <button class="btn primary" id="guestSubmit" type="submit">✦ SIGN THE GUESTBOOK</button>
-              <span class="status" id="guestStatus" role="status" aria-live="polite"></span>
-            </div>
-          </form>
-        </div>
-        <div class="entries-card">
-          <div class="guest-meta">
-            <strong>RECENT SIGNATURES</strong>
-            <span class="counter" id="guestCounter">000000</span>
-          </div>
-          <div class="entries" id="guestEntries">
-            <div class="entry"><p>Loading messages from the stars…</p></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-
-  <section class="section-shell shell" id="first-orbit">
-    <div class="panel first-orbit">
-      <div class="orbit-copy">
-        <p class="eyebrow">PRESERVED FROM THE EARLY WEB</p>
-        <h2>Echoes From the First Orbit</h2>
-        <p>A small curated collection from my first corner of the early internet. These surviving pages preserve a few meaningful fragments from that original digital time capsule.</p>
-
-        <div class="relic-links" aria-label="Selected archived pages">
-          <a class="relic-link-card" href="https://web.archive.org/web/20190804224338/http://www.angelfire.com/az2/soldierboy602/flowerpoem.html" target="_blank" rel="noopener noreferrer">
-            <span class="relic-icon">🌼</span>
-            <span>
-              <strong>The Flower Poem</strong>
-              <small>A reflection on courage, strength, and love.</small>
-            </span>
-          </a>
-
-          <a class="relic-link-card" href="https://web.archive.org/web/20190804224338/http://www.angelfire.com/az2/soldierboy602/child.html" target="_blank" rel="noopener noreferrer">
-            <span class="relic-icon">🕯️</span>
-            <span>
-              <strong>The Unborn Child</strong>
-              <small>A somber archived poem, author unknown.</small>
-            </span>
-          </a>
-
-          <a class="relic-link-card" href="https://web.archive.org/web/20190804224333/http://www.angelfire.com/az2/soldierboy602/river.html" target="_blank" rel="noopener noreferrer">
-            <span class="relic-icon">🌊</span>
-            <span>
-              <strong>Just A River</strong>
-              <small>A meditation on time, change, and love.</small>
-            </span>
-          </a>
-
-          <a class="relic-link-card" href="https://web.archive.org/web/20190807030903/http://caveofmagic.com/" target="_blank" rel="noopener noreferrer">
-            <span class="relic-icon">✨</span>
-            <span>
-              <strong>Cave of Magic</strong>
-              <small>The original “Do You Believe in Magic?” destination.</small>
-            </span>
-          </a>
-
-          <a class="relic-link-card" href="https://web.archive.org/web/20091023111730/http://geocities.com/Heartland/Ridge/6356/Smile4Me13.html" target="_blank" rel="noopener noreferrer">
-            <span class="relic-icon">🙂</span>
-            <span>
-              <strong>Smile for Me</strong>
-              <small>A preserved Geocities-era page from the early web.</small>
-            </span>
-          </a>
-
-          <a class="relic-link-card" href="https://web.archive.org/web/20191016191339/http://tcastle.com/dontcry.html#.Xadr4_7P32c" target="_blank" rel="noopener noreferrer">
-            <span class="relic-icon">🌧️</span>
-            <span>
-              <strong>Don’t Cry</strong>
-              <small>A preserved page carried forward from the old link collection.</small>
-            </span>
-          </a>
-        </div>
-
-
-        <div class="midi-relics">
-          <h3>Original MIDI Relics</h3>
-          <p>Each page below is paired with the original MIDI music connected to it. Press Play to hear the restored early-web soundtrack without leaving Astralis Nova.</p>
-
-          <div class="midi-grid">
-            <article class="midi-card">
-              <h4>Smile for Me</h4>
-              <p><strong>Good Vibes</strong> was the background MIDI attached to this archived Geocities page.</p>
-              <midi-player src="Audio/goodvib.mid" sound-font></midi-player>
-              <div class="midi-actions">
-                <a href="https://web.archive.org/web/20091023111730/http://geocities.com/Heartland/Ridge/6356/Smile4Me13.html" target="_blank" rel="noopener noreferrer">OPEN SMILE FOR ME</a>
-                <a href="Audio/goodvib.mid" download>DOWNLOAD ORIGINAL MIDI</a>
-              </div>
-            </article>
-
-            <article class="midi-card">
-              <h4>Don’t Cry</h4>
-              <p><strong>Turn Your Eyes</strong> was the MIDI connected to this preserved page.</p>
-              <midi-player src="Audio/TurnYourEyes.mid" sound-font></midi-player>
-              <div class="midi-actions">
-                <a href="https://web.archive.org/web/20191016191339/http://tcastle.com/dontcry.html#.Xadr4_7P32c" target="_blank" rel="noopener noreferrer">OPEN DON’T CRY</a>
-                <a href="Audio/TurnYourEyes.mid" download>DOWNLOAD ORIGINAL MIDI</a>
-              </div>
-            </article>
-
-            <article class="midi-card">
-              <h4>Sandy’s Angels</h4>
-              <p><strong>Angels Watching</strong> was preserved with this archived page from someone connected to the original site.</p>
-              <midi-player src="Audio/angelswatching.mid" sound-font></midi-player>
-              <div class="midi-actions">
-                <a href="https://web.archive.org/web/20080925142153/http://members.aol.com/Foxyla8569/index.html" target="_blank" rel="noopener noreferrer">OPEN SANDY’S ANGELS</a>
-                <a href="Audio/angelswatching.mid" download>DOWNLOAD ORIGINAL MIDI</a>
-              </div>
-            </article>
-          </div>
-
-          <div class="midi-archive-links">
-            <a class="relic-link-card" href="https://web.archive.org/web/20190804224336/http://www.angelfire.com/az2/soldierboy602/music.html" target="_blank" rel="noopener noreferrer">
-              <span class="relic-icon">🎼</span>
-              <span>
-                <strong>Echoes From the First Orbit</strong>
-                <small>Visit the preserved MIDI collection from the early web.</small>
-              </span>
-            </a>
-            <a class="relic-link-card" href="https://web.archive.org/web/20080925142153/http://members.aol.com/Foxyla8569/index.html" target="_blank" rel="noopener noreferrer">
-              <span class="relic-icon">😇</span>
-              <span>
-                <strong>Sandy’s Angels</strong>
-                <small>Visit the archived page associated with Angels Watching.</small>
-              </span>
-            </a>
-          </div>
-
-          <div class="midi-note">
-            MIDI playback uses an in-browser synthesizer. Browsers require a click or tap before sound begins, so press the Play button on the relic you want to hear. Pause the Astralis Nova radio first if both tracks are audible.
-          </div>
-        </div>
-
-        <details class="archive-home-details">
-          <summary>Original homepage archive</summary>
-          <p>The original homepage is preserved for historical reference, although many of its old links no longer work.</p>
-          <a class="btn secondary" href="https://web.archive.org/web/20190804224523/http://www.angelfire.com/az2/soldierboy602/" target="_blank" rel="noopener noreferrer">OPEN ORIGINAL HOMEPAGE</a>
-        </details>
-      </div>
-    </div>
-  </section>
-
-
-  <section class="section-shell shell" id="cosmic-culture">
-    <div class="culture-grid">
-      <article class="panel chuckle-card">
-        <div class="culture-inner">
-          <p class="eyebrow">TODAY’S COSMIC CHUCKLE</p>
-          <h2>A Little Humor From This Orbit</h2>
-          <img class="chuckle-image" src="cosmic-chuckle-001.png" alt="My friend Sierra tried to throw her empty soda can in the trash. Unfortunately, Sierra Mist." loading="lazy">
-          <div class="chuckle-tag">😄 Daily laugh transmission</div>
-        </div>
-      </article>
-
-      <article class="panel quote-card">
-        <div class="culture-inner">
-          <p class="eyebrow">WORDS AMONG THE STARS</p>
-          <div class="quote-mark" aria-hidden="true">“</div>
-          <blockquote class="quote-text">
-            Remember to look up at the stars and not down at your feet.
-          </blockquote>
-          <p class="quote-credit">— Stephen Hawking</p>
-          <div class="quote-note">
-            A reminder to stay curious, keep looking outward, and never stop wondering what may be waiting beyond the next horizon.
-          </div>
-        </div>
-      </article>
-    </div>
-  </section>
 
 
   <section class="section-shell shell" id="live-board">
