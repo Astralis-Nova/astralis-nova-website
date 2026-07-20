@@ -7,7 +7,7 @@ export async function onRequest(context) {
   return new HTMLRewriter()
     .on("body", {
       element(element) {
-        element.append('<script src="/site-fixes.js?v=20260719" defer></script>', { html: true });
+        element.append('<script src="/site-fixes.js?v=20260720b" defer></script>', { html: true });
       },
     })
     .transform(response);
