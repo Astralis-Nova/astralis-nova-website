@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <radialGradient id="base" cx="32%" cy="27%" r="78%">
+      <stop offset="0" stop-color="#ffdd91"/>
+      <stop offset=".14" stop-color="#e86832"/>
+      <stop offset=".43" stop-color="#743126"/>
+      <stop offset=".74" stop-color="#251923"/>
+      <stop offset="1" stop-color="#080a12"/>
+    </radialGradient>
+    <clipPath id="clip"><circle cx="60" cy="60" r="44"/></clipPath>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="0" stdDeviation="3.2" flood-color="#ff6a21" flood-opacity=".95"/>
+    </filter>
+  </defs>
+  <circle cx="60" cy="60" r="47" fill="#ff4b1f" opacity=".18" filter="url(#glow)"/>
+  <circle cx="60" cy="60" r="44" fill="url(#base)"/>
+  <g clip-path="url(#clip)" fill="none" stroke-linecap="round" filter="url(#glow)">
+    <path d="M24 38L40 48 36 63 54 72 50 93" stroke="#ffb13b" stroke-width="2.4"/>
+    <path d="M69 20L64 40 79 51 72 67 92 80" stroke="#ff6f22" stroke-width="2.1"/>
+    <path d="M28 82L43 76 61 85 77 78 98 88" stroke="#ffd15a" stroke-width="1.8"/>
+    <path d="M83 29L77 41 88 49" stroke="#ffca55" stroke-width="1.7"/>
+  </g>
+  <g clip-path="url(#clip)" fill="#190f13" opacity=".58">
+    <path d="M18 47C35 35 41 44 54 36 48 53 38 61 20 61Z"/>
+    <path d="M58 54C74 43 88 49 103 42 101 61 90 70 74 72Z"/>
+    <path d="M38 76C49 66 61 72 69 67 68 86 57 94 43 96Z"/>
+  </g>
+  <ellipse cx="42" cy="36" rx="13" ry="7" fill="#fff3c9" opacity=".2" transform="rotate(-22 42 36)"/>
+</svg>
