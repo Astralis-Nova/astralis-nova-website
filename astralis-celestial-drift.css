@@ -5,8 +5,8 @@
   pointer-events:none;
   overflow:hidden;
   z-index:1;
-  isolation:auto;
 }
+
 #astralis-celestial-drift .celestial{
   position:fixed;
   display:block;
@@ -16,87 +16,98 @@
   border:0!important;
   box-shadow:none!important;
   mix-blend-mode:screen;
-  opacity:.72;
   will-change:transform,opacity,left,top;
 }
-#astralis-celestial-drift .beta{
-  width:clamp(82px,11vw,170px);
-  left:-18vw;
+
+#astralis-celestial-drift .earth{
+  width:clamp(78px,10vw,150px);
+  left:-16vw;
   top:58vh;
-  filter:drop-shadow(0 0 15px rgba(109,176,255,.34));
-  animation:astralisBetaDrift 225s linear infinite;
+  opacity:.72;
+  filter:drop-shadow(0 0 16px rgba(130,190,255,.30));
+  animation:astralisEarthDrift 220s linear infinite;
 }
-#astralis-celestial-drift .toi{
-  width:clamp(62px,8vw,122px);
-  left:105vw;
-  top:22vh;
-  filter:drop-shadow(0 0 13px rgba(255,166,99,.28));
-  animation:astralisToiDrift 188s linear infinite;
+
+#astralis-celestial-drift .mars{
+  width:clamp(58px,8vw,110px);
+  left:104vw;
+  top:24vh;
+  opacity:.62;
+  filter:drop-shadow(0 0 12px rgba(255,128,92,.22));
+  animation:astralisMarsDrift 190s linear infinite;
 }
-#astralis-celestial-drift .wispit{
-  width:clamp(118px,17vw,248px);
+
+#astralis-celestial-drift .gas{
+  width:clamp(120px,18vw,250px);
   left:76vw;
   top:72vh;
-  opacity:.48;
-  filter:drop-shadow(0 0 18px rgba(122,157,255,.24));
-  animation:astralisWispitDrift 338s linear infinite;
+  opacity:.42;
+  filter:drop-shadow(0 0 18px rgba(98,144,255,.18));
+  animation:astralisGasDrift 320s linear infinite;
 }
-#astralis-celestial-drift .gaia{
-  width:clamp(58px,7vw,108px);
-  left:14vw;
-  top:106vh;
-  opacity:.58;
-  filter:drop-shadow(0 0 12px rgba(220,128,255,.24));
-  animation:astralisGaiaDrift 260s linear infinite;
-}
-#astralis-celestial-drift .comet{
-  width:clamp(130px,19vw,290px);
-  left:-34vw;
+
+#astralis-celestial-drift .ringed{
+  width:clamp(82px,12vw,165px);
+  left:88vw;
   top:10vh;
-  opacity:.58;
-  background:transparent!important;
-  mix-blend-mode:screen!important;
-  filter:drop-shadow(0 0 14px rgba(145,220,255,.28)) brightness(.92) saturate(.88);
-  animation:astralisCometPass 102s linear infinite;
+  opacity:.44;
+  filter:drop-shadow(0 0 14px rgba(175,190,255,.18));
+  animation:astralisRingedDrift 260s linear infinite;
 }
-@keyframes astralisBetaDrift{
+
+#astralis-celestial-drift .comet{
+  width:clamp(96px,14vw,220px);
+  left:-32vw;
+  top:12vh;
+  opacity:.28;
+  filter:blur(.15px) drop-shadow(0 0 14px rgba(161,228,255,.18));
+  animation:astralisCometPass 132s linear infinite;
+}
+
+@keyframes astralisEarthDrift{
   0%{transform:translate3d(-8vw,0,0) scale(.82) rotate(0deg);opacity:0}
   8%{opacity:.68}
-  45%{transform:translate3d(44vw,-3vh,0) scale(.95) rotate(112deg);opacity:.76}
-  88%{opacity:.62}
-  100%{transform:translate3d(122vw,-7vh,0) scale(1.02) rotate(292deg);opacity:0}
+  45%{transform:translate3d(42vw,-3vh,0) scale(.95) rotate(120deg);opacity:.74}
+  88%{opacity:.55}
+  100%{transform:translate3d(120vw,-7vh,0) scale(1.02) rotate(300deg);opacity:0}
 }
-@keyframes astralisToiDrift{
+
+@keyframes astralisMarsDrift{
   0%{transform:translate3d(0,0,0) scale(.75) rotate(0deg);opacity:0}
-  10%{opacity:.66}
-  56%{transform:translate3d(-55vw,4vh,0) scale(.9) rotate(-108deg);opacity:.72}
-  100%{transform:translate3d(-126vw,11vh,0) scale(1.02) rotate(-258deg);opacity:0}
+  10%{opacity:.58}
+  56%{transform:translate3d(-54vw,4vh,0) scale(.9) rotate(-110deg);opacity:.62}
+  100%{transform:translate3d(-124vw,11vh,0) scale(1.02) rotate(-260deg);opacity:0}
 }
-@keyframes astralisWispitDrift{
+
+@keyframes astralisGasDrift{
   0%{transform:translate3d(0,0,0) scale(1.02) rotate(0deg);opacity:0}
-  9%{opacity:.38}
-  50%{transform:translate3d(-19vw,-2vh,0) scale(1.05) rotate(38deg);opacity:.47}
-  100%{transform:translate3d(-44vw,3vh,0) scale(1.08) rotate(78deg);opacity:0}
+  9%{opacity:.34}
+  50%{transform:translate3d(-18vw,-2vh,0) scale(1.05) rotate(40deg);opacity:.40}
+  100%{transform:translate3d(-42vw,3vh,0) scale(1.08) rotate(80deg);opacity:0}
 }
-@keyframes astralisGaiaDrift{
-  0%{transform:translate3d(0,0,0) scale(.7) rotate(0deg);opacity:0}
-  12%{opacity:.5}
-  58%{transform:translate3d(46vw,-55vh,0) scale(.88) rotate(145deg);opacity:.58}
-  100%{transform:translate3d(98vw,-112vh,0) scale(1) rotate(310deg);opacity:0}
+
+@keyframes astralisRingedDrift{
+  0%{transform:translate3d(0,0,0) scale(.85) rotate(0deg);opacity:0}
+  10%{opacity:.38}
+  55%{transform:translate3d(-44vw,9vh,0) scale(.96) rotate(55deg);opacity:.46}
+  100%{transform:translate3d(-120vw,18vh,0) scale(1.04) rotate(120deg);opacity:0}
 }
+
 @keyframes astralisCometPass{
-  0%{transform:translate3d(0,0,0) rotate(-14deg) scale(.64);opacity:0}
-  10%{opacity:.5}
-  58%{transform:translate3d(80vw,44vh,0) rotate(-14deg) scale(.92);opacity:.62}
-  100%{transform:translate3d(138vw,78vh,0) rotate(-14deg) scale(1.02);opacity:0}
+  0%{transform:translate3d(0,0,0) rotate(-14deg) scale(.58);opacity:0}
+  12%{opacity:.22}
+  52%{transform:translate3d(62vw,20vh,0) rotate(-12deg) scale(.88);opacity:.30}
+  100%{transform:translate3d(140vw,46vh,0) rotate(-10deg) scale(1.02);opacity:0}
 }
+
 @media(max-width:700px){
-  #astralis-celestial-drift .beta{top:63vh;width:clamp(56px,15vw,98px)}
-  #astralis-celestial-drift .toi{top:30vh;width:clamp(44px,12vw,82px)}
-  #astralis-celestial-drift .wispit{top:76vh;width:clamp(88px,25vw,165px);opacity:.36}
-  #astralis-celestial-drift .gaia{width:clamp(42px,11vw,76px)}
-  #astralis-celestial-drift .comet{top:12vh;width:clamp(105px,30vw,190px);opacity:.46}
+  #astralis-celestial-drift .earth{top:63vh;width:clamp(52px,14vw,92px)}
+  #astralis-celestial-drift .mars{top:30vh;width:clamp(42px,11vw,78px)}
+  #astralis-celestial-drift .gas{top:76vh;width:clamp(84px,24vw,160px);opacity:.32}
+  #astralis-celestial-drift .ringed{top:14vh;width:clamp(62px,16vw,120px);opacity:.30}
+  #astralis-celestial-drift .comet{top:13vh;width:clamp(72px,20vw,160px);opacity:.20}
 }
+
 @media(prefers-reduced-motion:reduce){
   #astralis-celestial-drift{display:none}
 }
