@@ -7,7 +7,7 @@ export async function onRequest(context) {
   return new HTMLRewriter()
     .on("body", {
       element(element) {
-        element.append('<script src="/site-fixes.js?v=20260720c" defer></script><script src="/cosmic-worlds.js?v=20260720a" defer></script><script src="/conquest-media.js?v=20260720a" defer></script>', { html: true });
+        element.append('<script src="/site-fixes.js?v=20260720c" defer></script><script src="/cosmic-worlds.js?v=20260720a" defer></script><script src="/conquest-media.js?v=20260720a" defer></script><script src="/realistic-orbit.js?v=20260721a" defer></script>', { html: true });
       },
     })
     .transform(response);
