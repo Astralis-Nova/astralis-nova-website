@@ -1,0 +1,81 @@
+
+/* Astralis Nova Celestial Drift Layer */
+#astralis-celestial-drift{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:1;
+}
+#astralis-celestial-drift .celestial{
+  position:fixed;
+  pointer-events:none;
+  user-select:none;
+  mix-blend-mode:screen;
+  opacity:.86;
+  will-change:transform, opacity, left, top;
+}
+#astralis-celestial-drift .earth{
+  width:clamp(72px, 10vw, 148px);
+  left:-14vw;
+  top:58vh;
+  filter:drop-shadow(0 0 14px rgba(130,190,255,.38));
+  animation:astralisEarthDrift 220s linear infinite;
+}
+#astralis-celestial-drift .mars{
+  width:clamp(56px, 8vw, 112px);
+  left:104vw;
+  top:24vh;
+  filter:drop-shadow(0 0 12px rgba(255,128,92,.28));
+  animation:astralisMarsDrift 185s linear infinite;
+}
+#astralis-celestial-drift .gas{
+  width:clamp(120px, 18vw, 260px);
+  left:76vw;
+  top:72vh;
+  opacity:.52;
+  filter:drop-shadow(0 0 18px rgba(98,144,255,.25));
+  animation:astralisGasDrift 340s linear infinite;
+}
+#astralis-celestial-drift .comet{
+  width:clamp(92px, 14vw, 210px);
+  left:-30vw;
+  top:10vh;
+  opacity:.7;
+  filter:drop-shadow(0 0 18px rgba(161,228,255,.34));
+  animation:astralisCometPass 105s linear infinite;
+}
+@keyframes astralisEarthDrift{
+  0%   { transform:translate3d(-8vw, 0, 0) scale(.82) rotate(0deg); opacity:.0; }
+  8%   { opacity:.75; }
+  45%  { transform:translate3d(42vw, -3vh, 0) scale(.95) rotate(120deg); opacity:.82; }
+  88%  { opacity:.68; }
+  100% { transform:translate3d(120vw, -7vh, 0) scale(1.02) rotate(300deg); opacity:0; }
+}
+@keyframes astralisMarsDrift{
+  0%   { transform:translate3d(0, 0, 0) scale(.75) rotate(0deg); opacity:0; }
+  10%  { opacity:.74; }
+  56%  { transform:translate3d(-54vw, 4vh, 0) scale(.9) rotate(-110deg); opacity:.78; }
+  100% { transform:translate3d(-124vw, 11vh, 0) scale(1.02) rotate(-260deg); opacity:0; }
+}
+@keyframes astralisGasDrift{
+  0%   { transform:translate3d(0, 0, 0) scale(1.02) rotate(0deg); opacity:0; }
+  9%   { opacity:.42; }
+  50%  { transform:translate3d(-18vw, -2vh, 0) scale(1.05) rotate(40deg); opacity:.5; }
+  100% { transform:translate3d(-42vw, 3vh, 0) scale(1.08) rotate(80deg); opacity:0; }
+}
+@keyframes astralisCometPass{
+  0%   { transform:translate3d(0,0,0) rotate(-14deg) scale(.64); opacity:0; }
+  10%  { opacity:.65; }
+  58%  { transform:translate3d(78vw, 44vh, 0) rotate(-14deg) scale(.92); opacity:.78; }
+  100% { transform:translate3d(136vw, 78vh, 0) rotate(-14deg) scale(1.02); opacity:0; }
+}
+@media (max-width: 700px){
+  #astralis-celestial-drift .earth{ top:63vh; width:clamp(52px, 14vw, 92px); }
+  #astralis-celestial-drift .mars{ top:30vh; width:clamp(42px, 11vw, 78px); }
+  #astralis-celestial-drift .gas{ top:76vh; width:clamp(84px, 24vw, 160px); opacity:.4; }
+  #astralis-celestial-drift .comet{ top:12vh; width:clamp(72px, 20vw, 160px); opacity:.55; }
+}
+@media (prefers-reduced-motion: reduce){
+  #astralis-celestial-drift{ display:none; }
+}
