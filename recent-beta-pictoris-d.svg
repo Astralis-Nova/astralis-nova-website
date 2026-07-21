@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <radialGradient id="base" cx="31%" cy="26%" r="76%">
+      <stop offset="0" stop-color="#fff0c6"/>
+      <stop offset=".16" stop-color="#f3a25f"/>
+      <stop offset=".48" stop-color="#bb4f63"/>
+      <stop offset=".76" stop-color="#542d62"/>
+      <stop offset="1" stop-color="#111329"/>
+    </radialGradient>
+    <clipPath id="clip"><circle cx="60" cy="60" r="45"/></clipPath>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#f18a7a" flood-opacity=".6"/>
+    </filter>
+  </defs>
+  <circle cx="60" cy="60" r="47" fill="#351b46" opacity=".28" filter="url(#glow)"/>
+  <circle cx="60" cy="60" r="45" fill="url(#base)"/>
+  <g clip-path="url(#clip)" opacity=".9">
+    <path d="M10 38C34 28 69 48 110 31V45C80 57 43 40 10 54Z" fill="#f2b06f" opacity=".58"/>
+    <path d="M6 57C37 45 70 67 114 49V63C79 77 38 58 6 70Z" fill="#7a355f" opacity=".72"/>
+    <path d="M8 77C42 64 76 88 112 70V84C77 96 39 79 8 91Z" fill="#d86b69" opacity=".48"/>
+    <ellipse cx="78" cy="71" rx="12" ry="6" fill="#6d294f" opacity=".75" transform="rotate(-12 78 71)"/>
+  </g>
+  <ellipse cx="43" cy="36" rx="15" ry="8" fill="#fff8dc" opacity=".2" transform="rotate(-24 43 36)"/>
+  <circle cx="60" cy="60" r="45" fill="none" stroke="#ffd6b0" stroke-opacity=".25"/>
+</svg>
