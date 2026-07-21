@@ -1,5 +1,6 @@
 (() => {
   document.getElementById("astralis-realistic-orbit-v1")?.remove();
+  document.getElementById("astralis-realistic-orbit-v2")?.remove();
   document.querySelectorAll(".recent-comet").forEach(element => element.remove());
 
   const style = document.createElement("style");
