@@ -3,52 +3,121 @@
 
   if (document.getElementById("astralisVulcanBlessing")) return;
 
-  const handImage = "data:image/webp;base64,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";
-
   const style = document.createElement("style");
   style.id = "astralisVulcanBlessingStyles";
   style.textContent = `
-    .vulcan-blessing{position:fixed!important;right:12px!important;bottom:96px!important;z-index:99999!important;width:clamp(136px,12vw,178px)!important;padding:0!important;border:0!important;background:transparent!important;appearance:none;cursor:pointer;pointer-events:auto;display:block!important;visibility:visible!important;opacity:1!important;filter:drop-shadow(0 10px 22px rgba(0,0,0,.5)) drop-shadow(0 0 16px rgba(75,166,255,.26));animation:vulcanPortalFloat 6.6s ease-in-out infinite}
-    .vulcan-photo-shell{position:relative;display:grid;justify-items:center;isolation:isolate}
-    .vulcan-portal{position:relative;width:100%;aspect-ratio:240/431;overflow:hidden;border-radius:46% 46% 38% 38%/40% 40% 34% 34%;background:radial-gradient(ellipse at 50% 50%,rgba(36,99,191,.34),rgba(14,24,60,.62) 58%,transparent 76%);-webkit-mask-image:radial-gradient(ellipse at 50% 50%,#000 0 66%,rgba(0,0,0,.97) 73%,transparent 100%);mask-image:radial-gradient(ellipse at 50% 50%,#000 0 66%,rgba(0,0,0,.97) 73%,transparent 100%)}
-    .vulcan-ring{position:absolute;z-index:0;inset:7% 4% 8%;border-radius:50%;border:2px solid rgba(137,224,255,.48);box-shadow:0 0 18px rgba(93,205,255,.5),0 0 38px rgba(139,90,255,.28),inset 0 0 24px rgba(75,179,255,.22);background:conic-gradient(from 15deg,transparent,rgba(121,232,255,.2),transparent 34%,rgba(172,102,255,.2),transparent 72%);animation:vulcanRingTurn 9s linear infinite,vulcanRingPulse 3.8s ease-in-out infinite}
-    .vulcan-hand-layer{position:absolute;z-index:2;inset:0;display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none;-webkit-user-drag:none}
-    .vulcan-hand-shadow{z-index:1;opacity:.18;filter:blur(2px) saturate(1.15)}
-    .vulcan-hand-palm{clip-path:polygon(0 44%,100% 42%,100% 100%,0 100%)}
-    .vulcan-hand-left{clip-path:polygon(0 0,49% 0,50% 64%,0 67%);transform-origin:42% 63%;animation:vulcanLeftFingers 3.4s ease-in-out infinite}
-    .vulcan-hand-center{clip-path:polygon(33% 0,80% 0,82% 64%,34% 64%);transform-origin:55% 61%;animation:vulcanCenterFingers 3.8s ease-in-out infinite}
-    .vulcan-hand-thumb{clip-path:polygon(65% 31%,100% 26%,100% 70%,64% 70%);transform-origin:72% 64%;animation:vulcanThumbMove 3.1s ease-in-out infinite}
-    .vulcan-glass{position:absolute;z-index:3;inset:0;pointer-events:none;background:radial-gradient(circle at 49% 28%,rgba(255,255,255,.13),transparent 18%),linear-gradient(135deg,rgba(104,223,255,.07),transparent 44%,rgba(176,108,255,.08));mix-blend-mode:screen}
-    .vulcan-spark{position:absolute;z-index:4;width:5px;height:5px;border-radius:50%;background:#eaffff;box-shadow:0 0 9px #82e8ff;pointer-events:none;animation:vulcanSpark 3.1s ease-in-out infinite}
-    .vulcan-spark.s1{top:18%;left:11%;animation-delay:.2s}.vulcan-spark.s2{top:27%;right:9%;animation-delay:1.1s}.vulcan-spark.s3{bottom:24%;left:8%;animation-delay:2s}.vulcan-spark.s4{bottom:18%;right:12%;animation-delay:.7s}
-    .vulcan-photo-caption{display:block;position:relative;z-index:6;margin-top:-14px;max-width:100%;padding:5px 9px 6px;border:1px solid rgba(122,208,255,.24);border-radius:999px;background:rgba(3,12,23,.84);color:#eefaff;font-size:.58rem;font-weight:800;letter-spacing:.12em;line-height:1.25;text-align:center;text-transform:uppercase;text-shadow:0 0 10px rgba(111,208,255,.4);box-shadow:0 0 18px rgba(69,154,255,.18);white-space:normal}
-    .vulcan-blessing:hover .vulcan-portal,.vulcan-blessing:focus-visible .vulcan-portal{filter:brightness(1.06) saturate(1.08)}
+    .vulcan-blessing{
+      position:fixed!important;
+      right:12px!important;
+      bottom:96px!important;
+      z-index:99999!important;
+      width:clamp(138px,12vw,184px)!important;
+      padding:0!important;
+      border:0!important;
+      background:transparent!important;
+      appearance:none;
+      cursor:pointer;
+      pointer-events:auto;
+      display:block!important;
+      visibility:visible!important;
+      opacity:1!important;
+      filter:drop-shadow(0 12px 24px rgba(0,0,0,.5)) drop-shadow(0 0 20px rgba(75,166,255,.28));
+      animation:vulcanFloat 6.4s ease-in-out infinite;
+    }
+    .vulcan-shell{position:relative;display:grid;justify-items:center;isolation:isolate}
+    .vulcan-orbit{
+      position:absolute;
+      inset:6% 3% 13%;
+      border-radius:50%;
+      border:2px solid rgba(142,225,255,.48);
+      background:conic-gradient(from 20deg,transparent,rgba(103,224,255,.18),transparent 34%,rgba(175,109,255,.2),transparent 71%);
+      box-shadow:0 0 20px rgba(85,203,255,.46),0 0 42px rgba(136,92,255,.26),inset 0 0 26px rgba(79,176,255,.2);
+      animation:vulcanOrbit 10s linear infinite,vulcanPulse 4s ease-in-out infinite;
+    }
+    .vulcan-hand-svg{display:block;width:100%;height:auto;overflow:visible;position:relative;z-index:2}
+    .vulcan-hand-svg .pair-left{transform-box:fill-box;transform-origin:72% 100%;animation:vulcanLeftPair 3.6s ease-in-out infinite}
+    .vulcan-hand-svg .pair-center{transform-box:fill-box;transform-origin:50% 100%;animation:vulcanCenterPair 4s ease-in-out infinite}
+    .vulcan-hand-svg .thumb-group{transform-box:fill-box;transform-origin:0% 82%;animation:vulcanThumb 3.2s ease-in-out infinite}
+    .vulcan-hand-svg .hand-highlight{animation:vulcanHighlight 3.8s ease-in-out infinite}
+    .vulcan-spark{position:absolute;z-index:4;width:5px;height:5px;border-radius:50%;background:#eaffff;box-shadow:0 0 10px #82e8ff;pointer-events:none;animation:vulcanSpark 3.1s ease-in-out infinite}
+    .vulcan-spark.s1{top:18%;left:9%;animation-delay:.2s}.vulcan-spark.s2{top:26%;right:8%;animation-delay:1.1s}.vulcan-spark.s3{bottom:25%;left:7%;animation-delay:2s}.vulcan-spark.s4{bottom:17%;right:11%;animation-delay:.7s}
+    .vulcan-caption{display:block;position:relative;z-index:6;margin-top:-12px;max-width:100%;padding:5px 9px 6px;border:1px solid rgba(122,208,255,.25);border-radius:999px;background:rgba(3,12,23,.86);color:#eefaff;font-size:.58rem;font-weight:800;letter-spacing:.12em;line-height:1.25;text-align:center;text-transform:uppercase;text-shadow:0 0 10px rgba(111,208,255,.42);box-shadow:0 0 18px rgba(69,154,255,.18);white-space:normal}
+    .vulcan-blessing:hover .vulcan-hand-svg,.vulcan-blessing:focus-visible .vulcan-hand-svg{filter:brightness(1.07) saturate(1.06)}
     .vulcan-blessing:focus-visible{outline:2px solid #8de8ff;outline-offset:4px;border-radius:24px}
-    .vulcan-photo-signal{position:fixed;z-index:100000;max-width:min(340px,calc(100vw - 24px));padding:12px 14px;border:1px solid rgba(113,206,255,.56);border-radius:14px;background:radial-gradient(circle at 10% 20%,rgba(47,165,255,.16),transparent 35%),rgba(3,12,23,.97);color:#e4f4ff;box-shadow:0 16px 42px rgba(0,0,0,.5),0 0 28px rgba(69,154,255,.16);font-size:.84rem;line-height:1.5;pointer-events:none;opacity:0;transform:translateY(8px) scale(.98);transition:opacity .22s ease,transform .22s ease}
-    .vulcan-photo-signal.show{opacity:1;transform:none}.vulcan-photo-signal strong{display:block;margin-bottom:5px;color:#91eaff;letter-spacing:.05em}
-    @keyframes vulcanPortalFloat{0%,100%{transform:translateY(0) rotate(-.4deg)}50%{transform:translateY(-6px) rotate(.4deg)}}
-    @keyframes vulcanRingTurn{to{transform:rotate(360deg)}}@keyframes vulcanRingPulse{0%,100%{opacity:.66;scale:.97}50%{opacity:1;scale:1.035}}
-    @keyframes vulcanLeftFingers{0%,100%{transform:rotate(-.7deg) translateY(0)}50%{transform:rotate(1deg) translateY(-1px)}}
-    @keyframes vulcanCenterFingers{0%,100%{transform:rotate(.45deg) translateY(0)}50%{transform:rotate(-.75deg) translateY(-1.5px)}}
-    @keyframes vulcanThumbMove{0%,100%{transform:rotate(-.2deg) translateX(0)}50%{transform:rotate(2.2deg) translateX(1px)}}
+    .vulcan-signal{position:fixed;z-index:100000;max-width:min(340px,calc(100vw - 24px));padding:12px 14px;border:1px solid rgba(113,206,255,.56);border-radius:14px;background:radial-gradient(circle at 10% 20%,rgba(47,165,255,.16),transparent 35%),rgba(3,12,23,.97);color:#e4f4ff;box-shadow:0 16px 42px rgba(0,0,0,.5),0 0 28px rgba(69,154,255,.16);font-size:.84rem;line-height:1.5;pointer-events:none;opacity:0;transform:translateY(8px) scale(.98);transition:opacity .22s ease,transform .22s ease}
+    .vulcan-signal.show{opacity:1;transform:none}.vulcan-signal strong{display:block;margin-bottom:5px;color:#91eaff;letter-spacing:.05em}
+    @keyframes vulcanFloat{0%,100%{transform:translateY(0) rotate(-.35deg)}50%{transform:translateY(-6px) rotate(.35deg)}}
+    @keyframes vulcanOrbit{to{transform:rotate(360deg)}}
+    @keyframes vulcanPulse{0%,100%{opacity:.7;scale:.97}50%{opacity:1;scale:1.035}}
+    @keyframes vulcanLeftPair{0%,100%{transform:rotate(-.8deg)}50%{transform:rotate(1.2deg) translateY(-1px)}}
+    @keyframes vulcanCenterPair{0%,100%{transform:rotate(.45deg)}50%{transform:rotate(-.7deg) translateY(-1.4px)}}
+    @keyframes vulcanThumb{0%,100%{transform:rotate(-.4deg)}50%{transform:rotate(2.4deg) translateX(1px)}}
+    @keyframes vulcanHighlight{0%,100%{opacity:.35}50%{opacity:.72}}
     @keyframes vulcanSpark{0%,100%{opacity:.25;transform:scale(.78)}50%{opacity:1;transform:scale(1.45)}}
-    @media(max-width:700px){.vulcan-blessing{right:7px!important;bottom:82px!important;width:112px!important}.vulcan-photo-caption{margin-top:-10px;padding:4px 6px 5px;font-size:.47rem;letter-spacing:.09em}.vulcan-spark{width:4px;height:4px}}
-    @media(prefers-reduced-motion:reduce){.vulcan-blessing,.vulcan-ring,.vulcan-hand-left,.vulcan-hand-center,.vulcan-hand-thumb,.vulcan-spark{animation:none!important}}
+    @media(max-width:700px){.vulcan-blessing{right:7px!important;bottom:82px!important;width:116px!important}.vulcan-caption{margin-top:-9px;padding:4px 6px 5px;font-size:.47rem;letter-spacing:.09em}.vulcan-spark{width:4px;height:4px}}
+    @media(prefers-reduced-motion:reduce){.vulcan-blessing,.vulcan-orbit,.vulcan-hand-svg .pair-left,.vulcan-hand-svg .pair-center,.vulcan-hand-svg .thumb-group,.vulcan-hand-svg .hand-highlight,.vulcan-spark{animation:none!important}}
   `;
   document.head.appendChild(style);
 
-  const layer = (className) => `<img class="vulcan-hand-layer ${className}" src="${handImage}" alt="">`;
   const widget = document.createElement("button");
   widget.id = "astralisVulcanBlessing";
   widget.className = "vulcan-blessing";
   widget.type = "button";
-  widget.setAttribute("aria-label", "Ramon's animated live long and prosper hand");
-  widget.innerHTML = `<span class="vulcan-photo-shell"><span class="vulcan-portal" aria-hidden="true"><span class="vulcan-ring"></span>${layer("vulcan-hand-shadow")}${layer("vulcan-hand-palm")}${layer("vulcan-hand-left")}${layer("vulcan-hand-center")}${layer("vulcan-hand-thumb")}<span class="vulcan-glass"></span><span class="vulcan-spark s1"></span><span class="vulcan-spark s2"></span><span class="vulcan-spark s3"></span><span class="vulcan-spark s4"></span></span><span class="vulcan-photo-caption">Live Long &amp; Prosper</span></span>`;
+  widget.setAttribute("aria-label", "Animated live long and prosper salute");
+  widget.innerHTML = `
+    <span class="vulcan-shell">
+      <span class="vulcan-orbit" aria-hidden="true"></span>
+      <span class="vulcan-spark s1" aria-hidden="true"></span>
+      <span class="vulcan-spark s2" aria-hidden="true"></span>
+      <span class="vulcan-spark s3" aria-hidden="true"></span>
+      <span class="vulcan-spark s4" aria-hidden="true"></span>
+      <svg class="vulcan-hand-svg" viewBox="0 0 240 330" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffd9c0"/>
+            <stop offset="35%" stop-color="#e9b28f"/>
+            <stop offset="72%" stop-color="#c88466"/>
+            <stop offset="100%" stop-color="#985f4c"/>
+          </linearGradient>
+          <radialGradient id="palmGlow" cx="45%" cy="38%" r="70%">
+            <stop offset="0%" stop-color="#ffe9d9" stop-opacity=".8"/>
+            <stop offset="70%" stop-color="#d29576" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="#8d5545" stop-opacity="0"/>
+          </radialGradient>
+          <filter id="handShadow" x="-35%" y="-35%" width="170%" height="170%">
+            <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#12274f" flood-opacity=".42"/>
+            <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#5bc9ff" flood-opacity=".28"/>
+          </filter>
+        </defs>
+        <g filter="url(#handShadow)">
+          <g class="pair-left">
+            <rect x="38" y="54" width="31" height="130" rx="15.5" fill="url(#skin)" transform="rotate(-17 53.5 184)"/>
+            <rect x="55" y="34" width="34" height="150" rx="17" fill="url(#skin)" transform="rotate(-12 72 184)"/>
+            <path d="M43 82c8-4 15-4 22-1M62 67c8-4 16-3 23 0" fill="none" stroke="#9e624e" stroke-opacity=".48" stroke-width="2.2" stroke-linecap="round"/>
+          </g>
+          <g class="pair-center">
+            <rect x="112" y="16" width="34" height="174" rx="17" fill="url(#skin)"/>
+            <rect x="145" y="28" width="34" height="162" rx="17" fill="url(#skin)"/>
+            <path d="M118 56c9-4 17-4 24 0M151 67c8-4 17-4 24 0" fill="none" stroke="#9e624e" stroke-opacity=".48" stroke-width="2.2" stroke-linecap="round"/>
+          </g>
+          <path d="M66 164c8-19 27-29 52-29h42c25 0 44 14 51 38 7 23 3 49-6 70l-20 47c-7 17-24 28-43 28H91c-20 0-37-12-45-30l-18-42c-9-22-11-47-4-69 6-17 21-27 42-13Z" fill="url(#skin)" stroke="#875443" stroke-width="3.5"/>
+          <path d="M54 212c14-18 30-28 50-31 22-4 42 2 58 17M52 238c19-8 37-10 54-6 18 4 35 13 49 27M82 184c-6 23-5 46 3 69M132 181c2 17 8 32 19 46M171 190c-9 13-15 27-18 43" fill="none" stroke="#955c49" stroke-opacity=".58" stroke-width="3" stroke-linecap="round"/>
+          <path class="hand-highlight" d="M76 160c14-12 31-17 50-17h31c20 0 34 8 42 22-19-5-38-6-57-3-23 3-45 13-66 29-7-9-7-20 0-31Z" fill="url(#palmGlow)"/>
+          <g class="thumb-group">
+            <path d="M169 213c14-20 31-39 47-45 11-4 21 1 24 10 4 10 0 20-10 28l-35 34c-9 9-21 8-28 0-7-8-6-18 2-27Z" fill="url(#skin)" stroke="#875443" stroke-width="3.5"/>
+            <path d="M187 196c8-4 15-4 22-1" fill="none" stroke="#9e624e" stroke-opacity=".48" stroke-width="2.2" stroke-linecap="round"/>
+          </g>
+          <path d="M83 304c16 5 35 7 57 5 18-1 34-5 47-11" fill="none" stroke="#f2c5aa" stroke-opacity=".25" stroke-width="6" stroke-linecap="round"/>
+        </g>
+      </svg>
+      <span class="vulcan-caption">Live Long &amp; Prosper</span>
+    </span>
+  `;
 
   const signal = document.createElement("div");
-  signal.className = "vulcan-photo-signal";
+  signal.className = "vulcan-signal";
   signal.setAttribute("role", "status");
-  signal.innerHTML = '<strong>RAMON’S VULCAN BLESSING</strong>Peace and long life from the Astralis frontier. Live long and prosper. 🖖';
+  signal.innerHTML = '<strong>VULCAN BLESSING ONLINE</strong>Peace and long life from the Astralis frontier. Live long and prosper. 🖖';
   document.body.append(widget, signal);
 
   let hideTimer;
