@@ -98,10 +98,18 @@
       <span class="vulcan-real-spark s2" aria-hidden="true"></span>
       <span class="vulcan-real-spark s3" aria-hidden="true"></span>
       <span class="vulcan-real-spark s4" aria-hidden="true"></span>
-      <img class="vulcan-real-photo" src="/vulcan-salute-realistic.svg?v=20260722a" alt="">
+      <img class="vulcan-real-photo" src="/vulcan-salute-realistic.webp?v=20260722b" alt="">
       <span class="vulcan-real-caption">Live Long and Prosper</span>
     </span>
   `;
+
+  const photo = widget.querySelector(".vulcan-real-photo");
+  photo.addEventListener("error", () => {
+    const fallback = document.createElement("span");
+    fallback.textContent = "🖖";
+    fallback.style.cssText = "display:grid;place-items:center;width:100%;aspect-ratio:1;font-size:6rem;line-height:1";
+    photo.replaceWith(fallback);
+  }, { once: true });
 
   const signal = document.createElement("div");
   signal.className = "vulcan-real-signal";
