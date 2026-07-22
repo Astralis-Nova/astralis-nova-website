@@ -43,7 +43,7 @@
     .nova-explorer-signal{
       position:fixed;
       z-index:80;
-      max-width:min(360px,calc(100vw - 28px));
+      max-width:min(540px,calc(100vw - 28px));
       padding:13px 16px;
       border:1px solid rgba(113,206,255,.58);
       border-radius:14px;
@@ -58,7 +58,8 @@
       transition:opacity .2s ease,transform .2s ease;
     }
     .nova-explorer-signal.show{opacity:1;transform:none}
-    .nova-explorer-signal strong{display:block;margin-bottom:3px;color:#91eaff;letter-spacing:.045em}
+    .nova-explorer-signal strong{display:block;margin-bottom:5px;color:#91eaff;letter-spacing:.045em}
+    .nova-explorer-signal .frontier-quote{display:block;margin-top:10px;padding-top:10px;border-top:1px solid rgba(113,206,255,.28);font-family:Georgia,serif;font-size:.92rem;line-height:1.55;color:#f4f8ff}
     @keyframes novaExplorerFlight{
       0%{left:-280px;top:16vh;transform:rotate(-2deg) scale(.72);opacity:0}
       4%{opacity:.92}
@@ -89,7 +90,7 @@
   const signal = document.createElement("div");
   signal.className = "nova-explorer-signal";
   signal.setAttribute("role", "status");
-  signal.innerHTML = '<strong>NXS ASTRALIS · EXPLORER CLASS</strong>Classic deep-space cruiser online. Star charts aligned. Imagination drive holding steady. ✦';
+  signal.innerHTML = '<strong>NXS ASTRALIS · EXPLORER CLASS</strong>Classic deep-space cruiser online. Star charts aligned. Imagination drive holding steady. ✦<span class="frontier-quote">“Space: the final frontier. These are the voyages of the starship Enterprise. Its five-year mission: to explore strange new worlds, to seek out new life and new civilizations, to boldly go where no one has gone before.”</span>';
 
   document.body.append(ship, trail, signal);
 
@@ -113,12 +114,12 @@
   ship.addEventListener("click", () => {
     const rect = ship.getBoundingClientRect();
     const left = Math.min(window.innerWidth - signal.offsetWidth - 14, Math.max(14, rect.left));
-    const top = Math.min(window.innerHeight - 112, Math.max(14, rect.bottom + 10));
+    const top = Math.min(window.innerHeight - signal.offsetHeight - 14, Math.max(14, rect.bottom + 10));
     signal.style.left = `${left}px`;
     signal.style.top = `${top}px`;
     signal.classList.add("show");
     clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => signal.classList.remove("show"), 4200);
+    hideTimer = setTimeout(() => signal.classList.remove("show"), 9000);
   });
 
   const scheduleWarp = () => {
