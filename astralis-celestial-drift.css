@@ -16,7 +16,7 @@
   border:0!important;
   box-shadow:none!important;
   mix-blend-mode:screen;
-  will-change:transform,opacity,left,top;
+  will-change:transform,opacity,left,top,filter;
 }
 
 #astralis-celestial-drift .earth{
@@ -47,12 +47,15 @@
 }
 
 #astralis-celestial-drift .ringed{
-  width:clamp(82px,12vw,165px);
-  left:88vw;
+  width:clamp(104px,14vw,190px);
+  left:auto;
+  right:1.5vw;
   top:10vh;
-  opacity:.44;
-  filter:drop-shadow(0 0 14px rgba(175,190,255,.18));
-  animation:astralisRingedDrift 260s linear infinite;
+  opacity:.68;
+  mix-blend-mode:screen;
+  filter:saturate(1.16) contrast(1.06) drop-shadow(0 0 13px rgba(150,188,255,.3)) drop-shadow(0 0 28px rgba(105,124,255,.14));
+  transform-origin:50% 50%;
+  animation:astralisRingedDrift 260s linear infinite,astralisRingedGlow 7.5s ease-in-out infinite;
 }
 
 #astralis-celestial-drift .comet{
@@ -87,10 +90,16 @@
 }
 
 @keyframes astralisRingedDrift{
-  0%{transform:translate3d(0,0,0) scale(.85) rotate(0deg);opacity:0}
-  10%{opacity:.38}
-  55%{transform:translate3d(-44vw,9vh,0) scale(.96) rotate(55deg);opacity:.46}
-  100%{transform:translate3d(-120vw,18vh,0) scale(1.04) rotate(120deg);opacity:0}
+  0%{transform:translate3d(0,0,0) scale(.9) rotate(-3deg);opacity:0}
+  8%{opacity:.62}
+  52%{transform:translate3d(-42vw,8vh,0) scale(.98) rotate(42deg);opacity:.7}
+  88%{opacity:.5}
+  100%{transform:translate3d(-118vw,17vh,0) scale(1.05) rotate(96deg);opacity:0}
+}
+
+@keyframes astralisRingedGlow{
+  0%,100%{filter:saturate(1.12) contrast(1.04) brightness(.94) drop-shadow(0 0 12px rgba(150,188,255,.26)) drop-shadow(0 0 24px rgba(105,124,255,.12))}
+  50%{filter:saturate(1.24) contrast(1.08) brightness(1.08) drop-shadow(0 0 18px rgba(150,214,255,.38)) drop-shadow(0 0 34px rgba(140,105,255,.2))}
 }
 
 @keyframes astralisCometPass{
@@ -104,7 +113,7 @@
   #astralis-celestial-drift .earth{top:63vh;width:clamp(52px,14vw,92px)}
   #astralis-celestial-drift .mars{top:30vh;width:clamp(42px,11vw,78px)}
   #astralis-celestial-drift .gas{top:76vh;width:clamp(84px,24vw,160px);opacity:.32}
-  #astralis-celestial-drift .ringed{top:14vh;width:clamp(62px,16vw,120px);opacity:.30}
+  #astralis-celestial-drift .ringed{top:9vh;right:1vw;width:clamp(82px,20vw,122px);opacity:.62}
   #astralis-celestial-drift .comet{top:13vh;width:clamp(72px,20vw,160px);opacity:.20}
 }
 
