@@ -1,0 +1,1 @@
+window.HQ2="And however difficult life may seem, there is always something you can do and succeed at. It matters that you don't just give up.";
