@@ -23,8 +23,8 @@
       animation:novaExplorerFlight 82s linear infinite;
       will-change:left,top,transform,opacity,filter;
     }
-    .nova-explorer img{display:block;width:100%;height:auto;pointer-events:none;transform:scaleX(-1);transform-origin:center;transition:filter .22s ease,transform .22s ease}
-    .nova-explorer:hover img,.nova-explorer:focus-visible img{transform:scaleX(-1) scale(1.08);filter:brightness(1.18) saturate(1.16)}
+    .nova-explorer img{display:block;width:100%;height:auto;pointer-events:none;transform:none;transform-origin:center;transition:filter .22s ease,transform .22s ease}
+    .nova-explorer:hover img,.nova-explorer:focus-visible img{transform:scale(1.08);filter:brightness(1.18) saturate(1.16)}
     .nova-explorer:focus-visible{outline:2px solid #8de8ff;outline-offset:5px;border-radius:999px}
     .nova-explorer-warp{
       position:fixed;
@@ -80,7 +80,7 @@
   ship.className = "nova-explorer";
   ship.type = "button";
   ship.setAttribute("aria-label", "Astralis Nova classic explorer starship");
-  ship.innerHTML = '<img src="/astralis-nova-explorer-classic.svg" alt="">';
+  ship.innerHTML = '<img src="/astralis-nova-explorer-classic.svg?v=20260722b" alt="">';
 
   const trail = document.createElement("span");
   trail.className = "nova-explorer-warp";
