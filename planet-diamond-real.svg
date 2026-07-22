@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
+  <defs>
+    <radialGradient id="g" cx="35%" cy="30%" r="65%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.14" stop-color="#fbe5ff"/>
+      <stop offset="0.34" stop-color="#c9efff"/>
+      <stop offset="0.58" stop-color="#8ca8ff"/>
+      <stop offset="0.82" stop-color="#5d54a0"/>
+      <stop offset="1" stop-color="#181632"/>
+    </radialGradient>
+    <filter id="s"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+  <circle cx="120" cy="120" r="108" fill="url(#g)"/>
+  <path d="M32 132c17-16 36-24 56-27 23-3 41 0 66 10 20 8 35 11 54 12-17 22-37 36-67 47-33 12-65 13-109 2-8-2-16-5-23-9 1-14 0-25 23-35Z" fill="#ffffff" opacity="0.18"/>
+  <path d="M26 92c17-10 39-15 62-14 25 1 46 9 76 27 18 11 34 18 52 22-22-28-46-47-78-60-37-16-75-17-112-6-11 4-18 8-24 12 5 8 10 13 24 19Z" fill="#8ef0ff" opacity="0.2"/>
+  <g opacity="0.82">
+    <path d="M90 72l11 13-11 13-11-13 11-13Z" fill="#fff"/>
+    <path d="M147 92l8 10-8 10-8-10 8-10Z" fill="#dff9ff"/>
+    <path d="M71 135l7 9-7 9-7-9 7-9Z" fill="#fff"/>
+    <path d="M121 142l12 15-12 15-12-15 12-15Z" fill="#ffe9ff"/>
+    <path d="M168 142l6 8-6 8-6-8 6-8Z" fill="#f4fcff"/>
+  </g>
+  <circle cx="155" cy="77" r="18" fill="#ffffff" opacity="0.12" filter="url(#s)"/>
+</svg>
