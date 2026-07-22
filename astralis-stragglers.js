@@ -2,12 +2,12 @@
   "use strict";
 
   const ASSETS = {
-    flower: "/planet-ocean-real.svg",
-    unborn: "/planet-lunar-real.svg",
-    river: "/planet-ice-real.svg",
-    magic: "/planet-amethyst-real.svg",
-    smile: "/planet-diamond-real.svg",
-    cry: "/planet-rogue-aurora.svg",
+    flower: "/planet-ocean-real.svg?v=20260722p",
+    unborn: "/planet-lunar-real.svg?v=20260722p",
+    river: "/planet-ice-real.svg?v=20260722p",
+    magic: "/planet-amethyst-real.svg?v=20260722p",
+    smile: "/planet-diamond-real.svg?v=20260722p",
+    cry: "/planet-rogue-aurora.svg?v=20260722p",
     angels: "/astralis-earth.png",
     orbit: "/astralis-gas-giant.png"
   };
@@ -58,7 +58,7 @@
       .relic-icon.straggler-planet .ai-planet-shell{--ring:#8bdcff;--moon:#dfffff;--tilt:-18deg;--stretch:1.18;--orbit-speed:10s;position:relative;display:grid;place-items:center;background:transparent!important}
       .relic-icon.straggler-planet .ai-planet-shell::before{border-color:color-mix(in srgb,var(--ring) 62%,transparent)!important;box-shadow:0 0 10px color-mix(in srgb,var(--ring) 32%,transparent)!important;animation:stragglerOrbit var(--orbit-speed) linear infinite!important}
       .relic-icon.straggler-planet .ai-planet-shell::after{background:var(--moon)!important;box-shadow:0 0 8px var(--moon),0 0 15px color-mix(in srgb,var(--ring) 72%,transparent)!important;animation:stragglerMoon 5.4s ease-in-out infinite!important}
-      .relic-icon.straggler-planet .ai-planet-shell img{display:block!important;background:transparent!important;mix-blend-mode:screen!important;filter:drop-shadow(0 0 9px color-mix(in srgb,var(--ring) 48%,transparent))!important}
+      .relic-icon.straggler-planet .ai-planet-shell img{display:block!important;background:transparent!important;mix-blend-mode:normal!important;filter:drop-shadow(0 0 9px color-mix(in srgb,var(--ring) 48%,transparent))!important}
       .relic-icon.straggler-planet .relic-v1{--ring:#5de7ff;--moon:#dfffff;--tilt:-24deg;--stretch:1.23;--orbit-speed:9s}
       .relic-icon.straggler-planet .relic-v2{--ring:#eef5ff;--moon:#adcbff;--tilt:22deg;--stretch:1.12;--orbit-speed:12s}
       .relic-icon.straggler-planet .relic-v3{--ring:#9eeaff;--moon:#fff;--tilt:-9deg;--stretch:1.28;--orbit-speed:11s}
