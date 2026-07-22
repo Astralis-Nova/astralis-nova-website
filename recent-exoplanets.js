@@ -14,16 +14,17 @@
     document.getElementById("recentExoplanetStyles")?.remove();
     document.getElementById("recentExoplanetStylesV2")?.remove();
     document.getElementById("recentExoplanetStylesV3")?.remove();
+    document.getElementById("recentExoplanetStylesV4")?.remove();
 
     const style = document.createElement("style");
-    style.id = "recentExoplanetStylesV4";
+    style.id = "recentExoplanetStylesV5";
     style.textContent = `
       .astralis-worlds-head{max-width:850px!important}
       .astralis-worlds-note{display:block;margin-top:9px;color:#839bb8;font-size:.76rem;line-height:1.55}
       .astralis-planet-link{gap:18px!important;min-height:146px!important;padding:18px!important}
-      .astralis-planet.recent-exoplanet{display:grid!important;place-items:center!important;flex:0 0 96px!important;width:96px!important;height:96px!important;background:transparent!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important;transition:transform .3s ease,filter .3s ease}
+      .astralis-planet.recent-exoplanet{display:grid!important;place-items:center!important;flex:0 0 96px!important;width:96px!important;height:96px!important;background:transparent!important;background-color:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:visible!important;isolation:isolate!important;transition:transform .3s ease,filter .3s ease}
       .astralis-planet.recent-exoplanet::before,.astralis-planet.recent-exoplanet::after{content:none!important;display:none!important}
-      .astralis-planet.recent-exoplanet img{display:block;width:100%;height:100%;object-fit:contain;background:transparent;animation:recentExoplanetFloat 6.2s ease-in-out infinite;transform-origin:50% 50%;filter:drop-shadow(0 0 12px rgba(77,157,255,.26))}
+      .astralis-planet.recent-exoplanet img{display:block;width:100%;height:100%;object-fit:contain;background:transparent!important;background-color:transparent!important;mix-blend-mode:screen;animation:recentExoplanetFloat 6.2s ease-in-out infinite;transform-origin:50% 50%;filter:drop-shadow(0 0 12px rgba(77,157,255,.26));-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0 58%,rgba(0,0,0,.98) 66%,rgba(0,0,0,.72) 74%,transparent 88%);mask-image:radial-gradient(circle at 50% 50%,#000 0 58%,rgba(0,0,0,.98) 66%,rgba(0,0,0,.72) 74%,transparent 88%)}
       .astralis-planet.recent-exoplanet.violet img{filter:hue-rotate(48deg) saturate(1.2) drop-shadow(0 0 12px rgba(191,104,255,.28))}
       .astralis-planet.recent-exoplanet.gold img{filter:hue-rotate(-18deg) saturate(1.12) brightness(1.04) drop-shadow(0 0 12px rgba(255,183,91,.25))}
       .astralis-planet.recent-exoplanet.blue img{filter:hue-rotate(165deg) saturate(.9) brightness(1.08) drop-shadow(0 0 12px rgba(105,185,255,.28))}
