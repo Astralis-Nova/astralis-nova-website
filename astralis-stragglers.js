@@ -23,7 +23,7 @@
         position:absolute;
         z-index:2;
         right:-2%;
-        top:-30%;
+        top:-8%;
         width:clamp(410px,50vw,790px);
         aspect-ratio:1;
         pointer-events:none;
@@ -39,19 +39,11 @@
         width:100%;
         height:100%;
         object-fit:contain;
+        background:transparent;
         transform-origin:50% 50%;
         animation:astralisGalaxyBreathe 8.5s ease-in-out infinite;
       }
-      .astralis-hero-galaxy::before{
-        content:"";
-        position:absolute;
-        inset:13%;
-        border:1px solid rgba(151,220,255,.18);
-        border-radius:50%;
-        background:radial-gradient(circle,rgba(114,205,255,.08),transparent 58%);
-        box-shadow:0 0 42px rgba(101,150,255,.18),inset 0 0 44px rgba(255,118,213,.1);
-        animation:astralisGalaxyCounterSpin 29s linear infinite reverse;
-      }
+      .astralis-hero-galaxy::before{content:none!important;display:none!important}
       .astralis-hero-galaxy::after{
         content:"";
         position:absolute;
@@ -62,11 +54,11 @@
         animation:astralisGalaxyCounterSpin 19s linear infinite;
       }
 
-      .relic-icon.straggler-planet{overflow:visible!important}
-      .relic-icon.straggler-planet .ai-planet-shell{--ring:#8bdcff;--moon:#dfffff;--tilt:-18deg;--stretch:1.18;--orbit-speed:10s;position:relative;display:grid;place-items:center}
+      .relic-icon.straggler-planet{overflow:visible!important;background:transparent!important;border:0!important;box-shadow:none!important}
+      .relic-icon.straggler-planet .ai-planet-shell{--ring:#8bdcff;--moon:#dfffff;--tilt:-18deg;--stretch:1.18;--orbit-speed:10s;position:relative;display:grid;place-items:center;background:transparent!important}
       .relic-icon.straggler-planet .ai-planet-shell::before{border-color:color-mix(in srgb,var(--ring) 62%,transparent)!important;box-shadow:0 0 10px color-mix(in srgb,var(--ring) 32%,transparent)!important;animation:stragglerOrbit var(--orbit-speed) linear infinite!important}
       .relic-icon.straggler-planet .ai-planet-shell::after{background:var(--moon)!important;box-shadow:0 0 8px var(--moon),0 0 15px color-mix(in srgb,var(--ring) 72%,transparent)!important;animation:stragglerMoon 5.4s ease-in-out infinite!important}
-      .relic-icon.straggler-planet .ai-planet-shell img{mix-blend-mode:normal!important;filter:drop-shadow(0 0 9px color-mix(in srgb,var(--ring) 48%,transparent))!important}
+      .relic-icon.straggler-planet .ai-planet-shell img{display:block!important;background:transparent!important;mix-blend-mode:screen!important;filter:drop-shadow(0 0 9px color-mix(in srgb,var(--ring) 48%,transparent))!important}
       .relic-icon.straggler-planet .relic-v1{--ring:#5de7ff;--moon:#dfffff;--tilt:-24deg;--stretch:1.23;--orbit-speed:9s}
       .relic-icon.straggler-planet .relic-v2{--ring:#eef5ff;--moon:#adcbff;--tilt:22deg;--stretch:1.12;--orbit-speed:12s}
       .relic-icon.straggler-planet .relic-v3{--ring:#9eeaff;--moon:#fff;--tilt:-9deg;--stretch:1.28;--orbit-speed:11s}
@@ -85,12 +77,12 @@
       @keyframes stragglerMoon{0%,100%{transform:translate(0,0) scale(.82);opacity:.58}50%{transform:translate(-6px,-5px) scale(1.18);opacity:1}}
 
       @media(max-width:800px){
-        .astralis-hero-galaxy{right:-12%;top:-9%;width:510px;opacity:.72}
+        .astralis-hero-galaxy{right:-12%;top:4%;width:510px;opacity:.72}
       }
       @media(max-width:520px){
-        .astralis-hero-galaxy{right:-23%;top:-7%;width:440px;opacity:.64;filter:saturate(1.18) contrast(1.08) drop-shadow(0 0 25px rgba(116,142,255,.26))}
+        .astralis-hero-galaxy{right:-23%;top:7%;width:440px;opacity:.64;filter:saturate(1.18) contrast(1.08) drop-shadow(0 0 25px rgba(116,142,255,.26))}
       }
-      @media(prefers-reduced-motion:reduce){.astralis-hero-galaxy,.astralis-hero-galaxy img,.astralis-hero-galaxy::before,.astralis-hero-galaxy::after,.relic-icon.straggler-planet .ai-planet-shell::before,.relic-icon.straggler-planet .ai-planet-shell::after{animation:none!important}}
+      @media(prefers-reduced-motion:reduce){.astralis-hero-galaxy,.astralis-hero-galaxy img,.astralis-hero-galaxy::after,.relic-icon.straggler-planet .ai-planet-shell::before,.relic-icon.straggler-planet .ai-planet-shell::after{animation:none!important}}
     `;
     document.head.appendChild(style);
   }
