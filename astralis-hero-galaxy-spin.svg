@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" fill="none">
+  <defs>
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff8d8"/>
+      <stop offset="0.18" stop-color="#ffd99e"/>
+      <stop offset="0.34" stop-color="#ff8ec7"/>
+      <stop offset="0.58" stop-color="#7b66ff"/>
+      <stop offset="1" stop-color="#140d30" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mist" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="0.16" stop-color="#f8b3d6" stop-opacity="0.7"/>
+      <stop offset="0.42" stop-color="#8e87ff" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#140d30" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="blur12"><feGaussianBlur stdDeviation="12"/></filter>
+    <filter id="blur24"><feGaussianBlur stdDeviation="24"/></filter>
+  </defs>
+  <g transform="translate(450 450)">
+    <circle r="290" fill="url(#mist)" opacity="0.55" filter="url(#blur24)"/>
+    <g opacity="0.9">
+      <ellipse rx="260" ry="88" transform="rotate(18)" stroke="#f4a4d5" stroke-width="44" stroke-linecap="round" stroke-dasharray="6 32" opacity="0.16"/>
+      <ellipse rx="220" ry="75" transform="rotate(18)" stroke="#a188ff" stroke-width="38" stroke-linecap="round" stroke-dasharray="5 26" opacity="0.18"/>
+      <ellipse rx="180" ry="62" transform="rotate(18)" stroke="#7ad2ff" stroke-width="28" stroke-linecap="round" stroke-dasharray="4 20" opacity="0.12"/>
+    </g>
+    <g filter="url(#blur12)">
+      <path d="M-298 -72c76-36 164-45 258-27 73 15 141 48 236 118-114-32-193-43-292-26-71 12-132 34-202 74 62-64 117-108 190-139 43-18 90-30 146-38-109-10-205 6-336 38Z" fill="#8f72ff" opacity="0.34"/>
+      <path d="M-274 101c95-68 188-103 303-117 81-11 148-5 257 15-126 12-211 28-297 76-70 39-121 84-163 157 18-73 44-122 95-176 34-36 76-67 132-97-111 20-206 57-327 142Z" fill="#ff95c3" opacity="0.36"/>
+      <path d="M50 -292c85 53 148 114 202 204 39 65 63 132 80 240-57-95-105-156-185-216-61-46-126-77-224-98 83-1 140 11 207 45 45 22 88 53 130 100-48-103-107-176-210-275Z" fill="#6fd6ff" opacity="0.24"/>
+      <path d="M-75 299c-78-46-138-100-194-186-40-62-67-126-92-233 64 89 116 146 198 200 63 41 129 66 228 80-83 8-140 1-208-26-45-17-89-44-135-85 55 98 119 167 203 250Z" fill="#9f8bff" opacity="0.22"/>
+    </g>
+    <circle r="112" fill="url(#core)" filter="url(#blur12)"/>
+    <circle r="38" fill="#fff8ea"/>
+    <g fill="#fff">
+      <circle cx="-214" cy="-96" r="4" opacity="0.9"/>
+      <circle cx="232" cy="108" r="5" opacity="0.85"/>
+      <circle cx="92" cy="-214" r="3.5" opacity="0.9"/>
+      <circle cx="-118" cy="211" r="4.5" opacity="0.8"/>
+      <circle cx="-247" cy="44" r="3" opacity="0.7"/>
+      <circle cx="206" cy="-66" r="3" opacity="0.75"/>
+      <circle cx="140" cy="188" r="3.5" opacity="0.72"/>
+      <circle cx="-64" cy="-246" r="4" opacity="0.82"/>
+    </g>
+  </g>
+</svg>
