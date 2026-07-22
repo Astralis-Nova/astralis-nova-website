@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 260" role="img" aria-labelledby="title desc">
+  <title id="title">Astralis Nova Comet</title>
+  <desc id="desc">A detailed luminous comet with a transparent ion tail and sparkling fragments.</desc>
+  <defs>
+    <linearGradient id="tail" x1="0" x2="1">
+      <stop stop-color="#5c71ff" stop-opacity="0"/>
+      <stop offset=".28" stop-color="#707cff" stop-opacity=".14"/>
+      <stop offset=".65" stop-color="#55d9ff" stop-opacity=".56"/>
+      <stop offset="1" stop-color="#f2ffff" stop-opacity=".96"/>
+    </linearGradient>
+    <radialGradient id="nucleus" cx="36%" cy="30%" r="76%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".18" stop-color="#c9f8ff"/>
+      <stop offset=".43" stop-color="#59c9ff"/>
+      <stop offset=".7" stop-color="#3157c8"/>
+      <stop offset="1" stop-color="#16164c"/>
+    </radialGradient>
+    <filter id="blur"><feGaussianBlur stdDeviation="13"/></filter>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="9" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="rock" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence baseFrequency=".05" numOctaves="3" seed="14" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="8"/>
+    </filter>
+  </defs>
+
+  <path d="M12 134C174 31 359 51 544 124C356 88 178 179 12 134Z" fill="url(#tail)" opacity=".42" filter="url(#blur)"/>
+  <path d="M8 133C183 81 374 82 551 130C354 110 174 159 8 133Z" fill="url(#tail)" opacity=".88"/>
+  <path d="M68 155C227 111 385 112 554 137C370 133 216 169 68 155Z" fill="#b5f4ff" opacity=".18" filter="url(#blur)"/>
+
+  <circle cx="558" cy="132" r="58" fill="#6bd7ff" opacity=".32" filter="url(#blur)"/>
+  <circle cx="558" cy="132" r="42" fill="url(#nucleus)" filter="url(#glow)"/>
+  <path d="M532 116l20-27 17 20 28-9-8 28 18 19-29 5-15 28-18-24-29-5 17-20Z" fill="url(#nucleus)" opacity=".92" filter="url(#rock)"/>
+  <g fill="#dffcff" filter="url(#glow)">
+    <circle cx="472" cy="100" r="4"/><circle cx="431" cy="152" r="3"/><circle cx="390" cy="111" r="3.5"/>
+    <circle cx="340" cy="164" r="2.5"/><circle cx="286" cy="98" r="3"/><circle cx="224" cy="151" r="2.5"/>
+  </g>
+</svg>
