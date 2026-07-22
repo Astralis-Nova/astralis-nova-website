@@ -22,16 +22,16 @@
       .astralis-hero-galaxy{
         position:absolute;
         z-index:2;
-        right:-2%;
-        top:-8%;
-        width:clamp(410px,50vw,790px);
+        right:-1%;
+        top:-2%;
+        width:clamp(430px,52vw,820px);
         aspect-ratio:1;
         pointer-events:none;
-        opacity:.9;
+        opacity:.96;
         mix-blend-mode:screen;
-        filter:saturate(1.2) contrast(1.08) drop-shadow(0 0 34px rgba(116,142,255,.32)) drop-shadow(0 0 70px rgba(255,117,208,.12));
+        filter:saturate(1.08) contrast(1.14) brightness(1.03) drop-shadow(0 0 18px rgba(116,142,255,.18)) drop-shadow(0 0 36px rgba(255,117,208,.08));
         transform-origin:50% 50%;
-        animation:astralisGalaxyOrbit 42s linear infinite;
+        animation:astralisGalaxyOrbit 52s linear infinite;
         will-change:transform;
       }
       .astralis-hero-galaxy img{
@@ -40,18 +40,20 @@
         height:100%;
         object-fit:contain;
         background:transparent;
+        filter:saturate(1.06) contrast(1.14) brightness(1.02);
         transform-origin:50% 50%;
-        animation:astralisGalaxyBreathe 8.5s ease-in-out infinite;
+        animation:astralisGalaxyBreathe 10.5s ease-in-out infinite;
       }
       .astralis-hero-galaxy::before{content:none!important;display:none!important}
       .astralis-hero-galaxy::after{
         content:"";
         position:absolute;
-        inset:24%;
+        inset:30%;
         border-radius:50%;
-        background:conic-gradient(from 10deg,transparent,rgba(126,218,255,.2),transparent 20%,rgba(255,132,219,.2),transparent 49%,rgba(255,228,141,.16),transparent 76%);
-        filter:blur(10px);
-        animation:astralisGalaxyCounterSpin 19s linear infinite;
+        background:conic-gradient(from 12deg,transparent,rgba(126,218,255,.10),transparent 22%,rgba(255,132,219,.09),transparent 51%,rgba(255,228,141,.07),transparent 78%);
+        filter:blur(16px);
+        opacity:.42;
+        animation:astralisGalaxyCounterSpin 27s linear infinite;
       }
 
       .relic-icon.straggler-planet{overflow:visible!important;background:transparent!important;border:0!important;box-shadow:none!important}
@@ -72,15 +74,15 @@
 
       @keyframes astralisGalaxyOrbit{to{transform:rotate(360deg)}}
       @keyframes astralisGalaxyCounterSpin{to{transform:rotate(360deg)}}
-      @keyframes astralisGalaxyBreathe{0%,100%{transform:scale(.98);opacity:.9;filter:brightness(.96)}50%{transform:scale(1.045);opacity:1;filter:brightness(1.14)}}
+      @keyframes astralisGalaxyBreathe{0%,100%{transform:scale(.992);opacity:.94;filter:brightness(.99)}50%{transform:scale(1.018);opacity:1;filter:brightness(1.07)}}
       @keyframes stragglerOrbit{from{transform:rotate(var(--tilt)) scaleX(var(--stretch))}to{transform:rotate(calc(var(--tilt) + 360deg)) scaleX(var(--stretch))}}
       @keyframes stragglerMoon{0%,100%{transform:translate(0,0) scale(.82);opacity:.58}50%{transform:translate(-6px,-5px) scale(1.18);opacity:1}}
 
       @media(max-width:800px){
-        .astralis-hero-galaxy{right:-12%;top:4%;width:510px;opacity:.72}
+        .astralis-hero-galaxy{right:-11%;top:5%;width:530px;opacity:.8}
       }
       @media(max-width:520px){
-        .astralis-hero-galaxy{right:-23%;top:7%;width:440px;opacity:.64;filter:saturate(1.18) contrast(1.08) drop-shadow(0 0 25px rgba(116,142,255,.26))}
+        .astralis-hero-galaxy{right:-22%;top:8%;width:450px;opacity:.72;filter:saturate(1.06) contrast(1.12) brightness(1.02) drop-shadow(0 0 18px rgba(116,142,255,.18))}
       }
       @media(prefers-reduced-motion:reduce){.astralis-hero-galaxy,.astralis-hero-galaxy img,.astralis-hero-galaxy::after,.relic-icon.straggler-planet .ai-planet-shell::before,.relic-icon.straggler-planet .ai-planet-shell::after{animation:none!important}}
     `;
@@ -93,7 +95,7 @@
     const galaxy = document.createElement("div");
     galaxy.className = "astralis-hero-galaxy";
     galaxy.setAttribute("aria-hidden", "true");
-    galaxy.innerHTML = '<img src="/astralis-hero-galaxy-spin.svg?v=20260722m" alt="">';
+    galaxy.innerHTML = '<img src="/astralis-hero-galaxy-spin.svg?v=20260722q" alt="">';
     hero.appendChild(galaxy);
     return true;
   }
