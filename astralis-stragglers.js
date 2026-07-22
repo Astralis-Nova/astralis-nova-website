@@ -82,9 +82,14 @@
     if (!icons.length) return false;
     icons.forEach((icon, index) => {
       const key = relicKey(icon.closest(".relic-link-card"), index);
+      const variant = `relic-v${index + 1}`;
+      const currentImage = icon.querySelector("img");
+      const desiredImage = new URL(ASSETS[key], window.location.href).href;
+      const alreadyCorrect = icon.dataset.stragglerPlanet === key && currentImage?.src === desiredImage && icon.querySelector(`.${variant}`);
+      if (alreadyCorrect) return;
       icon.classList.add("ai-relic-icon", "straggler-planet");
       icon.dataset.stragglerPlanet = key;
-      icon.innerHTML = `<span class="ai-planet-shell relic-v${index + 1}"><img src="${ASSETS[key]}" alt="" aria-hidden="true" loading="lazy"></span>`;
+      icon.innerHTML = `<span class="ai-planet-shell ${variant}"><img src="${ASSETS[key]}" alt="" aria-hidden="true" loading="lazy"></span>`;
     });
     return true;
   }
