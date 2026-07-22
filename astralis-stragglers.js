@@ -17,12 +17,50 @@
     const style = document.createElement("style");
     style.id = "astralisStragglerStyles";
     style.textContent = `
-      .hero{overflow:hidden}
+      .hero{overflow:hidden;isolation:isolate}
       .hero-inner{position:relative;z-index:3}
-      .astralis-hero-galaxy{position:absolute;z-index:2;right:-6%;top:-34%;width:clamp(340px,45vw,720px);aspect-ratio:1;pointer-events:none;opacity:.76;mix-blend-mode:screen;filter:drop-shadow(0 0 32px rgba(118,117,255,.28));transform-origin:50% 50%;animation:astralisGalaxyOrbit 42s linear infinite;will-change:transform}
-      .astralis-hero-galaxy img{display:block;width:100%;height:100%;object-fit:contain;animation:astralisGalaxyBreathe 9s ease-in-out infinite;transform-origin:50% 50%}
-      .astralis-hero-galaxy::before{content:"";position:absolute;inset:18%;border:1px solid rgba(151,211,255,.16);border-radius:50%;box-shadow:0 0 35px rgba(115,137,255,.14),inset 0 0 38px rgba(255,118,213,.08);animation:astralisGalaxyCounterSpin 26s linear infinite reverse}
-      .astralis-hero-galaxy::after{content:"";position:absolute;inset:30%;border-radius:50%;background:conic-gradient(from 10deg,transparent,rgba(126,218,255,.15),transparent 22%,rgba(255,132,219,.16),transparent 50%,rgba(255,228,141,.12),transparent);filter:blur(8px);animation:astralisGalaxyCounterSpin 18s linear infinite}
+      .astralis-hero-galaxy{
+        position:absolute;
+        z-index:2;
+        right:-2%;
+        top:-30%;
+        width:clamp(410px,50vw,790px);
+        aspect-ratio:1;
+        pointer-events:none;
+        opacity:.9;
+        mix-blend-mode:screen;
+        filter:saturate(1.2) contrast(1.08) drop-shadow(0 0 34px rgba(116,142,255,.32)) drop-shadow(0 0 70px rgba(255,117,208,.12));
+        transform-origin:50% 50%;
+        animation:astralisGalaxyOrbit 42s linear infinite;
+        will-change:transform;
+      }
+      .astralis-hero-galaxy img{
+        display:block;
+        width:100%;
+        height:100%;
+        object-fit:contain;
+        transform-origin:50% 50%;
+        animation:astralisGalaxyBreathe 8.5s ease-in-out infinite;
+      }
+      .astralis-hero-galaxy::before{
+        content:"";
+        position:absolute;
+        inset:13%;
+        border:1px solid rgba(151,220,255,.18);
+        border-radius:50%;
+        background:radial-gradient(circle,rgba(114,205,255,.08),transparent 58%);
+        box-shadow:0 0 42px rgba(101,150,255,.18),inset 0 0 44px rgba(255,118,213,.1);
+        animation:astralisGalaxyCounterSpin 29s linear infinite reverse;
+      }
+      .astralis-hero-galaxy::after{
+        content:"";
+        position:absolute;
+        inset:24%;
+        border-radius:50%;
+        background:conic-gradient(from 10deg,transparent,rgba(126,218,255,.2),transparent 20%,rgba(255,132,219,.2),transparent 49%,rgba(255,228,141,.16),transparent 76%);
+        filter:blur(10px);
+        animation:astralisGalaxyCounterSpin 19s linear infinite;
+      }
 
       .relic-icon.straggler-planet{overflow:visible!important}
       .relic-icon.straggler-planet .ai-planet-shell{--ring:#8bdcff;--moon:#dfffff;--tilt:-18deg;--stretch:1.18;--orbit-speed:10s;position:relative;display:grid;place-items:center}
@@ -42,12 +80,16 @@
 
       @keyframes astralisGalaxyOrbit{to{transform:rotate(360deg)}}
       @keyframes astralisGalaxyCounterSpin{to{transform:rotate(360deg)}}
-      @keyframes astralisGalaxyBreathe{0%,100%{transform:scale(.985);opacity:.88}50%{transform:scale(1.035);opacity:1}}
+      @keyframes astralisGalaxyBreathe{0%,100%{transform:scale(.98);opacity:.9;filter:brightness(.96)}50%{transform:scale(1.045);opacity:1;filter:brightness(1.14)}}
       @keyframes stragglerOrbit{from{transform:rotate(var(--tilt)) scaleX(var(--stretch))}to{transform:rotate(calc(var(--tilt) + 360deg)) scaleX(var(--stretch))}}
       @keyframes stragglerMoon{0%,100%{transform:translate(0,0) scale(.82);opacity:.58}50%{transform:translate(-6px,-5px) scale(1.18);opacity:1}}
 
-      @media(max-width:800px){.astralis-hero-galaxy{right:-18%;top:-10%;width:470px;opacity:.52}}
-      @media(max-width:520px){.astralis-hero-galaxy{right:-38%;top:-2%;width:392px;opacity:.4}}
+      @media(max-width:800px){
+        .astralis-hero-galaxy{right:-12%;top:-9%;width:510px;opacity:.72}
+      }
+      @media(max-width:520px){
+        .astralis-hero-galaxy{right:-23%;top:-7%;width:440px;opacity:.64;filter:saturate(1.18) contrast(1.08) drop-shadow(0 0 25px rgba(116,142,255,.26))}
+      }
       @media(prefers-reduced-motion:reduce){.astralis-hero-galaxy,.astralis-hero-galaxy img,.astralis-hero-galaxy::before,.astralis-hero-galaxy::after,.relic-icon.straggler-planet .ai-planet-shell::before,.relic-icon.straggler-planet .ai-planet-shell::after{animation:none!important}}
     `;
     document.head.appendChild(style);
@@ -59,7 +101,7 @@
     const galaxy = document.createElement("div");
     galaxy.className = "astralis-hero-galaxy";
     galaxy.setAttribute("aria-hidden", "true");
-    galaxy.innerHTML = '<img src="/astralis-hero-galaxy-spin.svg" alt="">';
+    galaxy.innerHTML = '<img src="/astralis-hero-galaxy-spin.svg?v=20260722m" alt="">';
     hero.appendChild(galaxy);
     return true;
   }
