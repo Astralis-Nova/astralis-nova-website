@@ -9,159 +9,225 @@
     .vulcan-blessing{
       position:fixed;
       right:16px;
-      bottom:104px;
+      bottom:92px;
       z-index:99999;
-      width:clamp(158px,15vw,220px);
+      width:clamp(190px,17vw,250px);
       padding:0;
       border:0;
       background:transparent;
       appearance:none;
       cursor:pointer;
       pointer-events:auto;
-      animation:vulcanFloat 6.8s ease-in-out infinite;
-      filter:drop-shadow(0 16px 26px rgba(0,0,0,.52));
       isolation:isolate;
+      filter:drop-shadow(0 18px 30px rgba(0,0,0,.54));
+      animation:vulcanFloat 6.5s ease-in-out infinite;
     }
     .vulcan-tech-frame{
       position:relative;
-      display:grid;
-      place-items:center;
-      aspect-ratio:1 / 1.22;
+      display:block;
+      width:100%;
+      aspect-ratio:300 / 418;
+      overflow:visible;
       transform-style:preserve-3d;
     }
-    .vulcan-core-glow{
+    .vulcan-tech-frame::before{
+      content:"";
       position:absolute;
-      inset:12% 5% 23%;
+      z-index:0;
+      inset:11% -7% 17%;
       border-radius:50%;
       background:
-        radial-gradient(circle at 50% 46%,rgba(104,222,255,.25),transparent 38%),
-        radial-gradient(circle at 50% 54%,rgba(149,94,255,.2),transparent 62%);
-      box-shadow:inset 0 0 42px rgba(92,202,255,.18),0 0 38px rgba(109,87,255,.16);
+        radial-gradient(circle,rgba(105,226,255,.2),transparent 42%),
+        radial-gradient(circle,rgba(157,83,255,.16),transparent 68%);
+      box-shadow:0 0 45px rgba(75,179,255,.19),inset 0 0 40px rgba(139,96,255,.14);
       animation:vulcanCorePulse 4.2s ease-in-out infinite;
+    }
+    .vulcan-real-hand{
+      position:absolute;
+      z-index:5;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      object-position:center;
+      pointer-events:none;
+      transform-origin:50% 72%;
+      filter:drop-shadow(0 0 9px rgba(90,224,255,.48)) drop-shadow(0 0 18px rgba(164,94,255,.3));
+      animation:vulcanHandBreath 5.2s ease-in-out infinite;
     }
     .vulcan-ring{
       position:absolute;
+      z-index:2;
+      left:50%;
+      top:43%;
+      translate:-50% -50%;
       border-radius:50%;
       pointer-events:none;
-      opacity:.88;
-      filter:drop-shadow(0 0 8px rgba(98,215,255,.42));
+      filter:drop-shadow(0 0 7px rgba(102,219,255,.62));
     }
     .vulcan-ring.outer{
-      inset:12% 3% 26%;
-      background:repeating-conic-gradient(from 12deg,rgba(120,229,255,.9) 0 1deg,transparent 1deg 9deg);
+      width:92%;
+      aspect-ratio:1;
+      background:repeating-conic-gradient(from 5deg,rgba(126,233,255,.95) 0 1.4deg,transparent 1.4deg 9deg);
       -webkit-mask:radial-gradient(circle,transparent 65%,#000 66% 69%,transparent 70%);
       mask:radial-gradient(circle,transparent 65%,#000 66% 69%,transparent 70%);
-      animation:vulcanClockwise 15s linear infinite;
+      animation:vulcanClockwise 13s linear infinite;
     }
     .vulcan-ring.middle{
-      inset:18% 9% 31%;
-      border:1px dashed rgba(187,121,255,.58);
-      box-shadow:inset 0 0 18px rgba(114,214,255,.12),0 0 16px rgba(167,99,255,.13);
-      animation:vulcanCounter 10s linear infinite;
+      width:78%;
+      aspect-ratio:1;
+      border:2px dashed rgba(191,121,255,.62);
+      box-shadow:0 0 18px rgba(153,92,255,.18),inset 0 0 17px rgba(90,216,255,.13);
+      animation:vulcanCounter 8.5s linear infinite;
     }
     .vulcan-ring.inner{
-      inset:25% 16% 37%;
-      background:conic-gradient(from 90deg,transparent,rgba(107,225,255,.52),transparent 28%,rgba(184,113,255,.48),transparent 64%);
-      -webkit-mask:radial-gradient(circle,transparent 73%,#000 74% 78%,transparent 79%);
-      mask:radial-gradient(circle,transparent 73%,#000 74% 78%,transparent 79%);
-      animation:vulcanClockwise 6.6s linear infinite;
+      width:63%;
+      aspect-ratio:1;
+      background:conic-gradient(from 20deg,transparent,rgba(93,225,255,.74),transparent 26%,rgba(190,106,255,.66),transparent 61%);
+      -webkit-mask:radial-gradient(circle,transparent 73%,#000 74% 79%,transparent 80%);
+      mask:radial-gradient(circle,transparent 73%,#000 74% 79%,transparent 80%);
+      animation:vulcanClockwise 5.6s linear infinite;
     }
-    .vulcan-hud-crosshair{
+    .vulcan-crosshair{
       position:absolute;
-      inset:15% 6% 28%;
+      z-index:1;
+      left:50%;
+      top:43%;
+      translate:-50% -50%;
+      width:88%;
+      aspect-ratio:1;
       border-radius:50%;
       background:
-        linear-gradient(90deg,transparent 49.6%,rgba(139,231,255,.24) 49.8% 50.2%,transparent 50.4%),
-        linear-gradient(transparent 49.6%,rgba(139,231,255,.24) 49.8% 50.2%,transparent 50.4%);
-      opacity:.58;
-      animation:vulcanCrosshair 5s ease-in-out infinite;
+        linear-gradient(90deg,transparent 49.7%,rgba(142,233,255,.3) 49.8% 50.2%,transparent 50.3%),
+        linear-gradient(transparent 49.7%,rgba(142,233,255,.3) 49.8% 50.2%,transparent 50.3%);
+      opacity:.64;
+      animation:vulcanCrosshair 4.6s ease-in-out infinite;
     }
     .vulcan-orbit{
       position:absolute;
-      z-index:5;
-      inset:12% 2% 27%;
+      z-index:7;
+      left:50%;
+      top:43%;
+      translate:-50% -50%;
+      width:94%;
+      aspect-ratio:1;
       border-radius:50%;
-      animation:vulcanOrbit 8.8s linear infinite;
+      pointer-events:none;
+      animation:vulcanClockwise 7.4s linear infinite;
+    }
+    .vulcan-orbit.reverse{animation:vulcanCounter 11.3s linear infinite}
+    .vulcan-orbit i{
+      position:absolute;
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#fff;
+      box-shadow:0 0 5px #fff,0 0 14px #67e5ff,0 0 26px rgba(170,89,255,.94);
+    }
+    .vulcan-orbit i:nth-child(1){left:2%;top:48%}
+    .vulcan-orbit i:nth-child(2){right:10%;top:12%;width:5px;height:5px}
+    .vulcan-orbit i:nth-child(3){right:0;bottom:30%;width:6px;height:6px}
+    .vulcan-scan{
+      position:absolute;
+      z-index:8;
+      left:7%;
+      right:7%;
+      top:7%;
+      height:10%;
+      border-radius:50%;
+      background:linear-gradient(180deg,transparent,rgba(204,249,255,.82),rgba(135,91,255,.56),transparent);
+      filter:blur(1.5px) drop-shadow(0 0 9px rgba(100,225,255,.8));
+      opacity:0;
+      pointer-events:none;
+      mix-blend-mode:screen;
+      animation:vulcanScan 4.2s linear infinite;
+    }
+    .vulcan-sweep{
+      position:absolute;
+      z-index:3;
+      left:50%;
+      top:43%;
+      width:86%;
+      aspect-ratio:1;
+      translate:-50% -50%;
+      border-radius:50%;
+      background:conic-gradient(from 0deg,transparent 0 76%,rgba(110,225,255,.12) 83%,rgba(185,111,255,.28) 88%,transparent 94%);
+      animation:vulcanClockwise 4.8s linear infinite;
       pointer-events:none;
     }
-    .vulcan-orbit.reverse{animation-direction:reverse;animation-duration:12.8s;transform:rotate(48deg)}
-    .vulcan-orbit span{
+    .vulcan-corner{
       position:absolute;
-      width:6px;
-      height:6px;
-      border-radius:50%;
-      background:#effdff;
-      box-shadow:0 0 5px #fff,0 0 14px #62dcff,0 0 22px rgba(157,99,255,.78);
+      z-index:9;
+      width:24px;
+      height:24px;
+      border-color:rgba(124,229,255,.74);
+      filter:drop-shadow(0 0 5px rgba(99,219,255,.62));
+      pointer-events:none;
     }
-    .vulcan-orbit span:nth-child(1){left:2%;top:48%}
-    .vulcan-orbit span:nth-child(2){right:8%;top:17%;width:4px;height:4px}
-    .vulcan-orbit span:nth-child(3){right:1%;bottom:29%;width:5px;height:5px}
-    .vulcan-hand-svg{
-      position:relative;
-      z-index:4;
-      width:78%;
-      height:auto;
-      overflow:visible;
-      transform-origin:50% 78%;
-      animation:vulcanHandPulse 4.8s ease-in-out infinite;
-      filter:drop-shadow(0 0 12px rgba(82,204,255,.38)) drop-shadow(0 0 22px rgba(145,93,255,.2));
-    }
-    .vulcan-hand-svg .vulcan-circuit{animation:vulcanCircuitFlicker 3.2s ease-in-out infinite}
-    .vulcan-hand-svg .vulcan-circuit:nth-of-type(2){animation-delay:.7s}
-    .vulcan-hand-svg .vulcan-circuit:nth-of-type(3){animation-delay:1.4s}
-    .vulcan-hand-svg .vulcan-scan-band{animation:vulcanScanBand 3.8s linear infinite}
-    .vulcan-data-row{
+    .vulcan-corner.tl{left:3%;top:18%;border-left:2px solid;border-top:2px solid}
+    .vulcan-corner.tr{right:3%;top:18%;border-right:2px solid;border-top:2px solid}
+    .vulcan-corner.bl{left:3%;bottom:18%;border-left:2px solid;border-bottom:2px solid}
+    .vulcan-corner.br{right:3%;bottom:18%;border-right:2px solid;border-bottom:2px solid}
+    .vulcan-status-line{
       position:absolute;
-      z-index:7;
-      left:4%;
-      right:4%;
-      bottom:5%;
+      z-index:10;
+      left:8%;
+      right:8%;
+      bottom:3%;
       display:flex;
       align-items:center;
-      gap:7px;
-      color:#c8f4ff;
-      font:600 .5rem/1.2 system-ui,sans-serif;
-      letter-spacing:.15em;
+      gap:8px;
+      color:#ddf8ff;
+      font:700 .48rem/1.2 system-ui,sans-serif;
+      letter-spacing:.16em;
       text-transform:uppercase;
-      text-shadow:0 0 9px rgba(95,213,255,.5);
+      text-shadow:0 0 10px rgba(100,219,255,.7);
       white-space:nowrap;
     }
-    .vulcan-data-row::before,.vulcan-data-row::after{
+    .vulcan-status-line::before,.vulcan-status-line::after{
       content:"";
       height:1px;
       flex:1;
-      background:linear-gradient(90deg,transparent,rgba(112,226,255,.72));
-      box-shadow:0 0 8px rgba(92,213,255,.52);
+      background:linear-gradient(90deg,transparent,rgba(110,229,255,.86));
+      box-shadow:0 0 8px rgba(100,219,255,.62);
     }
-    .vulcan-data-row::after{transform:scaleX(-1)}
-    .vulcan-blessing:hover .vulcan-hand-svg,
-    .vulcan-blessing:focus-visible .vulcan-hand-svg,
-    .vulcan-blessing.energized .vulcan-hand-svg{
-      filter:drop-shadow(0 0 15px rgba(101,226,255,.72)) drop-shadow(0 0 30px rgba(160,94,255,.42));
+    .vulcan-status-line::after{transform:scaleX(-1)}
+    .vulcan-blessing:hover .vulcan-real-hand,
+    .vulcan-blessing:focus-visible .vulcan-real-hand,
+    .vulcan-blessing.energized .vulcan-real-hand{
+      filter:drop-shadow(0 0 13px rgba(110,238,255,.84)) drop-shadow(0 0 30px rgba(174,91,255,.52)) brightness(1.08);
     }
     .vulcan-blessing:hover .vulcan-ring.outer,
     .vulcan-blessing:focus-visible .vulcan-ring.outer,
-    .vulcan-blessing.energized .vulcan-ring.outer{animation-duration:3.2s}
+    .vulcan-blessing.energized .vulcan-ring.outer{animation-duration:2.8s}
     .vulcan-blessing:hover .vulcan-ring.middle,
     .vulcan-blessing:focus-visible .vulcan-ring.middle,
-    .vulcan-blessing.energized .vulcan-ring.middle{animation-duration:2.6s}
-    .vulcan-blessing:focus-visible{
-      outline:2px solid #8de8ff;
-      outline-offset:5px;
-      border-radius:28px;
+    .vulcan-blessing.energized .vulcan-ring.middle{animation-duration:2.2s}
+    .vulcan-blessing.energized::after{
+      content:"";
+      position:absolute;
+      z-index:-1;
+      left:50%;
+      top:43%;
+      width:86%;
+      aspect-ratio:1;
+      border:2px solid rgba(134,235,255,.82);
+      border-radius:50%;
+      translate:-50% -50%;
+      animation:vulcanEnergyBurst 1.25s ease-out 2;
+      pointer-events:none;
     }
+    .vulcan-blessing:focus-visible{outline:2px solid #8de8ff;outline-offset:5px;border-radius:28px}
     .vulcan-blessing-signal{
       position:fixed;
       z-index:100000;
-      max-width:min(390px,calc(100vw - 28px));
-      padding:13px 15px 13px 17px;
-      border:1px solid rgba(105,220,255,.62);
+      max-width:min(400px,calc(100vw - 28px));
+      padding:13px 15px 13px 18px;
+      border:1px solid rgba(105,220,255,.64);
       border-radius:14px;
-      background:
-        linear-gradient(110deg,rgba(80,204,255,.08),transparent 28%,rgba(152,92,255,.08)),
-        rgba(2,10,23,.97);
+      background:linear-gradient(110deg,rgba(80,204,255,.09),transparent 28%,rgba(152,92,255,.09)),rgba(2,10,23,.97);
       color:#eaf8ff;
-      box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 28px rgba(78,180,255,.16);
+      box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 28px rgba(78,180,255,.17);
       font-size:.85rem;
       line-height:1.5;
       opacity:0;
@@ -179,57 +245,23 @@
       box-shadow:0 0 12px rgba(116,222,255,.75);
     }
     .vulcan-blessing-signal.show{opacity:1;transform:none}
-    .vulcan-blessing-signal strong{
-      display:block;
-      margin-bottom:5px;
-      color:#94edff;
-      letter-spacing:.07em;
-    }
-    .vulcan-blessing-signal .vulcan-readout{
-      display:block;
-      margin-top:7px;
-      color:#b8c9ff;
-      font-size:.72rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    @keyframes vulcanFloat{
-      0%,100%{transform:translateY(0) rotate(-.4deg)}
-      50%{transform:translateY(-8px) rotate(.5deg)}
-    }
-    @keyframes vulcanCorePulse{
-      0%,100%{transform:scale(.96);opacity:.66}
-      50%{transform:scale(1.04);opacity:1}
-    }
-    @keyframes vulcanClockwise{to{transform:rotate(360deg)}}
-    @keyframes vulcanCounter{to{transform:rotate(-360deg)}}
-    @keyframes vulcanOrbit{to{transform:rotate(360deg)}}
-    @keyframes vulcanCrosshair{
-      0%,100%{opacity:.34;transform:scale(.98)}
-      50%{opacity:.72;transform:scale(1.03)}
-    }
-    @keyframes vulcanHandPulse{
-      0%,100%{transform:scale(.985);opacity:.94}
-      50%{transform:scale(1.025);opacity:1}
-    }
-    @keyframes vulcanCircuitFlicker{
-      0%,100%{opacity:.35}
-      50%{opacity:1}
-    }
-    @keyframes vulcanScanBand{
-      0%{transform:translateY(-220px);opacity:0}
-      12%{opacity:.8}
-      68%{opacity:.72}
-      100%{transform:translateY(690px);opacity:0}
-    }
+    .vulcan-blessing-signal strong{display:block;margin-bottom:5px;color:#94edff;letter-spacing:.07em}
+    .vulcan-blessing-signal .vulcan-readout{display:block;margin-top:7px;color:#b8c9ff;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+    @keyframes vulcanFloat{0%,100%{transform:translateY(0) rotate(-.35deg)}50%{transform:translateY(-8px) rotate(.45deg)}}
+    @keyframes vulcanCorePulse{0%,100%{transform:scale(.96);opacity:.58}50%{transform:scale(1.05);opacity:1}}
+    @keyframes vulcanClockwise{to{rotate:360deg}}
+    @keyframes vulcanCounter{to{rotate:-360deg}}
+    @keyframes vulcanCrosshair{0%,100%{opacity:.36;transform:scale(.97)}50%{opacity:.78;transform:scale(1.04)}}
+    @keyframes vulcanHandBreath{0%,100%{transform:scale(.985) translateY(1px)}50%{transform:scale(1.025) translateY(-3px)}}
+    @keyframes vulcanScan{0%{transform:translateY(-20px);opacity:0}12%{opacity:.9}72%{opacity:.74}100%{transform:translateY(320px);opacity:0}}
+    @keyframes vulcanEnergyBurst{0%{transform:scale(.6);opacity:.9}100%{transform:scale(1.55);opacity:0}}
     @media(max-width:700px){
-      .vulcan-blessing{right:9px;bottom:82px;width:136px}
-      .vulcan-data-row{font-size:.41rem;letter-spacing:.09em}
+      .vulcan-blessing{right:8px;bottom:78px;width:152px}
+      .vulcan-status-line{font-size:.38rem;letter-spacing:.1em}
       .vulcan-blessing-signal{max-width:min(300px,calc(100vw - 24px))}
     }
     @media(prefers-reduced-motion:reduce){
-      .vulcan-blessing,.vulcan-core-glow,.vulcan-ring,.vulcan-hud-crosshair,
-      .vulcan-orbit,.vulcan-hand-svg,.vulcan-circuit,.vulcan-scan-band{animation:none!important}
+      .vulcan-blessing,.vulcan-tech-frame::before,.vulcan-real-hand,.vulcan-ring,.vulcan-crosshair,.vulcan-orbit,.vulcan-scan,.vulcan-sweep{animation:none!important}
     }
   `;
   document.head.appendChild(style);
@@ -241,53 +273,20 @@
   widget.setAttribute("aria-label", "Activate the Live Long and Prosper sci-fi blessing");
   widget.innerHTML = `
     <span class="vulcan-tech-frame">
-      <span class="vulcan-core-glow" aria-hidden="true"></span>
       <span class="vulcan-ring outer" aria-hidden="true"></span>
       <span class="vulcan-ring middle" aria-hidden="true"></span>
       <span class="vulcan-ring inner" aria-hidden="true"></span>
-      <span class="vulcan-hud-crosshair" aria-hidden="true"></span>
-      <span class="vulcan-orbit" aria-hidden="true"><span></span><span></span><span></span></span>
-      <span class="vulcan-orbit reverse" aria-hidden="true"><span></span><span></span><span></span></span>
-      <svg class="vulcan-hand-svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- Font Awesome Free 7.3.1 hand-spock, CC BY 4.0, Fonticons, Inc. -->
-        <defs>
-          <linearGradient id="vulcanHandFill" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#ffe2cf"/>
-            <stop offset="38%" stop-color="#dda987"/>
-            <stop offset="72%" stop-color="#bd7d73"/>
-            <stop offset="100%" stop-color="#714d70"/>
-          </linearGradient>
-          <linearGradient id="vulcanEdgeGlow" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#dffcff"/>
-            <stop offset="48%" stop-color="#64ddff"/>
-            <stop offset="100%" stop-color="#b27aff"/>
-          </linearGradient>
-          <linearGradient id="vulcanScanFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#7de8ff" stop-opacity="0"/>
-            <stop offset="48%" stop-color="#eaffff" stop-opacity=".74"/>
-            <stop offset="52%" stop-color="#9b78ff" stop-opacity=".58"/>
-            <stop offset="100%" stop-color="#7de8ff" stop-opacity="0"/>
-          </linearGradient>
-          <filter id="vulcanSvgGlow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="5" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <path id="vulcanHandShape" d="M138.3 80.8c-9.2-33.8 10.5-68.8 44.3-78.4 34-9.6 69.4 10.2 79 44.2L291.9 153.7 305.1 84c6.6-34.7 40.1-57.5 74.8-50.9 31.4 6 53 33.9 52 64.9 10-2.6 20.8-2.8 31.5-.1 34.3 8.6 55.1 43.3 46.6 77.6L454.7 397.2C437.8 464.7 377.2 512 307.6 512l-33.7 0c-56.9 0-112.2-19-157.2-53.9l-92-71.6c-27.9-21.7-32.9-61.9-11.2-89.8s61.9-32.9 89.8-11.2l17 13.2-51.8-131.2c-13-32.9 3.2-70.1 36-83 11.1-4.4 22.7-5.4 33.7-3.7zm77.1-21.2c-2.4-8.5-11.2-13.4-19.7-11s-13.4 11.2-11 19.7l54.8 182.4c3.5 12.3-3.3 25.2-15.4 29.3s-25.3-2-30-13.9L142.9 138.1c-3.2-8.2-12.5-12.3-20.8-9s-12.3 12.5-9 20.8l73.3 185.6c12 30.3-23.7 57-49.4 37L73.8 323.4c-7-5.4-17-4.2-22.5 2.8s-4.2 17 2.8 22.5l92 71.6c36.5 28.4 81.4 43.8 127.7 43.8l33.7 0c47.5 0 89-32.4 100.5-78.5l55.4-221.6c2.1-8.6-3.1-17.3-11.6-19.4s-17.3 3.1-19.4 11.6l-26 104c-2.9 11.7-13.4 19.9-25.5 19.9-16.5 0-28.9-15-25.8-31.2L383.7 99c1.7-8.7-4-17.1-12.7-18.7S354 84.3 352.3 93L320.5 260c-2.2 11.6-12.4 20-24.2 20-11 0-20.7-7.3-23.7-17.9L215.4 59.6z"/>
-          <clipPath id="vulcanHandClip"><use href="#vulcanHandShape"/></clipPath>
-        </defs>
-        <use href="#vulcanHandShape" fill="url(#vulcanHandFill)" stroke="url(#vulcanEdgeGlow)" stroke-width="7" stroke-linejoin="round" filter="url(#vulcanSvgGlow)"/>
-        <g clip-path="url(#vulcanHandClip)" fill="none" stroke="url(#vulcanEdgeGlow)" stroke-linecap="round">
-          <path class="vulcan-circuit" d="M78 337h74l24-25h76l31 31h96" stroke-width="3"/>
-          <path class="vulcan-circuit" d="M155 405h54l23-23h85l28 28h55" stroke-width="2.6"/>
-          <path class="vulcan-circuit" d="M181 143v62l29 30v61M325 118v74l-25 26v64" stroke-width="2.4"/>
-          <circle class="vulcan-circuit" cx="176" cy="312" r="7" stroke-width="3"/>
-          <circle class="vulcan-circuit" cx="283" cy="343" r="6" stroke-width="2.5"/>
-          <circle class="vulcan-circuit" cx="209" cy="405" r="5" stroke-width="2.2"/>
-          <rect class="vulcan-scan-band" x="-30" y="-90" width="580" height="120" fill="url(#vulcanScanFill)" stroke="none"/>
-        </g>
-        <path d="M111 350c48 35 92 53 147 61 51 8 99 1 141-22" fill="none" stroke="#fff" stroke-opacity=".23" stroke-width="5" stroke-linecap="round"/>
-      </svg>
-      <span class="vulcan-data-row">Live Long · Prosper</span>
+      <span class="vulcan-crosshair" aria-hidden="true"></span>
+      <span class="vulcan-sweep" aria-hidden="true"></span>
+      <span class="vulcan-orbit" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="vulcan-orbit reverse" aria-hidden="true"><i></i><i></i><i></i></span>
+      <img class="vulcan-real-hand" src="/vulcan-salute-realistic.webp?v=20260722a" alt="">
+      <span class="vulcan-scan" aria-hidden="true"></span>
+      <span class="vulcan-corner tl" aria-hidden="true"></span>
+      <span class="vulcan-corner tr" aria-hidden="true"></span>
+      <span class="vulcan-corner bl" aria-hidden="true"></span>
+      <span class="vulcan-corner br" aria-hidden="true"></span>
+      <span class="vulcan-status-line">Vulcan salute · online</span>
     </span>
   `;
 
@@ -309,11 +308,13 @@
     signal.style.left = `${left}px`;
     signal.style.top = `${top}px`;
     signal.classList.add("show");
+    widget.classList.remove("energized");
+    void widget.offsetWidth;
     widget.classList.add("energized");
 
     clearTimeout(hideTimer);
     clearTimeout(energyTimer);
     hideTimer = setTimeout(() => signal.classList.remove("show"), 5200);
-    energyTimer = setTimeout(() => widget.classList.remove("energized"), 2700);
+    energyTimer = setTimeout(() => widget.classList.remove("energized"), 2900);
   });
 })();
