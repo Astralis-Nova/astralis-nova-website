@@ -8,7 +8,7 @@
     <img class="celestial gas" src="/astralis-gas-giant.png" alt="">
     <img class="celestial earth" src="/astralis-earth.png" alt="">
     <img class="celestial mars" src="/astralis-mars.png" alt="">
-    <img class="celestial ringed" src="/planet-gas-giant.svg" alt="">
+    <img class="celestial ringed" src="/planet-gas-giant.svg?v=20260722m" alt="">
     <img class="celestial comet" src="/comet-c2026-a1-maps.svg" alt="">
   `;
 
