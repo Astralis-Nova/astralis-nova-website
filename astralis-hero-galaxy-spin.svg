@@ -1,45 +1,72 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" fill="none">
   <defs>
-    <radialGradient id="core" cx="50%" cy="50%" r="50%">
-      <stop offset="0" stop-color="#fff8d8"/>
-      <stop offset="0.18" stop-color="#ffd99e"/>
-      <stop offset="0.34" stop-color="#ff8ec7"/>
-      <stop offset="0.58" stop-color="#7b66ff"/>
-      <stop offset="1" stop-color="#140d30" stop-opacity="0"/>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff9df" stop-opacity=".98"/>
+      <stop offset=".09" stop-color="#ffd99a" stop-opacity=".94"/>
+      <stop offset=".22" stop-color="#ff9fc9" stop-opacity=".72"/>
+      <stop offset=".42" stop-color="#9d83ff" stop-opacity=".48"/>
+      <stop offset=".68" stop-color="#58bfff" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#120b2c" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="mist" cx="50%" cy="50%" r="50%">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.85"/>
-      <stop offset="0.16" stop-color="#f8b3d6" stop-opacity="0.7"/>
-      <stop offset="0.42" stop-color="#8e87ff" stop-opacity="0.38"/>
-      <stop offset="1" stop-color="#140d30" stop-opacity="0"/>
+    <radialGradient id="core" cx="48%" cy="44%" r="55%">
+      <stop offset="0" stop-color="#fffef4"/>
+      <stop offset=".28" stop-color="#fff2bd"/>
+      <stop offset=".65" stop-color="#ffc0d7"/>
+      <stop offset="1" stop-color="#7e68ff" stop-opacity="0"/>
     </radialGradient>
-    <filter id="blur12"><feGaussianBlur stdDeviation="12"/></filter>
-    <filter id="blur24"><feGaussianBlur stdDeviation="24"/></filter>
+    <linearGradient id="armA" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#6ad5ff" stop-opacity=".08"/>
+      <stop offset=".42" stop-color="#9e8cff" stop-opacity=".62"/>
+      <stop offset=".76" stop-color="#ff9bc9" stop-opacity=".48"/>
+      <stop offset="1" stop-color="#fff0b3" stop-opacity=".06"/>
+    </linearGradient>
+    <linearGradient id="armB" x1="1" y1="0" x2="0" y2="1">
+      <stop stop-color="#fff2bd" stop-opacity=".05"/>
+      <stop offset=".32" stop-color="#ff91c6" stop-opacity=".5"/>
+      <stop offset=".68" stop-color="#7b74ff" stop-opacity=".58"/>
+      <stop offset="1" stop-color="#62d7ff" stop-opacity=".06"/>
+    </linearGradient>
+    <filter id="blur8"><feGaussianBlur stdDeviation="8"/></filter>
+    <filter id="blur18"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="blur34"><feGaussianBlur stdDeviation="34"/></filter>
+    <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   </defs>
-  <g transform="translate(450 450)">
-    <circle r="290" fill="url(#mist)" opacity="0.55" filter="url(#blur24)"/>
-    <g opacity="0.9">
-      <ellipse rx="260" ry="88" transform="rotate(18)" stroke="#f4a4d5" stroke-width="44" stroke-linecap="round" stroke-dasharray="6 32" opacity="0.16"/>
-      <ellipse rx="220" ry="75" transform="rotate(18)" stroke="#a188ff" stroke-width="38" stroke-linecap="round" stroke-dasharray="5 26" opacity="0.18"/>
-      <ellipse rx="180" ry="62" transform="rotate(18)" stroke="#7ad2ff" stroke-width="28" stroke-linecap="round" stroke-dasharray="4 20" opacity="0.12"/>
+
+  <g transform="translate(450 450) rotate(-13)">
+    <ellipse rx="360" ry="275" fill="url(#halo)" opacity=".42" filter="url(#blur34)"/>
+    <ellipse rx="290" ry="118" fill="url(#halo)" opacity=".34" filter="url(#blur18)"/>
+
+    <g filter="url(#blur18)" opacity=".9">
+      <path d="M-348-70C-248-178-93-224 56-191c122 27 231 104 314 215-119-66-229-96-338-91-122 5-227 53-380 137 59-63 113-105 177-137 78-39 156-59 240-61-113-18-219-4-357 58Z" fill="url(#armA)"/>
+      <path d="M-321 121C-220 24-91-31 57-38c130-7 254 33 356 113-129-38-245-44-352-13-118 34-203 104-323 225 35-78 75-134 130-184 66-59 137-96 218-122-114 15-213 55-407 140Z" fill="url(#armB)"/>
+      <path d="M28-349C143-278 227-180 267-68c35 100 33 217-6 342-18-128-60-230-129-307-78-88-179-135-326-194 85 6 150 23 213 56 74 39 132 88 180 151-48-101-115-187-171-329Z" fill="url(#armA)" opacity=".72"/>
+      <path d="M-31 352C-143 286-226 196-271 83c-40-101-43-216-11-341 26 126 73 224 148 297 83 82 187 123 337 173-85-1-152-15-217-45-77-35-138-80-190-141 55 98 128 181 173 326Z" fill="url(#armB)" opacity=".7"/>
     </g>
-    <g filter="url(#blur12)">
-      <path d="M-298 -72c76-36 164-45 258-27 73 15 141 48 236 118-114-32-193-43-292-26-71 12-132 34-202 74 62-64 117-108 190-139 43-18 90-30 146-38-109-10-205 6-336 38Z" fill="#8f72ff" opacity="0.34"/>
-      <path d="M-274 101c95-68 188-103 303-117 81-11 148-5 257 15-126 12-211 28-297 76-70 39-121 84-163 157 18-73 44-122 95-176 34-36 76-67 132-97-111 20-206 57-327 142Z" fill="#ff95c3" opacity="0.36"/>
-      <path d="M50 -292c85 53 148 114 202 204 39 65 63 132 80 240-57-95-105-156-185-216-61-46-126-77-224-98 83-1 140 11 207 45 45 22 88 53 130 100-48-103-107-176-210-275Z" fill="#6fd6ff" opacity="0.24"/>
-      <path d="M-75 299c-78-46-138-100-194-186-40-62-67-126-92-233 64 89 116 146 198 200 63 41 129 66 228 80-83 8-140 1-208-26-45-17-89-44-135-85 55 98 119 167 203 250Z" fill="#9f8bff" opacity="0.22"/>
+
+    <g fill="none" stroke-linecap="round" opacity=".62">
+      <path d="M-342-50C-220-150-82-181 67-145c127 31 221 100 301 204" stroke="#b894ff" stroke-width="22" stroke-dasharray="2 23" filter="url(#blur8)"/>
+      <path d="M-314 112C-190 19-57-11 80 11c119 20 218 78 302 167" stroke="#ff9fcf" stroke-width="18" stroke-dasharray="2 19" filter="url(#blur8)"/>
+      <path d="M16-325C117-246 182-145 202-35c18 100-3 200-72 302" stroke="#73d6ff" stroke-width="16" stroke-dasharray="2 20" filter="url(#blur8)"/>
+      <path d="M-11 328C-111 250-178 150-201 42c-21-99-3-200 63-304" stroke="#9a88ff" stroke-width="15" stroke-dasharray="2 18" filter="url(#blur8)"/>
     </g>
-    <circle r="112" fill="url(#core)" filter="url(#blur12)"/>
-    <circle r="38" fill="#fff8ea"/>
-    <g fill="#fff">
-      <circle cx="-214" cy="-96" r="4" opacity="0.9"/>
-      <circle cx="232" cy="108" r="5" opacity="0.85"/>
-      <circle cx="92" cy="-214" r="3.5" opacity="0.9"/>
-      <circle cx="-118" cy="211" r="4.5" opacity="0.8"/>
-      <circle cx="-247" cy="44" r="3" opacity="0.7"/>
-      <circle cx="206" cy="-66" r="3" opacity="0.75"/>
-      <circle cx="140" cy="188" r="3.5" opacity="0.72"/>
-      <circle cx="-64" cy="-246" r="4" opacity="0.82"/>
+
+    <ellipse rx="172" ry="72" fill="url(#core)" filter="url(#blur18)"/>
+    <ellipse rx="92" ry="38" fill="url(#core)" opacity=".92" filter="url(#blur8)"/>
+    <ellipse rx="29" ry="17" fill="#fffdf2" opacity=".98" filter="url(#glow)"/>
+
+    <g fill="#fff" filter="url(#glow)">
+      <circle cx="-257" cy="-100" r="4.5" opacity=".9"/>
+      <circle cx="274" cy="93" r="4.2" opacity=".84"/>
+      <circle cx="113" cy="-257" r="3.7" opacity=".92"/>
+      <circle cx="-139" cy="252" r="4.1" opacity=".82"/>
+      <circle cx="-303" cy="43" r="3.2" opacity=".78"/>
+      <circle cx="251" cy="-77" r="3.4" opacity=".8"/>
+      <circle cx="167" cy="221" r="3.2" opacity=".74"/>
+      <circle cx="-78" cy="-291" r="4" opacity=".86"/>
+      <circle cx="327" cy="12" r="2.8" opacity=".75"/>
+      <circle cx="-225" cy="181" r="3" opacity=".72"/>
+      <circle cx="72" cy="300" r="2.7" opacity=".7"/>
+      <circle cx="-15" cy="-337" r="2.6" opacity=".76"/>
     </g>
   </g>
 </svg>
