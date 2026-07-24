@@ -8,43 +8,43 @@
     {
       name: 'Max',
       aka: 'aka Puddles',
-      count: 3,
-      collection: '/images/pets/max-collection.svg?v=20260724c',
-      description: 'A fluffy white cloud with loyal-companion energy, gentle eyes, and a talent for turning any cozy spot into his command bridge.'
+      count: 5,
+      collection: '/images/pets/max-collection.svg?v=20260724d',
+      description: 'A fluffy white cloud with loyal-companion energy, gentle eyes, and a talent for turning any cozy spot into his command bridge. His refreshed collection now includes family time, teddy-bear cuddles, puppy days, couch relaxation, and his bright-eyed tile-floor portrait.'
     },
     {
       name: 'Duke',
       aka: 'aka Prancer',
-      count: 4,
-      collection: '/images/pets/duke-collection.svg?v=20260724b',
-      description: 'The brown greeter of the crew: alert, warm-hearted, and always looking like he knows exactly when it is snack o’clock.'
+      count: 2,
+      collection: '/images/pets/duke-collection.svg?v=20260724d',
+      description: 'The brown greeter of the crew: alert, warm-hearted, and always looking like he knows exactly when it is snack o’clock. His newest collection includes a sunny close-up and a family porch memory.'
     },
     {
-      name: 'Zoey',
-      aka: 'longtime sidekick',
-      count: 3,
-      collection: '/images/pets/zoey-collection.svg?v=20260724b',
-      description: 'Bright-eyed, expressive, and full of personality. Zoey has been part sidekick, part comedian, and part emotional-support crew.'
+      name: 'Zoey & Pepper',
+      aka: 'best-friend memories',
+      count: 2,
+      collection: '/images/pets/zoey-collection.svg?v=20260724d',
+      description: 'Zoey and Pepper together, two beloved companions sharing the same family orbit. Their collection includes a portrait together and a warm porch memory with the family crew.'
     },
     {
       name: 'Tortellini',
       aka: 'slow-and-steady specialist',
-      count: 1,
-      collection: '/images/pets/tortellini.svg?v=20260724b',
-      description: 'The shelled explorer of the household, quiet, determined, and living proof that starships are not the only things built with good armor.'
+      count: 2,
+      collection: '/images/pets/tortellini.svg?v=20260724d',
+      description: 'The shelled explorer of the household, quiet, determined, and living proof that starships are not the only things built with good armor. The album now includes both habitat and outdoor dining adventures.'
     },
     {
       name: 'Rian',
       aka: 'white-dog star power',
-      count: 4,
-      collection: '/images/pets/rian-collection.svg?v=20260724b',
-      description: 'Fluffy ears, bright eyes, sweater-weather energy, and the kind of face that could negotiate extra treats from almost anyone.'
+      count: 5,
+      collection: '/images/pets/rian-collection.svg?v=20260724d',
+      description: 'Fluffy ears, bright eyes, and the kind of face that could negotiate extra treats from almost anyone. Both top photos are correctly filed under Rian, including the special picture with Shaleyaa and the teddy-bear cuddle.'
     },
     {
       name: 'General',
       aka: 'calm household guardian',
       count: 2,
-      collection: '/images/pets/general-collection.svg?v=20260724b',
+      collection: '/images/pets/general-collection.svg?v=20260724d',
       description: 'Steady posture, alert eyes, and the unmistakable energy of a loyal protector making quiet rounds around the home.'
     }
   ];
