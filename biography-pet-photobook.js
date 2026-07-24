@@ -61,6 +61,35 @@
   const description = section.querySelector('.pet-view-copy p');
   const gallery = section.querySelector('.pet-gallery-live');
   let requestId = 0;
+  let correctedAlbumsPromise;
+
+  const uniquePhotos = photos => [...new Set(photos.filter(Boolean))];
+
+  const getCorrectedAlbums = () => {
+    if (correctedAlbumsPromise) return correctedAlbumsPromise;
+
+    correctedAlbumsPromise = Promise.all(
+      pets.map(async ([slug]) => {
+        const response = await fetch(`/data/pets/${slug}.json?v=20260724h`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Album request failed for ${slug}: ${response.status}`);
+        return [slug, await response.json()];
+      })
+    ).then(entries => {
+      const albums = Object.fromEntries(entries);
+
+      // Corrections from the three identification quizzes:
+      // - The white puppy was Max, not Zoey.
+      // - The family photo with the brown dog was Duke, not Rian.
+      albums.max.photos = uniquePhotos([...albums.max.photos, albums.zoey.photos[0]]);
+      albums.zoey.photos = uniquePhotos(albums.zoey.photos.slice(1));
+      albums.duke.photos = uniquePhotos([...albums.duke.photos, albums.rian.photos[5]]);
+      albums.rian.photos = uniquePhotos(albums.rian.photos.slice(0, 5));
+
+      return albums;
+    });
+
+    return correctedAlbumsPromise;
+  };
 
   const lightbox = document.createElement('div');
   lightbox.className = 'pet-lightbox-live';
@@ -107,11 +136,9 @@
     picker.querySelectorAll('.pet-picker-button').forEach((button, i) => button.setAttribute('aria-selected', i === index ? 'true' : 'false'));
     gallery.innerHTML = '<div class="pet-loading">Loading pet photos…</div>';
     try {
-      const response = await fetch(`/data/pets/${pets[index][0]}.json?v=20260724g`, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`Album request failed: ${response.status}`);
-      const pet = await response.json();
+      const albums = await getCorrectedAlbums();
       if (current !== requestId) return;
-      render(pet);
+      render(albums[pets[index][0]]);
     } catch (error) {
       gallery.innerHTML = '<div class="pet-loading">This album could not load. Please refresh the page.</div>';
       console.error(error);
