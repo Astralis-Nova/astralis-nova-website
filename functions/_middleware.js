@@ -27,7 +27,7 @@ export async function onRequest(context) {
     })
     .on("body", {
       element(element) {
-        element.append('<script src="/astralis-performance-loader.js?v=20260722v" defer></script><script src="/biography-pet-photobook.js?v=20260724d" defer></script>', { html: true });
+        element.append('<script src="/astralis-performance-loader.js?v=20260722v" defer></script><script src="/biography-pet-photobook.js?v=20260724e" defer></script>', { html: true });
       },
     })
     .transform(response);
