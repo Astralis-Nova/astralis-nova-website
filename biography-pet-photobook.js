@@ -1,47 +1,51 @@
 (() => {
   const path = window.location.pathname.toLowerCase();
-  if (!path.endsWith('/biography') && !path.endsWith('/biography.html')) return;
-  if (document.getElementById('pet-photobook')) return;
+  if (!/\/biography(?:\.html)?\/?$/.test(path)) return;
+
+  document.getElementById('pet-photobook')?.remove();
 
   const pets = [
     {
       name: 'Max',
       aka: 'aka Puddles',
-      description: 'A fluffy white cloud with loyal-companion energy, gentle eyes, and a talent for turning any cozy spot into his command bridge.',
-      photos: ['/images/pets/max-puddles.svg?v=20260724a']
+      count: 3,
+      collection: '/images/pets/max-collection.svg?v=20260724b',
+      description: 'A fluffy white cloud with loyal-companion energy, gentle eyes, and a talent for turning any cozy spot into his command bridge.'
     },
     {
       name: 'Duke',
       aka: 'aka Prancer',
-      description: 'The brown greeter of the crew: alert, warm-hearted, and always looking like he knows exactly when it is snack o’clock.',
-      photos: ['/images/pets/duke-prancer.svg?v=20260724a']
+      count: 4,
+      collection: '/images/pets/duke-collection.svg?v=20260724b',
+      description: 'The brown greeter of the crew: alert, warm-hearted, and always looking like he knows exactly when it is snack o’clock.'
     },
     {
       name: 'Zoey',
       aka: 'longtime sidekick',
-      description: 'Bright-eyed, expressive, and full of personality. Zoey has the kind of face that can say an entire paragraph without barking once.',
-      photos: [
-        '/images/pets/zoey.svg?v=20260724a',
-        '/images/pets/zoey-memory.svg?v=20260724a'
-      ]
+      count: 3,
+      collection: '/images/pets/zoey-collection.svg?v=20260724b',
+      description: 'Bright-eyed, expressive, and full of personality. Zoey has been part sidekick, part comedian, and part emotional-support crew.'
     },
     {
       name: 'Tortellini',
       aka: 'slow-and-steady specialist',
-      description: 'The shelled explorer of the household, quiet, determined, and living proof that starships are not the only things built with good armor.',
-      photos: ['/images/pets/tortellini.svg?v=20260724a']
+      count: 1,
+      collection: '/images/pets/tortellini.svg?v=20260724b',
+      description: 'The shelled explorer of the household, quiet, determined, and living proof that starships are not the only things built with good armor.'
     },
     {
       name: 'Rian',
       aka: 'white-dog star power',
-      description: 'Fluffy ears, bright eyes, sweater-weather energy, and the kind of face that could negotiate extra treats from almost anyone.',
-      photos: ['/images/pets/rian.svg?v=20260724a']
+      count: 4,
+      collection: '/images/pets/rian-collection.svg?v=20260724b',
+      description: 'Fluffy ears, bright eyes, sweater-weather energy, and the kind of face that could negotiate extra treats from almost anyone.'
     },
     {
       name: 'General',
       aka: 'calm household guardian',
-      description: 'Steady posture, alert eyes, and the unmistakable energy of a loyal protector making quiet rounds around the home.',
-      photos: ['/images/pets/general.svg?v=20260724a']
+      count: 2,
+      collection: '/images/pets/general-collection.svg?v=20260724b',
+      description: 'Steady posture, alert eyes, and the unmistakable energy of a loyal protector making quiet rounds around the home.'
     }
   ];
 
@@ -49,21 +53,25 @@
   style.textContent = `
     #pet-photobook{margin-top:28px;padding:30px;border:1px solid rgba(255,255,255,.12);border-radius:24px;background:linear-gradient(145deg,rgba(8,17,30,.94),rgba(10,11,27,.9));box-shadow:0 18px 55px rgba(0,0,0,.32)}
     #pet-photobook h2{margin:0;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.03em}
-    #pet-photobook .pet-intro{max-width:780px;margin:14px 0 0;color:#d7e2f4;line-height:1.8}
-    .pet-grid-live{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:24px}
-    .pet-card-live{overflow:hidden;border:1px solid rgba(112,169,255,.25);border-radius:20px;background:rgba(7,14,26,.86);box-shadow:0 14px 38px rgba(0,0,0,.28)}
-    .pet-gallery-live{display:grid;grid-auto-flow:column;grid-auto-columns:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin}
-    .pet-photo-live{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#06101c;scroll-snap-align:start;cursor:zoom-in}
-    .pet-copy-live{padding:16px 16px 18px}
-    .pet-copy-live h3{margin:0;font-size:1.2rem}
-    .pet-aka-live{display:inline-block;margin-top:5px;color:#ffd27a;font-size:.82rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
-    .pet-copy-live p{margin:12px 0 0;color:#b7c5d9;line-height:1.65}
+    #pet-photobook .pet-intro{max-width:800px;margin:14px 0 0;color:#d7e2f4;line-height:1.8}
+    .pet-picker-live{display:flex;gap:10px;margin-top:24px;padding-bottom:8px;overflow-x:auto;scrollbar-width:thin}
+    .pet-picker-button{flex:0 0 auto;padding:11px 17px;border:1px solid rgba(112,169,255,.32);border-radius:999px;background:rgba(5,13,27,.82);color:#dcecff;font:inherit;font-weight:800;cursor:pointer;transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease}
+    .pet-picker-button:hover,.pet-picker-button:focus-visible{transform:translateY(-2px);border-color:rgba(121,202,255,.85);outline:none}
+    .pet-picker-button[aria-selected="true"]{border-color:#72cfff;background:linear-gradient(135deg,rgba(32,128,204,.52),rgba(167,50,139,.38));box-shadow:0 0 24px rgba(79,183,255,.18);color:#fff}
+    .pet-viewer-live{display:grid;grid-template-columns:minmax(280px,.95fr) minmax(0,1.05fr);gap:26px;align-items:center;margin-top:20px;padding:20px;border:1px solid rgba(112,169,255,.22);border-radius:22px;background:rgba(5,13,26,.82)}
+    .pet-collection-button{display:block;width:100%;padding:0;border:0;border-radius:18px;background:#06101c;overflow:hidden;cursor:zoom-in;box-shadow:0 16px 40px rgba(0,0,0,.3)}
+    .pet-collection-image{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#06101c}
+    .pet-view-copy h3{margin:0;font-size:clamp(1.7rem,3vw,2.35rem)}
+    .pet-view-aka{display:inline-block;margin-top:6px;color:#ffd27a;font-size:.84rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase}
+    .pet-view-copy p{margin:14px 0 0;color:#b7c5d9;line-height:1.75}
+    .pet-count-live{display:inline-flex;margin-top:16px;padding:7px 11px;border:1px solid rgba(255,255,255,.13);border-radius:999px;color:#dcecff;background:rgba(255,255,255,.05);font-size:.86rem;font-weight:800}
+    .pet-open-hint{display:block;margin-top:11px;color:#95abc4;font-size:.84rem}
     .pet-note-live{margin:20px 0 0;color:#b8c7dc;line-height:1.7}
-    .pet-lightbox-live{position:fixed;inset:0;z-index:1000000;display:none;place-items:center;padding:24px;background:rgba(0,0,0,.9)}
+    .pet-lightbox-live{position:fixed;inset:0;z-index:1000000;display:none;place-items:center;padding:24px;background:rgba(0,0,0,.92)}
     .pet-lightbox-live.open{display:grid}
-    .pet-lightbox-live img{max-width:min(92vw,980px);max-height:88vh;border-radius:18px;box-shadow:0 0 60px rgba(79,183,255,.3)}
-    .pet-lightbox-live button{position:fixed;right:20px;top:20px;width:44px;height:44px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:#07101d;color:#fff;font-size:1.4rem;cursor:pointer}
-    @media(max-width:560px){#pet-photobook{padding:22px 18px}.pet-grid-live{grid-template-columns:1fr}}
+    .pet-lightbox-live img{max-width:min(94vw,1000px);max-height:88vh;border-radius:18px;background:#06101c;box-shadow:0 0 60px rgba(79,183,255,.3)}
+    .pet-lightbox-live button{position:fixed;right:20px;top:20px;width:46px;height:46px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:#07101d;color:#fff;font-size:1.5rem;cursor:pointer}
+    @media(max-width:760px){#pet-photobook{padding:22px 18px}.pet-viewer-live{grid-template-columns:1fr}.pet-collection-image{aspect-ratio:1/1}}
   `;
   document.head.appendChild(style);
 
@@ -72,33 +80,56 @@
   section.innerHTML = `
     <p class="eyebrow">Field notes from the home crew</p>
     <h2>The Pet Photobook</h2>
-    <p class="pet-intro">Every good biography needs the real supporting cast. This is a living album for Ramon’s animal companions and household legends, built to grow whenever more favorite pictures are found.</p>
-    <div class="pet-grid-live"></div>
-    <p class="pet-note-live"><strong>Living album:</strong> more pet photographs can be added anytime new memories surface from the archives.</p>
+    <p class="pet-intro">Choose a member of the crew to open that pet’s photo collection. The album is built to keep growing whenever more favorite pictures are found.</p>
+    <div class="pet-picker-live" role="tablist" aria-label="Choose a pet"></div>
+    <div class="pet-viewer-live">
+      <button class="pet-collection-button" type="button" aria-label="Open selected pet photos full screen">
+        <img class="pet-collection-image" alt="">
+      </button>
+      <div class="pet-view-copy">
+        <h3></h3>
+        <span class="pet-view-aka"></span>
+        <p></p>
+        <span class="pet-count-live"></span>
+        <span class="pet-open-hint">Tap the photo collection to enlarge it.</span>
+      </div>
+    </div>
+    <p class="pet-note-live"><strong>Living album:</strong> additional photographs can be added under the correct pet whenever more memories surface from the archives.</p>
   `;
 
-  const grid = section.querySelector('.pet-grid-live');
-  for (const pet of pets) {
-    const card = document.createElement('article');
-    card.className = 'pet-card-live';
+  const picker = section.querySelector('.pet-picker-live');
+  const viewerImage = section.querySelector('.pet-collection-image');
+  const viewerTitle = section.querySelector('.pet-view-copy h3');
+  const viewerAka = section.querySelector('.pet-view-aka');
+  const viewerDescription = section.querySelector('.pet-view-copy p');
+  const viewerCount = section.querySelector('.pet-count-live');
+  const viewerButton = section.querySelector('.pet-collection-button');
 
-    const gallery = document.createElement('div');
-    gallery.className = 'pet-gallery-live';
-    pet.photos.forEach((src, index) => {
-      const image = document.createElement('img');
-      image.className = 'pet-photo-live';
-      image.src = src;
-      image.loading = 'lazy';
-      image.alt = `${pet.name} pet photograph${pet.photos.length > 1 ? ` ${index + 1}` : ''}`;
-      gallery.appendChild(image);
+  const selectPet = index => {
+    const pet = pets[index];
+    picker.querySelectorAll('.pet-picker-button').forEach((button, buttonIndex) => {
+      const selected = buttonIndex === index;
+      button.setAttribute('aria-selected', selected ? 'true' : 'false');
+      button.tabIndex = selected ? 0 : -1;
     });
+    viewerImage.src = pet.collection;
+    viewerImage.alt = `${pet.name} photo collection containing ${pet.count} photograph${pet.count === 1 ? '' : 's'}`;
+    viewerTitle.textContent = pet.name;
+    viewerAka.textContent = pet.aka;
+    viewerDescription.textContent = pet.description;
+    viewerCount.textContent = `${pet.count} photo${pet.count === 1 ? '' : 's'} in this collection`;
+    viewerButton.dataset.petName = pet.name;
+  };
 
-    const copy = document.createElement('div');
-    copy.className = 'pet-copy-live';
-    copy.innerHTML = `<h3>${pet.name}</h3><span class="pet-aka-live">${pet.aka}</span><p>${pet.description}</p>`;
-    card.append(gallery, copy);
-    grid.appendChild(card);
-  }
+  pets.forEach((pet, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'pet-picker-button';
+    button.setAttribute('role', 'tab');
+    button.textContent = pet.name;
+    button.addEventListener('click', () => selectPet(index));
+    picker.appendChild(button);
+  });
 
   const target = document.querySelector('.signal') || document.querySelector('.footer');
   if (target) target.before(section);
@@ -106,14 +137,14 @@
 
   const lightbox = document.createElement('div');
   lightbox.className = 'pet-lightbox-live';
-  lightbox.innerHTML = '<button type="button" aria-label="Close pet photo">×</button><img alt="Expanded pet photograph">';
+  lightbox.innerHTML = '<button type="button" aria-label="Close pet photos">×</button><img alt="Expanded pet photo collection">';
   document.body.appendChild(lightbox);
 
   const closeLightbox = () => lightbox.classList.remove('open');
-  section.addEventListener('click', event => {
-    const image = event.target.closest('.pet-photo-live');
-    if (!image) return;
-    lightbox.querySelector('img').src = image.src;
+  viewerButton.addEventListener('click', () => {
+    const expandedImage = lightbox.querySelector('img');
+    expandedImage.src = viewerImage.src;
+    expandedImage.alt = viewerImage.alt;
     lightbox.classList.add('open');
   });
   lightbox.addEventListener('click', event => {
@@ -122,4 +153,6 @@
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape') closeLightbox();
   });
+
+  selectPet(0);
 })();
