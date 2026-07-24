@@ -9,7 +9,7 @@
       name: 'Max',
       aka: 'aka Puddles',
       count: 3,
-      collection: '/images/pets/max-collection.svg?v=20260724b',
+      collection: '/images/pets/max-collection.svg?v=20260724c',
       description: 'A fluffy white cloud with loyal-companion energy, gentle eyes, and a talent for turning any cozy spot into his command bridge.'
     },
     {
@@ -51,6 +51,9 @@
 
   const style = document.createElement('style');
   style.textContent = `
+    .hero-grid > div:first-child{order:2}
+    .portrait-wrap{order:1}
+    .hero::before{left:auto!important;right:-8%!important}
     #pet-photobook{margin-top:28px;padding:30px;border:1px solid rgba(255,255,255,.12);border-radius:24px;background:linear-gradient(145deg,rgba(8,17,30,.94),rgba(10,11,27,.9));box-shadow:0 18px 55px rgba(0,0,0,.32)}
     #pet-photobook h2{margin:0;font-size:clamp(2rem,4vw,3rem);letter-spacing:-.03em}
     #pet-photobook .pet-intro{max-width:800px;margin:14px 0 0;color:#d7e2f4;line-height:1.8}
@@ -71,6 +74,7 @@
     .pet-lightbox-live.open{display:grid}
     .pet-lightbox-live img{max-width:min(94vw,1000px);max-height:88vh;border-radius:18px;background:#06101c;box-shadow:0 0 60px rgba(79,183,255,.3)}
     .pet-lightbox-live button{position:fixed;right:20px;top:20px;width:46px;height:46px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:#07101d;color:#fff;font-size:1.5rem;cursor:pointer}
+    @media(max-width:820px){.hero-grid > div:first-child{order:1}.portrait-wrap{order:2}.hero::before{left:52%!important;right:auto!important}}
     @media(max-width:760px){#pet-photobook{padding:22px 18px}.pet-viewer-live{grid-template-columns:1fr}.pet-collection-image{aspect-ratio:1/1}}
   `;
   document.head.appendChild(style);
