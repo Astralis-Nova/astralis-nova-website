@@ -70,18 +70,20 @@
 
     correctedAlbumsPromise = Promise.all(
       pets.map(async ([slug]) => {
-        const response = await fetch(`/data/pets/${slug}.json?v=20260725a`, { cache: 'no-store' });
+        const response = await fetch(`/data/pets/${slug}.json?v=20260725b`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Album request failed for ${slug}: ${response.status}`);
         return [slug, await response.json()];
       })
     ).then(entries => {
       const albums = Object.fromEntries(entries);
 
-      albums.max.photos = uniquePhotos([
-        '/images/pets/max-hq-01.svg?v=20260725a',
+      const maxPhotos = uniquePhotos([
+        '/images/pets/max-hq-01.svg?v=20260725b',
         ...albums.max.photos.slice(1),
         albums.zoey.photos[0]
       ]);
+      // Keep only the first and third Max pictures. The second and fourth were removed by request.
+      albums.max.photos = [maxPhotos[0], maxPhotos[2]].filter(Boolean);
       albums.zoey.photos = uniquePhotos(albums.zoey.photos.slice(1));
       albums.duke.photos = uniquePhotos([...albums.duke.photos, albums.rian.photos[5]]);
       albums.rian.photos = uniquePhotos(albums.rian.photos.slice(0, 5));
