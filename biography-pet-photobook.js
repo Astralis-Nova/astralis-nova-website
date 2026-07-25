@@ -14,6 +14,12 @@
     ['general', 'General']
   ];
 
+  const dukePhotoChunks = [
+    ['portrait-00.b64', 'portrait-01.b64', 'portrait-02.b64'],
+    ['night-watch-00.b64', 'night-watch-01.b64', 'night-watch-02.b64', 'night-watch-03.b64'],
+    ['adoption-day-00.b64', 'adoption-day-01.b64', 'adoption-day-02.b64', 'adoption-day-03.b64', 'adoption-day-04.b64']
+  ];
+
   const style = document.createElement('style');
   style.textContent = `
     .hero-grid > div:first-child{order:2}.portrait-wrap{order:1}.hero::before{left:auto!important;right:-8%!important}
@@ -65,27 +71,35 @@
 
   const uniquePhotos = photos => [...new Set(photos.filter(Boolean))];
 
+  const loadDukePhoto = async chunkNames => {
+    const chunks = await Promise.all(chunkNames.map(async name => {
+      const response = await fetch(`/data/pets/duke-v20260725d/${name}?v=20260725d`, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Duke photo chunk failed: ${name} (${response.status})`);
+      return (await response.text()).trim();
+    }));
+    return `data:image/webp;base64,${chunks.join('')}`;
+  };
+
   const getCorrectedAlbums = () => {
     if (correctedAlbumsPromise) return correctedAlbumsPromise;
 
     correctedAlbumsPromise = Promise.all(
       pets.map(async ([slug]) => {
-        const response = await fetch(`/data/pets/${slug}.json?v=20260725c`, { cache: 'no-store' });
+        const response = await fetch(`/data/pets/${slug}.json?v=20260725d`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Album request failed for ${slug}: ${response.status}`);
         return [slug, await response.json()];
       })
-    ).then(entries => {
+    ).then(async entries => {
       const albums = Object.fromEntries(entries);
 
       const maxPhotos = uniquePhotos([
-        '/images/pets/max-hq-01.svg?v=20260725c',
+        '/images/pets/max-hq-01.svg?v=20260725d',
         ...albums.max.photos.slice(1),
         albums.zoey.photos[0]
       ]);
-      // Keep only the first and third Max pictures. The second and fourth were removed by request.
       albums.max.photos = [maxPhotos[0], maxPhotos[2]].filter(Boolean);
       albums.zoey.photos = uniquePhotos(albums.zoey.photos.slice(1));
-      albums.duke.photos = uniquePhotos(albums.duke.photos);
+      albums.duke.photos = await Promise.all(dukePhotoChunks.map(loadDukePhoto));
       albums.rian.photos = uniquePhotos(albums.rian.photos);
 
       return albums;
