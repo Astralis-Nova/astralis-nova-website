@@ -37,7 +37,7 @@
     .pet-photo-card{position:relative;width:100%;max-width:150px;margin:0;overflow:hidden;border:1px solid rgba(112,169,255,.25);border-radius:16px;background:#06101c;box-shadow:0 12px 30px rgba(0,0,0,.28)}
     .pet-photo-button{display:block;width:100%;padding:0;border:0;background:#06101c;cursor:zoom-in}
     .pet-photo-button img{display:block;width:100%;aspect-ratio:1/1;object-fit:contain;background:#06101c;image-rendering:auto}
-    .pet-photo-label{position:absolute;left:9px;bottom:9px;padding:6px 10px;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(3,9,20,.86);color:#fff;font-size:.8rem;font-weight:900;pointer-events:none}
+    .pet-photo-label{position:static;display:block;box-sizing:border-box;width:100%;padding:8px 10px;border:0;border-top:1px solid rgba(112,169,255,.25);border-radius:0;background:#081525;color:#fff;font-size:.8rem;font-weight:900;text-align:center;pointer-events:none}
     .pet-loading{padding:28px;text-align:center;color:#aebed3}
     .pet-lightbox-live{position:fixed;inset:0;z-index:1000000;display:none;place-items:center;padding:20px;background:rgba(0,0,0,.93)}
     .pet-lightbox-live.open{display:grid}.pet-lightbox-live img{display:block;width:auto;max-width:min(92vw,640px);max-height:82vh;border-radius:16px;background:#06101c;image-rendering:auto}
