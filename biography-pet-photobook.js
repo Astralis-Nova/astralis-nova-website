@@ -14,10 +14,6 @@
     ['general', 'General']
   ];
 
-  const originalLeadPhotos = {
-    max: '/images/pets/hq/max-hq.svg?v=20260724i'
-  };
-
   const style = document.createElement('style');
   style.textContent = `
     .hero-grid > div:first-child{order:2}.portrait-wrap{order:1}.hero::before{left:auto!important;right:-8%!important}
@@ -31,17 +27,17 @@
     .pet-view-copy h3{margin:0;font-size:clamp(1.7rem,3vw,2.3rem)}
     .pet-view-aka{display:inline-block;margin-top:5px;color:#ffd27a;font-size:.82rem;font-weight:900;letter-spacing:.05em;text-transform:uppercase}
     .pet-view-copy p{color:#b7c5d9;line-height:1.7}
-    .pet-gallery-live{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,220px));justify-content:start;gap:14px;margin-top:16px}
+    .pet-gallery-live{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-top:16px}
     .pet-photo-card{position:relative;margin:0;overflow:hidden;border:1px solid rgba(112,169,255,.25);border-radius:16px;background:#06101c;box-shadow:0 12px 30px rgba(0,0,0,.28)}
     .pet-photo-button{display:block;width:100%;padding:0;border:0;background:#06101c;cursor:zoom-in}
-    .pet-photo-button img{display:block;width:100%;height:auto;max-height:320px;object-fit:contain;background:#06101c;image-rendering:auto}
+    .pet-photo-button img{display:block;width:100%;aspect-ratio:1/1;object-fit:contain;background:#06101c}
     .pet-photo-label{position:absolute;left:9px;bottom:9px;padding:6px 10px;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(3,9,20,.86);color:#fff;font-size:.8rem;font-weight:900;pointer-events:none}
     .pet-loading{padding:28px;text-align:center;color:#aebed3}
     .pet-lightbox-live{position:fixed;inset:0;z-index:1000000;display:none;place-items:center;padding:20px;background:rgba(0,0,0,.93)}
-    .pet-lightbox-live.open{display:grid}.pet-lightbox-live img{display:block;max-width:94vw;max-height:82vh;border-radius:16px;background:#06101c;image-rendering:auto}
+    .pet-lightbox-live.open{display:grid}.pet-lightbox-live img{display:block;max-width:94vw;max-height:82vh;border-radius:16px;background:#06101c}
     .pet-lightbox-caption{margin-top:10px;text-align:center;color:#fff;font-weight:900}.pet-close{position:fixed;right:18px;top:18px;width:44px;height:44px;border:1px solid #777;border-radius:50%;background:#07101d;color:#fff;font-size:1.4rem;cursor:pointer}
     @media(max-width:820px){.hero-grid > div:first-child{order:1}.portrait-wrap{order:2}.hero::before{left:52%!important;right:auto!important}}
-    @media(max-width:520px){#pet-photobook{padding:20px 15px}.pet-gallery-live{grid-template-columns:1fr 1fr}.pet-photo-button img{max-height:260px}}
+    @media(max-width:520px){#pet-photobook{padding:20px 15px}.pet-gallery-live{grid-template-columns:1fr 1fr}}
   `;
   document.head.appendChild(style);
 
@@ -50,7 +46,7 @@
   section.innerHTML = `
     <p class="eyebrow">Field notes from the home crew</p>
     <h2>The Pet Photobook</h2>
-    <p class="pet-intro">Choose a pet. Every picture from our identification quiz is filed under the correct name and opens individually. Original-resolution replacements are being used where available.</p>
+    <p class="pet-intro">Choose a pet. Every picture from our identification quiz is now filed under the correct name and opens individually.</p>
     <div class="pet-picker-live" role="tablist" aria-label="Choose a pet"></div>
     <div class="pet-viewer-live">
       <div class="pet-view-copy"><h3></h3><span class="pet-view-aka"></span><p></p></div>
@@ -74,14 +70,18 @@
 
     correctedAlbumsPromise = Promise.all(
       pets.map(async ([slug]) => {
-        const response = await fetch(`/data/pets/${slug}.json?v=20260724h`, { cache: 'no-store' });
+        const response = await fetch(`/data/pets/${slug}.json?v=20260725a`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Album request failed for ${slug}: ${response.status}`);
         return [slug, await response.json()];
       })
     ).then(entries => {
       const albums = Object.fromEntries(entries);
 
-      albums.max.photos = uniquePhotos([originalLeadPhotos.max, ...albums.max.photos, albums.zoey.photos[0]]);
+      albums.max.photos = uniquePhotos([
+        '/images/pets/max-hq-01.svg?v=20260725a',
+        ...albums.max.photos.slice(1),
+        albums.zoey.photos[0]
+      ]);
       albums.zoey.photos = uniquePhotos(albums.zoey.photos.slice(1));
       albums.duke.photos = uniquePhotos([...albums.duke.photos, albums.rian.photos[5]]);
       albums.rian.photos = uniquePhotos(albums.rian.photos.slice(0, 5));
