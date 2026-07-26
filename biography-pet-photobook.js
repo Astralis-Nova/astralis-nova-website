@@ -14,11 +14,14 @@
     ['general', 'General']
   ];
 
-  const dukePhotoChunks = [
-    ['portrait-00.b64', 'portrait-01.b64', 'portrait-02.b64'],
-    ['night-watch-00.b64', 'night-watch-01.b64', 'night-watch-02.b64', 'night-watch-03.b64'],
-    ['adoption-day-00.b64', 'adoption-day-01.b64', 'adoption-day-02.b64', 'adoption-day-03.b64', 'adoption-day-04.b64']
+  const dukeSpriteChunks = [
+    'sprite-00.b64', 'sprite-01.b64', 'sprite-02.b64', 'sprite-03.b64',
+    'sprite-04.b64', 'sprite-05.b64', 'sprite-06.b64', 'sprite-07.b64'
   ];
+  const dukeSpriteVersion = '20260726c';
+  const dukePhotoCount = 8;
+  const dukeCellSize = 100;
+  const dukeColumns = 4;
 
   const style = document.createElement('style');
   style.textContent = `
@@ -71,13 +74,31 @@
 
   const uniquePhotos = photos => [...new Set(photos.filter(Boolean))];
 
-  const loadDukePhoto = async chunkNames => {
-    const chunks = await Promise.all(chunkNames.map(async name => {
-      const response = await fetch(`/data/pets/duke-v20260725d/${name}?v=20260725d`, { cache: 'no-store' });
-      if (!response.ok) throw new Error(`Duke photo chunk failed: ${name} (${response.status})`);
+  const loadImage = src => new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error('Duke photo sprite could not be decoded.'));
+    image.src = src;
+  });
+
+  const loadDukePhotos = async () => {
+    const chunks = await Promise.all(dukeSpriteChunks.map(async name => {
+      const response = await fetch(`/data/pets/duke-v20260726c/${name}?v=${dukeSpriteVersion}`, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Duke sprite chunk failed: ${name} (${response.status})`);
       return (await response.text()).trim();
     }));
-    return `data:image/webp;base64,${chunks.join('')}`;
+
+    const sprite = await loadImage(`data:image/jpeg;base64,${chunks.join('')}`);
+    return Array.from({ length: dukePhotoCount }, (_, index) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = dukeCellSize;
+      canvas.height = dukeCellSize;
+      const context = canvas.getContext('2d');
+      const sourceX = (index % dukeColumns) * dukeCellSize;
+      const sourceY = Math.floor(index / dukeColumns) * dukeCellSize;
+      context.drawImage(sprite, sourceX, sourceY, dukeCellSize, dukeCellSize, 0, 0, dukeCellSize, dukeCellSize);
+      return canvas.toDataURL('image/jpeg', 0.92);
+    });
   };
 
   const getCorrectedAlbums = () => {
@@ -85,23 +106,21 @@
 
     correctedAlbumsPromise = Promise.all(
       pets.map(async ([slug]) => {
-        const response = await fetch(`/data/pets/${slug}.json?v=20260725d`, { cache: 'no-store' });
+        const response = await fetch(`/data/pets/${slug}.json?v=${dukeSpriteVersion}`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Album request failed for ${slug}: ${response.status}`);
         return [slug, await response.json()];
       })
     ).then(async entries => {
       const albums = Object.fromEntries(entries);
-
       const maxPhotos = uniquePhotos([
-        '/images/pets/max-hq-01.svg?v=20260725d',
+        `/images/pets/max-hq-01.svg?v=${dukeSpriteVersion}`,
         ...albums.max.photos.slice(1),
         albums.zoey.photos[0]
       ]);
       albums.max.photos = [maxPhotos[0], maxPhotos[2]].filter(Boolean);
       albums.zoey.photos = uniquePhotos(albums.zoey.photos.slice(1));
-      albums.duke.photos = await Promise.all(dukePhotoChunks.map(loadDukePhoto));
+      albums.duke.photos = await loadDukePhotos();
       albums.rian.photos = uniquePhotos(albums.rian.photos);
-
       return albums;
     });
 
