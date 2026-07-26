@@ -5,11 +5,18 @@
   const originalFetch = window.fetch.bind(window);
   const spriteChunks = [
     'sprite-00.b64',
-    'sprite-01.b64',
-    'sprite-02.b64',
-    'sprite-03.b64'
+    'tail-00.b64',
+    'tail-01.b64',
+    'tail-02.b64',
+    'tail-03.b64',
+    'tail-04.b64',
+    'tail-05.b64',
+    'tail-06.b64',
+    'tail-07.b64',
+    'tail-08.b64',
+    'tail-09.b64'
   ];
-  const version = '20260726b';
+  const version = '20260726c';
   const photoCount = 13;
   const cellSize = 120;
   const columns = 4;
