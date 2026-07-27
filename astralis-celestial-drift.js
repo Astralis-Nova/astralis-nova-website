@@ -13,4 +13,12 @@
   `;
 
   if (!existing) document.body.prepend(layer);
+
+  const rainbowLink = document.querySelector('.menu a[href="#guestbook"]');
+  if (rainbowLink) {
+    rainbowLink.href = 'rainbow-promise.html';
+    rainbowLink.textContent = 'RAINBOW';
+    rainbowLink.setAttribute('aria-label', 'Open The Rainbow Promise page');
+    rainbowLink.title = 'The Rainbow Promise';
+  }
 })();
