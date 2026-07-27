@@ -1,3 +1,0 @@
-Astralis Nova Cloudflare Pages deployment trigger.
-Commit created to verify automatic production deployment from the main branch.
-Date: 2026-07-27
