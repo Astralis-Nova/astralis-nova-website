@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "20260722t";
+  const VERSION = "20260727r";
   const loaded = new Map();
 
   function loadScript(src, { module = false } = {}) {
@@ -168,7 +168,7 @@
 
   const deferred = [
     `/rickroll-planet.js?v=20260722a`,
-    `/recent-exoplanets.js?v=20260722n`,
+    `/recent-exoplanets.js?v=20260727r`,
     `/conquest-media.js?v=20260720a`,
     `/vulcan-salute.js?v=20260722l`,
     `/cosmic-chuckles.js?v=20260722a`,
