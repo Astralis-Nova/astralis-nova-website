@@ -7,7 +7,15 @@
     { image: "/astralis-mars.png", label: "Visual: Red creative world", href: "/#live-board" },
     { image: "/astralis-earth.png", label: "Visual: Story world", href: "/biography.html", variant: "violet" },
     { image: "/astralis-gas-giant.png", label: "Visual: Archive orbit world", href: "/#first-orbit", variant: "gold" },
-    { image: "/astralis-mars.png", label: "Visual: Visitor moon", href: "/#guestbook", variant: "blue" }
+    {
+      image: "/rainbow-portal.svg",
+      label: "Visual: Rainbow after the rain",
+      href: "/rainbow-promise.html",
+      title: "Rainbow Promise",
+      description: "Rain, Noah’s ark, the covenant, and hope carried across the sky after a storm.",
+      badge: "Reflection World",
+      ariaLabel: "Open The Rainbow Promise reflection"
+    }
   ];
 
   function installStyles() {
@@ -27,7 +35,6 @@
       .astralis-planet.recent-exoplanet img{display:block;width:100%;height:100%;object-fit:contain;background:transparent!important;background-color:transparent!important;mix-blend-mode:screen;animation:recentExoplanetFloat 6.2s ease-in-out infinite;transform-origin:50% 50%;filter:drop-shadow(0 0 12px rgba(77,157,255,.26));-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 0 58%,rgba(0,0,0,.98) 66%,rgba(0,0,0,.72) 74%,transparent 88%);mask-image:radial-gradient(circle at 50% 50%,#000 0 58%,rgba(0,0,0,.98) 66%,rgba(0,0,0,.72) 74%,transparent 88%)}
       .astralis-planet.recent-exoplanet.violet img{filter:hue-rotate(48deg) saturate(1.2) drop-shadow(0 0 12px rgba(191,104,255,.28))}
       .astralis-planet.recent-exoplanet.gold img{filter:hue-rotate(-18deg) saturate(1.12) brightness(1.04) drop-shadow(0 0 12px rgba(255,183,91,.25))}
-      .astralis-planet.recent-exoplanet.blue img{filter:hue-rotate(165deg) saturate(.9) brightness(1.08) drop-shadow(0 0 12px rgba(105,185,255,.28))}
       .astralis-planet-link:nth-child(3n) .recent-exoplanet img{animation-delay:-1.8s}
       .astralis-planet-link:nth-child(3n+1) .recent-exoplanet img{animation-delay:-3.4s}
       .astralis-planet-link:hover .recent-exoplanet,.astralis-planet-link:focus-visible .recent-exoplanet{transform:translateY(-3px) rotate(3deg) scale(1.06)}
@@ -67,6 +74,7 @@
       if (!planet || !copy) return;
 
       link.setAttribute("href", world.href);
+      if (world.ariaLabel) link.setAttribute("aria-label", world.ariaLabel);
       if (world.external) {
         link.setAttribute("target", "_blank");
         link.setAttribute("rel", "noopener noreferrer");
@@ -84,6 +92,24 @@
       image.setAttribute("aria-hidden", "true");
       image.loading = "lazy";
       planet.appendChild(image);
+
+      if (world.title) {
+        const heading = copy.querySelector("strong");
+        if (heading) heading.textContent = world.title;
+      }
+
+      if (world.description) {
+        const description = [...copy.querySelectorAll(":scope > span")].find(span =>
+          !span.classList.contains("astralis-world-badge") &&
+          !span.classList.contains("astralis-world-origin")
+        );
+        if (description) description.textContent = world.description;
+      }
+
+      if (world.badge) {
+        const badge = copy.querySelector(".astralis-world-badge");
+        if (badge) badge.textContent = world.badge;
+      }
 
       copy.querySelectorAll(".astralis-world-origin").forEach(element => element.remove());
       const origin = document.createElement("span");
