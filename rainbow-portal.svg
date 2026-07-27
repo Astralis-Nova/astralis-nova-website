@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="title desc">
+  <title id="title">Rainbow Promise portal</title>
+  <desc id="desc">A rainbow rising through rain clouds after a storm.</desc>
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="cloud" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#f8fdff"/>
+      <stop offset="1" stop-color="#8bb9dc"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke-linecap="round" filter="url(#glow)">
+    <path d="M22 78a38 38 0 0 1 76 0" stroke="#ef5b67" stroke-width="7"/>
+    <path d="M29 78a31 31 0 0 1 62 0" stroke="#f28a3a" stroke-width="7"/>
+    <path d="M36 78a24 24 0 0 1 48 0" stroke="#f2cf4a" stroke-width="7"/>
+    <path d="M43 78a17 17 0 0 1 34 0" stroke="#4fc36e" stroke-width="7"/>
+    <path d="M50 78a10 10 0 0 1 20 0" stroke="#4f8fe8" stroke-width="7"/>
+  </g>
+  <g fill="url(#cloud)" opacity=".96">
+    <path d="M12 83c0-8 7-14 15-14 2-9 10-15 20-15 12 0 21 9 21 21 8 1 14 7 14 15H26c-8 0-14-3-14-7Z"/>
+    <path d="M68 88c0-7 6-12 13-12 2-8 9-13 18-13 10 0 18 8 18 18 7 1 12 6 12 13H80c-7 0-12-2-12-6Z" transform="translate(-9 -1)"/>
+  </g>
+  <g stroke="#9bddff" stroke-width="3" stroke-linecap="round" opacity=".85">
+    <path d="M31 95l-3 8"/><path d="M48 96l-3 9"/><path d="M72 96l-3 9"/><path d="M89 94l-3 8"/>
+  </g>
+  <circle cx="60" cy="53" r="3" fill="#fff9d4" filter="url(#glow)"/>
+</svg>
