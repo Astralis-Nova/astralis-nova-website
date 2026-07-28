@@ -27,7 +27,7 @@ export async function onRequest(context) {
     })
     .on("body", {
       element(element) {
-        element.append('<script src="/astralis-performance-loader.js?v=20260728k" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script><script src="/biography-zoey-gallery.js?v=20260726c" defer></script><script src="/biography-rian-gallery.js?v=20260726a" defer></script><script src="/biography-pet-photobook.js?v=20260726e" defer></script>', { html: true });
+        element.append('<script src="/astralis-performance-loader.js?v=20260728m" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script><script src="/biography-zoey-gallery.js?v=20260726c" defer></script><script src="/biography-rian-gallery.js?v=20260726a" defer></script><script src="/biography-pet-photobook.js?v=20260726e" defer></script>', { html: true });
       },
     })
     .transform(response);
