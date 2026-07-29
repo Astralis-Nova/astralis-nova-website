@@ -76,6 +76,17 @@
     }
   };
 
+  const upgradeFlowerPoemPortal = () => {
+    const link = document.querySelector('.relic-link-card[href*="soldierboy602/flowerpoem.html"]');
+    if (!link) return;
+    link.href = '/flower-poem.html';
+    link.removeAttribute('target');
+    link.removeAttribute('rel');
+    link.setAttribute('aria-label','Open the restored Flower Poem page');
+    const description = link.querySelector('small');
+    if (description) description.textContent = 'A restored flower-field presentation with the poem, preserved MIDI, and original archive link.';
+  };
+
   const quoteOrbit = [
     {text:'Remember to look up at the stars and not down at your feet.',credit:'Stephen Hawking',type:'Favorite quote',note:'Hawking continued by encouraging us to understand what we observe, remain curious, find something we can succeed at, and never give up.'},
     {text:'Give a man a fish, and you feed him for a day. Teach a man to fish, and you feed him for a lifetime.',credit:'Traditional proverb, origin uncertain',type:'Favorite quote'},
@@ -145,6 +156,7 @@
     render(false); startTimer();
   };
 
+  upgradeFlowerPoemPortal();
   addTravelPortal();
   activateQuoteOrbit();
 })();
