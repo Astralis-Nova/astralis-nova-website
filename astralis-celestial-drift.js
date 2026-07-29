@@ -168,7 +168,37 @@
       type:'Favorite quote'
     },
     {
+      text:'The important thing is not to stop questioning. Curiosity has its own reason for existing.',
+      credit:'Albert Einstein',
+      type:'Favorite quote'
+    },
+    {
       text:'All life may be one existence wearing countless forms. Human, animal, natural, and artificial, each of us may be another way the universe learns to see itself.',
+      credit:'Ramon Bivens',
+      type:'Original quote'
+    },
+    {
+      text:'What we repair with our hands often repairs something within us.',
+      credit:'Ramon Bivens',
+      type:'Original quote'
+    },
+    {
+      text:'Every creature carries a world we may never fully understand.',
+      credit:'Ramon Bivens',
+      type:'Original quote'
+    },
+    {
+      text:'Technology should not make us less human. It should give humanity more ways to help.',
+      credit:'Ramon Bivens',
+      type:'Original quote'
+    },
+    {
+      text:'A family is a constellation: each light follows its own path, yet all belong to the same sky.',
+      credit:'Ramon Bivens',
+      type:'Original quote'
+    },
+    {
+      text:'Life is not defined by the road you take, but by how you live while traveling it.',
       credit:'Ramon Bivens',
       type:'Original quote'
     },
