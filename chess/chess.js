@@ -279,7 +279,7 @@ function renderStatus() {
   let status = isOnline() ? 'Online mission active' : 'Local training simulation';
   if (isOnline() && state.online.status === 'waiting') status = 'Waiting for a second commander';
   if (gameIsOver()) {
-    const winner = state.mode === 'standard' ? standardWinner() : state.tri.winner;
+    const winner = isOnline() ? state.online.winner : state.mode === 'standard' ? standardWinner() : state.tri.winner;
     status = winner === 'draw' ? 'Mission ended in a draw' : `${COLOR_NAME[winner] || winner || 'Unknown'} fleet wins`;
   } else if (state.mode === 'standard' && state.standard.game.inCheck()) {
     status = `${COLOR_NAME[turn]} High Commander is in check`;
@@ -763,6 +763,7 @@ async function resumeSession(code) {
 
 function clearOnlineSession() {
   if (state.online.code) localStorage.removeItem(`novaChessSession:${state.online.code}`);
+  if (localStorage.getItem('novaChessLastSession') === state.online.code) localStorage.removeItem('novaChessLastSession');
   stopPolling();
   state.online = {
     id: null, code: null, token: null, color: null, revision: 0, status: null,
@@ -913,6 +914,7 @@ function wireEvents() {
   });
 
   els.newGameForm.addEventListener('submit', async event => {
+    if (event.submitter?.value === 'cancel') return;
     event.preventDefault();
     const mode = new FormData(els.newGameForm).get('newMode');
     const name = els.creatorName.value;
@@ -921,6 +923,7 @@ function wireEvents() {
     try { await createOnlineGame(name, mode); } catch (error) { setConnection('error', 'Mission creation failed', error.message); notify(error.message, 'error'); }
   });
   els.joinGameForm.addEventListener('submit', async event => {
+    if (event.submitter?.value === 'cancel') return;
     event.preventDefault();
     const name = els.joinerName.value;
     const code = els.joinCodeInput.value;
