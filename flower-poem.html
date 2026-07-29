@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="The Flower Poem, Standing Alone by Chase, restored from the Astralis Nova First Orbit archive.">
+  <meta name="theme-color" content="#183b2a">
+  <title>The Flower Poem | Astralis Nova</title>
+  <style>
+    :root{
+      color-scheme:dark;
+      --ink:#fffdf6;
+      --soft:#e9efd9;
+      --glass:rgba(13,29,25,.66);
+      --line:rgba(255,255,255,.28);
+      --gold:#ffe08a;
+      --green:#8ee59f;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;min-height:100vh;color:var(--ink);
+      font-family:Georgia,"Times New Roman",serif;
+      overflow-x:hidden;background:#173929
+    }
+    a{color:inherit}
+    button{font:inherit}
+    .sky{
+      position:fixed;inset:0;z-index:-5;overflow:hidden;
+      background:
+        radial-gradient(circle at 73% 12%,rgba(255,244,177,.86) 0 4.5rem,rgba(255,240,170,.26) 4.6rem 9rem,transparent 16rem),
+        linear-gradient(180deg,#71bfe7 0%,#9ed9ec 31%,#f9d3bf 55%,#4e8d53 56%,#214f36 100%)
+    }
+    .sky::before{
+      content:"";position:absolute;inset:0;
+      background:
+        radial-gradient(ellipse at 14% 18%,rgba(255,255,255,.72) 0 5%,transparent 5.5%),
+        radial-gradient(ellipse at 23% 17%,rgba(255,255,255,.62) 0 7%,transparent 7.5%),
+        radial-gradient(ellipse at 81% 29%,rgba(255,255,255,.52) 0 7%,transparent 7.5%),
+        linear-gradient(180deg,transparent 0 48%,rgba(32,85,48,.18) 49% 100%);
+      filter:blur(8px);opacity:.75
+    }
+    .hill,.hill::before,.hill::after{
+      position:absolute;content:"";left:-12vw;right:-12vw;border-radius:50% 50% 0 0/100% 100% 0 0
+    }
+    .hill{height:48vh;bottom:-20vh;background:linear-gradient(180deg,#4f9657,#1d4b33);transform:rotate(-2deg)}
+    .hill::before{height:35vh;bottom:14vh;background:linear-gradient(180deg,#74ad62,#356f48);transform:translateX(28vw) rotate(5deg)}
+    .hill::after{height:31vh;bottom:10vh;background:linear-gradient(180deg,#6da75d,#2a6640);transform:translateX(-25vw) rotate(-5deg)}
+    .field-glow{
+      position:fixed;inset:45% -10% -15%;z-index:-3;pointer-events:none;
+      background:
+        radial-gradient(circle at 18% 45%,rgba(255,233,120,.18),transparent 22rem),
+        radial-gradient(circle at 78% 28%,rgba(255,151,202,.15),transparent 24rem),
+        repeating-linear-gradient(78deg,transparent 0 24px,rgba(185,239,164,.08) 25px 27px,transparent 28px 50px)
+    }
+    .flowers{position:fixed;inset:49% 0 0;z-index:-2;pointer-events:none;overflow:hidden}
+    .flower{
+      --x:50%;--h:180px;--s:1;--petal:#ff8fc8;--delay:0s;
+      position:absolute;left:var(--x);bottom:-18px;width:6px;height:var(--h);
+      background:linear-gradient(90deg,#245a34,#6eb66f,#245a34);border-radius:999px;
+      transform-origin:bottom center;transform:scale(var(--s));
+      animation:sway 5.6s ease-in-out var(--delay) infinite alternate
+    }
+    .flower::before{
+      content:"";position:absolute;left:50%;top:-23px;width:42px;height:42px;transform:translateX(-50%);
+      background:
+        radial-gradient(circle at 50% 50%,#ffd84f 0 18%,transparent 19%),
+        radial-gradient(ellipse at 50% 8%,var(--petal) 0 20%,transparent 21%),
+        radial-gradient(ellipse at 92% 50%,var(--petal) 0 20%,transparent 21%),
+        radial-gradient(ellipse at 50% 92%,var(--petal) 0 20%,transparent 21%),
+        radial-gradient(ellipse at 8% 50%,var(--petal) 0 20%,transparent 21%),
+        radial-gradient(ellipse at 79% 20%,var(--petal) 0 17%,transparent 18%),
+        radial-gradient(ellipse at 21% 20%,var(--petal) 0 17%,transparent 18%),
+        radial-gradient(ellipse at 79% 80%,var(--petal) 0 17%,transparent 18%),
+        radial-gradient(ellipse at 21% 80%,var(--petal) 0 17%,transparent 18%);
+      filter:drop-shadow(0 5px 8px rgba(16,44,22,.25))
+    }
+    .flower::after{
+      content:"";position:absolute;left:-16px;top:42%;width:24px;height:12px;
+      border-radius:100% 0 100% 0;background:#4d9854;box-shadow:21px 34px 0 #5ca45a;
+      transform:rotate(-22deg)
+    }
+    @keyframes sway{from{rotate:-2.2deg}to{rotate:2.6deg}}
+    .f1{--x:3%;--h:150px;--s:.76;--petal:#ffe06d;--delay:-1s}.f2{--x:8%;--h:220px;--s:1.05;--petal:#ff92c2;--delay:-2.8s}
+    .f3{--x:14%;--h:175px;--s:.84;--petal:#d8a0ff;--delay:-.4s}.f4{--x:20%;--h:255px;--s:1.12;--petal:#fff4dd;--delay:-3.5s}
+    .f5{--x:27%;--h:198px;--s:.9;--petal:#ff735f;--delay:-2s}.f6{--x:34%;--h:145px;--s:.7;--petal:#f5d85b;--delay:-4s}
+    .f7{--x:41%;--h:235px;--s:1;--petal:#ff9ecf;--delay:-1.8s}.f8{--x:48%;--h:164px;--s:.8;--petal:#a8c7ff;--delay:-3s}
+    .f9{--x:55%;--h:214px;--s:.98;--petal:#fff2dd;--delay:-.8s}.f10{--x:62%;--h:262px;--s:1.15;--petal:#d695ff;--delay:-4.4s}
+    .f11{--x:69%;--h:180px;--s:.82;--petal:#ff6f8c;--delay:-2.2s}.f12{--x:76%;--h:224px;--s:1.05;--petal:#ffd866;--delay:-1.3s}
+    .f13{--x:83%;--h:155px;--s:.72;--petal:#a9d8ff;--delay:-3.8s}.f14{--x:89%;--h:245px;--s:1.08;--petal:#ff99ce;--delay:-2.6s}
+    .f15{--x:96%;--h:190px;--s:.88;--petal:#fff5ea;--delay:-.6s}
+    .page{width:min(940px,calc(100% - 32px));margin:auto;padding:26px 0 52px}
+    .topnav{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:30px}
+    .brand{font-family:Arial,sans-serif;font-weight:900;letter-spacing:.13em;text-decoration:none;text-shadow:0 2px 20px rgba(0,0,0,.45)}
+    .back{
+      min-height:42px;padding:10px 15px;border:1px solid var(--line);border-radius:999px;
+      background:rgba(8,25,24,.52);backdrop-filter:blur(10px);text-decoration:none;font:800 .78rem Arial,sans-serif
+    }
+    .poem-card{
+      position:relative;overflow:hidden;padding:clamp(26px,6vw,64px);border:1px solid var(--line);border-radius:30px;
+      background:linear-gradient(160deg,rgba(11,31,27,.73),rgba(13,27,34,.59));
+      box-shadow:0 32px 100px rgba(2,22,13,.42),inset 0 1px 0 rgba(255,255,255,.17);
+      backdrop-filter:blur(17px);-webkit-backdrop-filter:blur(17px)
+    }
+    .poem-card::before{
+      content:"❀";position:absolute;right:-30px;top:-68px;font-size:15rem;color:rgba(255,255,255,.055);rotate:18deg
+    }
+    .eyebrow{margin:0 0 10px;text-align:center;font:900 .74rem Arial,sans-serif;letter-spacing:.2em;color:#c9ffca}
+    h1{margin:0;text-align:center;font-size:clamp(3rem,9vw,6.7rem);line-height:.88;letter-spacing:-.055em;text-shadow:0 8px 38px rgba(0,0,0,.3)}
+    .subtitle{text-align:center;color:var(--gold);font-size:clamp(1.05rem,3vw,1.35rem);margin:18px 0 8px}
+    .author{text-align:center;margin:0 0 36px;color:var(--soft);font-style:italic}
+    .poem{
+      max-width:720px;margin:auto;padding:26px clamp(15px,4vw,34px);border-block:1px solid rgba(255,255,255,.19);
+      text-align:center;font-size:clamp(1.08rem,2.2vw,1.34rem);line-height:1.83;text-wrap:balance
+    }
+    .poem p{margin:.15em 0}
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+    .control-card{padding:20px;border:1px solid rgba(255,255,255,.2);border-radius:18px;background:rgba(4,19,17,.48)}
+    .control-card h2{margin:0 0 7px;font:900 1rem Arial,sans-serif;letter-spacing:.05em}
+    .control-card p{margin:0 0 14px;color:#d6e5d7;line-height:1.5;font-size:.92rem}
+    midi-player{display:block;width:100%;--background-color:rgba(4,18,17,.9);--primary-color:#87e89e;--secondary-color:#ffe078;--font-family:Arial,sans-serif}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .button{
+      min-height:42px;padding:10px 15px;border:1px solid rgba(255,255,255,.28);border-radius:999px;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(26,79,51,.54);color:white;
+      text-decoration:none;cursor:pointer;font:900 .75rem Arial,sans-serif;letter-spacing:.04em
+    }
+    .button:hover,.button:focus-visible{background:rgba(55,126,74,.72);border-color:#d9ffd7}
+    .copy-status{min-height:1.4em;margin-top:10px!important;color:#e9ffb8!important;font-size:.8rem!important}
+    .archive{
+      margin-top:30px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18);text-align:center;color:#d8e2d5
+    }
+    .archive strong{display:block;color:white;margin-bottom:7px}
+    .archive-note{max-width:680px;margin:18px auto 0;font-size:.8rem;line-height:1.55;color:#c7d3c8}
+    footer{text-align:center;padding:24px 0 0;color:rgba(255,255,255,.72);font:700 .72rem Arial,sans-serif;letter-spacing:.06em}
+    @media(max-width:720px){
+      .controls{grid-template-columns:1fr}.poem-card{border-radius:22px}.topnav{align-items:flex-start}.brand{font-size:.82rem}
+      .flower{opacity:.84}.poem{line-height:1.68}
+    }
+    @media(prefers-reduced-motion:reduce){.flower{animation:none}html{scroll-behavior:auto}}
+  </style>
+  <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
+</head>
+<body>
+  <div class="sky" aria-hidden="true"><div class="hill"></div></div>
+  <div class="field-glow" aria-hidden="true"></div>
+  <div class="flowers" aria-hidden="true">
+    <span class="flower f1"></span><span class="flower f2"></span><span class="flower f3"></span><span class="flower f4"></span><span class="flower f5"></span>
+    <span class="flower f6"></span><span class="flower f7"></span><span class="flower f8"></span><span class="flower f9"></span><span class="flower f10"></span>
+    <span class="flower f11"></span><span class="flower f12"></span><span class="flower f13"></span><span class="flower f14"></span><span class="flower f15"></span>
+  </div>
+
+  <main class="page">
+    <nav class="topnav" aria-label="Page navigation">
+      <a class="brand" href="/">ASTRALIS NOVA<br><small>FIRST ORBIT RESTORATION</small></a>
+      <a class="back" href="/#first-orbit">← BACK TO THE ARCHIVE</a>
+    </nav>
+
+    <article class="poem-card">
+      <p class="eyebrow">A POEM PRESERVED FROM THE EARLY WEB</p>
+      <h1>The Flower Poem</h1>
+      <p class="subtitle">Standing Alone</p>
+      <p class="author">by Chase</p>
+
+      <div class="poem" id="poemText">
+        <p>I can see the flower upon which my life grows, blooming into a rose.</p>
+        <p>See the hope and courage in the strength of the petals.</p>
+        <p>As long as I am, I will be.</p>
+        <p>The flower will never wilt or die.</p>
+        <p>As my life grows back, I shall become strong.</p>
+        <p>I shall become only dependent on one.</p>
+        <p>That one will be me.</p>
+        <p>I will rise with my petals high.</p>
+        <p>My life as a flower will bloom and prosper as I grow.</p>
+        <p>I may not be the pick of the patch, but I am just as beautiful as the rest.</p>
+        <p>I will stand as one, but not a lonely soul.</p>
+        <p>The tears will be far from my smile.</p>
+      </div>
+
+      <div class="controls">
+        <section class="control-card" aria-labelledby="musicTitle">
+          <h2 id="musicTitle">🎶 FIRST ORBIT MIDI</h2>
+          <p>Play <strong>Good Vibes</strong>, one of the preserved MIDI melodies from the original site collection.</p>
+          <midi-player src="Audio/goodvib.mid" sound-font></midi-player>
+          <div class="actions"><a class="button" href="Audio/goodvib.mid" download>DOWNLOAD MIDI</a></div>
+        </section>
+
+        <section class="control-card" aria-labelledby="copyTitle">
+          <h2 id="copyTitle">🌼 CARRY THE WORDS</h2>
+          <p>Copy the poem while keeping its title and author credit together.</p>
+          <button class="button" id="copyPoem" type="button">COPY POEM</button>
+          <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
+        </section>
+      </div>
+
+      <div class="archive">
+        <strong>See the page as it appeared in the original First Orbit.</strong>
+        <a class="button" href="https://web.archive.org/web/20190804224338/http://www.angelfire.com/az2/soldierboy602/flowerpoem.html" target="_blank" rel="noopener noreferrer">🕰 OPEN ORIGINAL ARCHIVED PAGE</a>
+        <p class="archive-note">“Standing Alone” is credited to Chase and was originally published in 1999. This restoration preserves the poem’s attribution while carrying forward a meaningful page from Ramon’s early-web archive.</p>
+      </div>
+    </article>
+
+    <footer>ASTRALIS NOVA · ECHOES FROM THE FIRST ORBIT</footer>
+  </main>
+
+  <script>
+    const copyButton=document.getElementById('copyPoem');
+    const copyStatus=document.getElementById('copyStatus');
+    const poemLines=[...document.querySelectorAll('#poemText p')].map(line=>line.textContent.trim()).join('\n');
+    copyButton.addEventListener('click',async()=>{
+      const poem=`The Flower Poem\nStanding Alone\nby Chase\n\n${poemLines}`;
+      try{
+        await navigator.clipboard.writeText(poem);
+        copyStatus.textContent='Poem copied with its author credit. 🌸';
+      }catch{
+        const area=document.createElement('textarea');
+        area.value=poem;document.body.appendChild(area);area.select();
+        document.execCommand('copy');area.remove();
+        copyStatus.textContent='Poem copied with its author credit. 🌸';
+      }
+    });
+  </script>
+</body>
+</html>
