@@ -156,5 +156,152 @@
     }
   };
 
+  const quoteOrbit = [
+    {
+      text:'Remember to look up at the stars and not down at your feet.',
+      credit:'Stephen Hawking',
+      type:'Favorite quote'
+    },
+    {
+      text:'The stars do not provide directions. They provide perspective.',
+      credit:'Astralis Nova',
+      type:'Original transmission'
+    },
+    {
+      text:'Repair begins the moment curiosity becomes stronger than frustration.',
+      credit:'Astralis Nova',
+      type:'Original transmission'
+    },
+    {
+      text:'A good idea is a small spacecraft. Give it fuel, guidance, and permission to leave the launchpad.',
+      credit:'Astralis Nova',
+      type:'Original transmission'
+    },
+    {
+      text:'A machine becomes memorable when it helps someone believe they can solve the next problem.',
+      credit:'Astralis Nova',
+      type:'Original transmission'
+    },
+    {
+      text:'The future rarely knocks. Most days, it waits quietly on the workbench.',
+      credit:'Astralis Nova',
+      type:'Original transmission'
+    }
+  ];
+
+  const addQuoteOrbitStyles = () => {
+    if (document.getElementById('astralis-quote-orbit-styles')) return;
+
+    const style = document.createElement('style');
+    style.id = 'astralis-quote-orbit-styles';
+    style.textContent = `
+      .quote-card .culture-inner{min-height:100%;display:flex;flex-direction:column}
+      .quote-orbit-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+      .quote-orbit-badge{
+        display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;
+        border:1px solid rgba(107,166,226,.36);background:rgba(5,14,28,.58);
+        color:#a9c8ea;font-size:.68rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase
+      }
+      .quote-orbit-copy{transition:opacity .24s ease,transform .24s ease}
+      .quote-orbit-copy.is-changing{opacity:0;transform:translateY(7px)}
+      .quote-orbit-text{min-height:5.8em;margin:10px 0 12px}
+      .quote-orbit-credit{margin:0;color:#7ec5ff;font-weight:800}
+      .quote-orbit-note{margin-top:14px}
+      .quote-orbit-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:18px}
+      .quote-orbit-next{
+        min-height:38px;padding:8px 13px;border-radius:999px;border:1px solid rgba(106,164,226,.48);
+        background:rgba(7,20,38,.76);color:#fff;font-weight:900;cursor:pointer
+      }
+      .quote-orbit-next:hover,.quote-orbit-next:focus-visible{border-color:#68b9ff;background:rgba(14,46,78,.84)}
+      .quote-orbit-count{color:#849ab3;font-size:.75rem;font-variant-numeric:tabular-nums}
+      @media(prefers-reduced-motion:reduce){.quote-orbit-copy{transition:none}}
+    `;
+    document.head.appendChild(style);
+  };
+
+  const activateQuoteOrbit = () => {
+    const card = document.querySelector('#cosmic-culture .quote-card');
+    if (!card || card.dataset.quoteOrbitReady === 'true') return;
+
+    addQuoteOrbitStyles();
+    card.dataset.quoteOrbitReady = 'true';
+    card.innerHTML = `
+      <div class="culture-inner">
+        <div class="quote-orbit-head">
+          <p class="eyebrow" style="margin:0">QUOTE ORBIT</p>
+          <span class="quote-orbit-badge" id="quoteOrbitType">Favorite quote</span>
+        </div>
+        <div class="quote-mark" aria-hidden="true">“</div>
+        <div class="quote-orbit-copy" id="quoteOrbitCopy" aria-live="polite">
+          <blockquote class="quote-text quote-orbit-text" id="quoteOrbitText"></blockquote>
+          <p class="quote-credit quote-orbit-credit" id="quoteOrbitCredit"></p>
+          <div class="quote-note quote-orbit-note" id="quoteOrbitNote"></div>
+        </div>
+        <div class="quote-orbit-controls">
+          <button class="quote-orbit-next" id="quoteOrbitNext" type="button">✦ NEXT TRANSMISSION</button>
+          <span class="quote-orbit-count" id="quoteOrbitCount"></span>
+        </div>
+      </div>
+    `;
+
+    const text = card.querySelector('#quoteOrbitText');
+    const credit = card.querySelector('#quoteOrbitCredit');
+    const type = card.querySelector('#quoteOrbitType');
+    const note = card.querySelector('#quoteOrbitNote');
+    const count = card.querySelector('#quoteOrbitCount');
+    const copy = card.querySelector('#quoteOrbitCopy');
+    const next = card.querySelector('#quoteOrbitNext');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let index = Math.floor(Date.now() / 86400000) % quoteOrbit.length;
+    let timer;
+
+    const render = (animate) => {
+      const quote = quoteOrbit[index];
+      const update = () => {
+        text.textContent = quote.text;
+        credit.textContent = `— ${quote.credit}`;
+        type.textContent = quote.type;
+        note.textContent = quote.type === 'Favorite quote'
+          ? 'A favorite voice carried forward among the stars.'
+          : 'An original thought from the Astralis Nova creative archive.';
+        count.textContent = `${String(index + 1).padStart(2,'0')} / ${String(quoteOrbit.length).padStart(2,'0')}`;
+        copy.classList.remove('is-changing');
+      };
+
+      if (animate && !reduceMotion) {
+        copy.classList.add('is-changing');
+        window.setTimeout(update,240);
+      } else {
+        update();
+      }
+    };
+
+    const advance = () => {
+      index = (index + 1) % quoteOrbit.length;
+      render(true);
+    };
+
+    const startTimer = () => {
+      if (reduceMotion) return;
+      window.clearInterval(timer);
+      timer = window.setInterval(advance,14000);
+    };
+
+    next.addEventListener('click',() => {
+      advance();
+      startTimer();
+    });
+    card.addEventListener('mouseenter',() => window.clearInterval(timer));
+    card.addEventListener('mouseleave',startTimer);
+    document.addEventListener('visibilitychange',() => {
+      if (document.hidden) window.clearInterval(timer);
+      else startTimer();
+    });
+
+    render(false);
+    startTimer();
+  };
+
   addTravelPortal();
+  activateQuoteOrbit();
 })();
