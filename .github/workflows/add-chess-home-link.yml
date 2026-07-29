@@ -1,0 +1,51 @@
+name: Add Chess Portal Home Link
+
+on:
+  push:
+    branches:
+      - feature/chess-home-link
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, '[home-linked]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/chess-home-link
+
+      - name: Add portal links to homepage
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("index.html")
+          source = path.read_text(encoding="utf-8")
+          replacements = [
+              (
+                  '        <a href="#music">MUSIC</a>\n        <a href="#guestbook">GUESTBOOK</a>',
+                  '        <a href="#music">MUSIC</a>\n        <a href="chess/">CHESS PORTAL</a>\n        <a href="#guestbook">GUESTBOOK</a>',
+              ),
+              (
+                  '            <a class="btn" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener">▷ WATCH VIDEO</a>',
+                  '            <a class="btn" href="https://www.youtube.com/watch?v=YEtZXiKR-VI" target="_blank" rel="noopener">▷ WATCH VIDEO</a>\n            <a class="btn secondary" href="chess/">♟ ENTER CHESS PORTAL</a>',
+              ),
+          ]
+
+          for old, new in replacements:
+              if old not in source:
+                  raise SystemExit(f"Expected homepage pattern not found: {old[:90]}")
+              source = source.replace(old, new, 1)
+
+          path.write_text(source, encoding="utf-8")
+
+      - name: Commit homepage link
+        run: |
+          git config user.name "Astralis Nova Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git commit -m "Link homepage to Nova Chess Portal [home-linked]"
+          git push origin HEAD:feature/chess-home-link
