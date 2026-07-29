@@ -1,0 +1,13 @@
+{
+  "name": "Astralis Nova Chess Portal",
+  "short_name": "Nova Chess",
+  "description": "Asynchronous standard and Tri-Deck sci-fi chess.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#02040b",
+  "theme_color": "#050816",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
