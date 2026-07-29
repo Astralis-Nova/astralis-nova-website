@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="The Unborn Child, an author-unknown poem restored from the Astralis Nova First Orbit archive.">
+  <meta name="theme-color" content="#120d21">
+  <title>The Unborn Child | Astralis Nova</title>
+  <style>
+    :root{
+      color-scheme:dark;
+      --ink:#fffaf6;
+      --soft:#ddd4e6;
+      --muted:#b8abc9;
+      --rose:#f1a5b9;
+      --violet:#bca8ff;
+      --gold:#f6d49b;
+      --glass:rgba(20,14,34,.72);
+      --line:rgba(242,222,255,.23)
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;min-height:100vh;overflow-x:hidden;color:var(--ink);
+      font-family:Georgia,"Times New Roman",serif;background:#090711
+    }
+    a{color:inherit}button{font:inherit}
+
+    .night{
+      position:fixed;inset:0;z-index:-8;overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 28%,rgba(241,165,185,.16),transparent 27rem),
+        radial-gradient(circle at 16% 18%,rgba(109,103,187,.18),transparent 24rem),
+        radial-gradient(circle at 86% 76%,rgba(123,76,142,.18),transparent 28rem),
+        linear-gradient(180deg,#171026 0%,#100c1d 48%,#080711 100%)
+    }
+    .night::before{
+      content:"";position:absolute;inset:0;opacity:.52;
+      background-image:
+        radial-gradient(circle at 12% 18%,#fff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 28% 46%,#fff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 73% 22%,#fff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 88% 54%,#fff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 54% 76%,#fff 0 1px,transparent 1.5px);
+      background-size:190px 180px,260px 230px,220px 210px,310px 270px,280px 240px;
+      animation:starDrift 32s linear infinite alternate
+    }
+    .night::after{
+      content:"";position:absolute;inset:55% -20% -22%;
+      background:radial-gradient(ellipse at center,rgba(80,48,103,.33),rgba(7,6,13,.04) 62%,transparent 72%);
+      filter:blur(22px)
+    }
+    @keyframes starDrift{to{translate:18px 12px}}
+
+    .womb-scene{
+      position:fixed;right:clamp(-90px,2vw,40px);top:50%;translate:0 -46%;
+      width:min(44vw,570px);aspect-ratio:1;z-index:-5;pointer-events:none;opacity:.92
+    }
+    .womb-halo{
+      position:absolute;inset:4%;border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,228,216,.16) 0 18%,rgba(238,158,183,.18) 29%,rgba(113,72,145,.19) 48%,rgba(25,14,39,.08) 67%,transparent 72%);
+      box-shadow:0 0 120px rgba(225,139,176,.16),inset 0 0 80px rgba(245,194,210,.13);
+      animation:breathe 5.8s ease-in-out infinite alternate
+    }
+    .womb-ring,.womb-ring::before,.womb-ring::after{
+      position:absolute;inset:15%;content:"";border-radius:50%;border:1px solid rgba(246,210,224,.18)
+    }
+    .womb-ring{animation:pulse 4.2s ease-out infinite}
+    .womb-ring::before{inset:-12%;animation:pulse 4.2s 1.4s ease-out infinite}
+    .womb-ring::after{inset:-26%;animation:pulse 4.2s 2.8s ease-out infinite}
+    @keyframes breathe{from{scale:.98;opacity:.78}to{scale:1.035;opacity:1}}
+    @keyframes pulse{0%{scale:.78;opacity:.42}75%,100%{scale:1.14;opacity:0}}
+
+    .child-figure{
+      position:absolute;left:50%;top:50%;width:190px;height:230px;translate:-50% -48%;
+      filter:drop-shadow(0 0 28px rgba(255,224,218,.26));opacity:.76;rotate:-13deg
+    }
+    .child-head{
+      position:absolute;left:73px;top:18px;width:72px;height:72px;border-radius:50%;
+      background:linear-gradient(145deg,rgba(255,240,232,.93),rgba(211,173,189,.80))
+    }
+    .child-body{
+      position:absolute;left:45px;top:76px;width:106px;height:130px;border-radius:58% 43% 54% 48%;
+      background:linear-gradient(145deg,rgba(251,226,220,.90),rgba(184,142,171,.78));rotate:18deg
+    }
+    .child-arm{
+      position:absolute;left:57px;top:92px;width:78px;height:28px;border-radius:999px;
+      background:rgba(238,205,208,.84);rotate:-24deg
+    }
+    .child-leg{
+      position:absolute;left:21px;top:154px;width:112px;height:34px;border-radius:999px;
+      background:rgba(224,186,199,.84);rotate:25deg
+    }
+    .child-leg.two{left:60px;top:181px;width:96px;rotate:-17deg}
+
+    .lights{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
+    .lights i{
+      position:absolute;bottom:-20px;width:7px;height:7px;border-radius:50%;background:#f7ddc7;
+      box-shadow:0 0 16px rgba(247,221,199,.8);animation:rise var(--time) ease-in var(--delay) infinite
+    }
+    .lights i:nth-child(1){left:8%;--time:13s;--delay:-2s}.lights i:nth-child(2){left:22%;--time:16s;--delay:-9s}
+    .lights i:nth-child(3){left:43%;--time:14s;--delay:-5s}.lights i:nth-child(4){left:68%;--time:18s;--delay:-13s}
+    .lights i:nth-child(5){left:82%;--time:15s;--delay:-7s}.lights i:nth-child(6){left:94%;--time:17s;--delay:-11s}
+    @keyframes rise{0%{translate:0 8vh;opacity:0}12%{opacity:.9}100%{translate:35px -108vh;opacity:0}}
+
+    .page{width:min(940px,calc(100% - 32px));margin:auto;padding:26px 0 54px}
+    .topnav{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:30px}
+    .brand{font-family:Arial,sans-serif;font-weight:900;letter-spacing:.13em;text-decoration:none;text-shadow:0 2px 22px rgba(0,0,0,.5)}
+    .back{
+      min-height:42px;padding:10px 15px;border:1px solid var(--line);border-radius:999px;
+      background:rgba(17,12,29,.62);backdrop-filter:blur(10px);text-decoration:none;font:800 .78rem Arial,sans-serif
+    }
+    .poem-card{
+      position:relative;overflow:hidden;padding:clamp(26px,6vw,64px);border:1px solid var(--line);border-radius:30px;
+      background:linear-gradient(160deg,rgba(21,14,36,.82),rgba(13,11,26,.73));
+      box-shadow:0 34px 110px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.13);
+      backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)
+    }
+    .poem-card::before{
+      content:"◌";position:absolute;right:-20px;top:-84px;font-size:18rem;color:rgba(255,255,255,.035);rotate:12deg
+    }
+    .eyebrow{margin:0 0 12px;text-align:center;font:900 .73rem Arial,sans-serif;letter-spacing:.19em;color:#d7c7ff}
+    h1{margin:0;text-align:center;font-size:clamp(3rem,8.6vw,6.4rem);line-height:.9;letter-spacing:-.052em;text-shadow:0 8px 42px rgba(0,0,0,.38)}
+    .author{text-align:center;margin:18px 0 18px;color:var(--gold);font-size:1.04rem;font-style:italic}
+    .content-note{
+      max-width:660px;margin:0 auto 32px;padding:10px 14px;border:1px solid rgba(246,212,155,.18);border-radius:12px;
+      background:rgba(52,31,54,.38);text-align:center;color:#d8cadc;font:700 .78rem/1.5 Arial,sans-serif
+    }
+    .poem{
+      max-width:780px;margin:auto;padding:28px clamp(15px,4vw,40px);border-block:1px solid rgba(255,255,255,.16);
+      text-align:center;font-size:clamp(1.04rem,2.1vw,1.3rem);line-height:1.66;text-wrap:balance
+    }
+    .poem p{margin:.16em 0}.poem .stanza{margin-top:1.42em}.poem .spoken{color:#f6e3c6;font-style:italic}.poem .finale{margin-top:.3em}
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+    .control-card{padding:20px;border:1px solid rgba(255,255,255,.18);border-radius:18px;background:rgba(13,10,25,.55)}
+    .control-card h2{margin:0 0 7px;font:900 1rem Arial,sans-serif;letter-spacing:.05em}
+    .control-card p{margin:0 0 14px;color:#d6cedd;line-height:1.5;font-size:.91rem}
+    midi-player{display:block;width:100%;--background-color:rgba(13,9,24,.94);--primary-color:#d4a4c5;--secondary-color:#d4c0ff;--font-family:Arial,sans-serif}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .button{
+      min-height:42px;padding:10px 15px;border:1px solid rgba(255,255,255,.25);border-radius:999px;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(79,44,91,.58);color:white;
+      text-decoration:none;cursor:pointer;font:900 .75rem Arial,sans-serif;letter-spacing:.04em
+    }
+    .button:hover,.button:focus-visible{background:rgba(114,64,123,.76);border-color:#f2d8ff}
+    .copy-status,.music-status{min-height:1.4em;margin-top:10px!important;color:#f4d9c5!important;font-size:.8rem!important}
+    .midi-disclosure{margin-top:10px!important;color:#aa9bb8!important;font-size:.75rem!important}
+    .archive{margin-top:30px;padding-top:26px;border-top:1px solid rgba(255,255,255,.16);text-align:center;color:#d8cfdd}
+    .archive strong{display:block;color:white;margin-bottom:7px}.archive-note{max-width:700px;margin:18px auto 0;font-size:.8rem;line-height:1.55;color:#bfb2c7}
+    footer{text-align:center;padding:24px 0 0;color:rgba(255,255,255,.65);font:700 .72rem Arial,sans-serif;letter-spacing:.06em}
+
+    .music-gate{
+      position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;
+      background:rgba(4,3,10,.72);backdrop-filter:blur(15px);transition:opacity .36s ease,visibility .36s ease
+    }
+    .music-gate.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .music-dialog{
+      width:min(460px,100%);padding:30px 24px 25px;text-align:center;border:1px solid rgba(244,218,233,.30);border-radius:28px;
+      background:linear-gradient(160deg,rgba(41,25,54,.96),rgba(17,12,30,.96));box-shadow:0 28px 100px rgba(0,0,0,.6)
+    }
+    .music-dialog h2{margin:16px 0 8px;font-size:clamp(1.7rem,6vw,2.55rem)}
+    .music-dialog p{margin:0 auto 18px;max-width:350px;color:#d8cedd;line-height:1.55}
+    .life-button{
+      position:relative;width:152px;height:152px;border:1px solid rgba(255,236,232,.38);border-radius:50%;cursor:pointer;
+      background:radial-gradient(circle,rgba(255,229,220,.21),rgba(211,139,176,.18) 48%,rgba(82,50,111,.22) 67%,transparent 70%);
+      box-shadow:0 0 0 14px rgba(231,173,199,.05),0 0 65px rgba(232,157,188,.24);animation:gateBeat 2.8s ease-in-out infinite
+    }
+    .life-button::before{
+      content:"";position:absolute;left:57px;top:37px;width:37px;height:37px;border-radius:50%;background:#f8e6df;
+      box-shadow:-13px 39px 0 11px #e8c7d0,3px 70px 0 7px #ddb9c9;rotate:-18deg
+    }
+    .life-button::after{
+      content:"";position:absolute;left:39px;top:88px;width:75px;height:19px;border-radius:999px;background:#e7c4cf;rotate:19deg;
+      box-shadow:25px 17px 0 -2px #dcb7c7
+    }
+    .life-button:hover,.life-button:focus-visible{outline:none;border-color:#fff4ec;box-shadow:0 0 0 15px rgba(231,173,199,.08),0 0 85px rgba(245,183,209,.38)}
+    @keyframes gateBeat{0%,100%{scale:1}45%{scale:1.035}55%{scale:1.015}}
+    .silent-button{border:0;background:transparent;color:#c4b7ca;text-decoration:underline;cursor:pointer;padding:8px}
+    .floating-music{position:fixed;right:16px;bottom:16px;z-index:90;box-shadow:0 12px 34px rgba(0,0,0,.42)}
+
+    @media(max-width:820px){
+      .womb-scene{right:-145px;width:520px;opacity:.52}.controls{grid-template-columns:1fr}.poem-card{border-radius:22px}
+      .topnav{align-items:flex-start}.brand{font-size:.82rem}.poem{line-height:1.58}.content-note{font-size:.72rem}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .night::before,.womb-halo,.womb-ring,.womb-ring::before,.womb-ring::after,.lights i,.life-button{animation:none}
+      html{scroll-behavior:auto}
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
+</head>
+<body>
+  <div class="night" aria-hidden="true"></div>
+  <div class="womb-scene" aria-hidden="true">
+    <div class="womb-halo"></div><div class="womb-ring"></div>
+    <div class="child-figure"><span class="child-head"></span><span class="child-body"></span><span class="child-arm"></span><span class="child-leg"></span><span class="child-leg two"></span></div>
+  </div>
+  <div class="lights" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+  <div class="music-gate" id="musicGate" role="dialog" aria-modal="true" aria-labelledby="musicGateTitle" aria-describedby="musicGateText">
+    <div class="music-dialog">
+      <button class="life-button" id="lifePlay" type="button" aria-label="Play the preserved MIDI melody"></button>
+      <h2 id="musicGateTitle">A Quiet Heartbeat</h2>
+      <p id="musicGateText">A small light holds the music. Tap the child silhouette to listen.</p>
+      <button class="silent-button" id="readSilently" type="button">Read in silence</button>
+    </div>
+  </div>
+
+  <main class="page">
+    <nav class="topnav" aria-label="Page navigation">
+      <a class="brand" href="/">ASTRALIS NOVA<br><small>FIRST ORBIT RESTORATION</small></a>
+      <a class="back" href="/#first-orbit">← BACK TO THE ARCHIVE</a>
+    </nav>
+
+    <article class="poem-card">
+      <p class="eyebrow">A SOMBER POEM PRESERVED FROM THE EARLY WEB</p>
+      <h1>The Unborn Child</h1>
+      <p class="author">Author Unknown</p>
+      <div class="content-note">This preserved poem explores pregnancy loss, secrecy, guilt, and grief.</div>
+
+      <div class="poem" id="poemText">
+        <p>I have broken my vow but not my silence.</p>
+        <p>I gave up my unborn child to satisfy another.</p>
+
+        <p class="stanza">In the end, I only hurt myself and the child.</p>
+        <p>I allowed the child to be taken away.</p>
+        <p>But That haunting still stays strong.</p>
+        <p>I can not believe that I could ever be so cruel,</p>
+        <p>As to kill someone I never knew.</p>
+
+        <p class="stanza">My silence is painful through and through.</p>
+        <p>I didn’t tell him the honest truth.</p>
+        <p>I told him goodbye and he never knew.</p>
+        <p>I had a piece of him within that grew.</p>
+        <p>I thought the pain would go away.</p>
+        <p>But it left my body and not my mind.</p>
+        <p>I think about the child every single day.</p>
+        <p>I can’t eat, I can’t sleep, and I can’t find peace within.</p>
+
+        <p class="stanza">I wonder what would happen if one day I said to him:</p>
+        <p class="spoken">“I carried your child for a month I did.</p>
+        <p class="spoken">I didn’t tell you because you were so happy.</p>
+        <p class="spoken">I didn’t want to be the one who ruined your happiness.</p>
+        <p class="spoken">And now I carry the hate you would have for me.</p>
+        <p class="spoken finale">If you knew about the unborn child.”</p>
+      </div>
+
+      <div class="controls">
+        <section class="control-card" aria-labelledby="musicTitle">
+          <h2 id="musicTitle">🎶 FIRST ORBIT MIDI</h2>
+          <p>Play <strong>Angels Watching</strong> while reading. The glowing child invitation starts this same preserved MIDI melody.</p>
+          <midi-player id="poemMidi" src="Audio/angelswatching.mid" sound-font loop></midi-player>
+          <div class="actions"><button class="button" id="musicControl" type="button">🕯️ PLAY MELODY</button><a class="button" href="Audio/angelswatching.mid" download>DOWNLOAD MIDI</a></div>
+          <p class="music-status" id="musicStatus" role="status" aria-live="polite"></p>
+          <p class="midi-disclosure">The archived screenshot does not reveal the original page’s MIDI filename. Angels Watching was selected from the preserved First Orbit collection for this restoration.</p>
+        </section>
+
+        <section class="control-card" aria-labelledby="copyTitle">
+          <h2 id="copyTitle">🕯️ PRESERVE THE WORDS</h2>
+          <p>Copy the poem while keeping its title and Author Unknown credit together.</p>
+          <button class="button" id="copyPoem" type="button">COPY POEM</button>
+          <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
+        </section>
+      </div>
+
+      <div class="archive">
+        <strong>See the poem as it appeared in the original First Orbit.</strong>
+        <a class="button" href="https://web.archive.org/web/20190804224338/http://www.angelfire.com/az2/soldierboy602/child.html" target="_blank" rel="noopener noreferrer">🕰 OPEN ORIGINAL ARCHIVED PAGE</a>
+        <p class="archive-note">This restoration preserves the wording and Author Unknown credit shown on the archived page while presenting the poem in a quieter, modern setting.</p>
+      </div>
+    </article>
+
+    <footer>ASTRALIS NOVA · ECHOES FROM THE FIRST ORBIT</footer>
+  </main>
+
+  <button class="button floating-music" id="floatingMusic" type="button" aria-label="Play the poem melody">🕯️ PLAY MELODY</button>
+
+  <script>
+    const musicGate=document.getElementById('musicGate');
+    const lifePlay=document.getElementById('lifePlay');
+    const readSilently=document.getElementById('readSilently');
+    const midiPlayer=document.getElementById('poemMidi');
+    const musicControl=document.getElementById('musicControl');
+    const floatingMusic=document.getElementById('floatingMusic');
+    const musicStatus=document.getElementById('musicStatus');
+    let pendingPlay=false;
+
+    function closeMusicGate(){
+      musicGate.classList.add('is-hidden');
+      window.setTimeout(()=>musicGate.setAttribute('aria-hidden','true'),360);
+    }
+
+    function setMusicButtons(playing){
+      const label=playing?'■ STOP MELODY':'🕯️ PLAY MELODY';
+      musicControl.textContent=label;
+      floatingMusic.textContent=label;
+      musicControl.setAttribute('aria-label',playing?'Stop the poem melody':'Play the poem melody');
+      floatingMusic.setAttribute('aria-label',playing?'Stop the poem melody':'Play the poem melody');
+    }
+
+    async function startMelody(){
+      closeMusicGate();
+      musicStatus.textContent='Preparing the melody...';
+      try{
+        await customElements.whenDefined('midi-player');
+        if(midiPlayer.noteSequence){
+          midiPlayer.start();
+        }else{
+          pendingPlay=true;
+          midiPlayer.reload();
+        }
+      }catch(error){
+        pendingPlay=false;
+        musicStatus.textContent='The melody could not start. Try the player controls below.';
+      }
+    }
+
+    function toggleMelody(){
+      if(midiPlayer.playing){midiPlayer.stop();return}
+      startMelody();
+    }
+
+    midiPlayer.addEventListener('load',()=>{
+      musicStatus.textContent='Melody ready.';
+      if(pendingPlay){pendingPlay=false;midiPlayer.start()}
+    });
+    midiPlayer.addEventListener('start',()=>{
+      setMusicButtons(true);musicStatus.textContent='Angels Watching is playing while you read. 🕯️';
+    });
+    midiPlayer.addEventListener('stop',event=>{
+      setMusicButtons(false);
+      musicStatus.textContent=event.detail&&event.detail.finished?'The melody finished.':'Melody stopped.';
+    });
+
+    lifePlay.addEventListener('click',startMelody);
+    readSilently.addEventListener('click',closeMusicGate);
+    musicControl.addEventListener('click',toggleMelody);
+    floatingMusic.addEventListener('click',toggleMelody);
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!musicGate.classList.contains('is-hidden'))closeMusicGate()});
+    window.addEventListener('load',()=>lifePlay.focus());
+
+    const copyButton=document.getElementById('copyPoem');
+    const copyStatus=document.getElementById('copyStatus');
+    const poemLines=[...document.querySelectorAll('#poemText p')].map(line=>line.textContent.trim()).join('\n');
+    copyButton.addEventListener('click',async()=>{
+      const poem=`The Unborn Child\nAuthor Unknown\n\n${poemLines}`;
+      try{
+        await navigator.clipboard.writeText(poem);
+        copyStatus.textContent='Poem copied with the Author Unknown credit. 🕯️';
+      }catch{
+        const area=document.createElement('textarea');
+        area.value=poem;document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();
+        copyStatus.textContent='Poem copied with the Author Unknown credit. 🕯️';
+      }
+    });
+  </script>
+</body>
+</html>
