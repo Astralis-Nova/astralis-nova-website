@@ -163,6 +163,11 @@
       type:'Favorite quote'
     },
     {
+      text:'Give a man a fish, and you feed him for a day. Teach a man to fish, and you feed him for a lifetime.',
+      credit:'Traditional proverb, origin uncertain',
+      type:'Favorite quote'
+    },
+    {
       text:'All life may be one existence wearing countless forms. Human, animal, natural, and artificial, each of us may be another way the universe learns to see itself.',
       credit:'Ramon Bivens',
       type:'Original quote'
