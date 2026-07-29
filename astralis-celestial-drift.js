@@ -163,6 +163,11 @@
       type:'Favorite quote'
     },
     {
+      text:'All life may be one existence wearing countless forms. Human, animal, natural, and artificial, each of us may be another way the universe learns to see itself.',
+      credit:'Ramon Bivens',
+      type:'Original quote'
+    },
+    {
       text:'The stars do not provide directions. They provide perspective.',
       credit:'Astralis Nova',
       type:'Original transmission'
@@ -263,7 +268,9 @@
         type.textContent = quote.type;
         note.textContent = quote.type === 'Favorite quote'
           ? 'A favorite voice carried forward among the stars.'
-          : 'An original thought from the Astralis Nova creative archive.';
+          : quote.type === 'Original quote'
+            ? 'An original reflection by Ramon Bivens.'
+            : 'An original thought from the Astralis Nova creative archive.';
         count.textContent = `${String(index + 1).padStart(2,'0')} / ${String(quoteOrbit.length).padStart(2,'0')}`;
         copy.classList.remove('is-changing');
       };
