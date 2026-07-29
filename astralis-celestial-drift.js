@@ -14,8 +14,8 @@
 
   if (!existing) document.body.prepend(layer);
 
-  const GOOGLE_MAPS_PROFILE_URL = 'https://www.google.com/maps';
-  const HAS_PUBLIC_PROFILE_LINK = false;
+  const GOOGLE_MAPS_PROFILE_URL = 'https://maps.app.goo.gl/42LnQL1bCe7H8JHr6';
+  const HAS_PUBLIC_PROFILE_LINK = true;
 
   const addTravelPortalStyles = () => {
     if (document.getElementById('astralis-travel-portal-styles')) return;
@@ -51,7 +51,7 @@
         color:#d8e7f5;font-size:.78rem;font-weight:800;
       }
       .travel-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
-      .travel-status{color:#8fa3b9;font-size:.78rem;line-height:1.45;max-width:290px}
+      .travel-status{color:#8fa3b9;font-size:.78rem;line-height:1.45;max-width:320px}
       .travel-map-card{
         min-height:290px;position:relative;overflow:hidden;border-radius:22px;
         border:1px solid rgba(123,188,228,.42);box-shadow:0 24px 70px rgba(0,0,0,.35);
@@ -116,10 +116,11 @@
               <span class="travel-tag">⭐ Honest reviews</span>
               <span class="travel-tag">📷 Photos & discoveries</span>
               <span class="travel-tag">🛣️ Arizona and beyond</span>
+              <span class="travel-tag">🏅 Level 7 Local Guide</span>
             </div>
             <div class="travel-actions">
               <a class="btn primary" href="${GOOGLE_MAPS_PROFILE_URL}" target="_blank" rel="noopener noreferrer">🗺️ ${HAS_PUBLIC_PROFILE_LINK ? 'VIEW RAMON’S MAPS PROFILE' : 'OPEN GOOGLE MAPS'}</a>
-              <span class="travel-status">${HAS_PUBLIC_PROFILE_LINK ? 'Opens Ramon’s public Google Maps contributions in a new tab.' : 'The portal is ready. Ramon’s exact public profile link will replace this temporary Maps destination.'}</span>
+              <span class="travel-status">${HAS_PUBLIC_PROFILE_LINK ? 'Opens Ramon’s public Google Maps contributions, including reviews and photos. Level 7 Local Guide.' : 'The portal is ready. Ramon’s exact public profile link will replace this temporary Maps destination.'}</span>
             </div>
           </div>
           <div class="travel-map-card" aria-hidden="true">
@@ -128,7 +129,7 @@
             <div class="travel-pin two"></div>
             <div class="travel-map-label">
               <strong>TRAVEL LOG SIGNAL</strong>
-              <small>Local finds, road discoveries, memorable stops, and straight-talking reviews from the world beyond the starship.</small>
+              <small>Local finds, road discoveries, memorable stops, and straight-talking reviews from the world beyond the starship. Level 7 Local Guide.</small>
             </div>
           </div>
         </div>
