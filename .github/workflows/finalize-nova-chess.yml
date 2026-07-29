@@ -1,0 +1,63 @@
+name: Finalize Nova Chess
+
+on:
+  push:
+    branches:
+      - feature/astralis-nova-chess-portal
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: ${{ !contains(github.event.head_commit.message, '[nova-patched]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/astralis-nova-chess-portal
+
+      - name: Apply final bridge corrections
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("chess/chess.js")
+          source = path.read_text(encoding="utf-8")
+          replacements = [
+              (
+                  "const winner = state.mode === 'standard' ? standardWinner() : state.tri.winner;",
+                  "const winner = isOnline() ? state.online.winner : state.mode === 'standard' ? standardWinner() : state.tri.winner;",
+              ),
+              (
+                  "if (state.online.code) localStorage.removeItem(`novaChessSession:${state.online.code}`);\n  stopPolling();",
+                  "if (state.online.code) localStorage.removeItem(`novaChessSession:${state.online.code}`);\n  if (localStorage.getItem('novaChessLastSession') === state.online.code) localStorage.removeItem('novaChessLastSession');\n  stopPolling();",
+              ),
+              (
+                  "els.newGameForm.addEventListener('submit', async event => {\n    event.preventDefault();",
+                  "els.newGameForm.addEventListener('submit', async event => {\n    if (event.submitter?.value === 'cancel') return;\n    event.preventDefault();",
+              ),
+              (
+                  "els.joinGameForm.addEventListener('submit', async event => {\n    event.preventDefault();",
+                  "els.joinGameForm.addEventListener('submit', async event => {\n    if (event.submitter?.value === 'cancel') return;\n    event.preventDefault();",
+              ),
+          ]
+
+          for old, new in replacements:
+              if old not in source:
+                  raise SystemExit(f"Expected source pattern not found: {old[:80]}")
+              source = source.replace(old, new, 1)
+
+          path.write_text(source, encoding="utf-8")
+
+      - name: Confirm JavaScript syntax
+        run: node --check chess/chess.js
+
+      - name: Commit corrections
+        run: |
+          git config user.name "Astralis Nova Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add chess/chess.js
+          git commit -m "Fix Nova Chess online edge cases [nova-patched]"
+          git push origin HEAD:feature/astralis-nova-chess-portal
