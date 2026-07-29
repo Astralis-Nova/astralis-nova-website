@@ -3,63 +3,56 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="The Flower Poem, Standing Alone by Chase, restored from the Astralis Nova First Orbit archive.">
-  <meta name="theme-color" content="#183b2a">
+  <meta name="description" content="The original Flower Poem, author unknown, restored from the Astralis Nova First Orbit archive with an animated meadow and preserved MIDI music.">
+  <meta name="theme-color" content="#2f6f45">
   <title>The Flower Poem | Astralis Nova</title>
   <style>
     :root{
       color-scheme:dark;
-      --ink:#fffdf6;
-      --soft:#e9efd9;
-      --glass:rgba(13,29,25,.66);
-      --line:rgba(255,255,255,.28);
-      --gold:#ffe08a;
-      --green:#8ee59f;
+      --ink:#fffdf7;--soft:#e9f3df;--line:rgba(255,255,255,.28);
+      --gold:#ffe28b;--leaf:#7ddd8c;--glass:rgba(10,31,23,.70)
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
-      margin:0;min-height:100vh;color:var(--ink);
-      font-family:Georgia,"Times New Roman",serif;
-      overflow-x:hidden;background:#173929
+      margin:0;min-height:100vh;overflow-x:hidden;color:var(--ink);
+      font-family:Georgia,"Times New Roman",serif;background:#183f2a
     }
-    a{color:inherit}
-    button{font:inherit}
+    a{color:inherit}button{font:inherit}
+
     .sky{
-      position:fixed;inset:0;z-index:-5;overflow:hidden;
+      position:fixed;inset:0;z-index:-7;overflow:hidden;
       background:
-        radial-gradient(circle at 73% 12%,rgba(255,244,177,.86) 0 4.5rem,rgba(255,240,170,.26) 4.6rem 9rem,transparent 16rem),
-        linear-gradient(180deg,#71bfe7 0%,#9ed9ec 31%,#f9d3bf 55%,#4e8d53 56%,#214f36 100%)
+        radial-gradient(circle at 77% 13%,rgba(255,244,180,.94) 0 4.6rem,rgba(255,239,154,.25) 4.7rem 10rem,transparent 17rem),
+        linear-gradient(180deg,#6cbce7 0%,#a6ddec 34%,#f4d6c4 55%,#6da85e 56%,#1e4f34 100%)
     }
     .sky::before{
-      content:"";position:absolute;inset:0;
+      content:"";position:absolute;inset:0;opacity:.7;filter:blur(9px);
       background:
-        radial-gradient(ellipse at 14% 18%,rgba(255,255,255,.72) 0 5%,transparent 5.5%),
-        radial-gradient(ellipse at 23% 17%,rgba(255,255,255,.62) 0 7%,transparent 7.5%),
-        radial-gradient(ellipse at 81% 29%,rgba(255,255,255,.52) 0 7%,transparent 7.5%),
-        linear-gradient(180deg,transparent 0 48%,rgba(32,85,48,.18) 49% 100%);
-      filter:blur(8px);opacity:.75
+        radial-gradient(ellipse at 12% 18%,rgba(255,255,255,.72) 0 5%,transparent 5.7%),
+        radial-gradient(ellipse at 21% 17%,rgba(255,255,255,.62) 0 7%,transparent 7.7%),
+        radial-gradient(ellipse at 79% 27%,rgba(255,255,255,.56) 0 7%,transparent 7.7%)
     }
     .hill,.hill::before,.hill::after{
       position:absolute;content:"";left:-12vw;right:-12vw;border-radius:50% 50% 0 0/100% 100% 0 0
     }
-    .hill{height:48vh;bottom:-20vh;background:linear-gradient(180deg,#4f9657,#1d4b33);transform:rotate(-2deg)}
-    .hill::before{height:35vh;bottom:14vh;background:linear-gradient(180deg,#74ad62,#356f48);transform:translateX(28vw) rotate(5deg)}
-    .hill::after{height:31vh;bottom:10vh;background:linear-gradient(180deg,#6da75d,#2a6640);transform:translateX(-25vw) rotate(-5deg)}
+    .hill{height:48vh;bottom:-20vh;background:linear-gradient(180deg,#4f9958,#1c4a32);transform:rotate(-2deg)}
+    .hill::before{height:35vh;bottom:14vh;background:linear-gradient(180deg,#80b76a,#39754b);transform:translateX(28vw) rotate(5deg)}
+    .hill::after{height:31vh;bottom:10vh;background:linear-gradient(180deg,#71aa61,#2c6842);transform:translateX(-25vw) rotate(-5deg)}
     .field-glow{
-      position:fixed;inset:45% -10% -15%;z-index:-3;pointer-events:none;
+      position:fixed;inset:43% -10% -15%;z-index:-6;pointer-events:none;
       background:
-        radial-gradient(circle at 18% 45%,rgba(255,233,120,.18),transparent 22rem),
-        radial-gradient(circle at 78% 28%,rgba(255,151,202,.15),transparent 24rem),
+        radial-gradient(circle at 18% 45%,rgba(255,234,120,.18),transparent 22rem),
+        radial-gradient(circle at 78% 28%,rgba(255,151,202,.16),transparent 24rem),
         repeating-linear-gradient(78deg,transparent 0 24px,rgba(185,239,164,.08) 25px 27px,transparent 28px 50px)
     }
-    .flowers{position:fixed;inset:49% 0 0;z-index:-2;pointer-events:none;overflow:hidden}
+
+    .flowers{position:fixed;inset:49% 0 0;z-index:-4;pointer-events:none;overflow:hidden}
     .flower{
       --x:50%;--h:180px;--s:1;--petal:#ff8fc8;--delay:0s;
       position:absolute;left:var(--x);bottom:-18px;width:6px;height:var(--h);
       background:linear-gradient(90deg,#245a34,#6eb66f,#245a34);border-radius:999px;
-      transform-origin:bottom center;transform:scale(var(--s));
-      animation:sway 5.6s ease-in-out var(--delay) infinite alternate
+      transform-origin:bottom center;transform:scale(var(--s));animation:sway 5.6s ease-in-out var(--delay) infinite alternate
     }
     .flower::before{
       content:"";position:absolute;left:50%;top:-23px;width:42px;height:42px;transform:translateX(-50%);
@@ -76,9 +69,8 @@
       filter:drop-shadow(0 5px 8px rgba(16,44,22,.25))
     }
     .flower::after{
-      content:"";position:absolute;left:-16px;top:42%;width:24px;height:12px;
-      border-radius:100% 0 100% 0;background:#4d9854;box-shadow:21px 34px 0 #5ca45a;
-      transform:rotate(-22deg)
+      content:"";position:absolute;left:-16px;top:42%;width:24px;height:12px;border-radius:100% 0 100% 0;
+      background:#4d9854;box-shadow:21px 34px 0 #5ca45a;transform:rotate(-22deg)
     }
     @keyframes sway{from{rotate:-2.2deg}to{rotate:2.6deg}}
     .f1{--x:3%;--h:150px;--s:.76;--petal:#ffe06d;--delay:-1s}.f2{--x:8%;--h:220px;--s:1.05;--petal:#ff92c2;--delay:-2.8s}
@@ -89,55 +81,110 @@
     .f11{--x:69%;--h:180px;--s:.82;--petal:#ff6f8c;--delay:-2.2s}.f12{--x:76%;--h:224px;--s:1.05;--petal:#ffd866;--delay:-1.3s}
     .f13{--x:83%;--h:155px;--s:.72;--petal:#a9d8ff;--delay:-3.8s}.f14{--x:89%;--h:245px;--s:1.08;--petal:#ff99ce;--delay:-2.6s}
     .f15{--x:96%;--h:190px;--s:.88;--petal:#fff5ea;--delay:-.6s}
+
+    .white-flower{
+      position:fixed;right:clamp(14px,5vw,90px);bottom:-28px;width:210px;height:430px;z-index:-3;
+      transform-origin:50% 100%;animation:whiteSway 7s ease-in-out infinite alternate;pointer-events:none;filter:drop-shadow(0 20px 25px rgba(9,37,18,.24))
+    }
+    .white-stem{position:absolute;left:101px;bottom:0;width:10px;height:330px;border-radius:999px;background:linear-gradient(90deg,#315e37,#8cc77e,#315e37)}
+    .white-leaf{position:absolute;width:82px;height:34px;background:linear-gradient(145deg,#79bd68,#2e7240);border-radius:100% 0 100% 0;transform-origin:100% 50%}
+    .white-leaf.one{left:29px;bottom:135px;rotate:15deg}.white-leaf.two{left:105px;bottom:210px;rotate:168deg}
+    .white-center{position:absolute;left:78px;top:50px;width:58px;height:58px;border-radius:50%;z-index:3;background:radial-gradient(circle,#6b4317 0 12%,#e1ad34 14% 48%,#7d5117 50%);box-shadow:0 0 24px rgba(255,226,128,.42)}
+    .white-petal{position:absolute;left:87px;top:0;width:40px;height:94px;border-radius:60% 60% 48% 48%;transform-origin:20px 79px;background:linear-gradient(180deg,#fff,#f5f0dc 68%,#d8d0b6);box-shadow:inset 0 -8px 13px rgba(129,111,78,.15)}
+    .white-petal.p1{rotate:0deg}.white-petal.p2{rotate:60deg}.white-petal.p3{rotate:120deg}.white-petal.p4{rotate:180deg}.white-petal.p5{rotate:240deg}.white-petal.p6{rotate:300deg}
+    @keyframes whiteSway{from{rotate:-1.2deg}to{rotate:2.3deg}}
+
+    .falling-petals{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
+    .falling-petals i{
+      position:absolute;top:-70px;width:22px;height:36px;border-radius:75% 25% 70% 30%;background:rgba(255,252,241,.94);
+      box-shadow:0 4px 8px rgba(23,54,24,.18);animation:petalFall var(--time) linear var(--delay) infinite
+    }
+    .falling-petals i:nth-child(1){left:72%;--time:11s;--delay:-2s}.falling-petals i:nth-child(2){left:82%;--time:14s;--delay:-8s}.falling-petals i:nth-child(3){left:91%;--time:12s;--delay:-5s}
+    .falling-petals i:nth-child(4){left:64%;--time:15s;--delay:-11s}.falling-petals i:nth-child(5){left:76%;--time:13s;--delay:-7s}.falling-petals i:nth-child(6){left:88%;--time:16s;--delay:-13s}
+    @keyframes petalFall{0%{translate:0 -8vh;rotate:0deg;opacity:0}10%{opacity:1}50%{translate:-80px 52vh;rotate:210deg}100%{translate:70px 112vh;rotate:520deg;opacity:.15}}
+
     .page{width:min(940px,calc(100% - 32px));margin:auto;padding:26px 0 52px}
     .topnav{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:30px}
     .brand{font-family:Arial,sans-serif;font-weight:900;letter-spacing:.13em;text-decoration:none;text-shadow:0 2px 20px rgba(0,0,0,.45)}
     .back{
-      min-height:42px;padding:10px 15px;border:1px solid var(--line);border-radius:999px;
-      background:rgba(8,25,24,.52);backdrop-filter:blur(10px);text-decoration:none;font:800 .78rem Arial,sans-serif
+      min-height:42px;padding:10px 15px;border:1px solid var(--line);border-radius:999px;background:rgba(8,25,24,.56);
+      backdrop-filter:blur(10px);text-decoration:none;font:800 .78rem Arial,sans-serif
     }
     .poem-card{
       position:relative;overflow:hidden;padding:clamp(26px,6vw,64px);border:1px solid var(--line);border-radius:30px;
-      background:linear-gradient(160deg,rgba(11,31,27,.73),rgba(13,27,34,.59));
+      background:linear-gradient(160deg,rgba(10,31,24,.77),rgba(12,28,34,.63));
       box-shadow:0 32px 100px rgba(2,22,13,.42),inset 0 1px 0 rgba(255,255,255,.17);
       backdrop-filter:blur(17px);-webkit-backdrop-filter:blur(17px)
     }
-    .poem-card::before{
-      content:"❀";position:absolute;right:-30px;top:-68px;font-size:15rem;color:rgba(255,255,255,.055);rotate:18deg
-    }
+    .poem-card::before{content:"❀";position:absolute;right:-30px;top:-68px;font-size:15rem;color:rgba(255,255,255,.055);rotate:18deg}
     .eyebrow{margin:0 0 10px;text-align:center;font:900 .74rem Arial,sans-serif;letter-spacing:.2em;color:#c9ffca}
     h1{margin:0;text-align:center;font-size:clamp(3rem,9vw,6.7rem);line-height:.88;letter-spacing:-.055em;text-shadow:0 8px 38px rgba(0,0,0,.3)}
-    .subtitle{text-align:center;color:var(--gold);font-size:clamp(1.05rem,3vw,1.35rem);margin:18px 0 8px}
-    .author{text-align:center;margin:0 0 36px;color:var(--soft);font-style:italic}
+    .author{text-align:center;margin:18px 0 36px;color:var(--gold);font-size:1.05rem;font-style:italic}
     .poem{
-      max-width:720px;margin:auto;padding:26px clamp(15px,4vw,34px);border-block:1px solid rgba(255,255,255,.19);
-      text-align:center;font-size:clamp(1.08rem,2.2vw,1.34rem);line-height:1.83;text-wrap:balance
+      max-width:760px;margin:auto;padding:28px clamp(15px,4vw,38px);border-block:1px solid rgba(255,255,255,.19);
+      text-align:center;font-size:clamp(1.08rem,2.2vw,1.34rem);line-height:1.72;text-wrap:balance
     }
-    .poem p{margin:.15em 0}
+    .poem p{margin:.15em 0}.poem .finale{margin-top:1.25em;color:#fff0bd;font-style:italic;font-weight:700}
     .controls{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
-    .control-card{padding:20px;border:1px solid rgba(255,255,255,.2);border-radius:18px;background:rgba(4,19,17,.48)}
+    .control-card{padding:20px;border:1px solid rgba(255,255,255,.2);border-radius:18px;background:rgba(4,19,17,.50)}
     .control-card h2{margin:0 0 7px;font:900 1rem Arial,sans-serif;letter-spacing:.05em}
     .control-card p{margin:0 0 14px;color:#d6e5d7;line-height:1.5;font-size:.92rem}
     midi-player{display:block;width:100%;--background-color:rgba(4,18,17,.9);--primary-color:#87e89e;--secondary-color:#ffe078;--font-family:Arial,sans-serif}
     .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
     .button{
       min-height:42px;padding:10px 15px;border:1px solid rgba(255,255,255,.28);border-radius:999px;
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(26,79,51,.54);color:white;
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(26,79,51,.58);color:white;
       text-decoration:none;cursor:pointer;font:900 .75rem Arial,sans-serif;letter-spacing:.04em
     }
-    .button:hover,.button:focus-visible{background:rgba(55,126,74,.72);border-color:#d9ffd7}
-    .copy-status{min-height:1.4em;margin-top:10px!important;color:#e9ffb8!important;font-size:.8rem!important}
-    .archive{
-      margin-top:30px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18);text-align:center;color:#d8e2d5
-    }
-    .archive strong{display:block;color:white;margin-bottom:7px}
-    .archive-note{max-width:680px;margin:18px auto 0;font-size:.8rem;line-height:1.55;color:#c7d3c8}
+    .button:hover,.button:focus-visible{background:rgba(55,126,74,.76);border-color:#d9ffd7}
+    .copy-status,.music-status{min-height:1.4em;margin-top:10px!important;color:#e9ffb8!important;font-size:.8rem!important}
+    .archive{margin-top:30px;padding-top:26px;border-top:1px solid rgba(255,255,255,.18);text-align:center;color:#d8e2d5}
+    .archive strong{display:block;color:white;margin-bottom:7px}.archive-note{max-width:680px;margin:18px auto 0;font-size:.8rem;line-height:1.55;color:#c7d3c8}
     footer{text-align:center;padding:24px 0 0;color:rgba(255,255,255,.72);font:700 .72rem Arial,sans-serif;letter-spacing:.06em}
+
+    .music-gate{
+      position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:22px;background:rgba(4,18,13,.70);
+      backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:opacity .35s ease,visibility .35s ease
+    }
+    .music-gate.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .music-dialog{
+      width:min(500px,100%);padding:28px;border:1px solid rgba(255,255,255,.34);border-radius:28px;text-align:center;
+      background:linear-gradient(155deg,rgba(18,61,39,.96),rgba(8,27,23,.96));box-shadow:0 30px 100px rgba(0,0,0,.48),0 0 60px rgba(145,255,161,.13)
+    }
+    .music-dialog h2{margin:8px 0 10px;font-size:clamp(1.8rem,6vw,2.8rem)}
+    .music-dialog p{margin:0 auto 20px;max-width:380px;color:#e6f3e4;line-height:1.55}
+    .bloom-button{
+      position:relative;width:142px;height:142px;border:0;border-radius:50%;cursor:pointer;background:transparent;
+      filter:drop-shadow(0 18px 22px rgba(0,0,0,.28));transition:transform .25s ease
+    }
+    .bloom-button:hover,.bloom-button:focus-visible{transform:scale(1.08);outline:3px solid rgba(255,255,255,.75);outline-offset:8px}
+    .bloom-button::before{
+      content:"";position:absolute;inset:7px;border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,#ffd750 0 16%,transparent 17%),
+        radial-gradient(ellipse at 50% 5%,#ffb3d7 0 22%,transparent 23%),
+        radial-gradient(ellipse at 95% 50%,#ffb3d7 0 22%,transparent 23%),
+        radial-gradient(ellipse at 50% 95%,#ffb3d7 0 22%,transparent 23%),
+        radial-gradient(ellipse at 5% 50%,#ffb3d7 0 22%,transparent 23%),
+        radial-gradient(ellipse at 82% 18%,#ffe0ef 0 19%,transparent 20%),
+        radial-gradient(ellipse at 18% 18%,#ffe0ef 0 19%,transparent 20%),
+        radial-gradient(ellipse at 82% 82%,#ffe0ef 0 19%,transparent 20%),
+        radial-gradient(ellipse at 18% 82%,#ffe0ef 0 19%,transparent 20%);
+      animation:popupBloom 3.4s ease-in-out infinite alternate
+    }
+    @keyframes popupBloom{from{rotate:-3deg;scale:.96}to{rotate:3deg;scale:1.04}}
+    .silent-button{border:0;background:transparent;color:#d9e8dc;text-decoration:underline;cursor:pointer;padding:10px 14px;margin-top:4px}
+    .floating-music{
+      position:fixed;right:18px;bottom:18px;z-index:70;box-shadow:0 12px 36px rgba(0,0,0,.35);background:rgba(25,85,52,.90);backdrop-filter:blur(10px)
+    }
+
     @media(max-width:720px){
       .controls{grid-template-columns:1fr}.poem-card{border-radius:22px}.topnav{align-items:flex-start}.brand{font-size:.82rem}
-      .flower{opacity:.84}.poem{line-height:1.68}
+      .flower{opacity:.84}.poem{line-height:1.58}.white-flower{opacity:.72;right:-58px;scale:.82}.falling-petals{opacity:.72}
     }
-    @media(prefers-reduced-motion:reduce){.flower{animation:none}html{scroll-behavior:auto}}
+    @media(prefers-reduced-motion:reduce){
+      .flower,.white-flower,.falling-petals i,.bloom-button::before{animation:none}html{scroll-behavior:auto}
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
 </head>
@@ -149,6 +196,21 @@
     <span class="flower f6"></span><span class="flower f7"></span><span class="flower f8"></span><span class="flower f9"></span><span class="flower f10"></span>
     <span class="flower f11"></span><span class="flower f12"></span><span class="flower f13"></span><span class="flower f14"></span><span class="flower f15"></span>
   </div>
+  <div class="white-flower" aria-hidden="true">
+    <span class="white-stem"></span><span class="white-leaf one"></span><span class="white-leaf two"></span>
+    <span class="white-petal p1"></span><span class="white-petal p2"></span><span class="white-petal p3"></span>
+    <span class="white-petal p4"></span><span class="white-petal p5"></span><span class="white-petal p6"></span><span class="white-center"></span>
+  </div>
+  <div class="falling-petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+  <div class="music-gate" id="musicGate" role="dialog" aria-modal="true" aria-labelledby="musicGateTitle" aria-describedby="musicGateText">
+    <div class="music-dialog">
+      <button class="bloom-button" id="bloomPlay" type="button" aria-label="Play the preserved MIDI melody"></button>
+      <h2 id="musicGateTitle">Let the Flower Bloom</h2>
+      <p id="musicGateText">A flower holds the music &mdash; tap to let it bloom.</p>
+      <button class="silent-button" id="readSilently" type="button">Read in silence</button>
+    </div>
+  </div>
 
   <main class="page">
     <nav class="topnav" aria-label="Page navigation">
@@ -157,66 +219,134 @@
     </nav>
 
     <article class="poem-card">
-      <p class="eyebrow">A POEM PRESERVED FROM THE EARLY WEB</p>
+      <p class="eyebrow">THE ORIGINAL POEM PRESERVED FROM THE EARLY WEB</p>
       <h1>The Flower Poem</h1>
-      <p class="subtitle">Standing Alone</p>
-      <p class="author">by Chase</p>
+      <p class="author">Author Unknown</p>
 
       <div class="poem" id="poemText">
-        <p>I can see the flower upon which my life grows, blooming into a rose.</p>
-        <p>See the hope and courage in the strength of the petals.</p>
-        <p>As long as I am, I will be.</p>
-        <p>The flower will never wilt or die.</p>
-        <p>As my life grows back, I shall become strong.</p>
-        <p>I shall become only dependent on one.</p>
-        <p>That one will be me.</p>
-        <p>I will rise with my petals high.</p>
-        <p>My life as a flower will bloom and prosper as I grow.</p>
-        <p>I may not be the pick of the patch, but I am just as beautiful as the rest.</p>
-        <p>I will stand as one, but not a lonely soul.</p>
-        <p>The tears will be far from my smile.</p>
+        <p>I look out my window, what do I see?</p>
+        <p>I see a Meadow filled with Beautiful flowers.</p>
+        <p>A wind blows across this wide meadow.</p>
+        <p>I notice one particular flower.</p>
+        <p>not a large or bright flower</p>
+        <p>but rather a plain white one.</p>
+        <p>I see that to every blow of the wind</p>
+        <p>a petal falls to the ground.</p>
+        <p>Soon after, I notice that this flower</p>
+        <p>only has one petal left.</p>
+        <p>This petal holds on with everything</p>
+        <p>it gots, and with all its might.</p>
+        <p>Suddenly with the wind no longer blowing.</p>
+        <p>The petal still exist on that flower.</p>
+        <p>What courage, what strength, what love!!</p>
+        <p class="finale">I feel as if that flower is me, and the petal is you..</p>
       </div>
 
       <div class="controls">
         <section class="control-card" aria-labelledby="musicTitle">
           <h2 id="musicTitle">🎶 FIRST ORBIT MIDI</h2>
-          <p>Play <strong>Good Vibes</strong>, one of the preserved MIDI melodies from the original site collection.</p>
-          <midi-player src="Audio/goodvib.mid" sound-font></midi-player>
-          <div class="actions"><a class="button" href="Audio/goodvib.mid" download>DOWNLOAD MIDI</a></div>
+          <p>Play <strong>Good Vibes</strong> while reading. The flower invitation starts this same preserved MIDI melody.</p>
+          <midi-player id="poemMidi" src="Audio/goodvib.mid" sound-font loop></midi-player>
+          <div class="actions"><button class="button" id="musicControl" type="button">🌸 PLAY MELODY</button><a class="button" href="Audio/goodvib.mid" download>DOWNLOAD MIDI</a></div>
+          <p class="music-status" id="musicStatus" role="status" aria-live="polite"></p>
         </section>
 
         <section class="control-card" aria-labelledby="copyTitle">
           <h2 id="copyTitle">🌼 CARRY THE WORDS</h2>
-          <p>Copy the poem while keeping its title and author credit together.</p>
+          <p>Copy the original poem while keeping its title and Author Unknown credit together.</p>
           <button class="button" id="copyPoem" type="button">COPY POEM</button>
           <p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p>
         </section>
       </div>
 
       <div class="archive">
-        <strong>See the page as it appeared in the original First Orbit.</strong>
+        <strong>See the poem as it appeared in the original First Orbit.</strong>
         <a class="button" href="https://web.archive.org/web/20190804224338/http://www.angelfire.com/az2/soldierboy602/flowerpoem.html" target="_blank" rel="noopener noreferrer">🕰 OPEN ORIGINAL ARCHIVED PAGE</a>
-        <p class="archive-note">“Standing Alone” is credited to Chase and was originally published in 1999. This restoration preserves the poem’s attribution while carrying forward a meaningful page from Ramon’s early-web archive.</p>
+        <p class="archive-note">The surviving archived page does not show an author credit, so this restoration lists the writer as Author Unknown and preserves the poem exactly as shown.</p>
       </div>
     </article>
 
     <footer>ASTRALIS NOVA · ECHOES FROM THE FIRST ORBIT</footer>
   </main>
 
+  <button class="button floating-music" id="floatingMusic" type="button" aria-label="Play the poem melody">🌸 PLAY MELODY</button>
+
   <script>
+    const musicGate=document.getElementById('musicGate');
+    const bloomPlay=document.getElementById('bloomPlay');
+    const readSilently=document.getElementById('readSilently');
+    const midiPlayer=document.getElementById('poemMidi');
+    const musicControl=document.getElementById('musicControl');
+    const floatingMusic=document.getElementById('floatingMusic');
+    const musicStatus=document.getElementById('musicStatus');
+    let pendingPlay=false;
+
+    function closeMusicGate(){
+      musicGate.classList.add('is-hidden');
+      window.setTimeout(()=>musicGate.setAttribute('aria-hidden','true'),360);
+    }
+
+    function setMusicButtons(playing){
+      const label=playing?'■ STOP MELODY':'🌸 PLAY MELODY';
+      musicControl.textContent=label;
+      floatingMusic.textContent=label;
+      musicControl.setAttribute('aria-label',playing?'Stop the poem melody':'Play the poem melody');
+      floatingMusic.setAttribute('aria-label',playing?'Stop the poem melody':'Play the poem melody');
+    }
+
+    async function startMelody(){
+      closeMusicGate();
+      musicStatus.textContent='Preparing the flower melody...';
+      try{
+        await customElements.whenDefined('midi-player');
+        if(midiPlayer.noteSequence){
+          midiPlayer.start();
+        }else{
+          pendingPlay=true;
+          midiPlayer.reload();
+        }
+      }catch(error){
+        pendingPlay=false;
+        musicStatus.textContent='The melody could not start. Try the player controls below.';
+      }
+    }
+
+    function toggleMelody(){
+      if(midiPlayer.playing){midiPlayer.stop();return}
+      startMelody();
+    }
+
+    midiPlayer.addEventListener('load',()=>{
+      musicStatus.textContent='Melody ready.';
+      if(pendingPlay){pendingPlay=false;midiPlayer.start()}
+    });
+    midiPlayer.addEventListener('start',()=>{
+      setMusicButtons(true);musicStatus.textContent='Good Vibes is playing while you read. 🌸';
+    });
+    midiPlayer.addEventListener('stop',event=>{
+      setMusicButtons(false);
+      musicStatus.textContent=event.detail&&event.detail.finished?'The melody finished.':'Melody stopped.';
+    });
+
+    bloomPlay.addEventListener('click',startMelody);
+    readSilently.addEventListener('click',closeMusicGate);
+    musicControl.addEventListener('click',toggleMelody);
+    floatingMusic.addEventListener('click',toggleMelody);
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!musicGate.classList.contains('is-hidden'))closeMusicGate()});
+    window.addEventListener('load',()=>bloomPlay.focus());
+
     const copyButton=document.getElementById('copyPoem');
     const copyStatus=document.getElementById('copyStatus');
     const poemLines=[...document.querySelectorAll('#poemText p')].map(line=>line.textContent.trim()).join('\n');
     copyButton.addEventListener('click',async()=>{
-      const poem=`The Flower Poem\nStanding Alone\nby Chase\n\n${poemLines}`;
+      const poem=`The Flower Poem\nAuthor Unknown\n\n${poemLines}`;
       try{
         await navigator.clipboard.writeText(poem);
-        copyStatus.textContent='Poem copied with its author credit. 🌸';
+        copyStatus.textContent='Poem copied with the Author Unknown credit. 🌸';
       }catch{
         const area=document.createElement('textarea');
-        area.value=poem;document.body.appendChild(area);area.select();
-        document.execCommand('copy');area.remove();
-        copyStatus.textContent='Poem copied with its author credit. 🌸';
+        area.value=poem;document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();
+        copyStatus.textContent='Poem copied with the Author Unknown credit. 🌸';
       }
     });
   </script>
