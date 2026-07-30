@@ -16,7 +16,8 @@ const COLOR_NAME = { white: 'White', black: 'Black' };
 const SIDE_FROM_TURN = { w: 'white', b: 'black' };
 const TRI_BOARD_ELEMENTS = Object.freeze({
   VD: 'voidPlatformBoard',
-  NX: 'nexusPlatformBoard',
+  NP: 'portNexusBoard',
+  NS: 'starboardNexusBoard',
   SD: 'silverPlatformBoard',
 });
 
@@ -25,7 +26,7 @@ const els = Object.fromEntries([
   'whitePlayerName','blackPlayerName','whitePlayerStatus','blackPlayerStatus','turnLabel','gameStatus',
   'createOnlineButton','copyInviteButton','flipBoardButton','soundButton','gameCodeWrap','gameCode',
   'novaMessage','standardBoardWrap','standardBoard','rankCoordinates','fileCoordinates','triDeckStage',
-  'voidPlatformBoard','nexusPlatformBoard','silverPlatformBoard',
+  'voidPlatformBoard','portNexusBoard','starboardNexusBoard','silverPlatformBoard',
   'deckTabs','promotionPanel','promotionChoices','selectedSquare',
   'lastMove','syncTimer','whiteCaptured','blackCaptured','moveLog','resignButton','resetLocalButton',
   'telemetryGameId','telemetryRevision','telemetryColor','telemetryRules','newGameButton','joinGameButton',
@@ -45,7 +46,7 @@ const state = {
   selected: null,
   legalMoves: [],
   orientation: 'white',
-  activeBoard: 'NX',
+  activeBoard: 'NP',
   sound: true,
   apiOnline: false,
   polling: null,
@@ -347,7 +348,7 @@ function renderTelemetry() {
   els.telemetryGameId.textContent = state.online.id || 'Local';
   els.telemetryRevision.textContent = String(state.online.revision || 0);
   els.telemetryColor.textContent = state.online.color ? COLOR_NAME[state.online.color] : 'Training';
-  els.telemetryRules.textContent = state.mode === 'standard' ? 'Standard Chess' : 'Nova Tri-Deck v5 · Full Chess';
+  els.telemetryRules.textContent = state.mode === 'standard' ? 'Standard Chess' : 'Nova Tri-Deck v6 · Full Chess';
 }
 
 function updateModeUI() {
@@ -705,7 +706,7 @@ function switchMode(mode, { force = false } = {}) {
   clearSelection();
   loadLocal(mode);
   updateModeUI();
-  novaSpeak(mode === 'standard' ? 'Standard chess lattice engaged.' : 'Nova Tri-Deck engaged. Two 8×2 home platforms and one 8×4 Nexus now form a complete 8×8 battle grid.');
+  novaSpeak(mode === 'standard' ? 'Standard chess lattice engaged.' : 'Nova Tri-Deck engaged. Two 8×2 home platforms and twin 4×4 Nexus platforms now form a complete transparent 8×8 battle grid.');
 }
 
 function saveLocal() {
