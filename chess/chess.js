@@ -3,12 +3,9 @@ import { createPiece, pieceMarkup, pieceName } from './pieces.js';
 import {
   TRI_BOARD_IDS,
   TRI_STATE_VERSION,
-  applyTriMove,
   createTriState,
-  isTriPortal,
   triBoard,
-  triLegalMoves,
-  triPiece,
+  triBoardForSquare,
   triSquares,
 } from './trideck-engine.js';
 
@@ -18,13 +15,10 @@ const FILES = ['a','b','c','d','e','f','g','h'];
 const COLOR_NAME = { white: 'Silver', black: 'Void' };
 const SIDE_FROM_TURN = { w: 'white', b: 'black' };
 const TRI_BOARD_ELEMENTS = Object.freeze({
-  UA: 'upperAlphaBoard',
-  UB: 'upperBetaBoard',
-  U: 'upperBoard',
-  C: 'coreBoard',
-  L: 'lowerBoard',
-  LA: 'lowerAlphaBoard',
-  LB: 'lowerBetaBoard',
+  VD: 'voidPlatformBoard',
+  NU: 'upperNexusBoard',
+  NL: 'lowerNexusBoard',
+  SD: 'silverPlatformBoard',
 });
 
 const els = Object.fromEntries([
@@ -32,7 +26,7 @@ const els = Object.fromEntries([
   'whitePlayerName','blackPlayerName','whitePlayerStatus','blackPlayerStatus','turnLabel','gameStatus',
   'createOnlineButton','copyInviteButton','flipBoardButton','soundButton','gameCodeWrap','gameCode',
   'novaMessage','standardBoardWrap','standardBoard','rankCoordinates','fileCoordinates','triDeckStage',
-  'upperAlphaBoard','upperBetaBoard','upperBoard','coreBoard','lowerBoard','lowerAlphaBoard','lowerBetaBoard',
+  'voidPlatformBoard','upperNexusBoard','lowerNexusBoard','silverPlatformBoard',
   'deckTabs','promotionPanel','promotionChoices','selectedSquare',
   'lastMove','syncTimer','whiteCaptured','blackCaptured','moveLog','resignButton','resetLocalButton',
   'telemetryGameId','telemetryRevision','telemetryColor','telemetryRules','newGameButton','joinGameButton',
@@ -48,11 +42,11 @@ const state = {
     captured: { white: [], black: [] },
     lastMove: null,
   },
-  tri: createTriState(),
+  tri: createTriGameState(),
   selected: null,
   legalMoves: [],
   orientation: 'white',
-  activeBoard: 'C',
+  activeBoard: 'NU',
   sound: true,
   apiOnline: false,
   polling: null,
@@ -72,6 +66,24 @@ const state = {
   },
 };
 
+function createTriGameState(snapshot = createTriState()) {
+  const fallback = createTriState();
+  let game;
+  try {
+    game = new Chess(snapshot?.fen || fallback.fen);
+  } catch {
+    game = new Chess(fallback.fen);
+  }
+  return {
+    version: TRI_STATE_VERSION,
+    game,
+    moves: Array.isArray(snapshot?.moves) ? snapshot.moves : [],
+    captured: normalizeCaptured(snapshot?.captured),
+    lastMove: snapshot?.lastMove || null,
+    winner: snapshot?.winner || null,
+  };
+}
+
 function standardSnapshot() {
   return {
     version: 1,
@@ -84,7 +96,14 @@ function standardSnapshot() {
 }
 
 function triSnapshot() {
-  return structuredClone(state.tri);
+  return {
+    version: TRI_STATE_VERSION,
+    fen: state.tri.game.fen(),
+    moves: state.tri.moves,
+    captured: state.tri.captured,
+    lastMove: state.tri.lastMove,
+    winner: triWinner(),
+  };
 }
 
 function currentSnapshot() {
@@ -103,17 +122,8 @@ function restoreSnapshot(mode, snapshot) {
     state.standard.captured = normalizeCaptured(snapshot?.captured);
     state.standard.lastMove = snapshot?.lastMove || null;
   } else {
-    const fresh = createTriState();
     const compatible = Number(snapshot?.version) === TRI_STATE_VERSION;
-    state.tri = {
-      version: TRI_STATE_VERSION,
-      pieces: compatible && snapshot?.pieces && typeof snapshot.pieces === 'object' ? snapshot.pieces : fresh.pieces,
-      turn: compatible && snapshot?.turn === 'black' ? 'black' : 'white',
-      moves: compatible && Array.isArray(snapshot?.moves) ? snapshot.moves : [],
-      captured: compatible ? normalizeCaptured(snapshot?.captured) : fresh.captured,
-      lastMove: compatible ? snapshot?.lastMove || null : null,
-      winner: compatible ? snapshot?.winner || null : null,
-    };
+    state.tri = createTriGameState(compatible ? snapshot : createTriState());
   }
   clearSelection();
   updateModeUI();
@@ -131,7 +141,7 @@ function resetMode(mode = state.mode) {
   if (mode === 'standard') {
     state.standard = { game: new Chess(), moves: [], captured: { white: [], black: [] }, lastMove: null };
   } else {
-    state.tri = createTriState();
+    state.tri = createTriGameState();
   }
   clearSelection();
   saveLocal();
@@ -143,7 +153,8 @@ function isOnline() {
 }
 
 function localTurn() {
-  return state.mode === 'standard' ? SIDE_FROM_TURN[state.standard.game.turn()] : state.tri.turn;
+  const game = state.mode === 'standard' ? state.standard.game : state.tri.game;
+  return SIDE_FROM_TURN[game.turn()];
 }
 
 function currentTurn() {
@@ -153,14 +164,22 @@ function currentTurn() {
 
 function gameIsOver() {
   if (isOnline() && ['finished','resigned'].includes(state.online.status)) return true;
-  if (state.mode === 'standard') return state.standard.game.isGameOver();
-  return Boolean(state.tri.winner);
+  const game = state.mode === 'standard' ? state.standard.game : state.tri.game;
+  return game.isGameOver();
+}
+
+function chessWinner(game) {
+  if (!game.isGameOver()) return null;
+  if (game.isCheckmate()) return game.turn() === 'w' ? 'black' : 'white';
+  return 'draw';
 }
 
 function standardWinner() {
-  if (!state.standard.game.isGameOver()) return null;
-  if (state.standard.game.isCheckmate()) return state.standard.game.turn() === 'w' ? 'black' : 'white';
-  return 'draw';
+  return chessWinner(state.standard.game);
+}
+
+function triWinner() {
+  return chessWinner(state.tri.game);
 }
 
 function canAct() {
@@ -172,6 +191,11 @@ function canAct() {
 
 function pieceAtStandard(square) {
   const piece = state.standard.game.get(square);
+  return piece ? { type: piece.type, color: piece.color === 'w' ? 'white' : 'black' } : null;
+}
+
+function pieceAtTri(square) {
+  const piece = state.tri.game.get(square);
   return piece ? { type: piece.type, color: piece.color === 'w' ? 'white' : 'black' } : null;
 }
 
@@ -215,13 +239,6 @@ function buildSquare({ square, piece, board = null, mini = false }) {
   const last = state.mode === 'standard' ? state.standard.lastMove : state.tri.lastMove;
   if (last && last.from === square && (board === null || last.fromBoard === board)) button.classList.add('last-from');
   if (last && last.to === square && (board === null || last.toBoard === board)) button.classList.add('last-to');
-  if (board !== null && (isTriPortal(board, square) || triBoard(board)?.kind === 'attack')) {
-    button.classList.add(isTriPortal(board, square) ? 'portal-node' : 'transfer-node');
-    const glyph = document.createElement('span');
-    glyph.className = 'portal-glyph';
-    glyph.textContent = isTriPortal(board, square) ? '◇' : '·';
-    button.append(glyph);
-  }
   if (piece) button.append(createPiece(piece.type, piece.color, { mini }));
   return button;
 }
@@ -244,9 +261,9 @@ function renderTriBoards() {
     for (const square of triSquares(boardId, state.orientation)) {
       boardElement.append(buildSquare({
         square,
-        piece: triPiece(state.tri, boardId, square),
+        piece: pieceAtTri(square),
         board: boardId,
-        mini: true,
+        mini: false,
       }));
     }
   }
@@ -256,6 +273,7 @@ function renderTriBoards() {
   els.deckTabs.querySelectorAll('button').forEach(button => {
     button.classList.toggle('active', button.dataset.board === state.activeBoard);
   });
+  els.triDeckStage.classList.toggle('orientation-black', state.orientation === 'black');
 }
 
 function renderAll() {
@@ -280,9 +298,9 @@ function renderStatus() {
   let status = isOnline() ? 'Online mission active' : 'Local training simulation';
   if (isOnline() && state.online.status === 'waiting') status = 'Waiting for a second commander';
   if (gameIsOver()) {
-    const winner = isOnline() ? state.online.winner : state.mode === 'standard' ? standardWinner() : state.tri.winner;
+    const winner = isOnline() ? state.online.winner : state.mode === 'standard' ? standardWinner() : triWinner();
     status = winner === 'draw' ? 'Mission ended in a draw' : `${COLOR_NAME[winner] || winner || 'Unknown'} fleet wins`;
-  } else if (state.mode === 'standard' && state.standard.game.inCheck()) {
+  } else if ((state.mode === 'standard' ? state.standard.game : state.tri.game).inCheck()) {
     status = `${COLOR_NAME[turn]} High Commander is in check`;
   } else if (isOnline() && state.online.color !== turn) {
     status = 'Opponent move pending';
@@ -330,7 +348,7 @@ function renderTelemetry() {
   els.telemetryGameId.textContent = state.online.id || 'Local';
   els.telemetryRevision.textContent = String(state.online.revision || 0);
   els.telemetryColor.textContent = state.online.color ? COLOR_NAME[state.online.color] : 'Training';
-  els.telemetryRules.textContent = state.mode === 'standard' ? 'Standard Chess' : 'Nova Tri-Deck v2';
+  els.telemetryRules.textContent = state.mode === 'standard' ? 'Standard Chess' : 'Nova Tri-Deck v4 · Full Chess';
 }
 
 function updateModeUI() {
@@ -356,7 +374,7 @@ function handleStandardSquare(square) {
   if (state.selected) {
     const legal = state.legalMoves.filter(move => move.square === square);
     if (legal.length) {
-      if (legal.some(move => move.promotion)) return showPromotionChoices(square, legal);
+      if (legal.some(move => move.promotion)) return showPromotionChoices(square, legal, 'standard');
       return executeStandardMove(state.selected.square, square, undefined);
     }
   }
@@ -376,7 +394,7 @@ function handleStandardSquare(square) {
   renderAll();
 }
 
-function showPromotionChoices(targetSquare, legal) {
+function showPromotionChoices(targetSquare, legal, mode) {
   els.promotionChoices.innerHTML = '';
   for (const type of ['q','r','b','n']) {
     if (!legal.some(move => move.promotion === type)) continue;
@@ -384,7 +402,14 @@ function showPromotionChoices(targetSquare, legal) {
     button.type = 'button';
     button.title = pieceName(type);
     button.append(createPiece(type, currentTurn(), { mini: true }));
-    button.addEventListener('click', () => executeStandardMove(state.selected.square, targetSquare, type));
+    button.addEventListener('click', () => {
+      if (mode === 'trideck') {
+        const target = legal.find(move => move.square === targetSquare && move.promotion === type);
+        executeTriMove(state.selected, target, type);
+      } else {
+        executeStandardMove(state.selected.square, targetSquare, type);
+      }
+    });
     els.promotionChoices.append(button);
   }
   els.promotionPanel.hidden = false;
@@ -444,57 +469,84 @@ function standardCommentary(move) {
 function handleTriSquare(board, square) {
   state.activeBoard = board;
   if (!canAct()) return notify('The other commander currently holds the turn.', 'error');
-  const piece = triPiece(state.tri, board, square);
+  const piece = pieceAtTri(square);
   const turn = currentTurn();
 
   if (state.selected) {
-    const target = state.legalMoves.find(move => move.board === board && move.square === square);
-    if (target) return executeTriMove(state.selected, target);
+    const legal = state.legalMoves.filter(move => move.board === board && move.square === square);
+    if (legal.length) {
+      if (legal.some(move => move.promotion)) return showPromotionChoices(square, legal, 'trideck');
+      return executeTriMove(state.selected, legal[0]);
+    }
   }
 
   if (piece && piece.color === turn) {
     state.selected = { board, square };
-    state.legalMoves = triLegalMoves(state.tri, board, square);
-    const phaseCount = state.legalMoves.filter(move => move.phase).length;
-    novaSpeak(`${pieceName(piece.type)} linked on ${triBoard(board).label}. ${state.legalMoves.length} legal vector${state.legalMoves.length === 1 ? '' : 's'}${phaseCount ? `, including ${phaseCount} transfer route${phaseCount === 1 ? '' : 's'}` : ''}.`);
+    state.legalMoves = state.tri.game.moves({ square, verbose: true }).map(move => ({
+      square: move.to,
+      board: triBoardForSquare(move.to),
+      capture: Boolean(move.captured),
+      promotion: move.promotion,
+    }));
+    const platformRoutes = state.legalMoves.filter(move => move.board !== board).length;
+    novaSpeak(`${pieceName(piece.type)} linked on ${triBoard(board).label}. ${state.legalMoves.length} legal vector${state.legalMoves.length === 1 ? '' : 's'}${platformRoutes ? `, including ${platformRoutes} cross-platform route${platformRoutes === 1 ? '' : 's'}` : ''}.`);
   } else {
     clearSelection();
   }
   renderAll();
 }
 
-async function executeTriMove(from, target) {
-  let result;
+async function executeTriMove(from, target, promotion) {
+  let move;
   try {
-    result = applyTriMove(state.tri, from, target);
-  } catch (error) {
+    const payload = { from: from.square, to: target.square };
+    if (promotion) payload.promotion = promotion;
+    move = state.tri.game.move(payload);
+  } catch {
     clearSelection();
     playTone('error');
-    notify(error.message, 'error');
+    notify('That route is not legal.', 'error');
     return renderAll();
   }
-  const { record, piece, captured, promoted, legal } = result;
-  state.activeBoard = target.board;
+  const mover = move.color === 'w' ? 'white' : 'black';
+  if (move.captured) state.tri.captured[mover].push(move.captured);
+  const record = {
+    ply: state.tri.moves.length + 1,
+    color: mover,
+    notation: move.san,
+    from: move.from,
+    to: move.to,
+    fromBoard: triBoardForSquare(move.from),
+    toBoard: triBoardForSquare(move.to),
+    piece: move.piece,
+    captured: move.captured || null,
+    promotion: move.promotion || null,
+    at: new Date().toISOString(),
+  };
+  state.tri.moves.push(record);
+  state.tri.lastMove = { ...record };
+  state.tri.winner = triWinner();
+  state.activeBoard = record.toBoard;
   clearSelection();
-  playTone(captured ? 'capture' : legal.phase ? 'phase' : 'move');
+  playTone(move.captured ? 'capture' : record.fromBoard !== record.toBoard ? 'phase' : 'move');
   novaSpeak(
-    captured?.type === 'k'
-      ? 'High Commander captured. Tri-Deck victory confirmed.'
-      : legal.transfer
-        ? `${pieceName(piece.type)} transferred to ${triBoard(target.board).label}.`
-        : legal.phase
-          ? `${pieceName(piece.type)} phase-shifted to ${triBoard(target.board).label}.`
-          : captured
-            ? `${pieceName(captured.type)} removed from ${triBoard(target.board).label}.`
-            : promoted
-              ? 'Drone Sentinel promoted to Oracle Core.'
+    state.tri.game.isCheckmate()
+      ? `Checkmate confirmed on ${triBoard(record.toBoard).label}.`
+      : state.tri.game.inCheck()
+        ? `High Commander under direct threat after ${move.san}.`
+        : move.promotion
+          ? `Drone Sentinel promoted to ${pieceName(move.promotion)}.`
+          : move.captured
+            ? `${pieceName(move.captured)} removed from ${triBoard(record.toBoard).label}.`
+            : record.fromBoard !== record.toBoard
+              ? `${pieceName(move.piece)} crossed onto ${triBoard(record.toBoard).label}.`
               : 'Tri-Deck vector accepted.',
   );
   saveLocal();
   renderAll();
 
   if (isOnline()) await transmitMove(record);
-  else if (state.tri.winner) celebrate(state.tri.winner);
+  else if (state.tri.game.isGameOver()) celebrate(triWinner());
 }
 
 async function transmitMove(record) {
@@ -513,7 +565,7 @@ async function transmitMove(record) {
         move: record,
         nextTurn: localTurn(),
         gameOver: gameIsOver(),
-        winner: state.mode === 'standard' ? standardWinner() : state.tri.winner,
+        winner: state.mode === 'standard' ? standardWinner() : triWinner(),
       },
     });
     applyRemoteGame(response.game, { preserveMessage: true });
@@ -654,7 +706,7 @@ function switchMode(mode, { force = false } = {}) {
   clearSelection();
   loadLocal(mode);
   updateModeUI();
-  novaSpeak(mode === 'standard' ? 'Standard chess lattice engaged.' : 'Nova Tri-Deck engaged. All three command decks and four attack platforms are live.');
+  novaSpeak(mode === 'standard' ? 'Standard chess lattice engaged.' : 'Nova Tri-Deck engaged. Four elevated 8×2 platforms now form one complete 8×8 battle grid.');
 }
 
 function saveLocal() {
