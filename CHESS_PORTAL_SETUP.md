@@ -5,8 +5,8 @@ A two-player asynchronous chess portal for the Astralis Nova website.
 ## What ships in this release
 
 - Standard chess with legal-move validation, castling, en passant, promotion, check, checkmate, stalemate and draw detection through pinned `chess.js` 1.4.0.
-- Nova Tri-Deck, an original three-layer variant with Upper, Core and Lower boards.
-- Original sci-fi SVG units: High Commander, Oracle Core, Citadel, Phase Seer, Warp Strider and Drone Sentinel.
+- Nova Tri-Deck, an original 64-square variant with three 4×4 command decks and four playable 2×2 attack platforms.
+- Original character-style sci-fi SVG units: High Commander, Oracle Core, Citadel Droid, Phase Seer, Warp Strider and Drone Sentinel.
 - Local saved training games through `localStorage`.
 - Online correspondence games through Cloudflare Pages Functions and D1.
 - Shareable game codes and invite links.
@@ -73,13 +73,15 @@ Then open `/chess/`, create a game and copy the invite link into another browser
 
 ## Nova Tri-Deck rules
 
-- Silver command units begin on the Lower plane, Void command units begin on the Upper plane, and both Drone Sentinel lines begin on the Core.
-- Units move using their familiar chess movement on their current deck.
-- Any non-pawn unit may spend a turn phase-shifting to the same square on an adjacent deck if that destination is empty.
-- Drone Sentinels may phase-shift only while standing on one of the four glowing portal nodes: `d4`, `e4`, `d5`, `e5`.
-- There is no check/checkmate rule in Tri-Deck v1.
+- The battlefield contains three staggered 4×4 command decks plus four 2×2 attack platforms, for 64 playable squares total.
+- Silver begins on the Lower deck and its two attack platforms. Void begins on the Upper deck and its two attack platforms. The Central deck begins open.
+- Units use their familiar chess movement while remaining on their current board.
+- Any unit may spend a turn transferring between an attack platform and its four linked command-deck cells when the destination is empty.
+- Any non-pawn unit may spend a turn phase-shifting to the matching empty square on an adjacent command deck.
+- Drone Sentinels may phase-shift between command decks only from the four glowing portal cells: `b2`, `c2`, `b3`, `c3`.
+- There is no check/checkmate rule in Nova Tri-Deck v2.
 - Capture the opposing High Commander to win.
-- Drone Sentinels promote to an Oracle Core on the final rank.
+- A Silver Drone Sentinel promotes on the fourth rank of the Upper deck. A Void Drone Sentinel promotes on the first rank of the Lower deck.
 
 ## Security and fairness model
 
