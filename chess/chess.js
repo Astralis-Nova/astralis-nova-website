@@ -3,6 +3,7 @@ import { createPiece, pieceMarkup, pieceName } from './pieces.js';
 
 const API_URL = '../api/chess';
 const POLL_SECONDS = 12;
+const TRI_STATE_VERSION = 2;
 const FILES = ['a','b','c','d','e','f','g','h'];
 const PORTAL_NODES = new Set(['d4','e4','d5','e5']);
 const START_ORDER = ['r','n','b','q','k','b','n','r'];
@@ -57,13 +58,13 @@ function createTriState() {
   const pieces = {};
   for (let file = 0; file < 8; file += 1) {
     const letter = FILES[file];
-    pieces[`1:${letter}1`] = { type: START_ORDER[file], color: 'white' };
+    pieces[`0:${letter}1`] = { type: START_ORDER[file], color: 'white' };
     pieces[`1:${letter}2`] = { type: 'p', color: 'white' };
-    pieces[`1:${letter}8`] = { type: START_ORDER[file], color: 'black' };
+    pieces[`2:${letter}8`] = { type: START_ORDER[file], color: 'black' };
     pieces[`1:${letter}7`] = { type: 'p', color: 'black' };
   }
   return {
-    version: 1,
+    version: TRI_STATE_VERSION,
     pieces,
     turn: 'white',
     moves: [],
@@ -105,14 +106,15 @@ function restoreSnapshot(mode, snapshot) {
     state.standard.lastMove = snapshot?.lastMove || null;
   } else {
     const fresh = createTriState();
+    const compatible = Number(snapshot?.version) === TRI_STATE_VERSION;
     state.tri = {
-      version: 1,
-      pieces: snapshot?.pieces && typeof snapshot.pieces === 'object' ? snapshot.pieces : fresh.pieces,
-      turn: snapshot?.turn === 'black' ? 'black' : 'white',
-      moves: Array.isArray(snapshot?.moves) ? snapshot.moves : [],
-      captured: normalizeCaptured(snapshot?.captured),
-      lastMove: snapshot?.lastMove || null,
-      winner: snapshot?.winner || null,
+      version: TRI_STATE_VERSION,
+      pieces: compatible && snapshot?.pieces && typeof snapshot.pieces === 'object' ? snapshot.pieces : fresh.pieces,
+      turn: compatible && snapshot?.turn === 'black' ? 'black' : 'white',
+      moves: compatible && Array.isArray(snapshot?.moves) ? snapshot.moves : [],
+      captured: compatible ? normalizeCaptured(snapshot?.captured) : fresh.captured,
+      lastMove: compatible ? snapshot?.lastMove || null : null,
+      winner: compatible ? snapshot?.winner || null : null,
     };
   }
   clearSelection();
@@ -251,6 +253,9 @@ function renderTriBoards() {
   }
   document.querySelectorAll('[data-deck-shell]').forEach(shell => {
     shell.classList.toggle('active', Number(shell.dataset.deckShell) === state.activeDeck);
+  });
+  document.querySelectorAll('[data-attack-deck]').forEach(platform => {
+    platform.classList.toggle('active', Number(platform.dataset.attackDeck) === state.activeDeck);
   });
   els.deckTabs.querySelectorAll('button').forEach(button => {
     button.classList.toggle('active', Number(button.dataset.deck) === state.activeDeck);
@@ -723,7 +728,7 @@ function switchMode(mode, { force = false } = {}) {
   clearSelection();
   loadLocal(mode);
   updateModeUI();
-  novaSpeak(mode === 'standard' ? 'Standard chess lattice engaged.' : 'Nova Tri-Deck engaged. Three orbital layers are now active.');
+  novaSpeak(mode === 'standard' ? 'Standard chess lattice engaged.' : 'Nova Tri-Deck engaged. Choose a level, select a unit, then tap a glowing destination.');
 }
 
 function saveLocal() {
@@ -873,6 +878,11 @@ function wireEvents() {
     state.activeDeck = Number(button.dataset.deck);
     renderTriBoards();
   });
+  document.querySelectorAll('[data-attack-deck]').forEach(platform => platform.addEventListener('click', () => {
+    state.activeDeck = Number(platform.dataset.attackDeck);
+    renderTriBoards();
+    novaSpeak(`${state.activeDeck === 2 ? 'Upper command' : 'Lower tactical'} attack platform selected.`);
+  }));
   document.querySelectorAll('[data-deck-shell]').forEach(shell => shell.addEventListener('click', event => {
     if (event.target.closest('.square')) return;
     state.activeDeck = Number(shell.dataset.deckShell);
