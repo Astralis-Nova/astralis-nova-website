@@ -2,58 +2,56 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   TRI_BOARD_IDS,
+  TRI_START_FEN,
   TRI_STATE_VERSION,
-  applyTriMove,
   createTriState,
-  triLegalMoves,
+  triBoard,
+  triBoardForSquare,
   triSquares,
 } from './trideck-engine.js';
 
-test('Nova Tri-Deck has 64 playable squares and 32 starting units', () => {
-  const tri = createTriState();
-  const squareCount = TRI_BOARD_IDS.reduce((total, board) => total + triSquares(board).length, 0);
-  assert.equal(TRI_STATE_VERSION, 3);
-  assert.equal(squareCount, 64);
-  assert.equal(Object.keys(tri.pieces).length, 32);
-  assert.equal(Object.values(tri.pieces).filter(piece => piece.color === 'white').length, 16);
-  assert.equal(Object.values(tri.pieces).filter(piece => piece.color === 'black').length, 16);
+test('Nova Tri-Deck divides one complete 8×8 battlefield into four 8×2 platforms', () => {
+  const squares = TRI_BOARD_IDS.flatMap((board) => triSquares(board));
+  assert.equal(TRI_STATE_VERSION, 4);
+  assert.equal(TRI_BOARD_IDS.length, 4);
+  assert.equal(squares.length, 64);
+  assert.equal(new Set(squares).size, 64);
+  assert.deepEqual([...new Set(squares.map((square) => square[0]))], ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
+  assert.deepEqual([...new Set(squares.map((square) => Number(square[1])))].sort(), [1, 2, 3, 4, 5, 6, 7, 8]);
 });
 
-test('main-deck pieces can phase to the matching empty square', () => {
-  const tri = createTriState();
-  const moves = triLegalMoves(tri, 'L', 'a1');
-  assert.ok(moves.some(move => move.board === 'C' && move.square === 'a1' && move.phase));
+test('each elevated platform contains exactly two full ranks', () => {
+  for (const boardId of TRI_BOARD_IDS) {
+    assert.equal(triBoard(boardId).ranks.length, 2);
+    assert.equal(triSquares(boardId).length, 16);
+  }
 });
 
-test('Drone Sentinels need a portal cell to phase between main decks', () => {
-  const tri = createTriState();
-  const ordinary = triLegalMoves(tri, 'L', 'a2');
-  const portal = triLegalMoves(tri, 'L', 'b2');
-  assert.ok(!ordinary.some(move => move.board === 'C' && move.square === 'a2'));
-  assert.ok(portal.some(move => move.board === 'C' && move.square === 'b2' && move.phase));
+test('home armies occupy the two 8-square rows at opposite ends', () => {
+  assert.equal(triBoardForSquare('e8'), 'VD');
+  assert.equal(triBoardForSquare('a7'), 'VD');
+  assert.equal(triBoardForSquare('h2'), 'SD');
+  assert.equal(triBoardForSquare('d1'), 'SD');
 });
 
-test('all attack-platform cells link to their matching command-deck cells', () => {
-  const tri = createTriState();
-  delete tri.pieces['L:a1'];
-  const moves = triLegalMoves(tri, 'LA', 'a1');
-  const transfer = moves.find(move => move.board === 'L' && move.square === 'a1');
-  assert.ok(transfer?.transfer);
-
-  const result = applyTriMove(tri, { board: 'LA', square: 'a1' }, transfer, '2026-07-30T00:00:00.000Z');
-  assert.equal(tri.pieces['L:a1'].type, 'r');
-  assert.equal(result.record.notation, 'LA:a1⇅L:a1');
-  assert.equal(tri.turn, 'black');
+test('the middle four rows are divided into two 8×2 nexus platforms', () => {
+  for (const square of ['a6', 'h5']) assert.equal(triBoardForSquare(square), 'NU');
+  for (const square of ['a4', 'h3']) assert.equal(triBoardForSquare(square), 'NL');
 });
 
-test('capturing the opposing High Commander wins Tri-Deck', () => {
+test('rotating the view reverses both files and ranks inside every platform', () => {
+  assert.equal(triSquares('SD', 'white')[0], 'a2');
+  assert.equal(triSquares('SD', 'black')[0], 'h1');
+  assert.equal(triSquares('VD', 'white')[0], 'a8');
+  assert.equal(triSquares('VD', 'black')[0], 'h7');
+});
+
+test('a new Tri-Deck mission starts with the standard 32-piece chess position', () => {
   const tri = createTriState();
-  tri.pieces = {
-    'C:a1': { type: 'r', color: 'white' },
-    'C:a4': { type: 'k', color: 'black' },
-  };
-  const target = triLegalMoves(tri, 'C', 'a1').find(move => move.board === 'C' && move.square === 'a4');
-  const result = applyTriMove(tri, { board: 'C', square: 'a1' }, target);
-  assert.equal(result.captured.type, 'k');
-  assert.equal(tri.winner, 'white');
+  const boardPart = TRI_START_FEN.split(' ')[0];
+  const pieceCount = [...boardPart].filter((character) => /[prnbqkPRNBQK]/.test(character)).length;
+  assert.equal(tri.version, 4);
+  assert.equal(tri.fen, TRI_START_FEN);
+  assert.equal(pieceCount, 32);
+  assert.equal(tri.moves.length, 0);
 });

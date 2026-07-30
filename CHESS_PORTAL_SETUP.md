@@ -5,8 +5,8 @@ A two-player asynchronous chess portal for the Astralis Nova website.
 ## What ships in this release
 
 - Standard chess with legal-move validation, castling, en passant, promotion, check, checkmate, stalemate and draw detection through pinned `chess.js` 1.4.0.
-- Nova Tri-Deck, an original 64-square variant with three 4×4 command decks and four playable 2×2 attack platforms.
-- Original character-style sci-fi SVG units: High Commander, Oracle Core, Citadel Droid, Phase Seer, Warp Strider and Drone Sentinel.
+- Nova Tri-Deck, one complete 8×8 chess battlefield divided into four elevated 8×2 platforms.
+- Original Astralis Staunton-style SVG units: High Commander, Oracle Core, Citadel, Phase Seer, Warp Strider and Drone Sentinel.
 - Local saved training games through `localStorage`.
 - Online correspondence games through Cloudflare Pages Functions and D1.
 - Shareable game codes and invite links.
@@ -73,15 +73,13 @@ Then open `/chess/`, create a game and copy the invite link into another browser
 
 ## Nova Tri-Deck rules
 
-- The battlefield contains three staggered 4×4 command decks plus four 2×2 attack platforms, for 64 playable squares total.
-- Silver begins on the Lower deck and its two attack platforms. Void begins on the Upper deck and its two attack platforms. The Central deck begins open.
-- Units use their familiar chess movement while remaining on their current board.
-- Any unit may spend a turn transferring between an attack platform and its four linked command-deck cells when the destination is empty.
-- Any non-pawn unit may spend a turn phase-shifting to the matching empty square on an adjacent command deck.
-- Drone Sentinels may phase-shift between command decks only from the four glowing portal cells: `b2`, `c2`, `b3`, `c3`.
-- There is no check/checkmate rule in Nova Tri-Deck v2.
-- Capture the opposing High Commander to win.
-- A Silver Drone Sentinel promotes on the fourth rank of the Upper deck. A Void Drone Sentinel promotes on the first rank of the Lower deck.
+- The battlefield is a complete 8×8 chess grid visually divided into four elevated 8×2 platforms, for 64 playable squares total.
+- Void begins on the top command platform at ranks 8–7. Silver begins on the lower command platform at ranks 2–1.
+- Ranks 6–5 form the Upper Nexus platform. Ranks 4–3 form the Lower Nexus platform.
+- Pieces cross platform edges seamlessly according to their normal 8×8 chess geometry.
+- Tri-Deck uses full legal chess rules: castling, en passant, promotion, check, checkmate, stalemate and draw detection.
+- Rotating the view reverses both the square order and the physical platform order.
+- Previous experimental Tri-Deck snapshots automatically reset once because the v4 topology is intentionally incompatible with the earlier seven-board layout.
 
 ## Security and fairness model
 
@@ -98,6 +96,8 @@ chess/
   chess.css
   chess.js
   pieces.js
+  trideck-engine.js
+  trideck-engine.test.mjs
   icon.svg
   manifest.webmanifest
   sw.js
