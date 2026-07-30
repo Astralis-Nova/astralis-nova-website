@@ -1,21 +1,39 @@
 import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
 import { createPiece, pieceMarkup, pieceName } from './pieces.js';
+import {
+  TRI_BOARD_IDS,
+  TRI_STATE_VERSION,
+  applyTriMove,
+  createTriState,
+  isTriPortal,
+  triBoard,
+  triLegalMoves,
+  triPiece,
+  triSquares,
+} from './trideck-engine.js';
 
 const API_URL = '../api/chess';
 const POLL_SECONDS = 12;
-const TRI_STATE_VERSION = 2;
 const FILES = ['a','b','c','d','e','f','g','h'];
-const PORTAL_NODES = new Set(['d4','e4','d5','e5']);
-const START_ORDER = ['r','n','b','q','k','b','n','r'];
 const COLOR_NAME = { white: 'Silver', black: 'Void' };
 const SIDE_FROM_TURN = { w: 'white', b: 'black' };
+const TRI_BOARD_ELEMENTS = Object.freeze({
+  UA: 'upperAlphaBoard',
+  UB: 'upperBetaBoard',
+  U: 'upperBoard',
+  C: 'coreBoard',
+  L: 'lowerBoard',
+  LA: 'lowerAlphaBoard',
+  LB: 'lowerBetaBoard',
+});
 
 const els = Object.fromEntries([
   'connectionOrb','connectionLabel','connectionDetail','modeBadge','whitePlayerCard','blackPlayerCard',
   'whitePlayerName','blackPlayerName','whitePlayerStatus','blackPlayerStatus','turnLabel','gameStatus',
   'createOnlineButton','copyInviteButton','flipBoardButton','soundButton','gameCodeWrap','gameCode',
   'novaMessage','standardBoardWrap','standardBoard','rankCoordinates','fileCoordinates','triDeckStage',
-  'deck0Board','deck1Board','deck2Board','deckTabs','promotionPanel','promotionChoices','selectedSquare',
+  'upperAlphaBoard','upperBetaBoard','upperBoard','coreBoard','lowerBoard','lowerAlphaBoard','lowerBetaBoard',
+  'deckTabs','promotionPanel','promotionChoices','selectedSquare',
   'lastMove','syncTimer','whiteCaptured','blackCaptured','moveLog','resignButton','resetLocalButton',
   'telemetryGameId','telemetryRevision','telemetryColor','telemetryRules','newGameButton','joinGameButton',
   'rulesButton','refreshButton','fullscreenButton','newGameDialog','joinGameDialog','rulesDialog',
@@ -34,7 +52,7 @@ const state = {
   selected: null,
   legalMoves: [],
   orientation: 'white',
-  activeDeck: 1,
+  activeBoard: 'C',
   sound: true,
   apiOnline: false,
   polling: null,
@@ -53,26 +71,6 @@ const state = {
     winner: null,
   },
 };
-
-function createTriState() {
-  const pieces = {};
-  for (let file = 0; file < 8; file += 1) {
-    const letter = FILES[file];
-    pieces[`0:${letter}1`] = { type: START_ORDER[file], color: 'white' };
-    pieces[`1:${letter}2`] = { type: 'p', color: 'white' };
-    pieces[`2:${letter}8`] = { type: START_ORDER[file], color: 'black' };
-    pieces[`1:${letter}7`] = { type: 'p', color: 'black' };
-  }
-  return {
-    version: TRI_STATE_VERSION,
-    pieces,
-    turn: 'white',
-    moves: [],
-    captured: { white: [], black: [] },
-    lastMove: null,
-    winner: null,
-  };
-}
 
 function standardSnapshot() {
   return {
@@ -199,29 +197,29 @@ function renderCoordinates() {
   els.fileCoordinates.innerHTML = orderedFiles().map(file => `<span>${file}</span>`).join('');
 }
 
-function buildSquare({ square, piece, deck = null, mini = false }) {
+function buildSquare({ square, piece, board = null, mini = false }) {
   const { file, rank } = squareParts(square);
   const button = document.createElement('button');
   button.type = 'button';
   button.className = `square ${(file + rank) % 2 === 0 ? 'dark' : 'light'}`;
   button.dataset.square = square;
-  if (deck !== null) button.dataset.deck = String(deck);
+  if (board !== null) button.dataset.board = board;
   button.setAttribute('role', 'gridcell');
-  button.setAttribute('aria-label', `${deck === null ? '' : `Deck ${deck + 1}, `}${square}${piece ? `, ${piece.color} ${pieceName(piece.type)}` : ', empty'}`);
+  button.setAttribute('aria-label', `${board === null ? '' : `${triBoard(board)?.label || board}, `}${square}${piece ? `, ${piece.color} ${pieceName(piece.type)}` : ', empty'}`);
 
-  const selected = state.selected && state.selected.square === square && state.selected.deck === deck;
+  const selected = state.selected && state.selected.square === square && state.selected.board === board;
   if (selected) button.classList.add('selected');
-  const move = state.legalMoves.find(item => item.square === square && item.deck === deck);
+  const move = state.legalMoves.find(item => item.square === square && item.board === board);
   if (move) button.classList.add(move.capture ? 'capture' : 'legal');
 
   const last = state.mode === 'standard' ? state.standard.lastMove : state.tri.lastMove;
-  if (last && last.from === square && (deck === null || last.fromDeck === deck)) button.classList.add('last-from');
-  if (last && last.to === square && (deck === null || last.toDeck === deck)) button.classList.add('last-to');
-  if (deck !== null && PORTAL_NODES.has(square)) {
-    button.classList.add('portal-node');
+  if (last && last.from === square && (board === null || last.fromBoard === board)) button.classList.add('last-from');
+  if (last && last.to === square && (board === null || last.toBoard === board)) button.classList.add('last-to');
+  if (board !== null && (isTriPortal(board, square) || triBoard(board)?.kind === 'attack')) {
+    button.classList.add(isTriPortal(board, square) ? 'portal-node' : 'transfer-node');
     const glyph = document.createElement('span');
     glyph.className = 'portal-glyph';
-    glyph.textContent = '◇';
+    glyph.textContent = isTriPortal(board, square) ? '◇' : '·';
     button.append(glyph);
   }
   if (piece) button.append(createPiece(piece.type, piece.color, { mini }));
@@ -233,32 +231,30 @@ function renderStandardBoard() {
   for (const rank of orderedRanks()) {
     for (const file of orderedFiles()) {
       const square = `${file}${rank}`;
-      els.standardBoard.append(buildSquare({ square, piece: pieceAtStandard(square) }));
+      els.standardBoard.append(buildSquare({ square, piece: pieceAtStandard(square), board: null }));
     }
   }
   renderCoordinates();
 }
 
 function renderTriBoards() {
-  for (let deck = 0; deck < 3; deck += 1) {
-    const board = els[`deck${deck}Board`];
-    board.innerHTML = '';
-    for (const rank of orderedRanks()) {
-      for (const file of orderedFiles()) {
-        const square = `${file}${rank}`;
-        const piece = state.tri.pieces[`${deck}:${square}`] || null;
-        board.append(buildSquare({ square, piece, deck, mini: true }));
-      }
+  for (const boardId of TRI_BOARD_IDS) {
+    const boardElement = els[TRI_BOARD_ELEMENTS[boardId]];
+    boardElement.innerHTML = '';
+    for (const square of triSquares(boardId, state.orientation)) {
+      boardElement.append(buildSquare({
+        square,
+        piece: triPiece(state.tri, boardId, square),
+        board: boardId,
+        mini: true,
+      }));
     }
   }
-  document.querySelectorAll('[data-deck-shell]').forEach(shell => {
-    shell.classList.toggle('active', Number(shell.dataset.deckShell) === state.activeDeck);
-  });
-  document.querySelectorAll('[data-attack-deck]').forEach(platform => {
-    platform.classList.toggle('active', Number(platform.dataset.attackDeck) === state.activeDeck);
+  document.querySelectorAll('[data-board-shell]').forEach(shell => {
+    shell.classList.toggle('active', shell.dataset.boardShell === state.activeBoard);
   });
   els.deckTabs.querySelectorAll('button').forEach(button => {
-    button.classList.toggle('active', Number(button.dataset.deck) === state.activeDeck);
+    button.classList.toggle('active', button.dataset.board === state.activeBoard);
   });
 }
 
@@ -294,7 +290,9 @@ function renderStatus() {
     status = 'Your command turn';
   }
   els.gameStatus.textContent = status;
-  els.selectedSquare.textContent = state.selected ? `${state.selected.deck === null ? '' : `D${state.selected.deck + 1} `}${state.selected.square.toUpperCase()}` : 'None';
+  els.selectedSquare.textContent = state.selected
+    ? `${state.selected.board === null ? '' : `${state.selected.board} · `}${state.selected.square.toUpperCase()}`
+    : 'None';
 
   const last = state.mode === 'standard' ? state.standard.lastMove : state.tri.lastMove;
   els.lastMove.textContent = last?.notation || 'Opening grid';
@@ -332,7 +330,7 @@ function renderTelemetry() {
   els.telemetryGameId.textContent = state.online.id || 'Local';
   els.telemetryRevision.textContent = String(state.online.revision || 0);
   els.telemetryColor.textContent = state.online.color ? COLOR_NAME[state.online.color] : 'Training';
-  els.telemetryRules.textContent = state.mode === 'standard' ? 'Standard Chess' : 'Nova Tri-Deck v1';
+  els.telemetryRules.textContent = state.mode === 'standard' ? 'Standard Chess' : 'Nova Tri-Deck v2';
 }
 
 function updateModeUI() {
@@ -364,10 +362,10 @@ function handleStandardSquare(square) {
   }
 
   if (piece && piece.color === turn) {
-    state.selected = { square, deck: null };
+    state.selected = { square, board: null };
     state.legalMoves = state.standard.game.moves({ square, verbose: true }).map(move => ({
       square: move.to,
-      deck: null,
+      board: null,
       capture: Boolean(move.captured),
       promotion: move.promotion,
     }));
@@ -443,127 +441,55 @@ function standardCommentary(move) {
   return comments[state.standard.moves.length % comments.length];
 }
 
-function triPiece(deck, square) {
-  return state.tri.pieces[`${deck}:${square}`] || null;
-}
-
-function handleTriSquare(deck, square) {
-  state.activeDeck = deck;
+function handleTriSquare(board, square) {
+  state.activeBoard = board;
   if (!canAct()) return notify('The other commander currently holds the turn.', 'error');
-  const piece = triPiece(deck, square);
+  const piece = triPiece(state.tri, board, square);
   const turn = currentTurn();
 
   if (state.selected) {
-    const target = state.legalMoves.find(move => move.deck === deck && move.square === square);
+    const target = state.legalMoves.find(move => move.board === board && move.square === square);
     if (target) return executeTriMove(state.selected, target);
   }
 
   if (piece && piece.color === turn) {
-    state.selected = { deck, square };
-    state.legalMoves = triLegalMoves(deck, square, piece);
+    state.selected = { board, square };
+    state.legalMoves = triLegalMoves(state.tri, board, square);
     const phaseCount = state.legalMoves.filter(move => move.phase).length;
-    novaSpeak(`${pieceName(piece.type)} linked on Deck ${deck + 1}. ${phaseCount ? `${phaseCount} phase route${phaseCount > 1 ? 's' : ''} detected.` : 'No phase route available.'}`);
+    novaSpeak(`${pieceName(piece.type)} linked on ${triBoard(board).label}. ${state.legalMoves.length} legal vector${state.legalMoves.length === 1 ? '' : 's'}${phaseCount ? `, including ${phaseCount} transfer route${phaseCount === 1 ? '' : 's'}` : ''}.`);
   } else {
     clearSelection();
   }
   renderAll();
 }
 
-function triLegalMoves(deck, square, piece) {
-  const { file, rank } = squareParts(square);
-  const results = [];
-  const add = (targetDeck, targetFile, targetRank, { phase = false, pawnCaptureOnly = false } = {}) => {
-    const targetSquare = squareFrom(targetFile, targetRank);
-    if (!targetSquare || targetDeck < 0 || targetDeck > 2) return false;
-    const occupant = triPiece(targetDeck, targetSquare);
-    if (pawnCaptureOnly && (!occupant || occupant.color === piece.color)) return false;
-    if (!pawnCaptureOnly && occupant?.color === piece.color) return false;
-    results.push({ deck: targetDeck, square: targetSquare, capture: Boolean(occupant), phase });
-    return !occupant;
-  };
-  const slide = directions => {
-    for (const [df, dr] of directions) {
-      let f = file + df;
-      let r = rank + dr;
-      while (squareFrom(f, r)) {
-        const clear = add(deck, f, r);
-        if (!clear) break;
-        f += df;
-        r += dr;
-      }
-    }
-  };
-
-  if (piece.type === 'p') {
-    const dir = piece.color === 'white' ? 1 : -1;
-    const startRank = piece.color === 'white' ? 2 : 7;
-    const one = squareFrom(file, rank + dir);
-    if (one && !triPiece(deck, one)) {
-      add(deck, file, rank + dir);
-      const two = squareFrom(file, rank + dir * 2);
-      if (rank === startRank && two && !triPiece(deck, two)) add(deck, file, rank + dir * 2);
-    }
-    add(deck, file - 1, rank + dir, { pawnCaptureOnly: true });
-    add(deck, file + 1, rank + dir, { pawnCaptureOnly: true });
-  }
-  if (piece.type === 'n') {
-    for (const [df, dr] of [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]]) add(deck, file + df, rank + dr);
-  }
-  if (piece.type === 'b' || piece.type === 'q') slide([[1,1],[-1,1],[1,-1],[-1,-1]]);
-  if (piece.type === 'r' || piece.type === 'q') slide([[1,0],[-1,0],[0,1],[0,-1]]);
-  if (piece.type === 'k') {
-    for (let df = -1; df <= 1; df += 1) for (let dr = -1; dr <= 1; dr += 1) if (df || dr) add(deck, file + df, rank + dr);
-  }
-
-  const mayPhase = piece.type !== 'p' || PORTAL_NODES.has(square);
-  if (mayPhase) {
-    for (const targetDeck of [deck - 1, deck + 1]) {
-      if (targetDeck >= 0 && targetDeck <= 2 && !triPiece(targetDeck, square)) {
-        results.push({ deck: targetDeck, square, capture: false, phase: true });
-      }
-    }
-  }
-  return results;
-}
-
 async function executeTriMove(from, target) {
-  const fromKey = `${from.deck}:${from.square}`;
-  const toKey = `${target.deck}:${target.square}`;
-  const piece = state.tri.pieces[fromKey];
-  if (!piece) return;
-  const captured = state.tri.pieces[toKey] || null;
-  delete state.tri.pieces[fromKey];
-  const endRank = piece.color === 'white' ? 8 : 1;
-  const promoted = piece.type === 'p' && Number(target.square[1]) === endRank;
-  state.tri.pieces[toKey] = { ...piece, type: promoted ? 'q' : piece.type };
-  if (captured) state.tri.captured[piece.color].push(captured.type);
-  if (captured?.type === 'k') state.tri.winner = piece.color;
-
-  const deckLetter = ['L','C','U'];
-  const notation = target.phase
-    ? `${deckLetter[from.deck]}:${from.square}⇅${deckLetter[target.deck]}:${target.square}`
-    : `${deckLetter[from.deck]}:${from.square}${captured ? '×' : '–'}${target.square}${promoted ? '=O' : ''}`;
-  const record = {
-    ply: state.tri.moves.length + 1,
-    color: piece.color,
-    notation,
-    from: from.square,
-    to: target.square,
-    fromDeck: from.deck,
-    toDeck: target.deck,
-    piece: piece.type,
-    captured: captured?.type || null,
-    phase: Boolean(target.phase),
-    promotion: promoted ? 'q' : null,
-    at: new Date().toISOString(),
-  };
-  state.tri.moves.push(record);
-  state.tri.lastMove = { ...record };
-  if (!state.tri.winner) state.tri.turn = piece.color === 'white' ? 'black' : 'white';
-  state.activeDeck = target.deck;
+  let result;
+  try {
+    result = applyTriMove(state.tri, from, target);
+  } catch (error) {
+    clearSelection();
+    playTone('error');
+    notify(error.message, 'error');
+    return renderAll();
+  }
+  const { record, piece, captured, promoted, legal } = result;
+  state.activeBoard = target.board;
   clearSelection();
-  playTone(captured ? 'capture' : target.phase ? 'phase' : 'move');
-  novaSpeak(captured?.type === 'k' ? 'High Commander captured. Tri-Deck victory confirmed.' : target.phase ? 'Phase transition complete. The unit now occupies a new orbital layer.' : captured ? `${pieceName(captured.type)} removed from Deck ${target.deck + 1}.` : 'Tri-Deck vector accepted.');
+  playTone(captured ? 'capture' : legal.phase ? 'phase' : 'move');
+  novaSpeak(
+    captured?.type === 'k'
+      ? 'High Commander captured. Tri-Deck victory confirmed.'
+      : legal.transfer
+        ? `${pieceName(piece.type)} transferred to ${triBoard(target.board).label}.`
+        : legal.phase
+          ? `${pieceName(piece.type)} phase-shifted to ${triBoard(target.board).label}.`
+          : captured
+            ? `${pieceName(captured.type)} removed from ${triBoard(target.board).label}.`
+            : promoted
+              ? 'Drone Sentinel promoted to Oracle Core.'
+              : 'Tri-Deck vector accepted.',
+  );
   saveLocal();
   renderAll();
 
@@ -728,7 +654,7 @@ function switchMode(mode, { force = false } = {}) {
   clearSelection();
   loadLocal(mode);
   updateModeUI();
-  novaSpeak(mode === 'standard' ? 'Standard chess lattice engaged.' : 'Nova Tri-Deck engaged. Choose a level, select a unit, then tap a glowing destination.');
+  novaSpeak(mode === 'standard' ? 'Standard chess lattice engaged.' : 'Nova Tri-Deck engaged. All three command decks and four attack platforms are live.');
 }
 
 function saveLocal() {
@@ -865,27 +791,22 @@ function wireEvents() {
     const square = event.target.closest('.square')?.dataset.square;
     if (square) handleStandardSquare(square);
   });
-  for (let deck = 0; deck < 3; deck += 1) {
-    els[`deck${deck}Board`].addEventListener('click', event => {
+  for (const board of TRI_BOARD_IDS) {
+    els[TRI_BOARD_ELEMENTS[board]].addEventListener('click', event => {
       const square = event.target.closest('.square')?.dataset.square;
-      if (square) handleTriSquare(deck, square);
+      if (square) handleTriSquare(board, square);
     });
   }
   document.querySelectorAll('.segment').forEach(button => button.addEventListener('click', () => switchMode(button.dataset.mode)));
   els.deckTabs.addEventListener('click', event => {
-    const button = event.target.closest('button[data-deck]');
+    const button = event.target.closest('button[data-board]');
     if (!button) return;
-    state.activeDeck = Number(button.dataset.deck);
+    state.activeBoard = button.dataset.board;
     renderTriBoards();
   });
-  document.querySelectorAll('[data-attack-deck]').forEach(platform => platform.addEventListener('click', () => {
-    state.activeDeck = Number(platform.dataset.attackDeck);
-    renderTriBoards();
-    novaSpeak(`${state.activeDeck === 2 ? 'Upper command' : 'Lower tactical'} attack platform selected.`);
-  }));
-  document.querySelectorAll('[data-deck-shell]').forEach(shell => shell.addEventListener('click', event => {
+  document.querySelectorAll('[data-board-shell]').forEach(shell => shell.addEventListener('click', event => {
     if (event.target.closest('.square')) return;
-    state.activeDeck = Number(shell.dataset.deckShell);
+    state.activeBoard = shell.dataset.boardShell;
     renderTriBoards();
   }));
 
