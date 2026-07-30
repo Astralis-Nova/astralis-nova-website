@@ -19,13 +19,13 @@ export async function onRequest(context) {
   const action = String(url.searchParams.get('action') || 'health').toLowerCase();
 
   try {
-    if (!env.DB) throw httpError(503, 'D1 is not connected. Bind the chess database to this Pages project as DB, then redeploy.');
-    if (action === 'health') return await health(env.DB);
-    if (action === 'create' && request.method === 'POST') return await createGame(request, env.DB);
-    if (action === 'join' && request.method === 'POST') return await joinGame(request, env.DB);
-    if (action === 'get' && request.method === 'GET') return await getGame(url, env.DB);
-    if (action === 'move' && request.method === 'POST') return await makeMove(request, env.DB);
-    if (action === 'resign' && request.method === 'POST') return await resignGame(request, env.DB);
+    if (!env.CHESS_DB) throw httpError(503, 'Chess D1 is not connected. Bind the astralis-nova-chess database to this Pages project as CHESS_DB, then redeploy.');
+    if (action === 'health') return await health(env.CHESS_DB);
+    if (action === 'create' && request.method === 'POST') return await createGame(request, env.CHESS_DB);
+    if (action === 'join' && request.method === 'POST') return await joinGame(request, env.CHESS_DB);
+    if (action === 'get' && request.method === 'GET') return await getGame(url, env.CHESS_DB);
+    if (action === 'move' && request.method === 'POST') return await makeMove(request, env.CHESS_DB);
+    if (action === 'resign' && request.method === 'POST') return await resignGame(request, env.CHESS_DB);
     throw httpError(404, 'Unknown chess portal command.');
   } catch (error) {
     console.error('Chess API error', error);

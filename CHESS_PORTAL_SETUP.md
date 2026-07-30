@@ -49,11 +49,11 @@ In Cloudflare:
 2. Select the Astralis Nova Pages project.
 3. Open **Settings > Bindings**.
 4. Add a **D1 database binding**.
-5. Set the variable name to exactly `DB`.
+5. Set the variable name to exactly `CHESS_DB`.
 6. Select `astralis-nova-chess`.
 7. Save and redeploy the site.
 
-Using the dashboard binding avoids introducing a Wrangler configuration file that might accidentally replace existing Pages project settings.
+Keep the existing `DB` binding unchanged; it belongs to the website guestbook. The dedicated `CHESS_DB` binding prevents chess data from interfering with guestbook data. Using the dashboard binding also avoids introducing a Wrangler configuration file that might accidentally replace existing Pages project settings.
 
 ### 4. Verify the connection
 

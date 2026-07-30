@@ -83,9 +83,10 @@ Write-Host "  1. Open Cloudflare > Workers & Pages"
 Write-Host "  2. Select the Astralis Nova Pages project"
 Write-Host "  3. Open Settings > Bindings"
 Write-Host "  4. Add a D1 database binding"
-Write-Host "  5. Variable name: DB"
+Write-Host "  5. Variable name: CHESS_DB"
 Write-Host "  6. Database: $DatabaseName"
 Write-Host "  7. Save and redeploy"
+Write-Host "`nIMPORTANT: Keep the existing DB binding unchanged; it belongs to the guestbook." -ForegroundColor Yellow
 
 $OpenDashboard = Read-Host "`nOpen the Cloudflare Workers & Pages dashboard now? (Y/N)"
 if ($OpenDashboard -match '^[Yy]') {
