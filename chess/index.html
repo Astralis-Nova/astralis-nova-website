@@ -108,10 +108,10 @@
               <span class="spine-arc spine-arc-left"></span>
               <span class="spine-arc spine-arc-right"></span>
             </div>
-            <div class="attack-platform attack-alpha" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-            <div class="attack-platform attack-beta" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-            <div class="attack-platform attack-gamma" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-            <div class="attack-platform attack-delta" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+            <button class="attack-platform attack-alpha" data-attack-deck="2" type="button" aria-label="Select upper command plane"><i></i><i></i><i></i><i></i></button>
+            <button class="attack-platform attack-beta" data-attack-deck="2" type="button" aria-label="Select upper command plane"><i></i><i></i><i></i><i></i></button>
+            <button class="attack-platform attack-gamma" data-attack-deck="0" type="button" aria-label="Select lower tactical plane"><i></i><i></i><i></i><i></i></button>
+            <button class="attack-platform attack-delta" data-attack-deck="0" type="button" aria-label="Select lower tactical plane"><i></i><i></i><i></i><i></i></button>
             <div class="deck-orbit orbit-upper" data-deck-shell="2">
               <div class="deck-label"><span>Level 3</span><strong>Upper Command Plane</strong></div>
               <div class="chess-board mini-board" id="deck2Board" role="grid" aria-label="Upper deck chess board"></div>
@@ -124,7 +124,7 @@
               <div class="deck-label"><span>Level 1</span><strong>Lower Tactical Plane</strong></div>
               <div class="chess-board mini-board" id="deck0Board" role="grid" aria-label="Lower deck chess board"></div>
             </div>
-            <p class="apparatus-caption">Nova Tri-Dimensional Command Array · Select a level above</p>
+            <p class="apparatus-caption">Select a level or attack platform · Tap a unit · Tap a glowing destination</p>
           </div>
 
           <div class="promotion-panel" id="promotionPanel" hidden>
@@ -197,7 +197,7 @@
       <div class="dialog-heading"><div><p class="panel-kicker">Codex</p><h2>Rules of Engagement</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
       <div class="rules-grid">
         <article><h3>Standard Mode</h3><p>Traditional legal chess with castling, en passant, promotion, check, checkmate, stalemate and draw detection powered by chess.js.</p></article>
-        <article><h3>Nova Tri-Deck</h3><p>All pieces begin on the Core deck. Pieces move normally on a deck. Non-pawns may spend a turn phase-shifting to the same square on an adjacent deck. Pawns may phase-shift only while standing on a glowing portal node. Capture the opposing High Commander to win.</p></article>
+        <article><h3>Nova Tri-Deck</h3><p>Silver command units begin on the Lower plane, Void command units on the Upper plane, and both Drone Sentinel lines on the Core. Choose a level or attack platform, select a unit, then tap a glowing destination. Non-pawns may phase-shift to the same empty square on an adjacent level. Pawns phase-shift only from a glowing portal node. Capture the opposing High Commander to win.</p></article>
         <article><h3>Async Play</h3><p>Create a match, share the game code or invite link, then close the page. Each move is saved in D1. The portal checks for an opponent move automatically while open.</p></article>
         <article><h3>Piece Identities</h3><p>King: High Commander. Queen: Oracle Core. Rook: Citadel. Bishop: Phase Seer. Knight: Warp Strider. Pawn: Drone Sentinel.</p></article>
       </div>
