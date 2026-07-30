@@ -1,69 +1,115 @@
 const LABELS = {
   k: 'High Commander',
   q: 'Oracle Core',
-  r: 'Citadel',
+  r: 'Citadel Droid',
   b: 'Phase Seer',
   n: 'Warp Strider',
   p: 'Drone Sentinel',
 };
 
-const BODY = {
-  k: `
-    <path d="M50 5 60 18 75 14 71 31 88 38 75 48 78 72H22l3-24L12 38l17-7-4-17 15 4Z"/>
-    <path class="detail" d="M50 7v27M34 28h32M28 50h44M26 63h48"/>
-    <path class="fin" d="M22 55 8 66l19 2M78 55l14 11-19 2"/>
-    <circle class="core" cx="50" cy="42" r="9"/>
-    <path class="base" d="M18 74h64l8 15H10Z"/>`,
-  q: `
-    <path d="M50 4 60 22 83 29 68 47 74 72H26l6-25-15-18 23-7Z"/>
-    <path class="ring" d="M18 40c14-13 50-13 64 0-15 9-49 9-64 0Z"/>
-    <circle class="core" cx="50" cy="37" r="12"/>
-    <path class="detail" d="m50 15 7 13-7 13-7-13ZM30 56h40M28 66h44"/>
-    <path class="base" d="M19 74h62l8 15H11Z"/>`,
-  r: `
-    <path d="M20 13h14v11h10V13h12v11h10V13h14v28l-10 9 6 24H24l6-24-10-9Z"/>
-    <path class="fin" d="m24 46-14 8 17 6M76 46l14 8-17 6"/>
-    <path class="detail" d="M29 39h42M33 53h34M29 65h42"/>
-    <rect class="core" x="41" y="42" width="18" height="16" rx="3"/>
-    <path class="base" d="M17 75h66l7 14H10Z"/>`,
-  b: `
-    <path d="M50 5c15 15 23 29 23 41 0 10-6 20-15 28H42c-9-8-15-18-15-28 0-12 8-26 23-41Z"/>
-    <path class="ring" d="M23 45c13-9 41-9 54 0-13 10-41 10-54 0Z"/>
-    <path class="detail" d="m55 17-15 29 20 14M32 64h36"/>
-    <circle class="core" cx="50" cy="43" r="8"/>
-    <path class="base" d="M21 74h58l10 15H11Z"/>`,
-  n: `
-    <path d="M23 75c3-18 11-30 24-37l-8-15L54 7l11 20 22 10-14 15 3 23Z"/>
-    <path class="fin" d="m43 44-23 2 16 12M69 49l19 7-17 7"/>
-    <path class="detail" d="m47 38 17 7 14-8M34 60h39M31 69h43"/>
-    <circle class="core" cx="60" cy="32" r="6"/>
-    <path class="base" d="M18 75h64l8 14H10Z"/>`,
-  p: `
-    <path d="m50 8 17 13-5 21 14 13-7 20H31l-7-20 14-13-5-21Z"/>
-    <path class="fin" d="M32 48 13 59l20 3M68 48l19 11-20 3"/>
-    <path class="detail" d="M38 45h24M32 61h36M36 69h28"/>
-    <circle class="core" cx="50" cy="29" r="8"/>
-    <path class="base" d="M20 75h60l9 14H11Z"/>`,
-};
-
 let pieceSerial = 0;
 
-const FACTION_DETAIL = {
+const FIGURES = {
   white: {
-    k: `<ellipse class="faction-line" cx="50" cy="31" rx="26" ry="7"/><path class="faction-solid" d="M20 47 5 55l20 5M80 47l15 8-20 5"/>`,
-    q: `<ellipse class="faction-line" cx="50" cy="24" rx="29" ry="8"/><circle class="faction-core" cx="50" cy="16" r="5"/>`,
-    r: `<path class="faction-solid" d="m25 34-18 9 20 5M75 34l18 9-20 5"/><rect class="faction-core" x="45" y="20" width="10" height="9" rx="4"/>`,
-    b: `<ellipse class="faction-line" cx="50" cy="39" rx="28" ry="9"/><path class="faction-solid" d="M23 50 9 59l20 2M77 50l14 9-20 2"/>`,
-    n: `<path class="faction-solid" d="M44 39 15 43l22 11M69 45l23 9-22 7"/><circle class="faction-core" cx="60" cy="28" r="4"/>`,
-    p: `<ellipse class="faction-line" cx="50" cy="30" rx="22" ry="7"/><path class="faction-solid" d="M31 47 11 56l22 5M69 47l20 9-22 5"/>`,
+    k: `
+      <path class="cloth" d="M24 76 31 42l11-9h16l11 9 7 34Z"/>
+      <path class="armor" d="M28 48 15 57l16 7M72 48l13 9-16 7"/>
+      <path class="metal" d="M39 32V19l6-8h10l6 8v13l-6 7H45Z"/>
+      <path class="visor" d="M41 23h18l-4 7H45Z"/>
+      <path class="line" d="M37 44h26M40 51h20M50 39v25"/>
+      <path class="glow-fill" d="m50 44 5 6-5 7-5-7Z"/>
+      <path class="base" d="M20 75h60l10 14H10Z"/>`,
+    q: `
+      <path class="ring" d="M24 24c8-13 44-13 52 0-10 9-42 9-52 0Z"/>
+      <path class="cloth" d="M22 76 35 41l7-8h16l7 8 13 35Z"/>
+      <circle class="metal" cx="50" cy="24" r="11"/>
+      <path class="visor" d="M42 23h16l-3 5H45Z"/>
+      <path class="armor" d="m34 45-17 12 18 2M66 45l17 12-18 2"/>
+      <path class="line" d="M39 42h22M35 61h30M50 36v32"/>
+      <circle class="core" cx="50" cy="46" r="6"/>
+      <path class="base" d="M19 75h62l9 14H10Z"/>`,
+    r: `
+      <path class="metal" d="M29 29c2-14 40-14 42 0v43H29Z"/>
+      <path class="armor" d="M26 35 14 43l12 7M74 35l12 8-12 7"/>
+      <path class="line" d="M30 31h40M35 42h30M35 60h30M43 33v34M57 33v34"/>
+      <rect class="visor" x="37" y="22" width="26" height="8" rx="4"/>
+      <rect class="glow-fill" x="43" y="45" width="14" height="10" rx="2"/>
+      <circle class="core" cx="50" cy="25" r="3"/>
+      <path class="base" d="M20 73h60l10 16H10Z"/>`,
+    b: `
+      <path class="cloth" d="M22 76c4-26 10-47 28-64 18 17 24 38 28 64Z"/>
+      <path class="shadow" d="M36 31c5-13 23-13 28 0l-6 14H42Z"/>
+      <path class="visor" d="M41 31h18l-4 7H45Z"/>
+      <path class="armor" d="M31 49 16 59l18 2M69 49l15 10-18 2"/>
+      <path class="line" d="M50 42v29M35 61h30"/>
+      <path class="ring" d="M27 47c11-8 35-8 46 0-12 8-34 8-46 0Z"/>
+      <path class="base" d="M19 75h62l9 14H10Z"/>`,
+    n: `
+      <path class="shadow" d="M25 70 19 35l14-8 8 12h18l8-12 14 8-6 35Z"/>
+      <path class="armor" d="M17 40 5 52l22 1M83 40l12 12-22 1"/>
+      <path class="metal" d="M39 31V17l7-8h8l7 8v14l-6 8H45Z"/>
+      <path class="visor" d="M40 22h20l-5 7H45Z"/>
+      <path class="line" d="M36 45h28M42 45l-4 22M58 45l4 22"/>
+      <path class="glow" d="M22 52 9 66M78 52l13 14"/>
+      <path class="base" d="M18 71h64l8 18H10Z"/>`,
+    p: `
+      <path class="armor" d="M28 72 33 42l9-8h16l9 8 5 30Z"/>
+      <path class="metal" d="M37 33V19l7-8h12l7 8v14l-7 7H44Z"/>
+      <path class="visor" d="M39 22h22l-5 8H44Z"/>
+      <path class="shadow" d="M33 45 20 54l14 7M67 45l13 9-14 7"/>
+      <path class="line" d="M39 46h22M36 60h28M50 40v28"/>
+      <circle class="core" cx="50" cy="48" r="4"/>
+      <path class="base" d="M21 71h58l10 18H11Z"/>`,
   },
   black: {
-    k: `<path class="faction-solid" d="M50 7 61 27 88 35 69 45 84 62 57 54 50 78 43 54 16 62 31 45 12 35 39 27Z"/>`,
-    q: `<path class="faction-line" d="m50 8 12 19 25 11-21 12 9 25-25-14-25 14 9-25-21-12 25-11Z"/><path class="faction-solid" d="m50 17 7 13-7 10-7-10Z"/>`,
-    r: `<path class="faction-solid" d="m20 30-14 17 24-4-9 18 25-12-9-19ZM80 30l14 17-24-4 9 18-25-12 9-19Z"/>`,
-    b: `<path class="faction-line" d="M50 8 65 35 90 48 63 55 50 82 37 55 10 48 35 35Z"/><path class="faction-solid" d="m50 21 8 20-8 10-8-10Z"/>`,
-    n: `<path class="faction-solid" d="m40 24-31 8 28 10-19 18 34-11M62 28l31 14-27 8 17 20-32-16"/>`,
-    p: `<path class="faction-solid" d="M50 11 62 34 87 45 64 54 73 79 50 65 27 79 36 54 13 45 38 34Z"/>`,
+    k: `
+      <path class="cloth" d="M17 76 29 38l13-7h16l13 7 12 38Z"/>
+      <path class="armor" d="M28 45 9 58l22 4M72 45l19 13-22 4"/>
+      <path class="metal" d="m34 31 7-19 9-8 9 8 7 19-9 10H43Z"/>
+      <path class="visor" d="m39 22 11 8 11-8-5 14H44Z"/>
+      <path class="line" d="M34 45h32M50 40v29M37 57h26"/>
+      <path class="glow" d="m42 46 8 8 8-8"/>
+      <path class="base" d="M17 75h66l8 14H9Z"/>`,
+    q: `
+      <path class="cloth" d="M17 76 32 41l10-8h16l10 8 15 35Z"/>
+      <path class="metal" d="m35 30 5-17 10 8 10-8 5 17-9 10H44Z"/>
+      <path class="visor" d="M41 27h18l-5 7h-8Z"/>
+      <path class="armor" d="m30 44-20 11 22 6M70 44l20 11-22 6"/>
+      <path class="glow" d="M25 50 8 72M75 50l17 22"/>
+      <path class="core" d="m50 43 7 8-7 10-7-10Z"/>
+      <path class="base" d="M16 75h68l8 14H8Z"/>`,
+    r: `
+      <path class="shadow" d="M25 71V31l11-10h28l11 10v40Z"/>
+      <path class="armor" d="m25 35-17 7 17 12M75 35l17 7-17 12"/>
+      <path class="metal" d="m34 30 5-16h22l5 16Z"/>
+      <path class="visor" d="M38 22h24l-5 7H43Z"/>
+      <path class="line" d="M31 37h38M35 48h30M35 61h30M42 35v31M58 35v31"/>
+      <rect class="core" x="43" y="43" width="14" height="10" rx="1"/>
+      <path class="base" d="M18 71h64l9 18H9Z"/>`,
+    b: `
+      <path class="cloth" d="M17 76c7-29 14-51 33-69 19 18 26 40 33 69Z"/>
+      <path class="shadow" d="M32 34c5-18 31-18 36 0l-9 14H41Z"/>
+      <path class="visor" d="m39 32 11 8 11-8-5 13H44Z"/>
+      <path class="armor" d="m30 49-18 11 21 3M70 49l18 11-21 3"/>
+      <path class="glow" d="M23 54 8 74M77 54l15 20"/>
+      <path class="line" d="M50 46v25M34 63h32"/>
+      <path class="base" d="M17 75h66l9 14H8Z"/>`,
+    n: `
+      <path class="shadow" d="M21 70 25 34l13-9h24l13 9 4 36Z"/>
+      <path class="armor" d="M25 39 7 49l20 7M75 39l18 10-20 7"/>
+      <path class="metal" d="M37 32V17l7-9h12l7 9v15l-7 9H44Z"/>
+      <path class="visor" d="M39 21h22l-5 10H44Z"/>
+      <path class="line" d="M35 45h30M40 47l-5 20M60 47l5 20"/>
+      <path class="glow" d="M25 50 11 69M75 50l14 19"/>
+      <path class="base" d="M17 70h66l9 19H8Z"/>`,
+    p: `
+      <path class="armor" d="M25 72 32 42l10-8h16l10 8 7 30Z"/>
+      <path class="metal" d="m34 33 5-17 11-8 11 8 5 17-9 8H43Z"/>
+      <path class="visor" d="M38 23h24l-6 9H44Z"/>
+      <path class="shadow" d="m31 45-16 10 18 6M69 45l16 10-18 6"/>
+      <path class="line" d="M36 47h28M35 61h30M50 41v28"/>
+      <path class="core" d="m50 47 5 5-5 6-5-6Z"/>
+      <path class="base" d="M19 71h62l10 18H9Z"/>`,
   },
 };
 
@@ -81,19 +127,21 @@ function svgFor(type, color) {
         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
       </filter>
     </defs>
-    <g fill="url(#pieceGradient-${uid})" stroke="var(--piece-edge)" stroke-width="2" stroke-linejoin="round">
-      ${BODY[type]}
-      ${FACTION_DETAIL[color]?.[type] || ''}
+    <g stroke="var(--piece-edge)" stroke-width="1.8" stroke-linejoin="round">
+      ${FIGURES[color]?.[type] || ''}
     </g>
-    <g class="detail" fill="none" stroke="rgba(255,255,255,.72)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
     <style>
-      .detail{fill:none;stroke:rgba(255,255,255,.74);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+      .armor{fill:url(#pieceGradient-${uid})}
+      .metal{fill:var(--piece-mid)}
+      .cloth,.shadow{fill:var(--piece-shadow)}
+      .cloth{stroke:var(--piece-edge);stroke-width:2.2}
+      .shadow{stroke:var(--piece-glow);stroke-width:1.4}
+      .line{fill:none;stroke:rgba(255,255,255,.76);stroke-width:2;stroke-linecap:round}
+      .visor{fill:var(--piece-glow);stroke:#fff;stroke-width:1.2;filter:url(#pieceGlow-${uid})}
       .core{fill:var(--piece-glow);stroke:#fff;stroke-width:1.4;filter:url(#pieceGlow-${uid})}
-      .fin{fill:var(--piece-shadow);stroke:var(--piece-edge);stroke-width:2}
       .ring{fill:none;stroke:var(--piece-glow);stroke-width:4;filter:url(#pieceGlow-${uid})}
-      .faction-line{fill:none;stroke:var(--piece-glow);stroke-width:3;filter:url(#pieceGlow-${uid})}
-      .faction-solid{fill:var(--piece-shadow);stroke:var(--piece-glow);stroke-width:1.8}
-      .faction-core{fill:#fff;stroke:var(--piece-glow);stroke-width:2;filter:url(#pieceGlow-${uid})}
+      .glow{fill:none;stroke:var(--piece-glow);stroke-width:4;stroke-linecap:round;filter:url(#pieceGlow-${uid})}
+      .glow-fill{fill:var(--piece-glow);stroke:#fff;stroke-width:1;filter:url(#pieceGlow-${uid})}
       .base{filter:drop-shadow(0 5px 3px rgba(0,0,0,.36))}
     </style>
   </svg>`;
