@@ -48,7 +48,26 @@ const BODY = {
 
 let pieceSerial = 0;
 
-function svgFor(type) {
+const FACTION_DETAIL = {
+  white: {
+    k: `<ellipse class="faction-line" cx="50" cy="31" rx="26" ry="7"/><path class="faction-solid" d="M20 47 5 55l20 5M80 47l15 8-20 5"/>`,
+    q: `<ellipse class="faction-line" cx="50" cy="24" rx="29" ry="8"/><circle class="faction-core" cx="50" cy="16" r="5"/>`,
+    r: `<path class="faction-solid" d="m25 34-18 9 20 5M75 34l18 9-20 5"/><rect class="faction-core" x="45" y="20" width="10" height="9" rx="4"/>`,
+    b: `<ellipse class="faction-line" cx="50" cy="39" rx="28" ry="9"/><path class="faction-solid" d="M23 50 9 59l20 2M77 50l14 9-20 2"/>`,
+    n: `<path class="faction-solid" d="M44 39 15 43l22 11M69 45l23 9-22 7"/><circle class="faction-core" cx="60" cy="28" r="4"/>`,
+    p: `<ellipse class="faction-line" cx="50" cy="30" rx="22" ry="7"/><path class="faction-solid" d="M31 47 11 56l22 5M69 47l20 9-22 5"/>`,
+  },
+  black: {
+    k: `<path class="faction-solid" d="M50 7 61 27 88 35 69 45 84 62 57 54 50 78 43 54 16 62 31 45 12 35 39 27Z"/>`,
+    q: `<path class="faction-line" d="m50 8 12 19 25 11-21 12 9 25-25-14-25 14 9-25-21-12 25-11Z"/><path class="faction-solid" d="m50 17 7 13-7 10-7-10Z"/>`,
+    r: `<path class="faction-solid" d="m20 30-14 17 24-4-9 18 25-12-9-19ZM80 30l14 17-24-4 9 18-25-12 9-19Z"/>`,
+    b: `<path class="faction-line" d="M50 8 65 35 90 48 63 55 50 82 37 55 10 48 35 35Z"/><path class="faction-solid" d="m50 21 8 20-8 10-8-10Z"/>`,
+    n: `<path class="faction-solid" d="m40 24-31 8 28 10-19 18 34-11M62 28l31 14-27 8 17 20-32-16"/>`,
+    p: `<path class="faction-solid" d="M50 11 62 34 87 45 64 54 73 79 50 65 27 79 36 54 13 45 38 34Z"/>`,
+  },
+};
+
+function svgFor(type, color) {
   const uid = `${type}-${pieceSerial += 1}`;
   return `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
     <defs>
@@ -64,6 +83,7 @@ function svgFor(type) {
     </defs>
     <g fill="url(#pieceGradient-${uid})" stroke="var(--piece-edge)" stroke-width="2" stroke-linejoin="round">
       ${BODY[type]}
+      ${FACTION_DETAIL[color]?.[type] || ''}
     </g>
     <g class="detail" fill="none" stroke="rgba(255,255,255,.72)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></g>
     <style>
@@ -71,6 +91,9 @@ function svgFor(type) {
       .core{fill:var(--piece-glow);stroke:#fff;stroke-width:1.4;filter:url(#pieceGlow-${uid})}
       .fin{fill:var(--piece-shadow);stroke:var(--piece-edge);stroke-width:2}
       .ring{fill:none;stroke:var(--piece-glow);stroke-width:4;filter:url(#pieceGlow-${uid})}
+      .faction-line{fill:none;stroke:var(--piece-glow);stroke-width:3;filter:url(#pieceGlow-${uid})}
+      .faction-solid{fill:var(--piece-shadow);stroke:var(--piece-glow);stroke-width:1.8}
+      .faction-core{fill:#fff;stroke:var(--piece-glow);stroke-width:2;filter:url(#pieceGlow-${uid})}
       .base{filter:drop-shadow(0 5px 3px rgba(0,0,0,.36))}
     </style>
   </svg>`;
@@ -87,7 +110,7 @@ export function createPiece(type, color, { mini = false } = {}) {
   node.setAttribute('aria-label', `${color === 'white' ? 'Silver' : 'Void'} ${pieceName(type)}`);
   node.dataset.piece = type;
   node.dataset.color = color;
-  node.innerHTML = svgFor(type);
+  node.innerHTML = svgFor(type, color);
   return node;
 }
 
