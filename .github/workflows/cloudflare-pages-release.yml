@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - .github/workflows/cloudflare-pages-release.yml
   workflow_dispatch:
 
 permissions:
