@@ -89,7 +89,8 @@
           </div>
           <div class="deck-tabs" id="deckTabs" hidden role="group" aria-label="Highlight an elevated platform">
             <button data-board="VD" type="button">Void</button>
-            <button class="active" data-board="NX" type="button">Nexus</button>
+            <button class="active" data-board="NP" type="button">Port Nexus</button>
+            <button data-board="NS" type="button">Starboard Nexus</button>
             <button data-board="SD" type="button">Silver</button>
           </div>
           <button class="icon-action" id="fullscreenButton" type="button" title="Fullscreen board" aria-label="Fullscreen board">⛶</button>
@@ -112,16 +113,20 @@
                 <div class="deck-label"><span>Ranks 8–7 · Level 4</span><strong>Void Command Platform</strong></div>
                 <div class="tri-board platform-board" id="voidPlatformBoard" role="grid" aria-label="Void eight by two command platform"></div>
               </section>
-              <section class="tri-board-shell platform-shell nexus-platform active" data-board-shell="NX">
-                <div class="deck-label"><span>Ranks 6–3 · Level 2</span><strong>Central Nexus Platform</strong></div>
-                <div class="tri-board nexus-platform-board" id="nexusPlatformBoard" role="grid" aria-label="Central eight by four nexus platform"></div>
+              <section class="tri-board-shell platform-shell nexus-port-platform active" data-board-shell="NP">
+                <div class="deck-label"><span>Files A–D · Ranks 6–3</span><strong>Port Nexus 4×4</strong></div>
+                <div class="tri-board nexus-split-board" id="portNexusBoard" role="grid" aria-label="Port four by four nexus platform"></div>
+              </section>
+              <section class="tri-board-shell platform-shell nexus-starboard-platform" data-board-shell="NS">
+                <div class="deck-label"><span>Files E–H · Ranks 6–3</span><strong>Starboard Nexus 4×4</strong></div>
+                <div class="tri-board nexus-split-board" id="starboardNexusBoard" role="grid" aria-label="Starboard four by four nexus platform"></div>
               </section>
               <section class="tri-board-shell platform-shell silver-platform" data-board-shell="SD">
                 <div class="deck-label"><span>Ranks 2–1 · Level 1</span><strong>Silver Command Platform</strong></div>
                 <div class="tri-board platform-board" id="silverPlatformBoard" role="grid" aria-label="Silver eight by two command platform"></div>
               </section>
             </div>
-            <p class="apparatus-caption">One 8×8 battlefield · three elevated platforms · 16 + 32 + 16 squares</p>
+            <p class="apparatus-caption">One 8×8 battlefield · four transparent platforms · 16 squares each</p>
           </div>
 
           <div class="promotion-panel" id="promotionPanel" hidden>
@@ -174,7 +179,7 @@
     <form method="dialog" id="newGameForm">
       <div class="dialog-heading"><div><p class="panel-kicker">Launch Match</p><h2>Create Online Game</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
       <label>Commander name<input id="creatorName" name="creatorName" maxlength="32" placeholder="Commander One" autocomplete="nickname"></label>
-      <fieldset><legend>Ruleset</legend><label class="choice-card"><input type="radio" name="newMode" value="standard" checked><span><strong>Standard Chess</strong><small>Full chess rules on a traditional flat board.</small></span></label><label class="choice-card"><input type="radio" name="newMode" value="trideck"><span><strong>Nova Tri-Deck</strong><small>Full chess rules across two 8×2 home platforms and one 8×4 Nexus.</small></span></label></fieldset>
+      <fieldset><legend>Ruleset</legend><label class="choice-card"><input type="radio" name="newMode" value="standard" checked><span><strong>Standard Chess</strong><small>Full chess rules on a traditional flat board.</small></span></label><label class="choice-card"><input type="radio" name="newMode" value="trideck"><span><strong>Nova Tri-Deck</strong><small>Full chess rules across two 8×2 home platforms and two 4×4 Nexus platforms.</small></span></label></fieldset>
       <p class="dialog-note">Online play needs the dedicated chess D1 database bound as <code>CHESS_DB</code>. The website guestbook continues using its separate <code>DB</code> binding.</p>
       <div class="dialog-actions"><button class="secondary-action" value="cancel">Cancel</button><button class="primary-action" id="confirmCreateButton" value="default">Create Mission</button></div>
     </form>
@@ -194,7 +199,7 @@
       <div class="dialog-heading"><div><p class="panel-kicker">Codex</p><h2>Rules of Engagement</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
       <div class="rules-grid">
         <article><h3>Standard Mode</h3><p>Traditional legal chess with castling, en passant, promotion, check, checkmate, stalemate and draw detection powered by chess.js.</p></article>
-        <article><h3>Nova Tri-Deck</h3><p>One complete 8×8 chess battlefield is separated into three elevated platforms. Black begins on the 8×2 Void platform at ranks 8–7, White begins on the 8×2 Silver platform at ranks 2–1, and ranks 6–3 form one larger 8×4 Central Nexus. Pieces move seamlessly between platform edges using full chess geometry, including castling, en passant, promotion, check, checkmate, stalemate and draw rules.</p></article>
+        <article><h3>Nova Tri-Deck</h3><p>One complete 8×8 chess battlefield is separated into four transparent platforms. Black begins on the 8×2 Void platform at ranks 8–7, White begins on the 8×2 Silver platform at ranks 2–1, and ranks 6–3 split into two side-by-side 4×4 Nexus platforms. Pieces move seamlessly between platform edges using full chess geometry, including castling, en passant, promotion, check, checkmate, stalemate and draw rules.</p></article>
         <article><h3>Async Play</h3><p>Create a match, share the game code or invite link, then close the page. Each move is saved in D1. The portal checks for an opponent move automatically while open.</p></article>
         <article><h3>Astralis Pieces</h3><p>King: High Commander. Queen: Oracle Core. Rook: Citadel. Bishop: Phase Seer. Knight: Warp Strider. Pawn: Drone Sentinel. Every original figurine preserves a recognizable tournament-style chess silhouette in frosted white crystal or smoked black crystal glass.</p></article>
       </div>
