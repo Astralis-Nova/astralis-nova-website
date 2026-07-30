@@ -30,7 +30,7 @@
       <div>
         <p class="eyebrow">Command Grid Online</p>
         <h1>Astralis Nova Chess Portal</h1>
-        <p class="hero-copy">Play a standard match across time, or enter the experimental three-layer Nova Tri-Deck. Every online move is saved until your opponent returns.</p>
+        <p class="hero-copy">Play a standard match across time, or command one complete 8×8 battlefield divided across the elevated platforms of Nova Tri-Deck. Every online move is saved until your opponent returns.</p>
       </div>
       <div class="hero-status" aria-live="polite">
         <span class="status-orb" id="connectionOrb"></span>
@@ -87,10 +87,11 @@
             <button class="segment active" data-mode="standard" type="button">Standard</button>
             <button class="segment" data-mode="trideck" type="button">Tri-Deck</button>
           </div>
-          <div class="deck-tabs" id="deckTabs" hidden role="group" aria-label="Highlight a command deck">
-            <button data-board="U" type="button">Upper</button>
-            <button class="active" data-board="C" type="button">Core</button>
-            <button data-board="L" type="button">Lower</button>
+          <div class="deck-tabs" id="deckTabs" hidden role="group" aria-label="Highlight an elevated platform">
+            <button data-board="VD" type="button">Void</button>
+            <button class="active" data-board="NU" type="button">Upper Nexus</button>
+            <button data-board="NL" type="button">Lower Nexus</button>
+            <button data-board="SD" type="button">Silver</button>
           </div>
           <button class="icon-action" id="fullscreenButton" type="button" title="Fullscreen board" aria-label="Fullscreen board">⛶</button>
         </div>
@@ -102,42 +103,30 @@
             <div class="coordinates files" id="fileCoordinates" aria-hidden="true"></div>
           </div>
 
-          <div class="tri-deck-stage tos-apparatus" id="triDeckStage" hidden>
+          <div class="tri-deck-stage nova-apparatus" id="triDeckStage" hidden>
             <div class="apparatus-spine" aria-hidden="true">
               <span class="spine-arc"></span>
               <span class="spine-base"></span>
             </div>
             <div class="tri-sculpture">
-              <section class="tri-board-shell attack-shell upper-alpha" data-board-shell="UA">
-                <div class="deck-label"><strong>Void α</strong></div>
-                <div class="tri-board attack-board" id="upperAlphaBoard" role="grid" aria-label="Void Alpha attack platform"></div>
+              <section class="tri-board-shell platform-shell void-platform" data-board-shell="VD">
+                <div class="deck-label"><span>Ranks 8–7 · Level 4</span><strong>Void Command Platform</strong></div>
+                <div class="tri-board platform-board" id="voidPlatformBoard" role="grid" aria-label="Void eight by two command platform"></div>
               </section>
-              <section class="tri-board-shell attack-shell upper-beta" data-board-shell="UB">
-                <div class="deck-label"><strong>Void β</strong></div>
-                <div class="tri-board attack-board" id="upperBetaBoard" role="grid" aria-label="Void Beta attack platform"></div>
+              <section class="tri-board-shell platform-shell upper-nexus-platform active" data-board-shell="NU">
+                <div class="deck-label"><span>Ranks 6–5 · Level 3</span><strong>Upper Nexus Platform</strong></div>
+                <div class="tri-board platform-board" id="upperNexusBoard" role="grid" aria-label="Upper middle eight by two nexus platform"></div>
               </section>
-              <section class="tri-board-shell main-shell upper-deck" data-board-shell="U">
-                <div class="deck-label"><span>Level 3</span><strong>Upper Command Deck</strong></div>
-                <div class="tri-board main-board" id="upperBoard" role="grid" aria-label="Upper four by four command deck"></div>
+              <section class="tri-board-shell platform-shell lower-nexus-platform" data-board-shell="NL">
+                <div class="deck-label"><span>Ranks 4–3 · Level 2</span><strong>Lower Nexus Platform</strong></div>
+                <div class="tri-board platform-board" id="lowerNexusBoard" role="grid" aria-label="Lower middle eight by two nexus platform"></div>
               </section>
-              <section class="tri-board-shell main-shell core-deck active" data-board-shell="C">
-                <div class="deck-label"><span>Level 2</span><strong>Central Battle Deck</strong></div>
-                <div class="tri-board main-board" id="coreBoard" role="grid" aria-label="Central four by four battle deck"></div>
-              </section>
-              <section class="tri-board-shell main-shell lower-deck" data-board-shell="L">
-                <div class="deck-label"><span>Level 1</span><strong>Lower Tactical Deck</strong></div>
-                <div class="tri-board main-board" id="lowerBoard" role="grid" aria-label="Lower four by four tactical deck"></div>
-              </section>
-              <section class="tri-board-shell attack-shell lower-alpha" data-board-shell="LA">
-                <div class="deck-label"><strong>Silver α</strong></div>
-                <div class="tri-board attack-board" id="lowerAlphaBoard" role="grid" aria-label="Silver Alpha attack platform"></div>
-              </section>
-              <section class="tri-board-shell attack-shell lower-beta" data-board-shell="LB">
-                <div class="deck-label"><strong>Silver β</strong></div>
-                <div class="tri-board attack-board" id="lowerBetaBoard" role="grid" aria-label="Silver Beta attack platform"></div>
+              <section class="tri-board-shell platform-shell silver-platform" data-board-shell="SD">
+                <div class="deck-label"><span>Ranks 2–1 · Level 1</span><strong>Silver Command Platform</strong></div>
+                <div class="tri-board platform-board" id="silverPlatformBoard" role="grid" aria-label="Silver eight by two command platform"></div>
               </section>
             </div>
-            <p class="apparatus-caption">3 command decks · 4 playable attack platforms · 64 total squares</p>
+            <p class="apparatus-caption">One 8×8 battlefield · four elevated 8×2 platforms · full 64-square chess geometry</p>
           </div>
 
           <div class="promotion-panel" id="promotionPanel" hidden>
@@ -190,7 +179,7 @@
     <form method="dialog" id="newGameForm">
       <div class="dialog-heading"><div><p class="panel-kicker">Launch Match</p><h2>Create Online Game</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
       <label>Commander name<input id="creatorName" name="creatorName" maxlength="32" placeholder="Commander One" autocomplete="nickname"></label>
-      <fieldset><legend>Ruleset</legend><label class="choice-card"><input type="radio" name="newMode" value="standard" checked><span><strong>Standard Chess</strong><small>Full chess rules, checkmate and promotion.</small></span></label><label class="choice-card"><input type="radio" name="newMode" value="trideck"><span><strong>Nova Tri-Deck</strong><small>Three layers, phase shifts and Commander capture.</small></span></label></fieldset>
+      <fieldset><legend>Ruleset</legend><label class="choice-card"><input type="radio" name="newMode" value="standard" checked><span><strong>Standard Chess</strong><small>Full chess rules on a traditional flat board.</small></span></label><label class="choice-card"><input type="radio" name="newMode" value="trideck"><span><strong>Nova Tri-Deck</strong><small>Full chess rules across four elevated 8×2 platforms.</small></span></label></fieldset>
       <p class="dialog-note">Online play needs the dedicated chess D1 database bound as <code>CHESS_DB</code>. The website guestbook continues using its separate <code>DB</code> binding.</p>
       <div class="dialog-actions"><button class="secondary-action" value="cancel">Cancel</button><button class="primary-action" id="confirmCreateButton" value="default">Create Mission</button></div>
     </form>
@@ -210,9 +199,9 @@
       <div class="dialog-heading"><div><p class="panel-kicker">Codex</p><h2>Rules of Engagement</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
       <div class="rules-grid">
         <article><h3>Standard Mode</h3><p>Traditional legal chess with castling, en passant, promotion, check, checkmate, stalemate and draw detection powered by chess.js.</p></article>
-        <article><h3>Nova Tri-Deck</h3><p>Three staggered 4×4 command decks and four playable 2×2 attack platforms form one 64-square battlefield. Units move normally on their current board. Any unit may transfer between an attack platform and its four linked deck cells. Non-pawns may phase-shift to the same empty square on an adjacent command deck; Drone Sentinels use the four glowing portal cells. Capture the opposing High Commander to win.</p></article>
+        <article><h3>Nova Tri-Deck</h3><p>One complete 8×8 chess battlefield is separated into four elevated 8×2 platforms. Void begins on ranks 8–7, Silver begins on ranks 2–1, and the middle four ranks form two Nexus platforms. Pieces move seamlessly between platform edges using full chess geometry, including castling, en passant, promotion, check, checkmate, stalemate and draw rules.</p></article>
         <article><h3>Async Play</h3><p>Create a match, share the game code or invite link, then close the page. Each move is saved in D1. The portal checks for an opponent move automatically while open.</p></article>
-        <article><h3>Character Pieces</h3><p>King: High Commander. Queen: Oracle Core. Rook: Citadel Droid. Bishop: Phase Seer. Knight: Warp Strider. Pawn: Drone Sentinel. Silver fields explorers and mystics; Void fields armored warlords and machines.</p></article>
+        <article><h3>Astralis Pieces</h3><p>King: High Commander. Queen: Oracle Core. Rook: Citadel. Bishop: Phase Seer. Knight: Warp Strider. Pawn: Drone Sentinel. Every holographic figurine preserves a recognizable tournament-style chess silhouette while carrying original Silver Fleet or Void Fleet technology.</p></article>
       </div>
       <div class="dialog-actions"><button class="primary-action" value="cancel">Return to Bridge</button></div>
     </form>
