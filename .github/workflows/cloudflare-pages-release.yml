@@ -1,0 +1,47 @@
+name: Astralis Nova Pages Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cloudflare-pages-release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: astralis-nova-pages-production
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Validate and deploy production
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate chess portal
+        run: |
+          node --check chess/chess.js
+          node --check chess/pieces.js
+          node --check chess/trideck-engine.js
+          node --test chess/trideck-engine.test.mjs
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=astralis-nova-website --branch=main --commit-hash=${{ github.sha }} --commit-message="Astralis Nova production release"
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
