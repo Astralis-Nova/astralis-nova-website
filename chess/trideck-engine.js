@@ -1,4 +1,4 @@
-export const TRI_STATE_VERSION = 4;
+export const TRI_STATE_VERSION = 5;
 export const TRI_START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
 export const TRI_BOARDS = Object.freeze({
@@ -10,20 +10,12 @@ export const TRI_BOARDS = Object.freeze({
     level: 3,
     role: 'home',
   }),
-  NU: Object.freeze({
-    id: 'NU',
-    label: 'Upper Nexus Platform',
-    shortLabel: 'Upper Nexus',
-    ranks: Object.freeze([6, 5]),
+  NX: Object.freeze({
+    id: 'NX',
+    label: 'Central Nexus Platform',
+    shortLabel: 'Nexus',
+    ranks: Object.freeze([6, 5, 4, 3]),
     level: 2,
-    role: 'middle',
-  }),
-  NL: Object.freeze({
-    id: 'NL',
-    label: 'Lower Nexus Platform',
-    shortLabel: 'Lower Nexus',
-    ranks: Object.freeze([4, 3]),
-    level: 1,
     role: 'middle',
   }),
   SD: Object.freeze({
@@ -36,7 +28,7 @@ export const TRI_BOARDS = Object.freeze({
   }),
 });
 
-export const TRI_BOARD_IDS = Object.freeze(['VD', 'NU', 'NL', 'SD']);
+export const TRI_BOARD_IDS = Object.freeze(['VD', 'NX', 'SD']);
 const FILES = Object.freeze(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']);
 
 export function createTriState() {
