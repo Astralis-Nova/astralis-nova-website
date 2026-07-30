@@ -73,7 +73,7 @@ Then open `/chess/`, create a game and copy the invite link into another browser
 
 ## Nova Tri-Deck rules
 
-- All units begin on the Core deck.
+- Silver command units begin on the Lower plane, Void command units begin on the Upper plane, and both Drone Sentinel lines begin on the Core.
 - Units move using their familiar chess movement on their current deck.
 - Any non-pawn unit may spend a turn phase-shifting to the same square on an adjacent deck if that destination is empty.
 - Drone Sentinels may phase-shift only while standing on one of the four glowing portal nodes: `d4`, `e4`, `d5`, `e5`.
