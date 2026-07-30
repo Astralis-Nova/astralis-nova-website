@@ -5,7 +5,7 @@ A two-player asynchronous chess portal for the Astralis Nova website.
 ## What ships in this release
 
 - Standard chess with legal-move validation, castling, en passant, promotion, check, checkmate, stalemate and draw detection through pinned `chess.js` 1.4.0.
-- Nova Tri-Deck, one complete 8×8 chess battlefield divided into two 8×2 home platforms and one 8×4 central platform.
+- Nova Tri-Deck, one complete 8×8 chess battlefield divided into two 8×2 home platforms and two transparent 4×4 Nexus platforms.
 - Original Astralis crystal-glass SVG units: High Commander, Oracle Core, Citadel, Phase Seer, Warp Strider and Drone Sentinel.
 - Local saved training games through `localStorage`.
 - Online correspondence games through Cloudflare Pages Functions and D1.
@@ -73,13 +73,13 @@ Then open `/chess/`, create a game and copy the invite link into another browser
 
 ## Nova Tri-Deck rules
 
-- The battlefield is a complete 8×8 chess grid visually divided into three elevated platforms, for 64 playable squares total.
+- The battlefield is a complete 8×8 chess grid visually divided into four transparent elevated platforms, for 64 playable squares total.
 - Void begins on the top command platform at ranks 8–7. Silver begins on the lower command platform at ranks 2–1.
-- Ranks 6–3 form one larger 8×4 Central Nexus platform.
+- Ranks 6–3 split side-by-side into the 4×4 Port Nexus (files A–D) and 4×4 Starboard Nexus (files E–H).
 - Pieces cross platform edges seamlessly according to their normal 8×8 chess geometry.
 - Tri-Deck uses full legal chess rules: castling, en passant, promotion, check, checkmate, stalemate and draw detection.
 - Rotating the view reverses both the square order and the physical platform order.
-- Previous experimental Tri-Deck snapshots automatically reset once because the v5 topology combines the two former Nexus platforms into one.
+- Previous Tri-Deck snapshots automatically reset once because the v6 topology splits the center into two 4×4 platforms.
 
 ## Security and fairness model
 
