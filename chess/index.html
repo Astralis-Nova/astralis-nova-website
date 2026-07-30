@@ -87,10 +87,10 @@
             <button class="segment active" data-mode="standard" type="button">Standard</button>
             <button class="segment" data-mode="trideck" type="button">Tri-Deck</button>
           </div>
-          <div class="deck-tabs" id="deckTabs" hidden role="group" aria-label="Active deck">
-            <button data-deck="2" type="button">Upper</button>
-            <button class="active" data-deck="1" type="button">Core</button>
-            <button data-deck="0" type="button">Lower</button>
+          <div class="deck-tabs" id="deckTabs" hidden role="group" aria-label="Highlight a command deck">
+            <button data-board="U" type="button">Upper</button>
+            <button class="active" data-board="C" type="button">Core</button>
+            <button data-board="L" type="button">Lower</button>
           </div>
           <button class="icon-action" id="fullscreenButton" type="button" title="Fullscreen board" aria-label="Fullscreen board">⛶</button>
         </div>
@@ -104,27 +104,40 @@
 
           <div class="tri-deck-stage tos-apparatus" id="triDeckStage" hidden>
             <div class="apparatus-spine" aria-hidden="true">
-              <span class="spine-core"></span>
-              <span class="spine-arc spine-arc-left"></span>
-              <span class="spine-arc spine-arc-right"></span>
+              <span class="spine-arc"></span>
+              <span class="spine-base"></span>
             </div>
-            <button class="attack-platform attack-alpha" data-attack-deck="2" type="button" aria-label="Select upper command plane"><i></i><i></i><i></i><i></i></button>
-            <button class="attack-platform attack-beta" data-attack-deck="2" type="button" aria-label="Select upper command plane"><i></i><i></i><i></i><i></i></button>
-            <button class="attack-platform attack-gamma" data-attack-deck="0" type="button" aria-label="Select lower tactical plane"><i></i><i></i><i></i><i></i></button>
-            <button class="attack-platform attack-delta" data-attack-deck="0" type="button" aria-label="Select lower tactical plane"><i></i><i></i><i></i><i></i></button>
-            <div class="deck-orbit orbit-upper" data-deck-shell="2">
-              <div class="deck-label"><span>Level 3</span><strong>Upper Command Plane</strong></div>
-              <div class="chess-board mini-board" id="deck2Board" role="grid" aria-label="Upper deck chess board"></div>
+            <div class="tri-sculpture">
+              <section class="tri-board-shell attack-shell upper-alpha" data-board-shell="UA">
+                <div class="deck-label"><strong>Void α</strong></div>
+                <div class="tri-board attack-board" id="upperAlphaBoard" role="grid" aria-label="Void Alpha attack platform"></div>
+              </section>
+              <section class="tri-board-shell attack-shell upper-beta" data-board-shell="UB">
+                <div class="deck-label"><strong>Void β</strong></div>
+                <div class="tri-board attack-board" id="upperBetaBoard" role="grid" aria-label="Void Beta attack platform"></div>
+              </section>
+              <section class="tri-board-shell main-shell upper-deck" data-board-shell="U">
+                <div class="deck-label"><span>Level 3</span><strong>Upper Command Deck</strong></div>
+                <div class="tri-board main-board" id="upperBoard" role="grid" aria-label="Upper four by four command deck"></div>
+              </section>
+              <section class="tri-board-shell main-shell core-deck active" data-board-shell="C">
+                <div class="deck-label"><span>Level 2</span><strong>Central Battle Deck</strong></div>
+                <div class="tri-board main-board" id="coreBoard" role="grid" aria-label="Central four by four battle deck"></div>
+              </section>
+              <section class="tri-board-shell main-shell lower-deck" data-board-shell="L">
+                <div class="deck-label"><span>Level 1</span><strong>Lower Tactical Deck</strong></div>
+                <div class="tri-board main-board" id="lowerBoard" role="grid" aria-label="Lower four by four tactical deck"></div>
+              </section>
+              <section class="tri-board-shell attack-shell lower-alpha" data-board-shell="LA">
+                <div class="deck-label"><strong>Silver α</strong></div>
+                <div class="tri-board attack-board" id="lowerAlphaBoard" role="grid" aria-label="Silver Alpha attack platform"></div>
+              </section>
+              <section class="tri-board-shell attack-shell lower-beta" data-board-shell="LB">
+                <div class="deck-label"><strong>Silver β</strong></div>
+                <div class="tri-board attack-board" id="lowerBetaBoard" role="grid" aria-label="Silver Beta attack platform"></div>
+              </section>
             </div>
-            <div class="deck-orbit orbit-core active" data-deck-shell="1">
-              <div class="deck-label"><span>Level 2</span><strong>Central Battle Plane</strong></div>
-              <div class="chess-board mini-board" id="deck1Board" role="grid" aria-label="Core deck chess board"></div>
-            </div>
-            <div class="deck-orbit orbit-lower" data-deck-shell="0">
-              <div class="deck-label"><span>Level 1</span><strong>Lower Tactical Plane</strong></div>
-              <div class="chess-board mini-board" id="deck0Board" role="grid" aria-label="Lower deck chess board"></div>
-            </div>
-            <p class="apparatus-caption">Select a level or attack platform · Tap a unit · Tap a glowing destination</p>
+            <p class="apparatus-caption">3 command decks · 4 playable attack platforms · 64 total squares</p>
           </div>
 
           <div class="promotion-panel" id="promotionPanel" hidden>
@@ -197,9 +210,9 @@
       <div class="dialog-heading"><div><p class="panel-kicker">Codex</p><h2>Rules of Engagement</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
       <div class="rules-grid">
         <article><h3>Standard Mode</h3><p>Traditional legal chess with castling, en passant, promotion, check, checkmate, stalemate and draw detection powered by chess.js.</p></article>
-        <article><h3>Nova Tri-Deck</h3><p>Silver command units begin on the Lower plane, Void command units on the Upper plane, and both Drone Sentinel lines on the Core. Choose a level or attack platform, select a unit, then tap a glowing destination. Non-pawns may phase-shift to the same empty square on an adjacent level. Pawns phase-shift only from a glowing portal node. Capture the opposing High Commander to win.</p></article>
+        <article><h3>Nova Tri-Deck</h3><p>Three staggered 4×4 command decks and four playable 2×2 attack platforms form one 64-square battlefield. Units move normally on their current board. Any unit may transfer between an attack platform and its four linked deck cells. Non-pawns may phase-shift to the same empty square on an adjacent command deck; Drone Sentinels use the four glowing portal cells. Capture the opposing High Commander to win.</p></article>
         <article><h3>Async Play</h3><p>Create a match, share the game code or invite link, then close the page. Each move is saved in D1. The portal checks for an opponent move automatically while open.</p></article>
-        <article><h3>Piece Identities</h3><p>King: High Commander. Queen: Oracle Core. Rook: Citadel. Bishop: Phase Seer. Knight: Warp Strider. Pawn: Drone Sentinel.</p></article>
+        <article><h3>Character Pieces</h3><p>King: High Commander. Queen: Oracle Core. Rook: Citadel Droid. Bishop: Phase Seer. Knight: Warp Strider. Pawn: Drone Sentinel. Silver fields explorers and mystics; Void fields armored warlords and machines.</p></article>
       </div>
       <div class="dialog-actions"><button class="primary-action" value="cancel">Return to Bridge</button></div>
     </form>
