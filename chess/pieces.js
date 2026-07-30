@@ -74,15 +74,17 @@ function svgFor(type) {
   return `<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
     <defs>
       <linearGradient id="body-${uid}" x1=".12" y1=".05" x2=".85" y2=".95">
-        <stop offset="0" stop-color="var(--piece-highlight)"/>
-        <stop offset=".28" stop-color="var(--piece-main)"/>
-        <stop offset=".68" stop-color="var(--piece-mid)"/>
-        <stop offset="1" stop-color="var(--piece-edge)"/>
+        <stop offset="0" stop-color="var(--piece-highlight)" stop-opacity=".98"/>
+        <stop offset=".16" stop-color="var(--piece-main)" stop-opacity=".76"/>
+        <stop offset=".42" stop-color="var(--piece-highlight)" stop-opacity=".34"/>
+        <stop offset=".69" stop-color="var(--piece-mid)" stop-opacity=".72"/>
+        <stop offset="1" stop-color="var(--piece-edge)" stop-opacity=".96"/>
       </linearGradient>
       <linearGradient id="base-${uid}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="var(--piece-highlight)"/>
-        <stop offset=".32" stop-color="var(--piece-main)"/>
-        <stop offset="1" stop-color="var(--piece-shadow)"/>
+        <stop offset="0" stop-color="var(--piece-highlight)" stop-opacity=".94"/>
+        <stop offset=".24" stop-color="var(--piece-main)" stop-opacity=".7"/>
+        <stop offset=".55" stop-color="var(--piece-mid)" stop-opacity=".5"/>
+        <stop offset="1" stop-color="var(--piece-shadow)" stop-opacity=".96"/>
       </linearGradient>
       <radialGradient id="core-${uid}">
         <stop offset="0" stop-color="#fff"/>
@@ -102,13 +104,13 @@ function svgFor(type) {
       <path class="base-light" d="M25 82h50"/>
     </g>
     <style>
-      #figure-${uid} .shell{fill:url(#body-${uid})}
-      #figure-${uid} .deep{fill:var(--piece-shadow)}
-      #figure-${uid} .accent{fill:var(--piece-accent)}
-      #figure-${uid} .base{fill:url(#base-${uid})}
+      #figure-${uid} .shell{fill:url(#body-${uid});fill-opacity:var(--piece-shell-opacity,.9)}
+      #figure-${uid} .deep{fill:var(--piece-shadow);fill-opacity:var(--piece-deep-opacity,.75)}
+      #figure-${uid} .accent{fill:var(--piece-accent);fill-opacity:var(--piece-accent-opacity,.62)}
+      #figure-${uid} .base{fill:url(#base-${uid});fill-opacity:.92}
       #figure-${uid} .base-shadow{fill:rgba(0,0,0,.48);stroke:none}
-      #figure-${uid} .base-rim{fill:var(--piece-shadow)}
-      #figure-${uid} .base-light,#figure-${uid} .detail{fill:none;stroke:var(--piece-highlight);stroke-width:1.65;opacity:.86}
+      #figure-${uid} .base-rim{fill:var(--piece-shadow);fill-opacity:.84}
+      #figure-${uid} .base-light,#figure-${uid} .detail{fill:none;stroke:var(--piece-highlight);stroke-width:1.65;opacity:.92}
       #figure-${uid} .gem,#figure-${uid} .core{fill:url(#core-${uid});stroke:#fff;filter:url(#glow-${uid})}
       #figure-${uid} .visor{fill:var(--piece-glow);stroke:var(--piece-highlight);filter:url(#glow-${uid})}
       #figure-${uid} .glow{fill:none;stroke:var(--piece-glow);stroke-width:3.2;filter:url(#glow-${uid})}
