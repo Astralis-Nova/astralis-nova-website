@@ -1,6 +1,12 @@
 name: Astralis Nova Cloudflare Maintenance
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/cloudflare-maintenance.yml
+      - database/chess-schema.sql
   workflow_dispatch:
     inputs:
       mission:
@@ -44,7 +50,7 @@ jobs:
         run: npx --yes wrangler@4 whoami
 
       - name: Create dedicated chess database when missing
-        if: inputs.mission == 'setup-chess'
+        if: github.event_name == 'push' || inputs.mission == 'setup-chess'
         shell: bash
         run: |
           set -euo pipefail
@@ -56,7 +62,7 @@ jobs:
           fi
 
       - name: Install chess schema
-        if: inputs.mission == 'setup-chess'
+        if: github.event_name == 'push' || inputs.mission == 'setup-chess'
         run: npx --yes wrangler@4 d1 execute "$CHESS_DATABASE" --remote --file=./database/chess-schema.sql
 
       - name: Check live chess service
@@ -69,7 +75,7 @@ jobs:
           jq -e '.ok == true and .storage == "D1"' <<<"$body" >/dev/null
 
       - name: Next binding instruction
-        if: inputs.mission == 'setup-chess'
+        if: github.event_name == 'push' || inputs.mission == 'setup-chess'
         run: |
           echo "Database and schema are ready."
           echo "In Cloudflare Pages, bind astralis-nova-chess as CHESS_DB."
