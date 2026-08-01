@@ -42,6 +42,12 @@
     scaleY(2.38) !important;
 }
 
+/* Remove the visible platform-name bars from the playable area.
+   Board names remain available in the deck selector and ARIA labels. */
+.deck-label{
+  display:none !important;
+}
+
 /* Raise the middle Nexus tier so piece silhouettes have clearer vertical space. */
 .nexus-port-platform,
 .nexus-starboard-platform{
