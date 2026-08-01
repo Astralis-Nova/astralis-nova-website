@@ -1,513 +1,74 @@
-/* Astralis Nova Tri-Deck cinematic glass presentation
-   Gameplay, board IDs, square mapping and click handling remain unchanged.
-   Platform order: Void top, Port/Starboard middle, Silver bottom. */
+@import url("https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@1a8c1a05d2c988284afd5922448f67f82e486be5/chess/tri-deck-perspective.css");
 
-.board-stage:has(.tri-deck-stage:not([hidden])){
-  overflow:visible;
-  padding-block:20px 34px;
-}
-
-.tri-deck-stage.nova-apparatus{
-  position:relative;
-  width:min(100%,960px);
-  aspect-ratio:960/850;
-  perspective:1450px;
-  perspective-origin:50% 37%;
-  overflow:visible;
-  isolation:isolate;
-}
-
-/* Deep-space halo behind the apparatus. */
-.tri-deck-stage.nova-apparatus::before{
-  content:"";
-  position:absolute;
-  inset:0 2% 6%;
-  border-radius:34px;
-  background:
-    radial-gradient(circle at 50% 40%,rgba(76,205,255,.18),transparent 35%),
-    radial-gradient(circle at 50% 60%,rgba(106,82,255,.12),transparent 56%);
-  filter:blur(.2px);
-  pointer-events:none;
-  z-index:-6;
-}
-
-/* Holographic projector ring beneath the lowest platform. */
-.tri-deck-stage.nova-apparatus::after{
-  content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  bottom:-1%;
-  height:13%;
-  border:2px solid rgba(116,224,255,.56);
-  border-radius:50%;
-  background:
-    radial-gradient(ellipse at center,rgba(76,194,255,.22),rgba(65,87,188,.08) 46%,transparent 72%);
-  box-shadow:
-    0 0 34px rgba(55,169,255,.4),
-    inset 0 0 24px rgba(153,104,255,.22);
-  transform:rotateX(66deg);
-  pointer-events:none;
-  z-index:-5;
-}
-
-.tri-sculpture{
-  position:absolute;
-  inset:1% 2% 8%;
-  transform-style:preserve-3d;
-  z-index:2;
-}
-
-/* Slim support frame stays behind every playable square. */
-.apparatus-spine{
-  position:absolute;
-  inset:8% 9% 9%;
-  z-index:0;
-  pointer-events:none;
-  opacity:.9;
-}
-
-.apparatus-spine::before,
-.apparatus-spine::after{
-  content:"";
-  position:absolute;
-  top:12%;
-  bottom:8%;
-  width:2.4%;
-  border:1px solid rgba(145,229,255,.58);
-  background:
-    linear-gradient(90deg,#02050b 0%,#173965 30%,#9deeff 50%,#214e86 68%,#02050b 100%);
-  box-shadow:
-    0 0 13px rgba(70,188,255,.42),
-    inset 0 0 8px rgba(255,255,255,.18);
-  clip-path:polygon(34% 0,100% 0,66% 100%,0 100%);
-}
-.apparatus-spine::before{left:12%}
-.apparatus-spine::after{right:12%;transform:scaleX(-1)}
-
-.spine-arc{
-  position:absolute;
-  left:49.15%;
-  top:8%;
-  bottom:9%;
-  width:1.7%;
-  border-radius:999px;
-  background:linear-gradient(90deg,#06101d,#75ddff 45%,#e7fbff 51%,#347dbd 68%,#06101d);
-  box-shadow:0 0 15px rgba(75,200,255,.48);
-  opacity:.72;
-}
-
-.spine-base{
-  position:absolute;
-  left:19%;
-  width:62%;
-  bottom:0;
-  height:3.7%;
-  border-radius:50%;
-  background:linear-gradient(180deg,#91ecff,#245493 42%,#07101e 54%,#02040a);
-  box-shadow:
-    0 8px 22px rgba(0,0,0,.66),
-    0 0 25px rgba(70,189,255,.38);
-}
-
-.tri-board-shell{
-  position:absolute;
-  transform-style:preserve-3d;
-  transform-origin:center center;
-  transition:filter .2s ease,transform .22s ease;
-  z-index:3;
-  will-change:transform;
-}
-
-/* Transparent slab and illuminated front edge create visible tier depth. */
-.tri-board-shell::before{
-  content:"";
-  position:absolute;
-  inset:9px -10px -15px;
-  border:1px solid rgba(143,225,255,.68);
-  border-radius:8px;
-  background:
-    linear-gradient(165deg,rgba(191,243,255,.18),rgba(35,121,175,.10) 40%,rgba(3,13,29,.72) 82%);
-  clip-path:polygon(1.5% 0,98.5% 0,100% 78%,97.5% 100%,2.5% 100%,0 78%);
-  box-shadow:
-    0 17px 26px rgba(0,0,0,.62),
-    inset 0 0 18px rgba(89,219,255,.16),
-    0 0 17px rgba(55,174,255,.22);
-  backdrop-filter:blur(4px) saturate(1.25);
-  pointer-events:none;
-  z-index:-2;
-}
-
-.tri-board-shell::after{
-  content:"";
-  position:absolute;
-  left:1.5%;
-  right:1.5%;
-  bottom:-12px;
-  height:5px;
-  border-radius:0 0 8px 8px;
-  background:linear-gradient(90deg,transparent,#74dcff 12%,#e7fbff 50%,#74dcff 88%,transparent);
-  box-shadow:0 0 12px rgba(84,206,255,.52);
-  pointer-events:none;
-  z-index:-1;
-}
-
-.tri-board{
-  border:1px solid rgba(192,242,255,.92);
-  border-radius:5px;
-  background:rgba(6,24,45,.34);
-  backdrop-filter:blur(5px) saturate(1.28);
-  box-shadow:
-    0 0 0 3px rgba(3,13,29,.94),
-    0 0 0 5px rgba(92,207,255,.34),
-    0 16px 27px rgba(0,0,0,.66),
-    0 0 24px rgba(52,190,255,.25);
-}
-
-/* Clear holographic squares, still high-contrast enough for pieces. */
-.tri-board .square{
-  background:
-    linear-gradient(145deg,rgba(224,250,255,.34),rgba(106,194,222,.16));
-  border-color:rgba(225,250,255,.17);
-  box-shadow:inset 0 0 13px rgba(232,253,255,.09);
-  backdrop-filter:blur(2px) saturate(1.18);
-}
-.tri-board .square.dark{
-  background:
-    linear-gradient(145deg,rgba(20,88,133,.52),rgba(3,31,62,.34));
-}
-
-.deck-label{
-  position:absolute;
-  left:0;
-  right:0;
-  top:-27px;
-  z-index:10;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin:0;
-  padding:4px 8px;
-  border:1px solid rgba(93,203,255,.24);
-  border-radius:7px;
-  background:linear-gradient(90deg,rgba(2,9,22,.88),rgba(7,25,49,.68),rgba(2,9,22,.88));
-  box-shadow:0 4px 14px rgba(0,0,0,.3);
-  backdrop-filter:blur(8px);
-  white-space:nowrap;
-}
-.deck-label span{color:rgba(183,221,244,.78)}
-.deck-label strong{
-  color:#85e8ff;
-  text-shadow:0 0 9px rgba(69,217,255,.55);
-}
-
-/* Cinematic stair-step: same four boards, with a readable three-quarter tilt. */
-.void-platform{
-  width:74%;
-  left:13%;
-  top:2%;
-  transform:rotateX(49deg) rotateZ(-.7deg);
-  z-index:8;
-}
-
-.nexus-port-platform{
-  width:39%;
-  left:7%;
-  top:34%;
-  transform:rotateX(49deg) rotateZ(.9deg);
-  z-index:7;
-}
-
-.nexus-starboard-platform{
-  width:39%;
-  right:7%;
-  top:34%;
-  transform:rotateX(49deg) rotateZ(-.9deg);
-  z-index:7;
-}
-
-.silver-platform{
-  width:74%;
-  left:13%;
-  top:66%;
-  transform:rotateX(49deg) rotateZ(.7deg);
-  z-index:6;
-}
-
-.tri-board-shell.active{
-  filter:brightness(1.15) saturate(1.2);
-}
-.tri-board-shell.active .tri-board{
-  border-color:#f2fdff;
-  box-shadow:
-    0 0 0 3px rgba(3,13,29,.94),
-    0 0 0 6px rgba(69,217,255,.76),
-    0 18px 30px rgba(0,0,0,.7),
-    0 0 34px rgba(69,217,255,.46);
-}
-
-.void-platform.active{transform:translateY(-5px) rotateX(47deg) rotateZ(-.7deg)}
-.nexus-port-platform.active{transform:translateY(-5px) rotateX(47deg) rotateZ(.9deg)}
-.nexus-starboard-platform.active{transform:translateY(-5px) rotateX(47deg) rotateZ(-.9deg)}
-.silver-platform.active{transform:translateY(-5px) rotateX(47deg) rotateZ(.7deg)}
-
-/* Player rotation swaps home platforms while retaining the tier geometry. */
-.orientation-black .void-platform{
-  top:66%;
-  transform:rotateX(49deg) rotateZ(180.7deg);
-  z-index:6;
-}
-.orientation-black .nexus-port-platform{
-  left:auto;
-  right:7%;
-  transform:rotateX(49deg) rotateZ(179.1deg);
-}
-.orientation-black .nexus-starboard-platform{
-  right:auto;
-  left:7%;
-  transform:rotateX(49deg) rotateZ(180.9deg);
-}
-.orientation-black .silver-platform{
-  top:2%;
-  transform:rotateX(49deg) rotateZ(179.3deg);
-  z-index:8;
-}
-.orientation-black .void-platform.active{transform:translateY(-5px) rotateX(47deg) rotateZ(180.7deg)}
-.orientation-black .nexus-port-platform.active{transform:translateY(-5px) rotateX(47deg) rotateZ(179.1deg)}
-.orientation-black .nexus-starboard-platform.active{transform:translateY(-5px) rotateX(47deg) rotateZ(180.9deg)}
-.orientation-black .silver-platform.active{transform:translateY(-5px) rotateX(47deg) rotateZ(179.3deg)}
-
-.apparatus-caption{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:10;
-  color:rgba(210,241,255,.9);
-  text-align:center;
-  text-shadow:0 0 10px rgba(69,217,255,.48);
-}
-
-@media (max-width:760px){
-  .tri-deck-stage.nova-apparatus{
-    aspect-ratio:760/850;
-    perspective:1120px;
-  }
-  .tri-sculpture{inset:2% 0 8%}
-  .void-platform,.silver-platform{width:84%;left:8%}
-  .nexus-port-platform{width:42%;left:4%}
-  .nexus-starboard-platform{width:42%;right:4%}
-  .void-platform{top:3%;transform:rotateX(43deg) rotateZ(-.5deg)}
-  .nexus-port-platform,.nexus-starboard-platform{top:35%}
-  .nexus-port-platform{transform:rotateX(43deg) rotateZ(.7deg)}
-  .nexus-starboard-platform{transform:rotateX(43deg) rotateZ(-.7deg)}
-  .silver-platform{top:67%;transform:rotateX(43deg) rotateZ(.5deg)}
-  .void-platform.active{transform:translateY(-4px) rotateX(41deg) rotateZ(-.5deg)}
-  .nexus-port-platform.active{transform:translateY(-4px) rotateX(41deg) rotateZ(.7deg)}
-  .nexus-starboard-platform.active{transform:translateY(-4px) rotateX(41deg) rotateZ(-.7deg)}
-  .silver-platform.active{transform:translateY(-4px) rotateX(41deg) rotateZ(.5deg)}
-  .deck-label{top:-23px;font-size:.42rem}
-  .deck-label strong{font-size:.49rem}
-  .apparatus-spine::before,.apparatus-spine::after{width:2%;opacity:.56}
-  .spine-arc{opacity:.48}
-}
-
-@media (max-width:480px){
-  .tri-deck-stage.nova-apparatus{
-    aspect-ratio:1/1.2;
-    perspective:920px;
-  }
-  .void-platform{top:4%}
-  .nexus-port-platform,.nexus-starboard-platform{top:36%}
-  .silver-platform{top:68%}
-  .deck-label{top:-20px;padding:3px 5px}
-  .deck-label span{display:none}
-  .apparatus-caption{font-size:.42rem}
-  .tri-board-shell::before{inset:8px -6px -11px}
-  .tri-board-shell::after{bottom:-9px;height:4px}
-}
-
-@media (prefers-reduced-motion:reduce){
-  .tri-board-shell{transition:none}
-}
-
-/* August 2026 refinement: clearer middle glass, deeper tier spacing,
-   and upright figurines that counter the deck perspective. */
-.tri-deck-stage.nova-apparatus{
-  --deck-tilt:56deg;
-  --piece-upright-tilt:-56deg;
-  perspective:1650px;
-  perspective-origin:50% 29%;
-}
-
+/* Upright-piece correction
+   The decks keep their cinematic tilt, while the SVG figurines are visually
+   restored to full height and anchored at their bases. */
 .tri-board,
 .tri-board .square{
-  overflow:visible;
-  transform-style:preserve-3d;
+  overflow:visible !important;
 }
 
-/* Push the command platform into the distance, recess the Nexus pair,
-   and bring the Silver platform forward so the lower battlefield reads clearly. */
-.void-platform{
-  top:0;
-  transform:translate3d(0,-18px,-165px) rotateX(var(--deck-tilt)) rotateZ(-.7deg);
-}
-.nexus-port-platform{
-  top:34%;
-  transform:translate3d(0,-7px,-78px) rotateX(var(--deck-tilt)) rotateZ(.9deg);
-}
-.nexus-starboard-platform{
-  top:34%;
-  transform:translate3d(0,-7px,-78px) rotateX(var(--deck-tilt)) rotateZ(-.9deg);
-}
-.silver-platform{
-  top:67%;
-  transform:translate3d(0,18px,48px) rotateX(var(--deck-tilt)) rotateZ(.7deg);
+.tri-board .square{
+  isolation:visible;
 }
 
-.void-platform.active{
-  transform:translate3d(0,-23px,-165px) rotateX(var(--deck-tilt)) rotateZ(-.7deg);
-}
-.nexus-port-platform.active{
-  transform:translate3d(0,-12px,-78px) rotateX(var(--deck-tilt)) rotateZ(.9deg);
-}
-.nexus-starboard-platform.active{
-  transform:translate3d(0,-12px,-78px) rotateX(var(--deck-tilt)) rotateZ(-.9deg);
-}
-.silver-platform.active{
-  transform:translate3d(0,13px,48px) rotateX(var(--deck-tilt)) rotateZ(.7deg);
-}
-
-/* The middle boards remain playable while behaving like clear holographic glass. */
-.nexus-port-platform::before,
-.nexus-starboard-platform::before{
-  border-color:rgba(143,225,255,.44);
-  background:linear-gradient(165deg,rgba(208,248,255,.09),rgba(44,151,203,.035) 42%,rgba(3,13,29,.17) 86%);
-  box-shadow:
-    0 13px 21px rgba(0,0,0,.34),
-    inset 0 0 13px rgba(89,219,255,.08),
-    0 0 14px rgba(55,174,255,.16);
-  backdrop-filter:blur(1px) saturate(1.08);
-}
-.nexus-port-platform .tri-board,
-.nexus-starboard-platform .tri-board{
-  background:rgba(5,28,52,.075);
-  border-color:rgba(192,242,255,.72);
-  backdrop-filter:blur(.7px) saturate(1.08);
-  box-shadow:
-    0 0 0 3px rgba(3,13,29,.62),
-    0 0 0 5px rgba(92,207,255,.2),
-    0 12px 21px rgba(0,0,0,.4),
-    0 0 20px rgba(52,190,255,.2);
-}
-.nexus-port-platform .square,
-.nexus-starboard-platform .square{
-  background:linear-gradient(145deg,rgba(224,250,255,.12),rgba(106,194,222,.035));
-  border-color:rgba(225,250,255,.12);
-  box-shadow:inset 0 0 8px rgba(232,253,255,.045);
-  backdrop-filter:none;
-}
-.nexus-port-platform .square.dark,
-.nexus-starboard-platform .square.dark{
-  background:linear-gradient(145deg,rgba(24,103,153,.2),rgba(3,31,62,.065));
-}
-
-/* Pieces counter-rotate against the tilted platforms, so they stand vertically.
-   Each platform also cancels its tiny Z rotation for a level figurine. */
 .tri-board .piece{
-  --piece-counter-z:0deg;
-  transform-origin:50% 91%;
-  transform:translateY(-7%) translateZ(18px) rotateZ(var(--piece-counter-z)) rotateX(var(--piece-upright-tilt)) scale(.9);
-  backface-visibility:visible;
-  will-change:transform;
+  width:88% !important;
+  height:88% !important;
+  transform-origin:50% 92% !important;
+  transform:
+    translateY(-43%)
+    translateZ(24px)
+    rotateZ(var(--piece-counter-z,0deg))
+    scaleX(.82)
+    scaleY(2.28) !important;
+  backface-visibility:visible !important;
+  filter:
+    drop-shadow(0 9px 5px rgba(0,0,0,.72))
+    drop-shadow(0 0 7px rgba(225,248,255,.28)) !important;
 }
-.void-platform .piece{--piece-counter-z:.7deg}
-.nexus-port-platform .piece{--piece-counter-z:-.9deg}
-.nexus-starboard-platform .piece{--piece-counter-z:.9deg}
-.silver-platform .piece{--piece-counter-z:-.7deg}
+
+.tri-board .piece svg{
+  overflow:visible !important;
+  transform-origin:50% 92%;
+}
 
 .tri-board .square:hover .piece{
-  transform:translateY(-12%) translateZ(25px) rotateZ(var(--piece-counter-z)) rotateX(var(--piece-upright-tilt)) scale(.96);
+  transform:
+    translateY(-49%)
+    translateZ(30px)
+    rotateZ(var(--piece-counter-z,0deg))
+    scaleX(.86)
+    scaleY(2.38) !important;
 }
 
-/* Black orientation keeps the same depth hierarchy and upright pieces. */
-.orientation-black .void-platform{
-  top:67%;
-  transform:translate3d(0,18px,48px) rotateX(var(--deck-tilt)) rotateZ(180.7deg);
-  z-index:6;
-}
-.orientation-black .nexus-port-platform{
-  left:auto;
-  right:7%;
-  transform:translate3d(0,-7px,-78px) rotateX(var(--deck-tilt)) rotateZ(179.1deg);
-}
-.orientation-black .nexus-starboard-platform{
-  right:auto;
-  left:7%;
-  transform:translate3d(0,-7px,-78px) rotateX(var(--deck-tilt)) rotateZ(180.9deg);
-}
-.orientation-black .silver-platform{
-  top:0;
-  transform:translate3d(0,-18px,-165px) rotateX(var(--deck-tilt)) rotateZ(179.3deg);
-  z-index:8;
-}
-.orientation-black .void-platform.active{
-  transform:translate3d(0,13px,48px) rotateX(var(--deck-tilt)) rotateZ(180.7deg);
-}
-.orientation-black .nexus-port-platform.active{
-  transform:translate3d(0,-12px,-78px) rotateX(var(--deck-tilt)) rotateZ(179.1deg);
-}
-.orientation-black .nexus-starboard-platform.active{
-  transform:translate3d(0,-12px,-78px) rotateX(var(--deck-tilt)) rotateZ(180.9deg);
-}
-.orientation-black .silver-platform.active{
-  transform:translate3d(0,-23px,-165px) rotateX(var(--deck-tilt)) rotateZ(179.3deg);
-}
-.orientation-black .void-platform .piece{--piece-counter-z:-180.7deg}
-.orientation-black .nexus-port-platform .piece{--piece-counter-z:-179.1deg}
-.orientation-black .nexus-starboard-platform .piece{--piece-counter-z:-180.9deg}
-.orientation-black .silver-platform .piece{--piece-counter-z:-179.3deg}
-
+/* Keep the figurines readable on smaller screens without letting them collide. */
 @media (max-width:760px){
-  .tri-deck-stage.nova-apparatus{
-    --deck-tilt:50deg;
-    --piece-upright-tilt:-50deg;
-    perspective:1250px;
-    perspective-origin:50% 30%;
+  .tri-board .piece{
+    transform:
+      translateY(-38%)
+      translateZ(18px)
+      rotateZ(var(--piece-counter-z,0deg))
+      scaleX(.82)
+      scaleY(2.12) !important;
   }
-  .void-platform{top:1%;transform:translate3d(0,-12px,-115px) rotateX(var(--deck-tilt)) rotateZ(-.5deg)}
-  .nexus-port-platform,.nexus-starboard-platform{top:35%}
-  .nexus-port-platform{transform:translate3d(0,-5px,-54px) rotateX(var(--deck-tilt)) rotateZ(.7deg)}
-  .nexus-starboard-platform{transform:translate3d(0,-5px,-54px) rotateX(var(--deck-tilt)) rotateZ(-.7deg)}
-  .silver-platform{top:68%;transform:translate3d(0,12px,34px) rotateX(var(--deck-tilt)) rotateZ(.5deg)}
-  .void-platform.active{transform:translate3d(0,-16px,-115px) rotateX(var(--deck-tilt)) rotateZ(-.5deg)}
-  .nexus-port-platform.active{transform:translate3d(0,-9px,-54px) rotateX(var(--deck-tilt)) rotateZ(.7deg)}
-  .nexus-starboard-platform.active{transform:translate3d(0,-9px,-54px) rotateX(var(--deck-tilt)) rotateZ(-.7deg)}
-  .silver-platform.active{transform:translate3d(0,8px,34px) rotateX(var(--deck-tilt)) rotateZ(.5deg)}
-  .void-platform .piece{--piece-counter-z:.5deg}
-  .nexus-port-platform .piece{--piece-counter-z:-.7deg}
-  .nexus-starboard-platform .piece{--piece-counter-z:.7deg}
-  .silver-platform .piece{--piece-counter-z:-.5deg}
-  .orientation-black .void-platform{top:68%;transform:translate3d(0,12px,34px) rotateX(var(--deck-tilt)) rotateZ(180.5deg)}
-  .orientation-black .nexus-port-platform{transform:translate3d(0,-5px,-54px) rotateX(var(--deck-tilt)) rotateZ(179.3deg)}
-  .orientation-black .nexus-starboard-platform{transform:translate3d(0,-5px,-54px) rotateX(var(--deck-tilt)) rotateZ(180.7deg)}
-  .orientation-black .silver-platform{top:1%;transform:translate3d(0,-12px,-115px) rotateX(var(--deck-tilt)) rotateZ(179.5deg)}
-  .orientation-black .void-platform .piece{--piece-counter-z:-180.5deg}
-  .orientation-black .nexus-port-platform .piece{--piece-counter-z:-179.3deg}
-  .orientation-black .nexus-starboard-platform .piece{--piece-counter-z:-180.7deg}
-  .orientation-black .silver-platform .piece{--piece-counter-z:-179.5deg}
+  .tri-board .square:hover .piece{
+    transform:
+      translateY(-43%)
+      translateZ(23px)
+      rotateZ(var(--piece-counter-z,0deg))
+      scaleX(.86)
+      scaleY(2.22) !important;
+  }
 }
 
 @media (max-width:480px){
-  .tri-deck-stage.nova-apparatus{
-    --deck-tilt:47deg;
-    --piece-upright-tilt:-47deg;
-    perspective:1040px;
-  }
   .tri-board .piece{
-    transform:translateY(-5%) translateZ(12px) rotateZ(var(--piece-counter-z)) rotateX(var(--piece-upright-tilt)) scale(.86);
-  }
-  .tri-board .square:hover .piece{
-    transform:translateY(-9%) translateZ(18px) rotateZ(var(--piece-counter-z)) rotateX(var(--piece-upright-tilt)) scale(.91);
+    transform:
+      translateY(-32%)
+      translateZ(13px)
+      rotateZ(var(--piece-counter-z,0deg))
+      scaleX(.84)
+      scaleY(1.95) !important;
   }
 }
