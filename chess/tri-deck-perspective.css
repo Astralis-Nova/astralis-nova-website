@@ -9,7 +9,7 @@
 }
 
 .tri-board .square{
-  isolation:visible;
+  isolation:isolate;
 }
 
 .tri-board .piece{
@@ -42,6 +42,46 @@
     scaleY(2.38) !important;
 }
 
+/* Raise the middle Nexus tier so piece silhouettes have clearer vertical space. */
+.nexus-port-platform,
+.nexus-starboard-platform{
+  top:29% !important;
+}
+
+.nexus-port-platform{
+  transform:translate3d(0,-18px,-78px) rotateX(var(--deck-tilt)) rotateZ(.9deg) !important;
+}
+
+.nexus-starboard-platform{
+  transform:translate3d(0,-18px,-78px) rotateX(var(--deck-tilt)) rotateZ(-.9deg) !important;
+}
+
+.nexus-port-platform.active{
+  transform:translate3d(0,-23px,-78px) rotateX(var(--deck-tilt)) rotateZ(.9deg) !important;
+}
+
+.nexus-starboard-platform.active{
+  transform:translate3d(0,-23px,-78px) rotateX(var(--deck-tilt)) rotateZ(-.9deg) !important;
+}
+
+.orientation-black .nexus-port-platform{
+  top:29% !important;
+  transform:translate3d(0,-18px,-78px) rotateX(var(--deck-tilt)) rotateZ(179.1deg) !important;
+}
+
+.orientation-black .nexus-starboard-platform{
+  top:29% !important;
+  transform:translate3d(0,-18px,-78px) rotateX(var(--deck-tilt)) rotateZ(180.9deg) !important;
+}
+
+.orientation-black .nexus-port-platform.active{
+  transform:translate3d(0,-23px,-78px) rotateX(var(--deck-tilt)) rotateZ(179.1deg) !important;
+}
+
+.orientation-black .nexus-starboard-platform.active{
+  transform:translate3d(0,-23px,-78px) rotateX(var(--deck-tilt)) rotateZ(180.9deg) !important;
+}
+
 /* Keep the figurines readable on smaller screens without letting them collide. */
 @media (max-width:760px){
   .tri-board .piece{
@@ -52,6 +92,7 @@
       scaleX(.82)
       scaleY(2.12) !important;
   }
+
   .tri-board .square:hover .piece{
     transform:
       translateY(-43%)
@@ -59,6 +100,45 @@
       rotateZ(var(--piece-counter-z,0deg))
       scaleX(.86)
       scaleY(2.22) !important;
+  }
+
+  .nexus-port-platform,
+  .nexus-starboard-platform{
+    top:30% !important;
+  }
+
+  .nexus-port-platform{
+    transform:translate3d(0,-14px,-54px) rotateX(var(--deck-tilt)) rotateZ(.7deg) !important;
+  }
+
+  .nexus-starboard-platform{
+    transform:translate3d(0,-14px,-54px) rotateX(var(--deck-tilt)) rotateZ(-.7deg) !important;
+  }
+
+  .nexus-port-platform.active{
+    transform:translate3d(0,-18px,-54px) rotateX(var(--deck-tilt)) rotateZ(.7deg) !important;
+  }
+
+  .nexus-starboard-platform.active{
+    transform:translate3d(0,-18px,-54px) rotateX(var(--deck-tilt)) rotateZ(-.7deg) !important;
+  }
+
+  .orientation-black .nexus-port-platform{
+    top:30% !important;
+    transform:translate3d(0,-14px,-54px) rotateX(var(--deck-tilt)) rotateZ(179.3deg) !important;
+  }
+
+  .orientation-black .nexus-starboard-platform{
+    top:30% !important;
+    transform:translate3d(0,-14px,-54px) rotateX(var(--deck-tilt)) rotateZ(180.7deg) !important;
+  }
+
+  .orientation-black .nexus-port-platform.active{
+    transform:translate3d(0,-18px,-54px) rotateX(var(--deck-tilt)) rotateZ(179.3deg) !important;
+  }
+
+  .orientation-black .nexus-starboard-platform.active{
+    transform:translate3d(0,-18px,-54px) rotateX(var(--deck-tilt)) rotateZ(180.7deg) !important;
   }
 }
 
@@ -70,5 +150,10 @@
       rotateZ(var(--piece-counter-z,0deg))
       scaleX(.84)
       scaleY(1.95) !important;
+  }
+
+  .nexus-port-platform,
+  .nexus-starboard-platform{
+    top:31% !important;
   }
 }
