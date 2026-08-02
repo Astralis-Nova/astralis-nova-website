@@ -62,7 +62,9 @@ function jsonResponse(response,data){const headers=new Headers(response.headers)
 async function callAi(action,body){const response=await nativeFetch(aiUrl(action),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||`AI command failed (${response.status}).`);return data}
 
 function track(game){
-  const previous=actualGame?.status;actualGame=structuredClone(game);
+  const previous=actualGame?.status,previousId=actualGame?.id;
+  if(previousId&&previousId!==game.id){lastRevision=-1;handoff=false;cancelAi()}
+  actualGame=structuredClone(game);
   if(previous==='active_ai'&&game.status==='active'&&!handoff){handoff=true;cancelAi();announce('Challenger detected. Transferring command of the Black Glass Fleet.');toast('Human challenger has taken over Black.','success')}
   if(game.status==='active_ai'){handoff=false;scheduleAi()}else cancelAi();
 }
