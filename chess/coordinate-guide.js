@@ -1,6 +1,3 @@
-import './move-repair.js?v=17';
-import './touch-bridge.js?v=17';
-
 installCoordinateGuide();
 
 function installCoordinateGuide(){
