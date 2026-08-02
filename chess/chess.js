@@ -1,14 +1,56 @@
 import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
 
-const CORE_URL='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@f4ed377ed33cf21e28e47fcb0318021fe51af20e/chess/chess.js';
+const CORE_URLS=[
+  'https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@f4ed377ed33cf21e28e47fcb0318021fe51af20e/chess/chess.js',
+  'https://cdn.statically.io/gh/Astralis-Nova/astralis-nova-website/f4ed377ed33cf21e28e47fcb0318021fe51af20e/chess/chess.js'
+];
 const nativeFetch=window.fetch.bind(window);
 const VALUES={p:1,n:3.2,b:3.35,r:5,q:9.2,k:0};
-let actualGame=null,creatorToken=null,aiBusy=false,aiTimer=null,generation=0,lastRevision=-1,handoff=false;
+let actualGame=null,creatorToken=null,aiBusy=false,aiTimer=null,generation=0,lastRevision=-1,handoff=false,decorateTimer=null;
 
 injectControls();
 window.fetch=interceptFetch;
-await import(CORE_URL);
-setInterval(decorate,500);
+loadCore();
+
+async function loadCore(){
+  const detail=document.getElementById('connectionDetail');
+  if(detail)detail.textContent='Loading board controls…';
+  let lastError=null;
+  for(const url of CORE_URLS){
+    try{
+      await import(url);
+      document.documentElement.dataset.chessReady='true';
+      if(detail)detail.textContent='Board controls online. Tap a piece, then a glowing square.';
+      announce('Board controls online. Tap a piece, then tap a glowing destination square.');
+      clearInterval(decorateTimer);
+      decorateTimer=setInterval(decorate,500);
+      decorate();
+      return;
+    }catch(error){
+      lastError=error;
+      console.warn('Chess core failed to load from',url,error);
+    }
+  }
+  showBootError(lastError);
+}
+
+function showBootError(error){
+  console.error('Chess board controls failed to start',error);
+  const stage=document.getElementById('boardStage');
+  if(!stage)return;
+  const banner=document.createElement('div');
+  banner.className='chess-boot-error';
+  banner.innerHTML='<strong>Board controls did not start.</strong><span>Tap Reload Controls to reconnect the chess engine.</span><button type="button">Reload Controls</button>';
+  banner.querySelector('button').addEventListener('click',()=>location.reload());
+  stage.append(banner);
+  const detail=document.getElementById('connectionDetail');
+  if(detail)detail.textContent='Board controls failed to load. Use Reload Controls.';
+}
+
+function cloneData(value){
+  if(value===undefined)return undefined;
+  try{return JSON.parse(JSON.stringify(value))}catch{return value}
+}
 
 function injectControls(){
   const form=document.getElementById('newGameForm');
@@ -18,7 +60,7 @@ function injectControls(){
   label.innerHTML='<input id="novaAiTakeover" type="checkbox" checked><span><strong>Nova AI Until Challenger Joins</strong><small>Play against Nova now. A human can claim Black later and continue from the exact saved position.</small></span>';
   form.querySelector('fieldset')?.insertAdjacentElement('afterend',label);
   const style=document.createElement('style');
-  style.textContent='.nova-ai-choice{border-color:rgba(69,217,255,.42)!important;background:linear-gradient(135deg,rgba(20,77,126,.36),rgba(50,31,105,.28))!important}.nova-ai-choice strong{color:#8eeaff}.nova-ai-choice input{accent-color:#45d9ff}.player-card.ai-command{border-color:rgba(135,91,255,.72);box-shadow:0 0 24px rgba(135,91,255,.17)}';
+  style.textContent='.nova-ai-choice{border-color:rgba(69,217,255,.42)!important;background:linear-gradient(135deg,rgba(20,77,126,.36),rgba(50,31,105,.28))!important}.nova-ai-choice strong{color:#8eeaff}.nova-ai-choice input{accent-color:#45d9ff}.player-card.ai-command{border-color:rgba(135,91,255,.72);box-shadow:0 0 24px rgba(135,91,255,.17)}.chess-boot-error{position:absolute;inset:18px;z-index:50;display:grid;place-content:center;justify-items:center;gap:10px;text-align:center;padding:22px;border:1px solid rgba(255,96,125,.78);border-radius:16px;background:rgba(8,12,28,.96);box-shadow:0 20px 70px rgba(0,0,0,.65)}.chess-boot-error strong{font-size:1.15rem;color:#fff}.chess-boot-error span{max-width:420px;color:#c9d7e8;font-size:.82rem}.chess-boot-error button{min-height:42px;padding:9px 15px;border-radius:10px;border:1px solid rgba(69,217,255,.55);background:linear-gradient(90deg,#2b7cff,#875bff);color:white;font-weight:850;cursor:pointer}';
   document.head.append(style);
   const grid=document.querySelector('#rulesDialog .rules-grid');
   if(grid){const article=document.createElement('article');article.innerHTML='<h3>Nova AI Takeover</h3><p>Nova commands Black while the seat is open. A joining human atomically claims Black and continues from the saved position, history and current turn.</p>';grid.append(article)}
@@ -57,14 +99,14 @@ async function routed(action,init){
 
 function requestUrl(input){return typeof input==='string'?input:input instanceof URL?input.href:input?.url||''}
 function aiUrl(action){const url=new URL('../api/chess-ai',location.href);url.searchParams.set('action',action);return url}
-function publicData(data){const copy=structuredClone(data);copy.game.status='active';copy.game.blackName='Nova AI';return copy}
+function publicData(data){const copy=cloneData(data);copy.game.status='active';copy.game.blackName='Nova AI';return copy}
 function jsonResponse(response,data){const headers=new Headers(response.headers);headers.set('Content-Type','application/json; charset=utf-8');headers.delete('Content-Length');return new Response(JSON.stringify(data),{status:response.status,statusText:response.statusText,headers})}
 async function callAi(action,body){const response=await nativeFetch(aiUrl(action),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||`AI command failed (${response.status}).`);return data}
 
 function track(game){
   const previous=actualGame?.status,previousId=actualGame?.id;
   if(previousId&&previousId!==game.id){lastRevision=-1;handoff=false;cancelAi()}
-  actualGame=structuredClone(game);
+  actualGame=cloneData(game);
   if(previous==='active_ai'&&game.status==='active'&&!handoff){handoff=true;cancelAi();announce('Challenger detected. Transferring command of the Black Glass Fleet.');toast('Human challenger has taken over Black.','success')}
   if(game.status==='active_ai'){handoff=false;scheduleAi()}else cancelAi();
 }
