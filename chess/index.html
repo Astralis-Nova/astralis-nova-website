@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050816">
-  <meta name="description" content="Astralis Nova clean multi-tier chess portal with a local Nova AI opponent.">
+  <meta name="description" content="Astralis Nova clean multi-tier chess with local play, Nova AI, and online missions.">
   <title>Astralis Nova Multi-Tier Chess</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <style>
@@ -13,7 +13,7 @@
     body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(255,255,255,.72) 0 1px,transparent 1.5px);background-size:71px 71px;opacity:.18;mask-image:linear-gradient(to bottom,black,transparent 82%)}
     main{position:relative;width:min(1200px,100%);margin:auto}.top,.panel{border:1px solid var(--line);border-radius:18px;background:rgba(7,17,36,.95);box-shadow:0 18px 48px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.04)}
     .top{padding:15px;margin-bottom:11px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.brand-line{display:flex;align-items:center;gap:12px}.brand-mark{display:grid;place-items:center;width:44px;height:44px;border:1px solid rgba(112,231,255,.7);border-radius:50%;color:var(--cyan);font-size:1.35rem;box-shadow:0 0 24px rgba(69,217,255,.28)}.top h1{margin:0;color:var(--cyan);font-size:clamp(1.35rem,4vw,2.35rem)}.top p{margin:5px 0 0;color:var(--muted);font-size:.8rem}.badge{padding:6px 9px;border:1px solid #80ffe0;border-radius:999px;color:var(--green);background:rgba(3,28,28,.6);font-weight:950;font-size:.68rem;letter-spacing:.06em;box-shadow:0 0 18px rgba(120,255,219,.12)}
-    .layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,310px);gap:12px}.battlefield{padding:14px;overflow:hidden}.side{padding:14px;align-self:start;position:sticky;top:8px}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,325px);gap:12px}.battlefield{padding:14px;overflow:hidden}.side{padding:14px;align-self:start;position:sticky;top:8px}
     .tier-stack{display:grid;gap:20px;max-width:880px;margin:auto;perspective:1100px}.tier-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.tier-shell{position:relative;padding:28px 10px 10px;border:1px solid rgba(126,222,255,.6);border-radius:14px;background:linear-gradient(145deg,rgba(151,229,255,.14),rgba(6,22,42,.94));box-shadow:0 18px 30px rgba(0,0,0,.5),0 0 26px rgba(69,217,255,.12)}
     .tier-shell.home{width:92%;justify-self:center}.tier-shell.void{transform:rotateX(5deg) translateY(2px)}.tier-shell.silver{transform:rotateX(-5deg) translateY(-2px)}.tier-shell.nexus-left{transform:rotateY(3deg)}.tier-shell.nexus-right{transform:rotateY(-3deg)}
     .tier-title{position:absolute;left:10px;right:10px;top:7px;display:flex;justify-content:space-between;gap:10px;color:#b9d8ed;font-size:.64rem;font-weight:850;letter-spacing:.05em;text-transform:uppercase}.tier-title strong{color:var(--cyan)}
@@ -21,9 +21,10 @@
     .sq{position:relative;border:0;padding:0;margin:0;min-width:0;min-height:0;width:100%;height:100%;display:grid;place-items:center;overflow:hidden;background:var(--light);color:#102438;cursor:pointer;touch-action:manipulation}.sq.dark{background:var(--dark);color:#effbff}.sq.selected{box-shadow:inset 0 0 0 4px var(--gold),inset 0 0 24px rgba(255,225,122,.55);z-index:3}.sq.legal::after{content:"";width:34%;aspect-ratio:1;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(120,255,219,.95);position:absolute;z-index:4}.sq.capture{box-shadow:inset 0 0 0 5px var(--red)}.sq.last{box-shadow:inset 0 0 0 3px rgba(255,225,122,.7)}
     .piece{font-size:clamp(1.25rem,4.6vw,3.6rem);line-height:1;max-width:90%;max-height:90%;filter:drop-shadow(0 4px 3px rgba(0,0,0,.5));pointer-events:none}.coord{position:absolute;left:3px;top:2px;font-size:clamp(.38rem,.8vw,.6rem);font-weight:950;opacity:.92;pointer-events:none}.sq.light .coord{color:#0a2942}.sq.dark .coord{color:#e8f8ff}
     .status{padding:12px;border:1px solid #37658f;border-radius:13px;background:#061226;font-weight:850;line-height:1.45;margin-bottom:10px}.status.good{border-color:#54e8bb;color:var(--green)}.status.busy{border-color:#ffe17a;color:var(--gold)}.status.bad{border-color:#ff879e;color:var(--red)}
-    .actions{display:grid;gap:8px}.actions button,.actions a{min-height:44px;padding:10px 12px;border:1px solid #8eeaff;border-radius:11px;background:#11375f;color:#fff;font-weight:900;text-decoration:none;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation}.actions .primary{border-color:#baffef;background:linear-gradient(180deg,#80ffdc,#28c79e);color:#031812}.actions .legacy{border-color:#ffe17a;color:#ffeeb0;background:#3b2909}
-    .info{margin-top:12px;padding-top:12px;border-top:1px solid rgba(100,161,215,.25);font-size:.74rem;line-height:1.55;color:var(--muted)}.info strong{color:var(--cyan)}#moves{max-height:230px;overflow:auto;margin:9px 0 0;padding-left:22px;font-size:.75rem;color:#d8e9f5}#moves li{margin:4px 0}.selected-readout,.save-readout{margin-top:9px;padding:8px;border:1px dashed rgba(112,231,255,.4);border-radius:9px;color:#d9f4ff;font-size:.7rem;text-align:center}.save-readout{border-color:rgba(120,255,219,.35);color:#bfffe8}
-    .notice{margin-bottom:10px;padding:9px 10px;border:1px solid rgba(112,231,255,.35);border-radius:10px;background:rgba(5,24,45,.7);color:#ccecff;font-size:.7rem;line-height:1.45}
+    .actions{display:grid;gap:8px}.actions button,.actions a{min-height:43px;padding:9px 11px;border:1px solid #8eeaff;border-radius:11px;background:#11375f;color:#fff;font-weight:900;text-decoration:none;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation}.actions .primary{border-color:#baffef;background:linear-gradient(180deg,#80ffdc,#28c79e);color:#031812}.actions .legacy{border-color:#ffe17a;color:#ffeeb0;background:#3b2909}.actions button:disabled{opacity:.45;cursor:not-allowed}
+    .online-card{margin-top:10px;padding:10px;border:1px solid rgba(112,231,255,.35);border-radius:12px;background:rgba(4,18,38,.82)}.online-card h2{margin:0 0 8px;color:var(--cyan);font-size:.82rem;letter-spacing:.06em;text-transform:uppercase}.field{display:grid;gap:4px;margin:7px 0}.field label,.check{color:#bfd5e8;font-size:.67rem;font-weight:800}.field input{width:100%;min-height:40px;padding:8px 10px;border:1px solid #355f87;border-radius:9px;background:#030b18;color:#fff;font:800 .76rem system-ui}.check{display:flex;align-items:center;gap:7px;margin:8px 0}.check input{accent-color:#55dfbb}.online-buttons{display:grid;grid-template-columns:1fr 1fr;gap:7px}.online-buttons button{min-height:40px;padding:8px;border:1px solid #75cfff;border-radius:9px;background:#11375f;color:#fff;font-weight:900;cursor:pointer}.online-buttons .launch{border-color:#baffef;background:#2dbb96;color:#021711}.online-buttons button:disabled{opacity:.45}
+    .readout{margin-top:8px;padding:8px;border:1px dashed rgba(112,231,255,.38);border-radius:9px;color:#d9f4ff;font-size:.69rem;line-height:1.45;text-align:center}.readout.good{border-color:rgba(120,255,219,.5);color:#bfffe8}.readout.bad{border-color:rgba(255,135,158,.5);color:#ffb7c5}
+    .info{margin-top:12px;padding-top:12px;border-top:1px solid rgba(100,161,215,.25);font-size:.74rem;line-height:1.55;color:var(--muted)}.info strong{color:var(--cyan)}#moves{max-height:190px;overflow:auto;margin:9px 0 0;padding-left:22px;font-size:.75rem;color:#d8e9f5}#moves li{margin:4px 0}.notice{margin-bottom:10px;padding:9px 10px;border:1px solid rgba(112,231,255,.35);border-radius:10px;background:rgba(5,24,45,.7);color:#ccecff;font-size:.7rem;line-height:1.45}
     @media(max-width:820px){.layout{grid-template-columns:1fr}.side{position:static}.tier-stack{gap:15px}.tier-row{gap:10px}.tier-shell{padding:24px 6px 7px}.tier-shell.home{width:100%}.piece{font-size:clamp(1rem,7vw,2.7rem)}.tier-title{font-size:.5rem}.battlefield{padding:8px}}
     @media(max-width:520px){body{padding:5px}.top,.panel{border-radius:13px}.tier-row{grid-template-columns:1fr}.tier-shell.nexus-left,.tier-shell.nexus-right,.tier-shell.void,.tier-shell.silver{transform:none}.nexus-board{aspect-ratio:1.2/1}.piece{font-size:clamp(1.35rem,11vw,3rem)}.brand-mark{width:38px;height:38px}}
   </style>
@@ -31,8 +32,8 @@
 <body>
 <main>
   <header class="top">
-    <div class="brand-line"><span class="brand-mark">✦</span><div><h1>Astralis Nova Multi-Tier Chess</h1><p>One clean controller across four command tiers, with local autosave and Nova commanding Black.</p></div></div>
-    <span class="badge">CLEAN CONTROLLER V19</span>
+    <div class="brand-line"><span class="brand-mark">✦</span><div><h1>Astralis Nova Multi-Tier Chess</h1><p>Clean four-tier controller with local Nova AI and guarded online missions.</p></div></div>
+    <span class="badge">ONLINE CONTROLLER V20</span>
   </header>
   <div class="layout">
     <section class="panel battlefield">
@@ -46,145 +47,30 @@
       </div>
     </section>
     <aside class="panel side">
-      <div class="notice"><strong>Main portal promoted.</strong> The working safe controller now powers this page. The previous D1 online portal is preserved separately.</div>
-      <div id="status" class="status">Loading clean multi-tier controller…</div>
+      <div class="notice"><strong>V20 guarded networking:</strong> local play remains available even when D1 is offline. Online moves are server-confirmed before the turn advances.</div>
+      <div id="status" class="status">Loading clean controller…</div>
       <div class="actions">
-        <button id="reset" class="primary" type="button">New Multi-Tier Game</button>
+        <button id="newLocal" class="primary" type="button">New Local Game</button>
         <button id="flip" type="button">Rotate All Tiers</button>
         <a href="./standard-safe.html?build=s2">Standard Board</a>
-        <a class="legacy" href="./legacy-online.html">Legacy Online Missions</a>
+        <a class="legacy" href="./legacy-online.html">Legacy Online Archive</a>
         <a href="../">Return to Astralis Nova</a>
       </div>
-      <div id="selectedReadout" class="selected-readout">Selected: none</div>
-      <div id="saveReadout" class="save-readout">Autosave: initializing</div>
-      <div class="info">
-        <strong>How to command</strong><br>
-        Tap a white piece, then tap a glowing destination. Start with <strong>E2</strong> on the Silver tier. E3 and E4 appear on Starboard Nexus. Nova answers automatically.
-        <ol id="moves"><li>No moves yet.</li></ol>
-      </div>
+      <section class="online-card">
+        <h2>Online Mission</h2>
+        <div class="field"><label for="commanderName">Commander name</label><input id="commanderName" maxlength="32" placeholder="Commander One"></div>
+        <label class="check"><input id="novaTakeover" type="checkbox" checked> Nova controls Black until a challenger joins</label>
+        <div class="online-buttons"><button id="createOnline" class="launch" type="button">Create</button><button id="copyInvite" type="button" disabled>Copy Invite</button></div>
+        <div class="field"><label for="joinCode">Join code</label><input id="joinCode" maxlength="12" placeholder="NOVA-1234" autocapitalize="characters"></div>
+        <div class="online-buttons"><button id="joinOnline" class="launch" type="button">Join</button><button id="syncOnline" type="button" disabled>Sync</button><button id="leaveOnline" type="button" disabled>Leave Online</button></div>
+        <div id="onlineReadout" class="readout">D1 status: checking…</div>
+      </section>
+      <div id="selectedReadout" class="readout">Selected: none</div>
+      <div id="saveReadout" class="readout good">Local autosave: initializing</div>
+      <div class="info"><strong>How to command</strong><br>Local game: White versus Nova. Online game: create a mission, share the invite link, and a challenger can replace Nova as Black without resetting the position.<ol id="moves"><li>No moves yet.</li></ol></div>
     </aside>
   </div>
 </main>
-<script type="module">
-  import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
-
-  const BUILD='v19';
-  const SAVE_KEY='novaChessCleanMultiTierV19';
-  const SYMBOLS={w:{k:'♔',q:'♕',r:'♖',b:'♗',n:'♘',p:'♙'},b:{k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'}};
-  const FILES=['a','b','c','d','e','f','g','h'];
-  const BOARDS={VD:{files:FILES,ranks:[8,7]},NP:{files:['a','b','c','d'],ranks:[6,5,4,3]},NS:{files:['e','f','g','h'],ranks:[6,5,4,3]},SD:{files:FILES,ranks:[2,1]}};
-  const status=document.getElementById('status');
-  const moveList=document.getElementById('moves');
-  const selectedReadout=document.getElementById('selectedReadout');
-  const saveReadout=document.getElementById('saveReadout');
-  let game=new Chess();
-  let selected=null;
-  let legal=[];
-  let orientation='white';
-  let aiThinking=false;
-  let lastMove=null;
-
-  function setStatus(message,type=''){status.textContent=message;status.className=`status ${type}`.trim()}
-  function ordered(values){return orientation==='white'?values:[...values].reverse()}
-
-  function restoreGame(){
-    try{
-      const saved=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');
-      if(saved?.pgn){const restored=new Chess();restored.loadPgn(saved.pgn);game=restored}
-      if(saved?.orientation==='black')orientation='black';
-      if(saved?.lastMove?.from&&saved?.lastMove?.to)lastMove=saved.lastMove;
-      if(saved?.pgn){saveReadout.textContent='Autosave: restored previous game';setStatus(game.turn()==='b'?'Restored during Nova’s turn. Nova is resuming…':'Previous game restored. White to move.','good');return true}
-    }catch(error){console.warn('Clean chess restore failed',error);localStorage.removeItem(SAVE_KEY)}
-    saveReadout.textContent='Autosave: ready';return false;
-  }
-
-  function saveGame(){
-    try{
-      localStorage.setItem(SAVE_KEY,JSON.stringify({build:BUILD,pgn:game.pgn(),orientation,lastMove,savedAt:new Date().toISOString()}));
-      saveReadout.textContent=`Autosave: ${new Date().toLocaleTimeString()}`;
-    }catch(error){saveReadout.textContent='Autosave unavailable';console.warn('Clean chess save failed',error)}
-  }
-
-  function render(){
-    for(const [id,layout] of Object.entries(BOARDS)){
-      const board=document.getElementById(id);board.replaceChildren();
-      for(const rank of ordered(layout.ranks))for(const file of ordered(layout.files)){
-        const square=`${file}${rank}`;
-        const piece=game.get(square);
-        const button=document.createElement('button');
-        button.type='button';button.className=`sq ${(FILES.indexOf(file)+rank)%2===0?'dark':'light'}`;button.dataset.square=square;button.dataset.board=id;
-        if(selected===square)button.classList.add('selected');
-        if(lastMove&&(lastMove.from===square||lastMove.to===square))button.classList.add('last');
-        const route=legal.find(move=>move.to===square);if(route)button.classList.add(route.captured?'capture':'legal');
-        button.innerHTML=`<span class="coord">${square.toUpperCase()}</span>${piece?`<span class="piece">${SYMBOLS[piece.color][piece.type]}</span>`:''}`;
-        button.addEventListener('pointerup',event=>{event.preventDefault();event.stopPropagation();handleSquare(square)});
-        board.append(button);
-      }
-    }
-    selectedReadout.textContent=selected?`Selected: ${selected.toUpperCase()} · legal: ${legal.map(move=>move.to.toUpperCase()).join(', ')||'none'}`:'Selected: none';
-    renderMoves();
-  }
-
-  function handleSquare(square){
-    if(aiThinking)return setStatus('Nova is calculating Black’s move.','busy');
-    if(game.isGameOver())return setStatus('This game has ended. Start a new game.','bad');
-    if(game.turn()!=='w')return setStatus('Nova currently holds the Black turn.','busy');
-    const destination=legal.find(move=>move.to===square);
-    if(selected&&destination){
-      try{
-        const move=game.move({from:selected,to:square,promotion:destination.promotion||'q'});
-        lastMove={from:move.from,to:move.to};selected=null;legal=[];saveGame();render();
-        setStatus(`White played ${move.san}. Nova is calculating…`,'good');window.setTimeout(makeAiMove,550);
-      }catch(error){selected=null;legal=[];setStatus(`Move failed: ${error.message}`,'bad');render()}
-      return;
-    }
-    const piece=game.get(square);
-    if(piece?.color==='w'){
-      selected=square;legal=game.moves({square,verbose:true});
-      const destinations=legal.map(move=>move.to.toUpperCase()).join(', ');
-      setStatus(legal.length?`${square.toUpperCase()} selected. Legal destinations: ${destinations}.`:`${square.toUpperCase()} is blocked.`,legal.length?'good':'bad');
-    }else{selected=null;legal=[];setStatus('Tap one of your white pieces on the Silver tier. Start with E2.')}
-    render();
-  }
-
-  function makeAiMove(){
-    if(game.isGameOver())return finishStatus();
-    aiThinking=true;setStatus('Nova is calculating Black’s reply…','busy');
-    const moves=game.moves({verbose:true});
-    const value={p:1,n:3,b:3.2,r:5,q:9,k:0};let best=-Infinity,candidates=[];
-    for(const move of moves){
-      let score=(move.captured?value[move.captured]*10:0)+(move.promotion?value[move.promotion]*5:0)+(move.san.includes('+')?2:0)+Math.random();
-      if(['d4','e4','d5','e5'].includes(move.to))score+=1.2;
-      if(score>best+.05){best=score;candidates=[move]}else if(Math.abs(score-best)<=.05)candidates.push(move);
-    }
-    const choice=candidates[Math.floor(Math.random()*candidates.length)]||moves[0];
-    if(choice){const made=game.move({from:choice.from,to:choice.to,promotion:choice.promotion||'q'});lastMove={from:made.from,to:made.to}}
-    aiThinking=false;saveGame();render();
-    if(game.isGameOver())finishStatus();else setStatus(`Nova played ${choice?.san||'a move'}. White to move.`,'good');
-  }
-
-  function finishStatus(){
-    saveGame();
-    if(game.isCheckmate())setStatus(game.turn()==='w'?'Nova wins by checkmate.':'White wins by checkmate.','good');
-    else setStatus('Game ended in a draw.','good');
-  }
-
-  function renderMoves(){
-    const history=game.history();moveList.replaceChildren();
-    if(!history.length){const li=document.createElement('li');li.textContent='No moves yet.';moveList.append(li);return}
-    for(let i=0;i<history.length;i+=2){const li=document.createElement('li');li.textContent=`${Math.floor(i/2)+1}. ${history[i]||''}${history[i+1]?`  ${history[i+1]}`:''}`;moveList.append(li)}
-  }
-
-  document.getElementById('reset').addEventListener('click',()=>{
-    game=new Chess();selected=null;legal=[];aiThinking=false;lastMove=null;localStorage.removeItem(SAVE_KEY);saveGame();setStatus('New multi-tier game. White to move. Tap E2.','good');render();
-  });
-  document.getElementById('flip').addEventListener('click',()=>{orientation=orientation==='white'?'black':'white';saveGame();render()});
-  window.addEventListener('error',event=>setStatus(`Controller error: ${event.message}`,'bad'));
-  window.addEventListener('unhandledrejection',event=>setStatus(`Controller error: ${event.reason?.message||event.reason}`,'bad'));
-
-  const restored=restoreGame();render();
-  if(!restored)setStatus('Clean controller ready. White to move. Tap E2.','good');
-  if(game.turn()==='b'&&!game.isGameOver())window.setTimeout(makeAiMove,450);
-</script>
+<script type="module" src="./controller-v20.js?v=20"></script>
 </body>
 </html>
