@@ -1,6 +1,6 @@
 import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
 
-const BUILD='v20';
+const BUILD='v22';
 const LOCAL_KEY='novaChessLocalV20';
 const SYMBOLS={w:{k:'♔',q:'♕',r:'♖',b:'♗',n:'♘',p:'♙'},b:{k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'}};
 const FILES=['a','b','c','d','e','f','g','h'];
@@ -20,6 +20,8 @@ let lastMove=null;
 let busy=false;
 let aiThinking=false;
 let onlineMode=false;
+
+installCheckStyles();
 
 const core={
   onHumanMove:null,
@@ -42,10 +44,23 @@ const core={
   resetLocal,
   boardFor,
   winner,
+  checkNotice,
 };
 
 window.NovaChessCore=core;
 window.dispatchEvent(new CustomEvent('nova-chess-core-ready'));
+
+function installCheckStyles(){
+  if(document.getElementById('novaCheckStyles'))return;
+  const style=document.createElement('style');
+  style.id='novaCheckStyles';
+  style.textContent=`
+    .sq.check{outline:4px solid #ff607d;outline-offset:-4px;animation:nova-check-pulse 1.05s ease-in-out infinite;z-index:5}
+    .sq.check .coord{color:#fff!important;background:#b20d32;border-radius:4px;padding:2px;text-shadow:none!important}
+    @keyframes nova-check-pulse{0%,100%{filter:none}50%{filter:drop-shadow(0 0 11px #ff607d)}}
+  `;
+  document.head.append(style);
+}
 
 function setStatus(message,type=''){
   statusEl.textContent=message;
@@ -54,6 +69,7 @@ function setStatus(message,type=''){
 
 function ordered(values){return orientation==='white'?values:[...values].reverse()}
 function turnName(){return game.turn()==='w'?'white':'black'}
+function capitalize(value){return value.charAt(0).toUpperCase()+value.slice(1)}
 function boardFor(square){
   const rank=Number(square[1]);
   if(rank>=7)return'VD';
@@ -62,7 +78,37 @@ function boardFor(square){
 }
 function clearSelection(){selected=null;legal=[]}
 
+function findKingSquare(color){
+  for(const file of FILES){
+    for(let rank=1;rank<=8;rank+=1){
+      const square=`${file}${rank}`;
+      const piece=game.get(square);
+      if(piece?.type==='k'&&piece.color===color)return square;
+    }
+  }
+  return null;
+}
+
+function legalReplyText(limit=8){
+  const replies=[];
+  const seen=new Set();
+  for(const move of game.moves({verbose:true})){
+    const label=`${move.from.toUpperCase()}→${move.to.toUpperCase()}`;
+    if(seen.has(label))continue;
+    seen.add(label);
+    replies.push(label);
+    if(replies.length>=limit)break;
+  }
+  return replies.join(', ')||'none';
+}
+
+function checkNotice(prefix=''){
+  if(!game.isCheck())return prefix;
+  return `${prefix}${capitalize(turnName())} king is in check. Legal replies: ${legalReplyText()}.`;
+}
+
 function render(){
+  const checkedKing=game.isCheck()?findKingSquare(game.turn()):null;
   for(const [id,layout] of Object.entries(BOARDS)){
     const board=document.getElementById(id);
     if(!board)continue;
@@ -75,6 +121,7 @@ function render(){
       button.className=`sq ${(FILES.indexOf(file)+rank)%2===0?'dark':'light'}`;
       button.dataset.square=square;
       if(selected===square)button.classList.add('selected');
+      if(checkedKing===square)button.classList.add('check');
       if(lastMove&&(lastMove.from===square||lastMove.to===square))button.classList.add('last');
       const route=legal.find(move=>move.to===square);
       if(route)button.classList.add(route.captured?'capture':'legal');
@@ -89,7 +136,9 @@ function render(){
   }
   selectedReadout.textContent=selected
     ?`Selected: ${selected.toUpperCase()} · legal: ${legal.map(move=>move.to.toUpperCase()).join(', ')||'none'}`
-    :'Selected: none';
+    :game.isCheck()
+      ?`CHECK · legal replies: ${legalReplyText()}`
+      :'Selected: none';
   renderMoves();
 }
 
@@ -129,15 +178,26 @@ async function handleSquare(square){
   if(piece?.color===game.turn()){
     selected=square;
     legal=game.moves({square,verbose:true});
-    setStatus(
-      legal.length
-        ?`${square.toUpperCase()} selected. Choose ${legal.map(move=>move.to.toUpperCase()).join(', ')}.`
-        :`${square.toUpperCase()} is blocked.`,
-      legal.length?'good':'bad'
-    );
+    if(legal.length){
+      setStatus(
+        game.isCheck()
+          ?`${square.toUpperCase()} can answer the check. Choose ${legal.map(move=>move.to.toUpperCase()).join(', ')}.`
+          :`${square.toUpperCase()} selected. Choose ${legal.map(move=>move.to.toUpperCase()).join(', ')}.`,
+        'good'
+      );
+    }else if(game.isCheck()){
+      setStatus(`${capitalize(turnName())} king is in check. ${square.toUpperCase()} cannot answer it. Legal replies: ${legalReplyText()}.`,'bad');
+    }else{
+      setStatus(`${square.toUpperCase()} is blocked.`,'bad');
+    }
   }else{
     clearSelection();
-    setStatus(`Select one of your ${turnName()} pieces.`,'');
+    setStatus(
+      game.isCheck()
+        ?checkNotice()
+        :`Select one of your ${turnName()} pieces.`,
+      game.isCheck()?'bad':''
+    );
   }
   render();
 }
@@ -170,7 +230,7 @@ async function commitHumanMove(from,to,destination){
 
 function snapshot(){
   return{
-    version:20,
+    version:22,
     fen:game.fen(),
     pgn:game.pgn(),
     lastMove,
@@ -246,6 +306,7 @@ function makeLocalAiMove(){
   aiThinking=false;
   saveLocal();
   if(game.isGameOver())finishStatus();
+  else if(game.isCheck())setStatus(checkNotice(`Nova played ${made?.san||'a move'}. `),'bad');
   else setStatus(`Nova played ${made?.san||'a move'}. White to move.`,'good');
 }
 
@@ -317,4 +378,5 @@ window.addEventListener('unhandledrejection',event=>setStatus(`Controller error:
 
 if(!restoreLocal())setStatus('Local game ready. White to move.','good');
 else if(game.turn()==='b')window.setTimeout(makeLocalAiMove,450);
+else if(game.isCheck())setStatus(checkNotice('Restored position. '),'bad');
 render();
