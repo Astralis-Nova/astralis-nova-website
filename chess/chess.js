@@ -41,7 +41,7 @@ async function interceptFetch(input,init={}){
     const enabled=await callAi('enable',{id:data.game.id,token:data.token});
     data.game=enabled.game;
     track(data.game);recoverToken(data.game);
-    return jsonResponse(response,data);
+    return jsonResponse(response,publicData(data));
   }
 
   if(data?.game){track(data.game);recoverToken(data.game)}
