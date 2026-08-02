@@ -55,10 +55,10 @@ function configureOnline(){
 
 function updateControls(){
   const connected=Boolean(session&&onlineGame);
-  createButton.disabled=networkBusy;
-  joinButton.disabled=networkBusy;
+  createButton.disabled=networkBusy||connected;
+  joinButton.disabled=networkBusy||connected;
   copyButton.disabled=!connected;
-  syncButton.disabled=!connected;
+  syncButton.disabled=!connected||networkBusy;
   leaveButton.disabled=!connected;
 }
 
@@ -183,8 +183,25 @@ function applyServerGame(serverGame){
   updateControls();
 }
 
+async function activateNovaForWaitingMission(){
+  if(!session||session.color!=='white'||onlineGame?.status!=='waiting'||!novaTakeover.checked)return false;
+  try{
+    const data=await api('../api/chess-ai?action=enable',{
+      method:'POST',
+      body:JSON.stringify({id:session.id,token:session.token})
+    });
+    applyServerGame(data.game);
+    core.setStatus('Nova activated as Black. White to move.','good');
+    return true;
+  }catch(error){
+    setOnline(`${onlineGame.code} created and waiting · Nova activation failed: ${error.message}`,'bad');
+    core.setStatus('Mission exists, but Nova could not take Black yet. A human may still join with the code.','bad');
+    return false;
+  }
+}
+
 async function createOnline(){
-  if(networkBusy)return;
+  if(networkBusy||session)return;
   networkBusy=true;
   core.setBusy(true);
   updateControls();
@@ -194,7 +211,7 @@ async function createOnline(){
     localStorage.setItem('novaChessName',name);
     core.resetLocal();
 
-    let data=await api('../api/chess?action=create',{
+    const data=await api('../api/chess?action=create',{
       method:'POST',
       body:JSON.stringify({mode:MODE,name,state:core.snapshot()})
     });
@@ -202,30 +219,18 @@ async function createOnline(){
     session={id:data.game.id,code:data.game.code,token:data.token,color:'white'};
     onlineGame=data.game;
     saveSession();
-
-    if(novaTakeover.checked){
-      data=await api('../api/chess-ai?action=enable',{
-        method:'POST',
-        body:JSON.stringify({id:session.id,token:session.token})
-      });
-      onlineGame=data.game;
-    }
-
     applyServerGame(onlineGame);
     startPolling();
-    core.setStatus(
-      onlineGame.status==='active_ai'
-        ?'Online mission created. White to move against Nova.'
-        :'Mission created. Waiting for a challenger.',
-      'good'
-    );
-  }catch(error){
-    setOnline(`Create failed: ${error.message}`,'bad');
-    core.setStatus(`Online mission could not start: ${error.message}`,'bad');
-    if(session&&onlineGame){
-      applyServerGame(onlineGame);
-      startPolling();
+
+    const activated=await activateNovaForWaitingMission();
+    if(!activated&&onlineGame.status==='waiting'){
+      core.setStatus('Mission created. Waiting for a human challenger.','good');
+    }else if(onlineGame.status==='active_ai'){
+      core.setStatus('Online mission created. White to move against Nova.','good');
     }
+  }catch(error){
+    setOnline(`Create failed before a mission code was issued: ${error.message}`,'bad');
+    core.setStatus(`Online mission was not created: ${error.message}`,'bad');
   }finally{
     networkBusy=false;
     core.setBusy(false);
@@ -234,7 +239,7 @@ async function createOnline(){
 }
 
 async function joinOnline(){
-  if(networkBusy)return;
+  if(networkBusy||session)return;
   networkBusy=true;
   core.setBusy(true);
   updateControls();
@@ -278,13 +283,17 @@ async function syncOnline(silent=false){
       ||data.game.status!==onlineGame.status;
     applyServerGame(data.game);
 
+    if(data.game.status==='waiting'&&session.color==='white'&&novaTakeover.checked){
+      await activateNovaForWaitingMission();
+    }
+
     if(changed&&!silent){
-      core.setStatus(`Mission synchronized. ${data.game.currentTurn} to move.`,'good');
+      core.setStatus(`Mission synchronized. ${onlineGame.currentTurn} to move.`,'good');
     }
 
     if(
-      data.game.status==='active_ai'
-      &&data.game.currentTurn==='black'
+      onlineGame.status==='active_ai'
+      &&onlineGame.currentTurn==='black'
       &&session.color==='white'
       &&!networkBusy
       &&!core.busy
@@ -303,10 +312,7 @@ function startPolling(){
 }
 
 function stopPolling(){
-  if(pollTimer){
-    clearInterval(pollTimer);
-    pollTimer=null;
-  }
+  if(pollTimer){clearInterval(pollTimer);pollTimer=null}
   clearTimeout(aiTimer);
 }
 
@@ -321,9 +327,13 @@ async function resumeOnline(){
     const data=await api(`../api/chess?action=get&id=${encodeURIComponent(session.id)}`,{method:'GET'});
     applyServerGame(data.game);
     startPolling();
-    core.setStatus(`Online mission restored. ${data.game.currentTurn} to move.`,'good');
 
-    if(data.game.status==='active_ai'&&data.game.currentTurn==='black'&&session.color==='white'){
+    if(data.game.status==='waiting'&&session.color==='white'&&novaTakeover.checked){
+      await activateNovaForWaitingMission();
+    }
+
+    core.setStatus(`Online mission restored. ${onlineGame.currentTurn} to move.`,'good');
+    if(onlineGame.status==='active_ai'&&onlineGame.currentTurn==='black'&&session.color==='white'){
       aiTimer=setTimeout(()=>void makeOnlineAiMove(),500);
     }
     return true;
@@ -365,24 +375,15 @@ async function copyInvite(){
   try{
     await navigator.clipboard.writeText(url.href);
     setOnline(`Invite copied: ${session.code}`,'good');
-  }catch{
-    window.prompt('Copy this invite link:',url.href);
-  }
+  }catch{window.prompt('Copy this invite link:',url.href)}
 }
 
 function cleanName(value){
-  return String(value||'Commander')
-    .trim()
-    .replace(/[<>]/g,'')
-    .slice(0,32)||'Commander';
+  return String(value||'Commander').trim().replace(/[<>]/g,'').slice(0,32)||'Commander';
 }
 
 function normalizeCode(value){
-  return String(value||'')
-    .trim()
-    .toUpperCase()
-    .replace(/[^A-Z0-9-]/g,'')
-    .slice(0,12);
+  return String(value||'').trim().toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,12);
 }
 
 async function api(url,options={}){
