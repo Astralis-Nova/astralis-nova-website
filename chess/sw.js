@@ -1,5 +1,5 @@
-const CACHE = 'astralis-nova-chess-v15';
-const ASSETS = ['./','./index.html','./chess.css','./chess.js?v=15','./coordinate-guide.js?v=15','./trideck-engine.js','./pieces.js','./icon.svg','./manifest.webmanifest'];
+const CACHE = 'astralis-nova-chess-v16';
+const ASSETS = ['./','./index.html','./chess.css','./chess.js?v=15','./coordinate-guide.js?v=15','./move-repair.js?v=16','./trideck-engine.js','./pieces.js','./icon.svg','./manifest.webmanifest'];
 self.addEventListener('install', event => event.waitUntil(
   caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting())
 ));
