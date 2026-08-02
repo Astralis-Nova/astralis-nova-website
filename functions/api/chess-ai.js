@@ -60,10 +60,9 @@ async function makeMove(request,db){
   if(!gameOver&&nextTurn!==expectedNext)throw http(400,'The next-turn value is invalid.');
   if(gameOver&&winner&&![actor,'draw'].includes(winner))throw http(400,'The reported winner is invalid.');
   const nextRevision=revision+1,status=gameOver?'finished':'active_ai',safeWinner=gameOver?winner:null,notation=cleanNotation(body.move?.notation);
-  const update=db.prepare(`UPDATE chess_games SET state_json=?,current_turn=?,revision=?,status=?,winner=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND revision=? AND current_turn=? AND status='active_ai' AND black_token_hash IS NULL`).bind(stateJson,gameOver?actor:nextTurn,nextRevision,status,safeWinner,id,revision,actor);
-  const insert=db.prepare(`INSERT INTO chess_moves (game_id,revision,player_color,notation,move_json,created_at) VALUES (?,?,?,?,?,CURRENT_TIMESTAMP)`).bind(id,nextRevision,actor,notation,moveJson);
-  const results=await db.batch([update,insert]);
-  if(!results?.[0]?.meta?.changes)throw http(409,asAi?'A human commander claimed Black before Nova moved.':'The board changed before the move was saved.');
+  const update=await db.prepare(`UPDATE chess_games SET state_json=?,current_turn=?,revision=?,status=?,winner=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND revision=? AND current_turn=? AND status='active_ai' AND black_token_hash IS NULL`).bind(stateJson,gameOver?actor:nextTurn,nextRevision,status,safeWinner,id,revision,actor).run();
+  if(!update?.meta?.changes)throw http(409,asAi?'A human commander claimed Black before Nova moved.':'The board changed before the move was saved.');
+  await db.prepare(`INSERT INTO chess_moves (game_id,revision,player_color,notation,move_json,created_at) VALUES (?,?,?,?,?,CURRENT_TIMESTAMP)`).bind(id,nextRevision,actor,notation,moveJson).run();
   return reply({game:serialize(await find(db,{id})),aiMove:asAi});
 }
 
