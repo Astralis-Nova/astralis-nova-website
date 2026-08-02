@@ -35,7 +35,10 @@ function installGuide(){
 
   stage.addEventListener('click',()=>queueGuide(70));
   const observer=new MutationObserver(()=>queueGuide(25));
-  observer.observe(stage,{childList:true,subtree:true});
+  for(const id of ['standardBoard','voidPlatformBoard','portNexusBoard','starboardNexusBoard','silverPlatformBoard']){
+    const board=document.getElementById(id);
+    if(board)observer.observe(board,{childList:true});
+  }
 }
 
 function queueGuide(delay=30){
