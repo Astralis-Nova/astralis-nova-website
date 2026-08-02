@@ -11,20 +11,20 @@
     main{width:min(1040px,100%);margin:auto}.top,.panel{border:1px solid var(--line);border-radius:18px;background:rgba(7,17,36,.95);box-shadow:0 18px 48px rgba(0,0,0,.38)}
     .top{padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.top h1{margin:0;color:var(--cyan);font-size:clamp(1.35rem,4vw,2.3rem)}.top p{margin:5px 0 0;color:#b8cde1;font-size:.8rem}.badge{padding:6px 9px;border:1px solid #80ffe0;border-radius:999px;color:var(--green);font-weight:950;font-size:.68rem;letter-spacing:.06em}
     .layout{display:grid;grid-template-columns:minmax(260px,1fr) minmax(220px,300px);gap:12px}.board-panel{padding:12px}.side{padding:14px;align-self:start;position:sticky;top:10px}
-    #board{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;width:100%;max-width:720px;margin:auto;border:3px solid #9eeaff;box-shadow:0 0 0 5px #061123,0 20px 55px rgba(0,0,0,.55),0 0 32px rgba(60,201,255,.25);touch-action:manipulation;user-select:none}
-    .sq{position:relative;border:0;padding:0;display:grid;place-items:center;background:var(--light);color:#102438;cursor:pointer;touch-action:manipulation}.sq.dark{background:var(--dark);color:#effbff}.sq.selected{box-shadow:inset 0 0 0 5px var(--gold),inset 0 0 24px rgba(255,225,122,.55)}.sq.legal::after{content:"";width:28%;aspect-ratio:1;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(120,255,219,.95);position:absolute}.sq.capture{box-shadow:inset 0 0 0 5px var(--red)}
-    .piece{font-size:clamp(1.8rem,7vw,4.8rem);line-height:1;filter:drop-shadow(0 5px 4px rgba(0,0,0,.48));pointer-events:none}.coord{position:absolute;left:3px;top:2px;font-size:clamp(.45rem,1.1vw,.7rem);font-weight:950;opacity:.9;pointer-events:none}.sq.light .coord{color:#0a2942}.sq.dark .coord{color:#e8f8ff}
+    #board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));aspect-ratio:1/1;width:min(100%,720px);height:auto;margin:auto;border:3px solid #9eeaff;box-shadow:0 0 0 5px #061123,0 20px 55px rgba(0,0,0,.55),0 0 32px rgba(60,201,255,.25);touch-action:manipulation;user-select:none;overflow:hidden}
+    .sq{position:relative;border:0;padding:0;margin:0;min-width:0;min-height:0;width:100%;height:100%;display:grid;place-items:center;overflow:hidden;background:var(--light);color:#102438;cursor:pointer;touch-action:manipulation}.sq.dark{background:var(--dark);color:#effbff}.sq.selected{box-shadow:inset 0 0 0 5px var(--gold),inset 0 0 24px rgba(255,225,122,.55)}.sq.legal::after{content:"";width:28%;aspect-ratio:1;border-radius:50%;background:var(--green);box-shadow:0 0 18px rgba(120,255,219,.95);position:absolute}.sq.capture{box-shadow:inset 0 0 0 5px var(--red)}
+    .piece{font-size:clamp(1.7rem,7vw,4.6rem);line-height:1;max-width:88%;max-height:88%;filter:drop-shadow(0 5px 4px rgba(0,0,0,.48));pointer-events:none}.coord{position:absolute;left:3px;top:2px;font-size:clamp(.42rem,1vw,.68rem);font-weight:950;opacity:.9;pointer-events:none}.sq.light .coord{color:#0a2942}.sq.dark .coord{color:#e8f8ff}
     .status{padding:12px;border:1px solid #37658f;border-radius:13px;background:#061226;font-weight:850;line-height:1.45;margin-bottom:10px}.status.good{border-color:#54e8bb;color:var(--green)}.status.busy{border-color:#ffe17a;color:var(--gold)}.status.bad{border-color:#ff879e;color:var(--red)}
     .actions{display:grid;gap:8px}.actions button,.actions a{min-height:45px;padding:10px 12px;border:1px solid #8eeaff;border-radius:11px;background:#11375f;color:#fff;font-weight:900;text-decoration:none;display:flex;align-items:center;justify-content:center;cursor:pointer}.actions .primary{border-color:#baffef;background:linear-gradient(180deg,#80ffdc,#28c79e);color:#031812}
     .info{margin-top:12px;padding-top:12px;border-top:1px solid rgba(100,161,215,.25);font-size:.74rem;line-height:1.55;color:#b9cee2}.info strong{color:var(--cyan)}#moves{max-height:240px;overflow:auto;margin:9px 0 0;padding-left:22px;font-size:.75rem;color:#d8e9f5}#moves li{margin:4px 0}
-    @media(max-width:760px){.layout{grid-template-columns:1fr}.side{position:static}.piece{font-size:clamp(1.7rem,11vw,4rem)}body{padding:7px}.top,.panel{border-radius:14px}}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}.side{position:static}.piece{font-size:clamp(1.55rem,10vw,3.8rem)}body{padding:7px}.top,.panel{border-radius:14px}}
   </style>
 </head>
 <body>
 <main>
   <header class="top">
     <div><h1>Astralis Nova Standard Safe Mode</h1><p>Clean local chess controller. No saved Tri-Deck session, no online sync, no mode switching.</p></div>
-    <span class="badge">SAFE CONTROLLER S1</span>
+    <span class="badge">SAFE CONTROLLER S2</span>
   </header>
   <div class="layout">
     <section class="panel board-panel"><div id="board" aria-label="Standard chess board"></div></section>
@@ -33,6 +33,7 @@
       <div class="actions">
         <button id="reset" class="primary" type="button">New Safe Game</button>
         <button id="flip" type="button">Rotate Board</button>
+        <a href="./trideck-safe.html?build=t1">Open Multi-Tier Safe Mode</a>
         <a href="./?resume=1">Return to Tri-Deck Mission</a>
         <a href="./diagnostics.html?build=d2">Open Diagnostics</a>
       </div>
@@ -46,99 +47,50 @@
 </main>
 <script type="module">
   import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
-
   const SYMBOLS={w:{k:'♔',q:'♕',r:'♖',b:'♗',n:'♘',p:'♙'},b:{k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'}};
   const FILES=['a','b','c','d','e','f','g','h'];
-  const board=document.getElementById('board');
-  const status=document.getElementById('status');
-  const moveList=document.getElementById('moves');
-  let game=new Chess();
-  let selected=null;
-  let legal=[];
-  let orientation='white';
-  let aiThinking=false;
-
+  const board=document.getElementById('board'),status=document.getElementById('status'),moveList=document.getElementById('moves');
+  let game=new Chess(),selected=null,legal=[],orientation='white',aiThinking=false;
   function orderedFiles(){return orientation==='white'?FILES:[...FILES].reverse()}
   function orderedRanks(){return orientation==='white'?[8,7,6,5,4,3,2,1]:[1,2,3,4,5,6,7,8]}
   function setStatus(message,type=''){status.textContent=message;status.className=`status ${type}`.trim()}
-
   function render(){
     board.replaceChildren();
     for(const rank of orderedRanks())for(const file of orderedFiles()){
-      const square=`${file}${rank}`;
-      const piece=game.get(square);
-      const button=document.createElement('button');
+      const square=`${file}${rank}`,piece=game.get(square),button=document.createElement('button');
       button.type='button';button.className=`sq ${(FILES.indexOf(file)+rank)%2===0?'dark':'light'}`;button.dataset.square=square;
       if(selected===square)button.classList.add('selected');
-      const route=legal.find(move=>move.to===square);
-      if(route)button.classList.add(route.captured?'capture':'legal');
+      const route=legal.find(move=>move.to===square);if(route)button.classList.add(route.captured?'capture':'legal');
       button.innerHTML=`<span class="coord">${square.toUpperCase()}</span>${piece?`<span class="piece">${SYMBOLS[piece.color][piece.type]}</span>`:''}`;
-      button.addEventListener('pointerup',event=>{event.preventDefault();handleSquare(square)});
-      board.append(button);
+      button.addEventListener('pointerup',event=>{event.preventDefault();handleSquare(square)});board.append(button);
     }
     renderMoves();
   }
-
   function handleSquare(square){
     if(aiThinking)return setStatus('Nova is calculating Black’s move.','busy');
     if(game.isGameOver())return setStatus('This game has ended. Start a new safe game.','bad');
     if(game.turn()!=='w')return setStatus('Nova currently holds the Black turn.','busy');
-
     const destination=legal.find(move=>move.to===square);
     if(selected&&destination){
-      try{
-        const move=game.move({from:selected,to:square,promotion:destination.promotion||'q'});
-        selected=null;legal=[];render();
-        setStatus(`White played ${move.san}. Nova is calculating…`,'good');
-        window.setTimeout(makeAiMove,550);
-      }catch(error){selected=null;legal=[];setStatus(`Move failed: ${error.message}`,'bad');render()}
-      return;
+      try{const move=game.move({from:selected,to:square,promotion:destination.promotion||'q'});selected=null;legal=[];render();setStatus(`White played ${move.san}. Nova is calculating…`,'good');window.setTimeout(makeAiMove,550)}
+      catch(error){selected=null;legal=[];setStatus(`Move failed: ${error.message}`,'bad');render()}return;
     }
-
     const piece=game.get(square);
-    if(piece?.color==='w'){
-      selected=square;
-      legal=game.moves({square,verbose:true});
-      setStatus(legal.length?`${square.toUpperCase()} selected. Tap a glowing destination.`:`${square.toUpperCase()} is blocked.` ,legal.length?'good':'bad');
-    }else{
-      selected=null;legal=[];setStatus('Tap one of your white pieces. Start with E2.');
-    }
+    if(piece?.color==='w'){selected=square;legal=game.moves({square,verbose:true});setStatus(legal.length?`${square.toUpperCase()} selected. Tap a glowing destination.`:`${square.toUpperCase()} is blocked.`,legal.length?'good':'bad')}
+    else{selected=null;legal=[];setStatus('Tap one of your white pieces. Start with E2.')}
     render();
   }
-
   function makeAiMove(){
-    if(game.isGameOver())return finishStatus();
-    aiThinking=true;setStatus('Nova is calculating Black’s reply…','busy');
-    const moves=game.moves({verbose:true});
-    let best=-Infinity,candidates=[];
-    const value={p:1,n:3,b:3.2,r:5,q:9,k:0};
-    for(const move of moves){
-      let score=(move.captured?value[move.captured]*10:0)+(move.promotion?value[move.promotion]*5:0)+(move.san.includes('+')?2:0)+Math.random();
-      const center=['d4','e4','d5','e5'];if(center.includes(move.to))score+=1.2;
-      if(score>best+.05){best=score;candidates=[move]}else if(Math.abs(score-best)<=.05)candidates.push(move);
-    }
-    const choice=candidates[Math.floor(Math.random()*candidates.length)]||moves[0];
-    if(choice)game.move({from:choice.from,to:choice.to,promotion:choice.promotion||'q'});
-    aiThinking=false;render();
-    if(game.isGameOver())finishStatus();else setStatus(`Nova played ${choice?.san||'a move'}. White to move.`,'good');
+    if(game.isGameOver())return finishStatus();aiThinking=true;setStatus('Nova is calculating Black’s reply…','busy');
+    const moves=game.moves({verbose:true}),value={p:1,n:3,b:3.2,r:5,q:9,k:0};let best=-Infinity,candidates=[];
+    for(const move of moves){let score=(move.captured?value[move.captured]*10:0)+(move.promotion?value[move.promotion]*5:0)+(move.san.includes('+')?2:0)+Math.random();if(['d4','e4','d5','e5'].includes(move.to))score+=1.2;if(score>best+.05){best=score;candidates=[move]}else if(Math.abs(score-best)<=.05)candidates.push(move)}
+    const choice=candidates[Math.floor(Math.random()*candidates.length)]||moves[0];if(choice)game.move({from:choice.from,to:choice.to,promotion:choice.promotion||'q'});aiThinking=false;render();if(game.isGameOver())finishStatus();else setStatus(`Nova played ${choice?.san||'a move'}. White to move.`,'good');
   }
-
-  function finishStatus(){
-    if(game.isCheckmate())setStatus(game.turn()==='w'?'Nova wins by checkmate.':'White wins by checkmate.','good');
-    else setStatus('Game ended in a draw.','good');
-  }
-
-  function renderMoves(){
-    const history=game.history();moveList.replaceChildren();
-    if(!history.length){const li=document.createElement('li');li.textContent='No moves yet.';moveList.append(li);return}
-    for(let i=0;i<history.length;i+=2){const li=document.createElement('li');li.textContent=`${Math.floor(i/2)+1}. ${history[i]||''}${history[i+1]?`  ${history[i+1]}`:''}`;moveList.append(li)}
-  }
-
+  function finishStatus(){if(game.isCheckmate())setStatus(game.turn()==='w'?'Nova wins by checkmate.':'White wins by checkmate.','good');else setStatus('Game ended in a draw.','good')}
+  function renderMoves(){const history=game.history();moveList.replaceChildren();if(!history.length){const li=document.createElement('li');li.textContent='No moves yet.';moveList.append(li);return}for(let i=0;i<history.length;i+=2){const li=document.createElement('li');li.textContent=`${Math.floor(i/2)+1}. ${history[i]||''}${history[i+1]?`  ${history[i+1]}`:''}`;moveList.append(li)}}
   document.getElementById('reset').addEventListener('click',()=>{game=new Chess();selected=null;legal=[];aiThinking=false;setStatus('New safe game. White to move. Tap E2.','good');render()});
   document.getElementById('flip').addEventListener('click',()=>{orientation=orientation==='white'?'black':'white';render()});
-  window.addEventListener('error',event=>setStatus(`Controller error: ${event.message}`,'bad'));
-  window.addEventListener('unhandledrejection',event=>setStatus(`Controller error: ${event.reason?.message||event.reason}`,'bad'));
-
+  window.addEventListener('error',event=>setStatus(`Controller error: ${event.message}`,'bad'));window.addEventListener('unhandledrejection',event=>setStatus(`Controller error: ${event.reason?.message||event.reason}`,'bad'));
   setStatus('Safe controller ready. White to move. Tap E2.','good');render();
 </script>
 </body>
