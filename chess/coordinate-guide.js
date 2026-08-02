@@ -3,6 +3,7 @@ installCoordinateGuide();
 function installCoordinateGuide(){
   installStyles();
   installHelpPanel();
+  installModeGuard();
   labelSquares();
   const observer=new MutationObserver(labelSquares);
   for(const id of ['standardBoard','voidPlatformBoard','portNexusBoard','starboardNexusBoard','silverPlatformBoard']){
@@ -26,6 +27,9 @@ function installStyles(){
     .chess-help-panel p{margin:0;color:#d1e4f3;font:750 .72rem/1.5 Inter,system-ui,sans-serif}
     .tier-map{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:9px}
     .tier-map span{padding:6px;border:1px solid rgba(121,182,255,.2);border-radius:8px;background:rgba(2,11,28,.48);color:#c7dcf0;font:800 .59rem/1.25 Inter,system-ui,sans-serif;text-align:center}
+    .safe-mode-link{display:flex;align-items:center;justify-content:center;min-height:42px;margin-top:10px;padding:9px 12px;border:1px solid #baffef;border-radius:10px;background:linear-gradient(180deg,#80ffdc,#28c79e);color:#031812!important;text-decoration:none;font:950 .73rem Inter,system-ui,sans-serif;box-shadow:0 8px 20px rgba(40,199,158,.2)}
+    .mode-lock-note{display:none;margin-top:9px;padding:8px 10px;border:1px solid rgba(255,225,122,.55);border-radius:9px;background:rgba(56,39,5,.45);color:#ffe99c;font:800 .68rem/1.4 Inter,system-ui,sans-serif}
+    .mode-lock-note.visible{display:block}
     @media(max-width:680px){.tier-map{grid-template-columns:1fr 1fr}.square-coordinate{left:2px;top:2px;font-size:.44rem}}
   `;
   document.head.append(style);
@@ -40,8 +44,27 @@ function installHelpPanel(){
   panel.innerHTML=`
     <strong>How to move</strong>
     <p>Tap a white piece once. Then use the bright green move buttons fixed at the bottom of the screen. Start with E2, then choose E3 or E4.</p>
-    <div class="tier-map"><span>VOID<br>A8–H7</span><span>PORT NEXUS<br>A6–D3</span><span>STARBOARD<br>E6–H3</span><span>SILVER<br>A2–H1</span></div>`;
+    <div class="tier-map"><span>VOID<br>A8–H7</span><span>PORT NEXUS<br>A6–D3</span><span>STARBOARD<br>E6–H3</span><span>SILVER<br>A2–H1</span></div>
+    <div id="modeLockNote" class="mode-lock-note">This saved online mission is locked to its original ruleset. Standard Safe Mode opens a separate clean game and will not erase this Tri-Deck mission.</div>
+    <a class="safe-mode-link" href="./standard-safe.html?build=s1">Open Standard Safe Mode</a>`;
   toolbar.insertAdjacentElement('afterend',panel);
+}
+
+function installModeGuard(){
+  document.addEventListener('click',event=>{
+    const segment=event.target.closest?.('.segment[data-mode]');
+    if(!segment)return;
+    const gameId=document.getElementById('telemetryGameId')?.textContent?.trim()||'Local';
+    const current=(document.getElementById('modeBadge')?.textContent||'').toLowerCase();
+    const requested=segment.dataset.mode;
+    const online=gameId&&gameId!=='Local';
+    if(!online||current.includes(requested==='trideck'?'tri':'standard'))return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    document.getElementById('modeLockNote')?.classList.add('visible');
+    const panel=document.getElementById('novaMessage');
+    if(panel)panel.innerHTML='<span class="nova-avatar">N</span><p><strong>Nova:</strong> This online mission is Tri-Deck locked. Open Standard Safe Mode for a separate flat-board game.</p>';
+  },true);
 }
 
 function labelSquares(){
