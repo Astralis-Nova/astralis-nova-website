@@ -1,3 +1,5 @@
+import './move-repair.js?v=16';
+
 const BOARD_NAMES={VD:'Void A8–H7',NP:'Port Nexus A6–D3',NS:'Starboard Nexus E6–H3',SD:'Silver A2–H1'};
 let refreshTimer=null;
 
@@ -23,6 +25,7 @@ function installStyles(){
     .tier-map span{padding:6px;border:1px solid rgba(121,182,255,.2);border-radius:8px;background:rgba(2,11,28,.48);color:#c7dcf0;font:800 .59rem/1.25 Inter,system-ui,sans-serif;text-align:center}
     .move-choice-status{color:#f4fbff;font:850 .74rem/1.45 Inter,system-ui,sans-serif;margin-bottom:8px}
     .move-choice-status strong{color:#ffe27d}
+    .move-choice-status[data-state="busy"]{color:#9feaff}.move-choice-status[data-state="success"]{color:#86ffe1}.move-choice-status[data-state="error"]{color:#ff9caf}
     .move-choice-actions{display:flex;flex-wrap:wrap;gap:8px}
     .move-choice-button{min-height:44px;padding:9px 14px;border:1px solid #cafff4;border-radius:999px;background:linear-gradient(180deg,#86ffe1,#32d2aa);color:#031a16;font:950 .76rem/1 Inter,system-ui,sans-serif;box-shadow:0 7px 18px rgba(50,210,170,.22),0 0 15px rgba(83,255,211,.18);cursor:pointer;touch-action:manipulation}
     .move-choice-button small{display:block;margin-top:3px;font-size:.57rem;opacity:.7}
@@ -80,10 +83,7 @@ function observeBoards(){
   }
 }
 
-function queueRefresh(delay=30){
-  clearTimeout(refreshTimer);
-  refreshTimer=setTimeout(refreshGuide,delay);
-}
+function queueRefresh(delay=30){clearTimeout(refreshTimer);refreshTimer=setTimeout(refreshGuide,delay)}
 
 function refreshGuide(){
   labelSquares();
@@ -92,18 +92,12 @@ function refreshGuide(){
   const actions=document.getElementById('moveChoiceActions');
   if(!actions)return;
   actions.replaceChildren();
-  if(!selected){
-    setStatus('Start with a white pawn on row 2. Example: tap <strong>E2</strong>, then choose E3 or E4.');
-    return;
-  }
+  if(!selected){setStatus('Start with a white pawn on row 2. Example: tap <strong>E2</strong>, then choose E3 or E4.');return}
 
   const source=String(selected.dataset.square||'').toUpperCase();
   selected.closest('[data-board-shell]')?.classList.add('coordinate-source-board');
   const legal=[...document.querySelectorAll('.square.legal,.square.capture')];
-  if(!legal.length){
-    setStatus(`<strong>${source}</strong> has no legal move. At the opening, use a pawn on row 2 or a knight.`);
-    return;
-  }
+  if(!legal.length){setStatus(`<strong>${source}</strong> has no legal move. At the opening, use a pawn on row 2 or a knight.`);return}
 
   const stage=document.getElementById('triDeckStage');
   if(stage&&!stage.hidden)stage.classList.add('coordinate-selection-active');
@@ -152,10 +146,6 @@ function findTarget(square,board){
   return [...document.querySelectorAll(selector)].find(node=>node.classList.contains('legal')||node.classList.contains('capture'))||null;
 }
 
-function setStatus(html){
-  const node=document.getElementById('moveChoiceStatus');
-  if(node)node.innerHTML=html;
-}
-
+function setStatus(html){const node=document.getElementById('moveChoiceStatus');if(node)node.innerHTML=html}
 function cssEscape(value){return window.CSS?.escape?CSS.escape(value):String(value).replace(/[^a-zA-Z0-9_-]/g,'\\$&')}
 function escapeHtml(value){return String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
