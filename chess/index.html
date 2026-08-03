@@ -7,7 +7,7 @@
   <meta name="description" content="Astralis Nova clean multi-tier chess with local play, Nova AI, and online missions.">
   <title>Astralis Nova Multi-Tier Chess</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./tri-deck-visual-v28.css?v=28">
+  <link rel="stylesheet" href="./tri-deck-visual-v28.css?v=29">
 </head>
 <body>
 <main>
@@ -16,10 +16,10 @@
       <span class="brand-mark">✦</span>
       <div>
         <h1>Astralis Nova Multi-Tier Chess</h1>
-        <p>Clear four-tier command table with local Nova AI and guarded online missions.</p>
+        <p>Clear four-tier command table with regulation chess rules, local Nova AI, and guarded online missions.</p>
       </div>
     </div>
-    <span class="badge">ONLINE CONTROLLER V28</span>
+    <span class="badge">ONLINE CONTROLLER V29</span>
   </header>
 
   <div class="layout">
@@ -49,8 +49,8 @@
     </section>
 
     <aside class="panel side">
-      <div class="notice"><strong>V28 clear command table:</strong> one clean visual layer controls the elevated translucent Nexus tiers while the repaired chess engine remains untouched.</div>
-      <div id="status" class="status">Loading clean controller…</div>
+      <div class="notice"><strong>V29 regulation rules:</strong> the four floating tiers are one standard 8×8 chessboard. Every legal move is checked locally and again by the online server.</div>
+      <div id="status" class="status">Loading regulation controller…</div>
 
       <div class="actions">
         <button id="newLocal" class="primary" type="button">New Local Game</button>
@@ -86,12 +86,12 @@
       <div id="saveReadout" class="readout good">Local autosave: initializing</div>
       <div class="info">
         <strong>How to command</strong><br>
-        Local game: White versus Nova. Online game: create a mission, share the invite link, and a challenger can replace Nova as Black without resetting the position.
+        Select a piece, then choose one of its highlighted legal destinations. Coordinates remain standard A–H and 1–8 across all four tiers.
         <ol id="moves"><li>No moves yet.</li></ol>
       </div>
     </aside>
   </div>
 </main>
-<script type="module" src="./controller-v28.js?v=28"></script>
+<script type="module" src="./controller-v29.js?v=29"></script>
 </body>
 </html>
