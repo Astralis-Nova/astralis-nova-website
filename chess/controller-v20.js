@@ -1,7 +1,7 @@
 const visual=document.createElement('link');
 visual.rel='stylesheet';
-visual.href='./tri-deck-visual-v26.css?v=26';
-visual.dataset.astralisVisual='v26';
+visual.href='./tri-deck-visual-v27.css?v=27';
+visual.dataset.astralisVisual='v27';
 document.head.append(visual);
 
 import('./controller-core-v20.js?v=22')
@@ -10,12 +10,12 @@ import('./controller-core-v20.js?v=22')
   .then(()=>import('./online-v20.js?v=22'))
   .then(()=>{
     const badge=document.querySelector('.badge');
-    if(badge)badge.textContent='ONLINE CONTROLLER V26';
+    if(badge)badge.textContent='ONLINE CONTROLLER V27';
     const notice=document.querySelector('.notice');
-    if(notice)notice.innerHTML='<strong>V26 clear raised Nexus:</strong> the middle Port and Starboard tier is lifted, while the playable boards use the more transparent glass treatment from the original command table.';
+    if(notice)notice.innerHTML='<strong>V27 elevated clear Nexus:</strong> the middle Port and Starboard tiers sit higher and use a more transparent acrylic board surface, while the working chess controller remains unchanged.';
   })
   .catch(error=>{
-    console.error('V26 chess controller failed to start',error);
+    console.error('V27 chess controller failed to start',error);
     const status=document.getElementById('status');
     if(status){
       status.textContent=`Controller startup failed: ${error.message}`;
