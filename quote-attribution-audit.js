@@ -2,16 +2,18 @@
   const records=[
     {
       match:'Remember to look up at the stars and not down at your feet.',
+      text:'Remember to look up at the stars and not down at your feet.',
       credit:'Stephen Hawking',
       type:'Verified quotation',
-      note:'Verified in Stephen Hawking’s public remarks, including the 2012 London Paralympic opening ceremony and later Cambridge appearances.'
+      note:'In the full verified passage, Hawking continues by urging us to understand what we observe, wonder why the universe exists, remain curious, find something we can succeed at despite difficulty, and never give up. Source: Stephen Hawking Estate, “Speech 5.”'
     },
     {
       match:'Give a man a fish, and you feed him for a day. Teach a man to fish, and you feed him for a lifetime.',
-      text:'If you give a man a fish, he is hungry again in an hour. If you teach him to catch a fish, you do him a good turn.',
+      alternate:'If you give a man a fish, he is hungry again in an hour. If you teach him to catch a fish, you do him a good turn.',
+      text:'If you give a man a fish he is hungry again in an hour.',
       credit:'Anne Isabella Thackeray Ritchie',
       type:'Earliest documented version, 1885',
-      note:'Published in Mrs. Dymond in 1885. The familiar “day/lifetime” wording is a later adaptation, not an ancient Chinese proverb.'
+      note:'Ritchie’s original passage continues by saying that teaching the person to catch fish does him lasting good. It appeared in Mrs. Dymond in 1885. The familiar “day/lifetime” wording is a later adaptation, not an ancient Chinese proverb.'
     },
     {
       match:'The important thing is not to stop questioning. Curiosity has its own reason for existing.',
@@ -56,7 +58,7 @@
     applying=true;
     try{
       const current=text.textContent.trim();
-      const record=records.find(item=>item.match===current||item.text===current);
+      const record=records.find(item=>item.match===current||item.text===current||item.alternate===current);
       if(record){
         if(record.text)write(text,record.text);
         write(credit,'— '+record.credit);
