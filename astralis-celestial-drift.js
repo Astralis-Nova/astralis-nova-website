@@ -13,10 +13,11 @@
   };
 
   const loadQuoteAudit=()=>{
-    if(document.querySelector('script[src="/quote-attribution-audit.js"]'))return;
+    if(document.querySelector('script[data-quote-audit]'))return;
     const audit=document.createElement('script');
-    audit.src='/quote-attribution-audit.js';
-    audit.defer=true;
+    audit.src='/quote-attribution-audit.js?v=20260804b';
+    audit.dataset.quoteAudit='true';
+    audit.async=false;
     document.head.appendChild(audit);
   };
 
