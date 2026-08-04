@@ -4,212 +4,94 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050816">
-  <meta name="description" content="Astralis Nova Chess Portal — asynchronous two-player standard and Tri-Deck sci-fi chess.">
-  <title>Astralis Nova Chess Portal</title>
-  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="description" content="Astralis Nova clean multi-tier chess with local play, Nova AI, and online missions.">
+  <title>Astralis Nova Multi-Tier Chess</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./chess.css">
-  <link rel="stylesheet" href="./tri-deck-perspective.css">
+  <link rel="stylesheet" href="./tri-deck-visual-v28.css?v=29">
 </head>
 <body>
-  <div class="starfield" aria-hidden="true"></div>
-  <header class="command-bar">
-    <a class="brand" href="../" aria-label="Return to Astralis Nova home">
+<main>
+  <header class="top">
+    <div class="brand-line">
       <span class="brand-mark">✦</span>
-      <span><strong>Astralis Nova</strong><small>Chess Portal</small></span>
-    </a>
-    <nav class="command-nav" aria-label="Chess portal controls">
-      <button class="nav-button" id="newGameButton" type="button">New Game</button>
-      <button class="nav-button" id="joinGameButton" type="button">Join Game</button>
-      <button class="nav-button" id="rulesButton" type="button">Rules</button>
-      <a class="nav-button" href="../">Music Site</a>
-    </nav>
+      <div>
+        <h1>Astralis Nova Multi-Tier Chess</h1>
+        <p>Clear four-tier command table with regulation chess rules, local Nova AI, and guarded online missions.</p>
+      </div>
+    </div>
+    <span class="badge">ONLINE CONTROLLER V29</span>
   </header>
 
-  <main class="portal-shell">
-    <section class="portal-hero">
-      <div>
-        <p class="eyebrow">Command Grid Online</p>
-        <h1>Astralis Nova Chess Portal</h1>
-        <p class="hero-copy">Play a standard match across time, or command one complete 8×8 battlefield divided across the elevated platforms of Nova Tri-Deck. Every online move is saved until your opponent returns.</p>
-      </div>
-      <div class="hero-status" aria-live="polite">
-        <span class="status-orb" id="connectionOrb"></span>
-        <div><strong id="connectionLabel">Local command mode</strong><small id="connectionDetail">Create an online game to test the D1 link.</small></div>
+  <div class="layout">
+    <section class="panel battlefield" aria-label="Astralis Nova multi-tier chess table">
+      <div class="tier-stack">
+        <section class="tier-shell home void">
+          <div class="tier-title"><span>Ranks 8–7</span><strong>Void Command</strong></div>
+          <div class="tier-board home-board" id="VD"></div>
+        </section>
+
+        <div class="tier-row">
+          <section class="tier-shell nexus-left">
+            <div class="tier-title"><span>A–D · Ranks 6–3</span><strong>Port Nexus</strong></div>
+            <div class="tier-board nexus-board" id="NP"></div>
+          </section>
+          <section class="tier-shell nexus-right">
+            <div class="tier-title"><span>E–H · Ranks 6–3</span><strong>Starboard Nexus</strong></div>
+            <div class="tier-board nexus-board" id="NS"></div>
+          </section>
+        </div>
+
+        <section class="tier-shell home silver">
+          <div class="tier-title"><span>Ranks 2–1</span><strong>Silver Command</strong></div>
+          <div class="tier-board home-board" id="SD"></div>
+        </section>
       </div>
     </section>
 
-    <section class="game-layout">
-      <aside class="panel mission-panel">
-        <div class="panel-heading">
-          <div><p class="panel-kicker">Mission</p><h2>Game Control</h2></div>
-          <span class="mode-badge" id="modeBadge">STANDARD</span>
-        </div>
+    <aside class="panel side">
+      <div class="notice"><strong>V29 regulation rules:</strong> the four floating tiers are one standard 8×8 chessboard. Every legal move is checked locally and again by the online server.</div>
+      <div id="status" class="status">Loading regulation controller…</div>
 
-        <div class="player-card active" id="whitePlayerCard">
-          <div class="player-emblem light">✦</div>
-          <div><span>White Glass Fleet</span><strong id="whitePlayerName">Commander One</strong></div>
-          <small id="whitePlayerStatus">Ready</small>
-        </div>
-        <div class="player-card" id="blackPlayerCard">
-          <div class="player-emblem dark">◆</div>
-          <div><span>Black Glass Fleet</span><strong id="blackPlayerName">Awaiting Rival</strong></div>
-          <small id="blackPlayerStatus">Standby</small>
-        </div>
+      <div class="actions">
+        <button id="newLocal" class="primary" type="button">New Local Game</button>
+        <button id="flip" type="button">Rotate All Tiers</button>
+        <a href="./standard-safe.html?build=s2">Standard Board</a>
+        <a href="../">Return to Astralis Nova</a>
+      </div>
 
-        <div class="turn-console">
-          <p>Current directive</p>
-          <strong id="turnLabel">White to move</strong>
-          <span id="gameStatus">Local training simulation</span>
+      <section class="online-card">
+        <h2>Online Mission</h2>
+        <div class="field">
+          <label for="commanderName">Commander name</label>
+          <input id="commanderName" maxlength="32" placeholder="Commander One">
         </div>
-
-        <div class="control-grid">
-          <button class="primary-action" id="createOnlineButton" type="button">Create Online Game</button>
-          <button class="secondary-action" id="copyInviteButton" type="button" disabled>Copy Invite</button>
-          <button class="secondary-action" id="flipBoardButton" type="button">Rotate View</button>
-          <button class="secondary-action" id="soundButton" type="button" aria-pressed="true">Sound: On</button>
+        <label class="check"><input id="novaTakeover" type="checkbox" checked> Nova controls Black until a challenger joins</label>
+        <div class="online-buttons">
+          <button id="createOnline" class="launch" type="button">Create</button>
+          <button id="copyInvite" type="button" disabled>Copy Invite</button>
         </div>
-
-        <div class="game-code-wrap" id="gameCodeWrap" hidden>
-          <span>Game code</span>
-          <strong id="gameCode">--------</strong>
-          <small>Share the invite link, not your player key.</small>
+        <div class="field">
+          <label for="joinCode">Join code</label>
+          <input id="joinCode" maxlength="12" placeholder="NOVA-1234" autocapitalize="characters">
         </div>
-
-        <div class="nova-message" id="novaMessage" aria-live="polite">
-          <span class="nova-avatar">N</span>
-          <p><strong>Nova:</strong> The board is stable. Choose a piece to begin.</p>
+        <div class="online-buttons">
+          <button id="joinOnline" class="launch" type="button">Join</button>
+          <button id="syncOnline" type="button" disabled>Sync</button>
+          <button id="leaveOnline" type="button" disabled>Leave Online</button>
         </div>
-      </aside>
-
-      <section class="board-sector panel" aria-label="Chess board">
-        <div class="board-toolbar">
-          <div class="segmented" role="group" aria-label="Game mode">
-            <button class="segment active" data-mode="standard" type="button">Standard</button>
-            <button class="segment" data-mode="trideck" type="button">Tri-Deck</button>
-          </div>
-          <div class="deck-tabs" id="deckTabs" hidden role="group" aria-label="Highlight an elevated platform">
-            <button data-board="VD" type="button">Void</button>
-            <button class="active" data-board="NP" type="button">Port Nexus</button>
-            <button data-board="NS" type="button">Starboard Nexus</button>
-            <button data-board="SD" type="button">Silver</button>
-          </div>
-          <button class="icon-action" id="fullscreenButton" type="button" title="Fullscreen board" aria-label="Fullscreen board">⛶</button>
-        </div>
-
-        <div class="board-stage" id="boardStage">
-          <div class="standard-board-wrap" id="standardBoardWrap">
-            <div class="coordinates ranks" id="rankCoordinates" aria-hidden="true"></div>
-            <div class="chess-board" id="standardBoard" role="grid" aria-label="Standard chess board"></div>
-            <div class="coordinates files" id="fileCoordinates" aria-hidden="true"></div>
-          </div>
-
-          <div class="tri-deck-stage nova-apparatus" id="triDeckStage" hidden>
-            <div class="apparatus-spine" aria-hidden="true">
-              <span class="spine-arc"></span>
-              <span class="spine-base"></span>
-            </div>
-            <div class="tri-sculpture">
-              <section class="tri-board-shell platform-shell void-platform" data-board-shell="VD">
-                <div class="deck-label"><span>Ranks 8–7 · Level 4</span><strong>Void Command Platform</strong></div>
-                <div class="tri-board platform-board" id="voidPlatformBoard" role="grid" aria-label="Void eight by two command platform"></div>
-              </section>
-              <section class="tri-board-shell platform-shell nexus-port-platform active" data-board-shell="NP">
-                <div class="deck-label"><span>Files A–D · Ranks 6–3</span><strong>Port Nexus 4×4</strong></div>
-                <div class="tri-board nexus-split-board" id="portNexusBoard" role="grid" aria-label="Port four by four nexus platform"></div>
-              </section>
-              <section class="tri-board-shell platform-shell nexus-starboard-platform" data-board-shell="NS">
-                <div class="deck-label"><span>Files E–H · Ranks 6–3</span><strong>Starboard Nexus 4×4</strong></div>
-                <div class="tri-board nexus-split-board" id="starboardNexusBoard" role="grid" aria-label="Starboard four by four nexus platform"></div>
-              </section>
-              <section class="tri-board-shell platform-shell silver-platform" data-board-shell="SD">
-                <div class="deck-label"><span>Ranks 2–1 · Level 1</span><strong>Silver Command Platform</strong></div>
-                <div class="tri-board platform-board" id="silverPlatformBoard" role="grid" aria-label="Silver eight by two command platform"></div>
-              </section>
-            </div>
-            <p class="apparatus-caption">One 8×8 battlefield · four transparent platforms · 16 squares each</p>
-          </div>
-
-          <div class="promotion-panel" id="promotionPanel" hidden>
-            <p>Promote Drone Sentinel</p>
-            <div id="promotionChoices"></div>
-          </div>
-        </div>
-
-        <div class="board-footer">
-          <div><span>Selected</span><strong id="selectedSquare">None</strong></div>
-          <div><span>Last move</span><strong id="lastMove">Opening grid</strong></div>
-          <div><span>Auto-sync</span><strong id="syncTimer">Local only</strong></div>
-        </div>
+        <div id="onlineReadout" class="readout">D1 status: checking…</div>
       </section>
 
-      <aside class="panel intel-panel">
-        <div class="panel-heading">
-          <div><p class="panel-kicker">Telemetry</p><h2>Mission Log</h2></div>
-          <button class="tiny-button" id="refreshButton" type="button">Sync</button>
-        </div>
-
-        <div class="captured-grid">
-          <div><span>White captured</span><div id="whiteCaptured" class="captured-row">None</div></div>
-          <div><span>Black captured</span><div id="blackCaptured" class="captured-row">None</div></div>
-        </div>
-
-        <ol class="move-log" id="moveLog" aria-label="Move history">
-          <li class="empty-log">No moves recorded.</li>
-        </ol>
-
-        <div class="intel-actions">
-          <button class="secondary-action" id="resignButton" type="button">Resign</button>
-          <button class="secondary-action" id="resetLocalButton" type="button">Reset Local</button>
-        </div>
-
-        <details class="system-details">
-          <summary>System telemetry</summary>
-          <dl>
-            <div><dt>Game ID</dt><dd id="telemetryGameId">Local</dd></div>
-            <div><dt>Revision</dt><dd id="telemetryRevision">0</dd></div>
-            <div><dt>Player key</dt><dd id="telemetryColor">Training</dd></div>
-            <div><dt>Ruleset</dt><dd id="telemetryRules">Standard</dd></div>
-          </dl>
-        </details>
-      </aside>
-    </section>
-  </main>
-
-  <dialog class="portal-dialog" id="newGameDialog">
-    <form method="dialog" id="newGameForm">
-      <div class="dialog-heading"><div><p class="panel-kicker">Launch Match</p><h2>Create Online Game</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
-      <label>Commander name<input id="creatorName" name="creatorName" maxlength="32" placeholder="Commander One" autocomplete="nickname"></label>
-      <fieldset><legend>Ruleset</legend><label class="choice-card"><input type="radio" name="newMode" value="standard" checked><span><strong>Standard Chess</strong><small>Full chess rules on a traditional flat board.</small></span></label><label class="choice-card"><input type="radio" name="newMode" value="trideck"><span><strong>Nova Tri-Deck</strong><small>Full chess rules across two 8×2 home platforms and two 4×4 Nexus platforms.</small></span></label></fieldset>
-      <p class="dialog-note">Online play needs the dedicated chess D1 database bound as <code>CHESS_DB</code>. The website guestbook continues using its separate <code>DB</code> binding.</p>
-      <div class="dialog-actions"><button class="secondary-action" value="cancel">Cancel</button><button class="primary-action" id="confirmCreateButton" value="default">Create Mission</button></div>
-    </form>
-  </dialog>
-
-  <dialog class="portal-dialog" id="joinGameDialog">
-    <form method="dialog" id="joinGameForm">
-      <div class="dialog-heading"><div><p class="panel-kicker">Join Match</p><h2>Enter Game Code</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
-      <label>Commander name<input id="joinerName" name="joinerName" maxlength="32" placeholder="Commander Two" autocomplete="nickname"></label>
-      <label>Game code<input id="joinCodeInput" name="joinCode" maxlength="12" placeholder="NOVA-1234" autocapitalize="characters" required></label>
-      <div class="dialog-actions"><button class="secondary-action" value="cancel">Cancel</button><button class="primary-action" id="confirmJoinButton" value="default">Join Mission</button></div>
-    </form>
-  </dialog>
-
-  <dialog class="portal-dialog wide" id="rulesDialog">
-    <form method="dialog">
-      <div class="dialog-heading"><div><p class="panel-kicker">Codex</p><h2>Rules of Engagement</h2></div><button class="dialog-close" value="cancel" aria-label="Close">×</button></div>
-      <div class="rules-grid">
-        <article><h3>Standard Mode</h3><p>Traditional legal chess with castling, en passant, promotion, check, checkmate, stalemate and draw detection powered by chess.js.</p></article>
-        <article><h3>Nova Tri-Deck</h3><p>One complete 8×8 chess battlefield is separated into four transparent platforms. Black begins on the 8×2 Void platform at ranks 8–7, White begins on the 8×2 Silver platform at ranks 2–1, and ranks 6–3 split into two side-by-side 4×4 Nexus platforms. Pieces move seamlessly between platform edges using full chess geometry, including castling, en passant, promotion, check, checkmate, stalemate and draw rules.</p></article>
-        <article><h3>Async Play</h3><p>Create a match, share the game code or invite link, then close the page. Each move is saved in D1. The portal checks for an opponent move automatically while open.</p></article>
-        <article><h3>Astralis Pieces</h3><p>King: High Commander. Queen: Oracle Core. Rook: Citadel. Bishop: Phase Seer. Knight: Warp Strider. Pawn: Drone Sentinel. Every original figurine preserves a recognizable tournament-style chess silhouette in frosted white crystal or smoked black crystal glass.</p></article>
+      <div id="selectedReadout" class="readout">Selected: none</div>
+      <div id="saveReadout" class="readout good">Local autosave: initializing</div>
+      <div class="info">
+        <strong>How to command</strong><br>
+        Select a piece, then choose one of its highlighted legal destinations. Coordinates remain standard A–H and 1–8 across all four tiers.
+        <ol id="moves"><li>No moves yet.</li></ol>
       </div>
-      <div class="dialog-actions"><button class="primary-action" value="cancel">Return to Bridge</button></div>
-    </form>
-  </dialog>
-
-  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
-
-  <script type="module" src="./chess.js"></script>
+    </aside>
+  </div>
+</main>
+<script type="module" src="./controller-v29.js?v=29"></script>
 </body>
 </html>

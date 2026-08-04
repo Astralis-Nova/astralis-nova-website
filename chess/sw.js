@@ -1,18 +1,8 @@
-const CACHE = 'astralis-nova-chess-v9';
-const ASSETS = ['./','./index.html','./chess.css','./chess.js','./trideck-engine.js','./pieces.js','./icon.svg','./manifest.webmanifest'];
-self.addEventListener('install', event => event.waitUntil(
-  caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting())
-));
-self.addEventListener('activate', event => event.waitUntil(
-  caches.keys()
-    .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
-    .then(() => self.clients.claim())
-));
-self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-  event.respondWith(fetch(event.request).then(response => {
-    const copy = response.clone();
-    caches.open(CACHE).then(cache => cache.put(event.request, copy));
-    return response;
-  }).catch(() => caches.match(event.request).then(hit => hit || caches.match('./index.html'))));
-});
+const CACHE_PREFIX='astralis-nova-chess-';
+self.addEventListener('install',event=>event.waitUntil(self.skipWaiting()));
+self.addEventListener('activate',event=>event.waitUntil((async()=>{
+  const keys=await caches.keys();
+  await Promise.all(keys.filter(key=>key.startsWith(CACHE_PREFIX)).map(key=>caches.delete(key)));
+  await self.registration.unregister();
+  await self.clients.claim();
+})()));

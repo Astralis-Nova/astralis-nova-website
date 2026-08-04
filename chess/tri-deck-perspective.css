@@ -48,6 +48,14 @@
   display:none !important;
 }
 
+/* Remove the three support lines behind the tiers.
+   The two angled struts and center spine are purely decorative. */
+.apparatus-spine::before,
+.apparatus-spine::after,
+.spine-arc{
+  display:none !important;
+}
+
 /* Raise the middle Nexus tier so piece silhouettes have clearer vertical space. */
 .nexus-port-platform,
 .nexus-starboard-platform{

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Just A River, an author-unknown poem restored from the Astralis Nova First Orbit archive.">
+  <meta name="theme-color" content="#071923">
+  <title>Just A River | Astralis Nova</title>
+  <style>
+    :root{color-scheme:dark;--ink:#f7fcff;--gold:#e9d7a2;--line:rgba(182,232,244,.25)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}
+    body{margin:0;min-height:100vh;overflow-x:hidden;color:var(--ink);font-family:Georgia,"Times New Roman",serif;background:#041118}
+    a{color:inherit}button{font:inherit}
+    .world{position:fixed;inset:0;z-index:-10;overflow:hidden;background:linear-gradient(180deg,#071522 0%,#0b2634 44%,#102d35 61%,#05151d 100%)}
+    .world::before{content:"";position:absolute;inset:0 0 45%;opacity:.72;background-image:radial-gradient(circle at 13% 18%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 37% 30%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 62% 13%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 82% 32%,#fff 0 1px,transparent 1.5px),radial-gradient(circle at 93% 11%,#fff 0 1px,transparent 1.5px);background-size:170px 160px,240px 210px,210px 190px,290px 240px,260px 220px;animation:stars 34s linear infinite alternate}
+    @keyframes stars{to{translate:18px 10px;opacity:.9}}
+    .moon{position:absolute;right:9vw;top:8vh;width:clamp(92px,13vw,180px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f5ffff,#c8edf1 44%,#7eaeb7 76%,#53747d);box-shadow:0 0 40px rgba(193,242,248,.28),0 0 110px rgba(118,214,231,.18)}
+    .mountains{position:absolute;left:-5%;right:-5%;bottom:38%;height:32%;background:linear-gradient(135deg,transparent 0 14%,#0c2a35 14.5% 27%,transparent 27.5% 32%,#123643 32.5% 48%,transparent 48.5% 55%,#0a2530 55.5% 69%,transparent 69.5% 74%,#11333e 74.5% 88%,transparent 88.5%)}
+    .bank{position:absolute;left:-12%;right:-12%;bottom:23%;height:26%;background:radial-gradient(ellipse at 22% 80%,#102e2b 0 20%,transparent 21%),radial-gradient(ellipse at 76% 88%,#0c2827 0 27%,transparent 28%),linear-gradient(180deg,transparent,#07191b 65%)}
+    .river{position:absolute;left:-18%;right:-18%;bottom:-18%;height:64%;transform:perspective(600px) rotateX(58deg);transform-origin:center bottom;background:repeating-linear-gradient(174deg,rgba(167,238,249,.13) 0 2px,transparent 3px 20px),radial-gradient(ellipse at 52% 7%,rgba(201,247,255,.32),transparent 27%),linear-gradient(90deg,#06131a,#0c3847 22%,#1a6375 49%,#0c3d4c 76%,#06161e);box-shadow:inset 0 18px 80px rgba(171,233,243,.12);animation:current 13s linear infinite}
+    .river::after{content:"";position:absolute;inset:0;background:linear-gradient(103deg,transparent 15%,rgba(208,249,255,.20) 28%,transparent 41%,rgba(144,228,242,.10) 61%,transparent 74%);animation:glimmer 6s ease-in-out infinite alternate}
+    @keyframes current{to{background-position:160px 0,0 0,0 0}}
+    @keyframes glimmer{to{translate:8% 2%;opacity:.55}}
+    .mist{position:absolute;left:-10%;right:-10%;bottom:28%;height:22%;background:radial-gradient(ellipse at center,rgba(202,241,244,.14),transparent 65%);filter:blur(18px);animation:mist 12s ease-in-out infinite alternate;transition:opacity 1s ease,filter 1s ease}
+    @keyframes mist{to{translate:6% -5%;opacity:.55}}
+    .river-ripples{position:absolute;left:6%;right:6%;bottom:4%;height:44%;transform:perspective(650px) rotateX(62deg);transform-origin:center bottom;pointer-events:none}
+    .river-ripples i{position:absolute;width:170px;height:54px;border:2px solid rgba(194,246,255,.68);border-radius:50%;opacity:0;filter:drop-shadow(0 0 10px rgba(119,226,244,.4))}
+    .river-ripples i:nth-child(1){left:14%;top:28%}.river-ripples i:nth-child(2){left:43%;top:48%;width:220px}.river-ripples i:nth-child(3){right:10%;top:18%;width:145px}
+    .world.interval-flow .river{animation:current 13s linear infinite,riverSurge 3.2s ease-in-out;box-shadow:inset 0 18px 100px rgba(177,240,250,.25),0 0 70px rgba(82,192,215,.12)}
+    .world.interval-flow .mist{opacity:.82;filter:blur(23px)}
+    .world.interval-flow .river-ripples i{animation:rippleWave 3.1s ease-out forwards}
+    .world.interval-flow .river-ripples i:nth-child(2){animation-delay:.28s}.world.interval-flow .river-ripples i:nth-child(3){animation-delay:.55s}
+    @keyframes riverSurge{0%,100%{filter:brightness(1) saturate(1)}45%{filter:brightness(1.3) saturate(1.22)}70%{filter:brightness(1.12) saturate(1.1)}}
+    @keyframes rippleWave{0%{scale:.35;opacity:0}18%{opacity:.85}100%{scale:2.15;opacity:0}}
+
+    .page{width:min(940px,calc(100% - 32px));margin:auto;padding:26px 0 54px}
+    .topnav{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:30px;position:relative;z-index:2}
+    .brand{font-family:Arial,sans-serif;font-weight:900;letter-spacing:.13em;text-decoration:none;text-shadow:0 2px 22px rgba(0,0,0,.6)}
+    .back{min-height:42px;padding:10px 15px;border:1px solid var(--line);border-radius:999px;background:rgba(3,20,27,.62);backdrop-filter:blur(10px);text-decoration:none;font:800 .78rem Arial,sans-serif}
+    .poem-card{position:relative;overflow:hidden;padding:clamp(26px,6vw,64px);border:1px solid var(--line);border-radius:30px;background:linear-gradient(160deg,rgba(8,28,42,.68),rgba(4,18,28,.52));box-shadow:0 34px 110px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(14px);isolation:isolate}
+    .poem-card::before{content:"≈";position:absolute;right:-25px;top:-105px;font-size:22rem;color:rgba(198,242,249,.035);rotate:-9deg;z-index:0}
+    .poem-water{position:absolute;left:0;right:0;bottom:0;height:72%;z-index:0;opacity:.82;pointer-events:none;background:linear-gradient(180deg,rgba(18,53,95,.08) 0%,rgba(16,79,142,.22) 12%,rgba(19,112,191,.48) 32%,rgba(15,96,173,.66) 52%,rgba(10,69,129,.78) 70%,rgba(7,43,89,.88) 100%)}
+    .poem-water::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 18%,rgba(196,234,255,.18),transparent 34%),repeating-linear-gradient(178deg,rgba(188,229,255,.16) 0 2px,rgba(31,93,164,.02) 3px 14px),linear-gradient(90deg,rgba(11,58,111,.28),rgba(76,163,229,.42) 18%,rgba(17,74,139,.30) 37%,rgba(129,203,249,.30) 56%,rgba(15,83,153,.32) 74%,rgba(6,45,92,.36));mix-blend-mode:screen;opacity:.95;animation:poemCurrent 14s linear infinite}
+    .poem-water::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 54%,rgba(234,248,255,.36) 0 2%,transparent 3%),radial-gradient(circle at 68% 34%,rgba(226,245,255,.24) 0 2%,transparent 3%),linear-gradient(104deg,transparent 8%,rgba(228,248,255,.25) 24%,transparent 38%,rgba(147,215,255,.18) 54%,transparent 70%);opacity:.9;animation:poemGlimmer 6.5s ease-in-out infinite alternate}
+    .poem-ripple-set{position:absolute;left:0;right:0;bottom:8%;height:44%;z-index:0;pointer-events:none}
+    .poem-ripple-set i{position:absolute;width:220px;height:60px;border:2px solid rgba(162,214,255,.48);border-radius:50%;opacity:.18;box-shadow:0 0 12px rgba(110,192,255,.18);animation:poemRipple 12s ease-in-out infinite}
+    .poem-ripple-set i:nth-child(1){left:6%;bottom:10%;animation-delay:0s}.poem-ripple-set i:nth-child(2){left:34%;bottom:19%;width:280px;animation-delay:2.8s}.poem-ripple-set i:nth-child(3){right:8%;bottom:5%;width:190px;animation-delay:5.6s}.poem-ripple-set i:nth-child(4){left:22%;bottom:0;width:170px;animation-delay:8.2s}
+    @keyframes poemCurrent{to{background-position:260px 0,0 0,0 0}}
+    @keyframes poemGlimmer{to{translate:10% 2%;opacity:.62}}
+    @keyframes poemRipple{0%{transform:scale(.55);opacity:0}18%{opacity:.28}100%{transform:scale(2);opacity:0}}
+    .poem-shell,.controls,.archive,footer{position:relative;z-index:2}
+    .eyebrow{margin:0 0 12px;text-align:center;font:900 .73rem Arial,sans-serif;letter-spacing:.19em;color:#a7e7f4}
+    h1{margin:0;text-align:center;font-size:clamp(3.2rem,9vw,6.8rem);line-height:.88;letter-spacing:-.055em;text-shadow:0 8px 42px rgba(0,0,0,.45)}
+    .author{text-align:center;margin:18px 0;color:var(--gold);font-size:1.04rem;font-style:italic}
+    .content-note{max-width:680px;margin:0 auto 32px;padding:10px 14px;border:1px solid rgba(174,234,255,.18);border-radius:12px;background:rgba(5,42,51,.42);text-align:center;color:#c6dce4;font:700 .78rem/1.5 Arial,sans-serif}
+    .poem{max-width:760px;margin:auto;padding:34px clamp(15px,4vw,40px);border-block:1px solid rgba(205,244,250,.18);text-align:center;font-size:clamp(1.15rem,2.5vw,1.48rem);line-height:1.78;text-wrap:balance;background:linear-gradient(180deg,rgba(3,16,24,.24),rgba(3,16,24,.16));border-radius:18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 0 30px rgba(8,40,70,.16)}
+    .poem p{margin:.12em 0}.poem .turn{margin-top:1.4em;color:#d8f7fb}.poem .final{margin-top:1.4em;color:#fff3cf;font-style:italic}
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+    .control-card{padding:20px;border:1px solid rgba(194,238,246,.18);border-radius:18px;background:rgba(3,20,27,.50)}
+    .control-card h2{margin:0 0 7px;font:900 1rem Arial,sans-serif;letter-spacing:.05em}.control-card p{margin:0 0 14px;color:#c1d5dd;line-height:1.5;font-size:.91rem}
+    midi-player{display:block;width:100%;--background-color:rgba(3,20,27,.94);--primary-color:#54cfe6;--secondary-color:#b2ecf6;--font-family:Arial,sans-serif}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .button{min-height:42px;padding:10px 15px;border:1px solid rgba(196,240,248,.25);border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:rgba(9,72,84,.58);color:white;text-decoration:none;cursor:pointer;font:900 .75rem Arial,sans-serif;letter-spacing:.04em}
+    .button:hover,.button:focus-visible{background:rgba(15,103,119,.78);border-color:#cff8ff}
+    .copy-status,.music-status{min-height:1.4em;margin-top:10px!important;color:#bdeaf2!important;font-size:.8rem!important}.midi-disclosure{margin-top:10px!important;color:#88a7b0!important;font-size:.75rem!important}
+    .archive{margin-top:30px;padding-top:26px;border-top:1px solid rgba(201,241,248,.16);text-align:center;color:#c5d9df}.archive strong{display:block;color:white;margin-bottom:7px}.archive-note{max-width:700px;margin:18px auto 0;font-size:.8rem;line-height:1.55;color:#9eb5bd}
+    footer{text-align:center;padding:24px 0 0;color:rgba(224,247,251,.66);font:700 .72rem Arial,sans-serif;letter-spacing:.06em}
+    .music-gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:rgba(2,11,16,.76);backdrop-filter:blur(15px);transition:opacity .36s ease,visibility .36s ease}.music-gate.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+    .music-dialog{width:min(470px,100%);padding:31px 24px 25px;text-align:center;border:1px solid rgba(181,235,244,.30);border-radius:28px;background:linear-gradient(160deg,rgba(8,49,60,.97),rgba(3,21,29,.97));box-shadow:0 28px 100px rgba(0,0,0,.62)}
+    .music-dialog h2{margin:17px 0 8px;font-size:clamp(1.7rem,6vw,2.55rem)}.music-dialog p{margin:0 auto 18px;max-width:360px;color:#c7dbe2;line-height:1.55}
+    .river-button{position:relative;width:166px;height:118px;border:1px solid rgba(207,247,252,.42);border-radius:50%;cursor:pointer;background:radial-gradient(ellipse at center,rgba(212,250,255,.29),rgba(73,183,202,.22) 46%,rgba(6,47,58,.32) 67%,transparent 70%);box-shadow:0 0 0 14px rgba(97,205,221,.05),0 0 70px rgba(96,205,224,.22);animation:riverBeat 3.4s ease-in-out infinite}
+    .river-button::before{content:"";position:absolute;left:18px;right:18px;top:48%;height:4px;border-radius:99px;background:#d4f9ff;box-shadow:0 -16px 0 -1px rgba(173,238,247,.62),0 16px 0 -1px rgba(120,214,229,.52);transform:skewX(-24deg)}
+    .river-button::after{content:"◆";position:absolute;left:50%;top:50%;translate:-50% -50%;font-size:2.2rem;color:#e8fbff;text-shadow:0 0 18px rgba(219,250,255,.75)}
+    .river-button:hover,.river-button:focus-visible{outline:none;border-color:#f3ffff;box-shadow:0 0 0 15px rgba(97,205,221,.08),0 0 90px rgba(132,230,244,.38)}
+    @keyframes riverBeat{0%,100%{scale:1}50%{scale:1.035}}
+    .silent-button{border:0;background:transparent;color:#aec4cc;text-decoration:underline;cursor:pointer;padding:8px}.floating-music{position:fixed;right:16px;bottom:16px;z-index:90;box-shadow:0 12px 34px rgba(0,0,0,.42)}
+    @media(max-width:820px){.controls{grid-template-columns:1fr}.poem-card{border-radius:22px}.topnav{align-items:flex-start}.brand{font-size:.82rem}.poem{line-height:1.62}.moon{right:-18px}.mountains{bottom:42%}.poem-water{height:66%}}
+    @media(prefers-reduced-motion:reduce){.world::before,.river,.river::after,.mist,.river-button,.poem-water::before,.poem-water::after,.poem-ripple-set i{animation:none}html{scroll-behavior:auto}}
+  </style>
+  <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
+</head>
+<body>
+  <div class="world" id="riverWorld" aria-hidden="true"><div class="moon"></div><div class="mountains"></div><div class="bank"></div><div class="river"></div><div class="mist"></div><div class="river-ripples"><i></i><i></i><i></i></div></div>
+  <div class="music-gate" id="musicGate" role="dialog" aria-modal="true" aria-labelledby="musicGateTitle" aria-describedby="musicGateText"><div class="music-dialog"><button class="river-button" id="riverPlay" type="button" aria-label="Play the preserved MIDI melody"></button><h2 id="musicGateTitle">Follow the Current</h2><p id="musicGateText">A small melody is resting beneath the water. Touch the river stone to let it flow.</p><button class="silent-button" id="readSilently" type="button">Read in silence</button></div></div>
+  <main class="page">
+    <nav class="topnav" aria-label="Page navigation"><a class="brand" href="/">ASTRALIS NOVA</a><a class="back" href="/#first-orbit">← RETURN TO FIRST ORBIT</a></nav>
+    <article class="poem-card">
+      <div class="poem-water" aria-hidden="true"></div>
+      <div class="poem-ripple-set" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="poem-shell">
+        <p class="eyebrow">ECHOES FROM THE FIRST ORBIT · RESTORED 2026</p><h1>Just A River</h1><p class="author">Author Unknown</p><p class="content-note">Preserved from Ramon Bivens’ original Angelfire page. The wording and spelling below remain as they appeared in the archived poem.</p>
+        <div class="poem" id="poemText"><p>A river flows through an through</p><p>Building a world of its own.</p><p>The beds forms slowly</p><p>with grains of earth.</p><p class="turn">The longer it exists</p><p>The more unique it becomes.</p><p class="turn">Some see a river as just a river.</p><p class="final">I see it as a sort of love.</p></div>
+      </div>
+      <div class="controls">
+        <section class="control-card" aria-labelledby="musicTitle"><h2 id="musicTitle">🎶 FIRST ORBIT MIDI</h2><p>Play <strong>Like Wind</strong> while reading. Its drifting melody now follows the river’s current.</p><midi-player id="poemMidi" src="/api/midi?file=likewind.mid" sound-font loop></midi-player><div class="actions"><button class="button" id="musicControl" type="button">🌊 PLAY LIKE WIND</button><a class="button" href="https://web.archive.org/web/20190804224335/http://www.angelfire.com/az2/soldierboy602/music/likewind.mid" target="_blank" rel="noopener noreferrer">OPEN MIDI FILE</a></div><p class="music-status" id="musicStatus" role="status" aria-live="polite"></p><p class="midi-disclosure">Like Wind is track five in the recovered First Orbit MIDI collection and was selected to match the poem’s flowing, reflective atmosphere. If playback stutters, the archived source stream is usually the reason.</p></section>
+        <section class="control-card" aria-labelledby="copyTitle"><h2 id="copyTitle">📜 PRESERVE THE WORDS</h2><p>Copy the poem with its title and original author credit intact.</p><div class="actions"><button class="button" id="copyPoem" type="button">COPY POEM</button></div><p class="copy-status" id="copyStatus" role="status" aria-live="polite"></p></section>
+      </div>
+      <div class="archive"><strong>Original First Orbit Archive</strong><a class="button" href="https://web.archive.org/web/20190804224333/http://www.angelfire.com/az2/soldierboy602/river.html" target="_blank" rel="noopener noreferrer">🛰️ OPEN THE 2019 ARCHIVE CAPTURE</a><p class="archive-note">This modern presentation preserves the surviving poem while giving it a new home inside Astralis Nova. The Internet Archive remains the historical source.</p></div>
+    </article>
+    <footer>ASTRALIS NOVA · ECHOES FROM THE FIRST ORBIT</footer>
+  </main>
+  <button class="button floating-music" id="floatingMusic" type="button" aria-label="Play or pause Like Wind">🎶 MUSIC</button>
+  <script>
+    (()=>{
+      const gate=document.getElementById('musicGate'), player=document.getElementById('poemMidi'), riverPlay=document.getElementById('riverPlay'), readSilently=document.getElementById('readSilently'), musicControl=document.getElementById('musicControl'), floatingMusic=document.getElementById('floatingMusic'), musicStatus=document.getElementById('musicStatus'), copyButton=document.getElementById('copyPoem'), copyStatus=document.getElementById('copyStatus'), riverWorld=document.getElementById('riverWorld'), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches; let playing=false;
+      const hideGate=()=>gate.classList.add('is-hidden');
+      const setState=state=>{playing=state;musicControl.textContent=state?'⏸ PAUSE LIKE WIND':'🌊 PLAY LIKE WIND';floatingMusic.textContent=state?'⏸ PAUSE':'🎶 MUSIC';musicStatus.textContent=state?'Like Wind is flowing with the river.':'The river is quiet.'};
+      const play=async()=>{try{if(window.Tone&&Tone.start)await Tone.start();if(player&&player.start)player.start();else if(player&&player.shadowRoot){const b=player.shadowRoot.querySelector('button');if(b)b.click()}setState(true);hideGate()}catch(error){hideGate();musicStatus.textContent='The poem is ready, but this browser could not start Like Wind automatically.'}};
+      const pause=()=>{try{if(player&&player.stop)player.stop();else if(player&&player.shadowRoot){const b=player.shadowRoot.querySelector('button');if(b)b.click()}}catch(error){}setState(false)};
+      const toggle=()=>playing?pause():play();
+      const pulseRiver=()=>{if(reducedMotion||document.hidden)return;riverWorld.classList.remove('interval-flow');void riverWorld.offsetWidth;riverWorld.classList.add('interval-flow');setTimeout(()=>riverWorld.classList.remove('interval-flow'),3400)};
+      const scheduleRiver=()=>{if(reducedMotion)return;const run=()=>{pulseRiver();setTimeout(run,8000+Math.random()*4000)};setTimeout(run,3200)};
+      riverPlay.addEventListener('click',play); readSilently.addEventListener('click',()=>{hideGate();setState(false)}); musicControl.addEventListener('click',toggle); floatingMusic.addEventListener('click',toggle); document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!gate.classList.contains('is-hidden')){hideGate();setState(false)}}); document.addEventListener('visibilitychange',()=>{if(!document.hidden)pulseRiver()});
+      copyButton.addEventListener('click',async()=>{const text=`Just A River\n\nA river flows through an through\nBuilding a world of its own.\nThe beds forms slowly\nwith grains of earth.\nThe longer it exists\nThe more unique it becomes.\nSome see a river as just a river.\nI see it as a sort of love.\n\nAuthor Unknown`;try{await navigator.clipboard.writeText(text);copyStatus.textContent='Poem copied with its title and author credit.'}catch(error){copyStatus.textContent='Copy was blocked by the browser. Select the poem text to copy it manually.'}});
+      scheduleRiver(); pulseRiver();
+    })();
+  </script>
+</body>
+</html>

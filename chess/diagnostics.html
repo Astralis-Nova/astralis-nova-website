@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#050816">
+  <title>Astralis Nova Chess Diagnostics</title>
+  <style>
+    :root{color-scheme:dark;--bg:#030714;--panel:#09152b;--line:#2a527d;--cyan:#70e7ff;--green:#76ffd8;--gold:#ffe07c;--red:#ff879d;--muted:#a9bed5}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;padding:16px;background:radial-gradient(circle at 50% 0,#102c50 0,transparent 42rem),var(--bg);color:#f7fbff;font-family:Inter,system-ui,sans-serif}
+    main{width:min(920px,100%);margin:auto}.hero,.card{border:1px solid var(--line);border-radius:18px;background:rgba(7,17,36,.94);box-shadow:0 18px 48px rgba(0,0,0,.38)}
+    .hero{padding:18px;margin-bottom:14px}.hero h1{margin:0 0 7px;color:var(--cyan);font-size:clamp(1.5rem,5vw,2.5rem)}.hero p{margin:0;color:var(--muted);line-height:1.5}
+    .version{display:inline-block;margin-top:10px;padding:5px 9px;border-radius:999px;background:#123052;color:var(--green);font-weight:900;font-size:.75rem}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{padding:15px}.card h2{margin:0 0 10px;font-size:1rem;color:var(--cyan)}
+    button,a.action{min-height:46px;padding:10px 14px;border:1px solid #9df9e4;border-radius:12px;background:linear-gradient(180deg,#79ffdc,#2bcaa1);color:#031913;font-weight:950;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation}
+    button.secondary,a.secondary{border-color:#79cfff;background:#12355c;color:#f4fbff}.actions{display:flex;flex-wrap:wrap;gap:8px}
+    #touchPad{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.touch-cell{min-height:58px;border:1px solid #53779d;border-radius:10px;background:#0e2442;color:#dceeff;font-weight:950}.touch-cell.active{background:#ffd968;color:#1b1300;box-shadow:0 0 22px rgba(255,217,104,.55)}.touch-cell.target{background:#5ff0c5;color:#021914;box-shadow:0 0 22px rgba(95,240,197,.55)}
+    #status{padding:11px;border-radius:11px;background:#071326;border:1px solid #315a82;color:#dcecff;font-weight:800;line-height:1.45;margin-bottom:10px}#status.ok{border-color:#48dfb4;color:var(--green)}#status.bad{border-color:#ff6e89;color:var(--red)}
+    #report{white-space:pre-wrap;word-break:break-word;max-height:440px;overflow:auto;padding:12px;border-radius:12px;background:#020711;border:1px solid #244a70;color:#cde2f5;font:700 .72rem/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}
+    .test-row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:8px 0;border-bottom:1px solid rgba(91,139,184,.2);font-size:.8rem}.test-row:last-child{border-bottom:0}.test-state{font-weight:950}.pass{color:var(--green)}.fail{color:var(--red)}.warn{color:var(--gold)}
+    code{color:#9feaff}@media(max-width:720px){.grid{grid-template-columns:1fr}body{padding:9px}.card{padding:12px}button,a.action{flex:1 1 45%}}
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <h1>Chess Black-Box Diagnostics</h1>
+    <p>This page is independent from the chess game. It tests your phone’s taps, current deployment files, JavaScript modules, chess engine access, service worker state, and stored game session.</p>
+    <span class="version">DIAGNOSTIC BUILD 2026-08-02 · D1</span>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>1. Touch test</h2>
+      <div id="status">Tap <strong>E2</strong>, then tap <strong>E4</strong>.</div>
+      <div id="touchPad" aria-label="Touch diagnostic pad">
+        <button class="touch-cell" data-cell="D2">D2</button><button class="touch-cell" data-cell="E2">E2</button><button class="touch-cell" data-cell="F2">F2</button><button class="touch-cell" data-cell="G2">G2</button>
+        <button class="touch-cell" data-cell="D3">D3</button><button class="touch-cell" data-cell="E3">E3</button><button class="touch-cell" data-cell="F3">F3</button><button class="touch-cell" data-cell="G3">G3</button>
+        <button class="touch-cell" data-cell="D4">D4</button><button class="touch-cell" data-cell="E4">E4</button><button class="touch-cell" data-cell="F4">F4</button><button class="touch-cell" data-cell="G4">G4</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2. Automated tests</h2>
+      <div id="testRows"></div>
+      <div class="actions" style="margin-top:12px">
+        <button id="runTests">Run all tests</button>
+        <button id="clearCache" class="secondary">Clear chess cache</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:14px">
+    <h2>3. Diagnostic report</h2>
+    <div class="actions" style="margin-bottom:10px">
+      <button id="copyReport">Copy report</button>
+      <a class="action secondary" href="./?clean=diag1">Open clean chess page</a>
+    </div>
+    <pre id="report">Diagnostics not started.</pre>
+  </section>
+</main>
+<script>
+(function(){
+  'use strict';
+  const BUILD='diag-2026-08-02-d1';
+  const report=[];
+  const tests=document.getElementById('testRows');
+  const reportEl=document.getElementById('report');
+  const status=document.getElementById('status');
+  let selected=false;
+
+  function line(message,data){
+    const text='['+new Date().toLocaleTimeString()+'] '+message+(data!==undefined?' '+safe(data):'');
+    report.push(text);reportEl.textContent=report.join('\n');reportEl.scrollTop=reportEl.scrollHeight;
+  }
+  function safe(value){try{return typeof value==='string'?value:JSON.stringify(value)}catch{return String(value)}}
+  function row(name,state,detail){
+    let el=document.querySelector('[data-test="'+name+'"]');
+    if(!el){el=document.createElement('div');el.className='test-row';el.dataset.test=name;el.innerHTML='<span></span><strong class="test-state"></strong>';tests.append(el)}
+    el.firstElementChild.textContent=name+(detail?' · '+detail:'');
+    const badge=el.lastElementChild;badge.textContent=state.toUpperCase();badge.className='test-state '+(state==='pass'?'pass':state==='fail'?'fail':'warn');
+  }
+
+  document.getElementById('touchPad').addEventListener('pointerdown',e=>line('pointerdown',cellInfo(e)),true);
+  document.getElementById('touchPad').addEventListener('pointerup',e=>line('pointerup',cellInfo(e)),true);
+  document.getElementById('touchPad').addEventListener('click',e=>{
+    const button=e.target.closest('[data-cell]');if(!button)return;
+    line('click',{cell:button.dataset.cell,trusted:e.isTrusted,target:e.target.tagName});
+    if(button.dataset.cell==='E2'){
+      selected=true;document.querySelectorAll('.touch-cell').forEach(x=>x.classList.remove('active','target'));button.classList.add('active');document.querySelector('[data-cell="E4"]').classList.add('target');status.className='';status.innerHTML='E2 registered. Now tap <strong>E4</strong>.';row('Phone touch sequence','warn','E2 received; awaiting E4');
+    }else if(button.dataset.cell==='E4'&&selected){
+      selected=false;document.querySelectorAll('.touch-cell').forEach(x=>x.classList.remove('active','target'));status.className='ok';status.textContent='PASS: Your phone delivered both E2 and E4 taps correctly.';row('Phone touch sequence','pass','E2 → E4 received');line('TOUCH TEST PASS');
+    }else{status.className='bad';status.textContent='Received '+button.dataset.cell+'. Tap E2 first, then E4.';row('Phone touch sequence','warn','unexpected '+button.dataset.cell)}
+  });
+  function cellInfo(e){const b=e.target.closest?.('[data-cell]');return {cell:b?.dataset.cell||null,type:e.pointerType||null,x:Math.round(e.clientX),y:Math.round(e.clientY),target:e.target.tagName}}
+
+  async function fetchTest(name,url,expectText){
+    try{
+      const bust=(url.includes('?')?'&':'?')+'diagnostic='+Date.now();
+      const response=await fetch(url+bust,{cache:'no-store'});
+      const text=await response.text();
+      const ok=response.ok&&(!expectText||text.includes(expectText));
+      row(name,ok?'pass':'fail','HTTP '+response.status+' · '+text.length+' bytes');
+      line(name,{url,status:response.status,bytes:text.length,containsExpected:expectText?text.includes(expectText):true,contentType:response.headers.get('content-type'),cacheControl:response.headers.get('cache-control')});
+      return ok;
+    }catch(error){row(name,'fail',error.message);line(name+' failed',error.message);return false}
+  }
+
+  async function runAll(){
+    report.length=0;tests.replaceChildren();line('Build',BUILD);line('User agent',navigator.userAgent);line('Location',location.href);line('Viewport',{w:innerWidth,h:innerHeight,dpr:devicePixelRatio});
+    row('Inline JavaScript','pass','this page executed');
+    row('Pointer Events',window.PointerEvent?'pass':'fail',window.PointerEvent?'supported':'missing');
+    row('CSS.escape',window.CSS&&CSS.escape?'pass':'warn',window.CSS&&CSS.escape?'supported':'fallback required');
+    row('Dynamic import syntax','warn','testing');
+    await fetchTest('Live chess HTML','./index.html','coordinate-guide.js?v=17');
+    await fetchTest('Main chess controller','./chess.js','CORE_URLS');
+    await fetchTest('Coordinate guide','./coordinate-guide.js','touch-bridge.js?v=17');
+    await fetchTest('Touch bridge','./touch-bridge.js','Touch bridge v');
+    await fetchTest('Move repair bridge','./move-repair.js','repairedChessFetch');
+    await fetchTest('Tri-Deck engine','./trideck-engine.js','TRI_STATE_VERSION');
+    await fetchTest('Piece renderer','./pieces.js','createPiece');
+
+    try{
+      const mod=await import('https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm?diag='+Date.now());
+      const game=new mod.Chess();const move=game.move({from:'e2',to:'e4'});
+      const ok=Boolean(move&&move.to==='e4');row('Remote chess engine',''+(ok?'pass':'fail'),ok?'e2 → e4 legal':'move failed');line('Chess engine import',{ok,move:move?.san,fen:game.fen()});
+    }catch(error){row('Remote chess engine','fail',error.message);line('Chess engine import failed',error.message)}
+
+    try{
+      if('serviceWorker' in navigator){
+        const regs=await navigator.serviceWorker.getRegistrations();
+        const controller=navigator.serviceWorker.controller;
+        row('Service worker',controller?'warn':'pass',controller?'page controlled by '+controller.scriptURL:'no active controller');
+        line('Service workers',{controller:controller?.scriptURL||null,registrations:regs.map(r=>({scope:r.scope,active:r.active?.scriptURL||null}))});
+      }else{row('Service worker','pass','unsupported, therefore not caching')}
+    }catch(error){row('Service worker','fail',error.message);line('Service worker inspection failed',error.message)}
+
+    try{
+      const keys=[];for(let i=0;i<localStorage.length;i++)keys.push(localStorage.key(i));
+      const chessKeys=keys.filter(k=>/novaChess/i.test(k));
+      row('Stored chess session',chessKeys.length?'warn':'pass',chessKeys.length?chessKeys.length+' key(s) found':'none');line('Chess localStorage keys',chessKeys.map(k=>({key:k,value:(localStorage.getItem(k)||'').slice(0,220)})));
+    }catch(error){row('Stored chess session','fail',error.message)}
+    line('TESTS COMPLETE');
+  }
+
+  async function clearChessCache(){
+    line('Clearing chess caches and workers');
+    try{
+      if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations();for(const reg of regs){if(reg.scope.includes('/chess/'))await reg.unregister()}}
+      if('caches' in window){const keys=await caches.keys();for(const key of keys){if(/chess|astralis-nova-chess/i.test(key))await caches.delete(key)}}
+      for(let i=localStorage.length-1;i>=0;i--){const key=localStorage.key(i);if(key&&/novaChessLastSession/i.test(key))localStorage.removeItem(key)}
+      row('Cache cleanup','pass','workers and chess caches cleared');line('Cache cleanup complete');status.className='ok';status.textContent='Chess cache cleared. Use Open clean chess page below.';
+    }catch(error){row('Cache cleanup','fail',error.message);line('Cache cleanup failed',error.message)}
+  }
+
+  document.getElementById('runTests').addEventListener('click',runAll);
+  document.getElementById('clearCache').addEventListener('click',clearChessCache);
+  document.getElementById('copyReport').addEventListener('click',async()=>{
+    try{await navigator.clipboard.writeText(reportEl.textContent);status.className='ok';status.textContent='Diagnostic report copied.'}
+    catch{window.prompt('Copy this diagnostic report:',reportEl.textContent)}
+  });
+  window.addEventListener('error',e=>line('WINDOW ERROR',{message:e.message,file:e.filename,line:e.lineno,column:e.colno}));
+  window.addEventListener('unhandledrejection',e=>line('UNHANDLED REJECTION',e.reason?.message||String(e.reason)));
+  line('Diagnostic page loaded',BUILD);row('Diagnostic page','pass','inline script running');
+})();
+</script>
+</body>
+</html>

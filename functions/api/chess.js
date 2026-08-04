@@ -5,6 +5,7 @@ const JSON_HEADERS = {
 };
 const MAX_STATE_BYTES = 220_000;
 const MODES = new Set(['standard', 'trideck']);
+const AI_NAME = 'Nova AI';
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -115,6 +116,7 @@ async function makeMove(request, db) {
   if (!id || !token || !Number.isInteger(expectedRevision) || expectedRevision < 0) throw httpError(400, 'The move request is incomplete.');
   const row = await findGame(db, { id });
   if (!row) throw httpError(404, 'Mission archive not found.');
+  if (isAiActive(row)) throw httpError(409, 'Nova AI controls Black in this mission. Synchronize and retry through the AI command route.');
   if (row.status !== 'active') throw httpError(409, 'This mission is not currently active.');
   if (row.mode !== mode) throw httpError(409, 'The ruleset does not match the saved mission.');
   if (Number(row.revision) !== expectedRevision) throw httpError(409, 'The board changed before your move was saved. Synchronize and try again.');
@@ -189,6 +191,10 @@ async function findGame(db, { id = null, code = null }) {
   return null;
 }
 
+function isAiActive(row) {
+  return Boolean(row && row.status === 'active' && !row.black_token_hash && String(row.black_name || '') === AI_NAME);
+}
+
 function serializeGame(row) {
   if (!row) return null;
   let state = {};
@@ -197,7 +203,7 @@ function serializeGame(row) {
     id: row.id,
     code: row.code,
     mode: row.mode,
-    status: row.status,
+    status: isAiActive(row) ? 'active_ai' : row.status,
     whiteName: row.white_name,
     blackName: row.black_name,
     state,
