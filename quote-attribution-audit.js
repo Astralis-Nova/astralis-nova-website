@@ -40,37 +40,59 @@
     ['The future rarely knocks. Most days, it waits quietly on the workbench.','Astralis Nova']
   ]);
 
+  let applying=false;
+  const write=(element,value)=>{
+    if(element&&element.textContent!==value)element.textContent=value;
+  };
+
   function applyAudit(){
+    if(applying)return;
     const text=document.getElementById('quoteOrbitText');
     const credit=document.getElementById('quoteOrbitCredit');
     const type=document.getElementById('quoteOrbitType');
     const note=document.getElementById('quoteOrbitNote');
     if(!text||!credit||!type||!note)return;
 
-    const current=text.textContent.trim();
-    const record=records.find(item=>item.match===current||item.text===current);
-    if(record){
-      if(record.text&&current!==record.text)text.textContent=record.text;
-      credit.textContent='— '+record.credit;
-      type.textContent=record.type;
-      note.textContent=record.note;
-      return;
-    }
+    applying=true;
+    try{
+      const current=text.textContent.trim();
+      const record=records.find(item=>item.match===current||item.text===current);
+      if(record){
+        if(record.text)write(text,record.text);
+        write(credit,'— '+record.credit);
+        write(type,record.type);
+        write(note,record.note);
+        return;
+      }
 
-    const originalCredit=originals.get(current);
-    if(originalCredit){
-      credit.textContent='— '+originalCredit;
-      type.textContent='Original transmission';
-      note.textContent='An original thought from the Astralis Nova creative archive.';
+      const originalCredit=originals.get(current);
+      if(originalCredit){
+        write(credit,'— '+originalCredit);
+        write(type,'Original transmission');
+        write(note,'An original thought from the Astralis Nova creative archive.');
+      }
+    }finally{
+      applying=false;
     }
   }
 
-  const start=()=>{
-    applyAudit();
+  function start(){
     const card=document.querySelector('#cosmic-culture .quote-card');
-    if(!card)return setTimeout(start,300);
-    new MutationObserver(applyAudit).observe(card,{subtree:true,childList:true,characterData:true});
-  };
+    if(!card){setTimeout(start,250);return;}
+    applyAudit();
+    let queued=false;
+    const observer=new MutationObserver(()=>{
+      if(queued)return;
+      queued=true;
+      requestAnimationFrame(()=>{
+        queued=false;
+        applyAudit();
+      });
+    });
+    observer.observe(card,{subtree:true,childList:true,characterData:true});
+  }
 
-  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',start):start();
+  document.readyState==='loading'
+    ?document.addEventListener('DOMContentLoaded',start,{once:true})
+    :start();
 })();
