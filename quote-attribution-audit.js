@@ -22,6 +22,9 @@
     }
   ];
 
+  const ROTATION_MS=60*1000;
+  let currentIndex=-1;
+
   const installStyles=()=>{
     if(document.getElementById('mlkTributeStyles'))return;
     const style=document.createElement('style');
@@ -32,24 +35,44 @@
       .mlk-tribute p{margin:0 0 15px;color:#d8e1ef;line-height:1.72}
       .mlk-tribute blockquote{margin:14px 0;padding:14px 18px;border-left:3px solid #5aa7ff;background:rgba(8,18,31,.55);border-radius:0 12px 12px 0;color:#f4f7ff;line-height:1.7;font-size:1rem}
       .mlk-tribute .mlk-credit{margin-top:18px;color:#8dc9ff;font-weight:900;letter-spacing:.03em}
+      .quote-text,.quote-credit,.quote-note{transition:opacity .35s ease}
+      .quote-orbit-fade{opacity:0}
     `;
     document.head.appendChild(style);
   };
 
-  const installQuoteOrbit=()=>{
+  const showQuote=(index,animate=true)=>{
     const text=document.querySelector('.quote-text');
     const credit=document.querySelector('.quote-credit');
     const note=document.querySelector('.quote-note');
     if(!text||!credit)return false;
 
-    const now=new Date();
-    const dayKey=Math.floor(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate())/86400000);
-    const quote=quotes[((dayKey%quotes.length)+quotes.length)%quotes.length];
+    const quote=quotes[index%quotes.length];
+    const apply=()=>{
+      text.textContent=quote.text;
+      credit.textContent=`— ${quote.credit}`;
+      if(note)note.textContent=quote.note;
+      text.classList.remove('quote-orbit-fade');
+      credit.classList.remove('quote-orbit-fade');
+      if(note)note.classList.remove('quote-orbit-fade');
+    };
 
-    if(text.textContent.trim()!==quote.text)text.textContent=quote.text;
-    const expectedCredit=`— ${quote.credit}`;
-    if(credit.textContent.trim()!==expectedCredit)credit.textContent=expectedCredit;
-    if(note&&note.textContent.trim()!==quote.note)note.textContent=quote.note;
+    if(animate){
+      text.classList.add('quote-orbit-fade');
+      credit.classList.add('quote-orbit-fade');
+      if(note)note.classList.add('quote-orbit-fade');
+      setTimeout(apply,350);
+    }else apply();
+
+    currentIndex=index%quotes.length;
+    return true;
+  };
+
+  const installQuoteOrbit=()=>{
+    if(currentIndex<0){
+      const minuteKey=Math.floor(Date.now()/ROTATION_MS);
+      return showQuote(minuteKey%quotes.length,false);
+    }
     return true;
   };
 
@@ -81,6 +104,11 @@
   installAll();
 
   const observer=new MutationObserver(()=>installAll());
-  observer.observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+  observer.observe(document.documentElement,{childList:true,subtree:true});
   setTimeout(()=>observer.disconnect(),30000);
+
+  setInterval(()=>{
+    if(currentIndex<0){installQuoteOrbit();return;}
+    showQuote((currentIndex+1)%quotes.length,true);
+  },ROTATION_MS);
 })();
