@@ -1,58 +1,32 @@
 (()=>{
-  const DEST='/daniel-and-lions-den.html';
+  const DESTINATION='/daniel-lions-story.html?v=20260805a';
 
-  const findCard=()=>{
-    const candidates=[...document.querySelectorAll('a,article,div,section')];
-    return candidates.find(el=>{
-      const text=(el.textContent||'').trim().toLowerCase();
-      return (text.includes('eraser board station')||text.includes('daniel and the lions’ den')||text.includes("daniel and the lions' den"))&&text.length<500;
-    })||null;
-  };
-
-  const forceDanielNavigation=event=>{
-    const target=event.target instanceof Element?event.target:null;
-    if(!target)return;
-    const card=target.closest('[data-daniel-story-ready="true"]');
+  const openDaniel=event=>{
+    const card=event.target.closest?.('[data-daniel-story-ready="true"]');
     if(!card)return;
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
-    window.location.assign(DEST);
+    location.assign(DESTINATION);
   };
 
-  document.addEventListener('click',forceDanielNavigation,true);
-  document.addEventListener('keydown',event=>{
-    if(event.key!=='Enter'&&event.key!==' ')return;
-    forceDanielNavigation(event);
-  },true);
+  document.addEventListener('click',openDaniel,true);
 
   const apply=()=>{
-    const textNode=findCard();
+    const all=[...document.querySelectorAll('a,article,div,section')];
+    const textNode=all.find(el=>{
+      const text=(el.textContent||'').trim().toLowerCase();
+      return (text.includes('eraser board station')||text.includes('daniel and the lions'))&&text.length<500;
+    });
     if(!textNode)return false;
 
-    const card=textNode.closest('a,[role="link"],article,div,section')||textNode;
+    const card=textNode.closest('a')||textNode.querySelector('a')||textNode;
     const link=card.matches?.('a')?card:card.querySelector?.('a');
-
-    card.dataset.danielStoryReady='true';
-    card.setAttribute('role','link');
-    card.setAttribute('tabindex','0');
-    card.setAttribute('aria-label','Open Daniel and the Lions Den story');
-    card.removeAttribute('onclick');
-
     if(link){
-      link.href=DEST;
-      link.setAttribute('href',DEST);
+      link.href=DESTINATION;
       link.removeAttribute('target');
       link.removeAttribute('rel');
-      link.removeAttribute('onclick');
-      link.dataset.danielStoryReady='true';
       link.setAttribute('aria-label','Open Daniel and the Lions Den story');
-    }
-
-    for(const el of card.querySelectorAll?.('[data-target],[data-href],[data-url]')||[]){
-      if(el.hasAttribute('data-target'))el.setAttribute('data-target',DEST);
-      if(el.hasAttribute('data-href'))el.setAttribute('data-href',DEST);
-      if(el.hasAttribute('data-url'))el.setAttribute('data-url',DEST);
     }
 
     const title=[...card.querySelectorAll?.('h1,h2,h3,h4,strong,b')||[]].find(el=>{
@@ -80,19 +54,15 @@
     });
     if(visual)visual.textContent='✦ Visual: Daniel praying among the lions';
 
-    const image=card.querySelector?.('img');
-    if(image){
-      image.alt='Daniel and the Lions Den';
-      image.style.filter='sepia(.35) saturate(1.2) hue-rotate(340deg) brightness(.9)';
-    }
-
+    card.dataset.danielStoryReady='true';
+    if(link)link.dataset.danielStoryReady='true';
     return true;
   };
 
   let attempts=0;
   const timer=setInterval(()=>{
     attempts++;
-    if(apply()||attempts>60)clearInterval(timer);
-  },200);
+    if(apply()||attempts>40)clearInterval(timer);
+  },250);
   apply();
 })();
