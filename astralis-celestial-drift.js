@@ -78,9 +78,7 @@
         <p class="darktide-kicker">Astralis Nova presents</p>
         <h2 id="darktidePanelTitle">Darktide Megamix</h2>
         <p>The strongest moments from four Darktide songs, cut apart and reforged into one battle transmission for the old warriors of Dereth.</p>
-        <audio id="darktideAudio" controls preload="metadata" src="/Audio/Darktide-Megamix.mp3">
-          Your browser does not support audio playback.
-        </audio>
+        <audio id="darktideAudio" controls preload="metadata" src="/Audio/Darktide-Megamix.mp3">Your browser does not support audio playback.</audio>
         <div class="darktide-actions" style="justify-content:center">
           <button class="darktide-action primary" id="darktidePanelShare" type="button">🔗 Copy Share Link</button>
           <a class="darktide-action" href="#music" id="darktideExplore">Explore All Songs</a>
@@ -121,9 +119,9 @@
   const loadNovaGuide=()=>{
     if(document.querySelector('script[data-nova-guide]'))return;
     const guide=document.createElement('script');
-    guide.src='/nova-guide.js?v=20260805a';
+    guide.src='/nova-guide.js?v=20260805b';
     guide.dataset.novaGuide='true';
-    guide.defer=true;
+    guide.async=false;
     document.head.appendChild(guide);
   };
 
