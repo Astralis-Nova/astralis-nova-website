@@ -1,9 +1,9 @@
 (()=>{
-  if(window.__astralisFloatingControlsLayoutV1)return;
-  window.__astralisFloatingControlsLayoutV1=true;
+  if(window.__astralisFloatingControlsLayoutV2)return;
+  window.__astralisFloatingControlsLayoutV2=true;
 
   const style=document.createElement('style');
-  style.id='astralisFloatingControlsLayoutV1';
+  style.id='astralisFloatingControlsLayoutV2';
   style.textContent=`
     #feelingTipsyButton{
       left:50%!important;
@@ -21,6 +21,13 @@
       max-width:min(260px,calc(100vw - 32px))!important;
       z-index:939!important;
     }
+    .tipsy-subtitle{
+      margin:0 0 7px!important;
+      color:#ffbf78!important;
+      font-size:.9rem!important;
+      font-weight:900!important;
+      letter-spacing:.05em!important;
+    }
     @media(max-width:640px){
       #feelingTipsyButton{
         bottom:12px!important;
@@ -35,6 +42,24 @@
   `;
   document.head.appendChild(style);
 
+  const updateMissionLabel=()=>{
+    const button=document.getElementById('feelingTipsyButton');
+    const label=button?.querySelector('.tipsy-text');
+    const title=document.getElementById('feelingTipsyTitle');
+    const kicker=document.querySelector('#feelingTipsyPanel .tipsy-kicker');
+    if(!button||!label||!title)return false;
+
+    label.textContent='Support the Mission';
+    button.setAttribute('aria-label','Open Support the Mission tip jar');
+    title.textContent='Support the Mission';
+
+    if(kicker){
+      kicker.textContent='Feeling Tipsy?';
+      kicker.classList.add('tipsy-subtitle');
+    }
+    return true;
+  };
+
   const placeSignal=()=>{
     const signal=document.getElementById('shipSignal');
     if(!signal)return false;
@@ -48,13 +73,14 @@
 
   const attach=()=>{
     const ship=document.getElementById('roamingStarship');
-    if(!ship||!placeSignal())return false;
-    if(!ship.dataset.centeredSignal){
+    const missionReady=updateMissionLabel();
+    const signalReady=placeSignal();
+    if(ship&&signalReady&&!ship.dataset.centeredSignal){
       ship.dataset.centeredSignal='true';
       ship.addEventListener('click',()=>requestAnimationFrame(placeSignal),true);
       window.addEventListener('resize',placeSignal,{passive:true});
     }
-    return true;
+    return Boolean(missionReady&&signalReady);
   };
 
   if(!attach()){
