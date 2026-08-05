@@ -70,7 +70,7 @@
   const loadQuoteAudit=()=>loadScript('/quote-attribution-audit.js?v=20260805a','quoteAudit');
   const loadNovaGuide=()=>loadScript('/nova-guide.js?v=20260805g','novaGuide');
   const loadTipJar=()=>loadScript('/feeling-tipsy.js?v=20260805c','feelingTipsy');
-  const loadFloatingLayout=()=>loadScript('/floating-controls-layout.js?v=20260805a','floatingControlsLayout');
+  const loadFloatingLayout=()=>loadScript('/floating-controls-layout.js?v=20260805b','floatingControlsLayout');
 
   const finish=()=>{upgradeRiver();loadQuoteAudit();addDarktideLaunch();loadNovaGuide();loadTipJar();loadFloatingLayout()};
   const core=document.createElement('script');core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@391ac37395e6de4dd8158a04476b059060495fee/astralis-celestial-drift.js';core.async=false;core.onload=finish;core.onerror=finish;document.head.appendChild(core);
