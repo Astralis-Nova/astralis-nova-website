@@ -1,6 +1,6 @@
 (()=>{
-  if(window.__astralisNovaBridgeV16)return;
-  window.__astralisNovaBridgeV16=true;
+  if(window.__astralisNovaBridgeV17)return;
+  window.__astralisNovaBridgeV17=true;
 
   window.__astralisNovaMidiUpgrade=true;
   window.__astralisNovaMidiUpgradeV2=true;
@@ -20,7 +20,7 @@
   const loadUpgrades=()=>{
     loadScript('/nova-remove-hands.js?v=20260805e','novaRemoveHands');
     loadScript('/nova-intelligence.js?v=20260805a','novaIntelligence');
-    loadScript('/nova-conversation.js?v=20260805b','novaConversation');
+    loadScript('/nova-conversation.js?v=20260805c','novaConversation');
   };
 
   if(window.__astralisNovaGuideV6){loadUpgrades();return}
