@@ -14,7 +14,6 @@
 
   const addDarktideLaunch=()=>{
     if(document.getElementById('darktideLaunch'))return;
-
     const style=document.createElement('style');
     style.textContent=`
       #darktideLaunch{position:relative;z-index:45;overflow:hidden;border-bottom:1px solid rgba(255,94,94,.45);background:linear-gradient(100deg,#17030b 0%,#3b0719 35%,#160923 70%,#061323 100%);box-shadow:0 10px 32px rgba(0,0,0,.38)}
@@ -43,93 +42,25 @@
       @media(prefers-reduced-motion:reduce){#darktideLaunch::before,.darktide-sigil{animation:none}}
     `;
     document.head.appendChild(style);
-
     const banner=document.createElement('section');
     banner.id='darktideLaunch';
     banner.setAttribute('aria-label','New Darktide Megamix release');
-    banner.innerHTML=`
-      <div class="darktide-launch-inner">
-        <div class="darktide-launch-copy">
-          <div class="darktide-sigil" aria-hidden="true">⚔️</div>
-          <div>
-            <p class="darktide-kicker">Incoming transmission from Dereth</p>
-            <h2 class="darktide-title">NEW: Darktide Megamix</h2>
-            <p class="darktide-sub">Four Darktide battle tracks reforged into one continuous remix.</p>
-          </div>
-        </div>
-        <div class="darktide-actions">
-          <button class="darktide-action primary" id="darktidePlay" type="button">▶ Play the Remix</button>
-          <button class="darktide-action" id="darktideShare" type="button">🔗 Copy Share Link</button>
-        </div>
-      </div>`;
-
+    banner.innerHTML=`<div class="darktide-launch-inner"><div class="darktide-launch-copy"><div class="darktide-sigil" aria-hidden="true">⚔️</div><div><p class="darktide-kicker">Incoming transmission from Dereth</p><h2 class="darktide-title">NEW: Darktide Megamix</h2><p class="darktide-sub">Four Darktide battle tracks reforged into one continuous remix.</p></div></div><div class="darktide-actions"><button class="darktide-action primary" id="darktidePlay" type="button">▶ Play the Remix</button><button class="darktide-action" id="darktideShare" type="button">🔗 Copy Share Link</button></div></div>`;
     const topbar=document.querySelector('.topbar');
-    if(topbar)topbar.insertAdjacentElement('afterend',banner);
-    else document.body.prepend(banner);
-
+    if(topbar)topbar.insertAdjacentElement('afterend',banner);else document.body.prepend(banner);
     const panel=document.createElement('div');
-    panel.id='darktidePanel';
-    panel.setAttribute('role','dialog');
-    panel.setAttribute('aria-modal','true');
-    panel.setAttribute('aria-labelledby','darktidePanelTitle');
-    panel.innerHTML=`
-      <div class="darktide-panel-card">
-        <button class="darktide-close" id="darktideClose" type="button" aria-label="Close Darktide player">×</button>
-        <p class="darktide-kicker">Astralis Nova presents</p>
-        <h2 id="darktidePanelTitle">Darktide Megamix</h2>
-        <p>The strongest moments from four Darktide songs, cut apart and reforged into one battle transmission for the old warriors of Dereth.</p>
-        <audio id="darktideAudio" controls preload="metadata" src="/Audio/Darktide-Megamix.mp3">Your browser does not support audio playback.</audio>
-        <div class="darktide-actions" style="justify-content:center">
-          <button class="darktide-action primary" id="darktidePanelShare" type="button">🔗 Copy Share Link</button>
-          <a class="darktide-action" href="#music" id="darktideExplore">Explore All Songs</a>
-        </div>
-        <div class="darktide-share-status" id="darktideShareStatus" aria-live="polite"></div>
-      </div>`;
+    panel.id='darktidePanel';panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-labelledby','darktidePanelTitle');
+    panel.innerHTML=`<div class="darktide-panel-card"><button class="darktide-close" id="darktideClose" type="button" aria-label="Close Darktide player">×</button><p class="darktide-kicker">Astralis Nova presents</p><h2 id="darktidePanelTitle">Darktide Megamix</h2><p>The strongest moments from four Darktide songs, cut apart and reforged into one battle transmission for the old warriors of Dereth.</p><audio id="darktideAudio" controls preload="metadata" src="/Audio/Darktide-Megamix.mp3">Your browser does not support audio playback.</audio><div class="darktide-actions" style="justify-content:center"><button class="darktide-action primary" id="darktidePanelShare" type="button">🔗 Copy Share Link</button><a class="darktide-action" href="#music" id="darktideExplore">Explore All Songs</a></div><div class="darktide-share-status" id="darktideShareStatus" aria-live="polite"></div></div>`;
     document.body.appendChild(panel);
-
     const openPanel=()=>{panel.classList.add('open');document.body.style.overflow='hidden';history.replaceState(null,'',`${location.pathname}?darktide=1${location.hash||''}`)};
-    const closePanel=()=>{panel.classList.remove('open');document.body.style.overflow='';const audio=document.getElementById('darktideAudio');if(audio)audio.pause()};
-    const copyLink=async()=>{
-      const url=`${location.origin}${location.pathname}?darktide=1`;
-      const status=document.getElementById('darktideShareStatus');
-      try{await navigator.clipboard.writeText(url);if(status)status.textContent='Share link copied. Transmission ready.'}
-      catch{window.prompt('Copy this Darktide share link:',url)}
-    };
-
-    document.getElementById('darktidePlay')?.addEventListener('click',openPanel);
-    document.getElementById('darktideClose')?.addEventListener('click',closePanel);
-    document.getElementById('darktideShare')?.addEventListener('click',copyLink);
-    document.getElementById('darktidePanelShare')?.addEventListener('click',copyLink);
-    document.getElementById('darktideExplore')?.addEventListener('click',closePanel);
-    panel.addEventListener('click',event=>{if(event.target===panel)closePanel()});
-    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&panel.classList.contains('open'))closePanel()});
-
+    const closePanel=()=>{panel.classList.remove('open');document.body.style.overflow='';document.getElementById('darktideAudio')?.pause()};
+    const copyLink=async()=>{const url=`${location.origin}${location.pathname}?darktide=1`;const status=document.getElementById('darktideShareStatus');try{await navigator.clipboard.writeText(url);if(status)status.textContent='Share link copied. Transmission ready.'}catch{window.prompt('Copy this Darktide share link:',url)}};
+    document.getElementById('darktidePlay')?.addEventListener('click',openPanel);document.getElementById('darktideClose')?.addEventListener('click',closePanel);document.getElementById('darktideShare')?.addEventListener('click',copyLink);document.getElementById('darktidePanelShare')?.addEventListener('click',copyLink);document.getElementById('darktideExplore')?.addEventListener('click',closePanel);panel.addEventListener('click',event=>{if(event.target===panel)closePanel()});document.addEventListener('keydown',event=>{if(event.key==='Escape'&&panel.classList.contains('open'))closePanel()});
     if(new URLSearchParams(location.search).get('darktide')==='1')setTimeout(openPanel,350);
   };
 
-  const loadQuoteAudit=()=>{
-    if(document.querySelector('script[data-quote-audit]'))return;
-    const audit=document.createElement('script');
-    audit.src='/quote-attribution-audit.js?v=20260805a';
-    audit.dataset.quoteAudit='true';
-    audit.async=false;
-    document.head.appendChild(audit);
-  };
-
-  const loadNovaGuide=()=>{
-    if(document.querySelector('script[data-nova-guide]'))return;
-    const guide=document.createElement('script');
-    guide.src='/nova-guide.js?v=20260805f';
-    guide.dataset.novaGuide='true';
-    guide.async=false;
-    document.head.appendChild(guide);
-  };
-
+  const loadQuoteAudit=()=>{if(document.querySelector('script[data-quote-audit]'))return;const audit=document.createElement('script');audit.src='/quote-attribution-audit.js?v=20260805a';audit.dataset.quoteAudit='true';audit.async=false;document.head.appendChild(audit)};
+  const loadNovaGuide=()=>{if(document.querySelector('script[data-nova-guide]'))return;const guide=document.createElement('script');guide.src='/nova-guide.js?v=20260805g';guide.dataset.novaGuide='true';guide.async=false;document.head.appendChild(guide)};
   const finish=()=>{upgradeRiver();loadQuoteAudit();addDarktideLaunch();loadNovaGuide()};
-  const core=document.createElement('script');
-  core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@391ac37395e6de4dd8158a04476b059060495fee/astralis-celestial-drift.js';
-  core.async=false;
-  core.onload=finish;
-  core.onerror=finish;
-  document.head.appendChild(core);
+  const core=document.createElement('script');core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@391ac37395e6de4dd8158a04476b059060495fee/astralis-celestial-drift.js';core.async=false;core.onload=finish;core.onerror=finish;document.head.appendChild(core);
 })();
