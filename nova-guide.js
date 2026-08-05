@@ -1,6 +1,6 @@
 (()=>{
-  if(window.__astralisNovaBridgeV8)return;
-  window.__astralisNovaBridgeV8=true;
+  if(window.__astralisNovaBridgeV9)return;
+  window.__astralisNovaBridgeV9=true;
 
   const loadScript=(src,key)=>{
     if(document.querySelector(`script[data-${key}]`))return;
@@ -12,7 +12,7 @@
   };
   const loadUpgrades=()=>{
     loadScript('/nova-intelligence.js?v=20260805a','novaIntelligence');
-    loadScript('/nova-midi-upgrade.js?v=20260805a','novaMidiUpgrade');
+    loadScript('/nova-midi-upgrade.js?v=20260805b','novaMidiUpgrade');
   };
 
   if(window.__astralisNovaGuideV6){loadUpgrades();return}
