@@ -1,6 +1,6 @@
 (()=>{
-  if(window.__astralisNovaRemoveHandsV2)return;
-  window.__astralisNovaRemoveHandsV2=true;
+  if(window.__astralisNovaCleanupV3)return;
+  window.__astralisNovaCleanupV3=true;
 
   const css=`
     #novaGuide .nova-hand,
@@ -29,6 +29,12 @@
       margin:0!important;
       transform:none!important;
     }
+    #musicToggle{
+      display:none!important;
+      visibility:hidden!important;
+      opacity:0!important;
+      pointer-events:none!important;
+    }
     @media(max-width:560px){
       #novaGuide .nova-orb-wrap{
         width:84px!important;
@@ -39,13 +45,21 @@
   `;
 
   const clean=()=>{
-    let style=document.getElementById('novaRemoveHandsStylesV2');
+    let style=document.getElementById('novaCleanupStylesV3');
     if(!style){
       style=document.createElement('style');
-      style.id='novaRemoveHandsStylesV2';
+      style.id='novaCleanupStylesV3';
       style.textContent=css;
       document.head.appendChild(style);
     }
+
+    const musicToggle=document.getElementById('musicToggle');
+    if(musicToggle){
+      musicToggle.hidden=true;
+      musicToggle.tabIndex=-1;
+      musicToggle.setAttribute('aria-hidden','true');
+    }
+
     const root=document.getElementById('novaGuide');
     if(!root)return false;
     root.querySelectorAll('.nova-hand,#novaLeft,#novaRight').forEach(el=>el.remove());
