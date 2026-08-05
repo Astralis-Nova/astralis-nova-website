@@ -1,6 +1,6 @@
 (()=>{
-  if(window.__astralisNovaCleanupV3)return;
-  window.__astralisNovaCleanupV3=true;
+  if(window.__astralisNovaCleanupV4)return;
+  window.__astralisNovaCleanupV4=true;
 
   const css=`
     #novaGuide .nova-hand,
@@ -29,12 +29,6 @@
       margin:0!important;
       transform:none!important;
     }
-    #musicToggle{
-      display:none!important;
-      visibility:hidden!important;
-      opacity:0!important;
-      pointer-events:none!important;
-    }
     @media(max-width:560px){
       #novaGuide .nova-orb-wrap{
         width:84px!important;
@@ -45,19 +39,23 @@
   `;
 
   const clean=()=>{
-    let style=document.getElementById('novaCleanupStylesV3');
+    let style=document.getElementById('novaCleanupStylesV4');
     if(!style){
       style=document.createElement('style');
-      style.id='novaCleanupStylesV3';
+      style.id='novaCleanupStylesV4';
       style.textContent=css;
       document.head.appendChild(style);
     }
 
     const musicToggle=document.getElementById('musicToggle');
     if(musicToggle){
-      musicToggle.hidden=true;
-      musicToggle.tabIndex=-1;
-      musicToggle.setAttribute('aria-hidden','true');
+      musicToggle.hidden=false;
+      musicToggle.removeAttribute('aria-hidden');
+      musicToggle.tabIndex=0;
+      musicToggle.style.removeProperty('display');
+      musicToggle.style.removeProperty('visibility');
+      musicToggle.style.removeProperty('opacity');
+      musicToggle.style.removeProperty('pointer-events');
     }
 
     const root=document.getElementById('novaGuide');
@@ -68,10 +66,7 @@
   };
 
   if(clean())return;
-
-  const observer=new MutationObserver(()=>{
-    if(clean())observer.disconnect();
-  });
+  const observer=new MutationObserver(()=>{if(clean())observer.disconnect()});
   observer.observe(document.documentElement,{childList:true,subtree:true});
-  setTimeout(()=>observer.disconnect(),8000);
+  setTimeout(()=>observer.disconnect(),5000);
 })();
