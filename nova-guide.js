@@ -1,6 +1,6 @@
 (()=>{
-  if(window.__astralisNovaBridgeV15)return;
-  window.__astralisNovaBridgeV15=true;
+  if(window.__astralisNovaBridgeV16)return;
+  window.__astralisNovaBridgeV16=true;
 
   window.__astralisNovaMidiUpgrade=true;
   window.__astralisNovaMidiUpgradeV2=true;
@@ -20,13 +20,10 @@
   const loadUpgrades=()=>{
     loadScript('/nova-remove-hands.js?v=20260805e','novaRemoveHands');
     loadScript('/nova-intelligence.js?v=20260805a','novaIntelligence');
-    loadScript('/nova-conversation.js?v=20260805a','novaConversation');
+    loadScript('/nova-conversation.js?v=20260805b','novaConversation');
   };
 
-  if(window.__astralisNovaGuideV6){
-    loadUpgrades();
-    return;
-  }
+  if(window.__astralisNovaGuideV6){loadUpgrades();return}
 
   const core=document.createElement('script');
   core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@c4c7d4a338e5532fed8fe52d4e7a950c536ccd69/nova-guide.js';
