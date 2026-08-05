@@ -1,25 +1,51 @@
 (()=>{
-  const replaceCard=()=>{
-    const cards=[...document.querySelectorAll('a.relic-link-card')];
-    const card=cards.find(a=>{
-      const text=(a.textContent||'').toLowerCase();
-      const href=(a.getAttribute('href')||'').toLowerCase();
-      return text.includes('eraser')||href.includes('eraser')||href.includes('board');
+  const apply=()=>{
+    const all=[...document.querySelectorAll('a,article,div,section')];
+    const textNode=all.find(el=>{
+      const text=(el.textContent||'').trim().toLowerCase();
+      return text.includes('eraser board station')&&text.length<500;
     });
-    if(!card)return false;
-    card.href='/daniel-and-lions-den.html';
-    card.removeAttribute('target');
-    card.removeAttribute('rel');
-    card.setAttribute('aria-label','Open Daniel and the Lions Den story');
-    const title=card.querySelector('strong');
-    const description=card.querySelector('small');
+    if(!textNode)return false;
+
+    const card=textNode.closest('a')||textNode.querySelector('a')||textNode;
+    const link=card.matches?.('a')?card:card.querySelector?.('a');
+    if(link){
+      link.href='/daniel-and-lions-den.html';
+      link.removeAttribute('target');
+      link.removeAttribute('rel');
+      link.setAttribute('aria-label','Open Daniel and the Lions Den story');
+    }
+
+    const title=[...card.querySelectorAll?.('h1,h2,h3,h4,strong,b')||[]].find(el=>(el.textContent||'').toLowerCase().includes('eraser board station'));
     if(title)title.textContent='Daniel and the Lions’ Den';
-    if(description)description.textContent='An animated story of faith, courage, integrity, and deliverance, with a related MIDI.';
+
+    const paragraphs=[...card.querySelectorAll?.('p,small,span')||[]];
+    const description=paragraphs.find(el=>{
+      const t=(el.textContent||'').toLowerCase();
+      return t.includes('leave a live drawing')||t.includes('message, starship')||t.includes('suspiciously artistic');
+    });
+    if(description)description.textContent='Enter the lions’ den for an illustrated story of faith, courage, integrity, and deliverance.';
+
+    const badge=paragraphs.find(el=>(el.textContent||'').toLowerCase().includes('live creative world'));
+    if(badge)badge.textContent='INSPIRATIONAL STORY';
+
+    const visual=paragraphs.find(el=>(el.textContent||'').toLowerCase().includes('visual: red creative world'));
+    if(visual)visual.textContent='✦ Visual: Daniel praying among the lions';
+
+    const image=card.querySelector?.('img');
+    if(image){
+      image.alt='Daniel and the Lions Den';
+      image.style.filter='sepia(.35) saturate(1.2) hue-rotate(340deg) brightness(.9)';
+    }
+
+    card.dataset.danielStoryReady='true';
     return true;
   };
-  if(!replaceCard()){
-    const observer=new MutationObserver(()=>{if(replaceCard())observer.disconnect()});
-    observer.observe(document.documentElement,{childList:true,subtree:true});
-    setTimeout(()=>observer.disconnect(),6000);
-  }
+
+  let attempts=0;
+  const timer=setInterval(()=>{
+    attempts++;
+    if(apply()||attempts>40)clearInterval(timer);
+  },250);
+  apply();
 })();
