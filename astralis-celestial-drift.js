@@ -118,7 +118,16 @@
     document.head.appendChild(audit);
   };
 
-  const finish=()=>{upgradeRiver();loadQuoteAudit();addDarktideLaunch()};
+  const loadNovaGuide=()=>{
+    if(document.querySelector('script[data-nova-guide]'))return;
+    const guide=document.createElement('script');
+    guide.src='/nova-guide.js?v=20260805a';
+    guide.dataset.novaGuide='true';
+    guide.defer=true;
+    document.head.appendChild(guide);
+  };
+
+  const finish=()=>{upgradeRiver();loadQuoteAudit();addDarktideLaunch();loadNovaGuide()};
   const core=document.createElement('script');
   core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@391ac37395e6de4dd8158a04476b059060495fee/astralis-celestial-drift.js';
   core.async=false;
