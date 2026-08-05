@@ -119,7 +119,7 @@
   const loadNovaGuide=()=>{
     if(document.querySelector('script[data-nova-guide]'))return;
     const guide=document.createElement('script');
-    guide.src='/nova-guide.js?v=20260805d';
+    guide.src='/nova-guide.js?v=20260805e';
     guide.dataset.novaGuide='true';
     guide.async=false;
     document.head.appendChild(guide);
