@@ -1,109 +1,25 @@
 (()=>{
-  if(window.__astralisNovaGuideV6)return;
-  window.__astralisNovaGuideV6=true;
+  if(window.__astralisNovaBridgeV7)return;
+  window.__astralisNovaBridgeV7=true;
 
-  const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const get=k=>{try{return localStorage.getItem(k)}catch{return null}};
-  const set=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
-  const pick=a=>a[Math.floor(Math.random()*a.length)];
-  const isHome=()=>location.pathname==='/'||/index\.html$/i.test(location.pathname);
-  const state={open:false,muted:get('astralisNovaMuted')==='true',name:get('astralisNovaName')||'',mood:'curious'};
-
-  const greetings=[
-    'Astralis Nova online. What shall we explore?',
-    'Signal received. Choose a course and I will take us there.',
-    'The stars are listening. Where to next?',
-    'Bridge systems ready. Name the destination.',
-    'Good to see you again. The portal is at your command.',
-    'Navigation intelligence standing by.',
-    'A fresh orbit begins. What would you like to discover?',
-    'All local systems are awake. Let us explore.',
-    'Long life, clear skies, and an interesting destination. Your move.',
-    'Sensors are humming. Point me toward something wonderful.',
-    'Another orbit, another possibility. Where shall we begin?',
-    'The portal is awake and feeling unusually curious.'
-  ];
-  const subGreetings=[
-    'Subpage detected. I can return us home or open another destination.',
-    'This archive signal is stable. Ready to jump elsewhere?',
-    'We are beyond the main portal, but navigation remains online.',
-    'Recovered page active. Name the next destination.',
-    'Away team status confirmed. I can beam us back to the main portal.'
-  ];
-  const moods={
-    calm:{faces:['🙂','😊','😌','☺️','🖖'],hands:['🖖','🤲','👋']},
-    curious:{faces:['🤔','🧐','👀','😯','🤨','🫡'],hands:['👉','☝️','🤏','🫴']},
-    excited:{faces:['😄','🤩','😎','😁','🥳','🚀'],hands:['🙌','👏','🤘','👍']},
-    playful:{faces:['😜','🤪','😏','🤭','👽','😺'],hands:['✌️','🤙','🫰','👉']},
-    focused:{faces:['🧠','🤖','🔎','🧐','🫡'],hands:['☝️','👉','🤏']},
-    music:{faces:['🎧','😎','🎵','🤘','🥁'],hands:['🤘','👏','🫰']},
-    darktide:{faces:['⚔️','😈','🔥','🛡️','😤'],hands:['✊','🤘','🫵']},
-    archive:{faces:['📜','🌊','🥹','🛰️','🤓'],hands:['🤲','🫴','☝️']},
-    love:{faces:['🥰','😍','💜','🤗','😊'],hands:['🫶','🤲','💞']},
-    puzzled:{faces:['😵‍💫','🤨','🫤','❓'],hands:['🤷','🤏','☝️']}
+  const loadIntelligence=()=>{
+    if(document.querySelector('script[data-nova-intelligence]'))return;
+    const intelligence=document.createElement('script');
+    intelligence.src='/nova-intelligence.js?v=20260805a';
+    intelligence.dataset.novaIntelligence='true';
+    intelligence.async=false;
+    document.head.appendChild(intelligence);
   };
 
-  const css=document.createElement('style');
-  css.textContent=`
-    #novaGuide{position:fixed;left:18px;bottom:18px;z-index:1300;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f8fbff}
-    .nova-orb-wrap{position:relative;width:126px;height:96px;display:grid;place-items:center}
-    .nova-orb{width:84px;height:84px;border-radius:50%;border:1px solid rgba(190,241,255,.98);cursor:pointer;display:grid;place-items:center;position:relative;color:#fff;background:radial-gradient(circle at 43% 35%,#fff 0 3%,#a7efff 5%,#36bfff 13%,#3158d8 31%,#351679 53%,#08091d 74%);box-shadow:0 0 0 7px rgba(49,154,255,.12),0 0 32px rgba(78,210,255,.95),0 0 80px rgba(116,54,255,.68),inset 0 0 32px rgba(255,255,255,.24);animation:novaBreathe 2.5s ease-in-out infinite}
-    .nova-orb::before,.nova-orb::after{content:"";position:absolute;border-radius:50%;inset:-11px;border:2px solid rgba(105,220,255,.72);border-left-color:transparent;border-bottom-color:rgba(196,72,255,.68);animation:novaSpin 5.2s linear infinite;filter:drop-shadow(0 0 10px #60dfff)}
-    .nova-orb::after{inset:-20px;border-color:rgba(228,92,255,.42);border-right-color:transparent;animation-direction:reverse;animation-duration:8.4s}
-    .nova-orb.flash{animation:novaFlash .72s ease 2,novaBreathe 2.5s ease-in-out infinite}
-    .nova-face{font-size:2rem;line-height:1;filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 16px #69dcff);transition:transform .22s ease,filter .22s ease;animation:novaFaceFloat 2.2s ease-in-out infinite}
-    .nova-orb:hover .nova-face{transform:scale(1.2) rotate(-5deg)}
-    .nova-hand{position:absolute;top:35px;font-size:1.55rem;filter:drop-shadow(0 0 10px #7be3ff);transition:.25s ease;z-index:3;pointer-events:none}
-    .nova-hand.left{left:0;animation:novaLeftHand 2.6s ease-in-out infinite}.nova-hand.right{right:0;animation:novaRightHand 2.8s ease-in-out infinite}
-    .nova-orb-wrap.wave .nova-hand.left{animation:novaWave .55s ease-in-out 4}.nova-orb-wrap.wave .nova-hand.right{animation:novaWaveR .55s ease-in-out 4}
-    .nova-label{position:absolute;left:122px;white-space:nowrap;padding:9px 12px;border-radius:999px;background:rgba(4,9,28,.95);border:1px solid rgba(111,211,255,.52);box-shadow:0 0 28px rgba(67,180,255,.28);font-size:.76rem;font-weight:900;opacity:0;transform:translateX(-8px);transition:.2s;pointer-events:none}
-    .nova-orb-wrap:hover .nova-label,.nova-orb:focus-visible~.nova-label{opacity:1;transform:none}
-    .nova-panel{position:absolute;left:0;bottom:112px;width:min(460px,calc(100vw - 28px));max-height:min(760px,calc(100vh - 138px));overflow:auto;border-radius:24px;border:1px solid rgba(118,207,255,.6);background:radial-gradient(circle at 90% 0,rgba(214,46,255,.18),transparent 42%),radial-gradient(circle at 0 10%,rgba(38,151,255,.25),transparent 44%),linear-gradient(180deg,rgba(9,17,44,.98),rgba(4,8,23,.99));box-shadow:0 32px 100px rgba(0,0,0,.72),0 0 54px rgba(37,167,255,.2);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transform:translateY(14px) scale(.96);transform-origin:bottom left;transition:.2s}
-    .nova-panel.open{opacity:1;pointer-events:auto;transform:none}.nova-head{display:flex;align-items:center;gap:11px;padding:16px;border-bottom:1px solid rgba(128,185,235,.18);position:sticky;top:0;background:rgba(7,13,33,.95);backdrop-filter:blur(14px);z-index:2}.nova-mini{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#fff 0 4%,#67dcff 10%,#2858bd 36%,#0a0b29 72%);box-shadow:0 0 22px rgba(85,212,255,.58);font-size:1.2rem}.nova-head h2{margin:0;font-size:1.02rem}.nova-head p{margin:2px 0 0;color:#9fc5df;font-size:.7rem}.nova-head-actions{margin-left:auto;display:flex;gap:6px}.nova-icon{width:34px;height:34px;border-radius:50%;border:1px solid rgba(149,203,238,.26);background:#0b1732;color:#fff;cursor:pointer}
-    .nova-body{padding:16px}.nova-message{margin:0 0 12px;padding:13px 14px;border-radius:14px 14px 14px 4px;border:1px solid rgba(105,183,239,.26);background:rgba(17,36,69,.76);line-height:1.52;font-size:.87rem}.nova-status{min-height:1.2em;color:#84e9c4;font-size:.72rem;margin:0 2px 10px}.nova-command-row{display:grid;grid-template-columns:1fr auto auto;gap:7px;margin:10px 0 14px}.nova-command{min-width:0;height:43px;border-radius:12px;border:1px solid rgba(103,178,232,.35);background:#08152c;color:#fff;padding:0 12px;outline:none}.nova-command:focus{border-color:#66d4ff;box-shadow:0 0 0 3px rgba(67,179,255,.12)}.nova-send{min-width:43px;height:43px;border-radius:12px;border:1px solid rgba(125,195,239,.35);background:linear-gradient(135deg,#157df4,#b72bd0);color:#fff;cursor:pointer;font-weight:900}
-    .nova-section{margin:14px 0 8px;color:#87d4ff;font-size:.67rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.nova-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.nova-action{min-height:46px;border-radius:12px;border:1px solid rgba(108,178,232,.29);background:linear-gradient(180deg,rgba(20,43,78,.95),rgba(10,23,46,.95));color:#fff;padding:9px 10px;text-align:left;cursor:pointer;font-size:.78rem;font-weight:850;line-height:1.25}.nova-action:hover,.nova-action:focus-visible{transform:translateY(-1px);border-color:#69d5ff;box-shadow:0 0 0 3px rgba(62,171,255,.12)}.nova-action.primary{grid-column:1/-1;text-align:center;background:linear-gradient(90deg,#147df5,#c72ac9);border:0}.nova-action small{display:block;color:#a8bed2;font-weight:500;margin-top:3px}.nova-footer{padding:0 16px 16px;color:#7895ad;font-size:.66rem;line-height:1.45}.nova-pulse-target{position:relative;z-index:1;outline:2px solid rgba(83,207,255,.9)!important;outline-offset:7px;border-radius:12px;animation:novaTarget 1.05s ease 3}
-    @keyframes novaSpin{to{transform:rotate(360deg)}}@keyframes novaBreathe{50%{transform:scale(1.06);filter:brightness(1.2)}}@keyframes novaFaceFloat{50%{transform:translateY(-3px) scale(1.06)}}@keyframes novaLeftHand{50%{transform:translate(-3px,-4px) rotate(-9deg)}}@keyframes novaRightHand{50%{transform:translate(3px,-4px) rotate(9deg)}}@keyframes novaWave{50%{transform:rotate(-35deg) translateY(-7px)}}@keyframes novaWaveR{50%{transform:rotate(35deg) translateY(-7px)}}@keyframes novaFlash{50%{box-shadow:0 0 0 11px rgba(116,221,255,.2),0 0 62px #74e7ff,0 0 115px #b144ff,inset 0 0 36px #fff}}@keyframes novaTarget{50%{box-shadow:0 0 0 10px rgba(55,173,255,.16),0 0 35px rgba(55,173,255,.35)}}
-    @media(max-width:560px){#novaGuide{left:7px;bottom:8px}.nova-orb-wrap{width:104px}.nova-orb{width:68px;height:68px}.nova-hand{font-size:1.25rem;top:34px}.nova-panel{bottom:101px}.nova-actions{grid-template-columns:1fr}.nova-action.primary{grid-column:auto}.nova-label{display:none}.nova-command-row{grid-template-columns:1fr auto}}
-    @media(prefers-reduced-motion:reduce){.nova-orb,.nova-orb::before,.nova-orb::after,.nova-face,.nova-hand,.nova-pulse-target{animation:none}.nova-panel,.nova-action{transition:none}}
-  `;
-  document.head.appendChild(css);
+  if(window.__astralisNovaGuideV6){
+    loadIntelligence();
+    return;
+  }
 
-  const root=document.createElement('aside');root.id='novaGuide';
-  root.innerHTML=`<section class="nova-panel" id="novaPanel" aria-hidden="true"><header class="nova-head"><div class="nova-mini" id="novaMini">🖖</div><div><h2>Astralis Nova</h2><p>Live site intelligence • Mood and operations online</p></div><div class="nova-head-actions"><button class="nova-icon" id="novaVoice" type="button">${state.muted?'🔇':'🔊'}</button><button class="nova-icon" id="novaClose" type="button">×</button></div></header><div class="nova-body"><p class="nova-message" id="novaMessage">Navigation online.</p><div class="nova-status" id="novaStatus" aria-live="polite"></div><div class="nova-command-row"><input class="nova-command" id="novaCommand" type="text" placeholder="Ask Nova: show quotes, pause audio…"><button class="nova-send" id="novaMic" type="button">🎙️</button><button class="nova-send" id="novaSend" type="button">➤</button></div><button class="nova-action primary" data-action="home">✦ Return to Astralis Nova Home</button><p class="nova-section">Destinations</p><div class="nova-actions"><button class="nova-action" data-action="music">🎵 Music Voyage<small>Complete song catalog</small></button><button class="nova-action" data-action="darktide">⚔️ Darktide Signal<small>Open the Megamix</small></button><button class="nova-action" data-action="archive">🛰️ First Orbit<small>Recovered pages</small></button><button class="nova-action" data-action="quote">✨ Quote Orbit<small>Quotes and MLK tribute</small></button><button class="nova-action" data-action="guestbook">📡 Guestbook<small>Leave a signal</small></button><button class="nova-action" data-action="chess">♟ Chess Portal<small>Layered board</small></button><button class="nova-action" data-action="river">🌊 Just A River<small>Restored poem</small></button><button class="nova-action" data-action="liveboard">🎨 Live Board<small>Collaborative canvas</small></button><button class="nova-action" data-action="about">👤 About Ramon<small>Meet the creator</small></button><button class="nova-action" data-action="contact">✉️ Contact<small>Send a transmission</small></button><button class="nova-action" data-action="top">🔥 Top Songs<small>Featured music</small></button><button class="nova-action" data-action="surprise">🎲 Surprise Me<small>Random destination</small></button></div><p class="nova-section">Operations</p><div class="nova-actions"><button class="nova-action" data-action="pause">⏸ Pause All Media<small>Silence every player</small></button><button class="nova-action" data-action="resume">▶ Resume Site Audio<small>Use main player</small></button><button class="nova-action" data-action="topPage">⬆ Top of Page<small>Return to current page top</small></button><button class="nova-action" data-action="diagnostic">🧭 Self-Check<small>Test site systems</small></button></div></div><div class="nova-footer">Nova detects real page elements instead of relying on guessed anchors. Cross-page requests return home and complete automatically.</div></section><div class="nova-orb-wrap" id="novaOrbWrap"><span class="nova-hand left" id="novaLeft">🖖</span><button class="nova-orb" id="novaOrb" type="button" aria-expanded="false"><span class="nova-face" id="novaFace">🙂</span></button><span class="nova-hand right" id="novaRight">🖖</span><span class="nova-label">Open Astralis Nova</span></div>`;
-  document.body.appendChild(root);
-
-  const panel=root.querySelector('#novaPanel'),orb=root.querySelector('#novaOrb'),wrap=root.querySelector('#novaOrbWrap'),face=root.querySelector('#novaFace'),left=root.querySelector('#novaLeft'),right=root.querySelector('#novaRight'),mini=root.querySelector('#novaMini'),msg=root.querySelector('#novaMessage'),status=root.querySelector('#novaStatus'),input=root.querySelector('#novaCommand'),voiceBtn=root.querySelector('#novaVoice');
-  let chosenVoice=null;
-  const setMood=(m='curious')=>{state.mood=m;const data=moods[m]||moods.curious;face.textContent=pick(data.faces);mini.textContent=face.textContent;left.textContent=pick(data.hands);right.textContent=pick(data.hands);wrap.classList.remove('wave');void wrap.offsetWidth;if(Math.random()>.55)wrap.classList.add('wave');};
-  const chooseVoice=()=>{const vs=window.speechSynthesis?.getVoices?.()||[];chosenVoice=vs.sort((a,b)=>{const score=v=>(/^en-GB/i.test(v.lang)?100:0)+(/sonia|libby|hazel|serena|kate|fiona|moira|martha|natural|female/i.test(v.name)?40:0)-(/male|guy|david|mark|george/i.test(v.name)?30:0);return score(b)-score(a)})[0]||null;};
-  if('speechSynthesis'in window){chooseVoice();speechSynthesis.addEventListener?.('voiceschanged',chooseVoice)}
-  const speak=t=>{if(state.muted||!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=.88;u.pitch=.86;u.volume=.92;u.voice=chosenVoice;speechSynthesis.speak(u)};
-  const say=(t,m='curious',voice=true)=>{msg.textContent=t;setMood(m);if(voice)speak(t)};
-  const open=v=>{state.open=v;panel.classList.toggle('open',v);panel.setAttribute('aria-hidden',String(!v));orb.setAttribute('aria-expanded',String(v));if(v)setTimeout(()=>input.focus(),180)};
-  const flash=()=>{orb.classList.remove('flash');void orb.offsetWidth;orb.classList.add('flash');setTimeout(()=>orb.classList.remove('flash'),1500)};
-  const pulse=el=>{if(!el)return;el.classList.remove('nova-pulse-target');void el.offsetWidth;el.classList.add('nova-pulse-target');setTimeout(()=>el.classList.remove('nova-pulse-target'),3800)};
-  const clearActive=()=>{speechSynthesis?.cancel();document.querySelectorAll('audio,video').forEach(m=>{if(!m.paused)m.pause()});document.getElementById('darktidePanel')?.classList.remove('open');document.querySelectorAll('[role="dialog"].open,.modal.open,.overlay.open').forEach(e=>e.classList.remove('open'));document.body.style.overflow='';document.documentElement.style.overflow='';};
-  const transition=fn=>{clearActive();open(false);requestAnimationFrame(()=>setTimeout(fn,reduced?0:90))};
-
-  const selectors={
-    home:['#home','header','.hero'],music:['#music','.catalog','.main'],quote:['#mlkTribute','.quote-card','.quote-text'],archive:['#echoes','[id*="orbit" i]','.relic-link-card'],guestbook:['#guestbook','.guestbook'],liveboard:['#live-board','#liveBoard','[id*="live" i] canvas','.live-board'],about:['#about','.about-card'],contact:['#contact','form#contactForm'],top:['#features','.top-area','.feature-grid']
-  };
-  const findTarget=key=>{for(const s of selectors[key]||[]){const el=document.querySelector(s);if(el)return el}return null};
-  const route=(key,label)=>{set('astralisNovaLastDestination',label);transition(()=>{if(!isHome()){location.assign(`/?novaTarget=${encodeURIComponent(key)}`);return}const target=findTarget(key);if(!target){status.textContent=`I could not locate ${label} yet.`;open(true);say(`I searched for ${label}, but its signal is not currently present on this page.`,'puzzled');return}history.replaceState(null,'',location.pathname);target.scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'});pulse(target)})};
-
-  const actions={
-    home:()=>{say('Returning to the main Astralis Nova portal.','calm');route('home','home')},music:()=>{say('Opening the music voyage.','music');route('music','music')},quote:()=>{say('Locking onto the real Quote Orbit and permanent tribute.','calm');route('quote','quote orbit')},archive:()=>{say('Opening Echoes From the First Orbit.','archive');route('archive','first orbit')},guestbook:()=>{say('Opening the guestbook signal array.','curious');route('guestbook','guestbook')},liveboard:()=>{say('Opening the collaborative live board.','playful');route('liveboard','live board')},about:()=>{say('Opening the creator profile.','calm');route('about','about')},contact:()=>{say('Opening the contact transmission console.','focused');route('contact','contact')},top:()=>{say('Opening the featured songs.','music');route('top','top songs')},
-    chess:()=>{say('Opening the layered chess portal.','focused');transition(()=>location.assign('/chess/'))},river:()=>{say('Opening the restored poem, Just A River.','archive');transition(()=>location.assign('/just-a-river.html'))},
-    darktide:()=>{say('Incoming transmission from Dereth.','darktide');transition(()=>{if(!isHome()){location.assign('/?darktide=1');return}const p=document.getElementById('darktidePlay');if(p){p.click();setTimeout(()=>document.getElementById('darktideAudio')?.play().catch(()=>{}),220)}else location.assign('/?darktide=1')})},
-    pause:()=>{clearActive();say('All detected media has been paused.','focused');status.textContent='Audio, video, and open overlays secured.'},resume:()=>{const a=document.getElementById('siteAudio');if(a){a.play().then(()=>say('Main site audio resumed.','music')).catch(()=>say('Press the website play control once to authorize audio.','puzzled'))}else say('The main audio player is not present on this page.','puzzled')},topPage:()=>{transition(()=>scrollTo({top:0,behavior:reduced?'auto':'smooth'}))},surprise:()=>actions[pick(['music','quote','archive','river','chess','liveboard','top'])](),
-    diagnostic:()=>{const checks=[['music',!!findTarget('music')],['quotes',!!findTarget('quote')],['Darktide',!!document.getElementById('darktideLaunch')],['voice','speechSynthesis'in window],['routing',true]];const ok=checks.filter(x=>x[1]).length;const missing=checks.filter(x=>!x[1]).map(x=>x[0]);say(`Self-check complete. ${ok} of ${checks.length} systems responded.${missing.length?` Missing here: ${missing.join(', ')}.`:' All local systems are responding.'}`,'focused');}
-  };
-
-  const understand=raw=>{const t=raw.trim();if(!t)return;const q=t.toLowerCase();const n=q.match(/(?:my name is|call me)\s+([a-z][a-z '-]{1,30})/i);if(n){state.name=n[1].trim().replace(/\b\w/g,c=>c.toUpperCase());set('astralisNovaName',state.name);return say(`Understood. I will remember you as ${state.name}.`,'love')}if(/pause|stop.*audio|silence/.test(q))return actions.pause();if(/resume|play site audio|background music/.test(q))return actions.resume();if(/darktide|megamix|dereth/.test(q))return actions.darktide();if(/quote|mlk|martin luther king|hawking/.test(q))return actions.quote();if(/live board|canvas|draw/.test(q))return actions.liveboard();if(/contact|email|message ramon/.test(q))return actions.contact();if(/about|who is ramon|creator/.test(q))return actions.about();if(/top songs|featured/.test(q))return actions.top();if(/chess/.test(q))return actions.chess();if(/river|poem/.test(q))return actions.river();if(/first orbit|archive|old site|memories/.test(q))return actions.archive();if(/guestbook/.test(q))return actions.guestbook();if(/music|songs|catalog/.test(q))return actions.music();if(/home|main page|go back/.test(q))return actions.home();if(/top of page|scroll up/.test(q))return actions.topPage();if(/surprise|random/.test(q))return actions.surprise();if(/self.?check|diagnos|test systems/.test(q))return actions.diagnostic();if(/live long|prosper/.test(q))return say('Live long and prosper. May curiosity remain your finest instrument.','calm');if(/help|what can you do/.test(q))return say('I can navigate twelve destinations, control media, close overlays, return between pages, accept voice commands, remember your name, surprise you, and test local systems.','focused');say('That command is not mapped yet. Try quotes, live board, top songs, pause audio, contact, surprise me, or self-check.','puzzled')};
-
-  root.addEventListener('click',e=>{const a=e.target.closest('[data-action]')?.dataset.action;if(a&&actions[a])actions[a]()});root.querySelector('#novaSend').onclick=()=>{const v=input.value;input.value='';understand(v)};input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const v=input.value;input.value='';understand(v)}});orb.onclick=()=>{open(!state.open);if(state.open){flash();say(`${state.name?`Welcome back, ${state.name}. `:''}${pick(isHome()?greetings:subGreetings)}`,pick(['calm','curious','playful','excited']))}};root.querySelector('#novaClose').onclick=()=>open(false);voiceBtn.onclick=()=>{state.muted=!state.muted;set('astralisNovaMuted',String(state.muted));voiceBtn.textContent=state.muted?'🔇':'🔊';if(state.muted)speechSynthesis?.cancel();else speak('Voice interface online.')};
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition,mic=root.querySelector('#novaMic');if(SR){const r=new SR();r.lang='en-GB';r.interimResults=false;mic.onclick=()=>{status.textContent='Listening…';try{r.start()}catch{}};r.onresult=e=>{const t=e.results[0][0].transcript;input.value=t;understand(t)};r.onerror=()=>status.textContent='Voice command not captured.'}else mic.style.display='none';
-
-  const pending=new URLSearchParams(location.search).get('novaTarget');if(pending&&isHome())setTimeout(()=>{const target=findTarget(pending);if(target){target.scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'});pulse(target);history.replaceState(null,'',location.pathname)}} ,1300);
-  setMood('curious');setInterval(()=>{if(!state.open&&document.visibilityState==='visible'){setMood(pick(Object.keys(moods)));if(!reduced&&Math.random()>.52)flash()}},9000);document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.open)open(false)});
+  const core=document.createElement('script');
+  core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@c4c7d4a338e5532fed8fe52d4e7a950c536ccd69/nova-guide.js';
+  core.async=false;
+  core.onload=loadIntelligence;
+  core.onerror=loadIntelligence;
+  document.head.appendChild(core);
 })();
