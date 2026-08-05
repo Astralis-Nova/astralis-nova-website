@@ -1,6 +1,6 @@
 (()=>{
-  if(window.__astralisNovaBridgeV9)return;
-  window.__astralisNovaBridgeV9=true;
+  if(window.__astralisNovaBridgeV10)return;
+  window.__astralisNovaBridgeV10=true;
 
   const loadScript=(src,key)=>{
     if(document.querySelector(`script[data-${key}]`))return;
@@ -14,6 +14,7 @@
   const loadUpgrades=()=>{
     loadScript('/nova-intelligence.js?v=20260805a','novaIntelligence');
     loadScript('/nova-midi-upgrade.js?v=20260805c','novaMidiUpgrade');
+    loadScript('/nova-orb-alignment.js?v=20260805a','novaOrbAlignment');
   };
 
   if(window.__astralisNovaGuideV6){
