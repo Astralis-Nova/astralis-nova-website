@@ -1,90 +1,164 @@
 (()=>{
-  if(window.__astralisNovaGuideLoaded)return;
-  window.__astralisNovaGuideLoaded=true;
+  if(window.__astralisNovaGuideV4)return;
+  window.__astralisNovaGuideV4=true;
 
   const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const get=(k,f='')=>{try{return localStorage.getItem(k)??f}catch{return f}};
+  const get=(k)=>{try{return localStorage.getItem(k)}catch{return null}};
   const set=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
-  const memory=JSON.parse(get('astralisNovaMemory','{}')||'{}');
-  const state={open:false,muted:get('astralisNovaMuted')==='true',listening:false};
+  const state={
+    open:false,
+    muted:get('astralisNovaMuted')==='true',
+    greeted:get('astralisNovaGreeted')==='true',
+    name:get('astralisNovaName')||'',
+    last:get('astralisNovaLastDestination')||''
+  };
+  const isHome=()=>location.pathname==='/'||/index\.html$/i.test(location.pathname);
 
   const css=document.createElement('style');
   css.textContent=`
-  #novaGuide{position:fixed;left:20px;bottom:20px;z-index:1200;color:#f7fbff;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-  .nova-orb{width:82px;height:82px;border-radius:50%;border:1px solid rgba(166,235,255,.9);cursor:pointer;position:relative;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 43% 35%,#fff 0 3%,#9beaff 5%,#25b8ff 13%,#3752d4 31%,#17104f 52%,#030716 74%);box-shadow:0 0 14px #7ee7ff,0 0 35px #238cff,0 0 75px rgba(198,42,255,.72),inset 0 0 28px rgba(255,255,255,.22);animation:novaBreathe 2.1s ease-in-out infinite}
-  .nova-orb::before,.nova-orb::after{content:"";position:absolute;border-radius:50%;inset:-12px;border:2px solid rgba(98,224,255,.55);box-shadow:0 0 18px rgba(79,208,255,.5);animation:novaSpin 5s linear infinite}
-  .nova-orb::after{inset:-21px;border-color:rgba(236,70,255,.42);border-style:dashed;animation-duration:8s;animation-direction:reverse}
-  .nova-core{font-size:1.8rem;text-shadow:0 0 7px #fff,0 0 18px #68dbff;animation:novaFlash 3.4s steps(1,end) infinite}
-  .nova-label{position:absolute;left:98px;white-space:nowrap;padding:9px 13px;border-radius:999px;background:rgba(4,10,30,.94);border:1px solid rgba(103,210,255,.55);box-shadow:0 0 20px rgba(39,167,255,.3);font-size:.78rem;font-weight:850;opacity:0;transform:translateX(-8px);transition:.2s;pointer-events:none}
-  .nova-orb:hover .nova-label,.nova-orb:focus-visible .nova-label{opacity:1;transform:none}
-  .nova-panel{position:absolute;left:0;bottom:108px;width:min(440px,calc(100vw - 28px));max-height:min(720px,calc(100vh - 140px));overflow:auto;border-radius:24px;border:1px solid rgba(107,210,255,.56);background:radial-gradient(circle at 88% 0,rgba(223,49,245,.18),transparent 42%),radial-gradient(circle at 0 20%,rgba(19,141,255,.26),transparent 48%),linear-gradient(180deg,rgba(8,17,43,.98),rgba(3,7,22,.985));box-shadow:0 35px 100px rgba(0,0,0,.75),0 0 55px rgba(32,161,255,.22);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transform:translateY(14px) scale(.95);transform-origin:bottom left;transition:.23s}
-  .nova-panel.open{opacity:1;pointer-events:auto;transform:none}
-  .nova-head{display:flex;align-items:center;gap:12px;padding:16px;border-bottom:1px solid rgba(117,191,238,.2);position:sticky;top:0;z-index:2;background:rgba(5,13,35,.94);backdrop-filter:blur(15px)}
-  .nova-avatar{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#fff 0 4%,#79e4ff 8%,#1b7cdb 33%,#110b3c 70%);box-shadow:0 0 22px #45cfff;font-size:1.2rem}
-  .nova-head h2{margin:0;font-size:1.02rem;letter-spacing:.05em}.nova-head p{margin:3px 0 0;color:#93c4e4;font-size:.7rem}.nova-head-actions{margin-left:auto;display:flex;gap:6px}
-  .nova-icon{width:35px;height:35px;border-radius:50%;border:1px solid rgba(145,205,242,.3);background:#0b1935;color:#fff;cursor:pointer}
-  .nova-body{padding:16px}.nova-message{margin:0 0 12px;padding:14px;border-radius:15px 15px 15px 4px;border:1px solid rgba(111,194,246,.25);background:rgba(18,42,78,.72);line-height:1.55;font-size:.88rem;min-height:68px}
-  .nova-status{min-height:1.2em;margin:0 2px 11px;color:#79edc3;font-size:.72rem}.nova-command{display:flex;gap:8px;margin-bottom:10px}.nova-command input{min-width:0;flex:1;height:45px;border-radius:13px;border:1px solid #28486d;background:#071429;color:#fff;padding:0 13px;outline:none}.nova-command input:focus{border-color:#53c9ff;box-shadow:0 0 0 3px rgba(62,174,255,.15)}
-  .nova-send{width:45px;height:45px;border:0;border-radius:13px;cursor:pointer;color:#fff;background:linear-gradient(135deg,#168df5,#d42bc8);font-size:1rem}.nova-chips{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 15px}.nova-chip{border:1px solid rgba(111,183,231,.3);background:#0c1c38;color:#dceeff;border-radius:999px;padding:7px 10px;cursor:pointer;font-size:.7rem}
-  .nova-title{margin:13px 0 8px;color:#7fd5ff;font-size:.66rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.nova-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.nova-action{min-height:45px;border-radius:12px;border:1px solid rgba(111,183,231,.28);background:linear-gradient(180deg,#142d52,#0a1832);color:#fff;padding:9px 10px;text-align:left;cursor:pointer;font-size:.77rem;font-weight:800}.nova-action:hover,.nova-action:focus-visible{border-color:#68d6ff;box-shadow:0 0 0 3px rgba(65,184,255,.12),0 0 20px rgba(69,179,255,.12);transform:translateY(-1px)}
-  .nova-action small{display:block;color:#9bb9cf;margin-top:3px;font-weight:500}.nova-memory{margin-top:14px;padding:10px 12px;border-radius:12px;background:rgba(7,19,39,.72);border:1px solid rgba(103,170,217,.18);font-size:.69rem;color:#8aa8bd;line-height:1.45}.nova-listening{animation:novaListen .8s ease-in-out infinite alternate}.nova-pulse-target{outline:2px solid #66d9ff!important;outline-offset:7px;border-radius:12px;animation:novaTarget 1s ease 3}
-  @keyframes novaSpin{to{transform:rotate(360deg)}}@keyframes novaBreathe{50%{transform:scale(1.08);filter:brightness(1.25);box-shadow:0 0 18px #fff,0 0 48px #29aaff,0 0 100px rgba(222,45,255,.88),inset 0 0 32px rgba(255,255,255,.32)}}@keyframes novaFlash{0%,91%,100%{opacity:1}92%{opacity:.15}94%{opacity:1}96%{opacity:.3}}@keyframes novaListen{to{box-shadow:0 0 30px #7dffdd}}@keyframes novaTarget{50%{box-shadow:0 0 0 10px rgba(70,190,255,.14),0 0 35px rgba(70,190,255,.28)}}
-  @media(max-width:560px){#novaGuide{left:12px;bottom:12px}.nova-orb{width:68px;height:68px}.nova-panel{bottom:91px}.nova-actions{grid-template-columns:1fr}.nova-label{display:none}}
-  @media(prefers-reduced-motion:reduce){.nova-orb,.nova-orb::before,.nova-orb::after,.nova-core,.nova-pulse-target{animation:none}.nova-panel,.nova-action{transition:none}}
+    #novaGuide{position:fixed;left:18px;bottom:18px;z-index:1200;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f8fbff}
+    .nova-orb{width:82px;height:82px;border-radius:50%;border:1px solid rgba(179,238,255,.95);cursor:pointer;display:grid;place-items:center;position:relative;color:#fff;background:radial-gradient(circle at 43% 35%,#fff 0 3%,#a7efff 5%,#36bfff 13%,#3158d8 31%,#351679 53%,#08091d 74%);box-shadow:0 0 0 7px rgba(49,154,255,.11),0 0 28px rgba(78,210,255,.9),0 0 70px rgba(116,54,255,.58),inset 0 0 30px rgba(255,255,255,.22);animation:novaBreathe 2.7s ease-in-out infinite}
+    .nova-orb::before,.nova-orb::after{content:"";position:absolute;border-radius:50%;inset:-11px;border:2px solid rgba(105,220,255,.66);border-left-color:transparent;border-bottom-color:rgba(196,72,255,.62);animation:novaSpin 5.5s linear infinite;filter:drop-shadow(0 0 8px #60dfff)}
+    .nova-orb::after{inset:-19px;border-color:rgba(228,92,255,.38);border-right-color:transparent;animation-direction:reverse;animation-duration:9s}
+    .nova-orb.flash{animation:novaFlash .8s ease 2,novaBreathe 2.7s ease-in-out infinite}
+    .nova-core{font-size:1.8rem;text-shadow:0 0 8px #fff,0 0 20px #53d8ff,0 0 32px #ab45ff}
+    .nova-label{position:absolute;left:101px;white-space:nowrap;padding:9px 12px;border-radius:999px;background:rgba(4,9,28,.94);border:1px solid rgba(111,211,255,.48);box-shadow:0 0 24px rgba(67,180,255,.25);font-size:.76rem;font-weight:900;opacity:0;transform:translateX(-8px);transition:.2s;pointer-events:none}
+    .nova-orb:hover .nova-label,.nova-orb:focus-visible .nova-label{opacity:1;transform:none}
+    .nova-panel{position:absolute;left:0;bottom:103px;width:min(430px,calc(100vw - 28px));max-height:min(720px,calc(100vh - 130px));overflow:auto;border-radius:24px;border:1px solid rgba(118,207,255,.58);background:radial-gradient(circle at 90% 0,rgba(214,46,255,.18),transparent 42%),radial-gradient(circle at 0 10%,rgba(38,151,255,.25),transparent 44%),linear-gradient(180deg,rgba(9,17,44,.98),rgba(4,8,23,.99));box-shadow:0 32px 100px rgba(0,0,0,.72),0 0 50px rgba(37,167,255,.18);backdrop-filter:blur(20px);opacity:0;pointer-events:none;transform:translateY(14px) scale(.96);transform-origin:bottom left;transition:.22s}
+    .nova-panel.open{opacity:1;pointer-events:auto;transform:none}
+    .nova-head{display:flex;align-items:center;gap:11px;padding:16px;border-bottom:1px solid rgba(128,185,235,.18);position:sticky;top:0;background:rgba(7,13,33,.94);backdrop-filter:blur(14px);z-index:2}
+    .nova-mini{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#fff 0 4%,#67dcff 10%,#2858bd 36%,#0a0b29 72%);box-shadow:0 0 22px rgba(85,212,255,.58);font-size:1.15rem}
+    .nova-head h2{margin:0;font-size:1.02rem}.nova-head p{margin:2px 0 0;color:#9fc5df;font-size:.7rem}.nova-head-actions{margin-left:auto;display:flex;gap:6px}
+    .nova-icon{width:34px;height:34px;border-radius:50%;border:1px solid rgba(149,203,238,.26);background:#0b1732;color:#fff;cursor:pointer}
+    .nova-body{padding:16px}.nova-message{margin:0 0 12px;padding:13px 14px;border-radius:14px 14px 14px 4px;border:1px solid rgba(105,183,239,.26);background:rgba(17,36,69,.76);line-height:1.52;font-size:.87rem}
+    .nova-status{min-height:1.2em;color:#84e9c4;font-size:.72rem;margin:0 2px 10px}.nova-command-row{display:grid;grid-template-columns:1fr auto auto;gap:7px;margin:10px 0 14px}.nova-command{min-width:0;height:43px;border-radius:12px;border:1px solid rgba(103,178,232,.35);background:#08152c;color:#fff;padding:0 12px;outline:none}.nova-command:focus{border-color:#66d4ff;box-shadow:0 0 0 3px rgba(67,179,255,.12)}
+    .nova-send{min-width:43px;height:43px;border-radius:12px;border:1px solid rgba(125,195,239,.35);background:linear-gradient(135deg,#157df4,#b72bd0);color:#fff;cursor:pointer;font-weight:900}
+    .nova-section{margin:14px 0 8px;color:#87d4ff;font-size:.67rem;font-weight:900;letter-spacing:.16em;text-transform:uppercase}.nova-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.nova-action{min-height:46px;border-radius:12px;border:1px solid rgba(108,178,232,.29);background:linear-gradient(180deg,rgba(20,43,78,.95),rgba(10,23,46,.95));color:#fff;padding:9px 10px;text-align:left;cursor:pointer;font-size:.78rem;font-weight:850;line-height:1.25}.nova-action:hover,.nova-action:focus-visible{transform:translateY(-1px);border-color:#69d5ff;box-shadow:0 0 0 3px rgba(62,171,255,.12)}.nova-action.primary{grid-column:1/-1;text-align:center;background:linear-gradient(90deg,#147df5,#c72ac9);border:0}.nova-action small{display:block;color:#a8bed2;font-weight:500;margin-top:3px}.nova-footer{padding:0 16px 16px;color:#7895ad;font-size:.66rem;line-height:1.45}
+    .nova-pulse-target{position:relative;z-index:1;outline:2px solid rgba(83,207,255,.9)!important;outline-offset:7px;border-radius:12px;animation:novaTarget 1.05s ease 3}
+    @keyframes novaSpin{to{transform:rotate(360deg)}}@keyframes novaBreathe{50%{transform:scale(1.055);filter:brightness(1.18)}}@keyframes novaFlash{50%{box-shadow:0 0 0 10px rgba(116,221,255,.18),0 0 55px #74e7ff,0 0 105px #b144ff,inset 0 0 34px #fff}}@keyframes novaTarget{50%{box-shadow:0 0 0 10px rgba(55,173,255,.16),0 0 35px rgba(55,173,255,.35)}}
+    @media(max-width:560px){#novaGuide{left:12px;bottom:12px}.nova-orb{width:68px;height:68px}.nova-panel{bottom:88px}.nova-actions{grid-template-columns:1fr}.nova-action.primary{grid-column:auto}.nova-label{display:none}.nova-command-row{grid-template-columns:1fr auto}}
+    @media(prefers-reduced-motion:reduce){.nova-orb,.nova-orb::before,.nova-orb::after,.nova-pulse-target{animation:none}.nova-panel,.nova-action{transition:none}}
   `;
   document.head.appendChild(css);
 
   const root=document.createElement('aside');
-  root.id='novaGuide';root.setAttribute('aria-label','Astralis Nova interactive guide');
-  root.innerHTML=`<section class="nova-panel" id="novaPanel" aria-hidden="true"><header class="nova-head"><div class="nova-avatar">✦</div><div><h2>ASTRALIS NOVA</h2><p>Interactive site intelligence • Voice • Local memory</p></div><div class="nova-head-actions"><button class="nova-icon" id="novaMic" title="Speak to Nova">🎙️</button><button class="nova-icon" id="novaVoice" title="Toggle voice">${state.muted?'🔇':'🔊'}</button><button class="nova-icon" id="novaClose" title="Close">×</button></div></header><div class="nova-body"><div class="nova-message" id="novaMessage">Welcome aboard. I am Astralis Nova, guide to the music, memories, transmissions, and hidden constellations of this world.</div><div class="nova-status" id="novaStatus" aria-live="polite"></div><form class="nova-command" id="novaForm"><input id="novaInput" autocomplete="off" placeholder="Ask Nova: play Darktide, show poems, run self-check…" aria-label="Ask Astralis Nova"><button class="nova-send" aria-label="Send">➤</button></form><div class="nova-chips"><button class="nova-chip" data-query="play darktide">Play Darktide</button><button class="nova-chip" data-query="show me the music">Music</button><button class="nova-chip" data-query="show first orbit">First Orbit</button><button class="nova-chip" data-query="run self check">Self-check</button></div><div class="nova-title">Destinations</div><div class="nova-actions"><button class="nova-action" data-action="music">🎵 Music Voyage<small>Browse all songs</small></button><button class="nova-action" data-action="darktide">⚔️ Darktide Signal<small>Open the Megamix</small></button><button class="nova-action" data-action="archive">🛰️ First Orbit<small>Restored memories</small></button><button class="nova-action" data-action="quotes">✨ Quote Orbit<small>MLK and Hawking</small></button><button class="nova-action" data-action="guestbook">📡 Guestbook<small>Leave a signal</small></button><button class="nova-action" data-action="chess">♟ Chess Portal<small>Enter the board</small></button><button class="nova-action" data-action="poem">🌊 Just A River<small>Open the restored poem</small></button><button class="nova-action" data-action="surprise">🎲 Surprise Me<small>Plot a random course</small></button></div><div class="nova-memory" id="novaMemory">Nova remembers preferences only on this device. Say “remember my name is …” or “remember I like …”. Nothing is sent to an AI service yet.</div></div></section><button class="nova-orb" id="novaOrb" aria-expanded="false" aria-controls="novaPanel"><span class="nova-core">✦</span><span class="nova-label">Open Astralis Nova</span></button>`;
+  root.id='novaGuide';
+  root.innerHTML=`
+    <section class="nova-panel" id="novaPanel" aria-hidden="true" aria-labelledby="novaTitle">
+      <header class="nova-head">
+        <div class="nova-mini" aria-hidden="true">✦</div>
+        <div><h2 id="novaTitle">Astralis Nova</h2><p>Interactive site intelligence • Navigation online</p></div>
+        <div class="nova-head-actions"><button class="nova-icon" id="novaVoice" type="button" aria-label="Toggle voice">${state.muted?'🔇':'🔊'}</button><button class="nova-icon" id="novaClose" type="button" aria-label="Close Nova">×</button></div>
+      </header>
+      <div class="nova-body">
+        <p class="nova-message" id="novaMessage">${isHome()?'All systems online. Choose a destination or ask me a question.':'You are viewing a recovered Astralis Nova page. I can return you to the main portal or open another destination.'}</p>
+        <div class="nova-status" id="novaStatus" aria-live="polite"></div>
+        <div class="nova-command-row"><input class="nova-command" id="novaCommand" type="text" placeholder="Ask Nova: play Darktide, go home…" aria-label="Ask Astralis Nova"><button class="nova-send" id="novaMic" type="button" aria-label="Speak command">🎙️</button><button class="nova-send" id="novaSend" type="button" aria-label="Send command">➤</button></div>
+        <button class="nova-action primary" data-action="home" type="button">✦ Return to Astralis Nova Home</button>
+        <p class="nova-section">Destinations</p>
+        <div class="nova-actions">
+          <button class="nova-action" data-action="music" type="button">🎵 Music Voyage<small>Open the complete catalog</small></button>
+          <button class="nova-action" data-action="darktide" type="button">⚔️ Darktide Signal<small>Open the Megamix player</small></button>
+          <button class="nova-action" data-action="archive" type="button">🛰️ First Orbit<small>Recovered pages and memories</small></button>
+          <button class="nova-action" data-action="quote" type="button">✨ Quote Orbit<small>Quotes and MLK tribute</small></button>
+          <button class="nova-action" data-action="guestbook" type="button">📡 Guestbook<small>Leave a signal</small></button>
+          <button class="nova-action" data-action="chess" type="button">♟ Chess Portal<small>Enter the layered board</small></button>
+          <button class="nova-action" data-action="river" type="button">🌊 Just A River<small>Open the restored poem</small></button>
+          <button class="nova-action" data-action="diagnostic" type="button">🧭 Self-Check<small>Test site systems</small></button>
+        </div>
+      </div>
+      <div class="nova-footer">Nova remembers only small preferences in this browser. She cannot secretly rewrite the website, but she can diagnose missing features and route visitors around the full Astralis Nova portal.</div>
+    </section>
+    <button class="nova-orb" id="novaOrb" type="button" aria-expanded="false" aria-controls="novaPanel"><span class="nova-core">✦</span><span class="nova-label">Open Astralis Nova</span></button>`;
   document.body.appendChild(root);
 
-  const $=s=>root.querySelector(s), panel=$('#novaPanel'),orb=$('#novaOrb'),msg=$('#novaMessage'),status=$('#novaStatus'),input=$('#novaInput'),mic=$('#novaMic'),voiceBtn=$('#novaVoice');
-  let voice=null,recognition=null;
-  const chooseVoice=()=>{const vs=speechSynthesis?.getVoices?.()||[];voice=vs.map(v=>{let n=v.name.toLowerCase(),l=(v.lang||'').toLowerCase(),s=0;if(l.startsWith('en-gb'))s+=100;else if(l.startsWith('en'))s+=20;if(/sonia|libby|hazel|serena|susan|kate|fiona|moira|martha|female|natural|neural/.test(n))s+=45;if(/male|guy|david|mark|george/.test(n))s-=35;return{v,s}}).sort((a,b)=>b.s-a.s)[0]?.v||null;return voice};
-  if('speechSynthesis'in window){chooseVoice();speechSynthesis.addEventListener?.('voiceschanged',chooseVoice)}
-  const speak=text=>{if(state.muted||!('speechSynthesis'in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.88;u.pitch=.84;u.volume=.94;if(voice||chooseVoice())u.voice=voice;speechSynthesis.speak(u)};
-  const say=(text,spoken=true)=>{msg.textContent=text;if(spoken)speak(text)};
-  const open=v=>{state.open=v;panel.classList.toggle('open',v);panel.setAttribute('aria-hidden',String(!v));orb.setAttribute('aria-expanded',String(v));if(v)setTimeout(()=>input.focus(),220)};
-  const remember=()=>set('astralisNovaMemory',JSON.stringify(memory));
-  const targetByText=(rx)=>[...document.querySelectorAll('section,main,article,div')].find(x=>rx.test((x.textContent||'').slice(0,1000)));
-  const spotlight=t=>{if(!t)return false;t.scrollIntoView({behavior:reduced?'auto':'smooth',block:'center'});t.classList.remove('nova-pulse-target');void t.offsetWidth;t.classList.add('nova-pulse-target');setTimeout(()=>t.classList.remove('nova-pulse-target'),3800);return true};
-  const destination=(id)=>{
-    const map={music:{text:'Opening the music voyage. Every track is a coordinate in the Astralis Nova story.',target:()=>document.querySelector('#music')},archive:{text:'Entering Echoes From the First Orbit, where old pages and MIDI signals still glow.',target:()=>document.querySelector('#echoes,#first-orbit,[id*="orbit" i],[id*="archive" i]')||targetByText(/Echoes From the First Orbit/i)},quotes:{text:'Locating the Quote Orbit and its permanent tribute to courage, curiosity, and forward motion.',target:()=>document.querySelector('#quoteOrbit,[id*="quote" i],.quote-card')||targetByText(/Martin Luther King|Stephen Hawking|Quote Orbit/i)},guestbook:{text:'Opening the guestbook. Leave a signal for the next traveler.',target:()=>document.querySelector('#guestbook')},about:{text:'Opening the Astralis Nova story.',target:()=>document.querySelector('#about')},contact:{text:'Opening communications.',target:()=>document.querySelector('#contact')}};
-    if(id==='darktide'){say('Incoming transmission from Dereth. Opening the Darktide Megamix now.');open(false);setTimeout(()=>{const b=document.getElementById('darktidePlay');if(b){b.click();setTimeout(()=>document.getElementById('darktideAudio')?.play().catch(()=>{}),300)}else location.href='/?darktide=1'},180);memory.last='darktide';remember();return}
-    if(id==='chess'){say('Opening the Astralis Nova chess portal.');setTimeout(()=>location.href='/chess/',260);return}
-    if(id==='poem'){say('Opening Just A River, restored from the First Orbit archive.');setTimeout(()=>location.href='/just-a-river.html',260);return}
-    if(id==='surprise'){destination(['music','archive','quotes','darktide','poem','chess'][Math.floor(Math.random()*6)]);return}
-    const d=map[id];if(!d)return;say(d.text);const t=d.target();open(false);setTimeout(()=>{if(!spotlight(t)){status.textContent='That destination is not on this page yet.'}},180);memory.last=id;remember();
+  const panel=root.querySelector('#novaPanel');
+  const orb=root.querySelector('#novaOrb');
+  const msg=root.querySelector('#novaMessage');
+  const status=root.querySelector('#novaStatus');
+  const input=root.querySelector('#novaCommand');
+  const voiceBtn=root.querySelector('#novaVoice');
+  let chosenVoice=null;
+
+  const chooseVoice=()=>{
+    const voices=speechSynthesis?.getVoices?.()||[];
+    const ranked=voices.map(v=>{const n=v.name.toLowerCase(),l=(v.lang||'').toLowerCase();let s=0;if(l.startsWith('en-gb'))s+=100;else if(l.startsWith('en'))s+=20;if(/sonia|libby|hazel|susan|serena|kate|fiona|moira|martha|female|natural|neural/.test(n))s+=40;if(/male|guy|david|mark|george|ryan/.test(n))s-=30;return {v,s}}).sort((a,b)=>b.s-a.s);chosenVoice=ranked[0]?.v||null;return chosenVoice;
   };
-  const selfCheck=()=>{const checks=[['Music',!!document.querySelector('#music')],['Darktide launcher',!!document.getElementById('darktidePlay')],['Guestbook',!!document.querySelector('#guestbook')],['Quote system',!!document.querySelector('#quoteOrbit,[id*="quote" i],.quote-card')||!!targetByText(/Martin Luther King|Stephen Hawking/)],['Speech',('speechSynthesis'in window)]];const bad=checks.filter(x=>!x[1]);const text=bad.length?`Self-check complete. ${checks.length-bad.length} of ${checks.length} systems responded. Missing signal: ${bad.map(x=>x[0]).join(', ')}.`:`Self-check complete. All ${checks.length} core systems are responding.`;say(text);status.textContent='Diagnostic scan complete.'};
-  const answer=q=>{
-    const raw=q.trim();if(!raw)return;const s=raw.toLowerCase();
-    let m=raw.match(/remember my name is\s+(.+)/i);if(m){memory.name=m[1].trim();remember();say(`Understood. I will remember you as ${memory.name} on this device.`);return}
-    m=raw.match(/remember (?:that )?i like\s+(.+)/i);if(m){memory.likes=m[1].trim();remember();say(`Logged locally. You like ${memory.likes}. I will use that when suggesting destinations.`);return}
-    if(/forget|clear memory/.test(s)){for(const k of Object.keys(memory))delete memory[k];remember();say('Local visitor memory cleared. Fresh stars, clean chart.');return}
-    if(/self.?check|diagnos|what.*broken|fix.*site/.test(s)){selfCheck();return}
-    if(/darktide|mega.?mix|dereth/.test(s)){destination('darktide');return}
-    if(/chess|board/.test(s)){destination('chess');return}
-    if(/river|poem/.test(s)){destination('poem');return}
-    if(/music|song|track|listen/.test(s)){destination('music');return}
-    if(/first orbit|archive|old site|memories|midi/.test(s)){destination('archive');return}
-    if(/quote|king|hawking|dream/.test(s)){destination('quotes');return}
-    if(/guest|sign/.test(s)){destination('guestbook');return}
-    if(/about|who is ramon|who.*astralis/.test(s)){destination('about');return}
-    if(/contact|message/.test(s)){destination('contact');return}
-    if(/surprise|random|anything/.test(s)){destination('surprise');return}
-    if(/who are you|what are you/.test(s)){say('I am Astralis Nova, the interactive intelligence of this creative world. I can guide, speak, remember local preferences, and inspect site systems. My deeper cloud intelligence is still being forged.');return}
-    if(/hello|hi|welcome/.test(s)){say(`Welcome aboard${memory.name?`, ${memory.name}`:''}. Ask me to play Darktide, open a poem, explore music, or run a self-check.`);return}
-    say(`I understood the words, but not the destination yet. Try “play Darktide,” “show First Orbit,” “open chess,” “read the quotes,” or “run self-check.”`);
+  if('speechSynthesis' in window){chooseVoice();speechSynthesis.addEventListener?.('voiceschanged',chooseVoice)}
+  const speak=(text)=>{if(state.muted||!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.88;u.pitch=.86;u.volume=.92;u.voice=chosenVoice||chooseVoice();speechSynthesis.speak(u)};
+  const say=(text,{voice=true}={})=>{msg.textContent=text;if(voice)speak(text)};
+  const open=(value)=>{state.open=value;panel.classList.toggle('open',value);panel.setAttribute('aria-hidden',String(!value));orb.setAttribute('aria-expanded',String(value));if(value)setTimeout(()=>input.focus(),220)};
+  const closeThen=(fn)=>{open(false);setTimeout(fn,reduced?0:180)};
+  const flash=()=>{orb.classList.remove('flash');void orb.offsetWidth;orb.classList.add('flash');setTimeout(()=>orb.classList.remove('flash'),1700)};
+  const pulse=(el)=>{if(!el)return;el.classList.remove('nova-pulse-target');void el.offsetWidth;el.classList.add('nova-pulse-target');setTimeout(()=>el.classList.remove('nova-pulse-target'),4000)};
+  const remember=(dest)=>{state.last=dest;set('astralisNovaLastDestination',dest)};
+
+  const homeUrl=(hash='')=>`/${hash}`;
+  const navigateHome=(hash,label)=>{
+    remember(label);
+    if(isHome()){
+      const target=hash?document.querySelector(hash):document.querySelector('#home')||document.body;
+      closeThen(()=>{if(hash)history.replaceState(null,'',hash);target?.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});pulse(target);});
+    }else closeThen(()=>location.assign(homeUrl(hash)));
   };
 
-  $('#novaForm').addEventListener('submit',e=>{e.preventDefault();const q=input.value;input.value='';answer(q)});
-  root.addEventListener('click',e=>{const a=e.target.closest('[data-action]')?.dataset.action;if(a)destination(a);const q=e.target.closest('[data-query]')?.dataset.query;if(q){input.value=q;answer(q)}});
-  orb.addEventListener('click',()=>{open(!state.open);if(state.open)say(`Welcome aboard${memory.name?`, ${memory.name}`:''}. I am online and ready.`)});
-  $('#novaClose').addEventListener('click',()=>open(false));
-  voiceBtn.addEventListener('click',()=>{state.muted=!state.muted;set('astralisNovaMuted',String(state.muted));voiceBtn.textContent=state.muted?'🔇':'🔊';if(state.muted)speechSynthesis?.cancel();else speak('Voice interface online. Astralis Nova standing by.')});
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(SR){recognition=new SR();recognition.lang='en-US';recognition.interimResults=false;recognition.onstart=()=>{state.listening=true;mic.classList.add('nova-listening');status.textContent='Listening…'};recognition.onend=()=>{state.listening=false;mic.classList.remove('nova-listening')};recognition.onerror=()=>status.textContent='Voice input was unavailable.';recognition.onresult=e=>{const q=e.results[0][0].transcript;input.value=q;answer(q)}}else mic.style.display='none';
-  mic.addEventListener('click',()=>{try{recognition?.start()}catch{}});
+  const actions={
+    home:()=>{say('Returning to the main Astralis Nova portal.');navigateHome('#home','home')},
+    music:()=>{say('Opening the Astralis Nova music voyage.');navigateHome('#music','music')},
+    guestbook:()=>{say('Opening the guestbook signal array.');navigateHome('#guestbook','guestbook')},
+    quote:()=>{say('Opening the Quote Orbit and Martin Luther King tribute.');navigateHome('#quoteOrbit','quote orbit')},
+    archive:()=>{say('Opening Echoes From the First Orbit.');navigateHome('#echoes','first orbit')},
+    chess:()=>{say('Opening the Astralis Nova chess portal.');remember('chess');closeThen(()=>location.assign('/chess/'))},
+    river:()=>{say('Opening the restored poem, Just A River.');remember('river');closeThen(()=>location.assign('/just-a-river.html'))},
+    darktide:()=>{
+      say('Incoming transmission from Dereth. Opening the Darktide Megamix.');remember('darktide');
+      if(!isHome()){closeThen(()=>location.assign('/?darktide=1'));return}
+      closeThen(()=>{const play=document.getElementById('darktidePlay');if(play){play.click();setTimeout(()=>document.getElementById('darktideAudio')?.play().catch(()=>{}),300)}else location.assign('/?darktide=1')});
+    },
+    diagnostic:()=>{
+      const checks=[['music',!!document.querySelector('#music')],['darktide',!!document.getElementById('darktideLaunch')],['voice','speechSynthesis' in window],['guestbook',!!document.querySelector('#guestbook')],['home route',true]];
+      const passed=checks.filter(([,ok])=>ok).length;
+      const missing=checks.filter(([,ok])=>!ok).map(([n])=>n);
+      say(`Self-check complete. ${passed} of ${checks.length} local systems responded.${missing.length?` Missing on this page: ${missing.join(', ')}.`:' All local systems are responding.'}`);
+      status.textContent=isHome()?'Main portal detected.':'Subpage detected. Home routing is armed.';
+    }
+  };
+
+  const understand=(raw)=>{
+    const text=raw.trim();if(!text)return;
+    const q=text.toLowerCase();
+    const name=q.match(/(?:my name is|call me)\s+([a-z][a-z '-]{1,30})/i);
+    if(name){state.name=name[1].trim().replace(/\b\w/g,c=>c.toUpperCase());set('astralisNovaName',state.name);say(`Understood. I will remember you as ${state.name} on this browser.`);return}
+    if(/clear.*memory|forget me/.test(q)){['astralisNovaName','astralisNovaLastDestination','astralisNovaGreeted'].forEach(k=>{try{localStorage.removeItem(k)}catch{}});state.name='';state.last='';state.greeted=false;say('Local visitor memory cleared.');return}
+    if(/darktide|megami?x|dereth/.test(q))return actions.darktide();
+    if(/chess/.test(q))return actions.chess();
+    if(/river|poem/.test(q))return actions.river();
+    if(/first orbit|archive|old site|memories/.test(q))return actions.archive();
+    if(/quote|martin luther king|hawking|mlk/.test(q))return actions.quote();
+    if(/guestbook|sign.*book|leave.*message/.test(q))return actions.guestbook();
+    if(/music|songs|catalog/.test(q))return actions.music();
+    if(/home|main page|main site|astralis page|go back/.test(q))return actions.home();
+    if(/self.?check|diagnos|test systems|what.*wrong/.test(q))return actions.diagnostic();
+    if(/who are you|what are you/.test(q)){say('I am Astralis Nova, the interactive guide for Ramon Bivens’ music, recovered web memories, poems, games, and cosmic projects.');return}
+    if(/help|what can you do/.test(q)){say('I can open the main portal, music, Darktide Megamix, First Orbit archive, poems, quotes, guestbook, and chess portal. I can also run a self-check and remember your name locally.');return}
+    say('I did not fully understand that command yet. Try: go home, play Darktide, open music, show poems, open chess, or run self-check.');
+  };
+
+  root.addEventListener('click',e=>{const action=e.target.closest('[data-action]')?.dataset.action;if(action&&actions[action])actions[action]()});
+  root.querySelector('#novaSend').addEventListener('click',()=>{const value=input.value;input.value='';understand(value)});
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();const value=input.value;input.value='';understand(value)}});
+  orb.addEventListener('click',()=>{
+    open(!state.open);
+    if(state.open){flash();if(!state.greeted){state.greeted=true;set('astralisNovaGreeted','true');const greeting=state.name?`Welcome back, ${state.name}. Astralis Nova is ready.`:'Welcome aboard. Astralis Nova is ready.';say(greeting)}else{say(isHome()?'Command interface ready. Where shall we go?':'Subpage navigation ready. I can return you to the main portal.',{voice:false})}}
+  });
+  root.querySelector('#novaClose').addEventListener('click',()=>open(false));
+  voiceBtn.addEventListener('click',()=>{state.muted=!state.muted;set('astralisNovaMuted',String(state.muted));voiceBtn.textContent=state.muted?'🔇':'🔊';if(state.muted){speechSynthesis?.cancel();status.textContent='Voice muted.'}else{status.textContent=chosenVoice?`Voice online: ${chosenVoice.name}.`:'Voice online.';speak('Voice interface online.')}});
+
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const mic=root.querySelector('#novaMic');
+  if(SR){const rec=new SR();rec.lang='en-GB';rec.interimResults=false;rec.maxAlternatives=1;mic.addEventListener('click',()=>{status.textContent='Listening…';try{rec.start()}catch{}});rec.onresult=e=>{const text=e.results[0][0].transcript;input.value=text;status.textContent=`Heard: ${text}`;understand(text)};rec.onerror=()=>status.textContent='Voice command was not captured. Try typing instead.'}
+  else mic.style.display='none';
+
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&state.open)open(false)});
+  setInterval(()=>{if(!state.open&&document.visibilityState==='visible'&&!reduced&&Math.random()>.62)flash()},18000);
 })();
