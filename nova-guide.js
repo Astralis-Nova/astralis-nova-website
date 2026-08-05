@@ -1,6 +1,13 @@
 (()=>{
-  if(window.__astralisNovaBridgeV12)return;
-  window.__astralisNovaBridgeV12=true;
+  if(window.__astralisNovaBridgeV13)return;
+  window.__astralisNovaBridgeV13=true;
+
+  // Prevent retired patches from activating if an old cached tag appears.
+  window.__astralisNovaMidiUpgrade=true;
+  window.__astralisNovaMidiUpgradeV2=true;
+  window.__astralisNovaMidiUpgradeV3=true;
+  window.__astralisNovaOrbAlignmentV1=true;
+  window.__astralisNovaOrbAlignmentV2=true;
 
   const loadScript=(src,key)=>{
     if(document.querySelector(`script[data-${key}]`))return;
@@ -12,9 +19,8 @@
   };
 
   const loadUpgrades=()=>{
+    loadScript('/nova-remove-hands.js?v=20260805b','novaRemoveHands');
     loadScript('/nova-intelligence.js?v=20260805a','novaIntelligence');
-    loadScript('/nova-midi-upgrade.js?v=20260805c','novaMidiUpgrade');
-    loadScript('/nova-remove-hands.js?v=20260805a','novaRemoveHands');
   };
 
   if(window.__astralisNovaGuideV6){
