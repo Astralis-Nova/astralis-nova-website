@@ -59,8 +59,18 @@
     if(new URLSearchParams(location.search).get('darktide')==='1')setTimeout(openPanel,350);
   };
 
-  const loadQuoteAudit=()=>{if(document.querySelector('script[data-quote-audit]'))return;const audit=document.createElement('script');audit.src='/quote-attribution-audit.js?v=20260805a';audit.dataset.quoteAudit='true';audit.async=false;document.head.appendChild(audit)};
-  const loadNovaGuide=()=>{if(document.querySelector('script[data-nova-guide]'))return;const guide=document.createElement('script');guide.src='/nova-guide.js?v=20260805g';guide.dataset.novaGuide='true';guide.async=false;document.head.appendChild(guide)};
-  const finish=()=>{upgradeRiver();loadQuoteAudit();addDarktideLaunch();loadNovaGuide()};
+  const loadScript=(src,key)=>{
+    if(document.querySelector(`script[data-${key}]`))return;
+    const script=document.createElement('script');
+    script.src=src;
+    script.dataset[key]='true';
+    script.async=false;
+    document.head.appendChild(script);
+  };
+  const loadQuoteAudit=()=>loadScript('/quote-attribution-audit.js?v=20260805a','quoteAudit');
+  const loadNovaGuide=()=>loadScript('/nova-guide.js?v=20260805g','novaGuide');
+  const loadTipJar=()=>loadScript('/feeling-tipsy.js?v=20260805b','feelingTipsy');
+
+  const finish=()=>{upgradeRiver();loadQuoteAudit();addDarktideLaunch();loadNovaGuide();loadTipJar()};
   const core=document.createElement('script');core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@391ac37395e6de4dd8158a04476b059060495fee/astralis-celestial-drift.js';core.async=false;core.onload=finish;core.onerror=finish;document.head.appendChild(core);
 })();
