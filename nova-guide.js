@@ -10,12 +10,16 @@
     script.async=false;
     document.head.appendChild(script);
   };
+
   const loadUpgrades=()=>{
     loadScript('/nova-intelligence.js?v=20260805a','novaIntelligence');
-    loadScript('/nova-midi-upgrade.js?v=20260805b','novaMidiUpgrade');
+    loadScript('/nova-midi-upgrade.js?v=20260805c','novaMidiUpgrade');
   };
 
-  if(window.__astralisNovaGuideV6){loadUpgrades();return}
+  if(window.__astralisNovaGuideV6){
+    loadUpgrades();
+    return;
+  }
 
   const core=document.createElement('script');
   core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@c4c7d4a338e5532fed8fe52d4e7a950c536ccd69/nova-guide.js';
