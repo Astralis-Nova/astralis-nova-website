@@ -78,9 +78,7 @@
         <p class="darktide-kicker">Astralis Nova presents</p>
         <h2 id="darktidePanelTitle">Darktide Megamix</h2>
         <p>The strongest moments from four Darktide songs, cut apart and reforged into one battle transmission for the old warriors of Dereth.</p>
-        <audio id="darktideAudio" controls preload="metadata">
-          <source src="/Audio/mp3/Darktide%20Megamix%20Project.mp3" type="audio/mpeg">
-          <source src="/Audio/mp3/Darktide-Megamix.mp3" type="audio/mpeg">
+        <audio id="darktideAudio" controls preload="metadata" src="/Audio/Darktide-Megamix.mp3">
           Your browser does not support audio playback.
         </audio>
         <div class="darktide-actions" style="justify-content:center">
