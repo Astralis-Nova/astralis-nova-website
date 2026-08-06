@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "20260727r";
+  const VERSION = "20260805a";
   const loaded = new Map();
 
   function loadScript(src, { module = false } = {}) {
@@ -155,7 +155,7 @@
 
   const critical = [
     `/site-fixes.js?v=20260720c`,
-    `/cosmic-worlds.js?v=20260720a`,
+    `/cosmic-worlds.js?v=20260805a`,
     `/realistic-orbit.js?v=20260721b`,
     `/astralis-celestial-drift.js?v=20260722m`,
     `/astralis-ai-upgrades.js?v=20260722q`,
