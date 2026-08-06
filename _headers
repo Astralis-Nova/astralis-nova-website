@@ -26,25 +26,25 @@
   Cache-Control: no-store, max-age=0, must-revalidate
   Pragma: no-cache
   Expires: 0
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://storage.googleapis.com https://cdn.jsdelivr.net; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'none'; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'
 
 /lion-den-faith.html
   Cache-Control: no-store, max-age=0, must-revalidate
   Pragma: no-cache
   Expires: 0
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://storage.googleapis.com https://cdn.jsdelivr.net; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'none'; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'
 
 /lion-den-faith-story.html
   Cache-Control: no-store, max-age=0, must-revalidate
   Pragma: no-cache
   Expires: 0
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://storage.googleapis.com https://cdn.jsdelivr.net; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'none'; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'
 
 /lion-den-faith*
   Cache-Control: no-store, max-age=0, must-revalidate
   Pragma: no-cache
   Expires: 0
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://storage.googleapis.com https://cdn.jsdelivr.net; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'none'; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'
 
 /daniel-lions-story/*
   Cache-Control: no-store, max-age=0, must-revalidate
