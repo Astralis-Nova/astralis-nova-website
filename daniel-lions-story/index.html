@@ -3,62 +3,63 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Daniel and the Lions' Den, a restored inspirational story page with click-to-enter presentation and Angels Watching MIDI.">
+<meta name="description" content="Daniel and the Lions' Den, an inspirational Astralis Nova story page.">
 <meta name="theme-color" content="#17110a">
 <title>Daniel and the Lions’ Den | Astralis Nova</title>
 <style>
-:root{color-scheme:dark;--gold:#ffd879;--ink:#fff9e9;--muted:#d7cfbc;--line:rgba(255,221,145,.28);--panel:rgba(12,10,8,.88)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;overflow-x:hidden;background:#090806;color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.72}a{color:inherit}button{font:inherit}
-.den-bg{position:fixed;inset:0;z-index:-5;background:radial-gradient(circle at 68% 4%,rgba(255,232,164,.95) 0 1.5rem,rgba(219,157,53,.34) 6rem,transparent 18rem),linear-gradient(150deg,#2a2116 0%,#0b0c10 42%,#171109 100%)}
-.den-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.68)),repeating-linear-gradient(0deg,transparent 0 78px,rgba(255,255,255,.025) 79px 80px)}
-.scene{position:fixed;inset:0;z-index:-3;pointer-events:none;opacity:0;transition:opacity .8s ease}.entered .scene{opacity:1}.daniel,.lion{position:absolute;filter:drop-shadow(0 14px 18px #000)}.daniel{left:56%;bottom:9vh;font-size:clamp(5rem,11vw,9rem);animation:pray 5s ease-in-out infinite}.lion{font-size:clamp(4rem,8vw,7rem);animation:breathe 5.2s ease-in-out infinite}.l1{left:5%;bottom:5vh}.l2{left:24%;bottom:10vh;font-size:clamp(3.2rem,6vw,5.2rem);animation-delay:.8s}.l3{right:5%;bottom:5vh;animation-delay:1.5s}@keyframes pray{50%{transform:translateY(-5px)}}@keyframes breathe{50%{transform:translateY(-4px)}}
-.entry{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 50% 25%,rgba(255,211,111,.16),transparent 28rem),rgba(3,3,3,.96);transition:opacity .55s ease,visibility .55s ease}.entered .entry{opacity:0;visibility:hidden}.entry-card{width:min(700px,100%);padding:clamp(28px,6vw,58px);text-align:center;border:1px solid var(--line);border-radius:30px;background:linear-gradient(160deg,rgba(36,24,13,.92),rgba(7,9,13,.95));box-shadow:0 30px 100px #000}.entry-icon{font-size:5rem}.entry h1{margin:8px 0 14px;font-size:clamp(2.6rem,8vw,5.4rem);line-height:.95}.entry p{max-width:560px;margin:0 auto 24px;color:var(--muted)}
-.enter-btn,.button{min-height:46px;padding:11px 17px;border:1px solid var(--line);border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(90deg,#ffd971,#c58a22);color:#171006;text-decoration:none;cursor:pointer;font:900 .82rem Arial,sans-serif;letter-spacing:.04em}.button.secondary{background:rgba(22,25,32,.82);color:#fff}
-.page{width:min(1000px,calc(100% - 30px));margin:auto;padding:22px 0 50px}.topnav{display:flex;justify-content:space-between;gap:12px;margin-bottom:22px}.story-card{padding:clamp(24px,5vw,52px);border:1px solid var(--line);border-radius:28px;background:linear-gradient(160deg,rgba(15,13,11,.92),rgba(7,9,13,.88));box-shadow:0 28px 90px #0009}.eyebrow{margin:0 0 8px;text-align:center;color:var(--gold);font:900 .74rem Arial,sans-serif;letter-spacing:.19em;text-transform:uppercase}.story-card>h1{text-align:center;margin:0;font-size:clamp(2.8rem,8vw,6rem);line-height:.92}.subtitle{text-align:center;color:var(--muted);margin:16px auto 30px;max-width:680px}.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:22px}.story,.meaning,.music{padding:24px;border:1px solid rgba(255,255,255,.11);border-radius:20px;background:rgba(5,6,9,.72)}.story p{margin:0 0 1.08em}.story strong{color:#ffe7a6}.meaning{align-self:start;position:sticky;top:12px}.lessons{list-style:none;padding:0;display:grid;gap:10px}.lessons li{padding:12px 14px;border:1px solid #3c3423;border-radius:14px;background:#141720}.music{margin-top:22px}.music h2{margin-top:0}.player-shell{min-height:74px;padding:14px;border-radius:16px;background:#0d1118;border:1px solid #2d3748}.music-status{margin:10px 0 0;color:#ffe7a5;font:700 .82rem Arial,sans-serif}.footer{text-align:center;color:#aaa18f;padding:26px 0 6px}
-@media(max-width:820px){.layout{grid-template-columns:1fr}.meaning{position:static}.scene{opacity:.35}.entered .scene{opacity:.55}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.daniel,.lion{animation:none}.entry,.scene{transition:none}}
+:root{color-scheme:dark;--gold:#ffd879;--ink:#fff9e9;--muted:#d7cfbc;--line:rgba(255,221,145,.28);--panel:#11131a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(160deg,#241b10 0,#090a0e 34%,#15100a 100%);color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.72}a{color:inherit}.page{width:min(1000px,calc(100% - 30px));margin:auto;padding:22px 0 48px}.topnav{display:flex;justify-content:space-between;gap:12px;margin-bottom:22px}.button{min-height:44px;padding:10px 15px;border:1px solid var(--line);border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#171b24;color:#fff;text-decoration:none;font:900 .8rem Arial,sans-serif;letter-spacing:.03em}.button.primary{background:linear-gradient(90deg,#ffd971,#c58a22);color:#171006;border:0}.entry,.story-card{border:1px solid var(--line);border-radius:28px;background:linear-gradient(160deg,rgba(35,24,13,.96),rgba(8,10,14,.97));box-shadow:0 24px 70px rgba(0,0,0,.45)}.entry{padding:clamp(30px,7vw,70px);text-align:center;margin-bottom:24px}.scene{font-size:clamp(3.5rem,10vw,7rem);letter-spacing:.08em;margin-bottom:8px}.eyebrow{margin:0 0 8px;color:var(--gold);font:900 .74rem Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase}.entry h1,.story-card>h1{margin:0;font-size:clamp(2.7rem,8vw,5.8rem);line-height:.94}.entry p,.subtitle{max-width:680px;margin:16px auto 24px;color:var(--muted)}.story-card{padding:clamp(24px,5vw,48px)}.story-card>h1{text-align:center}.subtitle{text-align:center}.layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:22px}.story,.meaning,.music{padding:24px;border:1px solid rgba(255,255,255,.11);border-radius:20px;background:var(--panel)}.story p{margin:0 0 1.08em}.story strong{color:#ffe7a6}.meaning{align-self:start}.lessons{list-style:none;padding:0;display:grid;gap:10px}.lessons li{padding:12px 14px;border:1px solid #3c3423;border-radius:14px;background:#171a22}.music{margin-top:22px}.music h2{margin-top:0}.music-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.footer{text-align:center;color:#aaa18f;padding:26px 0 4px}@media(max-width:820px){.layout{grid-template-columns:1fr}.topnav{flex-wrap:wrap}}
 </style>
 </head>
 <body>
-<div class="den-bg"></div>
-<div class="scene" aria-hidden="true"><div class="daniel">🙏</div><div class="lion l1">🦁</div><div class="lion l2">🦁</div><div class="lion l3">🦁</div></div>
-<div class="entry" id="entryScreen"><div class="entry-card"><div class="entry-icon">🦁</div><p class="eyebrow">ASTRALIS NOVA STORY ARCHIVE</p><h1>Daniel and the Lions’ Den</h1><p>Enter the ancient story of integrity, courage, prayer, and deliverance. The related MIDI becomes available after you enter.</p><button class="enter-btn" id="enterStory" type="button">✦ ENTER THE STORY</button></div></div>
 <div class="page">
-<nav class="topnav"><a class="button secondary" href="/">← Main Portal</a><a class="button secondary" href="#music">🎼 Story MIDI</a></nav>
-<main class="story-card"><p class="eyebrow">DANIEL 6 • COURAGE UNDER PRESSURE</p><h1>Daniel and the Lions’ Den</h1><p class="subtitle">Daniel’s courage was not loud or reckless. He remained faithful when fear demanded that he become someone else.</p>
-<div class="layout"><article class="story" id="story"><h2>The Story</h2>
+<nav class="topnav"><a class="button" href="/">← Main Portal</a><a class="button" href="#music">🎼 Story MIDI</a></nav>
+<section class="entry">
+<div class="scene" aria-hidden="true">🦁 🙏 🦁</div>
+<p class="eyebrow">ASTRALIS NOVA STORY ARCHIVE</p>
+<h1>Daniel and the Lions’ Den</h1>
+<p>Enter the ancient story of integrity, courage, prayer, and deliverance.</p>
+<a class="button primary" href="#story">✦ ENTER THE STORY</a>
+</section>
+<main class="story-card">
+<p class="eyebrow" style="text-align:center">DANIEL 6 • COURAGE UNDER PRESSURE</p>
+<h1>Daniel and the Lions’ Den</h1>
+<p class="subtitle">Daniel’s courage was not loud or reckless. He remained faithful when fear demanded that he become someone else.</p>
+<div class="layout">
+<article class="story" id="story"><h2>The Story</h2>
 <p>King Darius ruled over a vast kingdom. To help govern it, he appointed 120 officials called satraps, and over them he placed three administrators. Daniel was one of those three.</p>
 <p>Daniel quickly stood out. He was dependable, wise, and honest. The king trusted him so much that he considered placing Daniel over the entire kingdom.</p>
 <p>That made the other officials jealous.</p>
 <p>They began searching for something they could use against Daniel. They examined his work, hoping to find corruption, negligence, or dishonesty. But they found nothing. Daniel was faithful in his duties and gave them no legitimate reason to accuse him.</p>
 <p>So they decided that the only way to trap Daniel was through his devotion to God.</p>
-<p>The officials approached King Darius and proposed a new law: for thirty days, no one should pray to any god or person except the king. Anyone who disobeyed would be thrown into a den of lions.</p>
+<p>The officials approached King Darius and praised him. Then they proposed a new law:</p>
+<p><strong>For thirty days, no one in the kingdom should pray to any god or person except the king. Anyone who disobeyed would be thrown into a den of lions.</strong></p>
+<p>The officials urged Darius to sign the decree under the law of the Medes and Persians, which could not easily be changed once established.</p>
 <p>The king agreed and signed it.</p>
-<p>When Daniel learned about the decree, he went home and prayed to God three times a day, just as he had always done. He did not pray to create a spectacle. He simply refused to abandon his devotion because of fear.</p>
-<p>The officials found Daniel praying and accused him before the king. Darius was deeply distressed and tried to find a lawful way to rescue Daniel, but the decree could not be revoked.</p>
-<p>At last, Daniel was thrown into the lions’ den. Before he was lowered inside, the king said, <strong>“May your God, whom you continually serve, rescue you.”</strong></p>
-<p>A large stone was placed over the opening and sealed. That night the king refused food and could not sleep.</p>
-<p>At dawn, Darius hurried to the den and called, <strong>“Daniel, servant of the living God, has your God been able to rescue you from the lions?”</strong></p>
-<p>Daniel answered, <strong>“My God sent his angel and shut the mouths of the lions. They have not hurt me.”</strong></p>
-<p>The king was overjoyed and ordered Daniel lifted from the den. No wound was found on him because he had trusted in God.</p>
-<p>Afterward, Darius issued a proclamation honoring Daniel’s God as living and enduring, one who rescues and performs wonders. Daniel continued to prosper during the reign of Darius and later under Cyrus of Persia.</p></article>
-<aside class="meaning" id="meaning"><h2>Meaning of the Story</h2><ul class="lessons"><li>Integrity matters even when nobody rewards it.</li><li>Jealous people may attack what they cannot corrupt.</li><li>Faithfulness does not guarantee avoidance of danger.</li><li>Courage can mean continuing an ordinary good habit under extraordinary pressure.</li><li>Political power has limits, but conscience should not be casually surrendered.</li></ul><p><strong>Scripture:</strong> Daniel, chapter 6. 🦁📜</p></aside></div>
-<section class="music" id="music"><h2>Related MIDI: Angels Watching</h2><p>The quiet, protective atmosphere of this MIDI fits Daniel’s prayer and deliverance.</p><div class="player-shell" id="playerShell"><button class="button" id="loadMidi" type="button">▶ LOAD & PLAY MIDI</button></div><p class="music-status" id="musicStatus">The MIDI player loads only when requested, keeping the story page fast.</p><div style="margin-top:12px"><a class="button secondary" href="/Audio/angelswatching.mid" download>⬇ Download MIDI</a></div></section>
-</main><p class="footer">Astralis Nova Story Archive • Faith in the den, light in the darkness.</p></div>
-<script>
-const body=document.body,enter=document.getElementById('enterStory'),loadMidi=document.getElementById('loadMidi'),shell=document.getElementById('playerShell'),status=document.getElementById('musicStatus');
-enter.addEventListener('click',()=>{body.classList.add('entered');document.getElementById('story').scrollIntoView({behavior:'smooth',block:'start'})});
-let loading=false;
-loadMidi.addEventListener('click',()=>{
- if(loading)return;loading=true;status.textContent='Loading the MIDI player…';
- const tone=document.createElement('script');tone.src='https://cdn.jsdelivr.net/npm/tone@14.7.58/build/Tone.js';
- const magenta=document.createElement('script');magenta.src='https://cdn.jsdelivr.net/npm/@magenta/music@1.23.1/es6/core.js';
- const player=document.createElement('script');player.src='https://cdn.jsdelivr.net/npm/html-midi-player@1.4.0';
- tone.onload=()=>document.head.appendChild(magenta);
- magenta.onload=()=>document.head.appendChild(player);
- player.onload=()=>{shell.innerHTML='<midi-player src="/Audio/angelswatching.mid" sound-font></midi-player>';status.textContent='MIDI ready. Press Play on the player.'};
- player.onerror=()=>{status.textContent='The online player could not load. Use the Download MIDI button instead.'};
- document.head.appendChild(tone);
-});
-</script>
+<p>When Daniel learned about the decree, he did not hide his faith. He went home, entered the upstairs room where his windows opened toward Jerusalem, and prayed to God three times a day, just as he had always done.</p>
+<p>Daniel did not pray to create a public spectacle. He simply refused to abandon his regular devotion because of fear.</p>
+<p>The officials had expected this. They went together and found Daniel praying and asking God for help.</p>
+<p>They hurried back to the king and reminded him of the decree. Then they accused Daniel, saying that he still prayed three times a day.</p>
+<p>King Darius was deeply distressed. He did not want Daniel harmed and spent the rest of the day trying to find a lawful way to rescue him.</p>
+<p>But the officials reminded the king that a decree made under their laws could not be revoked.</p>
+<p>At last, Darius was forced to order Daniel thrown into the lions’ den.</p>
+<p>Before Daniel was lowered inside, the king said, <strong>“May your God, whom you continually serve, rescue you.”</strong></p>
+<p>A large stone was placed over the opening. The king sealed it with his own signet ring and with the rings of his nobles so that no one could secretly alter Daniel’s fate.</p>
+<p>That night, the king returned to his palace. He refused food and entertainment. He could not sleep.</p>
+<p>At the first light of dawn, Darius hurried to the lions’ den.</p>
+<p>As he approached, he called out anxiously, <strong>“Daniel, servant of the living God, has your God, whom you continually serve, been able to rescue you from the lions?”</strong></p>
+<p>From inside the den, Daniel answered, <strong>“May the king live forever. My God sent his angel and shut the mouths of the lions. They have not hurt me, because I was found innocent before God. I have also done nothing wrong against you, Your Majesty.”</strong></p>
+<p>The king was overjoyed. He ordered Daniel lifted out of the den. When Daniel was examined, no wound was found on him because he had trusted in God.</p>
+<p>Then Darius ordered that the men who had falsely accused Daniel be punished. According to the ancient account, they and their families were thrown into the lions’ den.</p>
+<p>Afterward, King Darius issued a proclamation throughout his kingdom. He commanded the people to respect the God of Daniel.</p>
+<p>The king declared that Daniel’s God was living and enduring, that his kingdom would not be destroyed, and that he rescued and performed wonders.</p>
+<p>Daniel continued to prosper during the reign of Darius and later under Cyrus of Persia.</p>
+</article>
+<aside class="meaning"><h2>Meaning of the Story</h2><p>Daniel’s courage was not loud or reckless. He simply remained faithful when fear demanded that he become someone else.</p><ul class="lessons"><li>Integrity matters even when nobody rewards it.</li><li>Jealous people may attack what they cannot corrupt.</li><li>Faithfulness does not guarantee avoidance of danger.</li><li>Courage can mean continuing an ordinary good habit under extraordinary pressure.</li><li>Political power has limits, but conscience should not be casually surrendered.</li></ul><p><strong>Scripture:</strong> Daniel, chapter 6. 🦁📜</p></aside>
+</div>
+<section class="music" id="music"><h2>Related MIDI: Turn Your Eyes</h2><p>A quieter, reflective MIDI for Daniel’s night of prayer and trust.</p><div class="music-actions"><a class="button primary" href="/Audio/TurnYourEyes.mid">▶ OPEN / PLAY TURN YOUR EYES MIDI</a><a class="button" href="/Audio/TurnYourEyes.mid" download>⬇ DOWNLOAD MIDI</a></div></section>
+</main>
+<p class="footer">Astralis Nova Story Archive • Faith in the den, light in the darkness.</p>
+</div>
 </body>
 </html>
