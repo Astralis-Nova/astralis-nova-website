@@ -7,8 +7,6 @@ export async function onRequest(context) {
   const url = new URL(context.request.url);
   const isHomepage = url.pathname === "/" || url.pathname === "/index.html";
 
-  // Standalone pages remain self-contained. Only the homepage receives the
-  // shared Astralis Nova runtime.
   if (!isHomepage) return response;
 
   return new HTMLRewriter()
@@ -29,12 +27,12 @@ export async function onRequest(context) {
     })
     .on("head", {
       element(element) {
-        element.append('<link rel="icon" type="image/svg+xml" href="/astralis-favicon.svg?v=20260722s"><link rel="alternate icon" type="image/svg+xml" href="/astralis-favicon-static.svg?v=20260722s"><link rel="apple-touch-icon" href="/astralis-favicon-static.svg?v=20260722s"><meta name="theme-color" content="#070c31"><link rel="stylesheet" href="/astralis-celestial-drift.css?v=20260722m"><style>#astralisVulcanBlessing{z-index:99999!important;right:16px!important;bottom:92px!important;width:270px!important;display:block!important;visibility:visible!important;opacity:1!important}.midi-relics,.astralis-planet-link[href="/lion-den-faith.html"],.astralis-planet-link[href="/lion-den-faith"]{display:none!important}@media(max-width:700px){#astralisVulcanBlessing{right:8px!important;bottom:78px!important;width:178px!important}}</style>', { html: true });
+        element.append('<link rel="icon" type="image/svg+xml" href="/astralis-favicon.svg?v=20260722s"><link rel="alternate icon" type="image/svg+xml" href="/astralis-favicon-static.svg?v=20260722s"><link rel="apple-touch-icon" href="/astralis-favicon-static.svg?v=20260722s"><meta name="theme-color" content="#070c31"><link rel="stylesheet" href="/astralis-celestial-drift.css?v=20260722m"><style>#astralisVulcanBlessing{z-index:99999!important;right:16px!important;bottom:92px!important;width:270px!important;display:block!important;visibility:visible!important;opacity:1!important}.midi-relics,.astralis-planet-link[href="/conquest.html"],.astralis-planet-link[href="#guestbook"]{display:none!important}@media(max-width:700px){#astralisVulcanBlessing{right:8px!important;bottom:78px!important;width:178px!important}}</style>', { html: true });
       },
     })
     .on("body", {
       element(element) {
-        element.append('<script src="/astralis-performance-loader.js?v=20260806b" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script><script src="/biography-zoey-gallery.js?v=20260726c" defer></script><script src="/biography-rian-gallery.js?v=20260726a" defer></script><script src="/biography-pet-photobook.js?v=20260726e" defer></script><script src="/darktide-catalog.js?v=20260806a" defer></script><script src="/remove-retired-links.js?v=20260806a" defer></script>', { html: true });
+        element.append('<script src="/astralis-performance-loader.js?v=20260806d" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script><script src="/biography-zoey-gallery.js?v=20260726c" defer></script><script src="/biography-rian-gallery.js?v=20260726a" defer></script><script src="/biography-pet-photobook.js?v=20260726e" defer></script><script src="/darktide-catalog.js?v=20260806a" defer></script><script src="/remove-retired-links.js?v=20260806c" defer></script>', { html: true });
       },
     })
     .transform(response);
