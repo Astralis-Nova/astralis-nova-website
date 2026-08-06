@@ -25,7 +25,7 @@ export async function onRequest(context) {
     })
     .on("body", {
       element(element) {
-        element.append('<script src="/cosmic-worlds.js?v=20260806e" defer></script><script src="/remove-retired-links.js?v=20260806e" defer></script><script src="/recent-exoplanets.js?v=20260806d" defer></script><script src="/darktide-catalog.js?v=20260806a" defer></script>', { html: true });
+        element.append('<script src="/astralis-performance-loader.js?v=20260806f" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script><script src="/biography-zoey-gallery.js?v=20260726c" defer></script><script src="/biography-rian-gallery.js?v=20260726a" defer></script><script src="/biography-pet-photobook.js?v=20260726e" defer></script><script src="/darktide-catalog.js?v=20260806a" defer></script>', { html: true });
       },
     })
     .transform(response);
