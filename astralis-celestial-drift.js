@@ -74,9 +74,10 @@
   const rebuildConnectedWorlds=()=>{
     document.getElementById('connected-worlds')?.remove();
     document.getElementById('astralisWorldStyles')?.remove();
-    loadScript('/cosmic-worlds.js?v=20260805b','cosmicWorldsFresh');
+    loadScript('/cosmic-worlds.js?v=20260805c','cosmicWorldsFresh');
   };
+  const loadLionsDenPortal=()=>loadScript('/lions-den-portal-v1.js?v=20260805a','lionsDenStandalone');
 
-  const finish=()=>{upgradeRiver();rebuildConnectedWorlds();loadQuoteAudit();addDarktideLaunch();loadNovaGuide();loadTipJar();loadFloatingLayout()};
+  const finish=()=>{upgradeRiver();rebuildConnectedWorlds();loadLionsDenPortal();loadQuoteAudit();addDarktideLaunch();loadNovaGuide();loadTipJar();loadFloatingLayout()};
   const core=document.createElement('script');core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@391ac37395e6de4dd8158a04476b059060495fee/astralis-celestial-drift.js';core.async=false;core.onload=finish;core.onerror=finish;document.head.appendChild(core);
 })();
