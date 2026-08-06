@@ -16,7 +16,6 @@
       .astralis-comet-head::before{width:8px;height:8px;left:8px;top:17px}
       .astralis-comet-head::after{width:5px;height:5px;right:8px;top:9px}
       @keyframes astralisRealCometFloat{0%,100%{transform:translate(0,1px) rotate(-3deg)}50%{transform:translate(5px,-5px) rotate(2deg)}}
-
       .astralis-worlds{position:relative;overflow:hidden;padding:26px;background:radial-gradient(circle at 50% 48%,rgba(34,109,220,.18),transparent 25rem),linear-gradient(180deg,rgba(7,17,31,.88),rgba(4,9,18,.92));border:1px solid rgba(93,146,214,.46);border-radius:18px;box-shadow:0 20px 65px rgba(0,0,0,.34)}
       .astralis-worlds::before{content:"✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦";position:absolute;top:17px;right:20px;color:rgba(143,203,255,.42);letter-spacing:.34em;font-size:.75rem}
       .astralis-worlds-head{max-width:760px;margin-bottom:22px}
@@ -29,7 +28,6 @@
       .astralis-sun-copy strong{display:block;font-size:1.2rem}
       .astralis-sun-copy span{display:block;color:#c7d1e0;margin-top:4px;line-height:1.5}
       @keyframes astralisSunPulse{0%,100%{transform:scale(1);filter:saturate(1)}50%{transform:scale(1.045);filter:saturate(1.18)}}
-
       .astralis-planet-link{position:relative;display:flex;align-items:center;gap:15px;min-height:132px;padding:17px;border-radius:18px;border:1px solid rgba(90,136,198,.42);background:linear-gradient(145deg,rgba(12,25,44,.92),rgba(7,12,25,.92));text-decoration:none;overflow:hidden;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
       .astralis-planet-link:hover,.astralis-planet-link:focus-visible{transform:translateY(-4px);border-color:#74c7ff;box-shadow:0 17px 38px rgba(0,0,0,.35),0 0 26px rgba(68,159,255,.19)}
       .astralis-planet-link::after{content:"";position:absolute;inset:auto -20% -55% 20%;height:90px;background:radial-gradient(ellipse,rgba(66,147,255,.15),transparent 68%);pointer-events:none}
@@ -57,16 +55,7 @@
     const link = document.getElementById("astralisBiographyPortal");
     if (!link || link.dataset.realComet === "true") return;
     link.dataset.realComet = "true";
-    link.innerHTML = `
-      <span class="astralis-bio-comet" aria-hidden="true">
-        <span class="astralis-comet-tail"></span>
-        <span class="astralis-comet-head"></span>
-      </span>
-      <span class="astralis-bio-copy">
-        <strong>FOLLOW THE COMET</strong>
-        <small>Enter the story of Ramon Bivens and Astralis Nova</small>
-      </span>
-      <span class="astralis-bio-star" aria-hidden="true">✦</span>`;
+    link.innerHTML = `<span class="astralis-bio-comet" aria-hidden="true"><span class="astralis-comet-tail"></span><span class="astralis-comet-head"></span></span><span class="astralis-bio-copy"><strong>FOLLOW THE COMET</strong><small>Enter the story of Ramon Bivens and Astralis Nova</small></span><span class="astralis-bio-star" aria-hidden="true">✦</span>`;
   }
 
   function addConnectedWorlds() {
@@ -80,61 +69,20 @@
     section.id = "connected-worlds";
     section.innerHTML = `
       <div class="astralis-worlds">
-        <div class="astralis-worlds-head">
-          <p class="eyebrow">CONNECTED WORLDS</p>
-          <h2>Choose a Planet</h2>
-          <p>A small solar system of the music, memories, games, communities, and creative places orbiting Astralis Nova.</p>
-        </div>
+        <div class="astralis-worlds-head"><p class="eyebrow">CONNECTED WORLDS</p><h2>Choose a Planet</h2><p>A small solar system of the music, memories, games, communities, and creative places orbiting Astralis Nova.</p></div>
         <div class="astralis-system">
-          <div class="astralis-sun-card">
-            <span class="astralis-sun" aria-hidden="true"></span>
-            <span class="astralis-sun-copy"><strong>Astralis Nova</strong><span>The central star. Music, memory, Arizona night skies, old-web spirit, and every strange little world connected to them.</span></span>
-          </div>
-
-          <a class="astralis-planet-link" href="/conquest.html" aria-label="Visit the Conquest Asheron's Call world">
-            <span class="astralis-planet planet-conquest ringed" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Conquest</strong><span>Asheron’s Call ACE server information, Discord, connection address, and live-status links.</span><span class="astralis-world-badge">Game World</span></span>
-          </a>
-
-          <a class="astralis-planet-link" href="https://emulator.ac/" target="_blank" rel="noopener noreferrer" aria-label="Open the ACEmulator website">
-            <span class="astralis-planet planet-ace" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>ACEmulator Forge</strong><span>The open-source engine and community rebuilding the world of Dereth.</span><span class="astralis-world-badge">External Portal</span></span>
-          </a>
-
-          <a class="astralis-planet-link" href="#live-board" aria-label="Travel to the Cosmic Eraser Board">
-            <span class="astralis-planet planet-board ringed" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Eraser Board Station</strong><span>Leave a live drawing, message, starship, or suspiciously artistic alien.</span><span class="astralis-world-badge">Live Creative World</span></span>
-          </a>
-
-          <a class="astralis-planet-link" href="/biography.html" aria-label="Open the Astralis Nova biography">
-            <span class="astralis-planet planet-biography" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Biography Moon</strong><span>The life, memories, technology, family, and imagination behind Astralis Nova.</span><span class="astralis-world-badge">Story World</span></span>
-          </a>
-
-          <a class="astralis-planet-link" href="#first-orbit" aria-label="Travel to Echoes From the First Orbit">
-            <span class="astralis-planet planet-orbit ringed" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>First Orbit</strong><span>Archived pages and MIDI relics preserved from Ramon’s earliest corner of the web.</span><span class="astralis-world-badge">Archive World</span></span>
-          </a>
-
-          <a class="astralis-planet-link" href="#guestbook" aria-label="Travel to the Astralis Nova guestbook">
-            <span class="astralis-planet planet-guestbook" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Guestbook Moon</strong><span>Sign your name, choose a favorite song, and leave a signal among the stars.</span><span class="astralis-world-badge">Visitor World</span></span>
-          </a>
+          <div class="astralis-sun-card"><span class="astralis-sun" aria-hidden="true"></span><span class="astralis-sun-copy"><strong>Astralis Nova</strong><span>The central star. Music, memory, Arizona night skies, old-web spirit, and every strange little world connected to them.</span></span></div>
+          <a class="astralis-planet-link" href="/conquest.html" aria-label="Visit the Conquest Asheron's Call world"><span class="astralis-planet planet-conquest ringed" aria-hidden="true"></span><span class="astralis-planet-copy"><strong>Conquest</strong><span>Asheron’s Call ACE server information, Discord, connection address, and live-status links.</span><span class="astralis-world-badge">Game World</span></span></a>
+          <a class="astralis-planet-link" href="https://emulator.ac/" target="_blank" rel="noopener noreferrer" aria-label="Open the ACEmulator website"><span class="astralis-planet planet-ace" aria-hidden="true"></span><span class="astralis-planet-copy"><strong>ACEmulator Forge</strong><span>The open-source engine and community rebuilding the world of Dereth.</span><span class="astralis-world-badge">External Portal</span></span></a>
+          <a class="astralis-planet-link" href="/lion-den-faith.html" aria-label="Open Daniel and the Lions’ Den"><span class="astralis-planet planet-board ringed" aria-hidden="true"></span><span class="astralis-planet-copy"><strong>Daniel and the Lions’ Den</strong><span>A story of courage, prayer, faith, and protection in the darkness.</span><span class="astralis-world-badge">Faith Story</span></span></a>
+          <a class="astralis-planet-link" href="/biography.html" aria-label="Open the Astralis Nova biography"><span class="astralis-planet planet-biography" aria-hidden="true"></span><span class="astralis-planet-copy"><strong>Biography Moon</strong><span>The life, memories, technology, family, and imagination behind Astralis Nova.</span><span class="astralis-world-badge">Story World</span></span></a>
+          <a class="astralis-planet-link" href="#first-orbit" aria-label="Travel to Echoes From the First Orbit"><span class="astralis-planet planet-orbit ringed" aria-hidden="true"></span><span class="astralis-planet-copy"><strong>First Orbit</strong><span>Archived pages and MIDI relics preserved from Ramon’s earliest corner of the web.</span><span class="astralis-world-badge">Archive World</span></span></a>
+          <a class="astralis-planet-link" href="#guestbook" aria-label="Travel to the Astralis Nova guestbook"><span class="astralis-planet planet-guestbook" aria-hidden="true"></span><span class="astralis-planet-copy"><strong>Guestbook Moon</strong><span>Sign your name, choose a favorite song, and leave a signal among the stars.</span><span class="astralis-world-badge">Visitor World</span></span></a>
         </div>
       </div>`;
-
     guestbook.parentNode.insertBefore(section, guestbook);
   }
 
-  function boot() {
-    installStyles();
-    upgradeBiographyComet();
-    addConnectedWorlds();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
-  }
+  function boot() { installStyles(); upgradeBiographyComet(); addConnectedWorlds(); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true }); else boot();
 })();
