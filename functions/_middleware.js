@@ -25,7 +25,7 @@ export async function onRequest(context) {
     })
     .on("body", {
       element(element) {
-        element.append('<script src="/cosmic-worlds.js?v=20260806e" defer></script><script src="/remove-retired-links.js?v=20260806d" defer></script><script src="/recent-exoplanets.js?v=20260806d" defer></script><script src="/darktide-catalog.js?v=20260806a" defer></script>', { html: true });
+        element.append('<script src="/cosmic-worlds.js?v=20260806e" defer></script><script src="/remove-retired-links.js?v=20260806e" defer></script><script src="/recent-exoplanets.js?v=20260806d" defer></script><script src="/darktide-catalog.js?v=20260806a" defer></script>', { html: true });
       },
     })
     .transform(response);
