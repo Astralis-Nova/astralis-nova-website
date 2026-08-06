@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "20260806c";
+  const VERSION = "20260806d";
   const loaded = new Map();
 
   function loadScript(src) {
@@ -85,7 +85,7 @@
   const critical = [
     "/site-fixes.js?v=20260720c",
     "/cosmic-worlds.js?v=20260806c",
-    "/remove-retired-links.js?v=20260806b",
+    "/remove-retired-links.js?v=20260806c",
     "/realistic-orbit.js?v=20260721b",
     "/astralis-celestial-drift.js?v=20260722m",
     "/astralis-ai-upgrades.js?v=20260722q",
@@ -98,7 +98,7 @@
 
   const deferred = [
     "/rickroll-planet.js?v=20260722a",
-    "/recent-exoplanets.js?v=20260806b",
+    "/recent-exoplanets.js?v=20260806d",
     "/conquest-media.js?v=20260720a",
     "/vulcan-salute.js?v=20260722l",
     "/cosmic-chuckles.js?v=20260722a",
