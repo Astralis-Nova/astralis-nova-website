@@ -1,68 +1,56 @@
-(()=>{
-  const destination='/daniel-lions-story-static.html?fresh=20260805m';
+(() => {
+  "use strict";
 
-  const apply=()=>{
-    const candidates=[...document.querySelectorAll('a,article,div,section')];
-    const textNode=candidates.find(el=>{
-      const text=(el.textContent||'').trim().toLowerCase();
-      return (text.includes('eraser board station')||text.includes('daniel and the lions'))&&text.length<500;
-    });
-    if(!textNode)return false;
+  const destination = "/daniel-lions-story-static.html?fresh=20260805n";
 
-    const card=textNode.closest('a')||textNode.closest('[role="link"]')||textNode;
-    card.dataset.danielStoryCard='true';
-    card.style.position=card.style.position||'relative';
-    card.style.cursor='pointer';
-    card.removeAttribute('onclick');
-    card.removeAttribute('data-target');
-    card.removeAttribute('data-section');
-    card.removeAttribute('data-scroll');
+  function replaceCard() {
+    const oldCard = document.querySelector(
+      '#connected-worlds a.astralis-planet-link[href="#live-board"]'
+    );
 
-    let link=card.matches('a')?card:card.querySelector('a');
-    if(!link){
-      link=document.createElement('a');
-      link.setAttribute('aria-label','Open Daniel and the Lions Den story');
-      link.style.cssText='position:absolute;inset:0;z-index:20;border-radius:inherit;text-decoration:none;color:inherit;';
-      link.innerHTML='<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Open Daniel and the Lions Den story</span>';
-      card.appendChild(link);
+    if (!oldCard) return false;
+
+    const card = oldCard.cloneNode(true);
+    card.href = destination;
+    card.target = "_blank";
+    card.rel = "noopener noreferrer";
+    card.setAttribute(
+      "aria-label",
+      "Open Daniel and the Lions Den inspirational story in a new tab"
+    );
+    card.removeAttribute("onclick");
+
+    const planet = card.querySelector(".astralis-planet");
+    if (planet) {
+      planet.className = "astralis-planet planet-board ringed";
     }
 
-    link.href=destination;
-    link.target='_self';
-    link.rel='';
-    link.removeAttribute('onclick');
-    link.setAttribute('aria-label','Open Daniel and the Lions Den story');
+    const title = card.querySelector(".astralis-planet-copy strong");
+    if (title) title.textContent = "Daniel and the Lions’ Den";
 
-    const title=[...card.querySelectorAll('h1,h2,h3,h4,strong,b')].find(el=>{
-      const text=(el.textContent||'').toLowerCase();
-      return text.includes('eraser board station')||text.includes('daniel and the lions');
-    });
-    if(title)title.textContent='Daniel and the Lions’ Den';
+    const text = card.querySelector(".astralis-planet-copy > span:not(.astralis-world-badge)");
+    if (text) {
+      text.textContent =
+        "Enter the story of Daniel’s courage, prayer, integrity, and deliverance.";
+    }
 
-    const bits=[...card.querySelectorAll('p,small,span')];
-    const description=bits.find(el=>{
-      const text=(el.textContent||'').toLowerCase();
-      return text.includes('leave a live drawing')||text.includes('message, starship')||text.includes('suspiciously artistic')||text.includes('open a separate illustrated story');
-    });
-    if(description)description.textContent='Read the lightweight story of faith, courage, integrity, and deliverance.';
+    const badge = card.querySelector(".astralis-world-badge");
+    if (badge) badge.textContent = "Inspirational Story";
 
-    const badge=bits.find(el=>{
-      const text=(el.textContent||'').toLowerCase();
-      return text.includes('live creative world')||text.includes('inspirational story');
-    });
-    if(badge)badge.textContent='INSPIRATIONAL STORY';
-
-    const visual=bits.find(el=>{
-      const text=(el.textContent||'').toLowerCase();
-      return text.includes('visual: red creative world')||text.includes('opens in a clean new tab');
-    });
-    if(visual)visual.textContent='✦ Lightweight static story page';
+    oldCard.replaceWith(card);
     return true;
-  };
-
-  if(!apply()){
-    const observer=new MutationObserver(()=>{if(apply())observer.disconnect()});
-    observer.observe(document.documentElement,{childList:true,subtree:true});
-    setTimeout(()=>observer.disconnect(),8000);
   }
+
+  if (replaceCard()) return;
+
+  const observer = new MutationObserver(() => {
+    if (replaceCard()) observer.disconnect();
+  });
+
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+
+  setTimeout(() => observer.disconnect(), 15000);
 })();
