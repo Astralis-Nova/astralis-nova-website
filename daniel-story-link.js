@@ -1,5 +1,5 @@
 (()=>{
-  const destination='/daniel-lions-story/?fresh=20260805h';
+  const destination='/daniel-lions-portal.html?fresh=20260805j';
   let danielCard=null;
 
   const isDanielTarget=node=>{
