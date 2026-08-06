@@ -2,18 +2,18 @@
   "use strict";
 
   const worlds = [
-    { match: link => link.pathname === '/conquest.html', image: '/astralis-earth.png', label: 'Visual: Earthlike explorer world' },
-    { match: link => link.hostname === 'emulator.ac', image: '/astralis-gas-giant.png', label: 'Visual: Giant forge world', external: true },
+    { match: link => link.hostname === 'emulator.ac', image: '/astralis-gas-giant.png', label: 'Visual: ACEmulator world', external: true },
+    { match: link => link.pathname === '/rainbow-promise.html' || link.pathname === '/rainbow-promise', image: '/rainbow-portal.svg', label: 'Visual: Rainbow after the rain' },
     { match: link => link.pathname === '/biography.html', image: '/astralis-earth.png', label: 'Visual: Story world', variant: 'violet' },
-    { match: link => link.hash === '#first-orbit', image: '/astralis-gas-giant.png', label: 'Visual: Archive orbit world', variant: 'gold' },
-    { match: link => link.hash === '#guestbook', image: '/astralis-earth.png', label: 'Visual: Visitor world' },
-    { match: link => link.pathname === '/rainbow-promise.html' || link.pathname === '/rainbow-promise', image: '/rainbow-portal.svg', label: 'Visual: Rainbow after the rain' }
+    { match: link => link.hash === '#first-orbit', image: '/astralis-gas-giant.png', label: 'Visual: Archive orbit world', variant: 'gold' }
   ];
 
   function installStyles() {
-    if (document.getElementById('recentExoplanetStylesV6')) return;
+    if (document.getElementById('recentExoplanetStylesV7')) return;
+    document.querySelectorAll('[id^="recentExoplanetStyles"]').forEach(style => style.remove());
+
     const style = document.createElement('style');
-    style.id = 'recentExoplanetStylesV6';
+    style.id = 'recentExoplanetStylesV7';
     style.textContent = `
       .astralis-worlds-head{max-width:850px!important}
       .astralis-worlds-note{display:block;margin-top:9px;color:#839bb8;font-size:.76rem;line-height:1.55}
@@ -40,10 +40,10 @@
 
     const intro = section.querySelector('.astralis-worlds-head > p:not(.eyebrow)');
     if (intro && !section.querySelector('.astralis-worlds-note')) {
-      intro.textContent = 'Travel through the music, memories, games, communities, and creative places orbiting Astralis Nova.';
+      intro.textContent = 'Travel through the music, memories, communities, and creative places orbiting Astralis Nova.';
       const note = document.createElement('small');
       note.className = 'astralis-worlds-note';
-      note.textContent = 'Each destination keeps its own permanent link while using realistic planet artwork.';
+      note.textContent = 'Each destination keeps its own permanent URL and dedicated planet artwork.';
       intro.insertAdjacentElement('afterend', note);
     }
 
@@ -58,6 +58,7 @@
 
       planet.className = `astralis-planet recent-exoplanet${world.variant ? ` ${world.variant}` : ''}`;
       planet.replaceChildren();
+
       const image = document.createElement('img');
       image.src = world.image;
       image.alt = '';
@@ -72,7 +73,7 @@
       copy.appendChild(origin);
     });
 
-    section.dataset.realisticPlanets = 'url-mapped';
+    section.dataset.realisticPlanets = 'url-mapped-v7';
     return true;
   }
 
