@@ -3,40 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://storage.googleapis.com https://cdn.jsdelivr.net; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
-<meta name="description" content="Daniel and the Lions' Den, an illustrated story of faith, courage, prayer, and deliverance.">
-<meta name="theme-color" content="#100b08">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; connect-src 'none'; object-src 'none'; frame-src 'none'; worker-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<meta name="description" content="Daniel and the Lions' Den story and meaning.">
+<meta name="theme-color" content="#120d08">
 <title>Daniel and the Lions’ Den | Astralis Nova</title>
 <style>
-:root{color-scheme:dark;--gold:#ffd873;--cream:#fff8e7;--muted:#d8cdb7;--line:rgba(255,218,126,.30);--panel:rgba(13,13,16,.94)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 50% 0,#35200e 0,#0a090a 38%,#040507 100%);color:var(--cream);font-family:Georgia,"Times New Roman",serif;line-height:1.72}a{color:inherit}button{font:inherit}.page{width:min(1040px,calc(100% - 28px));margin:auto;padding:18px 0 54px}.top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:11px 17px;border:1px solid var(--line);border-radius:999px;background:#17171c;color:#fff;text-decoration:none;font:900 .78rem Arial,sans-serif;cursor:pointer}.button.primary{background:linear-gradient(90deg,#ffe38a,#c98220);color:#171006;border:0}.button:hover,.button:focus-visible{filter:brightness(1.1)}
-.hero{position:relative;min-height:min(70vh,700px);overflow:hidden;border:1px solid var(--line);border-radius:28px;background:#080708;box-shadow:0 28px 80px rgba(0,0,0,.58);isolation:isolate}.scene-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-3}.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:linear-gradient(180deg,rgba(2,2,3,.06),rgba(3,3,4,.28) 52%,rgba(3,3,4,.94) 100%),radial-gradient(circle at 50% 15%,rgba(255,225,133,.18),transparent 36%)}.hero::after{content:"";position:absolute;left:40%;top:-8%;width:20%;height:68%;z-index:-1;background:linear-gradient(180deg,rgba(255,250,205,.48),rgba(255,208,104,.08),transparent);filter:blur(10px);clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);animation:holyLight 7s ease-in-out infinite}.hero-copy{position:absolute;left:0;right:0;bottom:0;padding:clamp(28px,7vw,68px);text-align:center}.eyebrow{margin:0 0 10px;color:var(--gold);font:900 .72rem Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase}.hero h1{margin:0;font-size:clamp(3rem,10vw,6.7rem);line-height:.9;text-shadow:0 6px 26px rgba(0,0,0,.85)}.hero p{max-width:720px;margin:18px auto 0;color:#f0dfc0;font-size:clamp(1rem,2.1vw,1.3rem);text-shadow:0 3px 13px #000}.entry-actions{display:flex;justify-content:center;gap:11px;flex-wrap:wrap;margin-top:22px}
-.gate{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:#09080b}.gate.hidden{display:none}.gate-card{width:min(680px,100%);padding:30px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(160deg,#2c1a0d,#0b0b0f 72%);text-align:center;box-shadow:0 30px 100px #000}.gate-mark{font-size:4.2rem;filter:drop-shadow(0 0 18px rgba(255,210,109,.42));animation:gateGlow 5s ease-in-out infinite}.gate h1{margin:4px 0 10px;font-size:clamp(2.3rem,8vw,4.8rem);line-height:.94}.gate p{max-width:580px;margin:0 auto;color:var(--muted)}
-.story-card{margin-top:22px;padding:clamp(24px,5vw,48px);border:1px solid var(--line);border-radius:24px;background:linear-gradient(160deg,rgba(37,24,13,.94),rgba(8,10,14,.98));box-shadow:0 22px 60px rgba(0,0,0,.48)}.story-card h2{margin-top:0}.story p{margin:0 0 1.08em}.story strong{color:#ffe6a3}.meaning,.music{margin-top:25px;padding:21px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:var(--panel)}.meaning ul{padding-left:21px}.player-shell{margin-top:14px;padding:14px;border:1px solid rgba(255,216,123,.24);border-radius:15px;background:#090a0d}.player-shell midi-player{display:block;width:100%}.music-note,.music-status{color:#cfc4b1;font-size:.9rem}.footer{text-align:center;color:#aaa18f;padding:26px 0 4px}
-@keyframes holyLight{0%,100%{opacity:.58}50%{opacity:.88}}@keyframes gateGlow{50%{transform:translateY(-4px);filter:drop-shadow(0 0 26px rgba(255,226,139,.82))}}@media(max-width:640px){.hero{min-height:66vh}.hero-copy{padding:24px 18px 30px}.gate-card{padding:24px 18px}}@media(prefers-reduced-motion:reduce){.hero::after,.gate-mark{animation:none}}
+:root{color-scheme:dark;--gold:#ffd873;--cream:#fff8e7;--muted:#d8cdb7;--line:rgba(255,218,126,.28);--panel:#11131a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(160deg,#24190d,#090a0e 36%,#15100a);color:var(--cream);font-family:Georgia,"Times New Roman",serif;line-height:1.72}a{color:inherit}.page{width:min(900px,calc(100% - 28px));margin:auto;padding:20px 0 50px}.top{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-bottom:18px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border:1px solid var(--line);border-radius:999px;background:#171a22;color:#fff;text-decoration:none;font:900 .78rem Arial,sans-serif}.button.primary{background:linear-gradient(90deg,#ffdf78,#c98b24);color:#171006;border:0}.hero,.card{border:1px solid var(--line);border-radius:24px;background:linear-gradient(160deg,rgba(38,25,13,.96),rgba(8,10,14,.97));box-shadow:0 22px 60px rgba(0,0,0,.45)}.hero{padding:34px 22px;text-align:center;margin-bottom:20px}.scene{font-size:clamp(3.5rem,12vw,6rem);margin-bottom:8px}.eyebrow{margin:0 0 8px;color:var(--gold);font:900 .72rem Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase}.hero h1{margin:0;font-size:clamp(2.5rem,10vw,5rem);line-height:.94}.hero p{max-width:650px;margin:15px auto 0;color:var(--muted)}.card{padding:clamp(22px,5vw,42px)}.card h2{margin-top:0}.story p{margin:0 0 1.08em}.story strong{color:#ffe6a3}.meaning,.music{margin-top:24px;padding:20px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:var(--panel)}.meaning ul{padding-left:20px}.music-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.footer{text-align:center;color:#aaa18f;padding:24px 0 4px}
 </style>
 </head>
 <body>
-<div class="gate" id="storyGate">
-  <div class="gate-card">
-    <div class="gate-mark" aria-hidden="true">🦁 ✨ 🦁</div>
-    <p class="eyebrow">ASTRALIS NOVA STORY ARCHIVE</p>
-    <h1>Daniel and the Lions’ Den</h1>
-    <p>Enter beneath the stone and follow the story of courage under pressure.</p>
-    <div class="entry-actions">
-      <button class="button primary" id="enterWithMusic" type="button">▶ Enter &amp; Play MIDI</button>
-      <button class="button" id="enterQuietly" type="button">Enter Quietly</button>
-    </div>
-    <p class="music-status" id="gateStatus" aria-live="polite"></p>
-  </div>
-</div>
 <div class="page">
-<nav class="top"><a class="button" href="/">← Main Portal</a><a class="button" href="#music">🎼 Story Music</a></nav>
-<section class="hero">
-  <img class="scene-art" src="/lion-den-cave.svg" alt="Daniel praying between resting lions as an angel descends through golden light">
-  <div class="hero-copy"><p class="eyebrow">DANIEL 6 • COURAGE UNDER PRESSURE</p><h1>Daniel and the Lions’ Den</h1><p>A story of integrity, prayer, courage, and a calm heart surrounded by danger.</p></div>
-</section>
-<main class="story-card" id="story"><article class="story"><h2>The Story</h2>
+<nav class="top"><a class="button" href="/">← Main Portal</a><a class="button" href="#music">🎼 Story MIDI</a></nav>
+<section class="hero"><div class="scene" aria-hidden="true">🦁 🙏 🦁</div><p class="eyebrow">DANIEL 6 • COURAGE UNDER PRESSURE</p><h1>Daniel and the Lions’ Den</h1><p>A story of integrity, prayer, courage, and a calm heart surrounded by danger.</p></section>
+<main class="card"><article class="story"><h2>The Story</h2>
 <p>King Darius ruled over a vast kingdom. To help govern it, he appointed 120 officials called satraps, and over them he placed three administrators. Daniel was one of those three.</p>
 <p>Daniel quickly stood out. He was dependable, wise, and honest. The king trusted him so much that he considered placing Daniel over the entire kingdom.</p>
 <p>The other officials became jealous. They searched Daniel’s work for corruption, negligence, or dishonesty, but they found nothing.</p>
@@ -51,62 +31,9 @@
 <p>The king was overjoyed and ordered Daniel lifted from the den. No wound was found on him because he had trusted in God.</p>
 <p>Afterward, Darius issued a proclamation honoring Daniel’s God as living and enduring, one who rescues and performs wonders. Daniel continued to prosper during the reign of Darius and later under Cyrus of Persia.</p></article>
 <section class="meaning"><h2>Meaning of the Story</h2><ul><li>Integrity matters even when nobody rewards it.</li><li>Jealous people may attack what they cannot corrupt.</li><li>Faithfulness does not guarantee avoidance of danger.</li><li>Courage can mean continuing an ordinary good habit under extraordinary pressure.</li><li>Political power has limits, but conscience should not be casually surrendered.</li></ul><p><strong>Scripture:</strong> Daniel, chapter 6. 🦁📜</p></section>
-<section class="music" id="music"><h2>Story MIDI: Angels Watching</h2><p class="music-note">The player loads only after you request music, which keeps the story page lighter on phones.</p><div class="player-shell" id="playerShell"><button class="button primary" id="loadPlayer" type="button">▶ Load Story MIDI Player</button><p class="music-status" id="musicStatus" aria-live="polite"></p></div></section>
+<section class="music" id="music"><h2>Related MIDI: Turn Your Eyes</h2><p>Open the MIDI directly or download it. No external MIDI libraries load on this page.</p><div class="music-actions"><a class="button primary" href="/Audio/TurnYourEyes.mid">▶ OPEN MIDI</a><a class="button" href="/Audio/TurnYourEyes.mid" download>⬇ DOWNLOAD MIDI</a></div></section>
 </main>
 <p class="footer">Astralis Nova Story Archive • Faith in the den, light in the darkness.</p>
 </div>
-<script>
-(() => {
-  const gate = document.getElementById('storyGate');
-  const gateStatus = document.getElementById('gateStatus');
-  const playerShell = document.getElementById('playerShell');
-  const musicStatus = document.getElementById('musicStatus');
-  let loadingPromise;
-
-  function loadMidiPlayer(){
-    if (customElements.get('midi-player')) return Promise.resolve();
-    if (loadingPromise) return loadingPromise;
-    loadingPromise = new Promise((resolve,reject)=>{
-      const script=document.createElement('script');
-      script.src='https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0';
-      script.onload=()=>customElements.whenDefined('midi-player').then(resolve);
-      script.onerror=reject;
-      document.head.appendChild(script);
-    });
-    return loadingPromise;
-  }
-
-  async function ensurePlayer(play){
-    musicStatus.textContent='Loading story music…';
-    gateStatus.textContent='Loading story music…';
-    try{
-      await loadMidiPlayer();
-      let player=document.getElementById('storyMidi');
-      if(!player){
-        player=document.createElement('midi-player');
-        player.id='storyMidi';
-        player.setAttribute('src','/Audio/angelswatching.mid');
-        player.setAttribute('sound-font','');
-        playerShell.prepend(player);
-      }
-      document.getElementById('loadPlayer')?.remove();
-      musicStatus.textContent='Angels Watching is ready.';
-      gateStatus.textContent='';
-      if(play) setTimeout(()=>player.start?.(),150);
-    }catch(error){
-      musicStatus.textContent='The MIDI player could not load. Please try again.';
-      gateStatus.textContent='The MIDI player could not load. Enter quietly instead.';
-      console.warn(error);
-    }
-  }
-
-  document.getElementById('enterWithMusic').addEventListener('click',async()=>{
-    gate.classList.add('hidden');
-    await ensurePlayer(true);
-  });
-  document.getElementById('enterQuietly').addEventListener('click',()=>gate.classList.add('hidden'));
-  document.getElementById('loadPlayer').addEventListener('click',()=>ensurePlayer(false));
-})();
-</script>
 </body>
 </html>
