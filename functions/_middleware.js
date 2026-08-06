@@ -4,6 +4,15 @@ export async function onRequest(context) {
 
   if (!contentType.includes("text/html")) return response;
 
+  const url = new URL(context.request.url);
+  const isHomepage = url.pathname === "/" || url.pathname === "/index.html";
+
+  // Story, poem, biography, Rainbow Promise, chess, and other standalone
+  // pages must remain self-contained. Injecting the homepage runtime into
+  // every HTML response caused Darktide banners, floating controls, and
+  // long-running observers to appear where they did not belong.
+  if (!isHomepage) return response;
+
   return new HTMLRewriter()
     .on('script[src*="html-midi-player"]', {
       element(element) {
@@ -27,7 +36,7 @@ export async function onRequest(context) {
     })
     .on("body", {
       element(element) {
-        element.append('<script src="/astralis-performance-loader.js?v=20260728o" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script><script src="/biography-zoey-gallery.js?v=20260726c" defer></script><script src="/biography-rian-gallery.js?v=20260726a" defer></script><script src="/biography-pet-photobook.js?v=20260726e" defer></script>', { html: true });
+        element.append('<script src="/astralis-performance-loader.js?v=20260728o" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script><script src="/biography-zoey-gallery.js?v=20260726c" defer></script><script src="/biography-rian-gallery.js?v=20260726a" defer></script><script src="/biography-pet-photobook.js?v=20260726e" defer></script><script src="/darktide-catalog.js?v=20260806a" defer></script>', { html: true });
       },
     })
     .transform(response);
