@@ -38,7 +38,7 @@
       .astralis-planet.ringed::after{content:"";position:absolute;left:-14px;top:27px;width:96px;height:22px;border:4px solid rgba(219,226,255,.72);border-left-color:rgba(87,155,255,.35);border-right-color:rgba(255,151,210,.62);border-radius:50%;transform:rotate(-14deg);box-shadow:0 0 11px rgba(122,168,255,.28)}
       .planet-conquest{background:radial-gradient(circle at 34% 27%,#d9efff 0 4%,#5489cf 12%,#203c82 45%,#171743 77%,#09091c 100%)}
       .planet-ace{background:radial-gradient(circle at 34% 30%,#fbfbf1 0 4%,#c7a65b 13%,#745232 45%,#2a1d28 76%,#0a0810 100%)}
-      .planet-board{background:radial-gradient(circle at 35% 30%,#d9fff1 0 5%,#32d899 16%,#147b72 47%,#16375c 76%,#07101e 100%)}
+      .planet-daniel{background:radial-gradient(circle at 35% 28%,#fff0ae 0 5%,#d98c32 17%,#8d3f22 47%,#392018 76%,#0b0807 100%);box-shadow:inset -13px -13px 18px rgba(0,0,0,.42),0 0 22px rgba(255,180,74,.34)}
       .planet-biography{background:radial-gradient(circle at 35% 28%,#ffe4fa 0 5%,#e75ebd 17%,#7843c8 47%,#25205f 76%,#09091b 100%)}
       .planet-orbit{background:radial-gradient(circle at 37% 28%,#fff2c6 0 4%,#f1a85f 17%,#8c4d45 46%,#3b274a 75%,#0b0912 100%)}
       .planet-guestbook{background:radial-gradient(circle at 35% 30%,#e8f5ff 0 5%,#80bce7 17%,#3a6091 47%,#202747 75%,#090a16 100%)}
@@ -101,9 +101,9 @@
             <span class="astralis-planet-copy"><strong>ACEmulator Forge</strong><span>The open-source engine and community rebuilding the world of Dereth.</span><span class="astralis-world-badge">External Portal</span></span>
           </a>
 
-          <a class="astralis-planet-link" href="#live-board" aria-label="Travel to the Cosmic Eraser Board">
-            <span class="astralis-planet planet-board ringed" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Eraser Board Station</strong><span>Leave a live drawing, message, starship, or suspiciously artistic alien.</span><span class="astralis-world-badge">Live Creative World</span></span>
+          <a class="astralis-planet-link" href="/daniel-lions-story-static.html?fresh=20260805p" target="_blank" rel="noopener noreferrer" aria-label="Open Daniel and the Lions’ Den story">
+            <span class="astralis-planet planet-daniel ringed" aria-hidden="true"></span>
+            <span class="astralis-planet-copy"><strong>Daniel and the Lions’ Den</strong><span>Enter an illustrated story of faith, courage, integrity, prayer, and deliverance.</span><span class="astralis-world-badge">Inspirational Story</span></span>
           </a>
 
           <a class="astralis-planet-link" href="/biography.html" aria-label="Open the Astralis Nova biography">
