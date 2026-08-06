@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "20260805a";
+  const VERSION = "20260806b";
   const loaded = new Map();
 
   function loadScript(src, { module = false } = {}) {
@@ -45,11 +45,8 @@
   }
 
   function afterIdle(callback, timeout = 1800) {
-    if ("requestIdleCallback" in window) {
-      requestIdleCallback(callback, { timeout });
-    } else {
-      setTimeout(callback, Math.min(timeout, 900));
-    }
+    if ("requestIdleCallback" in window) requestIdleCallback(callback, { timeout });
+    else setTimeout(callback, Math.min(timeout, 900));
   }
 
   function installPerformanceStyles() {
@@ -57,22 +54,9 @@
     const style = document.createElement("style");
     style.id = "astralisPerformanceStyles";
     style.textContent = `
-      .section-shell,
-      .astralis-worlds,
-      .martian-counter-wrap{
-        content-visibility:auto;
-        contain-intrinsic-size:1px 760px;
-      }
-      .astralis-perf-paused,
-      .astralis-perf-paused *,
-      html.astralis-page-hidden *,
-      html.astralis-page-hidden *::before,
-      html.astralis-page-hidden *::after{
-        animation-play-state:paused!important;
-      }
-      @media(max-width:700px){
-        .section-shell,.astralis-worlds,.martian-counter-wrap{contain-intrinsic-size:1px 980px}
-      }
+      .section-shell,.astralis-worlds,.martian-counter-wrap{content-visibility:auto;contain-intrinsic-size:1px 760px}
+      .astralis-perf-paused,.astralis-perf-paused *,html.astralis-page-hidden *,html.astralis-page-hidden *::before,html.astralis-page-hidden *::after{animation-play-state:paused!important}
+      @media(max-width:700px){.section-shell,.astralis-worlds,.martian-counter-wrap{contain-intrinsic-size:1px 980px}}
     `;
     document.head.appendChild(style);
   }
@@ -87,27 +71,14 @@
 
   function manageOffscreenMotion() {
     if (!("IntersectionObserver" in window)) return;
-
-    const selector = [
-      ".section-shell",
-      ".astralis-worlds",
-      ".martian-counter-wrap",
-      ".live-board-panel",
-      ".first-orbit",
-      ".culture-grid"
-    ].join(",");
-
+    const selector = [".section-shell",".astralis-worlds",".martian-counter-wrap",".live-board-panel",".first-orbit",".culture-grid"].join(",");
     const observer = new IntersectionObserver(entries => {
-      for (const entry of entries) {
-        entry.target.classList.toggle("astralis-perf-paused", !entry.isIntersecting);
-      }
+      for (const entry of entries) entry.target.classList.toggle("astralis-perf-paused", !entry.isIntersecting);
     }, { rootMargin: "320px 0px", threshold: 0.01 });
-
     document.querySelectorAll(selector).forEach(element => {
       element.dataset.astralisMotionObserved = "true";
       observer.observe(element);
     });
-
     const mutationObserver = new MutationObserver(() => {
       document.querySelectorAll(selector).forEach(element => {
         if (element.dataset.astralisMotionObserved === "true") return;
@@ -128,7 +99,6 @@
   function lazyLoadMidi() {
     const target = document.getElementById("first-orbit") || document.querySelector("midi-player");
     if (!target) return;
-
     let requested = false;
     const loadMidi = () => {
       if (requested) return;
@@ -136,26 +106,23 @@
       loadScript("https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0")
         .catch(error => console.warn("MIDI archive player could not load", error));
     };
-
     if (!("IntersectionObserver" in window)) {
       afterIdle(loadMidi, 3500);
       return;
     }
-
     const observer = new IntersectionObserver(entries => {
       if (!entries.some(entry => entry.isIntersecting)) return;
       observer.disconnect();
       loadMidi();
     }, { rootMargin: "1000px 0px" });
     observer.observe(target);
-
     target.addEventListener("pointerdown", loadMidi, { once: true, passive: true });
     target.addEventListener("focusin", loadMidi, { once: true });
   }
 
   const critical = [
     `/site-fixes.js?v=20260720c`,
-    `/cosmic-worlds.js?v=20260805a`,
+    `/cosmic-worlds.js?v=20260806b`,
     `/realistic-orbit.js?v=20260721b`,
     `/astralis-celestial-drift.js?v=20260722m`,
     `/astralis-ai-upgrades.js?v=20260722q`,
@@ -168,7 +135,7 @@
 
   const deferred = [
     `/rickroll-planet.js?v=20260722a`,
-    `/recent-exoplanets.js?v=20260727r`,
+    `/recent-exoplanets.js?v=20260806b`,
     `/conquest-media.js?v=20260720a`,
     `/vulcan-salute.js?v=20260722l`,
     `/cosmic-chuckles.js?v=20260722a`,
@@ -182,19 +149,14 @@
     optimizeImages();
     pauseWhenHidden();
     lazyLoadMidi();
-
     await loadSequence(critical);
     optimizeImages();
     manageOffscreenMotion();
-
     afterIdle(() => loadSequence(deferred), 2200);
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
-  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
+  else boot();
 
   window.AstralisPerformance = { version: VERSION, loadScript };
 })();
