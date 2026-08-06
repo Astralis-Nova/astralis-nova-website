@@ -71,8 +71,12 @@
   const loadNovaGuide=()=>loadScript('/nova-guide.js?v=20260805g','novaGuide');
   const loadTipJar=()=>loadScript('/feeling-tipsy.js?v=20260805c','feelingTipsy');
   const loadFloatingLayout=()=>loadScript('/floating-controls-layout.js?v=20260805b','floatingControlsLayout');
-  const loadDanielLink=()=>loadScript('/daniel-story-link.js?v=20260805e','danielStoryLink');
+  const rebuildConnectedWorlds=()=>{
+    document.getElementById('connected-worlds')?.remove();
+    document.getElementById('astralisWorldStyles')?.remove();
+    loadScript('/cosmic-worlds.js?v=20260805b','cosmicWorldsFresh');
+  };
 
-  const finish=()=>{upgradeRiver();loadQuoteAudit();addDarktideLaunch();loadNovaGuide();loadTipJar();loadFloatingLayout();loadDanielLink()};
+  const finish=()=>{upgradeRiver();rebuildConnectedWorlds();loadQuoteAudit();addDarktideLaunch();loadNovaGuide();loadTipJar();loadFloatingLayout()};
   const core=document.createElement('script');core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@391ac37395e6de4dd8158a04476b059060495fee/astralis-celestial-drift.js';core.async=false;core.onload=finish;core.onerror=finish;document.head.appendChild(core);
 })();
