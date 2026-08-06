@@ -6,3 +6,23 @@
 
 /chess/*
   Cache-Control: no-store, max-age=0, must-revalidate
+
+/daniel-lions-story/*
+  Cache-Control: no-store, max-age=0, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+/daniel-lions-story
+  Cache-Control: no-store, max-age=0, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+/daniel-and-lions-den.html
+  Cache-Control: no-store, max-age=0, must-revalidate
+  Pragma: no-cache
+  Expires: 0
+
+/daniel-lions-story.html
+  Cache-Control: no-store, max-age=0, must-revalidate
+  Pragma: no-cache
+  Expires: 0
