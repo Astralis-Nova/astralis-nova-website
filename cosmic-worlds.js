@@ -86,37 +86,37 @@
           <p>A small solar system of the music, memories, games, communities, and creative places orbiting Astralis Nova.</p>
         </div>
         <div class="astralis-system">
-          <div class="astralis-sun-card">
+          <div class="astralis-sun-card" data-world="astralis-nova">
             <span class="astralis-sun" aria-hidden="true"></span>
             <span class="astralis-sun-copy"><strong>Astralis Nova</strong><span>The central star. Music, memory, Arizona night skies, old-web spirit, and every strange little world connected to them.</span></span>
           </div>
 
-          <a class="astralis-planet-link" href="/conquest.html" aria-label="Visit the Conquest Asheron's Call world">
+          <a class="astralis-planet-link" data-world="conquest" href="/conquest.html" aria-label="Visit the Conquest Asheron's Call world">
             <span class="astralis-planet planet-conquest ringed" aria-hidden="true"></span>
             <span class="astralis-planet-copy"><strong>Conquest</strong><span>Asheron’s Call ACE server information, Discord, connection address, and live-status links.</span><span class="astralis-world-badge">Game World</span></span>
           </a>
 
-          <a class="astralis-planet-link" href="https://emulator.ac/" target="_blank" rel="noopener noreferrer" aria-label="Open the ACEmulator website">
+          <a class="astralis-planet-link" data-world="acemulator" href="https://emulator.ac/" target="_blank" rel="noopener noreferrer" aria-label="Open the ACEmulator website">
             <span class="astralis-planet planet-ace" aria-hidden="true"></span>
             <span class="astralis-planet-copy"><strong>ACEmulator Forge</strong><span>The open-source engine and community rebuilding the world of Dereth.</span><span class="astralis-world-badge">External Portal</span></span>
           </a>
 
-          <a class="astralis-planet-link" href="#live-board" aria-label="Travel to the Cosmic Eraser Board">
+          <a class="astralis-planet-link" data-world="eraser-board" href="#live-board" aria-label="Travel to the Cosmic Eraser Board">
             <span class="astralis-planet planet-board ringed" aria-hidden="true"></span>
             <span class="astralis-planet-copy"><strong>Eraser Board Station</strong><span>Leave a live drawing, message, starship, or suspiciously artistic alien.</span><span class="astralis-world-badge">Live Creative World</span></span>
           </a>
 
-          <a class="astralis-planet-link" href="/biography.html" aria-label="Open the Astralis Nova biography">
+          <a class="astralis-planet-link" data-world="biography" href="/biography.html" aria-label="Open the Astralis Nova biography">
             <span class="astralis-planet planet-biography" aria-hidden="true"></span>
             <span class="astralis-planet-copy"><strong>Biography Moon</strong><span>The life, memories, technology, family, and imagination behind Astralis Nova.</span><span class="astralis-world-badge">Story World</span></span>
           </a>
 
-          <a class="astralis-planet-link" href="#first-orbit" aria-label="Travel to Echoes From the First Orbit">
+          <a class="astralis-planet-link" data-world="first-orbit" href="#first-orbit" aria-label="Travel to Echoes From the First Orbit">
             <span class="astralis-planet planet-orbit ringed" aria-hidden="true"></span>
             <span class="astralis-planet-copy"><strong>First Orbit</strong><span>Archived pages and MIDI relics preserved from Ramon’s earliest corner of the web.</span><span class="astralis-world-badge">Archive World</span></span>
           </a>
 
-          <a class="astralis-planet-link" href="/rainbow-promise.html" aria-label="Open The Rainbow Promise reflection">
+          <a class="astralis-planet-link" data-world="rainbow-promise" href="/rainbow-promise.html" aria-label="Open The Rainbow Promise reflection">
             <span class="astralis-planet planet-guestbook" aria-hidden="true"></span>
             <span class="astralis-planet-copy"><strong>Rainbow Promise</strong><span>Rain, Noah’s ark, the covenant, and hope carried across the sky after a storm.</span><span class="astralis-world-badge">Reflection World</span></span>
           </a>
