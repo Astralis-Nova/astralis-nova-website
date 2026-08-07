@@ -1,14 +1,14 @@
 (() => {
   "use strict";
 
-  const worlds = [
-    { image: "/astralis-earth.png", label: "Visual: Earthlike explorer world" },
-    { image: "/astralis-gas-giant.png", label: "Visual: Giant forge world" },
-    { image: "/astralis-mars.png", label: "Visual: Red creative world" },
-    { image: "/astralis-earth.png", label: "Visual: Story world", variant: "violet" },
-    { image: "/astralis-gas-giant.png", label: "Visual: Archive orbit world", variant: "gold" },
-    { image: "/rainbow-portal.svg", label: "Visual: Rainbow after the rain" }
-  ];
+  const worlds = {
+    conquest: { image: "/astralis-earth.png", label: "Visual: Earthlike explorer world" },
+    acemulator: { image: "/astralis-gas-giant.png", label: "Visual: Giant forge world" },
+    "eraser-board": { image: "/astralis-mars.png", label: "Visual: Red creative world" },
+    biography: { image: "/astralis-earth.png", label: "Visual: Story world", variant: "violet" },
+    "first-orbit": { image: "/astralis-gas-giant.png", label: "Visual: Archive orbit world", variant: "gold" },
+    "rainbow-promise": { image: "/rainbow-portal.svg", label: "Visual: Rainbow after the rain" }
+  };
 
   function installStyles() {
     document.getElementById("recentExoplanetStyles")?.remove();
@@ -43,8 +43,8 @@
     const section = document.getElementById("connected-worlds");
     if (!section || section.dataset.realisticPlanets === "true") return false;
 
-    const links = [...section.querySelectorAll(".astralis-planet-link")];
-    if (links.length < worlds.length) return false;
+    const links = [...section.querySelectorAll(".astralis-planet-link[data-world]")];
+    if (!links.length) return false;
 
     section.dataset.realisticPlanets = "true";
     installStyles();
@@ -58,8 +58,10 @@
       intro.insertAdjacentElement("afterend", note);
     }
 
-    worlds.forEach((world, index) => {
-      const link = links[index];
+    links.forEach(link => {
+      const world = worlds[link.dataset.world];
+      if (!world) return;
+
       const planet = link.querySelector(".astralis-planet");
       const copy = link.querySelector(".astralis-planet-copy");
       if (!planet || !copy) return;
