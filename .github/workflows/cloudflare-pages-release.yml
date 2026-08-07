@@ -29,6 +29,30 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Validate homepage runtime
+        run: |
+          node --check astralis-performance-loader.js
+          node --check site-fixes.js
+          node --check cosmic-worlds.js
+          node --check realistic-orbit.js
+          node --check astralis-celestial-drift.js
+          node --check astralis-ai-upgrades.js
+          node --check astralis-stragglers.js
+          node --check realistic-galaxy-upgrade.js
+          node --check astralis-brand-orbit.js
+          node --check final-visual-fixes.js
+          node --check astralis-nova-explorer.js
+          node --check rickroll-planet.js
+          node --check recent-exoplanets.js
+          node --check conquest-media.js
+          node --check vulcan-salute.js
+          node --check cosmic-chuckles.js
+          node --check hawking-quote-data-a.js
+          node --check hawking-quote-data-b.js
+          node --check hawking-quote.js
+          node --check astralis-motion-restore.js
+          node --input-type=module --check < functions/_middleware.js
+
       - name: Validate chess portal
         run: |
           node --check chess/chess.js
