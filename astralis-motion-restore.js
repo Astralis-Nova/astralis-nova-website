@@ -2,38 +2,13 @@
   "use strict";
 
   const STYLE_ID = "astralisMotionRestoreStyles";
-
-  function removeReducedMotionRules() {
-    for (const sheet of [...document.styleSheets]) {
-      let rules;
-      try {
-        rules = sheet.cssRules;
-      } catch {
-        continue;
-      }
-      if (!rules) continue;
-
-      for (let index = rules.length - 1; index >= 0; index -= 1) {
-        const rule = rules[index];
-        if (rule.type !== CSSRule.MEDIA_RULE) continue;
-        const mediaText = rule.media?.mediaText || rule.conditionText || "";
-        if (!mediaText.includes("prefers-reduced-motion")) continue;
-        try {
-          sheet.deleteRule(index);
-        } catch {
-          // A browser may expose a readable stylesheet but still reject edits.
-        }
-      }
-    }
-  }
+  const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 
   function installMotionStyles() {
-    let style = document.getElementById(STYLE_ID);
-    if (!style) {
-      style = document.createElement("style");
-      style.id = STYLE_ID;
-    }
+    if (document.getElementById(STYLE_ID)) return;
 
+    const style = document.createElement("style");
+    style.id = STYLE_ID;
     style.textContent = `
       html.astralis-motion-enabled body .astralis-galaxy-main,
       html.astralis-motion-enabled body .astralis-galaxy-core,
@@ -61,28 +36,17 @@
     document.head.appendChild(style);
   }
 
-  function restoreVisibleSections() {
-    document.querySelectorAll(".astralis-perf-paused").forEach(section => {
-      const rect = section.getBoundingClientRect();
-      if (rect.bottom >= -320 && rect.top <= window.innerHeight + 320) {
-        section.classList.remove("astralis-perf-paused");
-      }
-    });
+  function syncMotionPreference() {
+    const allowMotion = !reducedMotion?.matches;
+    document.documentElement.classList.toggle("astralis-motion-enabled", allowMotion);
+
+    if (allowMotion) {
+      installMotionStyles();
+    } else {
+      document.getElementById(STYLE_ID)?.remove();
+    }
   }
 
-  function restoreMotion() {
-    document.documentElement.classList.add("astralis-motion-enabled");
-    removeReducedMotionRules();
-    installMotionStyles();
-    restoreVisibleSections();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", restoreMotion, { once: true });
-  } else {
-    restoreMotion();
-  }
-
-  window.addEventListener("load", restoreMotion, { once: true });
-  [500, 1800, 3800, 7200].forEach(delay => window.setTimeout(restoreMotion, delay));
+  syncMotionPreference();
+  reducedMotion?.addEventListener?.("change", syncMotionPreference);
 })();
