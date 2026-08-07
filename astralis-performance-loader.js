@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "20260727r";
+  const VERSION = "20260807a";
   const loaded = new Map();
 
   function loadScript(src, { module = false } = {}) {
@@ -104,19 +104,8 @@
     }, { rootMargin: "320px 0px", threshold: 0.01 });
 
     document.querySelectorAll(selector).forEach(element => {
-      element.dataset.astralisMotionObserved = "true";
       observer.observe(element);
     });
-
-    const mutationObserver = new MutationObserver(() => {
-      document.querySelectorAll(selector).forEach(element => {
-        if (element.dataset.astralisMotionObserved === "true") return;
-        element.dataset.astralisMotionObserved = "true";
-        observer.observe(element);
-      });
-    });
-    mutationObserver.observe(document.body, { childList: true, subtree: true });
-    setTimeout(() => mutationObserver.disconnect(), 15000);
   }
 
   function pauseWhenHidden() {
