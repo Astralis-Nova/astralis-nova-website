@@ -138,8 +138,4 @@
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", apply, {once:true});
   else apply();
-
-  const observer = new MutationObserver(apply);
-  observer.observe(document.documentElement, {childList:true, subtree:true});
-  window.setTimeout(() => observer.disconnect(), 12000);
 })();
