@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "20260807b";
+  const VERSION = "20260807c";
   const loaded = new Map();
 
   function loadScript(src, { module = false } = {}) {
@@ -149,12 +149,12 @@
     `/astralis-celestial-drift.js?v=20260722m`,
     `/astralis-ai-upgrades.js?v=20260722q`,
     `/astralis-stragglers.js?v=20260722q`,
-    `/realistic-galaxy-upgrade.js?v=20260722r`,
     `/astralis-brand-orbit.js?v=20260722s`,
     `/final-visual-fixes.js?v=20260722q`
   ];
 
   const deferred = [
+    `/realistic-galaxy-upgrade.js?v=20260722r`,
     `/astralis-nova-explorer.js?v=20260722e`,
     `/rickroll-planet.js?v=20260722a`,
     `/recent-exoplanets.js?v=20260727r`,
