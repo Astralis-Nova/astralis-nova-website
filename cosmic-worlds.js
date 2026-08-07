@@ -1,6 +1,77 @@
 (() => {
   "use strict";
 
+  const CONNECTED_WORLDS = [
+    {
+      id: "conquest",
+      href: "/conquest.html",
+      ariaLabel: "Visit the Conquest Asheron's Call world",
+      planetClass: "planet-conquest ringed",
+      title: "Conquest",
+      description: "Asheron’s Call ACE server information, Discord, connection address, and live-status links.",
+      badge: "Game World"
+    },
+    {
+      id: "acemulator",
+      href: "https://emulator.ac/",
+      ariaLabel: "Open the ACEmulator website",
+      planetClass: "planet-ace",
+      title: "ACEmulator Forge",
+      description: "The open-source engine and community rebuilding the world of Dereth.",
+      badge: "External Portal",
+      external: true
+    },
+    {
+      id: "eraser-board",
+      href: "#live-board",
+      ariaLabel: "Travel to the Cosmic Eraser Board",
+      planetClass: "planet-board ringed",
+      title: "Eraser Board Station",
+      description: "Leave a live drawing, message, starship, or suspiciously artistic alien.",
+      badge: "Live Creative World"
+    },
+    {
+      id: "biography",
+      href: "/biography.html",
+      ariaLabel: "Open the Astralis Nova biography",
+      planetClass: "planet-biography",
+      title: "Biography Moon",
+      description: "The life, memories, technology, family, and imagination behind Astralis Nova.",
+      badge: "Story World"
+    },
+    {
+      id: "first-orbit",
+      href: "#first-orbit",
+      ariaLabel: "Travel to Echoes From the First Orbit",
+      planetClass: "planet-orbit ringed",
+      title: "First Orbit",
+      description: "Archived pages and MIDI relics preserved from Ramon’s earliest corner of the web.",
+      badge: "Archive World"
+    },
+    {
+      id: "rainbow-promise",
+      href: "/rainbow-promise.html",
+      ariaLabel: "Open The Rainbow Promise reflection",
+      planetClass: "planet-guestbook",
+      title: "Rainbow Promise",
+      description: "Rain, Noah’s ark, the covenant, and hope carried across the sky after a storm.",
+      badge: "Reflection World"
+    }
+  ];
+
+  function renderWorldCard(world) {
+    const externalAttributes = world.external ? ' target="_blank" rel="noopener noreferrer"' : "";
+    return `
+      <a class="astralis-planet-link" data-world="${world.id}" href="${world.href}" aria-label="${world.ariaLabel}"${externalAttributes}>
+        <span class="astralis-planet ${world.planetClass}" aria-hidden="true"></span>
+        <span class="astralis-planet-copy">
+          <strong>${world.title}</strong>
+          <span>${world.description}</span>
+          <span class="astralis-world-badge">${world.badge}</span>
+        </span>
+      </a>`;
+  }
+
   function installStyles() {
     if (document.getElementById("astralisWorldStyles")) return;
     const style = document.createElement("style");
@@ -90,36 +161,7 @@
             <span class="astralis-sun" aria-hidden="true"></span>
             <span class="astralis-sun-copy"><strong>Astralis Nova</strong><span>The central star. Music, memory, Arizona night skies, old-web spirit, and every strange little world connected to them.</span></span>
           </div>
-
-          <a class="astralis-planet-link" data-world="conquest" href="/conquest.html" aria-label="Visit the Conquest Asheron's Call world">
-            <span class="astralis-planet planet-conquest ringed" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Conquest</strong><span>Asheron’s Call ACE server information, Discord, connection address, and live-status links.</span><span class="astralis-world-badge">Game World</span></span>
-          </a>
-
-          <a class="astralis-planet-link" data-world="acemulator" href="https://emulator.ac/" target="_blank" rel="noopener noreferrer" aria-label="Open the ACEmulator website">
-            <span class="astralis-planet planet-ace" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>ACEmulator Forge</strong><span>The open-source engine and community rebuilding the world of Dereth.</span><span class="astralis-world-badge">External Portal</span></span>
-          </a>
-
-          <a class="astralis-planet-link" data-world="eraser-board" href="#live-board" aria-label="Travel to the Cosmic Eraser Board">
-            <span class="astralis-planet planet-board ringed" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Eraser Board Station</strong><span>Leave a live drawing, message, starship, or suspiciously artistic alien.</span><span class="astralis-world-badge">Live Creative World</span></span>
-          </a>
-
-          <a class="astralis-planet-link" data-world="biography" href="/biography.html" aria-label="Open the Astralis Nova biography">
-            <span class="astralis-planet planet-biography" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Biography Moon</strong><span>The life, memories, technology, family, and imagination behind Astralis Nova.</span><span class="astralis-world-badge">Story World</span></span>
-          </a>
-
-          <a class="astralis-planet-link" data-world="first-orbit" href="#first-orbit" aria-label="Travel to Echoes From the First Orbit">
-            <span class="astralis-planet planet-orbit ringed" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>First Orbit</strong><span>Archived pages and MIDI relics preserved from Ramon’s earliest corner of the web.</span><span class="astralis-world-badge">Archive World</span></span>
-          </a>
-
-          <a class="astralis-planet-link" data-world="rainbow-promise" href="/rainbow-promise.html" aria-label="Open The Rainbow Promise reflection">
-            <span class="astralis-planet planet-guestbook" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Rainbow Promise</strong><span>Rain, Noah’s ark, the covenant, and hope carried across the sky after a storm.</span><span class="astralis-world-badge">Reflection World</span></span>
-          </a>
+          ${CONNECTED_WORLDS.map(renderWorldCard).join("")}
         </div>
       </div>`;
 
