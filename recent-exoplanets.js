@@ -2,20 +2,12 @@
   "use strict";
 
   const worlds = [
-    { image: "/astralis-earth.png", label: "Visual: Earthlike explorer world", href: "/conquest.html" },
-    { image: "/astralis-gas-giant.png", label: "Visual: Giant forge world", href: "https://emulator.ac/", external: true },
-    { image: "/astralis-mars.png", label: "Visual: Red creative world", href: "/#live-board" },
-    { image: "/astralis-earth.png", label: "Visual: Story world", href: "/biography.html", variant: "violet" },
-    { image: "/astralis-gas-giant.png", label: "Visual: Archive orbit world", href: "/#first-orbit", variant: "gold" },
-    {
-      image: "/rainbow-portal.svg",
-      label: "Visual: Rainbow after the rain",
-      href: "/rainbow-promise.html",
-      title: "Rainbow Promise",
-      description: "Rain, Noah’s ark, the covenant, and hope carried across the sky after a storm.",
-      badge: "Reflection World",
-      ariaLabel: "Open The Rainbow Promise reflection"
-    }
+    { image: "/astralis-earth.png", label: "Visual: Earthlike explorer world" },
+    { image: "/astralis-gas-giant.png", label: "Visual: Giant forge world" },
+    { image: "/astralis-mars.png", label: "Visual: Red creative world" },
+    { image: "/astralis-earth.png", label: "Visual: Story world", variant: "violet" },
+    { image: "/astralis-gas-giant.png", label: "Visual: Archive orbit world", variant: "gold" },
+    { image: "/rainbow-portal.svg", label: "Visual: Rainbow after the rain" }
   ];
 
   function installStyles() {
@@ -57,13 +49,12 @@
     section.dataset.realisticPlanets = "true";
     installStyles();
 
+    section.querySelector(".astralis-worlds-note")?.remove();
     const intro = section.querySelector(".astralis-worlds-head > p:not(.eyebrow)");
     if (intro) {
-      intro.textContent = "Travel through the music, memories, games, communities, and creative places orbiting Astralis Nova.";
-      section.querySelector(".astralis-worlds-note")?.remove();
       const note = document.createElement("small");
       note.className = "astralis-worlds-note";
-      note.textContent = "Each destination now uses realistic planet artwork while keeping the original Astralis Nova portal links.";
+      note.textContent = "Each destination uses realistic planet artwork while preserving its original Astralis Nova portal content and link.";
       intro.insertAdjacentElement("afterend", note);
     }
 
@@ -72,16 +63,6 @@
       const planet = link.querySelector(".astralis-planet");
       const copy = link.querySelector(".astralis-planet-copy");
       if (!planet || !copy) return;
-
-      link.setAttribute("href", world.href);
-      if (world.ariaLabel) link.setAttribute("aria-label", world.ariaLabel);
-      if (world.external) {
-        link.setAttribute("target", "_blank");
-        link.setAttribute("rel", "noopener noreferrer");
-      } else {
-        link.removeAttribute("target");
-        link.removeAttribute("rel");
-      }
 
       planet.className = `astralis-planet recent-exoplanet${world.variant ? ` ${world.variant}` : ""}`;
       planet.replaceChildren();
@@ -92,24 +73,6 @@
       image.setAttribute("aria-hidden", "true");
       image.loading = "lazy";
       planet.appendChild(image);
-
-      if (world.title) {
-        const heading = copy.querySelector("strong");
-        if (heading) heading.textContent = world.title;
-      }
-
-      if (world.description) {
-        const description = [...copy.querySelectorAll(":scope > span")].find(span =>
-          !span.classList.contains("astralis-world-badge") &&
-          !span.classList.contains("astralis-world-origin")
-        );
-        if (description) description.textContent = world.description;
-      }
-
-      if (world.badge) {
-        const badge = copy.querySelector(".astralis-world-badge");
-        if (badge) badge.textContent = world.badge;
-      }
 
       copy.querySelectorAll(".astralis-world-origin").forEach(element => element.remove());
       const origin = document.createElement("span");
