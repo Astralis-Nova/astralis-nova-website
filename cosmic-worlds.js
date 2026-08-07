@@ -116,9 +116,9 @@
             <span class="astralis-planet-copy"><strong>First Orbit</strong><span>Archived pages and MIDI relics preserved from Ramon’s earliest corner of the web.</span><span class="astralis-world-badge">Archive World</span></span>
           </a>
 
-          <a class="astralis-planet-link" href="#guestbook" aria-label="Travel to the Astralis Nova guestbook">
+          <a class="astralis-planet-link" href="/rainbow-promise.html" aria-label="Open The Rainbow Promise reflection">
             <span class="astralis-planet planet-guestbook" aria-hidden="true"></span>
-            <span class="astralis-planet-copy"><strong>Guestbook Moon</strong><span>Sign your name, choose a favorite song, and leave a signal among the stars.</span><span class="astralis-world-badge">Visitor World</span></span>
+            <span class="astralis-planet-copy"><strong>Rainbow Promise</strong><span>Rain, Noah’s ark, the covenant, and hope carried across the sky after a storm.</span><span class="astralis-world-badge">Reflection World</span></span>
           </a>
         </div>
       </div>`;
