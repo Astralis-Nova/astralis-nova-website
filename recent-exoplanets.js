@@ -121,11 +121,5 @@
     return true;
   }
 
-  if (applyRecentWorlds()) return;
-
-  const observer = new MutationObserver(() => {
-    if (applyRecentWorlds()) observer.disconnect();
-  });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-  window.setTimeout(() => observer.disconnect(), 10000);
+  applyRecentWorlds();
 })();
