@@ -104,10 +104,4 @@
   } else {
     upgradeLogo();
   }
-
-  const observer = new MutationObserver(() => {
-    if (upgradeLogo()) observer.disconnect();
-  });
-  observer.observe(document.documentElement, {childList:true, subtree:true});
-  window.setTimeout(() => observer.disconnect(), 10000);
 })();
