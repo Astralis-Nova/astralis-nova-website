@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Astralis Nova honors voices of light, love, courage, and forward motion.">
+  <title>Voices That Move Us Forward | Astralis Nova</title>
+  <style>
+    :root{
+      --bg:#050814;
+      --panel:#0a1020;
+      --panel-2:#11142a;
+      --text:#f4f7ff;
+      --muted:#b7c2d8;
+      --blue:#58b8ff;
+      --violet:#9d62ff;
+      --pink:#ef5bb9;
+      --gold:#ffd98a;
+      --line:rgba(113,166,255,.26);
+      --shell:min(980px,calc(100% - 28px));
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 18% 8%,rgba(69,126,255,.18),transparent 28rem),
+        radial-gradient(circle at 84% 28%,rgba(207,54,196,.15),transparent 30rem),
+        linear-gradient(180deg,#050814 0%,#07101c 52%,#050711 100%);
+      min-height:100vh;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.45;
+      background-image:
+        radial-gradient(circle at 12% 24%,#fff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 68% 18%,#8fd8ff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 82% 62%,#fff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 35% 78%,#c9a6ff 0 1px,transparent 1.5px),
+        radial-gradient(circle at 54% 44%,#fff 0 1px,transparent 1.5px);
+      background-size:260px 260px,310px 310px,360px 360px,410px 410px,470px 470px;
+    }
+
+    .shell{width:var(--shell);margin:auto;position:relative;z-index:1}
+    header{
+      padding:72px 0 34px;
+      border-bottom:1px solid var(--line);
+      background:
+        linear-gradient(180deg,rgba(4,8,20,.34),rgba(4,8,20,.82)),
+        radial-gradient(circle at 20% 20%,rgba(88,184,255,.12),transparent 24rem);
+    }
+
+    .eyebrow{
+      margin:0 0 12px;
+      color:var(--blue);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.19em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0;
+      max-width:840px;
+      font-size:clamp(2.5rem,7vw,5.5rem);
+      line-height:.98;
+      letter-spacing:-.045em;
+    }
+
+    .intro{
+      margin:24px 0 0;
+      max-width:820px;
+      color:#d7deed;
+      font-size:clamp(1.08rem,2.2vw,1.35rem);
+      line-height:1.7;
+    }
+
+    .mission{
+      margin:34px 0 0;
+      padding:20px 22px;
+      border:1px solid rgba(114,176,255,.35);
+      border-radius:18px;
+      background:linear-gradient(135deg,rgba(15,35,65,.68),rgba(34,18,57,.64));
+      box-shadow:0 18px 60px rgba(0,0,0,.24);
+    }
+
+    .mission strong{color:var(--gold)}
+    main{padding:42px 0 70px}
+
+    .leader-card{
+      overflow:hidden;
+      border:1px solid rgba(118,175,255,.32);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 88% 0%,rgba(239,91,185,.11),transparent 24rem),
+        linear-gradient(180deg,rgba(8,17,33,.9),rgba(7,10,24,.92));
+      box-shadow:0 26px 80px rgba(0,0,0,.34);
+    }
+
+    .leader-head{padding:28px 28px 10px}
+    .leader-head h2{
+      margin:0;
+      font-size:clamp(2rem,5vw,3.2rem);
+      letter-spacing:-.03em;
+    }
+    .leader-head p{
+      margin:9px 0 0;
+      color:var(--muted);
+      line-height:1.6;
+      max-width:760px;
+    }
+
+    .quotes{display:grid;gap:16px;padding:22px 28px 30px}
+    blockquote{
+      margin:0;
+      padding:22px 22px 22px 26px;
+      border-left:4px solid var(--blue);
+      border-radius:0 16px 16px 0;
+      background:linear-gradient(90deg,rgba(16,33,60,.74),rgba(18,14,39,.64));
+      color:#f5f7ff;
+      font-size:clamp(1rem,2.1vw,1.22rem);
+      line-height:1.72;
+    }
+
+    .credit{
+      padding:0 28px 30px;
+      color:#9bcfff;
+      font-size:1.05rem;
+      font-weight:900;
+    }
+
+    .future{
+      margin-top:24px;
+      padding:24px;
+      border:1px dashed rgba(142,169,225,.32);
+      border-radius:20px;
+      background:rgba(8,14,28,.56);
+    }
+    .future h3{margin:0 0 8px;font-size:1.25rem}
+    .future p{margin:0;color:var(--muted);line-height:1.65}
+
+    footer{
+      padding:22px 0 46px;
+      border-top:1px solid var(--line);
+      color:#8795ad;
+      font-size:.84rem;
+    }
+
+    @media(max-width:640px){
+      header{padding-top:52px}
+      .leader-head{padding:22px 18px 8px}
+      .quotes{padding:18px}
+      .credit{padding:0 18px 22px}
+      blockquote{padding:18px 17px 18px 20px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="shell">
+      <p class="eyebrow">Astralis Nova • Voices Among the Stars</p>
+      <h1>Voices That Move Us Forward</h1>
+
+      <p class="intro">
+        Astralis Nova carries the light, love, courage, and forward motion of
+        influential positive leaders whose words and actions helped humanity
+        reach toward something better.
+      </p>
+
+      <div class="mission">
+        <strong>The idea:</strong>
+        preserve words that still have something useful to say to the future.
+        Different generations, different voices, one continuing signal:
+        keep moving humanity forward.
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="leader-card" aria-labelledby="mlk-title">
+      <div class="leader-head">
+        <p class="eyebrow">A Voice of Courage, Equality & Hope</p>
+        <h2 id="mlk-title">Martin Luther King Jr.</h2>
+        <p>
+          A selection of words centered on light, love, perseverance,
+          equality, and the determination to keep moving forward.
+        </p>
+      </div>
+
+      <div class="quotes">
+        <blockquote>
+          “Darkness cannot drive out darkness; only light can do that.
+          Hate cannot drive out hate; only love can do that.”
+        </blockquote>
+
+        <blockquote>
+          “If you can't fly then run, if you can't run then walk,
+          if you can't walk then crawl, but whatever you do you have
+          to keep moving forward.”
+        </blockquote>
+
+        <blockquote>
+          “I have a dream that my four little children will one day live
+          in a nation where they will not be judged by the color of their skin,
+          but by the content of their character.”
+        </blockquote>
+      </div>
+
+      <div class="credit">— Martin Luther King Jr.</div>
+    </section>
+
+    <section class="future">
+      <h3>More voices can join this orbit later.</h3>
+      <p>
+        This page is designed so future leaders, thinkers, scientists,
+        humanitarians, artists, explorers, and other positive influences
+        can each receive their own section without changing the overall layout.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell">Astralis Nova • Voices That Move Us Forward • 2026</div>
+  </footer>
+</body>
+</html>
