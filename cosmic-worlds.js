@@ -23,12 +23,12 @@
     },
     {
       id: "eraser-board",
-      href: "#live-board",
-      ariaLabel: "Travel to the Cosmic Eraser Board",
+      href: "/voices-that-move-us-forward.html",
+      ariaLabel: "Open Voices That Move Us Forward",
       planetClass: "planet-board ringed",
-      title: "Eraser Board Station",
-      description: "Leave a live drawing, message, starship, or suspiciously artistic alien.",
-      badge: "Live Creative World"
+      title: "Voices That Move Us Forward",
+      description: "Words and ideas from positive leaders who helped humanity move toward something better.",
+      badge: "Inspiration World"
     },
     {
       id: "biography",
