@@ -97,7 +97,7 @@
   const installAll=()=>{
     installStyles();
     const orbitReady=installQuoteOrbit();
-    const tributeReady=installMLKTribute();
+    const tributeReady=true;
     return orbitReady&&tributeReady;
   };
 
