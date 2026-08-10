@@ -93,7 +93,7 @@
   button.id='feelingTipsyButton';
   button.type='button';
   button.setAttribute('aria-haspopup','dialog');
-  button.setAttribute('aria-label','Open the Feeling Tipsy tip jar');
+  button.setAttribute('aria-label','Open the Astralis Nova support panel');
   button.innerHTML=`
     <span class="tipsy-jar-wrap">
       <span class="tipsy-jar" aria-hidden="true">
@@ -102,11 +102,11 @@
           <span class="tipsy-liquid"></span>
           <span class="tipsy-spark one">✦</span>
           <span class="tipsy-spark two">✧</span>
-          <span class="tipsy-label">TIPS</span>
+          <span class="tipsy-label">SUPPORT</span>
         </span>
         <span class="tipsy-coin">$</span>
       </span>
-      <span class="tipsy-text">Feeling Tipsy?</span>
+      <span class="tipsy-text">Fuel the Next Orbit</span>
     </span>`;
 
   const panel=document.createElement('div');
@@ -116,11 +116,11 @@
   panel.setAttribute('aria-labelledby','feelingTipsyTitle');
   panel.innerHTML=`
     <div class="tipsy-card">
-      <button class="tipsy-close" id="feelingTipsyClose" type="button" aria-label="Close tip jar">×</button>
-      <div class="tipsy-icon" aria-hidden="true">🍸</div>
+      <button class="tipsy-close" id="feelingTipsyClose" type="button" aria-label="Close support panel">×</button>
+      <div class="tipsy-icon" aria-hidden="true">🚀</div>
       <p class="tipsy-kicker">Support the Astralis Nova mission</p>
-      <h2 id="feelingTipsyTitle">Feeling Tipsy?</h2>
-      <p>Astralis Nova is independently created and maintained. Tips help support the work, tools, and time behind keeping this little universe alive and growing.</p>
+      <h2 id="feelingTipsyTitle">Fuel the Next Orbit</h2>
+      <p>Astralis Nova is independently created and maintained. Support helps with the work, tools, and time behind keeping this little universe alive and growing.</p>
       <div class="tipsy-reasons">
         <div class="tipsy-reason">🎵 New music and remixes</div>
         <div class="tipsy-reason">🛠️ Website upkeep and repairs</div>
@@ -130,10 +130,10 @@
         <div class="tipsy-reason">⏳ The many hours behind it all</div>
       </div>
       <div class="tipsy-actions">
-        <a class="tipsy-paypal" href="${PAYPAL_URL}" target="_blank" rel="noopener noreferrer">💙 Tip with PayPal</a>
+        <a class="tipsy-paypal" href="${PAYPAL_URL}" target="_blank" rel="noopener noreferrer">💙 Support with PayPal</a>
         <button class="tipsy-later" id="feelingTipsyLater" type="button">Maybe Later</button>
       </div>
-      <p class="tipsy-note">Tips are always optional and deeply appreciated. PayPal may apply seller or processing fees.</p>
+      <p class="tipsy-note">Support is always optional and deeply appreciated. PayPal may apply seller or processing fees.</p>
     </div>`;
 
   document.body.append(button,panel);
