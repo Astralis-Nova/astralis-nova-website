@@ -56,6 +56,15 @@
       title: "Rainbow Promise",
       description: "Rain, Noah’s ark, the covenant, and hope carried across the sky after a storm.",
       badge: "Reflection World"
+    },
+    {
+      id: "scripture-nexus",
+      href: "/scripture-nexus.html",
+      ariaLabel: "Open Scripture Nexus Bible exploration world",
+      planetClass: "planet-scripture ringed",
+      title: "Scripture Nexus",
+      description: "Ask Bible questions, explore life guidance, discover random learning signals, and browse all 66 books.",
+      badge: "Bible Explorer"
     }
   ];
 
@@ -113,6 +122,7 @@
       .planet-biography{background:radial-gradient(circle at 35% 28%,#ffe4fa 0 5%,#e75ebd 17%,#7843c8 47%,#25205f 76%,#09091b 100%)}
       .planet-orbit{background:radial-gradient(circle at 37% 28%,#fff2c6 0 4%,#f1a85f 17%,#8c4d45 46%,#3b274a 75%,#0b0912 100%)}
       .planet-guestbook{background:radial-gradient(circle at 35% 30%,#e8f5ff 0 5%,#80bce7 17%,#3a6091 47%,#202747 75%,#090a16 100%)}
+      .planet-scripture{background:radial-gradient(circle at 33% 27%,#fffbe8 0 5%,#9cecff 13%,#637be9 33%,#6540ae 55%,#2c1b58 76%,#090812 100%);box-shadow:inset -13px -13px 18px rgba(0,0,0,.38),0 0 20px rgba(105,213,255,.42),0 0 34px rgba(154,108,255,.18)}
       .astralis-planet-copy{position:relative;z-index:1;min-width:0}
       .astralis-planet-copy strong{display:block;font-size:1rem;color:#fff}
       .astralis-planet-copy span{display:block;margin-top:5px;color:#b9c7da;font-size:.83rem;line-height:1.45}
