@@ -35,6 +35,16 @@
   `;
   document.head.appendChild(style);
 
+  const loadScript=(src,key)=>{
+    if(document.querySelector(`script[data-${key}]`))return;
+    const script=document.createElement('script');
+    script.src=src;
+    script.dataset[key]='true';
+    script.async=false;
+    document.head.appendChild(script);
+  };
+  loadScript('/hung-upon-nothing-world.js?v=20260829a','hungUponNothingWorld');
+
   const placeSignal=()=>{
     const signal=document.getElementById('shipSignal');
     if(!signal)return false;
