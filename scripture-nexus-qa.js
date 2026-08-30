@@ -19,4 +19,9 @@
   fresh.src='scripture-nexus-freshness.js?v=20260830a';
   fresh.defer=true;
   document.head.appendChild(fresh);
+
+  const wholeBible=document.createElement('script');
+  wholeBible.src='scripture-nexus-bible-search.js?v=20260830a';
+  wholeBible.defer=true;
+  document.head.appendChild(wholeBible);
 })();
