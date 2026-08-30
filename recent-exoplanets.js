@@ -5,7 +5,7 @@
     conquest: { image: "/astralis-earth.png", label: "Visual: Earthlike explorer world" },
     acemulator: { image: "/astralis-gas-giant.png", label: "Visual: Giant forge world" },
     "eraser-board": { image: "/astralis-mars.png", label: "Visual: Red creative world" },
-    biography: { image: "/astralis-earth.png", label: "Visual: Story world", variant: "violet" },
+    biography: { image: "/planet-lunar-real.svg?v=20260830b", label: "Visual: Biography Moon", variant: "violet" },
     "first-orbit": { image: "/astralis-gas-giant.png", label: "Visual: Archive orbit world", variant: "gold" },
     "rainbow-promise": { image: "/rainbow-portal.svg", label: "Visual: Rainbow after the rain" }
   };
