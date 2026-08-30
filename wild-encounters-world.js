@@ -44,7 +44,7 @@
         <span class="astralis-world-badge">Living World</span>
       </span>`;
     system.appendChild(card);
-    fetch('/wild-media/gopher.jpg.b64?v=20260830b').then(r=>{if(!r.ok)throw new Error();return r.text()}).then(encoded=>{const planet=card.querySelector('.planet-wild');if(planet)planet.style.setProperty('background-image',`linear-gradient(110deg,rgba(255,255,255,.10),rgba(0,0,0,.34)),url("data:image/jpeg;base64,${encoded.replace(/\\s/g,'')}")`,'important')}).catch(()=>{});
+    const planet=card.querySelector('.planet-wild');if(planet)planet.style.setProperty('background-image','linear-gradient(110deg,rgba(255,255,255,.10),rgba(0,0,0,.36)),url("/wild-media/gopher-snake-original.jpg?v=20260830d")','important');
     return true;
   };
 
