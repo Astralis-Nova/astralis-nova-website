@@ -48,7 +48,7 @@ export async function onRequest(context) {
   if (isBiography) {
     rewriter.on("body", {
       element(element) {
-        element.append('<script src="/biography-zoey-gallery.js?v=20260726c" defer></script><script src="/biography-rian-gallery.js?v=20260726a" defer></script><script src="/biography-pet-photobook.js?v=20260830a" defer></script>', { html: true });
+        element.append('<script src="/biography-zoey-gallery.js?v=20260726c" defer></script><script src="/biography-rian-gallery.js?v=20260726a" defer></script><script src="/biography-pet-photobook.js?v=20260830b" defer></script>', { html: true });
       },
     });
   }
