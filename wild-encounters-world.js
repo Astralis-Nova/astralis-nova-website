@@ -18,8 +18,8 @@
         border-color:#b8ee70!important;
         box-shadow:0 18px 44px rgba(0,0,0,.38),0 0 32px rgba(151,219,86,.18)!important
       }
-      .planet-wild{position:relative;background:radial-gradient(circle at 34% 26%,rgba(255,255,230,.25),transparent 18%),linear-gradient(145deg,#5c6b45,#202b22)!important;background-position:center!important;background-size:cover!important;box-shadow:inset -15px -16px 22px rgba(0,0,0,.50),inset 8px 7px 13px rgba(255,238,178,.12),0 0 20px rgba(178,229,95,.35)!important;overflow:visible!important}
-      .planet-wild::before{content:"";position:absolute;left:-19%;top:43%;width:138%;height:18%;border:3px solid rgba(208,224,187,.78);border-left-color:rgba(122,151,110,.42);border-radius:50%;transform:rotate(-16deg);box-shadow:0 0 8px rgba(188,224,173,.28);z-index:2}
+      .planet-wild{position:relative;background:#361715 url('/planet-volcanic-real.svg?v=20260830a') center/cover no-repeat!important;box-shadow:inset -15px -16px 22px rgba(0,0,0,.56),inset 8px 7px 13px rgba(255,220,160,.14),0 0 20px rgba(227,112,55,.38)!important;overflow:hidden!important}
+      .planet-wild::before{content:none}
       .planet-wild::after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(110deg,rgba(255,255,255,.16),transparent 35%,rgba(0,0,0,.32) 78%);box-shadow:inset 0 0 0 1px rgba(227,244,211,.24);z-index:1}
       .astralis-planet-link[data-world="wild-encounters"] .astralis-world-badge{border-color:rgba(177,226,105,.46)!important;color:#b8ed75!important;background:rgba(58,87,31,.18)!important}
     `;
@@ -44,7 +44,6 @@
         <span class="astralis-world-badge">Living World</span>
       </span>`;
     system.appendChild(card);
-    const planet=card.querySelector('.planet-wild');if(planet)planet.style.setProperty('background-image','linear-gradient(110deg,rgba(255,255,255,.10),rgba(0,0,0,.36)),url("/wild-media/gopher-snake-original.jpg?v=20260830d")','important');
     return true;
   };
 
