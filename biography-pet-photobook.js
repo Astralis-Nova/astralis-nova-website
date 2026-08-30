@@ -7,12 +7,12 @@
   const pets = [
     ['max', 'Max'],
     ['duke', 'Duke'],
-    ['zoey', 'Zoey'],
-    ['pepper', 'Pepper'],
+    ['zoey-pepper', 'Zoey & Pepper'],
     ['tortellini', 'Tortellini'],
     ['rian', 'Rian'],
     ['general', 'General']
   ];
+  const albumSlugs = ['max', 'duke', 'zoey', 'pepper', 'tortellini', 'rian', 'general'];
 
   const dukeSpriteChunks = [
     'sprite-00.b64', 'sprite-01.b64', 'sprite-02.b64', 'sprite-03.b64',
@@ -105,7 +105,7 @@
     if (correctedAlbumsPromise) return correctedAlbumsPromise;
 
     correctedAlbumsPromise = Promise.all(
-      pets.map(async ([slug]) => {
+      albumSlugs.map(async slug => {
         const response = await fetch(`/data/pets/${slug}.json?v=${dukeSpriteVersion}`, { cache: 'no-store' });
         if (!response.ok) throw new Error(`Album request failed for ${slug}: ${response.status}`);
         return [slug, await response.json()];
@@ -119,6 +119,12 @@
       ]);
       albums.max.photos = [maxPhotos[0], maxPhotos[2]].filter(Boolean);
       albums.zoey.photos = uniquePhotos(albums.zoey.photos.slice(1));
+      albums['zoey-pepper'] = {
+        name: 'Zoey & Pepper',
+        aka: 'best friends · one shared story',
+        description: 'Zoey and Pepper shared their days, their patio adventures, and a special place in the family story. Their memories now live together in one album.',
+        photos: uniquePhotos([...albums.zoey.photos, ...albums.pepper.photos])
+      };
       albums.duke.photos = await loadDukePhotos();
       albums.rian.photos = uniquePhotos(albums.rian.photos);
       return albums;
