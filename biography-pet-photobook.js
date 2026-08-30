@@ -118,15 +118,40 @@
         albums.zoey.photos[0]
       ]);
       albums.max.photos = [maxPhotos[0], maxPhotos[2]].filter(Boolean);
-      albums.zoey.photos = uniquePhotos([`/images/pets/zoey-original-portrait.jpg?v=20260830d`, ...albums.zoey.photos.slice(1)]);
+      albums.zoey.photos = uniquePhotos([
+        '/images/pets/zoey/20171122_131626.webp',
+        '/images/pets/zoey/20171122_131705.webp',
+        '/images/pets/zoey/20190221_192447.webp',
+        '/images/pets/zoey/20190429_122827.webp',
+        '/images/pets/zoey/20190710_125746.webp',
+        '/images/pets/zoey/20230418_094820.webp',
+        '/images/pets/zoey/20240217_151209.webp',
+        '/images/pets/zoey/20240601_173132.webp',
+        '/images/pets/zoey/30ec86c4-3d81-44f0-a885-e5ac7d19c5d1.webp',
+        '/images/pets/zoey/fullsize-r1.webp',
+        '/images/pets/zoey/fullsize-r2.webp',
+        '/images/pets/zoey/IMG_37301_optimized.webp',
+        '/images/pets/zoey/shared-memory.webp'
+      ]);
       albums['zoey-pepper'] = {
         name: 'Zoey & Pepper',
         aka: 'best friends · one shared story',
         description: 'Zoey and Pepper shared their days, their patio adventures, and a special place in the family story. Their memories now live together in one album.',
         photos: uniquePhotos([...albums.zoey.photos, ...albums.pepper.photos])
       };
-      albums.duke.photos = uniquePhotos([`/images/pets/duke-adoption-day.jpg?v=20260830d`, ...await loadDukePhotos()]);
-      albums.rian.photos = uniquePhotos(albums.rian.photos);
+      albums.duke.photos = uniquePhotos([
+        '/images/pets/duke-adoption-day.jpg?v=20260830d',
+        '/images/pets/duke/20230304_111625.webp',
+        '/images/pets/duke/20240207_133713.webp',
+        '/images/pets/duke/20240217_151034.webp',
+        '/images/pets/duke/20250131_194501.webp',
+        '/images/pets/duke/IMG_20230307_091528.webp',
+        '/images/pets/duke/night-watch.webp'
+      ]);
+      albums.rian.photos = uniquePhotos([
+        '/images/pets/rian/1651581320138.webp',
+        '/images/pets/rian/IMG_17191.webp'
+      ]);
       return albums;
     });
 
