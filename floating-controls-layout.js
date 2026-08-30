@@ -44,7 +44,7 @@
     document.head.appendChild(script);
   };
   loadScript('/hung-upon-nothing-world.js?v=20260829a','hungUponNothingWorld');
-  loadScript('/wild-encounters-world.js?v=20260830a','wildEncountersWorld');
+  loadScript('/wild-encounters-world.js?v=20260830b','wildEncountersWorld');
 
   const placeSignal=()=>{
     const signal=document.getElementById('shipSignal');
