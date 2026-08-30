@@ -118,14 +118,14 @@
         albums.zoey.photos[0]
       ]);
       albums.max.photos = [maxPhotos[0], maxPhotos[2]].filter(Boolean);
-      albums.zoey.photos = uniquePhotos(albums.zoey.photos.slice(1));
+      albums.zoey.photos = uniquePhotos([`/images/pets/zoey-original-portrait.jpg?v=20260830d`, ...albums.zoey.photos.slice(1)]);
       albums['zoey-pepper'] = {
         name: 'Zoey & Pepper',
         aka: 'best friends · one shared story',
         description: 'Zoey and Pepper shared their days, their patio adventures, and a special place in the family story. Their memories now live together in one album.',
         photos: uniquePhotos([...albums.zoey.photos, ...albums.pepper.photos])
       };
-      albums.duke.photos = await loadDukePhotos();
+      albums.duke.photos = uniquePhotos([`/images/pets/duke-adoption-day.jpg?v=20260830d`, ...await loadDukePhotos()]);
       albums.rian.photos = uniquePhotos(albums.rian.photos);
       return albums;
     });
