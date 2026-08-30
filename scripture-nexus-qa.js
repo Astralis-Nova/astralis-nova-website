@@ -1,7 +1,12 @@
 (() => {
   "use strict";
+  const smart=document.createElement('script');
+  smart.src='scripture-nexus-smart-search.js?v=20260830a';
+  smart.defer=true;
+  document.head.appendChild(smart);
+
   const core=document.createElement('script');
-  core.src='scripture-nexus-qa-core.js?v=20260829b';
+  core.src='scripture-nexus-qa-core.js?v=20260830c';
   core.defer=true;
   document.head.appendChild(core);
 
