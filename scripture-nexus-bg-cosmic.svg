@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="space" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#020514"/><stop offset=".48" stop-color="#06142d"/><stop offset="1" stop-color="#01040d"/></linearGradient>
+  <radialGradient id="sun"><stop stop-color="#fffbe8"/><stop offset=".14" stop-color="#ffe993"/><stop offset=".34" stop-color="#ffb43f" stop-opacity=".9"/><stop offset=".72" stop-color="#d76320" stop-opacity=".24"/><stop offset="1" stop-color="#d76320" stop-opacity="0"/></radialGradient>
+  <radialGradient id="planet" cx="32%" cy="28%"><stop stop-color="#8eeaff"/><stop offset=".19" stop-color="#2478cf"/><stop offset=".55" stop-color="#12376e"/><stop offset=".82" stop-color="#071632"/><stop offset="1" stop-color="#01040c"/></radialGradient>
+  <radialGradient id="violet"><stop stop-color="#9f67ff" stop-opacity=".48"/><stop offset="1" stop-color="#6c35d8" stop-opacity="0"/></radialGradient>
+  <radialGradient id="blue"><stop stop-color="#1d91ff" stop-opacity=".46"/><stop offset="1" stop-color="#145bd0" stop-opacity="0"/></radialGradient>
+  <linearGradient id="page" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#bcecff"/><stop offset=".2" stop-color="#76bce9"/><stop offset=".58" stop-color="#214d80"/><stop offset="1" stop-color="#081429"/></linearGradient>
+  <filter id="blur40"><feGaussianBlur stdDeviation="40"/></filter>
+  <filter id="blur18"><feGaussianBlur stdDeviation="18"/></filter>
+  <filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <pattern id="stars" width="160" height="120" patternUnits="userSpaceOnUse">
+    <circle cx="18" cy="23" r="1.2" fill="#dff7ff" opacity=".85"/><circle cx="71" cy="15" r=".8" fill="#b9d8ff" opacity=".7"/><circle cx="132" cy="39" r="1.5" fill="#fff" opacity=".9"/><circle cx="40" cy="88" r=".7" fill="#fff" opacity=".65"/><circle cx="109" cy="96" r="1.1" fill="#8bd8ff" opacity=".82"/><circle cx="150" cy="109" r=".7" fill="#d8c4ff" opacity=".65"/>
+  </pattern>
+</defs>
+<rect width="1600" height="1000" fill="url(#space)"/>
+<rect width="1600" height="1000" fill="url(#stars)" opacity=".95"/>
+<ellipse cx="290" cy="240" rx="330" ry="230" fill="url(#violet)" filter="url(#blur40)"/>
+<ellipse cx="1180" cy="470" rx="420" ry="260" fill="url(#blue)" filter="url(#blur40)"/>
+<g opacity=".8" transform="translate(245 185) rotate(-18)"><ellipse rx="195" ry="78" fill="none" stroke="#b575ff" stroke-width="16" opacity=".28"/><ellipse rx="135" ry="52" fill="none" stroke="#eef5ff" stroke-width="8" opacity=".4"/><ellipse rx="75" ry="28" fill="#f8eaff" opacity=".38" filter="url(#blur18)"/><circle r="11" fill="#fff7ff" filter="url(#glow)"/></g>
+<g transform="translate(1040 145)"><circle r="150" fill="url(#sun)" filter="url(#blur18)"/><circle r="43" fill="#fff6c9" filter="url(#glow)"/><g stroke="#ffd36f" stroke-width="4" opacity=".55"><path d="M0-120V-210M0 120v90M-120 0h-90M120 0h90M-84-84l-66-66M84 84l66 66M84-84l66-66M-84 84l-66 66"/></g></g>
+<g transform="translate(1360 330)"><circle r="190" fill="url(#planet)"/><circle r="193" fill="none" stroke="#69dfff" stroke-width="6" opacity=".7" filter="url(#glow)"/><path d="M-150-45c90-55 175-35 290 10M-135 30c80 45 165 40 275 8M-100 95c70 20 115 20 190 0" fill="none" stroke="#51aef0" stroke-width="14" opacity=".18"/><circle cx="-105" cy="145" r="32" fill="#0a2149" stroke="#4faadf" stroke-width="2" opacity=".8"/></g>
+<g fill="#fff" filter="url(#glow)"><circle cx="460" cy="195" r="2.8"/><circle cx="610" cy="295" r="2.3"/><circle cx="785" cy="170" r="2.6"/><circle cx="940" cy="320" r="2.1"/><circle cx="1215" cy="175" r="2.5"/><circle cx="330" cy="420" r="2.1"/><circle cx="1110" cy="470" r="2.3"/></g>
+<g opacity=".45" filter="url(#blur18)"><path d="M0 650C260 520 420 630 600 560S910 450 1090 555s300 40 510-55v300H0z" fill="#102758"/><path d="M0 760c210-100 380-70 540-30s340-35 500-10 330 90 560-20v300H0z" fill="#25194d"/></g>
+<g transform="translate(800 835)"><ellipse rx="520" ry="90" fill="#00030a" opacity=".75"/><path d="M0-118C-122-166-303-161-500-92l18 186C-295 39-136 38 0 92Z" fill="url(#page)" stroke="#6bcfff" stroke-opacity=".58" stroke-width="3"/><path d="M0-118C122-166 303-161 500-92l-18 186C295 39 136 38 0 92Z" fill="url(#page)" stroke="#6bcfff" stroke-opacity=".58" stroke-width="3"/><path d="M0-112V88" stroke="#e3fbff" stroke-width="5" opacity=".8" filter="url(#glow)"/><path d="M-455-70c165-46 306-39 429 0M-445-33c160-39 300-32 417 4M-433 4c152-31 286-24 403 8M455-70c-165-46-306-39-429 0M445-33c-160-39-300-32-417 4M433 4c-152-31-286-24-403 8" fill="none" stroke="#c4ecff" stroke-width="3" opacity=".22"/><ellipse cy="-106" rx="120" ry="45" fill="#6ce2ff" opacity=".22" filter="url(#blur18)"/></g>
+<rect width="1600" height="1000" fill="url(#stars)" opacity=".28"/>
+</svg>
