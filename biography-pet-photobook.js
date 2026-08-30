@@ -43,7 +43,7 @@
     .pet-photo-label{position:static;display:block;box-sizing:border-box;width:100%;padding:8px 10px;border:0;border-top:1px solid rgba(112,169,255,.25);border-radius:0;background:#081525;color:#fff;font-size:.8rem;font-weight:900;text-align:center;pointer-events:none}
     .pet-loading{padding:28px;text-align:center;color:#aebed3}
     .pet-lightbox-live{position:fixed;inset:0;z-index:1000000;display:none;place-items:center;padding:20px;background:rgba(0,0,0,.93)}
-    .pet-lightbox-live.open{display:grid}.pet-lightbox-live img{display:block;width:auto;max-width:min(92vw,640px);max-height:82vh;border-radius:16px;background:#06101c;image-rendering:auto}
+    .pet-lightbox-live.open{display:grid}.pet-lightbox-live img{display:block;width:auto;max-width:min(92vw,520px);max-height:78vh;border-radius:16px;background:#06101c;image-rendering:auto}.pet-lightbox-tools{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px}.pet-fullscreen{padding:9px 13px;border:1px solid rgba(114,207,255,.55);border-radius:999px;background:#0b2840;color:#e8f7ff;font:800 .78rem/1 Inter,system-ui,sans-serif;cursor:pointer}.pet-lightbox-live img:fullscreen{width:100vw;height:100vh;max-width:none;max-height:none;object-fit:contain;border-radius:0;background:#000}
     .pet-lightbox-caption{margin-top:10px;text-align:center;color:#fff;font-weight:900}.pet-close{position:fixed;right:18px;top:18px;width:44px;height:44px;border:1px solid #777;border-radius:50%;background:#07101d;color:#fff;font-size:1.4rem;cursor:pointer}
     @media(max-width:820px){.hero-grid > div:first-child{order:1}.portrait-wrap{order:2}.hero::before{left:52%!important;right:auto!important}}
     @media(max-width:520px){#pet-photobook{padding:20px 15px}.pet-gallery-live{grid-template-columns:repeat(2,minmax(0,140px));justify-content:center}}
@@ -129,9 +129,14 @@
 
   const lightbox = document.createElement('div');
   lightbox.className = 'pet-lightbox-live';
-  lightbox.innerHTML = '<button class="pet-close" type="button" aria-label="Close photo">×</button><div><img alt=""><div class="pet-lightbox-caption"></div></div>';
+  lightbox.innerHTML = '<button class="pet-close" type="button" aria-label="Close photo">×</button><div><img alt=""><div class="pet-lightbox-tools"><div class="pet-lightbox-caption"></div><button class="pet-fullscreen" type="button">⛶ View full screen</button></div></div>';
   document.body.appendChild(lightbox);
   const closeLightbox = () => lightbox.classList.remove('open');
+  lightbox.querySelector('.pet-fullscreen').addEventListener('click',()=>{
+    const image=lightbox.querySelector('img');
+    if(image.requestFullscreen)image.requestFullscreen();
+    else if(image.webkitRequestFullscreen)image.webkitRequestFullscreen();
+  });
   lightbox.addEventListener('click', event => { if (event.target === lightbox || event.target.classList.contains('pet-close')) closeLightbox(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') closeLightbox(); });
 
