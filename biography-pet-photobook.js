@@ -123,9 +123,9 @@
         '/images/pets/zoey/20171122_131705.webp',
         '/images/pets/zoey/20190221_192447.webp',
         '/images/pets/zoey/20190429_122827.webp',
-        '/images/pets/zoey/20190710_125746.webp',
+        '/images/pets/zoey/20190710_125746.webp?v=20260830f',
         '/images/pets/zoey/20230418_094820.webp',
-        '/images/pets/zoey/20240217_151209.webp',
+        '/images/pets/zoey/20240217_151209.webp?v=20260830f',
         '/images/pets/zoey/20240601_173132.webp',
         '/images/pets/zoey/30ec86c4-3d81-44f0-a885-e5ac7d19c5d1.webp',
         '/images/pets/zoey/fullsize-r1.webp',
@@ -141,9 +141,9 @@
       };
       albums.duke.photos = uniquePhotos([
         '/images/pets/duke-adoption-day.jpg?v=20260830d',
-        '/images/pets/duke/20230304_111625.webp',
+        '/images/pets/duke/20230304_111625.webp?v=20260830f',
         '/images/pets/duke/20240207_133713.webp',
-        '/images/pets/duke/20240217_151034.webp',
+        '/images/pets/duke/20240217_151034.webp?v=20260830f',
         '/images/pets/duke/20250131_194501.webp',
         '/images/pets/duke/IMG_20230307_091528.webp',
         '/images/pets/duke/night-watch.webp'
