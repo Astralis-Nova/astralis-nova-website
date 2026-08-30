@@ -1,5 +1,10 @@
 (() => {
   "use strict";
+  const topicExpansion=document.createElement('script');
+  topicExpansion.src='scripture-nexus-topic-expansion.js?v=20260830a';
+  topicExpansion.defer=true;
+  document.head.appendChild(topicExpansion);
+
   const smart=document.createElement('script');
   smart.src='scripture-nexus-smart-search.js?v=20260830a';
   smart.defer=true;
