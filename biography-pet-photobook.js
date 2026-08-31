@@ -137,7 +137,7 @@
         name: 'Zoey & Pepper',
         aka: 'best friends · one shared story',
         description: 'Zoey and Pepper shared their days, their patio adventures, and a special place in the family story. Their memories now live together in one album.',
-        photos: uniquePhotos([...albums.zoey.photos, ...albums.pepper.photos])
+        photos: uniquePhotos(albums.zoey.photos)
       };
       albums.duke.photos = uniquePhotos([
         '/images/pets/duke-adoption-day.jpg?v=20260830d',
