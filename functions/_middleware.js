@@ -48,7 +48,7 @@ export async function onRequest(context) {
   if (isBiography) {
     rewriter.on("body", {
       element(element) {
-        element.append('<script src="/biography-pet-photobook.js?v=20260830f" defer></script>', { html: true });
+        element.append('<script src="/biography-pet-photobook.js?v=20260831a" defer></script>', { html: true });
       },
     });
   }
