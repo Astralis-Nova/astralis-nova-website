@@ -63,7 +63,7 @@ var render=function(){
 };
 var load=function(){
  status.textContent='Scanning community portals…';document.getElementById('refresh').disabled=true;
- fetch('/api/ac-worlds',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
+ fetch('/api/ac-worlds?v=20260831a',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
   state.worlds=Array.isArray(data.worlds)?data.worlds:[];
   document.getElementById('totalWorlds').textContent=state.worlds.length;
   document.getElementById('onlineWorlds').textContent=state.worlds.filter(function(w){return w.status==='Online'}).length;
