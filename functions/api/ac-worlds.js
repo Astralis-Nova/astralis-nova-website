@@ -36,6 +36,24 @@ const inferRuleset=(name,description)=>{
   if((pvp&&pve)||/hybrid|pk option|pvp\/pve/.test(text))return "Hybrid";
   return pvp?"PvP":"PvE";
 };
+const extractFeatures=(name,description)=>{
+  const text=`${name} ${description}`.toLowerCase();
+  const rules=[
+    [/custom|modded|unique/,"Custom content"],
+    [/quest|story arc|lore/,"Quests & lore"],
+    [/loot|rare system|treasure/,"Custom loot"],
+    [/craft|recipe/,"Expanded crafting"],
+    [/live event|events/,"Live events"],
+    [/hardcore|permadeath/,"Hardcore"],
+    [/dark majesty|classic|era|pre[- ]?tod/,"Classic-era"],
+    [/quality of life|\\bqol\\b|easy mode/,"Quality-of-life"],
+    [/level [2-9][0-9]{2,}|level 1000|extended progression|infinite progression/,"Extended progression"],
+    [/\\bpvp\\b|\\bpk\\b|darktide|snowreap|ebontide|doctide|achard/,"PvP / PK"],
+    [/bot|macro|account limit/,"Automation rules"],
+    [/new skill|class abilities|template/,"Build variety"]
+  ];
+  return rules.filter(rule=>rule[0].test(text)).map(rule=>rule[1]).slice(0,6);
+};
 const normalizeStatusRows=data=>{
   const rows=Array.isArray(data)?data:(data?.servers||data?.data||data?.results||[]);
   const map=new Map();
@@ -94,6 +112,7 @@ export async function onRequestGet(){
     return {
       name,
       description,
+      features:extractFeatures(name,description),
       emulator:cleanName(server.software||server.emu||"Unknown").toUpperCase(),
       ruleset:(()=>{const inferred=inferRuleset(name,description);const declared=cleanName(server.type);return /^(Hybrid|Hardcore)$/i.test(inferred)?inferred:/^PvP$/i.test(declared)?"PvP":/^PvE$/i.test(declared)?"PvE":inferred})(),
       status,
