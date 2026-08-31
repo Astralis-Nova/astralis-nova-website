@@ -42,13 +42,13 @@ const normalizeStatusRows=data=>{
   for(const row of rows){
     const name=cleanName(row.name||row.server||row.server_name);
     if(!name)continue;
-    const raw=row.online??row.is_online??row.status??row.current_status;
+    const raw=row.status?.online??row.online??row.is_online??row.status??row.current_status;
     const online=typeof raw==="boolean"?raw:/^(online|up|true|1)$/i.test(String(raw||""));
     const offline=/^(offline|down|false|0)$/i.test(String(raw||""));
     map.set(key(name),{
       status:online?"Online":offline?"Offline":"Unknown",
       uptime:Number(row.uptime_percent??row.uptime??row.availability),
-      checkedAt:asDate(row.checked_at||row.last_checked||row.updated_at)
+      checkedAt:asDate(row.status?.last_checked||row.checked_at||row.last_checked||row.updated_at)
     });
   }
   return map;
@@ -94,15 +94,15 @@ export async function onRequestGet(){
     return {
       name,
       description,
-      emulator:cleanName(server.type||server.emu||server.software||"Unknown").toUpperCase(),
-      ruleset:inferRuleset(name,description),
+      emulator:cleanName(server.software||server.emu||"Unknown").toUpperCase(),
+      ruleset:(()=>{const inferred=inferRuleset(name,description);const declared=cleanName(server.type);return /^(Hybrid|Hardcore)$/i.test(inferred)?inferred:/^PvP$/i.test(declared)?"PvP":/^PvE$/i.test(declared)?"PvE":inferred})(),
       status,
       characters:count.count,
       countUpdatedAt:count.updatedAt,
       countAge:count.age,
       uptime:Number.isFinite(monitored?.uptime)?monitored.uptime:null,
       checkedAt:monitored?.checkedAt||null,
-      address:cleanName(server.address||[server.server_host,server.server_port].filter(Boolean).join(":")),
+      address:cleanName(typeof server.address==="string"?server.address:[server.host||server.server_host,server.port||server.server_port].filter(Boolean).join(":")),
       website:safeUrl(server.website||server.website_url),
       discord:safeUrl(server.discord||server.discord_url),
       details:`https://treestats.net/${encodeURIComponent(name)}`
