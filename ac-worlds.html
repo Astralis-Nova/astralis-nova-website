@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="AC Worlds: a live community directory of Asheron's Call emulator servers, rulesets, status, character counts, connection details, and community links.">
+<title>AC Worlds | Astralis Nova</title>
+<style>
+:root{--bg:#030711;--panel:rgba(8,17,31,.9);--panel2:rgba(12,25,43,.92);--line:rgba(91,160,224,.34);--text:#f4f8ff;--muted:#aebdd0;--cyan:#69d8ff;--gold:#f6c667;--red:#ff7b7b;--green:#64e5a7;--purple:#c596ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#030711 url("/page-background.webp") center top/cover fixed no-repeat}body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(2,6,14,.72),rgba(2,6,14,.94)),radial-gradient(circle at 75% 18%,rgba(41,117,194,.18),transparent 34rem)}a{color:inherit}.shell{width:min(1240px,calc(100% - 28px));margin:auto}.topbar{position:sticky;top:0;z-index:30;background:rgba(2,6,13,.88);border-bottom:1px solid rgba(103,167,221,.25);backdrop-filter:blur(14px)}.topbar .shell{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{text-decoration:none;font-weight:950;letter-spacing:.12em}.brand small{display:block;color:var(--cyan);font-size:.62rem;letter-spacing:.15em}.nav{display:flex;gap:8px;flex-wrap:wrap}.nav a{text-decoration:none;padding:8px 11px;border-radius:999px;color:#d8e4f2;font-size:.8rem}.hero{padding:52px 0 24px;display:grid;grid-template-columns:1.25fr .75fr;gap:26px;align-items:end}.eyebrow{margin:0;color:var(--cyan);font-size:.72rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase}.hero h1{margin:8px 0 12px;font-size:clamp(3.3rem,8vw,7rem);line-height:.85;letter-spacing:-.055em}.hero p{max-width:760px;margin:0;color:#c5d1e0;line-height:1.7}.hero-note{border:1px solid rgba(246,198,103,.36);border-radius:18px;padding:19px;background:rgba(31,24,11,.55);color:#e9dec3;line-height:1.55}.hero-note strong{display:block;color:var(--gold);margin-bottom:6px}.dashboard{padding:18px 0 54px}.toolbar{position:sticky;top:68px;z-index:20;padding:17px;border:1px solid var(--line);border-radius:18px;background:rgba(5,13,25,.94);backdrop-filter:blur(14px);box-shadow:0 18px 48px rgba(0,0,0,.32)}.search-row{display:grid;grid-template-columns:minmax(220px,1fr) 180px 180px;gap:10px}.search-row input,.search-row select{width:100%;border:1px solid rgba(118,173,224,.34);border-radius:12px;background:#081525;color:#edf6ff;padding:12px 13px;font:inherit}.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.filter{border:1px solid rgba(110,168,220,.32);border-radius:999px;background:rgba(16,33,54,.72);color:#d9e7f4;padding:8px 12px;font-weight:850;cursor:pointer}.filter.active{border-color:var(--cyan);background:rgba(53,154,196,.22);color:#bceeff}.summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}.stat{border:1px solid var(--line);border-radius:15px;padding:15px;background:var(--panel)}.stat strong{display:block;font-size:1.55rem;color:#fff}.stat span{color:var(--muted);font-size:.78rem}.statusline{display:flex;justify-content:space-between;gap:16px;align-items:center;margin:18px 2px 12px;color:#aebed0;font-size:.84rem}.statusline button{border:1px solid rgba(105,216,255,.42);border-radius:999px;background:rgba(28,87,111,.25);color:#c8f3ff;padding:8px 12px;font-weight:800;cursor:pointer}.world-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.world{position:relative;border:1px solid var(--line);border-radius:18px;background:linear-gradient(150deg,var(--panel2),rgba(5,11,21,.96));padding:18px;min-height:285px;display:flex;flex-direction:column;box-shadow:0 16px 40px rgba(0,0,0,.22)}.world:hover{border-color:rgba(105,216,255,.68);transform:translateY(-2px)}.world-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.world h2{margin:0;font-size:1.25rem}.population{text-align:right;flex:0 0 auto}.population strong{display:block;font-size:1.45rem;color:var(--gold)}.population span{color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em}.chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.chip{padding:5px 8px;border:1px solid rgba(111,170,221,.32);border-radius:999px;color:#c9d8e7;font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:.05em}.chip.pvp{border-color:rgba(255,123,123,.48);color:#ffb0a9}.chip.pve{border-color:rgba(100,229,167,.38);color:#9cf0c6}.chip.hybrid,.chip.hardcore{border-color:rgba(197,150,255,.48);color:#ddbaff}.state{display:inline-flex;align-items:center;gap:6px}.state:before{content:"";width:7px;height:7px;border-radius:50%;background:#789}.state.online:before{background:var(--green);box-shadow:0 0 8px rgba(100,229,167,.7)}.state.offline:before{background:var(--red)}.world-copy{color:#b8c5d4;line-height:1.55;font-size:.88rem;flex:1}.connect{margin-top:12px;padding:10px 11px;border-radius:10px;background:rgba(2,8,16,.72);border:1px solid rgba(94,142,190,.24);font-family:ui-monospace,Consolas,monospace;font-size:.78rem;color:#cce7ff;overflow-wrap:anywhere}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.actions a,.actions button{border:1px solid rgba(105,216,255,.32);border-radius:9px;background:rgba(17,49,70,.48);color:#d9f6ff;padding:8px 10px;text-decoration:none;font-size:.73rem;font-weight:850;cursor:pointer}.freshness{margin-top:10px;color:#8295aa;font-size:.69rem}.empty{grid-column:1/-1;border:1px dashed rgba(111,170,221,.4);border-radius:18px;padding:34px;text-align:center;color:#b8c7d8}.explain{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:14px}.info{padding:21px;border:1px solid var(--line);border-radius:18px;background:var(--panel)}.info h2{margin:0 0 8px}.info p,.info li{color:#b9c7d6;line-height:1.65}.footer{padding:28px 0 42px;text-align:center;color:#7f91a5;border-top:1px solid rgba(97,153,204,.18);background:rgba(2,6,13,.72)}@media(max-width:980px){.world-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.nav{display:none}.hero{padding-top:38px}.search-row{grid-template-columns:1fr}.toolbar{position:relative;top:auto}.world-grid,.explain{grid-template-columns:1fr}.world{min-height:0}.statusline{align-items:flex-start;flex-direction:column}body{background-attachment:scroll}}@media(max-width:430px){.summary{grid-template-columns:1fr 1fr}.hero h1{font-size:3.4rem}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>AC WORLDS</small></a><nav class="nav"><a href="#directory">Worlds</a><a href="#about">About the data</a><a href="/conquest.html">Conquest archive</a><a href="/">Home</a></nav></div></header>
+<main>
+<section class="hero shell"><div><p class="eyebrow">Dereth Server Nexus</p><h1>AC<br>Worlds</h1><p>A community directory for active Asheron’s Call emulator worlds—PvE, PvP, hybrid, hardcore, ACE and GDLE. Search the worlds, compare recent character activity, and find the right portal home.</p></div><aside class="hero-note"><strong>Character count ≠ human count</strong>Population figures may include bots, macros and several accounts controlled by one person. AC Worlds reports connected characters and always shows how fresh the reading is.</aside></section>
+<section class="dashboard shell" id="directory">
+<div class="toolbar">
+<div class="search-row"><label><span class="eyebrow">Search worlds</span><input id="search" type="search" placeholder="Server name, feature or address…" autocomplete="off"></label><label><span class="eyebrow">Emulator</span><select id="emulator"><option value="all">All emulators</option><option>ACE</option><option>GDLE</option><option>GDL</option></select></label><label><span class="eyebrow">Sort</span><select id="sort"><option value="population">Character activity</option><option value="status">Online status</option><option value="name">World name</option></select></label></div>
+<div class="filter-row" aria-label="Ruleset filters"><button class="filter active" data-ruleset="all">All</button><button class="filter" data-ruleset="PvE">PvE</button><button class="filter" data-ruleset="PvP">PvP</button><button class="filter" data-ruleset="Hybrid">Hybrid</button><button class="filter" data-ruleset="Hardcore">Hardcore</button><button class="filter" data-ruleset="online">Online now</button></div>
+</div>
+<div class="summary"><div class="stat"><strong id="totalWorlds">—</strong><span>Worlds listed</span></div><div class="stat"><strong id="onlineWorlds">—</strong><span>Reported online</span></div><div class="stat"><strong id="pvpWorlds">—</strong><span>PvP / hybrid worlds</span></div><div class="stat"><strong id="visibleCharacters">—</strong><span>Recent characters shown</span></div></div>
+<div class="statusline"><span id="dataStatus" role="status">Opening portals to the community directory…</span><button id="refresh" type="button">↻ Refresh data</button></div>
+<div class="world-grid" id="worldGrid" aria-live="polite"><div class="empty">Loading active emulator worlds…</div></div>
+<div class="explain" id="about"><article class="info"><h2>How the readings work</h2><p>Server details come from the community-maintained AC server list and TreeStats. Recent character reports are not guaranteed to represent unique people. A stale reading remains visibly marked instead of pretending to be live.</p><ul><li><strong>Online:</strong> confirmed by the monitor or supported by a recent report.</li><li><strong>Unknown:</strong> no dependable recent status.</li><li><strong>Offline:</strong> explicitly reported down by the status source.</li></ul></article><article class="info"><h2>Community-powered Dereth</h2><p>These worlds are independently operated community servers. Astralis Nova does not own, rank or officially endorse them. Always read a server’s rules and community information before connecting.</p><p><a href="https://emulator.ac/" target="_blank" rel="noopener">ACEmulator project</a> · <a href="https://github.com/acresources/serverslist/" target="_blank" rel="noopener">Community server list</a> · <a href="https://treestats.net/servers" target="_blank" rel="noopener">TreeStats directory</a></p></article></div>
+</section>
+</main>
+<footer class="footer"><div class="shell">Astralis Nova • AC Worlds • The portals remain open.</div></footer>
+<script>
+(function(){
+'use strict';
+var state={worlds:[],ruleset:'all'};
+var grid=document.getElementById('worldGrid'),search=document.getElementById('search'),emulator=document.getElementById('emulator'),sort=document.getElementById('sort'),status=document.getElementById('dataStatus');
+var esc=function(value){return String(value==null?'':value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})};
+var safe=function(value){try{var u=new URL(String(value));return /^https?:$/.test(u.protocol)?u.href:''}catch(e){return ''}};
+var age=function(date){if(!date)return 'No recent character report';var ms=Date.now()-Date.parse(date),mins=Math.max(0,Math.round(ms/60000));if(mins<60)return mins+' min ago';var hours=Math.round(mins/60);if(hours<48)return hours+' hr ago';return Math.round(hours/24)+' days ago'};
+var statusRank=function(value){return value==='Online'?0:value==='Unknown'?1:2};
+var render=function(){
+ var q=search.value.trim().toLowerCase(),emu=emulator.value;
+ var rows=state.worlds.filter(function(w){
+  var text=[w.name,w.description,w.address,w.ruleset,w.emulator].join(' ').toLowerCase();
+  var rules=state.ruleset==='all'||(state.ruleset==='online'?w.status==='Online':w.ruleset===state.ruleset);
+  return rules&&(emu==='all'||w.emulator===emu)&&(!q||text.indexOf(q)>=0);
+ });
+ rows.sort(function(a,b){
+  if(sort.value==='name')return a.name.localeCompare(b.name);
+  if(sort.value==='status')return statusRank(a.status)-statusRank(b.status)||(b.characters||0)-(a.characters||0);
+  return (b.characters==null?-1:b.characters)-(a.characters==null?-1:a.characters)||a.name.localeCompare(b.name);
+ });
+ document.getElementById('visibleCharacters').textContent=rows.reduce(function(sum,w){return sum+(Number.isFinite(w.characters)?w.characters:0)},0).toLocaleString();
+ if(!rows.length){grid.innerHTML='<div class="empty">No worlds match those filters. Try opening the portal parameters a little wider.</div>';return}
+ grid.innerHTML=rows.map(function(w){
+  var cls=String(w.ruleset||'').toLowerCase(),pop=Number.isFinite(w.characters)?w.characters.toLocaleString():'—';
+  var links='';
+  if(safe(w.website))links+='<a href="'+esc(safe(w.website))+'" target="_blank" rel="noopener">Website</a>';
+  if(safe(w.discord))links+='<a href="'+esc(safe(w.discord))+'" target="_blank" rel="noopener">Discord</a>';
+  if(safe(w.details))links+='<a href="'+esc(safe(w.details))+'" target="_blank" rel="noopener">TreeStats</a>';
+  var address=w.address?'<div class="connect">'+esc(w.address)+'</div>':'';
+  var copy=w.address?'<button type="button" data-copy="'+esc(w.address)+'">Copy address</button>':'';
+  return '<article class="world"><div class="world-head"><div><h2>'+esc(w.name)+'</h2><div class="chips"><span class="chip '+esc(cls)+'">'+esc(w.ruleset)+'</span><span class="chip">'+esc(w.emulator)+'</span><span class="chip state '+esc(String(w.status).toLowerCase())+'">'+esc(w.status)+'</span></div></div><div class="population"><strong>'+pop+'</strong><span>characters</span></div></div><p class="world-copy">'+esc(w.description||'Community emulator world.')+'</p>'+address+'<div class="actions">'+copy+links+'</div><div class="freshness">Population report: '+esc(age(w.countUpdatedAt))+(Number.isFinite(w.uptime)?' · Uptime '+esc(w.uptime.toFixed(1))+'%':'')+'</div></article>';
+ }).join('');
+ grid.querySelectorAll('[data-copy]').forEach(function(button){button.addEventListener('click',function(){navigator.clipboard.writeText(button.dataset.copy).then(function(){var old=button.textContent;button.textContent='Copied';setTimeout(function(){button.textContent=old},1400)})})});
+};
+var load=function(){
+ status.textContent='Scanning community portals…';document.getElementById('refresh').disabled=true;
+ fetch('/api/ac-worlds',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
+  state.worlds=Array.isArray(data.worlds)?data.worlds:[];
+  document.getElementById('totalWorlds').textContent=state.worlds.length;
+  document.getElementById('onlineWorlds').textContent=state.worlds.filter(function(w){return w.status==='Online'}).length;
+  document.getElementById('pvpWorlds').textContent=state.worlds.filter(function(w){return w.ruleset==='PvP'||w.ruleset==='Hybrid'}).length;
+  status.textContent='Community data refreshed '+new Date(data.generatedAt).toLocaleString()+'. Counts are connected characters, not unique people.';
+  render();
+ }).catch(function(error){status.textContent=error.message+'. Use the source links below while the signal reconnects.';grid.innerHTML='<div class="empty">The live directory signal is temporarily unavailable. No population figures have been guessed.</div>'}).finally(function(){document.getElementById('refresh').disabled=false});
+};
+search.addEventListener('input',render);emulator.addEventListener('change',render);sort.addEventListener('change',render);
+document.querySelectorAll('.filter').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.filter').forEach(function(b){b.classList.remove('active')});button.classList.add('active');state.ruleset=button.dataset.ruleset;render()})});
+document.getElementById('refresh').addEventListener('click',load);load();
+})();
+</script>
+</body>
+</html>
