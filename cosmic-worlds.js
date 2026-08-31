@@ -3,13 +3,13 @@
 
   const CONNECTED_WORLDS = [
     {
-      id: "conquest",
-      href: "/conquest.html",
-      ariaLabel: "Visit the Conquest Asheron's Call world",
+      id: "ac-worlds",
+      href: "/ac-worlds.html",
+      ariaLabel: "Open the AC Worlds emulator server directory",
       planetClass: "planet-conquest ringed",
-      title: "Conquest",
-      description: "Asheron’s Call ACE server information, Discord, connection address, and live-status links.",
-      badge: "Game World"
+      title: "AC Worlds",
+      description: "Explore active Asheron’s Call emulator worlds, PvE and PvP rulesets, character activity, status, and community links.",
+      badge: "Dereth Server Nexus"
     },
     {
       id: "acemulator",
