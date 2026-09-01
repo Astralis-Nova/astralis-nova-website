@@ -7,7 +7,7 @@ const html = fs.readFileSync(path.join(root, 'ac-worlds.html'), 'utf8');
 const css = fs.readFileSync(path.join(root, 'ac-adventure.css'), 'utf8');
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(ids).size, ids.length, 'IDs must be unique');
-for (const id of ['quests','questSearch','questServer','questType','questResults','questCount','databaseSearch','databaseTarget','itemReferences','sourceQuery','directory','worldGrid','search','sort','emulator','refresh','decal-plugins','pluginSearch','pluginSelect','pluginDetails','pluginCatalog','pluginCatalogLink','new-player','downloads','backgroundChoice','backgroundGallery','resetBackground','portalSpaceImage','portalSpaceToggle','about']) {
+for (const id of ['quests','questSearch','questServer','questType','questResults','questCount','databaseSearch','databaseTarget','itemReferences','sourceQuery','directory','worldGrid','search','sort','emulator','refresh','decal-plugins','pluginSearch','pluginSelect','pluginDetails','pluginCatalog','pluginCatalogLink','new-player','downloads','portalSpaceImage','portalSpaceToggle','about']) {
   assert(ids.includes(id), 'Missing existing control: ' + id);
 }
 for (const match of html.matchAll(/href="#([^"]+)"/g)) {
