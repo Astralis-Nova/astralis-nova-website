@@ -1,0 +1,15 @@
+.ac-jukebox{margin:0 auto 24px;padding:18px 22px;border:1px solid #ac88d05c;border-radius:12px;background:linear-gradient(115deg,#151226ed,#07121aed);box-shadow:0 8px 28px #0005;color:#f4eada}
+.ac-jukebox-grid{display:grid;grid-template-columns:70px minmax(160px,.8fr) minmax(240px,1.2fr);gap:18px;align-items:center}
+.ac-jukebox-art{width:70px;height:88px;object-fit:cover;border-radius:8px;mask-image:radial-gradient(ellipse,#000 40%,transparent 75%)}
+.ac-jukebox h2{font-family:'Cinzel',Georgia,serif;font-size:1.3rem;margin:4px 0 6px;color:#edd19b}
+.ac-jukebox p{font-size:.875rem;margin:4px 0;color:#c7bfd7;line-height:1.5}
+.ac-jukebox label{display:block;font-size:.875rem;margin-bottom:5px;color:#e3d6f2}
+.ac-jukebox select{width:100%;padding:9px 12px;min-height:44px;border:1px solid #a492b8;background:#0c1422;color:#fff;border-radius:6px;font:inherit}
+.ac-jukebox audio{display:block;width:100%;height:40px;margin-top:10px;color-scheme:dark}
+.ac-jukebox-buttons{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:9px}
+.ac-jukebox button,.ac-jukebox-buttons a{font:inherit;font-size:.875rem;min-height:44px;padding:8px 11px;border:1px solid #a492b870;border-radius:6px;background:#271c354f;color:#eaddf8;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer}
+.ac-jukebox button:hover,.ac-jukebox-buttons a:hover{background:#49315f75;border-color:#d6bdec}
+.ac-jukebox :focus-visible{outline:2px solid #f3cf88;outline-offset:4px}
+.ac-jukebox [hidden]{display:none}
+.ac-jukebox #acJukeboxStatus{min-height:1.5em}
+@media(max-width:700px){.ac-jukebox{padding:16px}.ac-jukebox-grid{grid-template-columns:54px minmax(0,1fr);gap:12px}.ac-jukebox-art{width:54px;height:70px}.ac-jukebox-player{grid-column:1/-1}}

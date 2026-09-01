@@ -56,11 +56,22 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 </style>
 <link rel="stylesheet" href="/ac-adventure.css?v=20260901resources">
 <link rel="stylesheet" href="/ac-community.css?v=20260901a">
+<link rel="stylesheet" href="/ac-jukebox.css?v=20260901a">
 </head>
 <body>
 <header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>AC WORLDS</small></a><nav class="nav"><a href="#quests">Quest search</a><a href="#downloads">Download files</a><a href="#new-player">Install guide</a><a href="#directory">Worlds</a><a href="#about">About the data</a><a href="/conquest.html">Conquest archive</a><a href="/">Home</a></nav></div></header>
 <main>
 <section class="hero shell"><div><p class="eyebrow">Asheron’s Call · The portals remain open</p><h1 id="acWorldsTitle">AC<br>Worlds</h1><p>Find your world. Rediscover a quest. Step back into Dereth.</p><a class="hero-search-link" href="#quests">Find an item or quest <span aria-hidden="true">↗</span></a></div><figure class="portal-art"><img id="portalSpaceImage" class="portal-space-image" src="/assets/ac-portals/portal-space-still.webp" width="320" height="180" alt="Asheron’s Call portal space: a dark blue-gray rippling tunnel stretching into the distance"><button type="button" id="portalSpaceToggle" aria-controls="portalSpaceImage acWorldsTitle" aria-label="Play title and portal animation" data-playing="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="portal-play-icon" d="M7 4v16l13-8z"/><path class="portal-pause-icon" d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg></button></figure></section>
+<section class="ac-jukebox shell" id="ac-jukebox" aria-labelledby="acJukeboxTitle">
+<div class="ac-jukebox-grid">
+<img class="ac-jukebox-art" src="/assets/ac-portals/portal-gateway.jpg" width="70" height="88" alt="" decoding="async">
+<div><p>Music from Astralis Nova</p><h2 id="acJukeboxTitle">Sounds of Dereth</h2><p id="acJukeboxNow">Darktide Megamix</p><p id="acJukeboxStatus" role="status">Ready when you are. Press play.</p></div>
+<div class="ac-jukebox-player">
+<div id="acJukeboxEnhanced" hidden><label for="acJukeboxTrack">Asheron’s Call jukebox</label><select id="acJukeboxTrack"><option value="darktide-megamix" data-src="/Audio/Darktide-Megamix.mp3">Darktide Megamix</option><option value="darktide" data-src="/Audio/mp3/Darktide.mp3">Darktide</option><option value="logged-back-in" data-src="/Audio/mp3/Logged%20Back%20In.mp3">Logged Back In</option></select><div class="ac-jukebox-buttons"><button type="button" id="acJukeboxPrevious" aria-label="Play previous song">← Previous</button><button type="button" id="acJukeboxNext" aria-label="Play next song">Next →</button><button type="button" id="acJukeboxShare">Copy song link</button></div></div>
+<audio id="acJukeboxAudio" aria-label="Asheron’s Call music player" controls preload="none" src="/Audio/Darktide-Megamix.mp3">Your browser does not support audio playback.</audio>
+<noscript><p>More songs: <a href="/Audio/mp3/Darktide.mp3">Darktide</a> · <a href="/Audio/mp3/Logged%20Back%20In.mp3">Logged Back In</a></p></noscript>
+</div></div>
+</section>
 <nav class="adventure-paths shell" aria-label="Explore AC Worlds">
 <a class="adventure-path" href="#quests"><img src="/assets/ac-portals/armor-concept.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Items &amp; quests</strong><span>Find your next reward</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
 <a class="adventure-path" href="#directory"><img src="/assets/ac-portals/sho-roadside.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Choose a world</strong><span>PvE, PvP &amp; custom realms</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
@@ -393,5 +404,6 @@ list();
 <script src="/ac-background-gallery.js?v=20260901a"></script>
 <script src="/ac-portal-space.js?v=20260901d"></script>
 <script src="/ac-community.js?v=20260901a"></script>
+<script src="/ac-jukebox.js?v=20260901a"></script>
 </body>
 </html>
