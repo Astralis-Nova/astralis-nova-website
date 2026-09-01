@@ -122,7 +122,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 </section>
 
 <section class="dashboard shell" id="directory" aria-labelledby="worldsTitle">
-<div class="adventure-section-head"><p class="eyebrow">Find your home in Dereth</p><h2 id="worldsTitle">Choose your world</h2><p>Compare rulesets and recent activity. Character counts can include bots and multiple accounts.</p><p>Find each world’s Discord, website or wiki on its card. Directory links refresh with community listings; extra guides are curated. Discord invites can expire.</p></div>
+<div class="adventure-section-head"><p class="eyebrow">Find your home in Dereth</p><h2 id="worldsTitle">Choose your world</h2><p>Compare rulesets and recent activity. Character counts can include bots and multiple accounts.</p><p>Only checked community links are shown. Broken links and destinations we could not verify are omitted. Checks are dated, not a guarantee: websites and invites can change afterward.</p></div>
 <div class="toolbar">
 <div class="search-row"><label><span class="eyebrow">Search worlds</span><input id="search" type="search" placeholder="Server name, feature or address…" autocomplete="off"></label><label><span class="eyebrow">Emulator</span><select id="emulator"><option value="all">All emulators</option><option>ACE</option><option>GDLE</option><option>GDL</option></select></label><label><span class="eyebrow">Sort</span><select id="sort"><option value="population">Character activity</option><option value="status">Online status</option><option value="name">World name</option></select></label></div>
 <div class="filter-row" aria-label="Ruleset filters"><button class="filter active" data-ruleset="all">All</button><button class="filter" data-ruleset="PvE">PvE</button><button class="filter" data-ruleset="PvP">PvP</button><button class="filter" data-ruleset="Hybrid">Hybrid</button><button class="filter" data-ruleset="Hardcore">Hardcore</button><button class="filter" data-ruleset="online">Online now</button></div>
@@ -319,10 +319,10 @@ var render=function(){
  grid.innerHTML=rows.map(function(w){
   var cls=String(w.ruleset||'').toLowerCase(),pop=Number.isFinite(w.characters)?w.characters.toLocaleString():'—';
   var links='';
-  var resources=Array.isArray(w.resources)?w.resources:[{label:'Discord',url:w.discord},{label:'Website',url:w.website}];
+  var resources=Array.isArray(w.resources)?w.resources.filter(function(r){return r&&r.verification==='checked'&&/^\d{4}-\d{2}-\d{2}$/.test(r.checkedAt)}):[];
   var seenLinks=new Set();
-  var resourceLinks=resources.filter(function(r){var url=r&&safe(r.url);if(!url||seenLinks.has(url))return false;seenLinks.add(url);return true}).map(function(r){return '<a href="'+esc(safe(r.url))+'" target="_blank" rel="noopener noreferrer" title="'+esc(r.source||'Community listing')+'">'+esc(r.label||'Resource')+' ↗</a>'}).join('');
-  var community='<div class="world-resources"><div class="offer-label">Community &amp; resources</div>'+(resourceLinks?'<div class="actions">'+resourceLinks+'</div>':'<p class="resource-note">No public community links listed yet.</p>')+'<a class="resource-report" href="#ac-community">Suggest a link / report an expired invite</a></div>';
+  var resourceLinks=resources.filter(function(r){var url=r&&safe(r.url);if(!url||seenLinks.has(url))return false;seenLinks.add(url);return true}).map(function(r){return '<a href="'+esc(safe(r.url))+'" target="_blank" rel="noopener noreferrer" title="'+esc((r.community?r.community+' · ':'')+r.source+' · Checked '+r.checkedAt)+'">'+esc(r.label||'Resource')+' ↗</a>'}).join('');
+  var community='<div class="world-resources"><div class="offer-label">Community &amp; resources</div>'+(resourceLinks?'<div class="actions">'+resourceLinks+'</div><p class="resource-note">Links checked '+esc(resources[0].checkedAt)+'</p>':'<p class="resource-note">No verified community links available.</p>')+'<a class="resource-report" href="#ac-community">Suggest a link / report an expired invite</a></div>';
   if(safe(w.details))links+='<a href="'+esc(safe(w.details))+'" target="_blank" rel="noopener">Server profile</a>';
   var features=Array.isArray(w.features)&&w.features.length?'<div class="offer-label">What this world offers</div><div class="feature-list">'+w.features.map(function(feature){return '<span class="feature">'+esc(feature)+'</span>'}).join('')+'</div>':'';
   var address=w.address?'<div class="connect">'+esc(w.address)+'</div>':'';
@@ -333,7 +333,7 @@ var render=function(){
 };
 var load=function(){
  status.textContent='Scanning community portals…';document.getElementById('refresh').disabled=true;
- fetch('/api/ac-worlds?v=20260901resources',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
+ fetch('/api/ac-worlds?v=20260901verified',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
   state.worlds=Array.isArray(data.worlds)?data.worlds:[];
   document.getElementById('totalWorlds').textContent=state.worlds.length;
   document.getElementById('onlineWorlds').textContent=state.worlds.filter(function(w){return w.status==='Online'}).length;

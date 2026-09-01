@@ -1,4 +1,4 @@
-import { safeResourceUrl as safeUrl, worldResources } from '../../lib/ac-world-resources.js';
+import { worldResources } from '../../lib/ac-world-resources.js';
 
 const HEADERS={
   "content-type":"application/json; charset=utf-8",
@@ -102,6 +102,7 @@ export async function onRequestGet(){
       age:""
     };
     const monitored=statusMap.get(key(name));
+    const resources=worldResources(server);
     const hours=ageHours(count.updatedAt);
     let status=monitored?.status||"Unknown";
     if(status==="Unknown"&&hours!==null&&hours<=6)status="Online";
@@ -118,9 +119,9 @@ export async function onRequestGet(){
       uptime:Number.isFinite(monitored?.uptime)?monitored.uptime:null,
       checkedAt:monitored?.checkedAt||null,
       address:cleanName(typeof server.address==="string"?server.address:[server.host||server.server_host,server.port||server.server_port].filter(Boolean).join(":")),
-      website:safeUrl(server.website||server.website_url),
-      discord:safeUrl(server.discord||server.discord_url),
-      resources:worldResources(server),
+      website:resources.find(link=>link.kind==='website')?.url||'',
+      discord:resources.find(link=>link.kind==='discord')?.url||'',
+      resources,
       details:`https://treestats.net/${encodeURIComponent(name)}`
     };
   }).filter(world=>world.name).sort((a,b)=>(b.characters??-1)-(a.characters??-1)||a.name.localeCompare(b.name));
