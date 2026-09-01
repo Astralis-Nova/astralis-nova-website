@@ -1,6 +1,11 @@
 /* AC Worlds: illustrated navigation, bronze accents, readable working surfaces. */
 :root{--adventure-bronze:#a17b46;--adventure-edge:#b9935766;--adventure-ink:#080e18}
-.hero{min-height:440px;padding-top:30px;padding-bottom:26px}
+.hero{min-height:440px;padding-top:30px;padding-bottom:26px;grid-template-columns:minmax(0,1fr);overflow:clip}
+.hero-title-stage{position:relative;isolation:isolate;width:fit-content;max-width:100%}
+.hero .hero-title-stage .portal-art{position:absolute;inset:-38% -40%;width:180%;height:176%;margin:0;z-index:-1;pointer-events:none}
+.hero-title-stage .portal-space-image{width:100%;height:100%;object-fit:fill;opacity:.8}
+.hero-title-stage .portal-art button{pointer-events:auto;right:14%;bottom:25%;z-index:2;opacity:.85}
+.hero-title-stage h1{position:relative;z-index:1}
 .hero>div{min-width:0}
 .hero h1{width:fit-content;max-width:100%;font-size:clamp(3.2rem,8vw,6.5rem)}
 @supports ((background-clip:text) or (-webkit-background-clip:text)){
@@ -66,7 +71,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #ff
 .quest-examples{line-height:1.8;margin-bottom:16px}
 .quest-examples button{display:inline-block;padding:3px 2px}
 .toolbar{border-radius:8px;border-color:var(--adventure-edge)}
-.world{transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.world{isolation:isolate;overflow:hidden;padding-top:148px;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.world-art-image{position:absolute;inset:0;z-index:-2;width:100%;height:340px;object-fit:cover;object-position:center 35%;opacity:.8;pointer-events:none}
+.world[data-art-layout="banner"] .world-art-image{height:140px;object-fit:contain;object-position:center;opacity:1}
+.world[data-art-layout="logo"] .world-art-image{width:112px;height:112px;left:18px;top:12px;object-fit:contain;opacity:1}
+.world:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,#07101b05 0,#07101b25 85px,#07101bf0 205px,#07101b 340px)}
+.world-art-credit{position:absolute;top:12px;right:12px;max-width:calc(100% - 24px);font-size:.875rem;line-height:1.4;padding:5px 8px;color:#e4eaf6;background:#060d18db;border:1px solid #acbacc55;border-radius:4px;text-decoration:none}
+.world-art-credit:hover{background:#152335}
+.world .world-head{text-shadow:0 2px 5px #000}
 .world:hover{border-color:#dfb76f;box-shadow:0 0 22px #c591321f,0 10px 24px #0007}
 .stat{border-radius:6px;border-color:#95774666}.stat strong{color:#efd29e}
 .stat span,.statusline,.connect{font-size:.875rem}
