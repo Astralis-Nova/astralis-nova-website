@@ -35,14 +35,43 @@ h1,.hero h2,.guide-head h2,.quest-head h2{font-family:Georgia,'Times New Roman',
 @keyframes portal-turn{to{transform:rotate(360deg)}}@keyframes portal-breathe{to{opacity:.4;transform:scale(.96)}}
 @media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:32px;gap:15px}.portal-scene{min-height:260px}.dereth-portal{width:170px}.dereth-intro{grid-template-columns:1fr}.hero h1{font-size:4.8rem}.realm-paths a{flex:1 1 40%;text-align:center}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.dereth-portal:before,.dereth-portal:after{animation:none}.world:hover,.source-link:hover{transform:none}.source-link{transition:none}}
+body{background-image:url('/ac-worlds-emblem-dark.webp');background-position:center top;background-size:auto max(900px,100vh)}
+body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c9 1100px)}
+.portal-art{margin:0;min-width:0;padding:14px;border:1px solid #b18ada66;border-radius:16px;background:#080713e8;box-shadow:0 12px 45px #180c2c88;color:#ddc5ee;font-size:.78rem}
+.portal-space{position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:10px;margin-bottom:12px;background:radial-gradient(ellipse,#050412 0 5%,#4c207b 15%,#8667c7 30%,#30114e 58%,#080611 80%);isolation:isolate}
+.portal-space:before,.portal-space:after{content:'';position:absolute;inset:-45%;border-radius:50%;background:repeating-conic-gradient(from 20deg,#d5b9ff00 0deg,#bb8dfb99 16deg,#44246988 35deg,#c9b9ff00 58deg);mask-image:radial-gradient(ellipse,transparent 0 6%,#000 17% 44%,transparent 68%);animation:portal-space-turn 32s linear infinite;filter:blur(7px)}
+.portal-space:after{inset:-25%;animation-direction:reverse;animation-duration:47s;opacity:.6;transform:rotate(35deg);background:repeating-conic-gradient(#747ed800 0deg,#b29bf2bb 12deg,#1c123400 40deg)}
+.portal-space-core{position:absolute;inset:38% 40%;border-radius:50%;background:#080412;box-shadow:0 0 24px 10px #a479ef88,0 0 65px 30px #5f4cbd66;z-index:1}
+.portal-art label{cursor:pointer;margin-left:5px}.portal-art figcaption{margin-top:8px;color:#a99cb9}.portal-art input:checked~.portal-space:before,.portal-art input:checked~.portal-space:after{animation-play-state:paused}
+.portal-art input,.portal-art label{position:relative;z-index:2}.portal-art .portal-space{margin-top:12px}
+@keyframes portal-space-turn{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.portal-space:before,.portal-space:after{animation:none}}
+@media(max-width:760px){body{background-size:auto 780px;background-position:center top}.portal-art{width:100%}}
+.portal-art{align-self:start;justify-self:end;width:min(100%,360px);margin-top:12px}
+.background-library{margin-bottom:24px;padding:18px;border:1px solid #b4945d66;border-radius:14px;background:#090f1be8}
+.background-library summary{cursor:pointer;color:#f4d9a8;font-weight:800;font-size:1.05rem}.background-library p{color:#b5c2d1;font-size:.84rem;line-height:1.6}
+.background-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:15px 0}.background-controls select{max-width:100%;padding:10px;border:1px solid #947c56;background:#101726;color:#fff;border-radius:8px}
+.background-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.background-card{padding:12px;border:1px solid #927e574f;border-radius:10px;background:#11192a}.background-card img{width:100%;height:150px;object-fit:contain;background:#030711;border-radius:6px}
+.background-card h3{font-size:.9rem;color:#eddbb6}.background-card a{display:block;font-size:.73rem;color:#b9ddec;margin-top:10px}
+.background-card button,.background-controls button{border:1px solid #c2a16b;padding:9px;border-radius:7px;background:#302b26;color:#ffebc9;cursor:pointer}
+@media(max-width:760px){.portal-art{justify-self:center;width:min(100%,360px)}}
 </style>
 </head>
 <body>
 <header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>AC WORLDS</small></a><nav class="nav"><a href="#quests">Quest search</a><a href="#downloads">Download files</a><a href="#new-player">Install guide</a><a href="#directory">Worlds</a><a href="#about">About the data</a><a href="/conquest.html">Conquest archive</a><a href="/">Home</a></nav></div></header>
 <main>
-<section class="hero shell"><div><p class="eyebrow">Asheron’s Call · The portals remain open</p><h1>AC<br>Worlds</h1><p>Return to Dereth. Find your world, follow a forgotten quest, and discover what the community is building beyond the next portal.</p><nav class="realm-paths" aria-label="Explore AC Worlds"><a href="#quests">Find an item or quest</a><a href="#directory">Choose your world</a><a href="#new-player">Begin your journey</a><a href="#decal-plugins">Plugins &amp; tools</a></nav></div><div class="portal-scene" aria-hidden="true"><div class="dereth-portal"></div><span class="portal-caption">A passage back to Dereth</span></div></section>
+<section class="hero shell"><div><p class="eyebrow">Asheron’s Call · The portals remain open</p><h1>AC<br>Worlds</h1><p>Return to Dereth. Find your world, follow a forgotten quest, and discover what the community is building beyond the next portal.</p><nav class="realm-paths" aria-label="Explore AC Worlds"><a href="#quests">Find an item or quest</a><a href="#directory">Choose your world</a><a href="#new-player">Begin your journey</a><a href="#decal-plugins">Plugins &amp; tools</a></nav></div><figure class="portal-art"><input type="checkbox" id="pausePortal"><label for="pausePortal">Pause portal motion</label><div class="portal-space" role="img" aria-label="A swirling violet portal-space tunnel"><span class="portal-space-core"></span></div><figcaption>Portal Space · An AC-inspired graphic, not video footage.</figcaption></figure></section>
 <section class="dereth-intro shell" id="ac-about" aria-label="About the community"><article><h2>A world rebuilt by its players</h2><p>ACEmulator is an open-source community project rebuilding Asheron’s Call. Its independently operated servers are not official Turbine or WB Games servers. AC Worlds brings ACE, GDLE and other community worlds, guides and tools together.</p><p><a href="https://emulator.ac/about/" target="_blank" rel="noopener noreferrer">About ACEmulator — read the project’s story ↗</a></p></article><aside class="hero-note"><strong>Character count ≠ human count</strong>Population figures may include bots, macros and several accounts controlled by one person. AC Worlds reports connected characters and always shows how fresh the reading is.</aside></section>
 
+<details class="background-library shell" id="backgrounds">
+<summary>Choose your Dereth background — portals, armor &amp; maps</summary>
+<p>12 named portal screenshots, armor concept art, a Subway map and a beta-era world map. These are preserved originals, not HD recreations or current custom-server navigation guarantees. Artwork and maps can also be opened at full size. Source links preserve attribution; original creators retain their rights.</p>
+<div class="background-controls"><label for="backgroundChoice">Background</label><select id="backgroundChoice"><option value="">Bronze emblem — default</option></select><button type="button" id="resetBackground">Restore bronze emblem</button></div>
+<p id="backgroundStatus" role="status"></p>
+<div class="background-gallery" id="backgroundGallery"></div>
+<p>The specific portal-route map from your screenshot has not been identified yet; it is not included as a guessed replacement. <a href="https://www.drunkenfell.com/index.php?title=Category%3AMaps" target="_blank" rel="noopener noreferrer">Browse more community maps ↗</a></p>
+</details>
 <section class="new-player shell" id="new-player">
 <div class="guide-shell">
 <div class="guide-head"><div><p class="eyebrow">First journey to Dereth</p><h2>New Player Launch Guide</h2><p>Install the game, choose a community world, and enter safely. Start with the basic client and launcher; add plugins only after the unmodified game works.</p></div><a class="guide-link" href="https://emulator.ac/how-to-play/" target="_blank" rel="noopener">Official ACEmulator setup ↗</a></div>
@@ -314,5 +343,6 @@ document.getElementById('pluginCatalog').addEventListener('change',function(){do
 list();
 })();
 </script>
+<script src="/ac-background-gallery.js?v=20260901a"></script>
 </body>
 </html>
