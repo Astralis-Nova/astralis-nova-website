@@ -47,7 +47,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 .portal-art{align-self:center;justify-self:start;width:min(100%,360px);margin-top:12px}
 @media(max-width:760px){.portal-art{justify-self:center;width:min(100%,360px)}}
 </style>
-<link rel="stylesheet" href="/ac-adventure.css?v=20260901borders">
+<link rel="stylesheet" href="/ac-adventure.css?v=20260901uniqueart">
 <link rel="stylesheet" href="/ac-community.css?v=20260901a">
 <link rel="stylesheet" href="/ac-jukebox.css?v=20260901a">
 </head>
@@ -307,9 +307,9 @@ var render=function(){
  if(!rows.length){grid.innerHTML='<div class="empty">No worlds match those filters. Try opening the portal parameters a little wider.</div>';return}
  grid.innerHTML=rows.map(function(w){
   var cls=String(w.ruleset||'').toLowerCase(),pop=Number.isFinite(w.characters)?w.characters.toLocaleString():'—';
-  var art=w.artwork||{image:'/assets/ac-portals/portal-gateway.jpg',label:'Shared Dereth scenery',source:'https://www.drunkenfell.com/index.php?title=File%3APortal_Gateway_Live.jpg'};
-  var artPath=/^\/assets\/(ac-portals|ac-worlds)\/[a-z0-9-]+\.(jpg|png|webp)$/.test(art.image||'')?art.image:'/assets/ac-portals/portal-gateway.jpg';
-  var artMarkup='<img class="world-art-image" src="'+esc(artPath)+'" alt="" width="600" height="340" loading="lazy" decoding="async">'+(safe(art.source)?'<a class="world-art-credit" href="'+esc(safe(art.source))+'" target="_blank" rel="noopener noreferrer" title="'+esc(art.label||'Artwork source')+'">'+(art.associated?'World artwork':'Shared AC scenery')+' ↗</a>':'');
+  var art=w.artwork||{};
+  var artPath=/^\/assets\/(ac-portals|ac-worlds)\/[a-z0-9-]+\.(jpg|png|webp)$/.test(art.image||'')?art.image:'';
+  var artMarkup=artPath?'<img class="world-art-image" src="'+esc(artPath)+'" alt="" width="600" height="340" loading="lazy" decoding="async">'+(safe(art.source)?'<a class="world-art-credit" href="'+esc(safe(art.source))+'" target="_blank" rel="noopener noreferrer" title="'+esc(art.label||'Artwork source')+'">'+(art.associated?'World artwork':'AC archive artwork')+' ↗</a>':''):'';
   var links='';
   var resources=Array.isArray(w.resources)?w.resources.filter(function(r){return r&&r.kind==='website'&&r.verification==='checked'&&/^\d{4}-\d{2}-\d{2}$/.test(r.checkedAt)}):[];
   var seenLinks=new Set();
@@ -319,13 +319,13 @@ var render=function(){
   var features=Array.isArray(w.features)&&w.features.length?'<div class="offer-label">What this world offers</div><div class="feature-list">'+w.features.map(function(feature){return '<span class="feature">'+esc(feature)+'</span>'}).join('')+'</div>':'';
   var address=w.address?'<div class="connect">'+esc(w.address)+'</div>':'';
   var copy=w.address?'<button type="button" data-copy="'+esc(w.address)+'">Copy address</button>':'';
-  return '<article class="world" data-art-layout="'+(art.layout==='banner'?'banner':art.layout==='logo'?'logo':'scene')+'">'+artMarkup+'<div class="world-head"><div><h2>'+esc(w.name)+'</h2><div class="chips"><span class="chip '+esc(cls)+'">'+esc(w.ruleset)+'</span><span class="chip">'+esc(w.emulator)+'</span><span class="chip state '+esc(String(w.status).toLowerCase())+'">'+esc(w.status)+'</span></div></div><div class="population"><strong>'+pop+'</strong><span>characters</span></div></div><p class="world-copy">'+esc(w.description||'Community emulator world.')+'</p>'+features+community+address+'<div class="actions">'+copy+links+'</div><div class="freshness">Population report: '+esc(age(w.countUpdatedAt))+(Number.isFinite(w.uptime)?' · Uptime '+esc(w.uptime.toFixed(1))+'%':'')+'</div></article>';
+  return '<article class="world" data-art-layout="'+(!artPath?'none':art.layout==='banner'?'banner':art.layout==='logo'?'logo':art.layout==='portrait'?'portrait':'scene')+'">'+artMarkup+'<div class="world-head"><div><h2>'+esc(w.name)+'</h2><div class="chips"><span class="chip '+esc(cls)+'">'+esc(w.ruleset)+'</span><span class="chip">'+esc(w.emulator)+'</span><span class="chip state '+esc(String(w.status).toLowerCase())+'">'+esc(w.status)+'</span></div></div><div class="population"><strong>'+pop+'</strong><span>characters</span></div></div><p class="world-copy">'+esc(w.description||'Community emulator world.')+'</p>'+features+community+address+'<div class="actions">'+copy+links+'</div><div class="freshness">Population report: '+esc(age(w.countUpdatedAt))+(Number.isFinite(w.uptime)?' · Uptime '+esc(w.uptime.toFixed(1))+'%':'')+'</div></article>';
  }).join('');
  grid.querySelectorAll('[data-copy]').forEach(function(button){button.addEventListener('click',function(){navigator.clipboard.writeText(button.dataset.copy).then(function(){var old=button.textContent;button.textContent='Copied';setTimeout(function(){button.textContent=old},1400)})})});
 };
 var load=function(){
  status.textContent='Scanning community portals…';document.getElementById('refresh').disabled=true;
- fetch('/api/ac-worlds?v=20260901worldart',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
+ fetch('/api/ac-worlds?v=20260901uniqueart',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
   state.worlds=Array.isArray(data.worlds)?data.worlds:[];
   document.getElementById('totalWorlds').textContent=state.worlds.length;
   document.getElementById('onlineWorlds').textContent=state.worlds.filter(function(w){return w.status==='Online'}).length;
