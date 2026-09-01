@@ -37,10 +37,10 @@ h1,.hero h2,.guide-head h2,.quest-head h2{font-family:Georgia,'Times New Roman',
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.dereth-portal:before,.dereth-portal:after{animation:none}.world:hover,.source-link:hover{transform:none}.source-link{transition:none}}
 body{background-image:url('/ac-worlds-emblem-dark.webp');background-position:center top;background-size:auto max(900px,100vh)}
 body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c9 1100px)}
-.portal-art{margin:0;min-width:0;padding:0;border:0;background:none;box-shadow:none;color:#ddc5ee;font-size:.78rem}
-.portal-space-image{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain}
-.portal-art figcaption{margin-top:10px;color:#bac5d2;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.portal-art figcaption a{color:#bac5d2}.portal-art button{padding:7px 10px;background:#101726;border:1px solid #64758c;border-radius:6px;color:#e0e8f4;cursor:pointer}.portal-art button:focus-visible{outline:2px solid #bce5ff;outline-offset:3px}
+.portal-art{position:relative;margin:0;min-width:0;padding:0;border:0;background:none;box-shadow:none}
+.portal-space-image{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;-webkit-mask-image:radial-gradient(ellipse closest-side at 50% 50%,#000 32%,#000b 58%,#0004 80%,transparent 100%);mask-image:radial-gradient(ellipse closest-side at 50% 50%,#000 32%,#000b 58%,#0004 80%,transparent 100%)}
+.portal-art button{position:absolute;right:12px;bottom:12px;display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:#05091255;color:#e0e8f4;opacity:.55;cursor:pointer}.portal-art button[hidden]{display:none}.portal-art button:hover,.portal-art button:focus-visible{opacity:1;background:#050912bb}.portal-art button:focus-visible{outline:2px solid #bce5ff;outline-offset:3px}
+.portal-art button svg{width:16px;height:16px;fill:currentColor}.portal-art button[data-playing="true"] .portal-play-icon,.portal-art button[data-playing="false"] .portal-pause-icon{display:none}
 @media(max-width:760px){body{background-size:auto 780px;background-position:center top}.portal-art{width:100%}}
 .portal-art{align-self:start;justify-self:end;width:min(100%,360px);margin-top:12px}
 .background-library{margin-bottom:24px;padding:18px;border:1px solid #b4945d66;border-radius:14px;background:#090f1be8}
@@ -56,7 +56,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <body>
 <header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>AC WORLDS</small></a><nav class="nav"><a href="#quests">Quest search</a><a href="#downloads">Download files</a><a href="#new-player">Install guide</a><a href="#directory">Worlds</a><a href="#about">About the data</a><a href="/conquest.html">Conquest archive</a><a href="/">Home</a></nav></div></header>
 <main>
-<section class="hero shell"><div><p class="eyebrow">Asheron’s Call · The portals remain open</p><h1>AC<br>Worlds</h1><p>Return to Dereth. Find your world, follow a forgotten quest, and discover what the community is building beyond the next portal.</p><nav class="realm-paths" aria-label="Explore AC Worlds"><a href="#quests">Find an item or quest</a><a href="#directory">Choose your world</a><a href="#new-player">Begin your journey</a><a href="#decal-plugins">Plugins &amp; tools</a></nav></div><figure class="portal-art"><img id="portalSpaceImage" class="portal-space-image" src="/assets/ac-portals/portal-space-still.webp" width="320" height="180" alt="Asheron’s Call portal space: a dark blue-gray rippling tunnel stretching into the distance"><figcaption><a href="https://makeagif.com/gif/asherons-call-portal-space-OFnm2t" target="_blank" rel="noopener noreferrer">Portal Space · GIF source ↗</a><button type="button" id="portalSpaceToggle" aria-controls="portalSpaceImage" hidden>Play portal space</button></figcaption></figure></section>
+<section class="hero shell"><div><p class="eyebrow">Asheron’s Call · The portals remain open</p><h1>AC<br>Worlds</h1><p>Return to Dereth. Find your world, follow a forgotten quest, and discover what the community is building beyond the next portal.</p><nav class="realm-paths" aria-label="Explore AC Worlds"><a href="#quests">Find an item or quest</a><a href="#directory">Choose your world</a><a href="#new-player">Begin your journey</a><a href="#decal-plugins">Plugins &amp; tools</a></nav></div><figure class="portal-art"><img id="portalSpaceImage" class="portal-space-image" src="/assets/ac-portals/portal-space-still.webp" width="320" height="180" alt="Asheron’s Call portal space: a dark blue-gray rippling tunnel stretching into the distance"><button type="button" id="portalSpaceToggle" aria-controls="portalSpaceImage" aria-label="Play portal space" data-playing="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="portal-play-icon" d="M7 4v16l13-8z"/><path class="portal-pause-icon" d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg></button></figure></section>
 <section class="dereth-intro shell" id="ac-about" aria-label="About the community"><article><h2>A world rebuilt by its players</h2><p>ACEmulator is an open-source community project rebuilding Asheron’s Call. Its independently operated servers are not official Turbine or WB Games servers. AC Worlds brings ACE, GDLE and other community worlds, guides and tools together.</p><p><a href="https://emulator.ac/about/" target="_blank" rel="noopener noreferrer">About ACEmulator — read the project’s story ↗</a></p></article><aside class="hero-note"><strong>Character count ≠ human count</strong>Population figures may include bots, macros and several accounts controlled by one person. AC Worlds reports connected characters and always shows how fresh the reading is.</aside></section>
 
 <details class="background-library shell" id="backgrounds">
@@ -176,7 +176,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <div class="explain" id="about"><article class="info"><h2>How the readings work</h2><p>Server details come from the community-maintained AC server list and TreeStats. Recent character reports are not guaranteed to represent unique people. A stale reading remains visibly marked instead of pretending to be live.</p><ul><li><strong>Online:</strong> confirmed by the monitor or supported by a recent report.</li><li><strong>Unknown:</strong> no dependable recent status.</li><li><strong>Offline:</strong> explicitly reported down by the status source.</li></ul></article><article class="info"><h2>Community-powered Dereth</h2><p>These worlds are independently operated community servers. Astralis Nova does not own, rank or officially endorse them. Always read a server’s rules and community information before connecting.</p><p><a href="https://emulator.ac/" target="_blank" rel="noopener">ACEmulator project</a> · <a href="https://github.com/acresources/serverslist/" target="_blank" rel="noopener">Community server list</a> · <a href="https://treestats.net/servers" target="_blank" rel="noopener">TreeStats directory</a></p></article></div>
 </section>
 </main>
-<footer class="footer"><div class="shell">Astralis Nova • AC Worlds • The portals remain open.</div></footer>
+<footer class="footer"><div class="shell">Astralis Nova • AC Worlds • The portals remain open. <a href="https://makeagif.com/gif/asherons-call-portal-space-OFnm2t" target="_blank" rel="noopener noreferrer">Portal animation source ↗</a></div></footer>
 <script>
 (function(){
 'use strict';
@@ -339,6 +339,6 @@ list();
 })();
 </script>
 <script src="/ac-background-gallery.js?v=20260901a"></script>
-<script src="/ac-portal-space.js?v=20260901b"></script>
+<script src="/ac-portal-space.js?v=20260901c"></script>
 </body>
 </html>

@@ -8,7 +8,8 @@
   function setPlaying(value) {
     playing = value;
     image.src = '/assets/ac-portals/portal-space-' + (playing ? 'motion' : 'still') + '.webp';
-    button.textContent = playing ? 'Pause portal space' : 'Play portal space';
+    button.dataset.playing = String(playing);
+    button.setAttribute('aria-label', playing ? 'Pause portal space' : 'Play portal space');
   }
   button.hidden = false;
   button.addEventListener('click', () => setPlaying(!playing));
