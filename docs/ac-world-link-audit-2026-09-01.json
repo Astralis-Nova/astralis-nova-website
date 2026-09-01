@@ -1,0 +1,746 @@
+{
+  "checkedAt": "2026-09-01",
+  "scope": "AC Worlds world-card Discord and website resources; no servers, music, or quest catalog entries removed.",
+  "method": "Public Discord Get Invite responses checked against the community-listed world. Website GET response and returned server-specific text inspected. No joining servers or private-channel access.",
+  "caveats": "Point-in-time checks, not a guarantee. 403/402, challenges, timeouts, generic shells and mismatched communities count as unverified, not necessarily dead. No attempts to bypass access controls.",
+  "discord": [
+    {
+      "worlds": [
+        "Asheron4Fun.com"
+      ],
+      "url": "https://discord.gg/afnQNXj",
+      "httpStatus": 200,
+      "guildName": "asheron4fun",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Asheron4Fun.com"
+      ]
+    },
+    {
+      "worlds": [
+        "AChard"
+      ],
+      "url": "https://discord.gg/gmHfqt2J2D",
+      "httpStatus": 200,
+      "guildName": "A'Chard",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "AChard"
+      ]
+    },
+    {
+      "worlds": [
+        "ACPrime"
+      ],
+      "url": "https://discord.gg/VSFtYXN3v7",
+      "httpStatus": 200,
+      "guildName": "AsheronsCall-ACPrime",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "ACPrime"
+      ]
+    },
+    {
+      "worlds": [
+        "Buadren AC"
+      ],
+      "url": "https://discord.gg/yMkzW3yAd4",
+      "httpStatus": 200,
+      "guildName": "Buadren AC",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Buadren AC"
+      ]
+    },
+    {
+      "worlds": [
+        "CABA"
+      ],
+      "url": "https://discord.gg/d7gUEBZSZR",
+      "httpStatus": 200,
+      "guildName": "CABA ACEmulator",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "CABA"
+      ]
+    },
+    {
+      "worlds": [
+        "Coldeve"
+      ],
+      "url": "https://discord.gg/nUR4PHe",
+      "httpStatus": 200,
+      "guildName": "Coldeve",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Coldeve"
+      ]
+    },
+    {
+      "worlds": [
+        "Conquest"
+      ],
+      "url": "https://discord.gg/Gsadhhv72S",
+      "httpStatus": 200,
+      "guildName": "Conquest (AC)",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Conquest"
+      ]
+    },
+    {
+      "worlds": [
+        "Dekarutide"
+      ],
+      "url": "https://discord.gg/gTv9XMC8aN",
+      "httpStatus": 200,
+      "guildName": "Dekarutide",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Dekarutide"
+      ]
+    },
+    {
+      "worlds": [
+        "Derptide"
+      ],
+      "url": "https://discord.gg/3gDTBVtfAg",
+      "httpStatus": 200,
+      "guildName": "Derptide",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Derptide"
+      ]
+    },
+    {
+      "worlds": [
+        "Doctide"
+      ],
+      "url": "https://discord.gg/Qts4sF58H6",
+      "httpStatus": 404,
+      "guildName": null,
+      "expiresAt": null,
+      "apiMessage": "Invite is expired.",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "DragonMoon"
+      ],
+      "url": "https://discord.gg/dragonmoon",
+      "httpStatus": 404,
+      "guildName": null,
+      "expiresAt": null,
+      "apiMessage": "Unknown Invite",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "DreamWeave"
+      ],
+      "url": "https://discord.gg/KFnBFpFQV",
+      "httpStatus": 200,
+      "guildName": "Asheron's Call: DreamWeave",
+      "expiresAt": "2026-09-25T20:38:40+00:00",
+      "apiMessage": null,
+      "retainedFor": [
+        "DreamWeave"
+      ]
+    },
+    {
+      "worlds": [
+        "Drunkenfell"
+      ],
+      "url": "https://discord.gg/e365fBcuaB",
+      "httpStatus": 200,
+      "guildName": "Drunkenfell",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Drunkenfell"
+      ]
+    },
+    {
+      "worlds": [
+        "Ebontide"
+      ],
+      "url": "https://discord.gg/r4b9yeNY",
+      "httpStatus": 404,
+      "guildName": null,
+      "expiresAt": null,
+      "apiMessage": "Unknown Invite",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Eversong"
+      ],
+      "url": "https://discord.gg/9eHxTb7p2J",
+      "httpStatus": 200,
+      "guildName": "Eversong - Asheron's Call",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Eversong"
+      ]
+    },
+    {
+      "worlds": [
+        "FunkyTown PK"
+      ],
+      "url": "https://discord.gg/CHgzDYVk",
+      "httpStatus": 404,
+      "guildName": null,
+      "expiresAt": null,
+      "apiMessage": "Unknown Invite",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "FunkyTEST",
+        "FunkyTown 2.0"
+      ],
+      "url": "https://discord.gg/4gzFWTMu",
+      "httpStatus": 404,
+      "guildName": null,
+      "expiresAt": null,
+      "apiMessage": "Unknown Invite",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Frostcull"
+      ],
+      "url": "https://discord.gg/RQF7HgEZn4",
+      "httpStatus": 200,
+      "guildName": "Frostcull - Asheron's Call",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Frostcull"
+      ]
+    },
+    {
+      "worlds": [
+        "GDLE Test",
+        "Harvestbud"
+      ],
+      "url": "https://discord.gg/jd3dEJf",
+      "httpStatus": 200,
+      "guildName": "GDLE(PvE)",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Harvestbud"
+      ]
+    },
+    {
+      "worlds": [
+        "Infinite Frosthaven"
+      ],
+      "url": "https://discord.gg/zdQVP7bmjC",
+      "httpStatus": 200,
+      "guildName": "Infinite Frosthaven",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Infinite Frosthaven"
+      ]
+    },
+    {
+      "worlds": [
+        "Harvestagain"
+      ],
+      "url": "https://discord.gg/znS865qNx8",
+      "httpStatus": 200,
+      "guildName": "Harvestagain",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Harvestagain"
+      ]
+    },
+    {
+      "worlds": [
+        "Jellocull"
+      ],
+      "url": "https://discord.gg/snv52pX",
+      "httpStatus": 404,
+      "guildName": null,
+      "expiresAt": null,
+      "apiMessage": "Invite is expired.",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "LeafDawn"
+      ],
+      "url": "https://discord.gg/c2QUBPwPZF",
+      "httpStatus": 200,
+      "guildName": "Leafdawn",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "LeafDawn"
+      ]
+    },
+    {
+      "worlds": [
+        "InfiniteLeaftide"
+      ],
+      "url": "https://discord.gg/KtNxP8CaZt",
+      "httpStatus": 200,
+      "guildName": "Infinite Leaftide",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "InfiniteLeaftide"
+      ]
+    },
+    {
+      "worlds": [
+        "Leafdawning"
+      ],
+      "url": "https://discord.gg/sQpDgAzSXB",
+      "httpStatus": 200,
+      "guildName": "Leafdawning",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Leafdawning"
+      ]
+    },
+    {
+      "worlds": [
+        "Levistras"
+      ],
+      "url": "https://discord.gg/TtkcWbv",
+      "httpStatus": 200,
+      "guildName": "Levistras",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Levistras"
+      ]
+    },
+    {
+      "worlds": [
+        "Mistwood"
+      ],
+      "url": "https://discord.gg/UMjW7qckpb",
+      "httpStatus": 200,
+      "guildName": "Mistwood - Asheron's Call",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Mistwood"
+      ]
+    },
+    {
+      "worlds": [
+        "Nexus"
+      ],
+      "url": "https://discord.gg/npZw7j6T",
+      "httpStatus": 404,
+      "guildName": null,
+      "expiresAt": null,
+      "apiMessage": "Unknown Invite",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Newfoundland"
+      ],
+      "url": "https://discord.gg/A5AHWZFUAa",
+      "httpStatus": 200,
+      "guildName": "Newfoundland Asheron's Call Server",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Newfoundland"
+      ]
+    },
+    {
+      "worlds": [
+        "Morgentau"
+      ],
+      "url": "https://discord.gg/gJCYTr5fPU",
+      "httpStatus": 200,
+      "guildName": "ACE morgentau",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Morgentau"
+      ]
+    },
+    {
+      "worlds": [
+        "NoESCapeGames"
+      ],
+      "url": "https://discord.gg/46C8afEVs4",
+      "httpStatus": 404,
+      "guildName": null,
+      "expiresAt": null,
+      "apiMessage": "Invite is expired.",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "PortalStorm"
+      ],
+      "url": "https://discord.gg/YeX6mupcf",
+      "httpStatus": 404,
+      "guildName": null,
+      "expiresAt": null,
+      "apiMessage": "Invite is expired.",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Reefcull"
+      ],
+      "url": "https://discord.gg/3ngsm6e",
+      "httpStatus": 200,
+      "guildName": "GDLE(PvE)",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Reefcull"
+      ]
+    },
+    {
+      "worlds": [
+        "Shadowland"
+      ],
+      "url": "https://discord.gg/XwMFx9Jty2",
+      "httpStatus": 200,
+      "guildName": "Shadowland",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Shadowland"
+      ]
+    },
+    {
+      "worlds": [
+        "Shadowgain"
+      ],
+      "url": "https://discord.gg/BmFZs6N97J",
+      "httpStatus": 200,
+      "guildName": "Shadowgain",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Shadowgain"
+      ]
+    },
+    {
+      "worlds": [
+        "Seedsow",
+        "Snowreap"
+      ],
+      "url": "https://discord.gg/GHKk4ck",
+      "httpStatus": 200,
+      "guildName": "Seedsow",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Seedsow"
+      ]
+    },
+    {
+      "worlds": [
+        "Sundering"
+      ],
+      "url": "https://discord.gg/XgHpcVbmJA",
+      "httpStatus": 200,
+      "guildName": "Sundering",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Sundering"
+      ]
+    },
+    {
+      "worlds": [
+        "Soulclaim"
+      ],
+      "url": "https://discord.gg/939ARjY",
+      "httpStatus": 200,
+      "guildName": "Blood Tithings",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "The Tower"
+      ],
+      "url": "https://discord.gg/XKTzn8ejJE",
+      "httpStatus": 200,
+      "guildName": "The Tower",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "The Tower"
+      ]
+    },
+    {
+      "worlds": [
+        "Thistlecrown"
+      ],
+      "url": "https://discord.gg/uhZ3hn7",
+      "httpStatus": 200,
+      "guildName": "Thistlecrown",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Thistlecrown"
+      ]
+    },
+    {
+      "worlds": [
+        "Unfamiliar Shores"
+      ],
+      "url": "https://discord.gg/d3ZPpQsHCd",
+      "httpStatus": 200,
+      "guildName": "Unfamiliar Shores",
+      "expiresAt": null,
+      "apiMessage": null,
+      "retainedFor": [
+        "Unfamiliar Shores"
+      ]
+    }
+  ],
+  "websites": [
+    {
+      "worlds": [
+        "Buadren AC"
+      ],
+      "url": "http://buadren.com",
+      "httpStatus": 502,
+      "title": "502 Bad Gateway",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "AChard"
+      ],
+      "url": "http://a-chard.ddns.net/",
+      "httpStatus": 200,
+      "title": "AChard Server Stats",
+      "retainedFor": [
+        "AChard"
+      ]
+    },
+    {
+      "worlds": [
+        "Asheron4Fun.com"
+      ],
+      "url": "https://web.asheron4fun.com/",
+      "httpStatus": 200,
+      "title": "A4F - Main",
+      "retainedFor": [
+        "Asheron4Fun.com"
+      ]
+    },
+    {
+      "worlds": [
+        "Dekarutide"
+      ],
+      "url": "https://www.dekarutide.com/",
+      "httpStatus": 502,
+      "title": "502 Bad Gateway",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "CABA"
+      ],
+      "url": "http://z123.zapto.org",
+      "httpStatus": 403,
+      "title": "Test Page for the HTTP Server on Fedora",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Conquest"
+      ],
+      "url": "https://dsc.gg/conquerac",
+      "httpStatus": 0,
+      "title": null,
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Doctide"
+      ],
+      "url": "http://doctide.online",
+      "httpStatus": 502,
+      "title": "502 Bad Gateway",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Derptide"
+      ],
+      "url": "https://derptide.net",
+      "httpStatus": 200,
+      "title": "Derptide",
+      "retainedFor": [
+        "Derptide"
+      ]
+    },
+    {
+      "worlds": [
+        "DreamWeave"
+      ],
+      "url": "https://wiki.acdreamweave.com",
+      "httpStatus": 200,
+      "title": "DreamWeave Wiki",
+      "retainedFor": [
+        "DreamWeave"
+      ]
+    },
+    {
+      "worlds": [
+        "FunkyTEST",
+        "FunkyTown 2.0",
+        "FunkyTown PK"
+      ],
+      "url": "https://www.funkytownac.com/",
+      "httpStatus": 502,
+      "title": "502 Bad Gateway",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Drunkenfell"
+      ],
+      "url": "http://www.drunkenfell.com",
+      "httpStatus": 200,
+      "title": "Drunkapedia",
+      "retainedFor": [
+        "Drunkenfell"
+      ]
+    },
+    {
+      "worlds": [
+        "Harvestbud"
+      ],
+      "url": "https://gdleac.com",
+      "httpStatus": 200,
+      "title": "GDLEnhanced | AC emulator and Discord channel",
+      "retainedFor": [
+        "Harvestbud"
+      ]
+    },
+    {
+      "worlds": [
+        "Harvestagain"
+      ],
+      "url": "https://harvestagain.net/",
+      "httpStatus": 200,
+      "title": "HarvestAgain",
+      "retainedFor": [
+        "Harvestagain"
+      ]
+    },
+    {
+      "worlds": [
+        "Morgentau"
+      ],
+      "url": "https://forum.morgentau.online/",
+      "httpStatus": 502,
+      "title": "502 Bad Gateway",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Nexus"
+      ],
+      "url": "https://www.nexusserver.wiki/",
+      "httpStatus": 200,
+      "title": "Notion",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Shadowgain"
+      ],
+      "url": "https://shadowgain.com",
+      "httpStatus": 200,
+      "title": "Shadowgain — an experimental Asheron's Call server",
+      "retainedFor": [
+        "Shadowgain"
+      ]
+    },
+    {
+      "worlds": [
+        "Sundering"
+      ],
+      "url": "https://sunderingac.com",
+      "httpStatus": 403,
+      "title": "Just a moment...",
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "DragonMoon"
+      ],
+      "url": "https://dragonmoonac.com/index.php/Main_Page",
+      "httpStatus": 200,
+      "title": "DragonMoon",
+      "retainedFor": [
+        "DragonMoon"
+      ]
+    },
+    {
+      "worlds": [
+        "NoESCapeGames"
+      ],
+      "url": "http://noescapegames.com",
+      "httpStatus": 0,
+      "title": null,
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "InfiniteLeaftide"
+      ],
+      "url": "https://www.leaftidewiki.com/",
+      "httpStatus": 200,
+      "title": "leaftidewiki",
+      "retainedFor": [
+        "InfiniteLeaftide"
+      ]
+    },
+    {
+      "worlds": [
+        "Conquest"
+      ],
+      "url": "https://conquestac.fandom.com/wiki/New_Player_Guide",
+      "httpStatus": 402,
+      "title": null,
+      "retainedFor": []
+    },
+    {
+      "worlds": [
+        "Conquest"
+      ],
+      "url": "https://conquestac.fandom.com/wiki/Conquest_Custom_Content",
+      "httpStatus": 402,
+      "title": null,
+      "retainedFor": []
+    }
+  ]
+}

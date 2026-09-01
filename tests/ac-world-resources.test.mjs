@@ -10,13 +10,13 @@ test('domain-only websites normalize; unsafe and placeholder values stay absent'
   assert.equal(safeResourceUrl('gdleac.com'), 'https://gdleac.com/');
   for (const value of ['WIP', '', null, 'javascript:alert(1)', 'data:text/html,test', '//evil.test', 'https://user:pass@example.com', 'not a website']) assert.equal(safeResourceUrl(value), '');
 });
-test('Discord is explicit, links deduplicate, and current directory values are used', () => {
+test('unreviewed directory links are never rendered, even if syntactically valid', () => {
   const result = worldResources({ name: 'Other', discord_url: 'https://discord.gg/new', website_url: 'https://discord.gg/new' });
-  assert.equal(result.length, 1);
-  assert.equal(result[0].label, 'Discord');
-  assert.equal(result[0].url, 'https://discord.gg/new');
+  assert.equal(result.length, 0);
   assert.equal(worldResources({ name: 'FrostfACE' }).length, 0);
-  assert.equal(worldResources({ name: 'Other', website: 'https://wiki.example.com' })[0].label, 'World wiki');
+  assert.equal(worldResources({ name: 'Other', website: 'https://wiki.example.com' }).length, 0);
+  assert.equal(worldResources({ name: 'Conquest', discord_url: 'https://discord.gg/Gsadhhv72S' })[0].verification, 'checked');
+  assert.equal(worldResources({ name: 'Conquest', discord_url: 'https://discord.gg/new' }).length, 0);
 });
 test('supplemental links never leak between similarly named worlds', () => {
   assert.equal(worldResources({ name: 'DragonMoon' })[0].url, 'https://dragonmoonac.com/index.php/Main_Page');
@@ -37,8 +37,8 @@ test('directory API adds resources without losing population or legacy URL field
     assert.equal(data.total, 3);
     const dragon = data.worlds.find(w => w.name === 'DragonMoon');
     assert.equal(dragon.characters, 12);
-    assert.equal(dragon.resources.length, 2);
-    assert.equal(dragon.discord, 'https://discord.gg/dragonmoon');
+    assert.equal(dragon.resources.length, 1);
+    assert.equal(dragon.discord, '');
     assert.equal(data.worlds.find(w => w.name === 'Harvestbud').website, 'https://gdleac.com/');
     assert.deepEqual(data.worlds.find(w => w.name === 'FrostfACE').resources, []);
   } finally { globalThis.fetch = original; }
@@ -48,6 +48,16 @@ test('page scripts parse and the rendered card includes community resources', ()
   for (const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)) if (match[1].trim()) new vm.Script(match[1]);
   assert(html.includes('+features+community+address+'));
   assert(html.includes('esc(r.label'));
-  assert(html.includes('No public community links listed yet.'));
+  assert(html.includes('No verified community links available.'));
+  assert(html.includes("r.verification==='checked'"));
   assert(html.includes('href="#ac-community">Suggest a link'));
+});
+
+test('known expired and mismatched invites stay absent; known expiry is enforced', () => {
+  for (const [name, code] of [['Nexus','npZw7j6T'],['Doctide','Qts4sF58H6'],['Soulclaim','939ARjY'],['Snowreap','GHKk4ck'],['GDLE Test','jd3dEJf']]) {
+    assert.equal(worldResources({ name, discord_url: 'https://discord.gg/'+code }).filter(r=>r.kind==='discord').length, 0);
+  }
+  const dream = { name: 'DreamWeave', discord_url: 'https://discord.gg/KFnBFpFQV' };
+  assert.equal(worldResources(dream, Date.parse('2026-09-01')).length, 1);
+  assert.equal(worldResources(dream, Date.parse('2026-09-26')).length, 0);
 });
