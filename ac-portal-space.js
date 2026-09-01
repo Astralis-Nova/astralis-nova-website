@@ -9,7 +9,8 @@
     playing = value;
     image.src = '/assets/ac-portals/portal-space-' + (playing ? 'motion' : 'still') + '.webp';
     button.dataset.playing = String(playing);
-    button.setAttribute('aria-label', playing ? 'Pause portal space' : 'Play portal space');
+    document.documentElement.dataset.acMotion = playing ? 'on' : 'off';
+    button.setAttribute('aria-label', playing ? 'Pause title and portal animation' : 'Play title and portal animation');
   }
   button.hidden = false;
   button.addEventListener('click', () => setPlaying(!playing));

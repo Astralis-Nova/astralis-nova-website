@@ -2,6 +2,12 @@
 :root{--adventure-bronze:#a17b46;--adventure-edge:#b9935766;--adventure-ink:#080e18}
 .hero{min-height:440px;padding-top:30px;padding-bottom:26px}
 .hero>div{min-width:0}
+.hero h1{width:fit-content;max-width:100%;font-size:clamp(3.2rem,8vw,6.5rem)}
+@supports ((background-clip:text) or (-webkit-background-clip:text)){
+  .hero h1{background-image:linear-gradient(110deg,#d8ae68 0%,#ffe8b7 32%,#fff9e9 44%,#bdeaf4 49%,#fff4d8 54%,#eac484 67%,#d8ae68 100%);background-size:260% 100%;background-position:100% 50%;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 2px 1px #251607) drop-shadow(0 0 12px #e6b66138);animation:ac-title-shimmer 9s ease-in-out infinite;animation-play-state:paused}
+  html[data-ac-motion="on"] .hero h1{animation-play-state:running}
+}
+@keyframes ac-title-shimmer{0%,15%{background-position:100% 50%}65%,100%{background-position:0% 50%}}
 .hero p:not(.eyebrow){max-width:34rem;font-size:1.05rem}
 .hero-search-link{display:inline-flex;align-items:center;gap:24px;margin-top:18px;padding:12px 18px;border:1px solid #e0b568;border-radius:5px;background:linear-gradient(135deg,#533b1c,#211c15);color:#fff0cf;text-decoration:none;font-weight:750;box-shadow:0 5px 20px #0006}
 .hero-search-link:hover{background:linear-gradient(135deg,#725026,#332619)}
@@ -71,3 +77,6 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #ff
 @media(max-width:760px){.hero{min-height:0;padding:28px 0 22px}.hero h1{font-size:4.8rem}.adventure-path{min-height:145px}.adventure-panel{padding:18px}.quest-head{gap:12px}.quest-count{text-align:left}.community-story .dereth-intro{grid-template-columns:1fr}}
 @media(max-width:440px){.adventure-paths{grid-template-columns:1fr 1fr;gap:8px}.adventure-path{padding:14px 12px;min-height:170px}.adventure-path strong{font-size:1.1rem}.adventure-path-copy>span{font-size:.875rem}.adventure-arrow{display:none}.hero p:not(.eyebrow){font-size:1rem}.hero h1{font-size:4.3rem}}
 @media(prefers-reduced-motion:reduce){.adventure-path,.adventure-path img,.world,.source-link{transition:none}.adventure-path:hover,.adventure-path:hover img,.world:hover,.source-link:hover{transform:none}}
+@media(max-width:760px){.hero h1{font-size:clamp(3.2rem,10vw,4.8rem)}}
+@media(prefers-reduced-motion:reduce){html[data-ac-motion] .hero h1,.hero h1{animation:none}}
+@media(forced-colors:active){.hero h1{background:none;color:CanvasText;filter:none;animation:none}}
