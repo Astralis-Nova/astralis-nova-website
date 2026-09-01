@@ -6,7 +6,7 @@
       id: "ac-worlds",
       href: "/ac-worlds.html",
       ariaLabel: "Open the AC Worlds emulator server directory",
-      planetClass: "planet-conquest ringed",
+      planetClass: "ac-worlds-portal",
       title: "AC Worlds",
       description: "Explore active Asheron’s Call emulator worlds, PvE and PvP rulesets, character activity, status, and community links.",
       badge: "Dereth Server Nexus"
@@ -71,9 +71,12 @@
     const externalAttributes = world.external ? ' target="_blank" rel="noopener noreferrer"' : "";
     const tag = world.placeholder ? "div" : "a";
     const destination = world.placeholder ? "" : ` href="${world.href}"`;
+    const visual = world.id === "ac-worlds"
+      ? '<picture><source media="(prefers-reduced-motion: no-preference)" srcset="/assets/ac-portals/portal-space-motion.webp"><img src="/assets/ac-portals/portal-space-still.webp" alt="" width="320" height="180" loading="lazy" decoding="async"></picture>'
+      : "";
     return `
       <${tag} class="astralis-planet-link" data-world="${world.id}"${destination} aria-label="${world.ariaLabel}"${externalAttributes}>
-        <span class="astralis-planet ${world.planetClass}" aria-hidden="true"></span>
+        <span class="astralis-planet ${world.planetClass}" aria-hidden="true">${visual}</span>
         <span class="astralis-planet-copy">
           <strong>${world.title}</strong>
           <span>${world.description}</span>
@@ -117,7 +120,12 @@
       .astralis-planet{position:relative;flex:0 0 72px;width:72px;height:72px;border-radius:50%;box-shadow:inset -13px -13px 18px rgba(0,0,0,.36),0 0 18px rgba(94,168,255,.25);transition:transform .28s ease}
       .astralis-planet-link:hover .astralis-planet{transform:rotate(8deg) scale(1.05)}
       .astralis-planet.ringed::after{content:"";position:absolute;left:-14px;top:27px;width:96px;height:22px;border:4px solid rgba(219,226,255,.72);border-left-color:rgba(87,155,255,.35);border-right-color:rgba(255,151,210,.62);border-radius:50%;transform:rotate(-14deg);box-shadow:0 0 11px rgba(122,168,255,.28)}
-      .planet-conquest{background:radial-gradient(circle at 34% 27%,#d9efff 0 4%,#5489cf 12%,#203c82 45%,#171743 77%,#09091c 100%)}
+      .astralis-planet.ac-worlds-portal{flex:0 0 104px;width:104px;height:104px;border-radius:0;background:none;box-shadow:none;overflow:visible}
+      .ac-worlds-portal picture{position:absolute;inset:-12px -18px;display:block;pointer-events:none}
+      .ac-worlds-portal img{display:block;width:100%;height:100%;object-fit:fill;filter:brightness(1.3);-webkit-mask-image:radial-gradient(ellipse closest-side at 50% 50%,#000 32%,#000b 58%,#0004 80%,transparent 100%);mask-image:radial-gradient(ellipse closest-side at 50% 50%,#000 32%,#000b 58%,#0004 80%,transparent 100%)}
+      .astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal{transform:scale(1.06)}
+      @media(max-width:640px){.astralis-planet.ac-worlds-portal{flex-basis:84px;width:84px;height:84px}}
+      @media(prefers-reduced-motion:reduce){.astralis-planet.ac-worlds-portal{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal{transform:none}}
       .planet-ace{background:radial-gradient(circle at 34% 30%,#fbfbf1 0 4%,#c7a65b 13%,#745232 45%,#2a1d28 76%,#0a0810 100%)}
       .planet-board{background:radial-gradient(circle at 35% 30%,#d9fff1 0 5%,#32d899 16%,#147b72 47%,#16375c 76%,#07101e 100%)}
       .planet-biography{background:radial-gradient(circle at 35% 28%,#ffe4fa 0 5%,#e75ebd 17%,#7843c8 47%,#25205f 76%,#09091b 100%)}
