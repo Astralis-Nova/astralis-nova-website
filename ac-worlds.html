@@ -45,20 +45,15 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 .portal-art button svg{width:16px;height:16px;fill:currentColor}.portal-art button[data-playing="true"] .portal-play-icon,.portal-art button[data-playing="false"] .portal-pause-icon{display:none}
 @media(max-width:760px){body{background-size:auto 780px;background-position:center top}.portal-art{width:100%}}
 .portal-art{align-self:center;justify-self:start;width:min(100%,360px);margin-top:12px}
-.background-library{margin-bottom:24px;padding:18px;border:1px solid #b4945d66;border-radius:14px;background:#090f1be8}
-.background-library summary{cursor:pointer;color:#f4d9a8;font-weight:800;font-size:1.05rem}.background-library p{color:#b5c2d1;font-size:.84rem;line-height:1.6}
-.background-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:15px 0}.background-controls select{max-width:100%;padding:10px;border:1px solid #947c56;background:#101726;color:#fff;border-radius:8px}
-.background-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-.background-card{padding:12px;border:1px solid #927e574f;border-radius:10px;background:#11192a}.background-card img{width:100%;height:150px;object-fit:contain;background:#030711;border-radius:6px}
-.background-card h3{font-size:.9rem;color:#eddbb6}.background-card a{display:block;font-size:.73rem;color:#b9ddec;margin-top:10px}
-.background-card button,.background-controls button{border:1px solid #c2a16b;padding:9px;border-radius:7px;background:#302b26;color:#ffebc9;cursor:pointer}
 @media(max-width:760px){.portal-art{justify-self:center;width:min(100%,360px)}}
 </style>
-<link rel="stylesheet" href="/ac-adventure.css?v=20260901worldart">
+<link rel="stylesheet" href="/ac-adventure.css?v=20260901borders">
 <link rel="stylesheet" href="/ac-community.css?v=20260901a">
 <link rel="stylesheet" href="/ac-jukebox.css?v=20260901a">
 </head>
 <body>
+<div class="ac-art-border ac-art-border-left" aria-hidden="true"><span class="ac-border-portal"></span><span class="ac-border-map"></span></div>
+<div class="ac-art-border ac-art-border-right" aria-hidden="true"><span class="ac-border-armor"></span><span class="ac-border-map"></span></div>
 <header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>AC WORLDS</small></a><nav class="nav"><a href="#quests">Quest search</a><a href="#downloads">Download files</a><a href="#new-player">Install guide</a><a href="#directory">Worlds</a><a href="#about">About the data</a><a href="/conquest.html">Conquest archive</a><a href="/">Home</a></nav></div></header>
 <main>
 <section class="hero shell"><div><p class="eyebrow">Asheron’s Call · The portals remain open</p><div class="hero-title-stage"><figure class="portal-art"><img id="portalSpaceImage" class="portal-space-image" src="/assets/ac-portals/portal-space-still.webp" width="320" height="180" alt="Asheron’s Call portal space: a dark blue-gray rippling tunnel stretching into the distance"><button type="button" id="portalSpaceToggle" aria-controls="portalSpaceImage acWorldsTitle" aria-label="Play title and portal animation" data-playing="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="portal-play-icon" d="M7 4v16l13-8z"/><path class="portal-pause-icon" d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg></button></figure><h1 id="acWorldsTitle">AC<br>Worlds</h1></div><p>Find your world. Rediscover a quest. Step back into Dereth.</p><a class="hero-search-link" href="#quests">Find an item or quest <span aria-hidden="true">↗</span></a></div></section>
@@ -82,14 +77,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 </nav>
 
 
-<details class="background-library shell" id="backgrounds">
-<summary>Choose your Dereth background — portals, armor &amp; maps</summary>
-<p>12 named portal screenshots, armor concept art, a Subway map and a beta-era world map. These are preserved originals, not HD recreations or current custom-server navigation guarantees. Artwork and maps can also be opened at full size. Source links preserve attribution; original creators retain their rights.</p>
-<div class="background-controls"><label for="backgroundChoice">Background</label><select id="backgroundChoice"><option value="">Bronze emblem — default</option></select><button type="button" id="resetBackground">Restore bronze emblem</button></div>
-<p id="backgroundStatus" role="status"></p>
-<div class="background-gallery" id="backgroundGallery"></div>
-<p>The specific portal-route map from your screenshot has not been identified yet; it is not included as a guessed replacement. <a href="https://www.drunkenfell.com/index.php?title=Category%3AMaps" target="_blank" rel="noopener noreferrer">Browse more community maps ↗</a></p>
-</details>
+
 <section class="quest-navigator shell" id="quests" aria-labelledby="quest-title">
 <div class="quest-shell">
 <div class="quest-head"><div><p class="eyebrow">Quest & custom content database</p><h2 id="quest-title">Items &amp; quests</h2><p>Find quests, loot and custom content. Choose a server to narrow the search.</p></div><div class="quest-count"><strong id="questCount">—</strong><span>custom records</span></div></div>
@@ -238,7 +226,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 </div>
 </section>
 </main>
-<footer class="footer"><div class="shell">Astralis Nova • AC Worlds • The portals remain open. <a href="https://makeagif.com/gif/asherons-call-portal-space-OFnm2t" target="_blank" rel="noopener noreferrer">Portal animation source ↗</a></div></footer>
+<footer class="footer"><div class="shell">Astralis Nova • AC Worlds • The portals remain open. <a href="https://makeagif.com/gif/asherons-call-portal-space-OFnm2t" target="_blank" rel="noopener noreferrer">Portal animation source ↗</a><p class="ac-art-credit">Border artwork from Drunkapedia: <a href="https://www.drunkenfell.com/index.php?title=Tree_Portal" target="_blank" rel="noopener noreferrer">Tree Portal</a> · <a href="https://www.drunkenfell.com/index.php?title=File%3ANew_Armor_Concept_Art_2010.jpg" target="_blank" rel="noopener noreferrer">Armor concept</a> · <a href="https://www.drunkenfell.com/index.php?title=File%3ABeta_World_Map.jpg" target="_blank" rel="noopener noreferrer">Beta world map</a>. Original creators retain their rights.</p></div></footer>
 <script>
 (function(){
 'use strict';
@@ -405,7 +393,6 @@ document.getElementById('pluginCatalog').addEventListener('change',function(){do
 list();
 })();
 </script>
-<script src="/ac-background-gallery.js?v=20260901a"></script>
 <script src="/ac-portal-space.js?v=20260901d"></script>
 <script src="/ac-community.js?v=20260901a"></script>
 <script src="/ac-jukebox.js?v=20260901a"></script>

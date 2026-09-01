@@ -85,8 +85,6 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #ff
 .community-story{margin:0 auto 32px}
 .community-story .dereth-intro{margin-bottom:0}
 .community-story .dereth-intro h2{font-family:Georgia,'Times New Roman',serif;font-size:1.5rem}
-.background-library{border-radius:6px;background:#090f1be8}
-.background-library summary{font-size:1rem}.background-library p{font-size:.875rem}
 .guide-details{margin-top:16px}.install-walkthrough .steps{margin-top:16px}
 .safety-note{font-size:.9375rem}.downloads>p{font-size:.9375rem}
 .explain .info{border-radius:7px;border-color:#97784655}
@@ -98,3 +96,17 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #ff
 @media(max-width:760px){.hero h1{font-size:clamp(3.2rem,10vw,4.8rem)}}
 @media(prefers-reduced-motion:reduce){html[data-ac-motion] .hero h1,.hero h1{animation:none}}
 @media(forced-colors:active){.hero h1{background:none;color:CanvasText;filter:none;animation:none}}
+
+/* Reuse the archived art in the empty margins; retain the bronze body background. */
+body{isolation:isolate}
+.ac-art-border{position:fixed;top:68px;bottom:0;width:clamp(10px,calc((100vw - 1240px)/2 - 8px),180px);z-index:-1;display:grid;grid-template-rows:1fr 1fr;pointer-events:none;overflow:hidden;opacity:.5}
+.ac-art-border-left{left:0;border-left:1px solid #b9935766;-webkit-mask-image:linear-gradient(to right,#000 15%,transparent);mask-image:linear-gradient(to right,#000 15%,transparent)}
+.ac-art-border-right{right:0;border-right:1px solid #b9935766;-webkit-mask-image:linear-gradient(to left,#000 15%,transparent);mask-image:linear-gradient(to left,#000 15%,transparent)}
+.ac-art-border span{min-height:0;background-position:center;background-size:cover;background-repeat:no-repeat;-webkit-mask-image:linear-gradient(transparent,#000 18%,#000 75%,transparent);mask-image:linear-gradient(transparent,#000 18%,#000 75%,transparent)}
+.ac-border-portal{background-image:url('/assets/ac-portals/tree-portal.jpg')}
+.ac-border-armor{background-image:url('/assets/ac-portals/armor-concept.jpg')}
+.ac-border-map{background-image:url('/assets/ac-portals/beta-world-map.jpg')}
+.ac-art-credit{margin:10px auto 0;max-width:50rem;padding:0 14px;font-size:.875rem;line-height:1.6}
+.ac-art-credit a{text-underline-offset:3px}
+@media(max-width:760px){.ac-art-border{width:8px;opacity:.3}}
+@media(forced-colors:active){.ac-art-border{display:none}}
