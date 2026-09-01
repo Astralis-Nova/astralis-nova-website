@@ -19,7 +19,7 @@ for (const match of html.matchAll(/(?:src|href)="(\/[^"?#]+)(?:\?[^"#]*)?"/g)) {
   }
 }
 const cards = [...html.matchAll(/class="adventure-path" href="#([^"]+)"/g)].map(match => match[1]);
-assert.deepEqual(cards, ['quests', 'directory', 'decal-plugins', 'new-player']);
+assert.deepEqual(cards, ['quests', 'directory', 'decal-plugins', 'new-player', 'conquest-quests', 'ac-community']);
 assert(html.indexOf('id="quests"') < html.indexOf('id="directory"'));
 assert(html.indexOf('id="directory"') < html.indexOf('id="new-player"'));
 assert(html.includes('<details class="lore-fold install-walkthrough">'));
