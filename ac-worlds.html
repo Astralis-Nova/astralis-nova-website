@@ -54,7 +54,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 .background-card button,.background-controls button{border:1px solid #c2a16b;padding:9px;border-radius:7px;background:#302b26;color:#ffebc9;cursor:pointer}
 @media(max-width:760px){.portal-art{justify-self:center;width:min(100%,360px)}}
 </style>
-<link rel="stylesheet" href="/ac-adventure.css?v=20260901b">
+<link rel="stylesheet" href="/ac-adventure.css?v=20260901resources">
 <link rel="stylesheet" href="/ac-community.css?v=20260901a">
 </head>
 <body>
@@ -111,7 +111,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 </section>
 
 <section class="dashboard shell" id="directory" aria-labelledby="worldsTitle">
-<div class="adventure-section-head"><p class="eyebrow">Find your home in Dereth</p><h2 id="worldsTitle">Choose your world</h2><p>Compare rulesets and recent activity. Character counts can include bots and multiple accounts.</p></div>
+<div class="adventure-section-head"><p class="eyebrow">Find your home in Dereth</p><h2 id="worldsTitle">Choose your world</h2><p>Compare rulesets and recent activity. Character counts can include bots and multiple accounts.</p><p>Find each world’s Discord, website or wiki on its card. Directory links refresh with community listings; extra guides are curated. Discord invites can expire.</p></div>
 <div class="toolbar">
 <div class="search-row"><label><span class="eyebrow">Search worlds</span><input id="search" type="search" placeholder="Server name, feature or address…" autocomplete="off"></label><label><span class="eyebrow">Emulator</span><select id="emulator"><option value="all">All emulators</option><option>ACE</option><option>GDLE</option><option>GDL</option></select></label><label><span class="eyebrow">Sort</span><select id="sort"><option value="population">Character activity</option><option value="status">Online status</option><option value="name">World name</option></select></label></div>
 <div class="filter-row" aria-label="Ruleset filters"><button class="filter active" data-ruleset="all">All</button><button class="filter" data-ruleset="PvE">PvE</button><button class="filter" data-ruleset="PvP">PvP</button><button class="filter" data-ruleset="Hybrid">Hybrid</button><button class="filter" data-ruleset="Hardcore">Hardcore</button><button class="filter" data-ruleset="online">Online now</button></div>
@@ -308,19 +308,21 @@ var render=function(){
  grid.innerHTML=rows.map(function(w){
   var cls=String(w.ruleset||'').toLowerCase(),pop=Number.isFinite(w.characters)?w.characters.toLocaleString():'—';
   var links='';
-  if(safe(w.website))links+='<a href="'+esc(safe(w.website))+'" target="_blank" rel="noopener">World guide</a>';
-  if(safe(w.discord))links+='<a href="'+esc(safe(w.discord))+'" target="_blank" rel="noopener">Community & rules</a>';
+  var resources=Array.isArray(w.resources)?w.resources:[{label:'Discord',url:w.discord},{label:'Website',url:w.website}];
+  var seenLinks=new Set();
+  var resourceLinks=resources.filter(function(r){var url=r&&safe(r.url);if(!url||seenLinks.has(url))return false;seenLinks.add(url);return true}).map(function(r){return '<a href="'+esc(safe(r.url))+'" target="_blank" rel="noopener noreferrer" title="'+esc(r.source||'Community listing')+'">'+esc(r.label||'Resource')+' ↗</a>'}).join('');
+  var community='<div class="world-resources"><div class="offer-label">Community &amp; resources</div>'+(resourceLinks?'<div class="actions">'+resourceLinks+'</div>':'<p class="resource-note">No public community links listed yet.</p>')+'<a class="resource-report" href="#ac-community">Suggest a link / report an expired invite</a></div>';
   if(safe(w.details))links+='<a href="'+esc(safe(w.details))+'" target="_blank" rel="noopener">Server profile</a>';
   var features=Array.isArray(w.features)&&w.features.length?'<div class="offer-label">What this world offers</div><div class="feature-list">'+w.features.map(function(feature){return '<span class="feature">'+esc(feature)+'</span>'}).join('')+'</div>':'';
   var address=w.address?'<div class="connect">'+esc(w.address)+'</div>':'';
   var copy=w.address?'<button type="button" data-copy="'+esc(w.address)+'">Copy address</button>':'';
-  return '<article class="world"><div class="world-head"><div><h2>'+esc(w.name)+'</h2><div class="chips"><span class="chip '+esc(cls)+'">'+esc(w.ruleset)+'</span><span class="chip">'+esc(w.emulator)+'</span><span class="chip state '+esc(String(w.status).toLowerCase())+'">'+esc(w.status)+'</span></div></div><div class="population"><strong>'+pop+'</strong><span>characters</span></div></div><p class="world-copy">'+esc(w.description||'Community emulator world.')+'</p>'+features+address+'<div class="actions">'+copy+links+'</div><div class="freshness">Population report: '+esc(age(w.countUpdatedAt))+(Number.isFinite(w.uptime)?' · Uptime '+esc(w.uptime.toFixed(1))+'%':'')+'</div></article>';
+  return '<article class="world"><div class="world-head"><div><h2>'+esc(w.name)+'</h2><div class="chips"><span class="chip '+esc(cls)+'">'+esc(w.ruleset)+'</span><span class="chip">'+esc(w.emulator)+'</span><span class="chip state '+esc(String(w.status).toLowerCase())+'">'+esc(w.status)+'</span></div></div><div class="population"><strong>'+pop+'</strong><span>characters</span></div></div><p class="world-copy">'+esc(w.description||'Community emulator world.')+'</p>'+features+community+address+'<div class="actions">'+copy+links+'</div><div class="freshness">Population report: '+esc(age(w.countUpdatedAt))+(Number.isFinite(w.uptime)?' · Uptime '+esc(w.uptime.toFixed(1))+'%':'')+'</div></article>';
  }).join('');
  grid.querySelectorAll('[data-copy]').forEach(function(button){button.addEventListener('click',function(){navigator.clipboard.writeText(button.dataset.copy).then(function(){var old=button.textContent;button.textContent='Copied';setTimeout(function(){button.textContent=old},1400)})})});
 };
 var load=function(){
  status.textContent='Scanning community portals…';document.getElementById('refresh').disabled=true;
- fetch('/api/ac-worlds?v=20260831a',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
+ fetch('/api/ac-worlds?v=20260901resources',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
   state.worlds=Array.isArray(data.worlds)?data.worlds:[];
   document.getElementById('totalWorlds').textContent=state.worlds.length;
   document.getElementById('onlineWorlds').textContent=state.worlds.filter(function(w){return w.status==='Online'}).length;

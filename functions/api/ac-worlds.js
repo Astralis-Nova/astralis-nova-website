@@ -1,3 +1,5 @@
+import { safeResourceUrl as safeUrl, worldResources } from '../../lib/ac-world-resources.js';
+
 const HEADERS={
   "content-type":"application/json; charset=utf-8",
   "cache-control":"public, max-age=120, s-maxage=300",
@@ -7,12 +9,6 @@ const HEADERS={
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:HEADERS});
 const cleanName=value=>String(value||"").trim();
 const key=value=>cleanName(value).toLowerCase().replace(/[^a-z0-9]+/g,"");
-const safeUrl=value=>{
-  try{
-    const url=new URL(String(value||""));
-    return /^https?:$/.test(url.protocol)?url.href:"";
-  }catch{return ""}
-};
 const asDate=value=>{
   if(!value)return null;
   const normalized=String(value).replace(" UTC","Z").replace(" +0000","Z");
@@ -124,6 +120,7 @@ export async function onRequestGet(){
       address:cleanName(typeof server.address==="string"?server.address:[server.host||server.server_host,server.port||server.server_port].filter(Boolean).join(":")),
       website:safeUrl(server.website||server.website_url),
       discord:safeUrl(server.discord||server.discord_url),
+      resources:worldResources(server),
       details:`https://treestats.net/${encodeURIComponent(name)}`
     };
   }).filter(world=>world.name).sort((a,b)=>(b.characters??-1)-(a.characters??-1)||a.name.localeCompare(b.name));
