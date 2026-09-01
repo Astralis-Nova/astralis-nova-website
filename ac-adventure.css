@@ -50,6 +50,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #ff
 .adventure-panel>.source-grid{margin-top:16px}
 .adventure-panel h4{font-family:Georgia,'Times New Roman',serif;color:#f4dbac;font-size:1.3rem}
 .quest-actions a,.spoiler-toggle,.download-button,.guide-link,.actions a,.actions button{font-size:.875rem;border-color:#b9935770;border-radius:5px;background:#513d222e;color:#f5dfb8}
+.world-resources{margin-top:16px;padding-top:14px;border-top:1px solid #b9935740}
+.world-resources .actions{margin-top:0}
+.world-resources .actions a{min-height:44px;display:inline-flex;align-items:center;overflow-wrap:anywhere}
+.resource-report{display:inline-block;margin-top:10px;color:#a9cde5;font-size:.78rem;line-height:1.5;text-underline-offset:3px}
+.resource-note{font-size:.82rem;color:#bbc6d7;margin:0}
+.world-resources a:focus-visible{outline:2px solid #edc987;outline-offset:4px}
 .quest-actions a:hover,.spoiler-toggle:hover,.download-button:hover,.guide-link:hover,.actions a:hover,.actions button:hover{border-color:#edc987;background:#79542040}
 .quest-summary,.world-copy,.step p,.download-card span,.guide-details p,.guide-details li,.info p,.info li{font-size:1rem;line-height:1.6}
 .quest-card,.world,.download-card,.step{border-color:#96764955;border-radius:7px}
