@@ -1,4 +1,5 @@
 import { worldResources, isTestWorld } from '../../lib/ac-world-resources.js';
+import { worldArtwork } from '../../lib/ac-world-art.js';
 
 const HEADERS={
   "content-type":"application/json; charset=utf-8",
@@ -109,6 +110,7 @@ export async function onRequestGet(){
     return {
       name,
       description,
+      artwork:worldArtwork(name),
       features:extractFeatures(name,description),
       emulator:cleanName(server.software||server.emu||"Unknown").toUpperCase(),
       ruleset:(()=>{const inferred=inferRuleset(name,description);const declared=cleanName(server.type);return /^(Hybrid|Hardcore)$/i.test(inferred)?inferred:/^PvP$/i.test(declared)?"PvP":/^PvE$/i.test(declared)?"PvE":inferred})(),
