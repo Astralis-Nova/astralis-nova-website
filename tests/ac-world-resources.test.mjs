@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
-import { safeResourceUrl, worldResources } from '../lib/ac-world-resources.js';
+import { safeResourceUrl, worldResources, isTestWorld } from '../lib/ac-world-resources.js';
 import { onRequestGet } from '../functions/api/ac-worlds.js';
 
 test('domain-only websites normalize; unsafe and placeholder values stay absent', () => {
@@ -15,7 +15,7 @@ test('unreviewed directory links are never rendered, even if syntactically valid
   assert.equal(result.length, 0);
   assert.equal(worldResources({ name: 'FrostfACE' }).length, 0);
   assert.equal(worldResources({ name: 'Other', website: 'https://wiki.example.com' }).length, 0);
-  assert.equal(worldResources({ name: 'Conquest', discord_url: 'https://discord.gg/Gsadhhv72S' })[0].verification, 'checked');
+  assert.equal(worldResources({ name: 'Conquest', discord_url: 'https://discord.gg/Gsadhhv72S' }).length, 0);
   assert.equal(worldResources({ name: 'Conquest', discord_url: 'https://discord.gg/new' }).length, 0);
 });
 test('supplemental links never leak between similarly named worlds', () => {
@@ -28,13 +28,17 @@ test('directory API adds resources without losing population or legacy URL field
   globalThis.fetch = async url => new Response(JSON.stringify(url.endsWith('/servers.json') ? [
     { name: 'DragonMoon', discord_url: 'https://discord.gg/dragonmoon' },
     { name: 'Harvestbud', website_url: 'gdleac.com' },
-    { name: 'FrostfACE' }
+    { name: 'FrostfACE' },
+    { name: 'FunkyTEST' },
+    { name: 'GDLE Test' }
   ] : url.includes('player_counts') ? [{ server: 'DragonMoon', count: 12 }] : []));
   try {
     const response = await onRequestGet();
     assert.equal(response.status, 200);
     const data = await response.json();
     assert.equal(data.total, 3);
+    assert(!data.worlds.some(isTestWorld));
+    assert(data.worlds.every(w => w.discord === '' && w.resources.every(r => r.kind === 'website')));
     const dragon = data.worlds.find(w => w.name === 'DragonMoon');
     assert.equal(dragon.characters, 12);
     assert.equal(dragon.resources.length, 1);
@@ -48,16 +52,23 @@ test('page scripts parse and the rendered card includes community resources', ()
   for (const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)) if (match[1].trim()) new vm.Script(match[1]);
   assert(html.includes('+features+community+address+'));
   assert(html.includes('esc(r.label'));
-  assert(html.includes('No verified community links available.'));
+  assert(html.includes('No verified website available.'));
   assert(html.includes("r.verification==='checked'"));
-  assert(html.includes('href="#ac-community">Suggest a link'));
+  assert(html.includes('href="#ac-community">Suggest a website'));
+  assert(html.includes('id="discord-guide"'));
+  assert(html.includes("r.kind==='website'"));
+  assert(!/https:\/\/(?:discord\.gg|discord\.com\/invite)\//.test(html));
 });
 
-test('known expired and mismatched invites stay absent; known expiry is enforced', () => {
+test('all world invites are absent, including previously verified ones', () => {
   for (const [name, code] of [['Nexus','npZw7j6T'],['Doctide','Qts4sF58H6'],['Soulclaim','939ARjY'],['Snowreap','GHKk4ck'],['GDLE Test','jd3dEJf']]) {
     assert.equal(worldResources({ name, discord_url: 'https://discord.gg/'+code }).filter(r=>r.kind==='discord').length, 0);
   }
   const dream = { name: 'DreamWeave', discord_url: 'https://discord.gg/KFnBFpFQV' };
-  assert.equal(worldResources(dream, Date.parse('2026-09-01')).length, 1);
-  assert.equal(worldResources(dream, Date.parse('2026-09-26')).length, 0);
+  assert.equal(worldResources(dream).length, 0);
+});
+
+test('exclude identified test worlds, not regular worlds mentioning development or temporarily offline', () => {
+  for (const name of ['FunkyTEST', 'GDLE Test', ' gdle test ']) assert(isTestWorld({name}));
+  for (const name of ['Conquest', 'FunkyTown 2.0', 'FunkyTown PK', 'InfiniteLeaftide', 'Nexus', 'DreamWeave']) assert(!isTestWorld({name, description:'active development', status:'Offline'}));
 });
