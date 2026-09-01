@@ -28,18 +28,22 @@ function looksLikeSpam(message) {
   return links.length > 1;
 }
 
-export async function onRequestGet({ env }) {
+export async function onRequestGet({ env, request }) {
   if (!env.DB) return json({ error: "Guestbook database is not connected." }, 503);
 
   try {
+    // Reuse the public ledger without changing its schema or the homepage feed.
+    const acWorlds = request && new URL(request.url).searchParams.get("scope") === "ac-worlds";
+    const scopeClause = acWorlds ? "WHERE message LIKE '[AC Worlds / %'" : "";
     const [entriesResult, countResult] = await Promise.all([
       env.DB.prepare(
         `SELECT id, name, location, favorite_song, message, created_at
          FROM guestbook_entries
+         ${scopeClause}
          ORDER BY created_at DESC
          LIMIT 50`
       ).all(),
-      env.DB.prepare("SELECT COUNT(*) AS total FROM guestbook_entries").first(),
+      env.DB.prepare(`SELECT COUNT(*) AS total FROM guestbook_entries ${scopeClause}`).first(),
     ]);
 
     return json({
