@@ -12,14 +12,13 @@
       badge: "Dereth Server Nexus"
     },
     {
-      id: "acemulator",
-      href: "https://emulator.ac/",
-      ariaLabel: "Open the ACEmulator website",
+      id: "reserved-world",
+      placeholder: true,
+      ariaLabel: "Uncharted World, reserved for future content",
       planetClass: "planet-ace",
-      title: "ACEmulator Forge",
-      description: "The open-source engine and community rebuilding the world of Dereth.",
-      badge: "External Portal",
-      external: true
+      title: "Uncharted World",
+      description: "An empty world. Its story is still to be discovered.",
+      badge: "Future destination"
     },
     {
       id: "eraser-board",
@@ -70,15 +69,17 @@
 
   function renderWorldCard(world) {
     const externalAttributes = world.external ? ' target="_blank" rel="noopener noreferrer"' : "";
+    const tag = world.placeholder ? "div" : "a";
+    const destination = world.placeholder ? "" : ` href="${world.href}"`;
     return `
-      <a class="astralis-planet-link" data-world="${world.id}" href="${world.href}" aria-label="${world.ariaLabel}"${externalAttributes}>
+      <${tag} class="astralis-planet-link" data-world="${world.id}"${destination} aria-label="${world.ariaLabel}"${externalAttributes}>
         <span class="astralis-planet ${world.planetClass}" aria-hidden="true"></span>
         <span class="astralis-planet-copy">
           <strong>${world.title}</strong>
           <span>${world.description}</span>
           <span class="astralis-world-badge">${world.badge}</span>
         </span>
-      </a>`;
+      </${tag}>`;
   }
 
   function installStyles() {
