@@ -1,4 +1,4 @@
-import { worldResources } from '../../lib/ac-world-resources.js';
+import { worldResources, isTestWorld } from '../../lib/ac-world-resources.js';
 
 const HEADERS={
   "content-type":"application/json; charset=utf-8",
@@ -93,7 +93,7 @@ export async function onRequestGet(){
     });
   }
   const statusMap=normalizeStatusRows(statusData);
-  const worlds=servers.map(server=>{
+  const worlds=servers.filter(server=>!isTestWorld(server)).map(server=>{
     const name=cleanName(server.name);
     const description=cleanName(server.description);
     const count=countMap.get(key(name))||{
@@ -120,7 +120,7 @@ export async function onRequestGet(){
       checkedAt:monitored?.checkedAt||null,
       address:cleanName(typeof server.address==="string"?server.address:[server.host||server.server_host,server.port||server.server_port].filter(Boolean).join(":")),
       website:resources.find(link=>link.kind==='website')?.url||'',
-      discord:resources.find(link=>link.kind==='discord')?.url||'',
+      discord:'',
       resources,
       details:`https://treestats.net/${encodeURIComponent(name)}`
     };
