@@ -54,12 +54,19 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 .background-card button,.background-controls button{border:1px solid #c2a16b;padding:9px;border-radius:7px;background:#302b26;color:#ffebc9;cursor:pointer}
 @media(max-width:760px){.portal-art{justify-self:center;width:min(100%,360px)}}
 </style>
+<link rel="stylesheet" href="/ac-adventure.css?v=20260901a">
 </head>
 <body>
 <header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>AC WORLDS</small></a><nav class="nav"><a href="#quests">Quest search</a><a href="#downloads">Download files</a><a href="#new-player">Install guide</a><a href="#directory">Worlds</a><a href="#about">About the data</a><a href="/conquest.html">Conquest archive</a><a href="/">Home</a></nav></div></header>
 <main>
-<section class="hero shell"><div><p class="eyebrow">Asheron’s Call · The portals remain open</p><h1>AC<br>Worlds</h1><p>Return to Dereth. Find your world, follow a forgotten quest, and discover what the community is building beyond the next portal.</p><nav class="realm-paths" aria-label="Explore AC Worlds"><a href="#quests">Find an item or quest</a><a href="#directory">Choose your world</a><a href="#new-player">Begin your journey</a><a href="#decal-plugins">Plugins &amp; tools</a></nav></div><figure class="portal-art"><img id="portalSpaceImage" class="portal-space-image" src="/assets/ac-portals/portal-space-still.webp" width="320" height="180" alt="Asheron’s Call portal space: a dark blue-gray rippling tunnel stretching into the distance"><button type="button" id="portalSpaceToggle" aria-controls="portalSpaceImage" aria-label="Play portal space" data-playing="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="portal-play-icon" d="M7 4v16l13-8z"/><path class="portal-pause-icon" d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg></button></figure></section>
-<section class="dereth-intro shell" id="ac-about" aria-label="About the community"><article><h2>A world rebuilt by its players</h2><p>ACEmulator is an open-source community project rebuilding Asheron’s Call. Its independently operated servers are not official Turbine or WB Games servers. AC Worlds brings ACE, GDLE and other community worlds, guides and tools together.</p><p><a href="https://emulator.ac/about/" target="_blank" rel="noopener noreferrer">About ACEmulator — read the project’s story ↗</a></p></article><aside class="hero-note"><strong>Character count ≠ human count</strong>Population figures may include bots, macros and several accounts controlled by one person. AC Worlds reports connected characters and always shows how fresh the reading is.</aside></section>
+<section class="hero shell"><div><p class="eyebrow">Asheron’s Call · The portals remain open</p><h1>AC<br>Worlds</h1><p>Find your world. Rediscover a quest. Step back into Dereth.</p><a class="hero-search-link" href="#quests">Find an item or quest <span aria-hidden="true">↗</span></a></div><figure class="portal-art"><img id="portalSpaceImage" class="portal-space-image" src="/assets/ac-portals/portal-space-still.webp" width="320" height="180" alt="Asheron’s Call portal space: a dark blue-gray rippling tunnel stretching into the distance"><button type="button" id="portalSpaceToggle" aria-controls="portalSpaceImage" aria-label="Play portal space" data-playing="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="portal-play-icon" d="M7 4v16l13-8z"/><path class="portal-pause-icon" d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg></button></figure></section>
+<nav class="adventure-paths shell" aria-label="Explore AC Worlds">
+<a class="adventure-path" href="#quests"><img src="/assets/ac-portals/armor-concept.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Items &amp; quests</strong><span>Find your next reward</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
+<a class="adventure-path" href="#directory"><img src="/assets/ac-portals/sho-roadside.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Choose a world</strong><span>PvE, PvP &amp; custom realms</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
+<a class="adventure-path" href="#decal-plugins"><img src="/assets/ac-portals/portal-gateway.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Plugins &amp; tools</strong><span>Browse plugins &amp; legacy tools</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
+<a class="adventure-path" href="#new-player"><img src="/assets/ac-portals/portal-space-entrance.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Enter Dereth</strong><span>Client, launcher &amp; setup</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
+</nav>
+
 
 <details class="background-library shell" id="backgrounds">
 <summary>Choose your Dereth background — portals, armor &amp; maps</summary>
@@ -69,12 +76,88 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <div class="background-gallery" id="backgroundGallery"></div>
 <p>The specific portal-route map from your screenshot has not been identified yet; it is not included as a guessed replacement. <a href="https://www.drunkenfell.com/index.php?title=Category%3AMaps" target="_blank" rel="noopener noreferrer">Browse more community maps ↗</a></p>
 </details>
+<section class="quest-navigator shell" id="quests" aria-labelledby="quest-title">
+<div class="quest-shell">
+<div class="quest-head"><div><p class="eyebrow">Quest & custom content database</p><h2 id="quest-title">Items &amp; quests</h2><p>Find quests, loot and custom content. Choose a server to narrow the search.</p></div><div class="quest-count"><strong id="questCount">—</strong><span>indexed records</span></div></div>
+<div class="quest-controls">
+<label><span class="eyebrow">Search content</span><input id="questSearch" type="search" placeholder="Quest, boss, reward, NPC or location…" autocomplete="off"></label>
+<label><span class="eyebrow">Server</span><select id="questServer"><option value="all">All servers</option></select></label>
+<label><span class="eyebrow">Content type</span><select id="questType"><option value="all">All content</option></select></label>
+</div>
+<form id="databaseSearch" class="source-console">
+<label for="databaseTarget"><strong>Find item &amp; quest references</strong></label>
+<div class="quest-controls" style="margin:10px 0"><select id="databaseTarget" aria-label="Database to search"><option value="web">All AC sources — start here</option><option value="conquest">Conquest Wiki — custom content</option><option value="acpedia">ACPedia — retail content</option><option value="fandom">Asheron's Call Fandom — retail content</option></select><button class="spoiler-toggle" type="submit">Find references</button></div>
+<p id="databaseHelp" role="status">Type above for saved references and source-search links. Pressing Enter keeps you here.</p>
+<div id="itemReferences" aria-live="polite"></div>
+</form>
+<p class="quest-examples">Try a Conquest scan: <button type="button" data-quest-example="Thorsten's Tears">Thorsten’s Tears</button> · <button type="button" data-quest-example="Ghost Slayer">Ghost Slayer</button> · <button type="button" data-quest-example="Liberation of Uziz">Liberation of Uziz</button> · <button type="button" data-quest-example="tinkering">tinkering</button></p>
+<details class="source-console source-archives"><summary>More AC sources — wikis, recipes &amp; archives</summary><div class="source-console-head"><div><h3 id="source-console-title">Search All AC Sources</h3><p>Search community archives. Retail and custom-server content can differ.</p></div><p class="source-query" id="sourceQuery">Enter a term to target every source.</p></div><div class="source-grid">
+<a class="source-link" data-ac-source="conquest" href="https://conquestac.fandom.com/wiki/Special:Search" target="_blank" rel="noopener noreferrer"><strong>Conquest Wiki ↗</strong><span>Custom quests, items, bosses and systems</span></a>
+<a class="source-link" data-ac-source="acpedia" href="https://acpedia.org/wiki/Home" target="_blank" rel="noopener noreferrer"><strong>ACPedia ↗</strong><span>Retail quests, items, NPCs, creatures and lore</span></a>
+<a class="source-link" data-ac-source="accpp" href="https://www.accpp.net/recipe-list" target="_blank" rel="noopener noreferrer"><strong>ACCPP Recipes ↗</strong><span>Crafting recipes, ingredients and combinations</span></a>
+<a class="source-link" data-ac-source="treestats" href="https://treestats.net/" target="_blank" rel="noopener noreferrer"><strong>TreeStats ↗</strong><span>Servers, characters, maps and emulator records</span></a>
+<a class="source-link" data-ac-source="ace" href="https://github.com/ACEmulator/ACE-World-16PY" target="_blank" rel="noopener noreferrer"><strong>ACE 16PY historical data ↗</strong><span>February 2005-era data; not Conquest or End-of-Retail</span></a>
+<a class="source-link" data-ac-source="fandom" href="https://asheron.fandom.com/wiki/Home" target="_blank" rel="noopener noreferrer"><strong>AC Fandom ↗</strong><span>Retail items and quests; custom servers can differ</span></a>
+<a class="source-link" data-ac-source="web" href="https://www.google.com/search?q=Asheron%27s+Call" target="_blank" rel="noopener noreferrer"><strong>AC Web Search ↗</strong><span>Broader guides, videos and community discussions</span></a>
+</div></details>
+<div class="quest-results" id="questResults" aria-live="polite"></div>
+<p class="quest-disclaimer">Server owners control their custom content and may change it without notice. Treat the linked server wiki or Discord as the final authority. Records marked “community source” have not been independently verified by Astralis Nova.</p>
+</div>
+</section>
+
+<section class="dashboard shell" id="directory" aria-labelledby="worldsTitle">
+<div class="adventure-section-head"><p class="eyebrow">Find your home in Dereth</p><h2 id="worldsTitle">Choose your world</h2><p>Compare rulesets and recent activity. Character counts can include bots and multiple accounts.</p></div>
+<div class="toolbar">
+<div class="search-row"><label><span class="eyebrow">Search worlds</span><input id="search" type="search" placeholder="Server name, feature or address…" autocomplete="off"></label><label><span class="eyebrow">Emulator</span><select id="emulator"><option value="all">All emulators</option><option>ACE</option><option>GDLE</option><option>GDL</option></select></label><label><span class="eyebrow">Sort</span><select id="sort"><option value="population">Character activity</option><option value="status">Online status</option><option value="name">World name</option></select></label></div>
+<div class="filter-row" aria-label="Ruleset filters"><button class="filter active" data-ruleset="all">All</button><button class="filter" data-ruleset="PvE">PvE</button><button class="filter" data-ruleset="PvP">PvP</button><button class="filter" data-ruleset="Hybrid">Hybrid</button><button class="filter" data-ruleset="Hardcore">Hardcore</button><button class="filter" data-ruleset="online">Online now</button></div>
+</div>
+<div class="summary"><div class="stat"><strong id="totalWorlds">—</strong><span>Worlds listed</span></div><div class="stat"><strong id="onlineWorlds">—</strong><span>Reported online</span></div><div class="stat"><strong id="pvpWorlds">—</strong><span>PvP / hybrid worlds</span></div><div class="stat"><strong id="visibleCharacters">—</strong><span>Recent characters shown</span></div></div>
+<div class="statusline"><span id="dataStatus" role="status">Opening portals to the community directory…</span><button id="refresh" type="button">↻ Refresh data</button></div>
+<div class="world-grid" id="worldGrid" aria-live="polite"><div class="empty">Loading active emulator worlds…</div></div>
+<details class="lore-fold" id="about"><summary>Server status, character counts &amp; community sources</summary><div class="explain"><article class="info"><h2>How the readings work</h2><p>Server details come from the community-maintained AC server list and TreeStats. Recent character reports are not guaranteed to represent unique people. A stale reading remains visibly marked instead of pretending to be live.</p><ul><li><strong>Online:</strong> confirmed by the monitor or supported by a recent report.</li><li><strong>Unknown:</strong> no dependable recent status.</li><li><strong>Offline:</strong> explicitly reported down by the status source.</li></ul></article><article class="info"><h2>Community-powered Dereth</h2><p>These worlds are independently operated community servers. Astralis Nova does not own, rank or officially endorse them. Always read a server’s rules and community information before connecting.</p><p><a href="https://emulator.ac/" target="_blank" rel="noopener">ACEmulator project</a> · <a href="https://github.com/acresources/serverslist/" target="_blank" rel="noopener">Community server list</a> · <a href="https://treestats.net/servers" target="_blank" rel="noopener">TreeStats directory</a></p></article></div></details>
+</section>
+<section id="decal-plugins" class="source-console shell adventure-panel" aria-labelledby="pluginTitle">
+<p class="eyebrow">Equip your journey</p><h2 id="pluginTitle">Plugins &amp; tools</h2>
+<p>126 archived plugin and tool listings. Check publisher requirements and your server’s rules before installing.</p><details class="lore-fold"><summary>Archive dates, coverage &amp; compatibility</summary><p>126 entries: 121 from <a href="https://www.accpp.net/latest-decal-plugins" target="_blank" rel="noopener noreferrer">ACCPP's plugin archive</a> plus 5 legacy discoveries, indexed September 1, 2026. A snapshot, not every plugin ever created. Listed versions are not guaranteed latest; release dates and compatibility are unverified.</p></details>
+<div class="quest-controls"><label>Find a plugin<input type="search" id="pluginSearch" placeholder="Name or author…"></label><label>Plugin dropdown<select id="pluginSelect"></select></label><label>Browse more catalogs<select id="pluginCatalog"><option value="https://www.accpp.net/latest-decal-plugins">Latest archive listings — ACCPP</option><option value="https://www.silostoybox.com/plugins.php?disable_mobile=true">Legacy catalog — Silo's Toy Box</option><option value="https://virindi.net/plugins/">Virindi publisher downloads</option><option value="https://utilitybelt.gitlab.io/">UtilityBelt publisher</option><option value="https://www.decaldev.com/">Decal framework</option></select></label></div>
+<div class="quest-actions"><a id="pluginCatalogLink" href="https://www.accpp.net/latest-decal-plugins" target="_blank" rel="noopener noreferrer">Open selected catalog ↗</a></div>
+<div id="pluginDetails" class="source-console" aria-live="polite"></div>
+<p class="source-note">Search “legacy” to find the added historical plugins. Legacy — compatibility unverified: project listings are preserved references, not tested downloads or confirmation that they work with current Decal, ACE, or Conquest. Check requirements and your server’s rules before installing.</p>
+<p>Review publisher instructions and server automation rules before installing. An archive listing is not a safety or compatibility endorsement. ACCompanion is a related standalone tool, not a Decal plugin.</p>
+</section>
+<section id="ac-resources" class="source-console shell adventure-panel" aria-labelledby="resourcesTitle">
+<p class="eyebrow">Maps, lore &amp; community</p><h2 id="resourcesTitle">Explore more of Dereth</h2>
+<p>Community tools, maps and preserved knowledge. These links open external sites; their content is not imported into our quest search. Sources reviewed September 1, 2026.</p>
+<div class="source-grid">
+<a class="source-link" href="https://planner.treestats.net/" target="_blank" rel="noopener noreferrer"><strong>Character Planner ↗</strong><span>Plan an AC character build. Custom-server rules and progression may differ.</span></a>
+<a class="source-link" href="https://dungeonmaps.treestats.net/" target="_blank" rel="noopener noreferrer"><strong>AC Dungeon Maps ↗</strong><span>Browse dungeon layouts. Custom dungeons and server changes may not be covered.</span></a>
+<a class="source-link" href="https://maps.utilitybelt.me/" target="_blank" rel="noopener noreferrer"><strong>UtilityBelt Maps ↗</strong><span>Another mapping project recommended by AC Dungeon Maps.</span></a>
+<a class="source-link" href="https://www.immortalbob.com/phpBB3/viewforum.php?f=25" target="_blank" rel="noopener noreferrer"><strong>Community utilities &amp; guides ↗</strong><span>Immortalbob’s plugin discussions, troubleshooting and older community tools. Check each post’s date.</span></a>
+<a class="source-link" href="https://github.com/Chorizite/Chorizite" target="_blank" rel="noopener noreferrer"><strong>Chorizite framework ↗</strong><span>Open-source AC plugin manager with Lua and HTML/CSS UI support. Separate from standard Decal plugins; not labeled legacy.</span></a>
+<a class="source-link" href="https://github.com/kaldorgreybear/AsheronsCall-VTGoArrow" target="_blank" rel="noopener noreferrer"><strong>GoArrow community fork ↗</strong><span>Source-code changes for dungeon-map loading. A community fork, not a verified replacement or tested download.</span></a>
+</div>
+<details class="lore-fold" id="ac-guide-library">
+<summary id="guideLibraryTitle">Classic guides, walkthroughs &amp; legacy sites</summary>
+<p>More places to research Dereth, alongside ACPedia and the retail and Conquest Fandom links above. These are external guides, not additional indexed quest results. A working guide index does not guarantee every linked page is complete.</p>
+<div class="source-grid">
+<a class="source-link" href="https://www.thejackcat.com/" target="_blank" rel="noopener noreferrer"><strong>Maggie the Jackcat ↗</strong><span>Legacy / preserved guide. Classic AC reference with travel, shopping and activity sections. Maggie notes that functionality may not be fully restored; not a current custom-server guide.</span></a>
+<a class="source-link" href="https://almarsguides.com/Computer/Games/AsheronsCall/Guides/" target="_blank" rel="noopener noreferrer"><strong>Almar’s AC Guides ↗</strong><span>Community walkthroughs for character building, the Facility Hub, transportation, loot, salvaging and tinkering. The index is marked under construction; check individual guides and server differences.</span></a>
+<a class="source-link" href="https://www.drunkenfell.com/index.php?title=Home" target="_blank" rel="noopener noreferrer"><strong>Drunkapedia — Drunkenfell Wiki ↗</strong><span>Server-specific wiki with custom content, quests, items, mechanics and lore. Drunkenfell changes do not automatically apply to Conquest or other worlds.</span></a>
+<a class="source-link" href="https://www.reddit.com/r/AsheronsCall/comments/1ap6a7l/postretail_guide_to_useful_quests/" target="_blank" rel="noopener noreferrer"><strong>Post-Retail Useful Quests ↗</strong><span>Community-written quest guide covering useful unlocks and progression rewards. Read corrections and verify requirements against your server.</span></a>
+<a class="source-link" href="https://www.reddit.com/r/AsheronsCall/comments/1d7xvtw/asherons_call_loremaster_guide_updated/" target="_blank" rel="noopener noreferrer"><strong>Loremaster leveling project ↗</strong><span>Author’s guide announcement linking a quest-and-exploration leveling route. The linked announcement describes levels 1–30 ready for testing and later levels as work in progress, not a complete endgame guide.</span></a>
+</div>
+</details>
+<details class="lore-fold"><summary>Which source should I use?</summary>
+<p><strong>Item or quest:</strong> use the source-search links above; choose Conquest for Conquest-specific content and cross-check retail references. <strong>Character build:</strong> try the planner. <strong>Lost in a dungeon:</strong> open the map tools. <strong>Plugin trouble:</strong> check publisher instructions and dated community discussions.</p>
+<p>Retail references, emulator data and custom-server content are not interchangeable. Downloads and automation tools remain subject to compatibility checks and your server’s rules.</p></details>
+</section>
+
 <section class="new-player shell" id="new-player">
 <div class="guide-shell">
-<div class="guide-head"><div><p class="eyebrow">First journey to Dereth</p><h2>New Player Launch Guide</h2><p>Install the game, choose a community world, and enter safely. Start with the basic client and launcher; add plugins only after the unmodified game works.</p></div><a class="guide-link" href="https://emulator.ac/how-to-play/" target="_blank" rel="noopener">Official ACEmulator setup ↗</a></div>
+<div class="guide-head"><div><p class="eyebrow">First journey to Dereth</p><h2>New Player Launch Guide</h2><p>Client → End-of-Retail files → launcher. Get the game working before adding plugins.</p></div><a class="guide-link" href="https://emulator.ac/how-to-play/" target="_blank" rel="noopener">Official ACEmulator setup ↗</a></div>
 <section class="downloads" id="downloads" aria-labelledby="downloads-title">
 <h3 id="downloads-title">Download files</h3>
-<p>Get these in order. The buttons open the same sources linked by ACEmulator’s official setup guide; Astralis Nova does not repackage or alter the installers.</p>
+<p>Download in order from the sources linked by ACEmulator. We do not repackage installers.</p>
 <div class="download-grid">
 <article class="download-card"><small>File 1</small><strong>AC client installer</strong><span><code>ac1install.exe</code> installs the original game client. The Internet Archive copy preserves Turbine’s installer.</span><a class="download-button" href="https://web.archive.org/web/20201121104423/http://content.turbine.com/sites/clientdl/ac1/ac1install.exe" target="_blank" rel="noopener">Download ac1install.exe ↗</a></article>
 <article class="download-card"><small>File 2</small><strong>End-of-Retail client files</strong><span>The four current client files. Open the ZIP, copy all four into the Asheron’s Call folder, and choose Replace.</span><a class="download-button" href="https://mega.nz/#!Q98n0BiR!p5IugPS8ZkQ7uX2A_LdN3Un2_wMX4gZBHowgs1Qomng" target="_blank" rel="noopener">Download EoR package ↗</a></article>
@@ -85,7 +168,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 </div>
 <p class="source-note">On MEGA, choose the download arrow—not “Save to MEGA.” Scan downloads normally and never reuse an important password on an emulator server.</p>
 </section>
-<div class="steps">
+<details class="lore-fold install-walkthrough"><summary>Six-step installation walkthrough</summary><div class="steps">
 <article class="step"><b>1</b><h3>Use a Windows computer</h3><p>The original Asheron’s Call client and the common community launchers are Windows software. Keep the game in a normal writable folder such as <code>C:\Turbine\Asheron's Call</code>.</p></article>
 <article class="step"><b>2</b><h3>Install the AC client</h3><p>Follow ACEmulator’s official How to Play page for its current approved client sources. Run the installer using its default location unless you have a reason to change it.</p></article>
 <article class="step"><b>3</b><h3>Apply End-of-Retail files</h3><p>The official guide provides the current End-of-Retail client-file package. Copy its four files into the AC folder and choose <strong>Replace</strong> when prompted.</p></article>
@@ -93,6 +176,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <article class="step"><b>5</b><h3>Create an account</h3><p>Most ACE worlds create an account on the first successful login. Choose a unique username and password; do not reuse your email, banking, work, or other important password.</p></article>
 <article class="step"><b>6</b><h3>Enter Dereth</h3><p>Select the world, enter the new credentials and press Launch. Read that server’s website or Discord first because account limits, botting rules and custom files vary.</p></article>
 </div>
+</details>
 <div class="guide-details">
 <details><summary>ACE, GDLE and special client files</summary><p><strong>ACE</strong> worlds generally use the End-of-Retail client described in the official ACEmulator guide. Some <strong>GDLE/classic-era</strong> or heavily customized worlds require their own DAT files.</p><p>Never overwrite your working client blindly. Make a separate copy of the complete AC folder for a classic or custom world, then follow that world’s own website or Discord instructions.</p></details>
 <details><summary>Add a server manually</summary><ol><li>Copy the server address from an AC Worlds card.</li><li>Open ThwargLauncher and switch to <strong>Advanced View</strong>.</li><li>Choose <strong>Edit Servers → Add Server</strong>.</li><li>Enter the world name, host and port shown here.</li><li>Select the emulator option required by the server, save it, then return to Simple View.</li></ol><p><a href="https://emulator.ac/how-to-add-your-private-server-to-thwarglauncher/" target="_blank" rel="noopener">Official manual-server instructions ↗</a></p></details>
@@ -103,80 +187,8 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 </div>
 </section>
 
-<section class="quest-navigator shell" id="quests" aria-labelledby="quest-title">
-<div class="quest-shell">
-<div class="quest-head"><div><p class="eyebrow">Quest & custom content database</p><h2 id="quest-title">Dereth Mission Navigator</h2><p>Search published server-specific quests, bosses, systems, hubs, rewards and progression guides. Every record identifies its world and opens the community source that maintains the information.</p></div><div class="quest-count"><strong id="questCount">—</strong><span>indexed records</span></div></div>
-<div class="quest-controls">
-<label><span class="eyebrow">Search content</span><input id="questSearch" type="search" placeholder="Quest, boss, reward, NPC or location…" autocomplete="off"></label>
-<label><span class="eyebrow">Server</span><select id="questServer"><option value="all">All servers</option></select></label>
-<label><span class="eyebrow">Content type</span><select id="questType"><option value="all">All content</option></select></label>
-</div>
-<form id="databaseSearch" class="source-console">
-<label for="databaseTarget"><strong>Find item &amp; quest references</strong></label>
-<div class="quest-controls" style="margin:10px 0"><select id="databaseTarget" aria-label="Database to search"><option value="web">All AC sources — start here</option><option value="conquest">Conquest Wiki — custom content</option><option value="acpedia">ACPedia — retail content</option><option value="fandom">Asheron's Call Fandom — retail content</option></select><button class="spoiler-toggle" type="submit">Find references</button></div>
-<p id="databaseHelp" role="status">Type an item or quest above. Direct references we have saved and query-specific search links appear here. Enter keeps you on this page; choose a link to open another site.</p>
-<div id="itemReferences" aria-live="polite"></div>
-</form>
-<p class="quest-examples">Try a Conquest scan: <button type="button" data-quest-example="Thorsten's Tears">Thorsten’s Tears</button> · <button type="button" data-quest-example="Ghost Slayer">Ghost Slayer</button> · <button type="button" data-quest-example="Liberation of Uziz">Liberation of Uziz</button> · <button type="button" data-quest-example="tinkering">tinkering</button></p>
-<section class="source-console" aria-labelledby="source-console-title"><div class="source-console-head"><div><h3 id="source-console-title">Search All AC Sources</h3><p>Internal matches appear below. These live portals search larger community archives without pretending retail and custom-server information are identical.</p></div><p class="source-query" id="sourceQuery">Enter a term to target every source.</p></div><div class="source-grid">
-<a class="source-link" data-ac-source="conquest" href="https://conquestac.fandom.com/wiki/Special:Search" target="_blank" rel="noopener noreferrer"><strong>Conquest Wiki ↗</strong><span>Custom quests, items, bosses and systems</span></a>
-<a class="source-link" data-ac-source="acpedia" href="https://acpedia.org/wiki/Home" target="_blank" rel="noopener noreferrer"><strong>ACPedia ↗</strong><span>Retail quests, items, NPCs, creatures and lore</span></a>
-<a class="source-link" data-ac-source="accpp" href="https://www.accpp.net/recipe-list" target="_blank" rel="noopener noreferrer"><strong>ACCPP Recipes ↗</strong><span>Crafting recipes, ingredients and combinations</span></a>
-<a class="source-link" data-ac-source="treestats" href="https://treestats.net/" target="_blank" rel="noopener noreferrer"><strong>TreeStats ↗</strong><span>Servers, characters, maps and emulator records</span></a>
-<a class="source-link" data-ac-source="ace" href="https://github.com/ACEmulator/ACE-World-16PY" target="_blank" rel="noopener noreferrer"><strong>ACE 16PY historical data ↗</strong><span>February 2005-era data; not Conquest or End-of-Retail</span></a>
-<a class="source-link" data-ac-source="fandom" href="https://asheron.fandom.com/wiki/Home" target="_blank" rel="noopener noreferrer"><strong>AC Fandom ↗</strong><span>Retail items and quests; custom servers can differ</span></a>
-<a class="source-link" data-ac-source="web" href="https://www.google.com/search?q=Asheron%27s+Call" target="_blank" rel="noopener noreferrer"><strong>AC Web Search ↗</strong><span>Broader guides, videos and community discussions</span></a>
-</div></section>
-<div class="quest-results" id="questResults" aria-live="polite"></div>
-<section id="decal-plugins" class="source-console" aria-labelledby="pluginTitle">
-<h3 id="pluginTitle">Decal plugins &amp; related tools</h3>
-<p>126 entries: 121 from <a href="https://www.accpp.net/latest-decal-plugins" target="_blank" rel="noopener noreferrer">ACCPP's plugin archive</a> plus 5 legacy discoveries, indexed September 1, 2026. A snapshot, not every plugin ever created. Listed versions are not guaranteed latest; release dates and compatibility are unverified.</p>
-<div class="quest-controls"><label>Find a plugin<input type="search" id="pluginSearch" placeholder="Name or author…"></label><label>Plugin dropdown<select id="pluginSelect"></select></label><label>Browse more catalogs<select id="pluginCatalog"><option value="https://www.accpp.net/latest-decal-plugins">Latest archive listings — ACCPP</option><option value="https://www.silostoybox.com/plugins.php?disable_mobile=true">Legacy catalog — Silo's Toy Box</option><option value="https://virindi.net/plugins/">Virindi publisher downloads</option><option value="https://utilitybelt.gitlab.io/">UtilityBelt publisher</option><option value="https://www.decaldev.com/">Decal framework</option></select></label></div>
-<div class="quest-actions"><a id="pluginCatalogLink" href="https://www.accpp.net/latest-decal-plugins" target="_blank" rel="noopener noreferrer">Open selected catalog ↗</a></div>
-<div id="pluginDetails" class="source-console" aria-live="polite"></div>
-<p class="source-note">Search “legacy” to find the added historical plugins. Legacy — compatibility unverified: project listings are preserved references, not tested downloads or confirmation that they work with current Decal, ACE, or Conquest. Check requirements and your server’s rules before installing.</p>
-<p>Review publisher instructions and server automation rules before installing. An archive listing is not a safety or compatibility endorsement. ACCompanion is a related standalone tool, not a Decal plugin.</p>
-</section>
-<section id="ac-resources" class="source-console" aria-labelledby="resourcesTitle">
-<h3 id="resourcesTitle">Explore more of Dereth</h3>
-<p>Community tools, maps and preserved knowledge. These links open external sites; their content is not imported into our quest search. Sources reviewed September 1, 2026.</p>
-<div class="source-grid">
-<a class="source-link" href="https://planner.treestats.net/" target="_blank" rel="noopener noreferrer"><strong>Character Planner ↗</strong><span>Plan an AC character build. Custom-server rules and progression may differ.</span></a>
-<a class="source-link" href="https://dungeonmaps.treestats.net/" target="_blank" rel="noopener noreferrer"><strong>AC Dungeon Maps ↗</strong><span>Browse dungeon layouts. Custom dungeons and server changes may not be covered.</span></a>
-<a class="source-link" href="https://maps.utilitybelt.me/" target="_blank" rel="noopener noreferrer"><strong>UtilityBelt Maps ↗</strong><span>Another mapping project recommended by AC Dungeon Maps.</span></a>
-<a class="source-link" href="https://www.immortalbob.com/phpBB3/viewforum.php?f=25" target="_blank" rel="noopener noreferrer"><strong>Community utilities &amp; guides ↗</strong><span>Immortalbob’s plugin discussions, troubleshooting and older community tools. Check each post’s date.</span></a>
-<a class="source-link" href="https://github.com/Chorizite/Chorizite" target="_blank" rel="noopener noreferrer"><strong>Chorizite framework ↗</strong><span>Open-source AC plugin manager with Lua and HTML/CSS UI support. Separate from standard Decal plugins; not labeled legacy.</span></a>
-<a class="source-link" href="https://github.com/kaldorgreybear/AsheronsCall-VTGoArrow" target="_blank" rel="noopener noreferrer"><strong>GoArrow community fork ↗</strong><span>Source-code changes for dungeon-map loading. A community fork, not a verified replacement or tested download.</span></a>
-</div>
-<section id="ac-guide-library" aria-labelledby="guideLibraryTitle">
-<h4 id="guideLibraryTitle">AC guide library — walkthroughs, wikis &amp; legacy sites</h4>
-<p>More places to research Dereth, alongside ACPedia and the retail and Conquest Fandom links above. These are external guides, not additional indexed quest results. A working guide index does not guarantee every linked page is complete.</p>
-<div class="source-grid">
-<a class="source-link" href="https://www.thejackcat.com/" target="_blank" rel="noopener noreferrer"><strong>Maggie the Jackcat ↗</strong><span>Legacy / preserved guide. Classic AC reference with travel, shopping and activity sections. Maggie notes that functionality may not be fully restored; not a current custom-server guide.</span></a>
-<a class="source-link" href="https://almarsguides.com/Computer/Games/AsheronsCall/Guides/" target="_blank" rel="noopener noreferrer"><strong>Almar’s AC Guides ↗</strong><span>Community walkthroughs for character building, the Facility Hub, transportation, loot, salvaging and tinkering. The index is marked under construction; check individual guides and server differences.</span></a>
-<a class="source-link" href="https://www.drunkenfell.com/index.php?title=Home" target="_blank" rel="noopener noreferrer"><strong>Drunkapedia — Drunkenfell Wiki ↗</strong><span>Server-specific wiki with custom content, quests, items, mechanics and lore. Drunkenfell changes do not automatically apply to Conquest or other worlds.</span></a>
-<a class="source-link" href="https://www.reddit.com/r/AsheronsCall/comments/1ap6a7l/postretail_guide_to_useful_quests/" target="_blank" rel="noopener noreferrer"><strong>Post-Retail Useful Quests ↗</strong><span>Community-written quest guide covering useful unlocks and progression rewards. Read corrections and verify requirements against your server.</span></a>
-<a class="source-link" href="https://www.reddit.com/r/AsheronsCall/comments/1d7xvtw/asherons_call_loremaster_guide_updated/" target="_blank" rel="noopener noreferrer"><strong>Loremaster leveling project ↗</strong><span>Author’s guide announcement linking a quest-and-exploration leveling route. The linked announcement describes levels 1–30 ready for testing and later levels as work in progress, not a complete endgame guide.</span></a>
-</div>
-</section>
-<h4>Where should I look?</h4>
-<p><strong>Item or quest:</strong> use the source-search links above; choose Conquest for Conquest-specific content and cross-check retail references. <strong>Character build:</strong> try the planner. <strong>Lost in a dungeon:</strong> open the map tools. <strong>Plugin trouble:</strong> check publisher instructions and dated community discussions.</p>
-<p>Retail references, emulator data and custom-server content are not interchangeable. Downloads and automation tools remain subject to compatibility checks and your server’s rules.</p>
-</section>
-<p class="quest-disclaimer">Server owners control their custom content and may change it without notice. Treat the linked server wiki or Discord as the final authority. Records marked “community source” have not been independently verified by Astralis Nova.</p>
-</div>
-</section>
 
-<section class="dashboard shell" id="directory">
-<div class="toolbar">
-<div class="search-row"><label><span class="eyebrow">Search worlds</span><input id="search" type="search" placeholder="Server name, feature or address…" autocomplete="off"></label><label><span class="eyebrow">Emulator</span><select id="emulator"><option value="all">All emulators</option><option>ACE</option><option>GDLE</option><option>GDL</option></select></label><label><span class="eyebrow">Sort</span><select id="sort"><option value="population">Character activity</option><option value="status">Online status</option><option value="name">World name</option></select></label></div>
-<div class="filter-row" aria-label="Ruleset filters"><button class="filter active" data-ruleset="all">All</button><button class="filter" data-ruleset="PvE">PvE</button><button class="filter" data-ruleset="PvP">PvP</button><button class="filter" data-ruleset="Hybrid">Hybrid</button><button class="filter" data-ruleset="Hardcore">Hardcore</button><button class="filter" data-ruleset="online">Online now</button></div>
-</div>
-<div class="summary"><div class="stat"><strong id="totalWorlds">—</strong><span>Worlds listed</span></div><div class="stat"><strong id="onlineWorlds">—</strong><span>Reported online</span></div><div class="stat"><strong id="pvpWorlds">—</strong><span>PvP / hybrid worlds</span></div><div class="stat"><strong id="visibleCharacters">—</strong><span>Recent characters shown</span></div></div>
-<div class="statusline"><span id="dataStatus" role="status">Opening portals to the community directory…</span><button id="refresh" type="button">↻ Refresh data</button></div>
-<div class="world-grid" id="worldGrid" aria-live="polite"><div class="empty">Loading active emulator worlds…</div></div>
-<div class="explain" id="about"><article class="info"><h2>How the readings work</h2><p>Server details come from the community-maintained AC server list and TreeStats. Recent character reports are not guaranteed to represent unique people. A stale reading remains visibly marked instead of pretending to be live.</p><ul><li><strong>Online:</strong> confirmed by the monitor or supported by a recent report.</li><li><strong>Unknown:</strong> no dependable recent status.</li><li><strong>Offline:</strong> explicitly reported down by the status source.</li></ul></article><article class="info"><h2>Community-powered Dereth</h2><p>These worlds are independently operated community servers. Astralis Nova does not own, rank or officially endorse them. Always read a server’s rules and community information before connecting.</p><p><a href="https://emulator.ac/" target="_blank" rel="noopener">ACEmulator project</a> · <a href="https://github.com/acresources/serverslist/" target="_blank" rel="noopener">Community server list</a> · <a href="https://treestats.net/servers" target="_blank" rel="noopener">TreeStats directory</a></p></article></div>
-</section>
+<details class="community-story shell lore-fold" id="ac-about"><summary>About ACEmulator &amp; the community</summary><div class="dereth-intro"><article><h2>A world rebuilt by its players</h2><p>ACEmulator is an open-source community project rebuilding Asheron’s Call. Its independently operated servers are not official Turbine or WB Games servers. AC Worlds brings ACE, GDLE and other community worlds, guides and tools together.</p><p><a href="https://emulator.ac/about/" target="_blank" rel="noopener noreferrer">About ACEmulator — read the project’s story ↗</a></p></article><aside class="hero-note"><strong>Character count ≠ human count</strong>Population figures may include bots, macros and several accounts controlled by one person. AC Worlds reports connected characters and always shows how fresh the reading is.</aside></div></details>
 </main>
 <footer class="footer"><div class="shell">Astralis Nova • AC Worlds • The portals remain open. <a href="https://makeagif.com/gif/asherons-call-portal-space-OFnm2t" target="_blank" rel="noopener noreferrer">Portal animation source ↗</a></div></footer>
 <script>
