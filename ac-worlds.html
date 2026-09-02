@@ -50,11 +50,40 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <link rel="stylesheet" href="/ac-adventure.css?v=20260901uniqueart">
 <link rel="stylesheet" href="/ac-community.css?v=20260901a">
 <link rel="stylesheet" href="/ac-jukebox.css?v=20260901a">
+<style>
+/* AC community media: players load only when a visitor chooses a video. */
+#ac-media{scroll-margin-top:100px}
+#ac-media>p,.ac-media-card p{font-size:1rem;line-height:1.6;color:#bbc8d8}
+.ac-media-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:22px 0}
+.ac-media-card{min-width:0;display:flex;flex-direction:column;border:1px solid #b4945d66;border-radius:9px;overflow:hidden;background:#09121f}
+.ac-media-screen{position:relative;aspect-ratio:16/9;background:#030711;overflow:hidden}
+.ac-media-screen>a{display:block;width:100%;height:100%}
+.ac-media-screen>[hidden]{display:none}
+.ac-media-screen img{display:block;width:100%;height:100%;object-fit:cover}
+.ac-media-screen iframe{display:block;width:100%;height:100%;border:0}
+.ac-media-card-body{display:flex;flex-direction:column;flex:1;padding:18px}
+.ac-media-kind{color:#e8c789;font-size:.875rem;font-weight:700}
+.ac-media-card h3{margin:8px 0;font:600 1.25rem/1.35 Georgia,serif;color:#f4dbac}
+.ac-media-card p{margin:0 0 12px}
+.ac-media-card .ac-media-credit{font-size:.875rem;color:#aebdd0}
+.ac-media-credit a{text-underline-offset:3px}
+.ac-media-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:10px}
+.ac-media-actions a,.ac-media-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 12px;border:1px solid #b4945d80;border-radius:5px;background:#30291e;color:#ffe4b1;font:600 .875rem/1.4 system-ui,sans-serif;text-decoration:none;cursor:pointer}
+.ac-media-actions a{background:transparent}
+.ac-media-actions [hidden]{display:none}
+.ac-media-actions a:hover,.ac-media-actions button:hover{border-color:#ffe1a4;background:#443724}
+#ac-media .source-link{padding:16px;gap:8px}
+#ac-media .source-link strong{font-size:1rem}
+#ac-media .source-link span{font-size:.875rem;line-height:1.5}
+#ac-media .ac-media-note{font-size:.875rem;color:#aebdd0}
+@media(max-width:980px){.ac-media-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.ac-media-grid{grid-template-columns:1fr}#ac-media{scroll-margin-top:90px}#ac-media .source-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 <div class="ac-art-border ac-art-border-left" aria-hidden="true"><span class="ac-border-portal"></span><span class="ac-border-map"></span></div>
 <div class="ac-art-border ac-art-border-right" aria-hidden="true"><span class="ac-border-armor"></span><span class="ac-border-map"></span></div>
-<header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>AC WORLDS</small></a><nav class="nav"><a href="#quests">Quest search</a><a href="#downloads">Download files</a><a href="#new-player">Install guide</a><a href="#directory">Worlds</a><a href="#about">About the data</a><a href="/conquest.html">Conquest archive</a><a href="/">Home</a></nav></div></header>
+<header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>AC WORLDS</small></a><nav class="nav"><a href="#quests">Quest search</a><a href="#downloads">Download files</a><a href="#new-player">Install guide</a><a href="#directory">Worlds</a><a href="#ac-media">Videos &amp; Media</a><a href="#about">About the data</a><a href="/conquest.html">Conquest archive</a><a href="/">Home</a></nav></div></header>
 <main>
 <section class="hero shell"><div><p class="eyebrow">Asheron’s Call · The portals remain open</p><div class="hero-title-stage"><figure class="portal-art"><img id="portalSpaceImage" class="portal-space-image" src="/assets/ac-portals/portal-space-still.webp" width="320" height="180" alt="Asheron’s Call portal space: a dark blue-gray rippling tunnel stretching into the distance"><button type="button" id="portalSpaceToggle" aria-controls="portalSpaceImage acWorldsTitle" aria-label="Play title and portal animation" data-playing="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path class="portal-play-icon" d="M7 4v16l13-8z"/><path class="portal-pause-icon" d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg></button></figure><h1 id="acWorldsTitle">AC<br>Worlds</h1></div><p>Find your world. Rediscover a quest. Step back into Dereth.</p><a class="hero-search-link" href="#quests">Find an item or quest <span aria-hidden="true">↗</span></a></div></section>
 <section class="ac-jukebox shell" id="ac-jukebox" aria-labelledby="acJukeboxTitle">
@@ -73,6 +102,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <a class="adventure-path" href="#decal-plugins"><img src="/assets/ac-portals/portal-gateway.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Plugins &amp; tools</strong><span>Browse plugins &amp; legacy tools</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
 <a class="adventure-path" href="#new-player"><img src="/assets/ac-portals/portal-space-entrance.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Enter Dereth</strong><span>Client, launcher &amp; setup</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
 <a class="adventure-path" href="#conquest-quests"><img src="/assets/ac-portals/four-towers.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Conquest quests</strong><span>Custom content &amp; server guides</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
+<a class="adventure-path" href="#ac-media"><img src="/assets/ac-portals/portal-space-still.webp" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Videos &amp; Media</strong><span>Watch Dereth come alive</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
 <a class="adventure-path" href="#ac-community"><img src="/assets/ac-portals/tree-portal.jpg" width="320" height="180" alt="" decoding="async"><span class="adventure-path-copy"><strong>Visitor messages</strong><span>Suggestions, fixes &amp; guestbook</span></span><span class="adventure-arrow" aria-hidden="true">↗</span></a>
 </nav>
 
@@ -130,6 +160,51 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <p class="source-note">Search “legacy” to find the added historical plugins. Legacy — compatibility unverified: project listings are preserved references, not tested downloads or confirmation that they work with current Decal, ACE, or Conquest. Check requirements and your server’s rules before installing.</p>
 <p>Review publisher instructions and server automation rules before installing. An archive listing is not a safety or compatibility endorsement. ACCompanion is a related standalone tool, not a Decal plugin.</p>
 </section>
+<section id="ac-media" class="source-console shell adventure-panel" aria-labelledby="acMediaTitle">
+<p class="eyebrow">Dereth on screen</p><h2 id="acMediaTitle">Videos &amp; Media</h2>
+<p>Guides, gameplay, lore and old-school Darktide memories from the AC community.</p>
+<p class="ac-media-note">Choose “Watch here” to play a video, or open it on YouTube. If a player is unavailable, use its YouTube link. Older footage and guides may differ from your server.</p>
+<div class="ac-media-grid">
+<article class="ac-media-card" data-media-id="5rfRdJQiseE">
+<div class="ac-media-screen"><a href="https://www.youtube.com/watch?v=5rfRdJQiseE" target="_blank" rel="noopener noreferrer" aria-label="Watch Set up Asheron’s Call in 2026 on YouTube"><img src="https://i.ytimg.com/vi/5rfRdJQiseE/hqdefault.jpg" width="480" height="360" alt="" loading="lazy" decoding="async"></a></div>
+<div class="ac-media-card-body"><span class="ac-media-kind">Setup &amp; installation</span><h3>Set up Asheron’s Call in 2026</h3><p>A walkthrough of the client, updates, launcher and Decal. Follow your chosen world’s instructions for custom files.</p><p class="ac-media-credit">By <a href="https://www.youtube.com/@MatureMindedgamers" target="_blank" rel="noopener noreferrer">Mature Minded Gamers</a> · YouTube</p>
+<div class="ac-media-actions"><button type="button" data-media-load hidden aria-label="Watch Set up Asheron’s Call in 2026 here">▶ Watch here</button><a href="https://www.youtube.com/watch?v=5rfRdJQiseE" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div></div>
+</article>
+<article class="ac-media-card" data-media-id="Z6wb_0aYkRY">
+<div class="ac-media-screen"><a href="https://www.youtube.com/watch?v=Z6wb_0aYkRY" target="_blank" rel="noopener noreferrer" aria-label="Watch 7 tips for returning to Dereth on YouTube"><img src="https://i.ytimg.com/vi/Z6wb_0aYkRY/hqdefault.jpg" width="480" height="360" alt="" loading="lazy" decoding="async"></a></div>
+<div class="ac-media-card-body"><span class="ac-media-kind">New &amp; returning players</span><h3>7 tips for returning to Dereth</h3><p>A starting point for getting your bearings and returning to the game.</p><p class="ac-media-credit">By <a href="https://www.youtube.com/@Fenix_Gaming" target="_blank" rel="noopener noreferrer">ABGFenix Gaming</a> · YouTube</p>
+<div class="ac-media-actions"><button type="button" data-media-load hidden aria-label="Watch 7 tips for returning to Dereth here">▶ Watch here</button><a href="https://www.youtube.com/watch?v=Z6wb_0aYkRY" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div></div>
+</article>
+<article class="ac-media-card" data-media-id="1wVKWWkp0hU">
+<div class="ac-media-screen"><a href="https://www.youtube.com/watch?v=1wVKWWkp0hU" target="_blank" rel="noopener noreferrer" aria-label="Watch The history of Darktide on YouTube"><img src="https://i.ytimg.com/vi/1wVKWWkp0hU/hqdefault.jpg" width="480" height="360" alt="" loading="lazy" decoding="async"></a></div>
+<div class="ac-media-card-body"><span class="ac-media-kind">Darktide memories</span><h3>The history of Darktide</h3><p>Ripper looks back at the stories and player conflict that made Darktide memorable.</p><p class="ac-media-credit">By <a href="https://www.youtube.com/@MMORPGcomOfficial" target="_blank" rel="noopener noreferrer">MMORPGcom</a> · YouTube</p>
+<div class="ac-media-actions"><button type="button" data-media-load hidden aria-label="Watch The history of Darktide here">▶ Watch here</button><a href="https://www.youtube.com/watch?v=1wVKWWkp0hU" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div></div>
+</article>
+<article class="ac-media-card" data-media-id="8c1dZgYJ-AU">
+<div class="ac-media-screen"><a href="https://www.youtube.com/watch?v=8c1dZgYJ-AU" target="_blank" rel="noopener noreferrer" aria-label="Watch Shadows of the Past on YouTube"><img src="https://i.ytimg.com/vi/8c1dZgYJ-AU/hqdefault.jpg" width="480" height="360" alt="" loading="lazy" decoding="async"></a></div>
+<div class="ac-media-card-body"><span class="ac-media-kind">Lore &amp; history</span><h3>Shadows of the Past</h3><p>Explore the February 2000 story update, Atlan weapons and more in this AC lore episode.</p><p class="ac-media-credit">By <a href="https://www.youtube.com/@JustPlayingTheClassics" target="_blank" rel="noopener noreferrer">Just Playing the Classics</a> · YouTube</p>
+<div class="ac-media-actions"><button type="button" data-media-load hidden aria-label="Watch Shadows of the Past here">▶ Watch here</button><a href="https://www.youtube.com/watch?v=8c1dZgYJ-AU" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div></div>
+</article>
+<article class="ac-media-card" data-media-id="bNOuTii6l3A">
+<div class="ac-media-screen"><a href="https://www.youtube.com/watch?v=bNOuTii6l3A" target="_blank" rel="noopener noreferrer" aria-label="Watch A new journey on Seedsow on YouTube"><img src="https://i.ytimg.com/vi/bNOuTii6l3A/hqdefault.jpg" width="480" height="360" alt="" loading="lazy" decoding="async"></a></div>
+<div class="ac-media-card-body"><span class="ac-media-kind">Classic-world gameplay</span><h3>A new journey on Seedsow</h3><p>Newbie gameplay without commentary from the classic-era Seedsow shard.</p><p class="ac-media-credit">By <a href="https://www.youtube.com/@JustPlayingTheClassics" target="_blank" rel="noopener noreferrer">Just Playing the Classics</a> · YouTube</p>
+<div class="ac-media-actions"><button type="button" data-media-load hidden aria-label="Watch A new journey on Seedsow here">▶ Watch here</button><a href="https://www.youtube.com/watch?v=bNOuTii6l3A" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div></div>
+</article>
+<article class="ac-media-card" data-media-id="VAFiUH4oojE">
+<div class="ac-media-screen"><a href="https://www.youtube.com/watch?v=VAFiUH4oojE" target="_blank" rel="noopener noreferrer" aria-label="Watch Darktide duels from 2006 on YouTube"><img src="https://i.ytimg.com/vi/VAFiUH4oojE/hqdefault.jpg" width="480" height="360" alt="" loading="lazy" decoding="async"></a></div>
+<div class="ac-media-card-body"><span class="ac-media-kind">Classic PvP footage</span><h3>Darktide duels from 2006</h3><p>A look back at player-versus-player fights from the original Darktide era.</p><p class="ac-media-credit">By <a href="https://www.youtube.com/@6danlor" target="_blank" rel="noopener noreferrer">Zetti</a> · YouTube</p>
+<div class="ac-media-actions"><button type="button" data-media-load hidden aria-label="Watch Darktide duels from 2006 here">▶ Watch here</button><a href="https://www.youtube.com/watch?v=VAFiUH4oojE" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div></div>
+</article>
+</div>
+<h3>More AC media &amp; community</h3>
+<div class="source-grid">
+<a class="source-link" href="https://www.twitch.tv/directory/category/asherons-call" target="_blank" rel="noopener noreferrer"><strong>Twitch · streams &amp; clips ↗</strong><span>Browse the Asheron’s Call category. Available streams and clips vary; someone may not be live right now.</span></a>
+<a class="source-link" href="https://www.reddit.com/r/AsheronsCall/" target="_blank" rel="noopener noreferrer"><strong>Reddit · community posts ↗</strong><span>Player videos, screenshots, stories and discussion from r/AsheronsCall.</span></a>
+<a class="source-link" href="https://archive.org/details/ASHERONS_CALL" target="_blank" rel="noopener noreferrer"><strong>Internet Archive · original manual ↗</strong><span>Read a preserved scan of the original Asheron’s Call manual.</span></a>
+</div>
+<p class="ac-media-note">Videos remain hosted by their creators. Creator links open their channels. Have an AC video or media source to share? <a href="#ac-community">Suggest it in the guestbook.</a></p>
+</section>
+
 <section id="ac-resources" class="source-console shell adventure-panel" aria-labelledby="resourcesTitle">
 <p class="eyebrow">Maps, lore &amp; community</p><h2 id="resourcesTitle">Explore more of Dereth</h2>
 <p>Community tools, maps and preserved knowledge. These links open external sites; their content is not imported into our quest search. Sources reviewed September 1, 2026.</p>
@@ -396,5 +471,46 @@ list();
 <script src="/ac-portal-space.js?v=20260901d"></script>
 <script src="/ac-community.js?v=20260901a"></script>
 <script src="/ac-jukebox.js?v=20260901a"></script>
+
+<script>
+(function(){
+'use strict';
+var cards=document.querySelectorAll('#ac-media .ac-media-card');
+var active=null;
+function reset(card){
+ var screen=card.querySelector('.ac-media-screen');
+ var player=screen.querySelector('iframe');
+ if(player)player.remove();
+ screen.querySelector('a').hidden=false;
+ var button=card.querySelector('[data-media-load]');
+ button.textContent='▶ Watch here';
+ button.setAttribute('aria-label','Watch '+card.querySelector('h3').textContent+' here');
+}
+cards.forEach(function(card){
+ var button=card.querySelector('[data-media-load]');
+ var id=card.getAttribute('data-media-id');
+ if(!/^[A-Za-z0-9_-]{11}$/.test(id))return;
+ button.hidden=false;
+ button.addEventListener('click',function(){
+  if(active===card){reset(card);active=null;return;}
+  if(active)reset(active);
+  var jukebox=document.getElementById('acJukeboxAudio');
+  if(jukebox)jukebox.pause();
+  var screen=card.querySelector('.ac-media-screen');
+  var frame=document.createElement('iframe');
+  frame.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&playsinline=1';
+  frame.title=card.querySelector('h3').textContent+' — YouTube video';
+  frame.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+  frame.allowFullscreen=true;
+  frame.referrerPolicy='strict-origin-when-cross-origin';
+  screen.querySelector('a').hidden=true;
+  screen.appendChild(frame);
+  button.textContent='■ Close player';
+  button.setAttribute('aria-label','Close '+card.querySelector('h3').textContent+' player');
+  active=card;
+ });
+});
+})();
+</script>
 </body>
 </html>
