@@ -7,14 +7,17 @@
   <meta name="theme-color" content="#060c18">
   <title>Our New Star — Meaning, Nature & Connection | Astralis Nova</title>
   <link rel="icon" href="/astralis-favicon-static.svg">
-  <link rel="stylesheet" href="/our-new-star.css?v=20260903cosmos">
-  <script src="/our-new-star.js?v=20260903cosmos" defer></script>
+  <link rel="stylesheet" href="/our-new-star.css?v=20260903scales">
+  <script src="/our-new-star.js?v=20260903scales" defer></script>
 </head>
 <body>
-<picture class="universe-backdrop" id="universeBackdrop" aria-hidden="true">
-  <source media="(max-width:680px)" srcset="/assets/our-new-star/deep-universe-mobile.webp">
-  <img src="/assets/our-new-star/deep-universe.webp" width="1586" height="992" alt="" decoding="async" fetchpriority="high">
-</picture>
+<div class="universe-backdrop" id="universeBackdrop" aria-hidden="true">
+  <picture class="is-current" data-backdrop="stars"><img src="/assets/our-new-star/scales-stars.webp" width="1800" height="1042" alt="" decoding="async" fetchpriority="high"></picture>
+  <picture data-backdrop="galaxies"><img data-src="/assets/our-new-star/scales-galaxies.webp" width="1600" height="1633" alt="" decoding="async"></picture>
+  <picture data-backdrop="dark-matter"><img data-src="/assets/our-new-star/scales-dark-matter.webp" width="1600" height="1782" alt="" decoding="async"></picture>
+  <picture data-backdrop="microns"><img data-src="/assets/our-new-star/scales-microns.webp" width="1600" height="1103" alt="" decoding="async"></picture>
+  <picture data-backdrop="atoms"><img data-src="/assets/our-new-star/scales-atoms.webp" width="1600" height="1000" alt="" decoding="async"></picture>
+</div>
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar">
   <div class="shell nav-wrap">
@@ -23,7 +26,7 @@
   </div>
 </header>
 <main id="main">
-  <section class="hero shell" aria-labelledby="page-title">
+  <section class="hero shell" data-universe-scale="stars" aria-labelledby="page-title">
     <div class="hero-copy">
       <p class="eyebrow">NATURE · EARTH · SPACE · CONNECTION</p>
       <h1 id="page-title">Astralis<br><span>Nova.</span></h1>
@@ -38,7 +41,7 @@
     </figure>
   </section>
 
-  <section class="shell section cosmos" id="cosmos" aria-labelledby="cosmos-heading">
+  <section class="shell section cosmos" id="cosmos" data-universe-scale="galaxies" aria-labelledby="cosmos-heading">
     <div class="section-heading"><div><p class="eyebrow">NEARBY WONDERS · DISTANT WORLDS</p><h2 id="cosmos-heading">A journey through space</h2></div><a class="text-link" href="#stairway">Stairway to heaven ↓</a></div>
     <p class="section-intro">Visit our Sun and Moon, travel through our solar system, and look toward a family of worlds around another star.</p>
     <div class="cosmos-controls" id="cosmosControls" role="group" aria-label="Choose a space view" hidden>
@@ -75,7 +78,7 @@
     </figure>
   </section>
 
-  <section class="about shell section" id="about" aria-labelledby="about-heading">
+  <section class="about shell section" id="about" data-universe-scale="atoms" aria-labelledby="about-heading">
     <div class="story">
       <p class="eyebrow">WHY THIS WORLD EXISTS</p>
       <h2 id="about-heading">The search is personal.<br>The invitation is open.</h2>
@@ -93,7 +96,7 @@
     </aside>
   </section>
 
-  <section class="shell section research" id="findings" aria-labelledby="research-heading">
+  <section class="shell section research" id="findings" data-universe-scale="dark-matter" aria-labelledby="research-heading">
     <div class="section-heading"><div><p class="eyebrow">THE RESEARCH JOURNAL</p><h2 id="research-heading">What we’re learning</h2></div><p class="review-date">First collection<br><time datetime="2026-09-03">September 3, 2026</time></p></div>
     <p class="section-intro">Follow an idea from the finding to its source. Research can help us understand experiences and the natural world. The meaning we draw from them is something we explore together.</p>
     <div class="research-controls" id="researchControls" hidden>
@@ -171,7 +174,7 @@
     </div>
   </section>
 
-  <section class="shell section" aria-labelledby="perspectives-heading" id="perspectives">
+  <section class="shell section" aria-labelledby="perspectives-heading" id="perspectives" data-universe-scale="microns">
     <p class="eyebrow">MORE THAN ONE WAY TO EXPLORE</p><h2 id="perspectives-heading">Perspectives we’re reading</h2>
     <p class="section-intro">These are starting points for understanding how people seek meaning. Their teachings are spiritual or philosophical perspectives; reading them does not require adopting them.</p>
     <div class="perspectives-grid">
@@ -182,10 +185,29 @@
     <p class="related-worlds">Continue through our worlds: <a href="/scripture-nexus.html">Explore the Bible in Scripture Nexus ↗</a><a href="/wild-encounters.html">Meet the life around us in Wild Encounters ↗</a></p>
   </section>
 
-  <section class="shell section" id="connect" aria-labelledby="connect-heading">
+  <section class="shell section" id="connect" data-universe-scale="stars" aria-labelledby="connect-heading">
     <div class="connect-panel"><div><p class="eyebrow">LOOKING UP TOGETHER</p><h2 id="connect-heading">Still searching?<br>You have a place here.</h2><p>Tell us about a moment that made you feel connected, a source worth reading, or a question you’d like us to explore. Faith, doubt, and curiosity can all be part of the conversation.</p><p class="small">The Astralis Nova guestbook is public. Mention “Our New Star” so your note is easy to recognize. Share only what you’re comfortable making public.</p><a class="button primary" href="/#guestbook">Join us in the guestbook ↗</a></div><div class="journal-note"><p class="eyebrow">HOW WE KEEP LEARNING</p><ul><li>Follow claims back to their sources.</li><li>Keep findings, interpretations, and personal experiences clear.</li><li>Make room for questions and changing our minds.</li><li>Treat people and other living things with care.</li></ul><p>The first entries are a beginning. There is more to discover.</p></div></div>
   </section>
 </main>
 <footer class="shell footer"><p>Astralis Nova · Our New Star</p><a href="/#connected-worlds">Return to the planets ↑</a></footer>
+<details class="scale-guide" id="scaleGuide" hidden>
+  <summary><span class="scale-guide-label">THE BACKGROUND · ACROSS SCALES</span><span id="scaleName">Stars &amp; nebulae</span><span class="scale-kind" id="scaleKind">Telescope observation</span></summary>
+  <div class="scale-guide-content">
+    <p class="small">Follow the page, or choose the universe surrounding you.</p>
+    <div class="scale-choices" role="group" aria-label="Choose the full-page universe background">
+      <button type="button" data-scale="auto" aria-controls="universeBackdrop" aria-pressed="true">Follow page</button>
+      <button type="button" data-scale="stars" aria-controls="universeBackdrop" aria-pressed="false">Stars &amp; nebulae</button>
+      <button type="button" data-scale="galaxies" aria-controls="universeBackdrop" aria-pressed="false">Galaxies</button>
+      <button type="button" data-scale="dark-matter" aria-controls="universeBackdrop" aria-pressed="false">Dark matter</button>
+      <button type="button" data-scale="microns" aria-controls="universeBackdrop" aria-pressed="false">Micron scale</button>
+      <button type="button" data-scale="atoms" aria-controls="universeBackdrop" aria-pressed="false">Atoms</button>
+    </div>
+    <p id="scaleExplanation" class="scale-explanation">Webb’s Cosmic Cliffs show stars and the edge of a stellar nursery. These observations use infrared light mapped to visible colors.</p>
+    <a id="scaleSource" class="source" href="https://science.nasa.gov/asset/webb/cosmic-cliffs-in-the-carina-nebula-nircam-image/" target="_blank" rel="noopener noreferrer">Image and science source</a>
+    <a id="scaleImage" class="source" href="/assets/our-new-star/scales-stars.webp" target="_blank" rel="noopener noreferrer">View the full image</a>
+    <p id="scaleCredit" class="image-credit">NASA, ESA, CSA, STScI</p>
+    <p id="scaleStatus" class="sr-only" role="status" aria-live="polite"></p>
+  </div>
+</details>
 </body>
 </html>
