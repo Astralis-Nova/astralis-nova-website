@@ -77,6 +77,8 @@
       document.getElementById(`elementDialog${key}`).textContent = value;
     });
     dialog.dataset.family = data.family;
+    document.getElementById("elementPlainSummary").textContent =
+      `${data.name} is element ${data.number}. Every ${data.name.toLowerCase()} atom has ${data.number} ${Number(data.number) === 1 ? "proton" : "protons"} in its center. A neutral atom has the same number of electrons. “${data.symbol}” is the element’s short symbol.`;
     document.getElementById("elementDialogSource").href = tile.href;
     const note = connections[data.number];
     document.getElementById("elementDialogConnection").hidden = !note;
