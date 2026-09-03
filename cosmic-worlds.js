@@ -13,12 +13,12 @@
     },
     {
       id: "reserved-world",
-      placeholder: true,
-      ariaLabel: "Uncharted World, reserved for future content",
-      planetClass: "planet-ace",
-      title: "Uncharted World",
-      description: "An empty world. Its story is still to be discovered.",
-      badge: "Future destination"
+      href: "/our-new-star.html",
+      ariaLabel: "Explore Astralis Nova, Our New Star: meaning, research, and spiritual connection",
+      planetClass: "planet-nova-sphere",
+      title: "Astralis Nova",
+      description: "Our search for meaning and spiritual connection through nature, Earth, space, and the questions we share.",
+      badge: "Our New Star"
     },
     {
       id: "eraser-board",
@@ -73,6 +73,8 @@
     const destination = world.placeholder ? "" : ` href="${world.href}"`;
     const visual = world.id === "ac-worlds"
       ? '<picture><source media="(prefers-reduced-motion: no-preference)" srcset="/assets/ac-portals/portal-space-motion.webp"><img src="/assets/ac-portals/portal-space-still.webp" alt="" width="320" height="180" loading="lazy" decoding="async"></picture>'
+      : world.id === "reserved-world"
+      ? '<picture><source type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" alt="" width="360" height="360" loading="lazy" decoding="async"></picture>'
       : "";
     return `
       <${tag} class="astralis-planet-link" data-world="${world.id}"${destination} aria-label="${world.ariaLabel}"${externalAttributes}>
@@ -126,7 +128,12 @@
       .astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal{transform:scale(1.06)}
       @media(max-width:640px){.astralis-planet.ac-worlds-portal{flex-basis:84px;width:84px;height:84px}}
       @media(prefers-reduced-motion:reduce){.astralis-planet.ac-worlds-portal{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal{transform:none}}
-      .planet-ace{background:radial-gradient(circle at 34% 30%,#fbfbf1 0 4%,#c7a65b 13%,#745232 45%,#2a1d28 76%,#0a0810 100%)}
+      .astralis-planet.planet-nova-sphere{flex:0 0 96px;width:96px;height:96px;background:none;box-shadow:none;overflow:visible}
+      .planet-nova-sphere picture{display:block;width:100%;height:100%;pointer-events:none}
+      .planet-nova-sphere img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 9px rgba(50,151,255,.5))}
+      .astralis-planet-link:hover .planet-nova-sphere{transform:scale(1.05)}
+      @media(max-width:640px){.astralis-planet.planet-nova-sphere{flex-basis:84px;width:84px;height:84px}}
+      @media(prefers-reduced-motion:reduce){.astralis-planet.planet-nova-sphere{transition:none}.astralis-planet-link:hover .planet-nova-sphere{transform:none}}
       .planet-board{background:radial-gradient(circle at 35% 30%,#d9fff1 0 5%,#32d899 16%,#147b72 47%,#16375c 76%,#07101e 100%)}
       .planet-biography{background:radial-gradient(circle at 35% 28%,#ffe4fa 0 5%,#e75ebd 17%,#7843c8 47%,#25205f 76%,#09091b 100%)}
       .planet-orbit{background:radial-gradient(circle at 37% 28%,#fff2c6 0 4%,#f1a85f 17%,#8c4d45 46%,#3b274a 75%,#0b0912 100%)}
