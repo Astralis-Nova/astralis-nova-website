@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Astralis Nova — Our New Star. A personal search for spiritual connection through nature, Earth, space, research, and the questions we share.">
+  <meta name="theme-color" content="#060c18">
+  <title>Our New Star — Meaning, Nature & Connection | Astralis Nova</title>
+  <link rel="icon" href="/astralis-favicon-static.svg">
+  <link rel="stylesheet" href="/our-new-star.css?v=20260903a">
+  <script src="/our-new-star.js?v=20260903a" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar">
+  <div class="shell nav-wrap">
+    <a class="brand" href="/">ASTRALIS NOVA<span>OUR NEW STAR</span></a>
+    <nav aria-label="Page navigation"><a href="#about">Our story</a><a href="#findings">Our findings</a><a href="#connect">Connect</a><a class="home" href="/#connected-worlds">All planets ↗</a></nav>
+  </div>
+</header>
+<main id="main">
+  <section class="hero shell" aria-labelledby="page-title">
+    <div class="hero-copy">
+      <p class="eyebrow">NATURE · EARTH · SPACE · CONNECTION</p>
+      <h1 id="page-title">Astralis<br><span>Nova.</span></h1>
+      <p class="hero-meaning">A new beginning among the stars.</p>
+      <p class="hero-intro">We’re still looking for that spiritual connection. This is where we follow the questions, share what we learn, and find others looking up at the same sky.</p>
+      <div class="actions"><a class="button primary" href="#findings">Explore our findings <span aria-hidden="true">↓</span></a><a class="text-link" href="#about">What our name means</a></div>
+    </div>
+    <figure class="sphere-stage">
+      <picture id="novaVisual"><source id="novaMotion" type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" width="360" height="360" alt="A hollow silver sphere with blue light, A and N cut through opposite sides, and star-shaped openings." fetchpriority="high" decoding="async"></picture>
+      <figcaption>OUR NEW STAR <span aria-hidden="true">✦</span> AN</figcaption>
+      <button type="button" class="rotation-toggle" id="rotationToggle" aria-controls="novaVisual" hidden>Pause rotation</button>
+    </figure>
+  </section>
+
+  <section class="about shell section" id="about" aria-labelledby="about-heading">
+    <div class="story">
+      <p class="eyebrow">WHY THIS WORLD EXISTS</p>
+      <h2 id="about-heading">The search is personal.<br>The invitation is open.</h2>
+      <p>I’ve met kind people in religious settings, and I’m still searching for a spiritual connection I can feel. I want to understand more: nature, the Earth we share, the universe beyond it, and whether other life is out there.</p>
+      <p>Astralis Nova is where I’m bringing that search together. Music, memories, and life on Earth are already part of this little universe. Now there’s a place for the research, the reflections, and the things that change how we see it.</p>
+      <p>There must be others wondering about the same things. If that sounds like you, you’re welcome here. Bring your curiosity, your experience, and your questions.</p>
+      <a class="text-link" href="/biography.html">Meet the person behind Astralis Nova ↗</a>
+    </div>
+    <aside class="name-panel" aria-labelledby="name-heading">
+      <p class="eyebrow">WHAT OUR NAME MEANS</p><h2 id="name-heading">Our New Star</h2>
+      <dl><div><dt>Astralis</dt><dd>Of the stars; relating to the stars.</dd></div><div><dt>Nova</dt><dd>New — from the Latin <i lang="la">novus</i>.</dd></div></dl>
+      <p class="chosen-meaning">“A new beginning among the stars.”</p>
+      <p class="small">That is our chosen, poetic meaning. <em>Our New Star</em> represents this new chapter; it is not a literal translation of the two-word name.</p>
+      <p class="source-links"><a href="https://www.etymonline.com/word/astral" target="_blank" rel="noopener noreferrer">Astralis: word origin ↗</a><a href="https://www.merriam-webster.com/dictionary/nova" target="_blank" rel="noopener noreferrer">Nova: word origin ↗</a></p>
+    </aside>
+  </section>
+
+  <section class="shell section research" id="findings" aria-labelledby="research-heading">
+    <div class="section-heading"><div><p class="eyebrow">THE RESEARCH JOURNAL</p><h2 id="research-heading">What we’re learning</h2></div><p class="review-date">First collection<br><time datetime="2026-09-03">September 3, 2026</time></p></div>
+    <p class="section-intro">Follow an idea from the finding to its source. Research can help us understand experiences and the natural world. The meaning we draw from them is something we explore together.</p>
+    <div class="research-controls" id="researchControls" hidden>
+      <form id="researchSearch" role="search"><label for="researchQuery">Search our findings</label><div class="search-row"><input id="researchQuery" type="search" maxlength="180" placeholder="Try nature, belonging, stars, or other life…" aria-describedby="searchHelp"><button class="button primary" type="submit">Search</button></div><p id="searchHelp" class="small">Search the published notes below, including their sources and open questions.</p></form>
+      <div class="filter-row"><div class="filters" role="group" aria-label="Filter research topics"><button type="button" data-topic="all" aria-pressed="true">Everything</button><button type="button" data-topic="connection" aria-pressed="false">Connection</button><button type="button" data-topic="nature" aria-pressed="false">Nature & Earth</button><button type="button" data-topic="space" aria-pressed="false">Space & other life</button></div><button class="button subtle" type="button" id="randomDiscovery">Surprise me <span aria-hidden="true">✦</span></button></div>
+      <p class="result-status small" id="resultStatus" role="status" aria-live="polite"></p>
+      <p class="empty-note" id="emptyResults" hidden>We haven’t covered that combination yet. <button type="button" id="resetResearch">Show all findings</button>, or <a href="#connect">share a question for a future entry</a>.</p>
+    </div>
+    <div class="findings-grid" id="findingsGrid">
+      <article class="finding" id="shared-wonder" data-topics="connection nature space" data-keywords="spiritual spirituality lonely belonging people awe meaning universe" tabindex="-1">
+        <div class="entry-meta"><span class="evidence">SURVEY FINDING</span><span>01 / CONNECTION</span></div>
+        <h3>Other people feel the wonder, too.</h3>
+        <p>Pew Research Center’s 2023–24 U.S. Religious Landscape Study, published in 2025, found that 61% of adults reported awe at nature’s beauty at least weekly. Both religious and religiously unaffiliated people reported wonder about the universe.</p>
+        <p class="takeaway"><strong>What we take from it:</strong> Wanting a connection to something larger is a question many people recognize.</p>
+        <details><summary>Limits & a question to carry forward</summary><p>These are people’s self-reported experiences, not a test of a spiritual explanation. Similar feelings do not mean everyone holds the same beliefs.</p><p><strong>Our question:</strong> Where do you feel most connected: with people, in nature, in worship, or under the night sky?</p></details>
+        <a class="source" href="https://www.pewresearch.org/religion/2025/02/26/religious-landscape-study-spiritual-experiences/" target="_blank" rel="noopener noreferrer">Pew Research Center · Spiritual experiences, 2025 ↗</a>
+      </article>
+      <article class="finding" id="time-in-nature" data-topics="nature connection" data-keywords="earth outside outdoors walking wellbeing peace health trees gardens" tabindex="-1">
+        <div class="entry-meta"><span class="evidence">OBSERVATIONAL STUDY</span><span>02 / NATURE</span></div>
+        <h3>Time in nature deserves our attention.</h3>
+        <p>A 2019 study of 19,806 adults in England found an association between spending at least 120 minutes in nature during the previous week and reporting better health and well-being, compared with no nature contact.</p>
+        <p class="takeaway"><strong>What we take from it:</strong> There is a research basis for taking our relationship with the outdoors seriously.</p>
+        <details><summary>Limits & a question to carry forward</summary><p>The study was observational and relied on self-report. It cannot establish cause, promise an individual benefit, or turn two hours into a universal prescription. It did not test spiritual truth.</p><p><strong>Our question:</strong> What changes in our attention when we spend time noticing a living place?</p></details>
+        <a class="source" href="https://www.nature.com/articles/s41598-019-44097-3" target="_blank" rel="noopener noreferrer">White et al. · Scientific Reports, 2019 ↗</a>
+      </article>
+      <article class="finding" id="awe-and-kindness" data-topics="connection nature" data-keywords="awe kindness generosity compassion community people helping emotions" tabindex="-1">
+        <div class="entry-meta"><span class="evidence">PSYCHOLOGY RESEARCH</span><span>03 / AWE</span></div>
+        <h3>Awe may turn our attention toward others.</h3>
+        <p>Across five studies involving 2,078 participants, Piff and colleagues investigated awe and generosity. Their experiments found that inducing awe could increase some measures of helping, generosity, and concern beyond the self.</p>
+        <p class="takeaway"><strong>What we take from it:</strong> A moment of wonder may matter most in how we treat someone afterward.</p>
+        <details><summary>Limits & a question to carry forward</summary><p>These studies examine particular emotional experiences and behaviors. They do not show that every encounter with nature changes a person, or establish a supernatural cause.</p><p><strong>Our question:</strong> Can feeling part of something larger make us more caring toward other life?</p></details>
+        <a class="source" href="https://pubmed.ncbi.nlm.nih.gov/25984788/" target="_blank" rel="noopener noreferrer">Piff et al. · Journal of Personality and Social Psychology, 2015 ↗</a>
+      </article>
+      <article class="finding" id="made-of-star-material" data-topics="space nature" data-keywords="stardust star stuff elements carbon oxygen universe earth cosmic body origins" tabindex="-1">
+        <div class="entry-meta"><span class="evidence">ASTRONOMY</span><span>04 / SPACE</span></div>
+        <h3>Our connection to the stars is physical.</h3>
+        <p>Carbon, oxygen, and many other elements in our bodies were produced through stellar processes before becoming part of Earth and living things. NASA describes studying this shared chemical history as part of understanding galaxy evolution.</p>
+        <p class="takeaway"><strong>What we take from it:</strong> The universe is part of our material history. That is already something worth wondering about.</p>
+        <details><summary>Limits & a question to carry forward</summary><p>The origin of our elements does not establish a cosmic purpose, a shared consciousness, or communication with the universe. Those are different questions.</p><p><strong>Our question:</strong> Does knowing our physical history change how we care for Earth and one another?</p></details>
+        <a class="source" href="https://www.jpl.nasa.gov/news/galaxy-evolution-explorer-looks-back-in-time/" target="_blank" rel="noopener noreferrer">NASA / JPL · Our elements and the history of stars ↗</a>
+      </article>
+      <article class="finding" id="life-beyond-earth" data-topics="space" data-keywords="aliens extraterrestrial ufo uap other life alone biosignatures planets mars europa nasa evidence" tabindex="-1">
+        <div class="entry-meta"><span class="evidence open">OPEN SCIENTIFIC SEARCH</span><span>05 / OTHER LIFE</span></div>
+        <h3>Are we alone? The search is real.</h3>
+        <p>As checked on September 3, 2026, NASA’s overview says Earth is the only place where life is known. Researchers are studying planetary environments, possible biosignatures, and other clues that could help answer whether life exists elsewhere.</p>
+        <p class="takeaway"><strong>What we take from it:</strong> Curiosity can remain wide open while a claim waits for convincing evidence.</p>
+        <details><summary>Limits & a question to carry forward</summary><p>A potentially habitable world or a possible biosignature is not a confirmed discovery of life. An unexplained observation also does not establish an extraterrestrial origin.</p><p><strong>Our question:</strong> What independent observations would be enough to change “possible” into “confirmed”?</p></details>
+        <a class="source" href="https://science.nasa.gov/exoplanets/can-we-find-life/" target="_blank" rel="noopener noreferrer">NASA Science · Can We Find Life? ↗</a>
+      </article>
+      <article class="finding reflection" id="connection-question" data-topics="connection nature space" data-keywords="spiritual spirituality faith religion meaning purpose consciousness soul god research reflection belief" tabindex="-1">
+        <div class="entry-meta"><span class="evidence reflection-label">PERSONAL REFLECTION</span><span>06 / THE NEXT QUESTION</span></div>
+        <h3>What would connection feel like?</h3>
+        <p>Would it be peace? A sense of belonging? A moment in nature, an act of kindness, or an answer that finally makes sense? We haven’t settled that question. It is part of why this page exists.</p>
+        <p class="takeaway"><strong>What we’re learning about our search:</strong> We can take an experience seriously and still ask careful questions about what it means.</p>
+        <details><summary>Questions we’re carrying forward</summary><p>How do different traditions understand consciousness? What could research test, and what remains a philosophical or spiritual interpretation? What experiences bring us closer to other people and living things?</p></details>
+        <a class="source" href="#connect">Bring your experience or question into the conversation ↓</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="shell section" aria-labelledby="perspectives-heading" id="perspectives">
+    <p class="eyebrow">MORE THAN ONE WAY TO EXPLORE</p><h2 id="perspectives-heading">Perspectives we’re reading</h2>
+    <p class="section-intro">These are starting points for understanding how people seek meaning. Their teachings are spiritual or philosophical perspectives; reading them does not require adopting them.</p>
+    <div class="perspectives-grid">
+      <article class="perspective"><span class="mini-label">BUDDHIST PRACTICE</span><h3>Mindfulness & interdependence</h3><p>Plum Village’s teachings emphasize openness, compassionate action, and awareness of our interdependence with other beings.</p><a href="https://plumvillage.org/mindfulness/the-14-mindfulness-trainings" target="_blank" rel="noopener noreferrer">Read the tradition’s own words ↗</a></article>
+      <article class="perspective"><span class="mini-label">QUAKER TRADITION</span><h3>Stillness & listening</h3><p>Unprogrammed Quaker worship includes shared expectant silence, with participants speaking when moved. Quaker practices and beliefs vary.</p><a href="https://quaker.org/silence-and-worship/" target="_blank" rel="noopener noreferrer">Explore silent worship ↗</a></article>
+      <article class="perspective"><span class="mini-label">NATURE & PHILOSOPHY</span><h3>Religious naturalism</h3><p>Religious naturalists look to the natural world and scientific understanding as foundations for wonder, meaning, and ethical concern.</p><a href="https://religious-naturalist-association.org/" target="_blank" rel="noopener noreferrer">Read the association’s introduction ↗</a></article>
+    </div>
+    <p class="related-worlds">Continue through our worlds: <a href="/scripture-nexus.html">Explore the Bible in Scripture Nexus ↗</a><a href="/wild-encounters.html">Meet the life around us in Wild Encounters ↗</a></p>
+  </section>
+
+  <section class="shell section" id="connect" aria-labelledby="connect-heading">
+    <div class="connect-panel"><div><p class="eyebrow">LOOKING UP TOGETHER</p><h2 id="connect-heading">Still searching?<br>You have a place here.</h2><p>Tell us about a moment that made you feel connected, a source worth reading, or a question you’d like us to explore. Faith, doubt, and curiosity can all be part of the conversation.</p><p class="small">The Astralis Nova guestbook is public. Mention “Our New Star” so your note is easy to recognize. Share only what you’re comfortable making public.</p><a class="button primary" href="/#guestbook">Join us in the guestbook ↗</a></div><div class="journal-note"><p class="eyebrow">HOW WE KEEP LEARNING</p><ul><li>Follow claims back to their sources.</li><li>Keep findings, interpretations, and personal experiences clear.</li><li>Make room for questions and changing our minds.</li><li>Treat people and other living things with care.</li></ul><p>The first entries are a beginning. There is more to discover.</p></div></div>
+  </section>
+</main>
+<footer class="shell footer"><p>Astralis Nova · Our New Star</p><a href="/#connected-worlds">Return to the planets ↑</a></footer>
+</body>
+</html>
