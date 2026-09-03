@@ -3,6 +3,9 @@
 
   const motion = document.getElementById("novaMotion");
   const toggle = document.getElementById("rotationToggle");
+  const supportMotion = document.getElementById("supportMotion");
+  const supportToggle = document.getElementById("supportMotionToggle");
+  const motionButtons = [toggle, supportToggle].filter(Boolean);
   const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
   const still = "/assets/astralis-sphere/an-blue-still.webp";
   const animation = "/assets/astralis-sphere/an-blue-motion.webp";
@@ -11,13 +14,19 @@
   function updateRotation() {
     motion.media = "all";
     motion.srcset = rotating ? animation : still;
-    toggle.textContent = rotating ? "Pause motion" : "Resume motion";
+    if (supportMotion) {
+      supportMotion.srcset = rotating ? "/assets/astralis-sphere/support-sphere-tumble.webp" :
+        "/assets/astralis-sphere/support-sphere-still.webp";
+    }
+    motionButtons.forEach(button => { button.textContent = rotating ? "Pause motion" : "Resume motion"; });
     document.documentElement.classList.toggle("space-motion-paused", !rotating);
   }
-  toggle.hidden = false;
-  toggle.addEventListener("click", () => {
-    rotating = !rotating;
-    updateRotation();
+  motionButtons.forEach(button => {
+    button.hidden = false;
+    button.addEventListener("click", () => {
+      rotating = !rotating;
+      updateRotation();
+    });
   });
   const syncPreference = () => {
     rotating = !preference.matches;
