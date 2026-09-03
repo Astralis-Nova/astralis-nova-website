@@ -1,4 +1,23 @@
 .science-jumps{display:flex;flex-wrap:wrap;gap:12px 24px;margin:26px 0 30px;font-size:.9375rem}
+.real-stairway{display:grid;grid-template-columns:1.3fr 1fr;align-items:center;background:#04070e}
+.stairway-photo{display:block;min-width:0}.stairway-photo img{display:block;width:100%;height:auto;object-fit:contain}
+.real-stairway figcaption{padding:30px;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+.real-stairway figcaption p{font-size:1rem;line-height:1.7}.real-stairway figcaption .eyebrow{font-size:.75rem}.real-stairway figcaption .image-credit{font-size:.8125rem;line-height:1.6;color:#9fb5cd;margin-bottom:0}
+.real-stairway .source{margin-top:12px}
+.everyday-example{padding:15px 16px;border-left:2px solid #9bccd4;background:#16324477;border-radius:0 8px 8px 0;color:#d2e6ef!important;font-size:1rem!important;line-height:1.7!important}
+.everyday-example strong{display:block;font-size:.875rem;color:#bce8ef;margin-bottom:7px}
+.deeper-note{margin:0 0 18px;padding-top:14px}.deeper-note summary{font-size:.9375rem}.matter-card .deeper-note p{margin:14px 0 0;font-size:.9375rem;color:#b6cbdc}
+.element-reading-help{padding:22px 24px;margin:26px 0;border:1px solid #486878;border-radius:12px;background:#0d2232}
+.element-reading-help h3{font-size:1.25rem;margin:0 0 16px}.element-reading-help p{font-size:1rem;color:#c1d7e7;margin:12px 0}
+.element-plain-summary{font-size:1rem;color:#c4deeb;padding:16px;background:#153346;border-radius:9px;margin:0 0 24px}
+.sunlight-journey{margin:30px 0;padding:28px;border:1px solid #897347;border-radius:14px;background:linear-gradient(120deg,#28271f,#101e30 70%)}
+.sunlight-journey>.eyebrow{color:#ecd59f;font-size:.75rem}.sunlight-journey h3{font-size:1.5rem;margin:0 0 24px}.sunlight-journey>p{font-size:.9375rem;color:#c2cbd4;max-width:840px}
+.sunlight-journey ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;padding:0;margin:0 0 22px;gap:20px}
+.sunlight-journey li{border-top:2px solid #a48b56;padding-top:16px}.sunlight-journey li strong{display:block;color:#f0dbaa;font-size:1rem;line-height:1.5;margin-bottom:10px}.sunlight-journey li span{display:block;color:#d0dce7;font-size:1rem;line-height:1.65}
+.spectrum-plain-words{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:28px;border-top:1px solid #35526b;padding-top:22px}
+.spectrum-plain-words p{font-size:.9375rem;color:#bcd1e3;margin:0}.spectrum-plain-words strong{display:block;color:#daedfb;margin-bottom:8px}
+@media(max-width:900px){.real-stairway{grid-template-columns:1fr}.stairway-photo{width:100%;max-width:690px;justify-self:center}.real-stairway figcaption{padding:26px}.sunlight-journey ol{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.real-stairway figcaption{padding:23px}.sunlight-journey{padding:22px}.sunlight-journey ol,.spectrum-plain-words{grid-template-columns:1fr}.sunlight-journey li{padding-top:12px}.sunlight-journey li strong{margin-bottom:6px}.spectrum-plain-words{gap:16px}.element-reading-help{padding:20px}}
 .matter-controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:26px}
 .matter-controls button{padding:12px 20px;border:1px solid #4d6981;border-radius:24px;min-height:46px;color:#d7e8f6;background:#0b1b2e;font-size:.9375rem}
 .matter-controls button[aria-pressed=true]{background:#b8e2f8;color:#081929;border-color:#b8e2f8;font-weight:700}
