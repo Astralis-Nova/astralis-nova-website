@@ -61,9 +61,13 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 .ac-media-screen>[hidden]{display:none}
 .ac-media-screen img{display:block;width:100%;height:100%;object-fit:cover}
 .ac-media-screen iframe{display:block;width:100%;height:100%;border:0}
-/* Keep the archival Darktide preview uncropped and avoid enlarging its 480px source. */
-.ac-media-card.ac-media-archive .ac-media-screen{width:100%;max-width:480px;align-self:center}
-.ac-media-card.ac-media-archive .ac-media-screen img{object-fit:contain}
+/* A crisp text cover for the archive clip; the original video still loads on request. */
+.ac-media-title-card{display:flex;flex-direction:column;justify-content:center;gap:7px;width:100%;height:100%;padding:14px 20px;color:#f4dbac;background:radial-gradient(ellipse at 80% 15%,#69353244,transparent 70%),linear-gradient(135deg,#231b20,#070e19);border-bottom:1px solid #b4945d55}
+.ac-media-title-series{font-size:.875rem;line-height:1.3;color:#c9b692;letter-spacing:.1em}
+.ac-media-title-card strong{font:600 clamp(1.5rem,3vw,2.2rem)/1.15 Georgia,serif;letter-spacing:.06em;color:#ffe3a8}
+.ac-media-title-detail{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.875rem;line-height:1.3;color:#d5c6ae}
+.ac-media-title-play{display:grid;place-items:center;flex:0 0 32px;width:32px;height:32px;border:1px solid #c7a26c88;border-radius:50%;font-size:.875rem;color:#ffe3a8}
+.ac-media-screen>a:hover .ac-media-title-card,.ac-media-screen>a:focus-visible .ac-media-title-card{background:radial-gradient(ellipse at 80% 15%,#81443e55,transparent 70%),linear-gradient(135deg,#30212a,#10192a)}
 
 .ac-media-card-body{display:flex;flex-direction:column;flex:1;padding:18px}
 .ac-media-kind{color:#e8c789;font-size:.875rem;font-weight:700}
@@ -194,9 +198,9 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <div class="ac-media-card-body"><span class="ac-media-kind">Classic-world gameplay</span><h3>A new journey on Seedsow</h3><p>Newbie gameplay without commentary from the classic-era Seedsow shard.</p><p class="ac-media-credit">By <a href="https://www.youtube.com/@JustPlayingTheClassics" target="_blank" rel="noopener noreferrer">Just Playing the Classics</a> · YouTube</p>
 <div class="ac-media-actions"><button type="button" data-media-load hidden aria-label="Watch A new journey on Seedsow here">▶ Watch here</button><a href="https://www.youtube.com/watch?v=bNOuTii6l3A" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div></div>
 </article>
-<article class="ac-media-card ac-media-archive" data-media-id="VAFiUH4oojE">
-<div class="ac-media-screen"><a href="https://www.youtube.com/watch?v=VAFiUH4oojE" target="_blank" rel="noopener noreferrer" aria-label="Watch Darktide duels from 2006 on YouTube"><img src="https://i.ytimg.com/vi/VAFiUH4oojE/hqdefault.jpg" width="480" height="360" alt="" loading="lazy" decoding="async"></a></div>
-<div class="ac-media-card-body"><span class="ac-media-kind">Classic PvP footage</span><h3>Darktide duels from 2006</h3><p>A look back at player-versus-player fights from the original Darktide era.</p><p class="ac-media-credit">2006 archive footage. If playback looks soft, check the YouTube player’s quality settings for the highest available option.</p><p class="ac-media-credit">By <a href="https://www.youtube.com/@6danlor" target="_blank" rel="noopener noreferrer">Zetti</a> · YouTube</p>
+<article class="ac-media-card" data-media-id="VAFiUH4oojE">
+<div class="ac-media-screen"><a href="https://www.youtube.com/watch?v=VAFiUH4oojE" target="_blank" rel="noopener noreferrer" aria-label="Watch Darktide duels from 2006 on YouTube"><span class="ac-media-title-card" aria-hidden="true"><span class="ac-media-title-series">ASHERON’S CALL</span><strong>DARKTIDE</strong><span class="ac-media-title-detail"><span>2006 · PvP duels</span><span class="ac-media-title-play">▶</span></span></span></a></div>
+<div class="ac-media-card-body"><span class="ac-media-kind">Classic PvP footage</span><h3>Darktide duels from 2006</h3><p>A look back at player-versus-player fights from the original Darktide era.</p><p class="ac-media-credit">By <a href="https://www.youtube.com/@6danlor" target="_blank" rel="noopener noreferrer">Zetti</a> · YouTube</p>
 <div class="ac-media-actions"><button type="button" data-media-load hidden aria-label="Watch Darktide duels from 2006 here">▶ Watch here</button><a href="https://www.youtube.com/watch?v=VAFiUH4oojE" target="_blank" rel="noopener noreferrer">YouTube ↗</a></div></div>
 </article>
 </div>
