@@ -11,7 +11,8 @@
   function updateRotation() {
     motion.media = "all";
     motion.srcset = rotating ? animation : still;
-    toggle.textContent = rotating ? "Pause rotation" : "Start rotation";
+    toggle.textContent = rotating ? "Pause motion" : "Resume motion";
+    document.documentElement.classList.toggle("space-motion-paused", !rotating);
   }
   toggle.hidden = false;
   toggle.addEventListener("click", () => {
