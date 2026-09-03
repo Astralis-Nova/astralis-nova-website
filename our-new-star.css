@@ -4,8 +4,10 @@
 @media(max-width:680px){.shell{width:calc(100% - 32px)}.nav-wrap{padding-block:17px;align-items:flex-start;gap:15px;flex-direction:column}.nav-wrap nav{gap:20px}.nav-wrap nav a{font-size:.875rem}.hero{grid-template-columns:1fr;padding-block:42px 44px;gap:30px}.hero h1{font-size:clamp(3.8rem,17vw,6rem)}.hero-meaning{font-size:1.25rem}.hero-intro{max-width:none}.sphere-stage{justify-self:center;width:min(100%,300px)}.sphere-stage picture{max-width:280px}.sphere-stage figcaption{margin-top:0}.about{grid-template-columns:1fr;gap:30px}.section{padding-block:42px}.name-panel{padding:25px}.section-heading{flex-direction:column;gap:0}.review-date{text-align:left;margin-top:0}.findings-grid{grid-template-columns:1fr}.finding{padding:23px}.research-controls{padding:18px}.search-row{grid-template-columns:1fr}.filter-row{align-items:stretch}.perspectives-grid{grid-template-columns:1fr;gap:8px}.perspective{padding-block:22px 8px}.connect-panel{grid-template-columns:1fr;gap:36px;padding:25px}.actions{gap:18px}.entry-meta{font-size:.75rem}.eyebrow{font-size:.75rem}.source{font-size:.875rem}}
 /* A continuous deep-space scene, slowly drifting behind the reading surfaces. */
 .universe-backdrop{display:block;position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:#030711}
-.universe-backdrop img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.08);filter:brightness(1.12) saturate(1.08);animation:universe-drift 65s ease-in-out infinite alternate}
-.universe-backdrop::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,7,17,.38),rgba(3,7,17,.24) 35%,rgba(3,7,17,.05) 70%),linear-gradient(180deg,transparent 60%,rgba(3,7,17,.16))}
+.universe-backdrop picture{display:block;position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
+.universe-backdrop picture.is-current{opacity:1}
+.universe-backdrop img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transform:scale(1.08);animation:universe-drift 65s ease-in-out infinite alternate}
+.universe-backdrop::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(3,7,17,.38),rgba(3,7,17,.24) 35%,rgba(3,7,17,.05) 70%),linear-gradient(180deg,transparent 60%,rgba(3,7,17,.16))}
 @keyframes universe-drift{from{transform:scale(1.08) translate3d(-1%,-.6%,0)}to{transform:scale(1.15) translate3d(1%,.6%,0)}}
 .space-motion-paused .universe-backdrop img{animation-play-state:paused}
 .hero{padding-block:88px 100px;min-height:max(680px,calc(100svh - 88px))}
@@ -54,3 +56,28 @@
 .stairway-scene figcaption>p:last-child{margin-bottom:0;color:#bccfe5;max-width:680px}
 @media(max-width:900px){.nav-wrap{align-items:flex-start;padding-block:20px}.nav-wrap nav{justify-content:flex-end}.cosmos-view figcaption{gap:24px;padding:26px}}
 @media(max-width:680px){.nav-wrap nav{justify-content:flex-start;gap:12px 20px}.cosmos-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cosmos-controls button{padding:11px 8px;font-size:.875rem}.cosmos-image{height:clamp(260px,80vw,410px);min-height:0}.cosmos-view figcaption{grid-template-columns:1fr;gap:18px;padding:23px}.stairway{margin-block:70px}.stairway-scene>img{aspect-ratio:1/1;object-fit:cover;object-position:55% center}.stairway-scene figcaption{padding:24px}.stairway-scene .eyebrow{font-size:.75rem}}
+
+/* The entire backdrop changes scale; the guide identifies observations and models. */
+body{padding-bottom:112px}
+.universe-backdrop [data-backdrop="microns"] img{object-fit:contain;object-position:center;animation:none;transform:none}
+.universe-backdrop [data-backdrop="atoms"] img{object-position:64% center;animation:none;transform:none}
+.hero-copy{padding:26px;border-radius:16px;background:rgba(3,9,21,.68)}
+.scale-guide{position:fixed;z-index:30;right:22px;bottom:max(18px,env(safe-area-inset-bottom));width:min(354px,calc(100vw - 32px));margin:0;padding:0;border:1px solid rgba(151,204,245,.42);border-radius:14px;background:rgba(4,12,25,.97);box-shadow:0 10px 40px rgba(0,0,0,.45);max-height:72svh;overflow:auto}
+.scale-guide summary{display:block;position:relative;padding:13px 40px 13px 17px;line-height:1.5;list-style:none;font-size:.9375rem;color:#edf6ff}
+.scale-guide summary::-webkit-details-marker{display:none}
+.scale-guide summary::after{content:"+";position:absolute;right:16px;top:23px;font-size:1.3rem;color:#98d6ff}
+.scale-guide[open] summary::after{content:"−"}
+.scale-guide-label{display:block;font-size:.75rem;letter-spacing:.1em;color:#99b8d6}
+.scale-kind{font-size:.75rem;color:#a8bad0;display:block}
+.scale-guide-content{padding:4px 17px 17px;border-top:1px solid var(--line)}
+.scale-guide-content>.small{margin:12px 0;font-size:.875rem}
+.scale-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.scale-choices button{min-height:42px;padding:9px 8px;font-size:.875rem;line-height:1.35;background:#0c1c31;color:#cfe6fa;border:1px solid #345474;border-radius:8px}
+.scale-choices button[aria-pressed=true]{background:#a9ddfb;color:#071626;border-color:#a9ddfb;font-weight:700}
+.scale-explanation{font-size:.875rem;line-height:1.65;color:#c9dbec;margin:16px 0 12px}
+.scale-guide .image-credit{font-size:.75rem;color:#91aac1;margin:10px 0 0;line-height:1.5}
+@media(max-width:680px){.hero-copy{padding:22px 18px;margin:0}.scale-guide{right:12px;width:calc(100vw - 24px)}.scale-guide summary{padding-block:10px}.scale-kind{display:inline;margin-left:8px;font-size:.75rem}.scale-guide-label{font-size:.75rem}.scale-guide summary::after{top:15px}}
+@media(prefers-reduced-motion:reduce){.universe-backdrop picture{transition:none}}
+.space-motion-paused .universe-backdrop picture{transition:none}
+
+.universe-backdrop picture:not(.is-current) img{animation-play-state:paused}
