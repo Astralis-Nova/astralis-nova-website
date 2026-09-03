@@ -7,8 +7,8 @@
   const supportToggle = document.getElementById("supportMotionToggle");
   const motionButtons = [toggle, supportToggle].filter(Boolean);
   const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const still = "/assets/astralis-sphere/an-blue-still.webp";
-  const animation = "/assets/astralis-sphere/an-blue-motion.webp";
+  const still = "/assets/astralis-sphere/support-sphere-still.webp";
+  const animation = "/assets/astralis-sphere/support-sphere-tumble.webp";
   let rotating = !preference.matches;
 
   function updateRotation() {

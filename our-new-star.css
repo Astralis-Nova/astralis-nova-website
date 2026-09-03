@@ -82,6 +82,18 @@ body{padding-bottom:112px}
 
 .universe-backdrop picture:not(.is-current) img{animation-play-state:paused}
 
+/* A compact opening: the sphere floats beside text with softly feathered contrast. */
+.hero{min-height:0;grid-template-columns:minmax(0,.9fr) minmax(0,1.15fr);grid-template-areas:"sphere copy";align-items:center;gap:clamp(24px,5vw,72px);padding-block:26px 44px}
+.hero-copy{grid-area:copy;position:relative;isolation:isolate;padding:28px 12px;margin:0;border:0;border-radius:0;background:transparent;text-shadow:0 2px 14px #020916,0 0 32px #020916}
+.hero-copy::before{content:"";position:absolute;inset:-12% -12%;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at center,rgba(3,12,28,.8) 0%,rgba(7,20,39,.58) 40%,rgba(8,24,43,.22) 62%,transparent 76%)}
+.hero h1{font-size:clamp(3.5rem,6.8vw,6rem);margin-bottom:20px}.hero-intro{color:#dae8f3}.hero-meaning{color:#edf7ff}
+.hero .sphere-stage{grid-area:sphere;justify-self:center;width:min(100%,360px);align-self:center;margin:0;padding:0;background:transparent}
+.hero .sphere-stage::before{inset:-8%;border-radius:0;background:radial-gradient(ellipse,rgba(99,176,231,.22),rgba(61,111,199,.09) 42%,transparent 70%)}
+.hero .sphere-stage picture{max-width:360px}.hero .sphere-stage img{filter:drop-shadow(0 0 12px rgba(164,218,255,.28)) drop-shadow(0 0 32px rgba(66,139,240,.25));mix-blend-mode:screen}
+.hero .sphere-stage figcaption{font-size:.875rem;color:#d0e8fa;letter-spacing:.12em}.hero .rotation-toggle{background:rgba(8,26,47,.44);border-color:rgba(162,211,244,.3);color:#d5eafa}
+.hero+.section{margin-top:24px}
+@media(max-width:680px){.hero{grid-template-columns:1fr;grid-template-areas:"sphere" "copy";gap:0;padding-block:16px 24px}.hero .sphere-stage{width:min(66vw,250px)}.hero .sphere-stage figcaption{margin:0;font-size:.8125rem}.hero .sphere-stage .rotation-toggle{margin-top:6px;padding:7px 12px;min-height:40px}.hero-copy{text-align:center;padding:28px 6px 16px}.hero-copy::before{inset:-6% -16%}.hero .eyebrow{font-size:.8125rem;margin-bottom:14px}.hero h1{font-size:clamp(3.4rem,14vw,4.6rem);line-height:1;margin-bottom:18px}.hero-meaning{font-size:1.2rem}.hero-intro{font-size:1rem;max-width:480px;margin-inline:auto}.hero .actions{justify-content:center;gap:16px 22px;margin-top:22px}}
+
 /* The periodic table: factual element identities, with family colors as a key. */
 .elements{--element-accent:#9de9dd}
 [data-family="nonmetal"]{--element-accent:#9de9dd}
