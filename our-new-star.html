@@ -12,6 +12,8 @@
   <script src="/our-new-star-elements.js?v=20260903elements" defer></script>
   <link rel="stylesheet" href="/our-new-star-science.css?v=20260903science">
   <script src="/our-new-star-science.js?v=20260903science" defer></script>
+  <link rel="stylesheet" href="/our-new-star-community.css?v=20260903community">
+  <script src="/our-new-star-community.js?v=20260903community" defer></script>
 </head>
 <body>
 <div class="universe-backdrop" id="universeBackdrop" aria-hidden="true">
@@ -438,8 +440,27 @@
     <p class="related-worlds">Continue through our worlds: <a href="/scripture-nexus.html">Explore the Bible in Scripture Nexus ↗</a><a href="/wild-encounters.html">Meet the life around us in Wild Encounters ↗</a></p>
   </section>
 
-  <section class="shell section" id="connect" data-universe-scale="stars" aria-labelledby="connect-heading">
-    <div class="connect-panel"><div><p class="eyebrow">LOOKING UP TOGETHER</p><h2 id="connect-heading">Still searching?<br>You have a place here.</h2><p>Tell us about a moment that made you feel connected, a source worth reading, or a question you’d like us to explore. Faith, doubt, and curiosity can all be part of the conversation.</p><p class="small">The Astralis Nova guestbook is public. Mention “Our New Star” so your note is easy to recognize. Share only what you’re comfortable making public.</p><a class="button primary" href="/#guestbook">Join us in the guestbook ↗</a></div><div class="journal-note"><p class="eyebrow">HOW WE KEEP LEARNING</p><ul><li>Follow claims back to their sources.</li><li>Keep findings, interpretations, and personal experiences clear.</li><li>Make room for questions and changing our minds.</li><li>Treat people and other living things with care.</li></ul><p>The first entries are a beginning. There is more to discover.</p></div></div>
+  <section class="shell section observation-deck" id="connect" data-universe-scale="stars" aria-labelledby="connect-heading">
+    <div class="section-heading"><div><p class="eyebrow">LOOKING UP TOGETHER</p><h2 id="connect-heading">The Observation Deck</h2></div><a class="text-link" href="#questions-exploring">Questions we’re exploring ↑</a></div>
+    <p class="section-intro">What makes you feel connected—to nature, other people, or the universe? Leave a question, share a source, or tell us about an experience that changed your perspective.</p>
+    <div class="observation-layout"><div class="observation-main">
+      <form class="observation-form" id="observationForm" aria-labelledby="observation-form-heading">
+        <h3 id="observation-form-heading">Add your voice</h3>
+        <div class="observation-fields"><div><label for="observationName">Name or nickname</label><input id="observationName" name="name" type="text" required maxlength="40" autocomplete="nickname" placeholder="What should we call you?"></div><div><label for="observationTopic">Topic</label><select id="observationTopic" name="topic"><option>Space</option><option>Nature</option><option>Spiritual connection</option><option>Research</option><option>Life & consciousness</option></select></div></div>
+        <label for="observationMessage">Your public message</label><textarea id="observationMessage" name="message" required minlength="3" maxlength="450" rows="5" aria-describedby="observationPrivacy observationMessageHelp" placeholder="A question you’re carrying, a discovery, or a moment of connection…"></textarea>
+        <p class="observation-help" id="observationMessageHelp">Up to 450 characters. You can include one source link.</p>
+        <div class="observation-trap" aria-hidden="true"><label for="observationWebsite">Leave this field empty</label><input id="observationWebsite" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+        <p class="observation-privacy" id="observationPrivacy">Messages are public here and in the main Astralis Nova guestbook. Nicknames are not verified. Share only what you’re comfortable making public, and treat different beliefs with care.</p>
+        <button class="button primary" id="observationSubmit" type="submit" disabled>Post public message</button><p id="observationStatus" class="observation-status" role="status" aria-live="polite"></p>
+      </form>
+      <div class="observation-feed-heading"><h3>Messages from fellow explorers</h3><button type="button" id="observationRefresh" class="button subtle" disabled>Refresh messages</button></div>
+      <p id="observationCount" class="observation-help" role="status" aria-live="polite">Messages will load here.</p><div id="observationEntries" class="observation-entries"></div>
+      <noscript><p>Enable JavaScript to read and post on the Observation Deck. You can also <a href="/#guestbook">visit the main guestbook</a>.</p></noscript>
+      <p class="observation-help">Conversations stay available when visitors leave. Use Refresh messages to check for new notes; Reply starts a public message addressed to that nickname.</p>
+    </div><aside class="observation-aside">
+      <div class="support-search" aria-labelledby="support-search-heading"><a href="https://paypal.me/ramonbivens" target="_blank" rel="noopener noreferrer" class="support-star" aria-label="Support Astralis Nova through PayPal (opens a new tab)"><img src="/assets/astralis-sphere/an-blue-still.webp" width="360" height="360" alt="Astralis Nova’s silver sphere glowing with blue light" loading="lazy" decoding="async"></a><p class="eyebrow">HELP KEEP OUR STAR SHINING</p><h3 id="support-search-heading">Fuel the Search</h3><p>Enjoy exploring with us? An optional contribution supports Astralis Nova’s website, creative work, and the time spent gathering and sharing what we learn.</p><a class="button primary" href="https://paypal.me/ramonbivens" target="_blank" rel="noopener noreferrer">Support with PayPal ↗</a><p class="observation-help">Exploring and joining the conversation are free. Contributions go to Astralis Nova.</p></div>
+      <div class="observation-guidelines"><h3>How we keep learning</h3><ul><li>Follow factual claims back to their sources.</li><li>Distinguish findings, interpretations, and personal experiences.</li><li>Ask questions and leave room to change your mind.</li><li>Make space for faith, doubt, and curiosity.</li></ul><a href="#findings">Read our research journal ↑</a></div>
+    </aside></div>
   </section>
 </main>
 <footer class="shell footer"><p>Astralis Nova · Our New Star</p><a href="/#connected-worlds">Return to the planets ↑</a></footer>

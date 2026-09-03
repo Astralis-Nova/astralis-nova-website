@@ -54,6 +54,13 @@ jobs:
           node --check astralis-motion-restore.js
           node --input-type=module --check < functions/_middleware.js
 
+      - name: Validate Our New Star and community
+        run: |
+          node --check our-new-star-elements.js
+          node --check our-new-star-science.js
+          node --check our-new-star-community.js
+          node --test tests/our-new-star-community.test.cjs tests/our-new-star-api.test.mjs tests/ac-community-api.test.mjs tests/ac-community-ui.test.cjs
+
       - name: Validate chess portal
         run: |
           node --check chess/chess.js
