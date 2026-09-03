@@ -7,8 +7,8 @@
   <meta name="theme-color" content="#060c18">
   <title>Our New Star — Meaning, Nature & Connection | Astralis Nova</title>
   <link rel="icon" href="/astralis-favicon-static.svg">
-  <link rel="stylesheet" href="/our-new-star.css?v=20260903deepspace">
-  <script src="/our-new-star.js?v=20260903deepspace" defer></script>
+  <link rel="stylesheet" href="/our-new-star.css?v=20260903cosmos">
+  <script src="/our-new-star.js?v=20260903cosmos" defer></script>
 </head>
 <body>
 <picture class="universe-backdrop" id="universeBackdrop" aria-hidden="true">
@@ -19,7 +19,7 @@
 <header class="topbar">
   <div class="shell nav-wrap">
     <a class="brand" href="/">ASTRALIS NOVA<span>OUR NEW STAR</span></a>
-    <nav aria-label="Page navigation"><a href="#about">Our story</a><a href="#findings">Our findings</a><a href="#connect">Connect</a><a class="home" href="/#connected-worlds">All planets ↗</a></nav>
+    <nav aria-label="Page navigation"><a href="#cosmos">Explore space</a><a href="#about">Our story</a><a href="#findings">Our findings</a><a href="#connect">Connect</a><a class="home" href="/#connected-worlds">All planets ↗</a></nav>
   </div>
 </header>
 <main id="main">
@@ -29,12 +29,49 @@
       <h1 id="page-title">Astralis<br><span>Nova.</span></h1>
       <p class="hero-meaning">A new beginning among the stars.</p>
       <p class="hero-intro">We’re still looking for that spiritual connection. This is where we follow the questions, share what we learn, and find others looking up at the same sky.</p>
-      <div class="actions"><a class="button primary" href="#findings">Explore our findings <span aria-hidden="true">↓</span></a><a class="text-link" href="#about">What our name means</a></div>
+      <div class="actions"><a class="button primary" href="#cosmos">Explore the cosmos <span aria-hidden="true">↓</span></a><a class="text-link" href="#about">What our name means</a></div>
     </div>
     <figure class="sphere-stage">
       <picture id="novaVisual"><source id="novaMotion" type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" width="360" height="360" alt="A hollow silver sphere with blue light, A and N cut through opposite sides, and star-shaped openings." fetchpriority="high" decoding="async"></picture>
       <figcaption>OUR NEW STAR <span aria-hidden="true">✦</span> AN</figcaption>
       <button type="button" class="rotation-toggle" id="rotationToggle" aria-controls="novaVisual universeBackdrop" hidden>Pause motion</button>
+    </figure>
+  </section>
+
+  <section class="shell section cosmos" id="cosmos" aria-labelledby="cosmos-heading">
+    <div class="section-heading"><div><p class="eyebrow">NEARBY WONDERS · DISTANT WORLDS</p><h2 id="cosmos-heading">A journey through space</h2></div><a class="text-link" href="#stairway">Stairway to heaven ↓</a></div>
+    <p class="section-intro">Visit our Sun and Moon, travel through our solar system, and look toward a family of worlds around another star.</p>
+    <div class="cosmos-controls" id="cosmosControls" role="group" aria-label="Choose a space view" hidden>
+      <button type="button" data-scene-target="solar" aria-controls="scene-solar" aria-pressed="true">Our solar system</button>
+      <button type="button" data-scene-target="sun" aria-controls="scene-sun" aria-pressed="false">The Sun</button>
+      <button type="button" data-scene-target="moon" aria-controls="scene-moon" aria-pressed="false">The Moon</button>
+      <button type="button" data-scene-target="trappist" aria-controls="scene-trappist" aria-pressed="false">TRAPPIST-1 system</button>
+    </div>
+    <div id="cosmosViews">
+      <figure class="cosmos-view" id="scene-solar" data-scene="solar">
+        <div class="cosmos-image system-image"><img src="/assets/our-new-star/solar-system.webp" width="1600" height="900" alt="An illustrated overview of the Sun and the eight planets in our solar system." loading="lazy" decoding="async"></div>
+        <figcaption><div><p class="eyebrow">OUR COSMIC NEIGHBORHOOD</p><h3>One star. Eight planets. Our home.</h3></div><div><p>Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune orbit our Sun. Beyond them are dwarf planets and smaller icy worlds. This illustration brings the family together; sizes and distances are not shown to scale.</p><a class="source" href="https://science.nasa.gov/solar-system/" target="_blank" rel="noopener noreferrer">Explore our solar system · NASA</a><p class="image-credit" data-credit="solar">NASA · Illustration</p></div></figcaption>
+      </figure>
+      <figure class="cosmos-view" id="scene-sun" data-scene="sun">
+        <div class="cosmos-image disk-image"><img src="/assets/our-new-star/sun.webp" width="1200" height="1200" alt="A false-color extreme-ultraviolet NASA observation of the Sun with bright active regions and dark coronal holes." loading="lazy" decoding="async"></div>
+        <figcaption><div><p class="eyebrow">THE STAR THAT SUSTAINS US</p><h3>The Sun</h3></div><div><p>Our star formed about 4.6 billion years ago. Its light and warmth shape life on Earth—a connection to the universe we experience every day.</p><a class="source" href="https://science.nasa.gov/sun/facts/" target="_blank" rel="noopener noreferrer">Get to know our star · NASA</a><p class="image-credit" data-credit="sun"><a href="https://svs.gsfc.nasa.gov/11739" target="_blank" rel="noopener noreferrer">NASA/SDO/AIA/LMSAL</a> · False-color extreme-ultraviolet observation, 2015</p></div></figcaption>
+      </figure>
+      <figure class="cosmos-view" id="scene-moon" data-scene="moon">
+        <div class="cosmos-image disk-image"><img src="/assets/our-new-star/moon.webp" width="1024" height="1024" alt="The Moon’s near side, showing its bright cratered highlands and darker plains." loading="lazy" decoding="async"></div>
+        <figcaption><div><p class="eyebrow">OUR NEAREST COMPANION</p><h3>The Moon</h3></div><div><p>About 238,855 miles away on average, the Moon is close enough to feel familiar and far enough to remind us how much space surrounds us. Its changing phases come from our changing view of its sunlit half.</p><a class="source" href="https://science.nasa.gov/moon/facts/" target="_blank" rel="noopener noreferrer">Explore the Moon · NASA</a><p class="image-credit" data-credit="moon"><a href="https://svs.gsfc.nasa.gov/4768" target="_blank" rel="noopener noreferrer">NASA’s Scientific Visualization Studio</a> · Visualization using Lunar Reconnaissance Orbiter data</p></div></figcaption>
+      </figure>
+      <figure class="cosmos-view" id="scene-trappist" data-scene="trappist">
+        <div class="cosmos-image system-image"><img src="/assets/our-new-star/trappist-system.webp" width="1600" height="900" alt="An artist’s concept of TRAPPIST-1 d passing in front of its red dwarf star, with two other planets in the background." loading="lazy" decoding="async"></div>
+        <figcaption><div><p class="eyebrow">ANOTHER STAR’S FAMILY</p><h3>The TRAPPIST-1 system</h3></div><div><p>Seven roughly Earth-sized planets orbit this small, cool star. Worlds e, f, and g lie in its habitable zone, where surface liquid water could be possible with the right conditions. That makes them compelling places to investigate.</p><a class="source" href="https://science.nasa.gov/asset/hubble/the-trappist-1-habitable-zone/" target="_blank" rel="noopener noreferrer">Explore the habitable zone · NASA</a><a class="text-link" href="#trappist-life">What we know about TRAPPIST-1 e ↓</a><p class="image-credit" data-credit="trappist"><a href="https://science.nasa.gov/asset/webb/trappist-1-d-artists-concept/" target="_blank" rel="noopener noreferrer">NASA, ESA, CSA, Joseph Olmsted (STScI)</a> · Artist’s concept showing planet d and two neighboring worlds; appearances are imagined</p></div></figcaption>
+      </figure>
+    </div>
+    <p class="sr-only" id="cosmosStatus" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="stairway shell" id="stairway" aria-labelledby="stairway-heading">
+    <figure class="stairway-scene">
+      <img src="/assets/our-new-star/stairway-to-heaven.webp" width="1586" height="992" alt="An imagined silver stairway curves upward through blue and violet starlight toward a warm golden light." loading="lazy" decoding="async">
+      <figcaption><p class="eyebrow">SYMBOLIC ART · OUR SEARCH FOR CONNECTION</p><h2 id="stairway-heading">Stairway to heaven</h2><p>An imagined path toward light, hope, and the connection we’re still searching for.</p></figcaption>
     </figure>
   </section>
 
@@ -113,6 +150,23 @@
         <p class="takeaway"><strong>What we’re learning about our search:</strong> We can take an experience seriously and still ask careful questions about what it means.</p>
         <details><summary>Questions we’re carrying forward</summary><p>How do different traditions understand consciousness? What could research test, and what remains a philosophical or spiritual interpretation? What experiences bring us closer to other people and living things?</p></details>
         <a class="source" href="#connect">Bring your experience or question into the conversation ↓</a>
+      </article>
+      <article class="finding" id="trappist-life" data-topics="space" data-keywords="trappist trappist-1 e planets alien life habitable zone atmosphere water solar system" tabindex="-1">
+        <div class="entry-meta"><span class="evidence open">HABITABILITY RESEARCH</span><span>07 / OTHER WORLDS</span></div>
+        <h3>TRAPPIST-1 e: a world worth watching.</h3>
+        <p>This rocky planet is slightly smaller than Earth and orbits its star every 6.1 days. Its location in the habitable zone makes it a target for studying possible conditions for liquid water.</p>
+        <p class="takeaway"><strong>What we know:</strong> Webb observations are helping narrow the possible atmospheres. A habitable-zone orbit alone does not show that a planet has water or life.</p>
+        <details><summary>What remains unknown</summary><p>NASA’s September 2025 report did not establish whether TRAPPIST-1 e has an atmosphere. Surface conditions and the existence of life remain open questions.</p></details>
+        <a class="source" href="https://science.nasa.gov/missions/webb/nasa-webb-looks-at-earth-sized-habitable-zone-exoplanet-trappist-1-e/" target="_blank" rel="noopener noreferrer">NASA · Webb’s look at TRAPPIST-1 e</a>
+        <a class="source" href="https://science.nasa.gov/exoplanet-catalog/trappist-1-e/" target="_blank" rel="noopener noreferrer">NASA · Planet measurements</a>
+      </article>
+      <article class="finding" id="kepler-life" data-topics="space" data-keywords="kepler kepler-186f planets alien life habitable zone atmosphere water red dwarf" tabindex="-1">
+        <div class="entry-meta"><span class="evidence open">HABITABILITY RESEARCH</span><span>08 / OTHER WORLDS</span></div>
+        <h3>Kepler-186f: an Earth-sized possibility.</h3>
+        <p>Kepler-186f was the first validated Earth-sized planet discovered in another star’s habitable zone. It orbits a star cooler and smaller than our Sun.</p>
+        <p class="takeaway"><strong>Why it matters:</strong> Earth-sized planets can exist at distances where surface liquid water may be possible. Temperature also depends on a planet’s atmosphere.</p>
+        <details><summary>What remains unknown</summary><p>Its atmosphere and surface conditions are not established. We have not confirmed oceans, plants, animals, or any other life there.</p></details>
+        <a class="source" href="https://www.nasa.gov/news-release/nasas-kepler-telescope-discovers-first-earth-size-planet-in-habitable-zone/" target="_blank" rel="noopener noreferrer">NASA · Discovering Kepler-186f</a>
       </article>
     </div>
   </section>

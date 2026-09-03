@@ -85,3 +85,22 @@
   });
   filterFindings();
 })();
+
+(() => {
+  "use strict";
+  const controls = document.getElementById("cosmosControls");
+  const views = [...document.querySelectorAll("[data-scene]")];
+  const buttons = [...document.querySelectorAll("[data-scene-target]")];
+  const status = document.getElementById("cosmosStatus");
+  if (!controls || !views.length || !buttons.length) return;
+  function showScene(name, announce = true) {
+    const selected = views.find(view => view.dataset.scene === name);
+    if (!selected) return;
+    views.forEach(view => { view.hidden = view !== selected; });
+    buttons.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.sceneTarget === name)));
+    if (announce) status.textContent = `${selected.querySelector("h3").textContent} view selected.`;
+  }
+  buttons.forEach(button => button.addEventListener("click", () => showScene(button.dataset.sceneTarget)));
+  showScene("solar", false);
+  controls.hidden = false;
+})();
