@@ -7,13 +7,13 @@
   <meta name="theme-color" content="#060c18">
   <title>Our New Star — Meaning, Nature & Connection | Astralis Nova</title>
   <link rel="icon" href="/astralis-favicon-static.svg">
-  <link rel="stylesheet" href="/our-new-star.css?v=20260903universe">
-  <script src="/our-new-star.js?v=20260903a" defer></script>
+  <link rel="stylesheet" href="/our-new-star.css?v=20260903deepspace">
+  <script src="/our-new-star.js?v=20260903deepspace" defer></script>
 </head>
 <body>
-<picture class="universe-backdrop" aria-hidden="true">
-  <source media="(max-width:680px)" srcset="/assets/our-new-star/universe-mobile.webp">
-  <img src="/assets/our-new-star/universe.webp" width="1586" height="992" alt="" decoding="async" fetchpriority="high">
+<picture class="universe-backdrop" id="universeBackdrop" aria-hidden="true">
+  <source media="(max-width:680px)" srcset="/assets/our-new-star/deep-universe-mobile.webp">
+  <img src="/assets/our-new-star/deep-universe.webp" width="1586" height="992" alt="" decoding="async" fetchpriority="high">
 </picture>
 <a class="skip" href="#main">Skip to content</a>
 <header class="topbar">
@@ -34,7 +34,7 @@
     <figure class="sphere-stage">
       <picture id="novaVisual"><source id="novaMotion" type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" width="360" height="360" alt="A hollow silver sphere with blue light, A and N cut through opposite sides, and star-shaped openings." fetchpriority="high" decoding="async"></picture>
       <figcaption>OUR NEW STAR <span aria-hidden="true">✦</span> AN</figcaption>
-      <button type="button" class="rotation-toggle" id="rotationToggle" aria-controls="novaVisual" hidden>Pause rotation</button>
+      <button type="button" class="rotation-toggle" id="rotationToggle" aria-controls="novaVisual universeBackdrop" hidden>Pause motion</button>
     </figure>
   </section>
 
