@@ -33,8 +33,10 @@ export async function onRequestGet({ env, request }) {
 
   try {
     // Reuse the public ledger without changing its schema or the homepage feed.
-    const acWorlds = request && new URL(request.url).searchParams.get("scope") === "ac-worlds";
-    const scopeClause = acWorlds ? "WHERE message LIKE '[AC Worlds / %'" : "";
+    const scope = request && new URL(request.url).searchParams.get("scope");
+    // Only fixed, recognized scopes can contribute SQL; never interpolate input.
+    const scopeClause = scope === "ac-worlds" ? "WHERE message LIKE '[AC Worlds / %'" :
+      scope === "our-new-star" ? "WHERE message LIKE '[Our New Star / %'" : "";
     const [entriesResult, countResult] = await Promise.all([
       env.DB.prepare(
         `SELECT id, name, location, favorite_song, message, created_at
