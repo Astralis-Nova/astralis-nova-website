@@ -1,71 +1,83 @@
 const LABELS = {
-  k: 'High Commander',
-  q: 'Oracle Core',
-  r: 'Citadel',
-  b: 'Phase Seer',
-  n: 'Warp Strider',
-  p: 'Drone Sentinel',
+  k: 'Solar King',
+  q: 'Lunar Queen',
+  r: 'Astralis Nova Citadel',
+  b: 'Ringworld Seer',
+  n: 'Comet Strider',
+  p: 'Asteroid Pawn',
 };
 
 let pieceSerial = 0;
 
 const FIGURES = {
+  // King: crowned sun / nova core
   k: `
-    <path class="deep" d="M35 79 39 39h22l4 40Z"/>
-    <path class="shell" d="M31 79 37 45l8-9h10l8 9 6 34Z"/>
-    <path class="accent" d="M34 57h32l-2 9H36Z"/>
-    <path class="shell" d="m36 34 5-13 7 5V12h4v14l7-5 5 13-8 7H44Z"/>
-    <path class="gem" d="m50 39 5 7-5 8-5-8Z"/>
-    <path class="detail" d="M41 69h18M43 76h14M42 32h16"/>
-    <path class="glow" d="M50 7v7M43 11h14"/>
+    <path class="deep" d="M33 79 39 49h22l6 30Z"/>
+    <path class="shell" d="M29 79 36 52l8-9h12l8 9 7 27Z"/>
+    <circle class="core" cx="50" cy="32" r="12"/>
+    <path class="glow" d="M50 8v9M50 47v8M26 32h9M65 32h9M33 15l6 7M61 42l6 7M67 15l-6 7M39 42l-6 7"/>
+    <path class="shell" d="m38 18 5-8 7 6 7-6 5 8-3 8H41Z"/>
+    <path class="accent" d="M35 56h30l-2 10H37Z"/>
+    <path class="detail" d="M40 70h20M43 76h14"/>
   `,
+
+  // Queen: crescent moon / astrology crown
   q: `
-    <path class="deep" d="M33 79 38 39h24l5 40Z"/>
-    <path class="shell" d="M29 79 37 48l7-9h12l7 9 8 31Z"/>
-    <path class="accent" d="M34 58h32l-3 10H37Z"/>
-    <path class="shell" d="m34 35-5-18 12 8 9-15 9 15 12-8-5 18-9 7H43Z"/>
-    <circle class="gem" cx="29" cy="16" r="3"/>
-    <circle class="gem" cx="50" cy="9" r="3.5"/>
-    <circle class="gem" cx="71" cy="16" r="3"/>
-    <path class="detail" d="M39 34h22M41 70h18"/>
-    <circle class="core" cx="50" cy="50" r="5"/>
+    <path class="deep" d="M33 79 39 47h22l6 32Z"/>
+    <path class="shell" d="M29 79 36 51l8-9h12l8 9 7 28Z"/>
+    <path class="shell" d="M57 12c-12 2-20 12-18 23 2 10 12 16 23 13-8-3-12-10-11-18 1-8 5-14 6-18Z"/>
+    <circle class="gem" cx="62" cy="18" r="3"/>
+    <circle class="gem" cx="35" cy="25" r="2.5"/>
+    <path class="glow" d="M68 12v6M65 15h6M32 15v5M29 18h6"/>
+    <path class="accent" d="M35 57h30l-3 10H38Z"/>
+    <path class="detail" d="M41 70h18M43 76h14"/>
   `,
+
+  // Rook: Astralis Nova observatory / castle citadel
   r: `
-    <path class="deep" d="M31 79V34h38v45Z"/>
-    <path class="shell" d="M27 79 31 37h38l4 42Z"/>
-    <path class="shell" d="M27 36V17h10v8h8v-8h10v8h8v-8h10v19Z"/>
-    <path class="accent" d="M31 41h38v11H31Z"/>
-    <path class="detail" d="M38 55v17M50 55v17M62 55v17M33 73h34"/>
-    <rect class="core" x="43" y="43" width="14" height="7" rx="2"/>
-    <path class="glow" d="M35 31h30"/>
+    <path class="deep" d="M31 79V38h38v41Z"/>
+    <path class="shell" d="M27 79 31 39h38l4 40Z"/>
+    <path class="shell" d="M28 38V21h9v7h8v-7h10v7h8v-7h9v17Z"/>
+    <path class="shell" d="M39 21c2-8 7-12 11-12s9 4 11 12Z"/>
+    <circle class="core" cx="50" cy="21" r="5"/>
+    <path class="glow" d="M50 7v7M43 11h14"/>
+    <path class="accent" d="M31 44h38v10H31Z"/>
+    <path class="detail" d="M38 57v15M50 57v15M62 57v15M34 73h32"/>
   `,
+
+  // Bishop: ringed planet / orbital seer
   b: `
-    <path class="deep" d="M32 79c3-20 6-32 13-40h10c7 8 10 20 13 40Z"/>
-    <path class="shell" d="M28 79c5-23 10-36 19-43h6c9 7 14 20 19 43Z"/>
-    <path class="shell" d="M50 8c13 10 18 21 13 29-5 8-21 8-26 0-5-8 0-19 13-29Z"/>
-    <path class="accent" d="M34 55h32l-3 11H37Z"/>
-    <path class="slash" d="m57 16-16 21"/>
+    <path class="deep" d="M32 79c3-20 7-31 14-39h8c7 8 11 19 14 39Z"/>
+    <path class="shell" d="M28 79c5-23 10-35 19-42h6c9 7 14 19 19 42Z"/>
+    <circle class="shell" cx="50" cy="28" r="12"/>
+    <ellipse class="accent" cx="50" cy="28" rx="22" ry="7" transform="rotate(-12 50 28)"/>
+    <path class="glow" d="M30 31c8-7 32-12 40-5"/>
+    <path class="slash" d="m56 18-12 20"/>
+    <path class="accent" d="M35 56h30l-3 10H38Z"/>
     <path class="detail" d="M42 70h16"/>
-    <circle class="core" cx="50" cy="49" r="4.5"/>
   `,
+
+  // Knight: comet / planetary strider
   n: `
-    <path class="deep" d="M28 79c5-18 11-29 22-36l13 5 8 31Z"/>
-    <path class="shell" d="M24 79c4-18 12-31 24-39l2-13-9-12c20 1 31 11 33 29l-9 12 8 23Z"/>
-    <path class="accent" d="m49 27 15 4 7 12-10 8-13-11Z"/>
-    <path class="visor" d="m52 31 13 3-5 6-9-3Z"/>
-    <path class="detail" d="M39 52c9 2 16 8 20 20M33 69h28"/>
-    <path class="glow" d="m42 16 9 11M36 18l8 10"/>
-    <circle class="gem" cx="63" cy="34" r="2.3"/>
+    <path class="deep" d="M28 79c5-18 11-28 22-35l13 5 8 30Z"/>
+    <path class="shell" d="M24 79c4-18 12-31 24-39l3-12-8-12c19 1 29 11 31 28l-9 12 8 23Z"/>
+    <circle class="core" cx="61" cy="34" r="5"/>
+    <path class="accent" d="m49 28 15 4 7 12-10 8-13-11Z"/>
+    <path class="glow" d="M42 16c-9 4-14 11-18 20M46 21c-8 5-12 11-15 18"/>
+    <path class="detail" d="M39 53c9 2 16 8 20 19M33 69h28"/>
   `,
+
+  // Pawn: cratered asteroid
   p: `
-    <path class="deep" d="M34 79c2-18 7-29 16-35 9 6 14 17 16 35Z"/>
-    <path class="shell" d="M29 79c4-19 10-31 18-35h6c8 4 14 16 18 35Z"/>
-    <circle class="shell" cx="50" cy="27" r="15"/>
-    <path class="visor" d="M38 25c7-5 17-5 24 0l-4 7H42Z"/>
-    <path class="accent" d="M35 57h30l-3 11H38Z"/>
-    <circle class="core" cx="50" cy="49" r="4"/>
+    <path class="deep" d="M34 79c2-16 7-27 16-33 9 6 14 17 16 33Z"/>
+    <path class="shell" d="M29 79c4-17 10-28 18-33h6c8 5 14 16 18 33Z"/>
+    <path class="shell" d="M35 28c0-10 7-17 16-17 11 0 17 7 16 17-1 9-8 15-17 15-9 0-15-6-15-15Z"/>
+    <circle class="deep" cx="44" cy="24" r="4"/>
+    <circle class="deep" cx="57" cy="31" r="3.2"/>
+    <circle class="deep" cx="53" cy="19" r="2.4"/>
+    <circle class="accent" cx="41" cy="33" r="2.5"/>
+    <path class="accent" d="M35 56h30l-3 10H38Z"/>
     <path class="detail" d="M42 71h16"/>
-    <path class="glow" d="M50 8v5"/>
   `,
 };
 
