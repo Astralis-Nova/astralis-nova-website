@@ -7,8 +7,8 @@
       "id": "cloud-test-cactus-forest",
       "title": "Cactus Forest",
       "artist": "Astralis Nova",
-      "audio": "../Audio/mp3/Cactus%20Forest.mp3",
-      "cover": "../cover-3.jpg"
+      "audio": "/Audio/mp3/Cactus%20Forest.mp3",
+      "cover": "/cover-3.jpg"
     }
   ]
 }
