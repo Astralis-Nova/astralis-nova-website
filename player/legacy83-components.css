@@ -328,10 +328,25 @@ body[data-skin="legacy83"] .legacy83-rack{display:block}
 
 .meter-bank{height:192px;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:18px 18px 48px;background:linear-gradient(180deg,#1c2024,#0b0d10);position:relative}
 .meter-bank::after{content:"POWER METERS        SPEAKERS A  B";position:absolute;left:18px;right:18px;bottom:14px;text-align:center;color:#bcb8ae;font-size:.47rem;letter-spacing:.13em;border-top:1px solid #555;padding-top:10px}
-.vu-meter{position:relative;border:4px solid #25282a;border-radius:3px;outline:1px solid #807b70;background:linear-gradient(180deg,#f5eccf,#d8c89e 70%,#9a896c);box-shadow:inset 0 0 18px #0007,0 4px 8px #000a;overflow:hidden}
-.vu-meter::before{content:"-40   -20    -10    -5     0    +3";position:absolute;top:12px;left:5px;right:5px;text-align:center;font-size:.42rem;letter-spacing:.025em;color:#28251f;border-bottom:1px solid #7a6e5544;padding-bottom:8px}
-.vu-meter::after{content:"";position:absolute;width:3px;height:88%;left:50%;bottom:-17px;background:linear-gradient(180deg,#e9493b,#9b110a);transform-origin:bottom center;transform:rotate(18deg);box-shadow:0 0 2px #5d0808}
-.vu-caption{position:absolute;left:0;right:0;bottom:8px;text-align:center;color:#29251f;font-size:.52rem;font-weight:900;letter-spacing:.16em}
+.vu-meter{
+  --vu-angle:-43deg;position:relative;border:5px solid #25282a;border-radius:4px;outline:1px solid #807b70;
+  background:
+    repeating-linear-gradient(98deg,transparent 0 8%,#524a3d44 8.4% 8.8%,transparent 9.2% 16%),
+    linear-gradient(180deg,#fff5d9,#decda1 70%,#978568);
+  box-shadow:inset 0 0 20px #0006,inset 0 2px #fff8,0 5px 9px #000b;overflow:hidden;
+}
+.vu-meter::before{content:"-40    -20     -10      -5       0      +3";position:absolute;z-index:2;top:11px;left:5px;right:5px;text-align:center;font-size:.39rem;font-weight:900;letter-spacing:.018em;color:#28251f;border-bottom:1px solid #7a6e5566;padding-bottom:9px}
+.vu-glass{position:absolute;z-index:5;inset:0;pointer-events:none;background:linear-gradient(118deg,#fff6 0 10%,transparent 24% 70%,#fff2 84%,transparent);box-shadow:inset 0 0 12px #fff3}
+.vu-needle{
+  position:absolute;z-index:3;left:50%;bottom:-18px;width:3px;height:112px;
+  transform-origin:50% 100%;transform:translateX(-50%) rotate(var(--vu-angle));
+  background:linear-gradient(180deg,#ed5547,#99150e 72%);box-shadow:0 0 2px #5d0808;
+}
+.vu-pivot{position:absolute;z-index:4;left:50%;bottom:-25px;width:48px;height:48px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle at 38% 32%,#dfd8c9 0 8%,#6c6558 22%,#26231d 58%,#080807 64%);box-shadow:0 2px 5px #0008}
+.vu-caption{position:absolute;z-index:4;left:0;right:0;bottom:8px;text-align:center;color:#29251f;font-size:.52rem;font-weight:900;letter-spacing:.16em}
+.vu-meter.is-peaking{box-shadow:inset 0 0 18px #ff5d4744,inset 0 2px #fff8,0 5px 9px #000b}
+.vu-meter.is-peaking::before{color:#7d130d}
+
 
 .cassette-module{min-height:300px}
 .cassette-stage{

@@ -9,7 +9,7 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../cover-3.jpg">
   <link rel="stylesheet" href="./player.css">
-  <link rel="stylesheet" href="./legacy83-components.css?v=69">
+  <link rel="stylesheet" href="./legacy83-components.css?v=70">
   <title>Astralis Nova Player</title>
 </head>
 <body data-skin="nova">
@@ -177,8 +177,12 @@
         <article class="hifi-module meter-module">
           <div class="hifi-label"><span>POWER LEVEL</span><span>L / R</span></div>
           <div class="meter-bank">
-            <div class="vu-meter"><div class="vu-caption">LEFT</div></div>
-            <div class="vu-meter"><div class="vu-caption">RIGHT</div></div>
+            <div class="vu-meter" data-vu-channel="left" role="meter" aria-label="Left audio level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <span class="vu-glass" aria-hidden="true"></span><span class="vu-needle" aria-hidden="true"></span><span class="vu-pivot" aria-hidden="true"></span><div class="vu-caption">LEFT</div>
+            </div>
+            <div class="vu-meter" data-vu-channel="right" role="meter" aria-label="Right audio level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <span class="vu-glass" aria-hidden="true"></span><span class="vu-needle" aria-hidden="true"></span><span class="vu-pivot" aria-hidden="true"></span><div class="vu-caption">RIGHT</div>
+            </div>
           </div>
         </article>
 

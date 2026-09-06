@@ -38,6 +38,7 @@
   const reelDeck=document.querySelector('.reel-module'),reelCounterDigits=[...document.querySelectorAll('.r83-counter span')],reelTransportButtons=[...document.querySelectorAll('[data-reel-action]')],reelPlayButton=document.querySelector('[data-reel-action="play"]'),reelRecordButton=document.querySelector('[data-reel-action="record"]');
   const reverbModule=document.querySelector('.reverb-module'),reverbTunnel=document.querySelector('.reverb-tunnel'),reverbModeLabel=$('reverbModeLabel'),reverbPreset=$('reverbPreset'),reverbMix=$('reverbMix'),reverbDepth=$('reverbDepth'),reverbDecay=$('reverbDecay'),reverbPreDelay=$('reverbPreDelay'),reverbMixValue=$('reverbMixValue'),reverbDepthValue=$('reverbDepthValue'),reverbDecayValue=$('reverbDecayValue'),reverbPreDelayValue=$('reverbPreDelayValue');
   const cassetteModule=document.querySelector('.cassette-module'),cassetteModeLabel=$('cassetteModeLabel'),cassetteCounterDigits=[...document.querySelectorAll('.cassette-counter span')],cassetteButtons=[...document.querySelectorAll('[data-cassette-action]')],cassettePlayButton=document.querySelector('[data-cassette-action="play"]'),cassetteEjectButton=document.querySelector('[data-cassette-action="eject"]'),cassetteRecordButton=document.querySelector('[data-cassette-action="record"]');
+  const vuMeters=[...document.querySelectorAll('.vu-meter')],vuNeedles=[...document.querySelectorAll('.vu-needle')];
 
   let current=Number(localStorage.getItem('nova.current')||2); if(!Number.isInteger(current)||!tracks[current]) current=0;
   let shuffle=localStorage.getItem('nova.shuffle')==='1',repeat=localStorage.getItem('nova.repeat')==='1';
@@ -66,6 +67,8 @@
   };
   let audioContext,sourceNode,analyser,filters=[],eqEnabled=true;
   let reverbPreDelayNode,reverbConvolver,reverbDryGain,reverbWetGain,reverbEchoDelay,reverbEchoFeedback,reverbEchoGain,reverbImpulseTimer;
+  let vuSplitter,vuAnalyserLeft,vuAnalyserRight,vuLeftLevel=0,vuRightLevel=0;
+  const vuDataLeft=new Float32Array(256),vuDataRight=new Float32Array(256);
   let reverbState={preset:'off',...reverbPresets.off};
   try{
     const savedReverb=JSON.parse(localStorage.getItem('nova.reverb')||'null');
@@ -268,6 +271,9 @@
     node.connect(reverbDryGain);reverbDryGain.connect(analyser);
     node.connect(reverbPreDelayNode);reverbPreDelayNode.connect(reverbConvolver);reverbConvolver.connect(reverbWetGain);reverbWetGain.connect(analyser);
     node.connect(reverbEchoDelay);reverbEchoDelay.connect(reverbEchoGain);reverbEchoGain.connect(analyser);reverbEchoDelay.connect(reverbEchoFeedback);reverbEchoFeedback.connect(reverbEchoDelay);
+    vuSplitter=audioContext.createChannelSplitter(2);vuAnalyserLeft=audioContext.createAnalyser();vuAnalyserRight=audioContext.createAnalyser();
+    vuAnalyserLeft.fftSize=256;vuAnalyserRight.fftSize=256;
+    analyser.connect(vuSplitter);vuSplitter.connect(vuAnalyserLeft,0);vuSplitter.connect(vuAnalyserRight,1);
     analyser.connect(audioContext.destination);
     applyEqValues();rebuildReverbImpulse();updateReverbGraph();drawVisualizer();
   }
@@ -306,7 +312,28 @@
     if(savedPreset!=='custom') applyPreset(savedPreset);
   }
   function applyEqValues(){document.querySelectorAll('#eqSliders input').forEach((slider,i)=>{if(filters[i])filters[i].gain.value=eqEnabled?Number(slider.value):0;});}
-  function drawVisualizer(){if(!analyser)return;const data=new Uint8Array(analyser.frequencyBinCount);const render=()=>{requestAnimationFrame(render);const w=canvas.width,h=canvas.height;analyser.getByteFrequencyData(data);if(reverbTunnel&&reverbState.preset!=='off'){let total=0;for(let i=0;i<data.length;i++)total+=data[i];reverbTunnel.style.setProperty('--reverb-brightness',(1+(total/data.length/255)*.72).toFixed(2));}ctx.clearRect(0,0,w,h);const barW=w/data.length,accent=getComputedStyle(document.body).getPropertyValue('--accent').trim()||'#49dfff',accent2=getComputedStyle(document.body).getPropertyValue('--accent-2').trim()||'#9d66ff',gradient=ctx.createLinearGradient(0,h,0,0);gradient.addColorStop(0,accent);gradient.addColorStop(1,accent2);ctx.fillStyle=gradient;for(let i=0;i<data.length;i++){const barH=Math.max(2,(data[i]/255)*h*.92);ctx.fillRect(i*barW,h-barH,Math.max(1,barW-2),barH);}};render();}
+  function readVuLevel(meter,data){
+    if(!meter)return 0;
+    meter.getFloatTimeDomainData(data);
+    let sum=0;for(let i=0;i<data.length;i++)sum+=data[i]*data[i];
+    const rms=Math.sqrt(sum/data.length);
+    if(rms<=.00001)return 0;
+    return clamp((20*Math.log10(rms)+48)/48,0,1);
+  }
+  function updateVuMeters(){
+    if(!vuAnalyserLeft||!vuAnalyserRight||vuNeedles.length<2)return;
+    let leftTarget=audio.paused?0:readVuLevel(vuAnalyserLeft,vuDataLeft),rightTarget=audio.paused?0:readVuLevel(vuAnalyserRight,vuDataRight);
+    if(rightTarget<.001&&leftTarget>.01)rightTarget=leftTarget;
+    vuLeftLevel+=(leftTarget-vuLeftLevel)*(leftTarget>vuLeftLevel ? .27 : .075);
+    vuRightLevel+=(rightTarget-vuRightLevel)*(rightTarget>vuRightLevel ? .27 : .075);
+    [vuLeftLevel,vuRightLevel].forEach((level,index)=>{
+      const angle=-43+level*78;
+      vuNeedles[index].style.setProperty('--vu-angle',`${angle.toFixed(2)}deg`);
+      vuMeters[index].setAttribute('aria-valuenow',String(Math.round(level*100)));
+      vuMeters[index].classList.toggle('is-peaking',level>.9);
+    });
+  }
+  function drawVisualizer(){if(!analyser)return;const data=new Uint8Array(analyser.frequencyBinCount);const render=()=>{requestAnimationFrame(render);const w=canvas.width,h=canvas.height;analyser.getByteFrequencyData(data);updateVuMeters();if(reverbTunnel&&reverbState.preset!=='off'){let total=0;for(let i=0;i<data.length;i++)total+=data[i];reverbTunnel.style.setProperty('--reverb-brightness',(1+(total/data.length/255)*.72).toFixed(2));}ctx.clearRect(0,0,w,h);const barW=w/data.length,accent=getComputedStyle(document.body).getPropertyValue('--accent').trim()||'#49dfff',accent2=getComputedStyle(document.body).getPropertyValue('--accent-2').trim()||'#9d66ff',gradient=ctx.createLinearGradient(0,h,0,0);gradient.addColorStop(0,accent);gradient.addColorStop(1,accent2);ctx.fillStyle=gradient;for(let i=0;i<data.length;i++){const barH=Math.max(2,(data[i]/255)*h*.92);ctx.fillRect(i*barW,h-barH,Math.max(1,barW-2),barH);}};render();}
 
   audio.addEventListener('play',()=>{playBtn.textContent='❚❚';playBtn.setAttribute('aria-label','Pause');updateReelDeckMotion();renderTracks();});
   audio.addEventListener('playing',updateReelDeckMotion);
