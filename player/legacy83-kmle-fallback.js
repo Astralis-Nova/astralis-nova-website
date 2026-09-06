@@ -13,6 +13,8 @@
     const station = tuner.querySelector('#tunerStation');
     const status = tuner.querySelector('#tunerStatus');
     const searchPanel = tuner.querySelector('.tuner-search-panel');
+    const searchInput = tuner.querySelector('#radioSearch');
+    const searchBtn = tuner.querySelector('#radioSearchBtn');
     const mainAudio = document.getElementById('audio');
     if (!slider || !station || !status || !searchPanel) return false;
 
@@ -46,6 +48,10 @@
       const kmleLabel = 'KMLE • KMLE COUNTRY 107.9';
       if (station.textContent !== kmleLabel) station.textContent = kmleLabel;
       tuner.classList.add('is-tuned');
+      const freq = tuner.querySelector('#tunerFrequency');
+      const units = tuner.querySelector('#tunerUnits');
+      if (freq) freq.textContent = '107.9';
+      if (units) units.textContent = 'MHz';
     }
     function notify(playing){
       document.body.classList.toggle('legacy83-radio-live',!!playing);
@@ -58,9 +64,11 @@
         setLabel();
         status.textContent='107.9 KMLE • CONNECTING…';
         if(radioAudio.src !== KMLE_STREAM) radioAudio.src = KMLE_STREAM;
+        radioAudio.load();
         await radioAudio.play();
         status.textContent='107.9 KMLE • LIVE';
         btn.textContent='❚❚ 107.9 KMLE • PAUSE';
+        official.hidden = true;
         notify(true);
       }catch(err){
         console.warn('KMLE direct stream failed',err);
@@ -77,7 +85,7 @@
     }
 
     btn.addEventListener('click',()=>radioAudio.paused?playKmle():stopKmle());
-    radioAudio.addEventListener('playing',()=>{status.textContent='107.9 KMLE • LIVE';btn.textContent='❚❚ 107.9 KMLE • PAUSE';notify(true);});
+    radioAudio.addEventListener('playing',()=>{status.textContent='107.9 KMLE • LIVE';btn.textContent='❚❚ 107.9 KMLE • PAUSE';official.hidden=true;notify(true);});
     radioAudio.addEventListener('waiting',()=>{status.textContent='107.9 KMLE • BUFFERING…';});
     radioAudio.addEventListener('stalled',()=>{status.textContent='107.9 KMLE • BUFFERING…';});
     radioAudio.addEventListener('error',()=>{status.textContent='107.9 KMLE • STREAM ERROR';btn.textContent='▶ 107.9 KMLE • RETRY LIVE';official.hidden=false;notify(false);});
@@ -104,8 +112,40 @@
       }
     }
 
-    slider.addEventListener('input', refresh);
-    slider.addEventListener('change',()=>setTimeout(refresh,0));
+    // 107.9 has one owner only. Capture the dial change before the generic tuner
+    // can launch a second directory stream through the main song audio element.
+    slider.addEventListener('change',e=>{
+      if(!is1079()) return;
+      e.stopImmediatePropagation();
+      setLabel();
+      playKmle();
+    },true);
+
+    slider.addEventListener('input',()=>refresh());
+
+    // Searching 107.9/KMLE should tune and play immediately, without also running
+    // the generic Radio Browser search path.
+    searchBtn?.addEventListener('click',e=>{
+      const q=(searchInput?.value||'').trim().toUpperCase();
+      if(q!=='107.9'&&q!=='107.9 FM'&&q!=='KMLE') return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      slider.value='107.9';
+      setLabel();
+      refresh();
+      playKmle();
+    },true);
+
+    searchInput?.addEventListener('keydown',e=>{
+      const q=(searchInput.value||'').trim().toUpperCase();
+      if(e.key!=='Enter'||(q!=='107.9'&&q!=='107.9 FM'&&q!=='KMLE')) return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      slider.value='107.9';
+      setLabel();
+      refresh();
+      playKmle();
+    },true);
 
     const observer = new MutationObserver(()=>requestAnimationFrame(refresh));
     observer.observe(status,{childList:true,characterData:true,subtree:true});
