@@ -35,6 +35,7 @@
 
   const $ = id => document.getElementById(id);
   const audio=$('audio'),cover=$('cover'),title=$('trackTitle'),artist=$('trackArtist'),playBtn=$('playBtn'),prevBtn=$('prevBtn'),nextBtn=$('nextBtn'),shuffleBtn=$('shuffleBtn'),repeatBtn=$('repeatBtn'),favoriteBtn=$('favoriteBtn'),seek=$('seek'),volume=$('volume'),timeReadout=$('timeReadout'),trackList=$('trackList'),search=$('search'),trackCount=$('trackCount'),skinSelect=$('skinSelect'),eqWindow=$('equalizer'),eqToggle=$('eqToggle'),eqPower=$('eqPower'),eqReset=$('eqReset'),eqPreset=$('eqPreset'),canvas=$('visualizer'),ctx=canvas.getContext('2d'),downloadTrackBtn=$('downloadTrackBtn'),downloadAllBtn=$('downloadAllBtn'),offlineStatus=$('offlineStatus');
+  const reelDeck=document.querySelector('.reel-module'),reelCounterDigits=[...document.querySelectorAll('.r83-counter span')];
 
   let current=Number(localStorage.getItem('nova.current')||2); if(!Number.isInteger(current)||!tracks[current]) current=0;
   let shuffle=localStorage.getItem('nova.shuffle')==='1',repeat=localStorage.getItem('nova.repeat')==='1';
@@ -58,6 +59,17 @@
   const fmt=s=>{if(!Number.isFinite(s))return'0:00';const m=Math.floor(s/60),sec=Math.floor(s%60).toString().padStart(2,'0');return `${m}:${sec}`};
   const absoluteSrc=t=>new URL(t.src,location.href).href;
   const escapeHtml=v=>v.replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+
+  function updateReelDeckMotion(){
+    if(!reelDeck)return;
+    reelDeck.classList.toggle('is-playing',!audio.paused&&!audio.ended);
+  }
+  function updateReelCounter(){
+    if(!reelCounterDigits.length)return;
+    const count=Math.max(0,Math.floor((Number.isFinite(audio.currentTime)?audio.currentTime:0)*3))%10000;
+    String(count).padStart(4,'0').split('').forEach((digit,index)=>{reelCounterDigits[index].textContent=digit;});
+  }
+
 
   async function refreshOfflineState(){
     if(!('caches' in window)) return;
@@ -146,11 +158,15 @@
   function applyEqValues(){document.querySelectorAll('#eqSliders input').forEach((slider,i)=>{if(filters[i])filters[i].gain.value=eqEnabled?Number(slider.value):0;});}
   function drawVisualizer(){if(!analyser)return;const data=new Uint8Array(analyser.frequencyBinCount);const render=()=>{requestAnimationFrame(render);const w=canvas.width,h=canvas.height;analyser.getByteFrequencyData(data);ctx.clearRect(0,0,w,h);const barW=w/data.length,accent=getComputedStyle(document.body).getPropertyValue('--accent').trim()||'#49dfff',accent2=getComputedStyle(document.body).getPropertyValue('--accent-2').trim()||'#9d66ff',gradient=ctx.createLinearGradient(0,h,0,0);gradient.addColorStop(0,accent);gradient.addColorStop(1,accent2);ctx.fillStyle=gradient;for(let i=0;i<data.length;i++){const barH=Math.max(2,(data[i]/255)*h*.92);ctx.fillRect(i*barW,h-barH,Math.max(1,barW-2),barH);}};render();}
 
-  audio.addEventListener('play',()=>{playBtn.textContent='❚❚';playBtn.setAttribute('aria-label','Pause');renderTracks();});
-  audio.addEventListener('pause',()=>{playBtn.textContent='▶';playBtn.setAttribute('aria-label','Play');renderTracks();});
-  audio.addEventListener('loadedmetadata',()=>{tracks[current].duration=fmt(audio.duration);timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;renderTracks();});
-  audio.addEventListener('timeupdate',()=>{if(!userSeeking&&Number.isFinite(audio.duration)&&audio.duration>0)seek.value=String(Math.round((audio.currentTime/audio.duration)*1000));timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;if('mediaSession'in navigator&&Number.isFinite(audio.duration)&&audio.duration>0){try{navigator.mediaSession.setPositionState({duration:audio.duration,playbackRate:audio.playbackRate,position:Math.min(audio.currentTime,audio.duration)});}catch{}}});
-  audio.addEventListener('ended',()=>repeat?(audio.currentTime=0,playAudio()):nextTrack());
+  audio.addEventListener('play',()=>{playBtn.textContent='❚❚';playBtn.setAttribute('aria-label','Pause');updateReelDeckMotion();renderTracks();});
+  audio.addEventListener('playing',updateReelDeckMotion);
+  audio.addEventListener('waiting',()=>reelDeck?.classList.remove('is-playing'));
+  audio.addEventListener('stalled',()=>reelDeck?.classList.remove('is-playing'));
+  audio.addEventListener('pause',()=>{playBtn.textContent='▶';playBtn.setAttribute('aria-label','Play');updateReelDeckMotion();renderTracks();});
+  audio.addEventListener('emptied',updateReelCounter);
+  audio.addEventListener('loadedmetadata',()=>{updateReelCounter();tracks[current].duration=fmt(audio.duration);timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;renderTracks();});
+  audio.addEventListener('timeupdate',()=>{updateReelCounter();if(!userSeeking&&Number.isFinite(audio.duration)&&audio.duration>0)seek.value=String(Math.round((audio.currentTime/audio.duration)*1000));timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;if('mediaSession'in navigator&&Number.isFinite(audio.duration)&&audio.duration>0){try{navigator.mediaSession.setPositionState({duration:audio.duration,playbackRate:audio.playbackRate,position:Math.min(audio.currentTime,audio.duration)});}catch{}}});
+  audio.addEventListener('ended',()=>{updateReelDeckMotion();repeat?(audio.currentTime=0,playAudio()):nextTrack();});
   audio.addEventListener('error',()=>{timeReadout.textContent='Track unavailable';if(!navigator.onLine&&!offlineIds.has(current))offlineStatus.textContent='This track was not downloaded. Reconnect to save it for offline use.';});
 
   playBtn.addEventListener('click',togglePlayback);prevBtn.addEventListener('click',prevTrack);nextBtn.addEventListener('click',nextTrack);
