@@ -1,0 +1,14 @@
+{
+  "name": "Astralis Nova Player",
+  "short_name": "Nova Player",
+  "description": "A skinnable Astralis Nova music player for mobile and desktop.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#030711",
+  "theme_color": "#07111f",
+  "orientation": "any",
+  "icons": [
+    {"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
