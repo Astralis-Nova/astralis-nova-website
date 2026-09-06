@@ -9,7 +9,7 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../cover-3.jpg">
   <link rel="stylesheet" href="./player.css">
-  <link rel="stylesheet" href="./legacy83-components.css?v=66">
+  <link rel="stylesheet" href="./legacy83-components.css?v=67">
   <title>Astralis Nova Player</title>
 </head>
 <body data-skin="nova">
@@ -120,18 +120,18 @@
               </div>
             </div>
 
-            <div class="r83-control-panel" aria-hidden="true">
+            <div class="r83-control-panel">
               <div class="r83-levels">
                 <div class="r83-knob-wrap"><span class="r83-knob"></span><small>MIC LEVEL</small></div>
                 <div class="r83-knob-wrap"><span class="r83-knob"></span><small>OUTPUT</small></div>
               </div>
 
-              <div class="r83-transport">
-                <span class="r83-key r83-record"><b>●</b><small>RECORD</small></span>
-                <span class="r83-key"><b>◀◀</b><small>REWIND</small></span>
-                <span class="r83-key"><b>■</b><small>STOP</small></span>
-                <span class="r83-key r83-play"><b>▶</b><small>PLAY</small></span>
-                <span class="r83-key"><b>▶▶</b><small>FAST FWD</small></span>
+              <div class="r83-transport" aria-label="Reel deck transport controls">
+                <button class="r83-key r83-record" type="button" data-reel-action="record" aria-label="Arm visual recording mode" aria-pressed="false"><b>●</b><small>RECORD</small></button>
+                <button class="r83-key" type="button" data-reel-action="rewind" aria-label="Rewind 10 seconds"><b>◀◀</b><small>REWIND</small></button>
+                <button class="r83-key" type="button" data-reel-action="stop" aria-label="Stop and return to beginning"><b>■</b><small>STOP</small></button>
+                <button class="r83-key r83-play" type="button" data-reel-action="play" aria-label="Play or pause" aria-pressed="false"><b>▶</b><small>PLAY</small></button>
+                <button class="r83-key" type="button" data-reel-action="forward" aria-label="Fast forward 10 seconds"><b>▶▶</b><small>FAST FWD</small></button>
               </div>
 
               <div class="r83-switch-bank">
