@@ -1,10 +1,13 @@
 (() => {
   'use strict';
 
+  const EXTENDED_FM_MAX = 111.9;
+  const NORMAL_FM_MAX = 107.9;
+
   function install(){
     const tuner=document.querySelector('.tuner-module');
-    if(!tuner){setTimeout(install,100);return;}
-    if(tuner.dataset.topFmFix==='1')return;
+    if(!tuner){setTimeout(install,150);return;}
+    if(tuner.dataset.extendedFmSafe==='1')return;
 
     const slider=tuner.querySelector('#tunerSlider');
     const needle=tuner.querySelector('.tuner-needle');
@@ -14,106 +17,68 @@
     const station=tuner.querySelector('#tunerStation');
     const status=tuner.querySelector('#tunerStatus');
     const knobMarker=tuner.querySelector('.tuner-knob span');
-    const up=tuner.querySelector('[data-scan="up"]');
-    const down=tuner.querySelector('[data-scan="down"]');
-    const next=tuner.querySelector('[data-step="1"]');
-    const prev=tuner.querySelector('[data-step="-1"]');
-    const searchInput=tuner.querySelector('#radioSearch');
-    const searchBtn=tuner.querySelector('#radioSearchBtn');
-    const select=tuner.querySelector('#radioStationSelect');
-    if(!slider||!needle||!glass||!freq||!station)return;
+    const fmButton=tuner.querySelector('[data-band="FM"]');
+    const amButton=tuner.querySelector('[data-band="AM"]');
+    const scale=tuner.querySelector('.tuner-fm-scale');
+    if(!slider||!needle||!glass||!freq||!station||!fmButton)return;
 
-    tuner.dataset.topFmFix='1';
-    const atFM=()=>tuner.querySelector('[data-band="FM"]')?.classList.contains('active');
-    const needleX=ratio=>{const left=53,right=20;return left+ratio*Math.max(0,glass.clientWidth-left-right);};
-    const ensureRange=()=>{if(atFM()){slider.min='88.1';slider.max='108.0';slider.step='0.1';}};
+    tuner.dataset.extendedFmSafe='1';
+    const atFM=()=>fmButton.classList.contains('active');
 
-    function paint1079(){
+    function setExtendedRange(){
       if(!atFM())return;
-      ensureRange();
-      slider.value='107.9';
-      needle.style.opacity='1';
-      const ratio=(107.9-88.1)/(108.0-88.1);
-      needle.style.left=`${needleX(ratio).toFixed(1)}px`;
-      if(knobMarker)knobMarker.style.transform=`rotate(${(ratio*240-120).toFixed(1)}deg)`;
-      freq.textContent='107.9';
-      if(units)units.textContent='MHz';
-      station.textContent='KMLE • KMLE COUNTRY 107.9';
-      if(status)status.textContent='107.9 FM • KMLE • TUNED';
-      tuner.classList.add('is-tuned');
+      slider.min='88.1';
+      slider.max=String(EXTENDED_FM_MAX);
+      slider.step='0.2';
+      if(scale){
+        const spans=[...scale.querySelectorAll('span')];
+        if(spans.length>=6)spans[5].textContent='112';
+      }
     }
 
-    function paint108(){
-      if(!atFM())return;
-      ensureRange();
-      slider.value='108.0';
-      needle.style.opacity='1';
-      needle.style.left=`${needleX(1).toFixed(1)}px`;
-      if(knobMarker)knobMarker.style.transform='rotate(120deg)';
-      freq.textContent='108.0';
+    function paintExtended(value){
+      const snapped=Number((88.1+Math.round((Number(value)-88.1)/0.2)*0.2).toFixed(1));
+      const v=Math.max(108.1,Math.min(EXTENDED_FM_MAX,snapped));
+      slider.value=String(v);
+      freq.textContent=v.toFixed(1);
       if(units)units.textContent='MHz';
-      station.textContent='— FM BAND EDGE —';
-      if(status)status.textContent='108.0 MHz • END OF BROADCAST FM';
+      station.textContent='— EXTENDED FM DIAL —';
+      if(status)status.textContent=`${v.toFixed(1)} MHz • ABOVE U.S. FM BAND`;
       tuner.classList.remove('is-tuned');
+      needle.style.opacity='1';
+      const left=53,right=20,width=glass.clientWidth||0;
+      const ratio=(v-88.1)/(EXTENDED_FM_MAX-88.1);
+      needle.style.left=`${(left+ratio*Math.max(0,width-left-right)).toFixed(1)}px`;
+      if(knobMarker)knobMarker.style.transform=`rotate(${(ratio*240-120).toFixed(1)}deg)`;
     }
 
-    function tune1079(play=true){
-      paint1079();
-      if(!play||!searchInput||!searchBtn||!select)return;
-      searchInput.value='107.9';
-      let finished=false;
-      const pick=()=>{
-        if(finished)return;
-        const i=[...select.options].findIndex(o=>/107\.9|KMLE/i.test(o.textContent||''));
-        if(i>=0){
-          finished=true;
-          observer.disconnect();
-          select.selectedIndex=i;
-          select.dispatchEvent(new Event('change',{bubbles:true}));
-          setTimeout(paint1079,50);
-        }
-      };
-      const observer=new MutationObserver(pick);
-      observer.observe(select,{childList:true});
-      searchBtn.click();
-      setTimeout(()=>{pick();observer.disconnect();paint1079();},2200);
-    }
+    setExtendedRange();
 
-    ensureRange();
-
-    const goUp=e=>{
-      if(!atFM())return;
-      const v=Number(slider.value);
-      if(v>=107.85){e.stopImmediatePropagation();paint108();return;}
-      if(v>=107.65){e.stopImmediatePropagation();tune1079(true);}
-    };
-    const goDown=e=>{
-      if(atFM()&&Number(slider.value)>=107.95){e.stopImmediatePropagation();tune1079(true);}
-    };
-
-    up?.addEventListener('click',goUp,true);
-    next?.addEventListener('click',goUp,true);
-    down?.addEventListener('click',goDown,true);
-    prev?.addEventListener('click',goDown,true);
-
+    // Only intercept the slider when it is physically above the normal U.S. FM band.
+    // Normal tuning, buttons, search, presets and 107.9 are left completely untouched.
     slider.addEventListener('input',e=>{
       if(!atFM())return;
       const v=Number(slider.value);
-      if(v>=107.95){e.stopImmediatePropagation();paint108();}
-      else if(v>=107.85){e.stopImmediatePropagation();paint1079();}
+      if(v<=NORMAL_FM_MAX)return;
+      e.stopImmediatePropagation();
+      paintExtended(v);
     },true);
+
     slider.addEventListener('change',e=>{
       if(!atFM())return;
       const v=Number(slider.value);
-      if(v>=107.95){e.stopImmediatePropagation();paint108();}
-      else if(v>=107.85){e.stopImmediatePropagation();tune1079(true);}
+      if(v<=NORMAL_FM_MAX)return;
+      e.stopImmediatePropagation();
+      paintExtended(v);
     },true);
 
-    tuner.querySelector('[data-band="FM"]')?.addEventListener('click',()=>setTimeout(ensureRange,0));
+    fmButton.addEventListener('click',()=>setTimeout(setExtendedRange,0));
+    amButton?.addEventListener('click',()=>setTimeout(()=>{
+      slider.min='530';slider.max='1700';slider.step='10';
+    },0));
+
     window.addEventListener('resize',()=>{
-      const v=Number(slider.value);
-      if(atFM()&&v>=107.95)paint108();
-      else if(atFM()&&v>=107.85)paint1079();
+      if(atFM()&&Number(slider.value)>NORMAL_FM_MAX)paintExtended(slider.value);
     },{passive:true});
   }
 
