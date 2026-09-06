@@ -103,17 +103,22 @@
     const audio=document.getElementById('audio');
     const module=document.querySelector('.turntable-module');
     const tonearm=module?.querySelector('.tonearm');
+    const stage=module?.querySelector('.turntable-stage');
     if(!audio||!module||!tonearm)return;
 
     let frame=0;
     let lastAngle=6;
+    const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
 
     const positionAngle=()=>{
+      const width=stage?.clientWidth||innerWidth;
+      const start=width<=620?6:width<=950?5:1;
+      const end=width<=620?-9:width<=950?-12:-11;
       if(Number.isFinite(audio.duration)&&audio.duration>0){
         const progress=Math.min(1,Math.max(0,audio.currentTime/audio.duration));
-        return -7-(progress*12);
+        return start+((end-start)*progress);
       }
-      return -7;
+      return start;
     };
 
     const paint=()=>{
@@ -121,9 +126,12 @@
       const cued=module.classList.contains('is-cued');
       if(playing||audio.currentTime>0)lastAngle=positionAngle();
       else if(audio.currentTime===0)lastAngle=6;
+      const now=performance.now();
+      const grooveMotion=playing&&!reduceMotion.matches?(Math.sin(now/850)*.72)+(Math.sin(now/310)*.2):0;
+      const visibleAngle=lastAngle+grooveMotion;
       const lift=cued?' translateY(-8px)':'';
-      tonearm.style.transform=`rotate(${lastAngle.toFixed(2)}deg)${lift}`;
-      tonearm.style.transition=playing?'transform .55s linear':'transform .7s cubic-bezier(.2,.75,.25,1)';
+      tonearm.style.transform=`rotate(${visibleAngle.toFixed(2)}deg)${lift}`;
+      tonearm.style.transition=playing?'transform .12s linear':'transform .7s cubic-bezier(.2,.75,.25,1)';
       if(playing)frame=requestAnimationFrame(paint);
     };
 
@@ -143,6 +151,7 @@
     audio.addEventListener('timeupdate',()=>{if(audio.paused)paint();});
     audio.addEventListener('loadedmetadata',()=>{if(audio.currentTime===0)returnArm();else paint();});
     audio.addEventListener('ended',()=>setTimeout(returnArm,350));
+    window.addEventListener('resize',paint);
 
     module.querySelectorAll('[data-turntable-action]').forEach(button=>button.addEventListener('click',()=>setTimeout(()=>{
       if(audio.currentTime===0&&audio.paused)returnArm();else paint();
