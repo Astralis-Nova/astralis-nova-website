@@ -3,6 +3,9 @@
 
   const API_SERVERS=['https://de1.api.radio-browser.info','https://de2.api.radio-browser.info','https://nl1.api.radio-browser.info'];
   const GENRES={Arizona:{state:'Arizona'},Country:{tag:'country'},Pop:{tag:'pop'},'80s':{tag:'80s'}};
+  const FREQUENCY_ALIASES={
+    '107.9':{name:'KMLE',countrycode:'US',state:'Arizona',frequency:107.9,label:'KMLE Country 107.9'}
+  };
 
   function installLegacy83Radio(){
     const reel=document.querySelector('.reel-module');
@@ -40,7 +43,7 @@
             <small>DRAG KNOB OR USE PREV / NEXT</small>
           </div>
           <div class="tuner-search-panel">
-            <div class="tuner-search-row"><input id="radioSearch" type="search" placeholder="Search 107.9, station name, city or genre"><button id="radioSearchBtn" type="button">SEARCH</button></div>
+            <div class="tuner-search-row"><input id="radioSearch" type="search" placeholder="Search 107.9, KMLE, station name, city or genre"><button id="radioSearchBtn" type="button">SEARCH</button></div>
             <div class="tuner-genres">${Object.keys(GENRES).map(name=>`<button type="button" data-genre="${name}">${name}</button>`).join('')}</div>
             <select id="radioStationSelect" aria-label="Live radio stations"><option>Load a station list…</option></select>
           </div>
@@ -80,14 +83,14 @@
       return [];
     }
 
-    function stationFrequency(i){const lim=band==='FM'?{min:88,max:108}:{min:530,max:1700};if(stations.length<2)return lim.min;return lim.min+(i/(stations.length-1))*(lim.max-lim.min);}
+    function stationFrequency(i){const s=stations[i];if(Number.isFinite(s?._frequency))return s._frequency;const lim=band==='FM'?{min:88,max:108}:{min:530,max:1700};if(stations.length<2)return lim.min;return lim.min+(i/(stations.length-1))*(lim.max-lim.min);}
     function paintStation(i,{play=false}={}){
       if(!stations.length){stationName.textContent='NO STATIONS FOUND';return;}
       index=Math.max(0,Math.min(stations.length-1,i));
-      const s=stations[index],f=stationFrequency(index),ratio=index/Math.max(1,stations.length-1);
+      const s=stations[index],f=stationFrequency(index),ratio=band==='FM'?Math.max(0,Math.min(1,(f-88)/20)):index/Math.max(1,stations.length-1);
       select.selectedIndex=index;slider.max=String(Math.max(0,stations.length-1));slider.value=String(index);
       freqEl.textContent=band==='FM'?f.toFixed(1):String(Math.round(f));unitsEl.textContent=band==='FM'?'MHz':'kHz';
-      needle.style.left=`${(ratio*100).toFixed(1)}%`;stationName.textContent=s.name.trim();knobMarker.style.transform=`rotate(${(ratio*240-120).toFixed(1)}deg)`;
+      needle.style.left=`${(ratio*100).toFixed(1)}%`;stationName.textContent=(s._label||s.name).trim();knobMarker.style.transform=`rotate(${(ratio*240-120).toFixed(1)}deg)`;
       if(play)playStation(s);
     }
     async function playStation(s){
@@ -95,7 +98,7 @@
       const url=s?.url_resolved||s?.url;if(!url){status.textContent='STATION UNAVAILABLE';return;}
       try{
         audio.pause();audio.src=url;audio.removeAttribute('crossorigin');audio.load();
-        document.getElementById('trackTitle').textContent=s.name?.trim()||'Live Radio';
+        document.getElementById('trackTitle').textContent=(s._label||s.name)?.trim()||'Live Radio';
         document.getElementById('trackArtist').textContent='Live Radio • Legacy 83 Tuner';
         status.textContent='CONNECTING…';
         await audio.play();
@@ -104,13 +107,22 @@
       }catch(e){console.warn('stream failed',e);status.textContent='STREAM ERROR • TRY NEXT';}
     }
     function loadSelect(){
-      select.innerHTML='';stations.forEach((s,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${i+1}. ${s.name}${s.state?` — ${s.state}`:''}`;select.appendChild(o);});
+      select.innerHTML='';stations.forEach((s,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=`${i+1}. ${s._label||s.name}${s.state?` — ${s.state}`:''}`;select.appendChild(o);});
       slider.max=String(Math.max(0,stations.length-1));if(stations.length)paintStation(0);
     }
     async function loadGenre(name){module.querySelectorAll('[data-genre]').forEach(b=>b.classList.toggle('active',b.dataset.genre===name));status.textContent=`LOADING ${name.toUpperCase()}…`;stations=await apiSearch({countrycode:'US',...(GENRES[name]||{})});loadSelect();status.textContent=stations.length?`${stations.length} LIVE STATIONS`:'NO STATIONS FOUND';}
     async function doSearch(){
-      const q=searchInput.value.trim();if(!q)return loadGenre('Arizona');status.textContent='SEARCHING…';
-      const byName=await apiSearch({name:q});const byTag=await apiSearch({tag:q});
+      const raw=searchInput.value.trim();if(!raw)return loadGenre('Arizona');status.textContent='SEARCHING…';
+      const key=raw.replace(/\s*fm$/i,'').trim();
+      const alias=FREQUENCY_ALIASES[key];
+      if(alias){
+        const matches=await apiSearch({name:alias.name,countrycode:alias.countrycode,state:alias.state});
+        stations=matches.map((s,i)=>({...s,_frequency:i===0?alias.frequency:undefined,_label:i===0?alias.label:undefined}));
+        loadSelect();
+        if(stations.length){paintStation(0,{play:false});status.textContent=`FOUND ${alias.label.toUpperCase()}`;}else status.textContent=`${alias.label.toUpperCase()} NOT IN DIRECTORY`;
+        return;
+      }
+      const byName=await apiSearch({name:raw});const byTag=await apiSearch({tag:raw});
       stations=[...byName,...byTag].filter((s,i,a)=>a.findIndex(x=>x.stationuuid===s.stationuuid)===i);loadSelect();status.textContent=stations.length?`${stations.length} MATCHES`:'NO MATCHES';
     }
     function step(delta,play=true){if(!stations.length)return;paintStation(Math.max(0,Math.min(stations.length-1,index+delta)),{play});}
