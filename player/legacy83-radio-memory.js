@@ -61,11 +61,69 @@
     if(event.detail?.playing&&event.detail?.station)writeMemory(event.detail.station);
   });
 
+  function installEndpointFix(tuner){
+    if(!tuner||tuner.dataset.endpointFix==='1')return;
+    const slider=tuner.querySelector('#tunerSlider');
+    const needle=tuner.querySelector('.tuner-needle');
+    const glass=tuner.querySelector('.tuner-glass');
+    const freq=tuner.querySelector('#tunerFrequency');
+    const units=tuner.querySelector('#tunerUnits');
+    const station=tuner.querySelector('#tunerStation');
+    const status=tuner.querySelector('#tunerStatus');
+    const knobMarker=tuner.querySelector('.tuner-knob span');
+    const up=tuner.querySelector('[data-scan="up"]');
+    if(!slider||!needle||!glass||!freq||!station)return;
+
+    tuner.dataset.endpointFix='1';
+    const atFM=()=>tuner.querySelector('[data-band="FM"]')?.classList.contains('active');
+    const needleX=ratio=>{
+      const left=53,right=20;
+      return left+ratio*Math.max(0,glass.clientWidth-left-right);
+    };
+    const ensureFMRange=()=>{
+      if(!atFM())return;
+      slider.min='88.0';
+      slider.max='108.0';
+      slider.step='0.1';
+    };
+    const show108=()=>{
+      if(!atFM())return;
+      ensureFMRange();
+      slider.value='108.0';
+      needle.style.opacity='1';
+      needle.style.left=`${needleX(1).toFixed(1)}px`;
+      if(knobMarker)knobMarker.style.transform='rotate(120deg)';
+      freq.textContent='108.0';
+      if(units)units.textContent='MHz';
+      station.textContent='— FM BAND EDGE —';
+      if(status)status.textContent='108.0 MHz • END OF BROADCAST FM';
+      tuner.classList.remove('is-tuned');
+    };
+
+    ensureFMRange();
+
+    slider.addEventListener('input',e=>{
+      if(atFM()&&Number(slider.value)>=108){e.stopImmediatePropagation();show108();}
+    },true);
+    slider.addEventListener('change',e=>{
+      if(atFM()&&Number(slider.value)>=108){e.stopImmediatePropagation();show108();}
+    },true);
+    up?.addEventListener('click',e=>{
+      if(atFM()&&Number(slider.value)>=107.9){e.stopImmediatePropagation();show108();}
+    },true);
+    tuner.querySelector('[data-band="FM"]')?.addEventListener('click',()=>setTimeout(ensureFMRange,0));
+    window.addEventListener('resize',()=>{
+      if(atFM()&&Number(slider.value)>=108)needle.style.left=`${needleX(1).toFixed(1)}px`;
+    },{passive:true});
+  }
+
   function install(){
     const waitForTuner=()=>{
       const tuner=document.querySelector('.tuner-module');
       const select=document.getElementById('radioStationSelect');
       if(!tuner||!select){setTimeout(waitForTuner,120);return;}
+
+      installEndpointFix(tuner);
 
       const observer=new MutationObserver(()=>{
         if(select.options.length&&select.options[0]?.value!=='')setTimeout(restoreDial,50);
