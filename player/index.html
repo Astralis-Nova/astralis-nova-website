@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Astralis Nova Player — a skinnable cosmic music player for desktop and mobile.">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../cover-3.jpg">
+  <link rel="stylesheet" href="./player.css">
+  <title>Astralis Nova Player</title>
+</head>
+<body data-skin="nova">
+  <div class="stars" aria-hidden="true"></div>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="../" aria-label="Astralis Nova home">
+        <span class="nova-mark">✦</span>
+        <span><strong>ASTRALIS NOVA</strong><small>NOVA PLAYER</small></span>
+      </a>
+      <div class="top-actions">
+        <button id="installBtn" class="chip" hidden>Install</button>
+        <label class="skin-picker">Skin
+          <select id="skinSelect" aria-label="Choose player skin">
+            <option value="nova">Nova</option>
+            <option value="desert">Cactus Forest</option>
+            <option value="classic">Classic 99</option>
+          </select>
+        </label>
+      </div>
+    </header>
+
+    <section class="player-window panel" aria-label="Music player">
+      <div class="window-title"><span>✦ ASTRALIS NOVA PLAYER</span><span class="tagline">MUSIC TRAVELS FURTHER</span></div>
+      <div class="player-grid">
+        <div class="art-wrap">
+          <img id="cover" src="../cover-3.jpg" alt="Current track artwork">
+          <button id="favoriteBtn" class="favorite" aria-label="Add current track to favorites" aria-pressed="false">☆</button>
+        </div>
+
+        <div class="now-playing">
+          <div class="track-heading">
+            <div>
+              <p class="eyebrow">NOW PLAYING</p>
+              <h1 id="trackTitle">Cactus Forest</h1>
+              <p id="trackArtist">Astralis Nova</p>
+            </div>
+            <div id="timeReadout" class="time-readout">0:00 / 0:00</div>
+          </div>
+
+          <canvas id="visualizer" width="900" height="150" aria-label="Audio spectrum visualizer"></canvas>
+
+          <div class="seek-row">
+            <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Song position">
+          </div>
+
+          <div class="controls">
+            <button id="shuffleBtn" class="icon-btn small" aria-label="Shuffle" aria-pressed="false">⇄</button>
+            <button id="prevBtn" class="icon-btn" aria-label="Previous track">◀◀</button>
+            <button id="playBtn" class="play-btn" aria-label="Play">▶</button>
+            <button id="nextBtn" class="icon-btn" aria-label="Next track">▶▶</button>
+            <button id="repeatBtn" class="icon-btn small" aria-label="Repeat" aria-pressed="false">↻</button>
+          </div>
+
+          <div class="utility-row">
+            <label class="volume">🔊 <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volume"></label>
+            <button id="eqToggle" class="chip" aria-expanded="true" aria-controls="equalizer">EQ</button>
+          </div>
+        </div>
+      </div>
+      <audio id="audio" preload="metadata"></audio>
+    </section>
+
+    <section id="equalizer" class="eq-window panel">
+      <div class="window-title"><span>✦ ASTRALIS NOVA EQUALIZER</span><span>SHAPE YOUR UNIVERSE</span></div>
+      <div class="eq-toolbar">
+        <button id="eqPower" class="chip active" aria-pressed="true">EQ ON</button>
+        <button id="eqReset" class="chip">Reset</button>
+      </div>
+      <div id="eqSliders" class="eq-sliders" aria-label="Equalizer controls"></div>
+    </section>
+
+    <section class="library-window panel">
+      <div class="window-title"><span>✦ ASTRALIS NOVA LIBRARY</span><span id="trackCount"></span></div>
+      <div class="library-tools">
+        <div class="library-tabs" role="tablist" aria-label="Library filter">
+          <button class="tab active" data-filter="all" role="tab" aria-selected="true">All</button>
+          <button class="tab" data-filter="favorites" role="tab" aria-selected="false">Favorites</button>
+        </div>
+        <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search library…" autocomplete="off"></label>
+      </div>
+      <div class="track-list-head" aria-hidden="true"><span>#</span><span>Title</span><span>Artist</span><span>Time</span></div>
+      <div id="trackList" class="track-list" role="list"></div>
+    </section>
+
+    <footer class="footer-note">
+      <span>Desktop + mobile</span><span>•</span><span>Skins saved on this device</span><span>•</span><span id="pwaStatus">Web app ready</span>
+    </footer>
+  </main>
+
+  <script src="./player.js" defer></script>
+</body>
+</html>
