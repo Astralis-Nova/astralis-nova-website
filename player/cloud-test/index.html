@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <title>Astralis Nova Cloud Sync Test</title>
+  <style>
+    :root{color-scheme:dark;--bg:#030711;--panel:#081522;--line:#274b6f;--text:#e8f7ff;--muted:#8eacc5;--accent:#49dfff}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(circle at 20% 10%,#0d527755,transparent 30%),radial-gradient(circle at 80% 0,#47246b55,transparent 28%),var(--bg);color:var(--text);display:grid;place-items:center;padding:20px}.card{width:min(640px,100%);background:linear-gradient(180deg,#0a1a2b,#06101a);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 0 32px #49dfff22}.brand{letter-spacing:.16em;font-size:.75rem;color:var(--accent)}h1{margin:.35rem 0 1rem;font-size:clamp(1.5rem,6vw,2.4rem)}.status{padding:10px 12px;border:1px solid var(--line);border-radius:10px;color:var(--muted);margin-bottom:16px}.track{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center}.track img{width:110px;height:110px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}.meta h2{margin:0 0 4px}.meta p{margin:0;color:var(--muted)}audio{width:100%;margin-top:18px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.actions a,.actions button{appearance:none;border:1px solid var(--line);background:#10263b;color:var(--text);padding:10px 14px;border-radius:10px;text-decoration:none;font:inherit;cursor:pointer}.actions button{border-color:var(--accent)}.hint{font-size:.9rem;color:var(--muted);line-height:1.45;margin-top:16px}@media(max-width:520px){.track{grid-template-columns:82px 1fr}.track img{width:82px;height:82px}}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand">✦ ASTRALIS NOVA PLAYER</div>
+    <h1>Cloud Sync Test</h1>
+    <div id="status" class="status">Connecting to shared library…</div>
+    <section id="track" class="track" hidden>
+      <img id="cover" alt="Album artwork">
+      <div class="meta"><h2 id="title"></h2><p id="artist"></p><p>☁ Shared cloud-library test track</p></div>
+    </section>
+    <audio id="audio" controls preload="metadata"></audio>
+    <div class="actions">
+      <button id="reload" type="button">↻ Sync now</button>
+      <a href="../">Open full Nova Player</a>
+    </div>
+    <p class="hint">Open this exact page on another phone, tablet, or computer. Both devices read the same shared cloud library file. If Cactus Forest appears and plays on both, the cross-device library test has passed.</p>
+  </main>
+  <script>
+    async function sync(){
+      const status=document.getElementById('status');
+      status.textContent='Syncing shared library…';
+      try{
+        const res=await fetch('../cloud-library.json?ts='+Date.now(),{cache:'no-store'});
+        if(!res.ok) throw new Error('Library request failed');
+        const data=await res.json();
+        const t=data.tracks&&data.tracks[0];
+        if(!t) throw new Error('No test track found');
+        document.getElementById('title').textContent=t.title;
+        document.getElementById('artist').textContent=t.artist;
+        document.getElementById('cover').src=t.cover;
+        document.getElementById('audio').src=t.audio;
+        document.getElementById('track').hidden=false;
+        status.textContent='✓ Synced from shared library • '+data.library_name+' • version '+data.version;
+      }catch(err){status.textContent='Could not sync: '+err.message;}
+    }
+    document.getElementById('reload').addEventListener('click',sync);
+    sync();
+  </script>
+</body>
+</html>
