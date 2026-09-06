@@ -4,7 +4,16 @@
   const API_SERVERS=['https://de1.api.radio-browser.info','https://de2.api.radio-browser.info','https://nl1.api.radio-browser.info'];
   const GENRES={Arizona:{state:'Arizona'},Country:{tag:'country'},Pop:{tag:'pop'},'80s':{tag:'80s'}};
 
-  // Phoenix-area dial calibration. These frequencies are only used when the station/call sign is known.
+  // U.S. broadcast dial calibration: FM centers are 88.1-107.9 MHz in 200 kHz steps;
+  // AM centers are 530-1700 kHz in 10 kHz steps.
+  const FM_MIN=88.1,FM_MAX=107.9,FM_STEP=0.2;
+  const AM_MIN=530,AM_MAX=1700,AM_STEP=10;
+  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+  const snapFM=v=>Number((FM_MIN+Math.round((clamp(v,FM_MIN,FM_MAX)-FM_MIN)/FM_STEP)*FM_STEP).toFixed(1));
+  const snapAM=v=>AM_MIN+Math.round((clamp(v,AM_MIN,AM_MAX)-AM_MIN)/AM_STEP)*AM_STEP;
+  const snapFrequency=v=>band==='FM'?snapFM(v):snapAM(v);
+
+  // Phoenix-area frequency map. Only assign a dial frequency when a call sign is known.
   const PHX_FM={
     KPHF:88.3,KVCP:88.3,KVIT:88.7,KLVK:89.1,KBAQ:89.5,KLVA:89.9,KFLR:90.3,KNOG:91.1,KJZZ:91.5,
     KTAR:92.3,KAZG:92.7,KDKB:93.3,KOY:93.7,KOOL:94.5,KOAI:95.1,KYOT:95.5,KMXP:96.9,KBSZ:97.3,
@@ -13,9 +22,12 @@
     KAIZ:105.5,KHOT:105.9,KOMR:106.3,KSUN:106.5,KASA:106.7,KVVA:107.1,KNUV:107.5,KMLE:107.9
   };
   const PHX_AM={KFYI:550,KTAR:620,KIDR:740,KNAI:860,KGME:910,KKNT:960,KXXT:1010,KDUS:1060,KFNX:1100,KCKY:1150,KNUV:1190,KOY:1230,KBSZ:1260,KIHP:1310,KIKO:1340,KPXQ:1360,KSUN:1400,KAZG:1440,KPHX:1480,KFNN:1510,KASA:1540,KQFN:1580};
+  const CURRENT_LABELS={KVVA:'La Suavecita 107.1',KMLE:'KMLE Country 107.9'};
   const FREQ_TO_CALL={};
   Object.entries(PHX_FM).forEach(([call,f])=>{(FREQ_TO_CALL[String(f)]??=[]).push(call)});
   Object.entries(PHX_AM).forEach(([call,f])=>{(FREQ_TO_CALL[String(f)]??=[]).push(call)});
+
+  let band='FM';
 
   function installLegacy83Radio(){
     const reel=document.querySelector('.reel-module');
@@ -26,7 +38,7 @@
     module.innerHTML=`
       <div class="hifi-label"><span>AM / FM STEREO RECEIVER + POWER METERS</span><span id="tunerStatus">LIVE RADIO READY</span></div>
       <div class="tuner-face">
-        <div class="tuner-brand"><strong>ASTRALIS NOVA</strong><span>AN-83T • CALIBRATED LIVE TUNER</span></div>
+        <div class="tuner-brand"><strong>ASTRALIS NOVA</strong><span>AN-83T • FCC CHANNEL-CALIBRATED LIVE TUNER</span></div>
         <div class="tuner-meter-layout">
           <div class="tuner-glass">
             <div class="tuner-band-scale tuner-fm-scale"><small>FM</small><span>88</span><span>92</span><span>96</span><span>100</span><span>104</span><span>108</span></div>
@@ -41,7 +53,7 @@
           <button type="button" class="tuner-power" aria-pressed="true"><b>●</b><small>POWER</small></button>
           <div class="tuner-band-buttons"><button type="button" data-band="FM" class="active">FM</button><button type="button" data-band="AM">AM</button></div>
           <button type="button" class="tuner-scan" data-scan="down">◀</button>
-          <label class="tuner-slider-wrap"><span>REAL DIAL</span><input id="tunerSlider" type="range" min="88" max="108" step="0.1" value="107.9"></label>
+          <label class="tuner-slider-wrap"><span>REAL DIAL</span><input id="tunerSlider" type="range" min="88.1" max="107.9" step="0.2" value="107.9"></label>
           <button type="button" class="tuner-scan" data-scan="up">▶</button>
           <div class="tuner-signal"><span></span><span></span><span></span><span></span><span></span></div>
         </div>
@@ -83,7 +95,7 @@
 
     const status=module.querySelector('#tunerStatus'),stationName=module.querySelector('#tunerStation'),freqEl=module.querySelector('#tunerFrequency'),unitsEl=module.querySelector('#tunerUnits'),slider=module.querySelector('#tunerSlider'),needle=module.querySelector('.tuner-needle'),power=module.querySelector('.tuner-power'),searchInput=module.querySelector('#radioSearch'),searchBtn=module.querySelector('#radioSearchBtn'),select=module.querySelector('#radioStationSelect'),knob=module.querySelector('.tuner-knob'),knobMarker=knob.querySelector('span');
     const audio=document.getElementById('audio');
-    let powered=true,band='FM',stations=[],index=0,dragStartX=null,dragStartFreq=107.9;
+    let powered=true,stations=[],index=0,dragStartX=null,dragStartFreq=107.9;
 
     const getCall=s=>{
       const text=`${s?.name||''} ${s?.homepage||''}`.toUpperCase();
@@ -91,10 +103,15 @@
       return Object.keys(table).find(call=>new RegExp(`(^|[^A-Z0-9])${call}([^A-Z0-9]|$)`).test(text))||null;
     };
     const knownFrequency=s=>{
-      if(Number.isFinite(s?._frequency))return s._frequency;
-      const call=getCall(s);return call?(band==='FM'?PHX_FM[call]:PHX_AM[call]):null;
+      if(Number.isFinite(s?._frequency))return snapFrequency(s._frequency);
+      const call=getCall(s);return call?snapFrequency((band==='FM'?PHX_FM:PHX_AM)[call]):null;
     };
-    const withCalibration=rows=>rows.map(s=>{const call=getCall(s);const f=call?(band==='FM'?PHX_FM[call]:PHX_AM[call]):null;return {...s,_call:call,_frequency:Number.isFinite(f)?f:null}});
+    const stationLabel=s=>{
+      const call=s?._call||getCall(s);
+      if(call&&CURRENT_LABELS[call])return `${call} • ${CURRENT_LABELS[call]}`;
+      return `${call?`${call} • `:''}${s?.name||'Live Radio'}`.trim();
+    };
+    const withCalibration=rows=>rows.map(s=>{const call=getCall(s);const f=call?(band==='FM'?PHX_FM[call]:PHX_AM[call]):null;return {...s,_call:call,_frequency:Number.isFinite(f)?snapFrequency(f):null}});
 
     async function apiSearch(params={}){
       const query=new URLSearchParams({hidebroken:'true',order:'clickcount',reverse:'true',limit:'100',...params});
@@ -104,20 +121,20 @@
       return [];
     }
 
-    function dialRatio(freq){const min=band==='FM'?88:530,max=band==='FM'?108:1700;return Math.max(0,Math.min(1,(freq-min)/(max-min)));}
+    function dialRatio(freq){const min=band==='FM'?FM_MIN:AM_MIN,max=band==='FM'?FM_MAX:AM_MAX;return Math.max(0,Math.min(1,(freq-min)/(max-min)));}
     function setDial(freq){
       const calibrated=Number.isFinite(freq);
       module.classList.toggle('is-tuned',calibrated&&powered);
       needle.style.opacity=calibrated?'1':'.2';
       if(!calibrated){freqEl.textContent='WEB';unitsEl.textContent='STREAM';needle.style.left='50%';return;}
-      const ratio=dialRatio(freq);needle.style.left=`${(ratio*100).toFixed(2)}%`;knobMarker.style.transform=`rotate(${(ratio*240-120).toFixed(1)}deg)`;
-      freqEl.textContent=band==='FM'?freq.toFixed(1):String(Math.round(freq));unitsEl.textContent=band==='FM'?'MHz':'kHz';slider.value=String(freq);
+      const snapped=snapFrequency(freq),ratio=dialRatio(snapped);needle.style.left=`${(ratio*100).toFixed(2)}%`;knobMarker.style.transform=`rotate(${(ratio*240-120).toFixed(1)}deg)`;
+      freqEl.textContent=band==='FM'?snapped.toFixed(1):String(Math.round(snapped));unitsEl.textContent=band==='FM'?'MHz':'kHz';slider.value=String(snapped);
     }
     function paintStation(i,{play=false}={}){
       if(!stations.length){stationName.textContent='NO STATIONS FOUND';setDial(null);return;}
       index=Math.max(0,Math.min(stations.length-1,i));
       const s=stations[index],f=knownFrequency(s);
-      select.selectedIndex=index;stationName.textContent=`${s._call?`${s._call} • `:''}${s.name}`.trim();setDial(f);
+      select.selectedIndex=index;stationName.textContent=stationLabel(s);setDial(f);
       if(play)playStation(s);
     }
     function notifyRadio(playing,station=null){
@@ -129,14 +146,15 @@
       const url=s?.url_resolved||s?.url;if(!url){status.textContent='STATION UNAVAILABLE';return;}
       try{
         audio.pause();notifyRadio(false,s);audio.src=url;audio.removeAttribute('crossorigin');audio.load();
-        document.getElementById('trackTitle').textContent=s.name?.trim()||'Live Radio';
-        document.getElementById('trackArtist').textContent=`${s._call?`${s._call} • `:''}Live Radio • Legacy 83 Tuner`;
+        const label=stationLabel(s);
+        document.getElementById('trackTitle').textContent=label;
+        document.getElementById('trackArtist').textContent='Live Radio • Legacy 83 Tuner';
         status.textContent='CONNECTING…';await audio.play();status.textContent='LIVE • PLAYING • RACK SYNC';notifyRadio(true,s);
       }catch(e){console.warn('stream failed',e);status.textContent='STREAM ERROR • TRY NEXT';notifyRadio(false,s);}
     }
     function loadSelect(){
       select.innerHTML='';
-      stations.forEach((s,i)=>{const o=document.createElement('option');o.value=String(i);const f=knownFrequency(s);o.textContent=`${f?(band==='FM'?f.toFixed(1):Math.round(f))+' • ':''}${s._call?`${s._call} • `:''}${s.name}`;select.appendChild(o);});
+      stations.forEach((s,i)=>{const o=document.createElement('option');o.value=String(i);const f=knownFrequency(s);o.textContent=`${f?(band==='FM'?f.toFixed(1):Math.round(f))+' • ':''}${stationLabel(s)}`;select.appendChild(o);});
       if(stations.length)paintStation(0);
     }
     async function loadGenre(name){
@@ -150,28 +168,35 @@
       const numeric=Number(raw.replace(/\s*(fm|am)$/i,''));
       if(Number.isFinite(numeric)){
         band=numeric<88?'AM':'FM';
-        module.querySelectorAll('[data-band]').forEach(b=>b.classList.toggle('active',b.dataset.band===band));
-        const calls=FREQ_TO_CALL[String(numeric)]||[];
+        configureBand(band,false);
+        const tuned=snapFrequency(numeric),calls=FREQ_TO_CALL[String(tuned)]||[];
         let found=[];
         for(const call of calls){found.push(...await apiSearch({name:call,countrycode:'US',state:'Arizona'}));}
-        stations=withCalibration(found.filter((s,i,a)=>a.findIndex(x=>x.stationuuid===s.stationuuid)===i)).map(s=>({...s,_frequency:numeric}));
-        loadSelect();setDial(numeric);status.textContent=stations.length?`TUNED ${numeric} ${band}`:`${numeric} ${band} • NO STREAM IN DIRECTORY`;return;
+        stations=withCalibration(found.filter((s,i,a)=>a.findIndex(x=>x.stationuuid===s.stationuuid)===i)).map(s=>({...s,_frequency:tuned}));
+        loadSelect();setDial(tuned);status.textContent=stations.length?`TUNED ${band==='FM'?tuned.toFixed(1):tuned} ${band}`:`${band==='FM'?tuned.toFixed(1):tuned} ${band} • NO STREAM IN DIRECTORY`;return;
       }
       const byName=await apiSearch({name:raw}),byTag=await apiSearch({tag:raw});stations=withCalibration([...byName,...byTag].filter((s,i,a)=>a.findIndex(x=>x.stationuuid===s.stationuuid)===i));loadSelect();status.textContent=stations.length?`${stations.length} MATCHES`:'NO MATCHES';
     }
     function calibratedStations(){return stations.map((s,i)=>({s,i,f:knownFrequency(s)})).filter(x=>Number.isFinite(x.f)).sort((a,b)=>a.f-b.f);}
     function tuneDial(freq,{play=false}={}){
-      setDial(freq);const list=calibratedStations();if(!list.length){status.textContent='NO CALIBRATED STATIONS IN LIST';return;}
-      const nearest=list.reduce((best,x)=>Math.abs(x.f-freq)<Math.abs(best.f-freq)?x:best,list[0]);
-      stationName.textContent=Math.abs(nearest.f-freq)<.18?`${nearest.s._call?`${nearest.s._call} • `:''}${nearest.s.name}`:'— BETWEEN STATIONS —';
-      module.classList.toggle('is-tuned',Math.abs(nearest.f-freq)<.18&&powered);
-      if(play&&Math.abs(nearest.f-freq)<.18){index=nearest.i;select.selectedIndex=index;playStation(nearest.s);}
+      const snapped=snapFrequency(freq);setDial(snapped);const list=calibratedStations();if(!list.length){status.textContent='NO CALIBRATED STATIONS IN LIST';return;}
+      const nearest=list.reduce((best,x)=>Math.abs(x.f-snapped)<Math.abs(best.f-snapped)?x:best,list[0]);
+      const exact=band==='FM'?Math.abs(nearest.f-snapped)<0.01:Math.abs(nearest.f-snapped)<1;
+      stationName.textContent=exact?stationLabel(nearest.s):'— BETWEEN STATIONS —';
+      module.classList.toggle('is-tuned',exact&&powered);
+      if(play&&exact){index=nearest.i;select.selectedIndex=index;playStation(nearest.s);}
     }
     function step(delta,play=true){
-      const list=calibratedStations();if(list.length){const current=Number(slider.value);const pos=list.findIndex(x=>x.i===index);const target=list[Math.max(0,Math.min(list.length-1,(pos<0?0:pos)+delta))];index=target.i;paintStation(index,{play});return;}
+      const list=calibratedStations();if(list.length){const pos=list.findIndex(x=>x.i===index);const target=list[Math.max(0,Math.min(list.length-1,(pos<0?0:pos)+delta))];index=target.i;paintStation(index,{play});return;}
       if(stations.length){index=Math.max(0,Math.min(stations.length-1,index+delta));paintStation(index,{play});}
     }
-    function configureBand(next){band=next;const min=band==='FM'?88:530,max=band==='FM'?108:1700,stepSize=band==='FM'?.1:10;slider.min=String(min);slider.max=String(max);slider.step=String(stepSize);module.querySelectorAll('[data-band]').forEach(b=>b.classList.toggle('active',b.dataset.band===band));setDial(band==='FM'?107.9:620);}
+    function configureBand(next,reset=true){
+      band=next;
+      const min=band==='FM'?FM_MIN:AM_MIN,max=band==='FM'?FM_MAX:AM_MAX,stepSize=band==='FM'?FM_STEP:AM_STEP;
+      slider.min=String(min);slider.max=String(max);slider.step=String(stepSize);
+      module.querySelectorAll('[data-band]').forEach(b=>b.classList.toggle('active',b.dataset.band===band));
+      if(reset)setDial(band==='FM'?107.9:620);
+    }
 
     module.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>step(Number(b.dataset.step),true)));
     module.querySelectorAll('[data-scan]').forEach(b=>b.addEventListener('click',()=>step(b.dataset.scan==='up'?1:-1,true)));
@@ -179,7 +204,7 @@
     select.addEventListener('change',()=>paintStation(Number(select.value),{play:true}));
     knob.addEventListener('click',()=>step(1,true));
     knob.addEventListener('pointerdown',e=>{dragStartX=e.clientX;dragStartFreq=Number(slider.value);knob.setPointerCapture(e.pointerId);});
-    knob.addEventListener('pointermove',e=>{if(dragStartX===null)return;const scale=band==='FM'?0.05:4;const min=Number(slider.min),max=Number(slider.max);const f=Math.max(min,Math.min(max,dragStartFreq+(e.clientX-dragStartX)*scale));slider.value=String(f);tuneDial(f);});
+    knob.addEventListener('pointermove',e=>{if(dragStartX===null)return;const scale=band==='FM'?0.06:4;const min=Number(slider.min),max=Number(slider.max);const f=Math.max(min,Math.min(max,dragStartFreq+(e.clientX-dragStartX)*scale));tuneDial(f);});
     knob.addEventListener('pointerup',e=>{if(dragStartX===null)return;dragStartX=null;knob.releasePointerCapture?.(e.pointerId);tuneDial(Number(slider.value),{play:true});});
     searchBtn.addEventListener('click',doSearch);searchInput.addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
     module.querySelectorAll('[data-genre]').forEach(b=>b.addEventListener('click',()=>loadGenre(b.dataset.genre)));
