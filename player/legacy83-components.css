@@ -1,5 +1,4 @@
-.legacy83-rack{display:none}
-body[data-skin="legacy83"] .legacy83-rack{display:block}
+.legacy83-rack{display:block}
 
 .legacy83-rack{
   margin:0 0 14px;
@@ -542,6 +541,93 @@ body[data-skin="legacy83"] .legacy83-rack{display:block}
   .r83-switch-bank>div{display:flex;align-items:center;gap:5px}.r83-toggle{width:14px;height:24px;margin:0}
   .r83-power{width:17px;height:17px;margin:0}.r83-switch-bank em{display:none}
   .r83-specs{left:20px;right:20px;bottom:9px;font-size:.31rem;letter-spacing:.06em}
+}
+
+/* Skin-aware component rack finishes */
+body[data-skin="legacy83"] .legacy83-rack-title span:first-child{font-size:0}
+body[data-skin="legacy83"] .legacy83-rack-title span:first-child::after{content:"LEGACY 83 COMPONENT SYSTEM";font-size:.73rem}
+
+/* Nova command-array finish */
+body[data-skin="nova"] .legacy83-rack{
+  border-color:#287da5;border-radius:15px 5px 15px 5px;
+  background:
+    linear-gradient(90deg,#102b43 0 10px,#061321 10px 19px,transparent 19px calc(100% - 19px),#061321 calc(100% - 19px) calc(100% - 10px),#102b43 calc(100% - 10px)),
+    radial-gradient(circle at 50% 0,#183a5f,#050b15 58%,#02050a);
+  box-shadow:0 20px 48px #000e,inset 0 0 0 1px #55dcff35,0 0 28px #38d9ff23;
+}
+body[data-skin="nova"] .legacy83-rack-title{
+  border-color:#3c9bc3;border-radius:9px 3px 9px 3px;color:#dcf8ff;text-shadow:0 0 8px #4adfff;
+  background:linear-gradient(90deg,#0a2b47,#102448 55%,#2a1850);box-shadow:inset 0 1px #bcefff36,inset 0 -1px #020814,0 0 14px #3bdcff2c;
+}
+body[data-skin="nova"] .legacy83-rack-title span:first-child{font-size:0}
+body[data-skin="nova"] .legacy83-rack-title span:first-child::after{content:"NOVA COMMAND COMPONENT ARRAY";font-size:.73rem}
+body[data-skin="nova"] .legacy83-rack-title small{color:#92d9f2}
+body[data-skin="nova"] .hifi-module{border-color:#316986;background:linear-gradient(180deg,#18354b,#0c1c2c 14%,#060b12);box-shadow:inset 0 1px #9be9ff32,inset 0 0 0 2px #03070d,inset 0 -30px 50px #0009,0 9px 20px #000d,0 0 15px #38dfff18}
+body[data-skin="nova"] .hifi-label{border-color:#265877;color:#cef5ff;text-shadow:0 0 6px #47dfff;background:repeating-linear-gradient(90deg,#ffffff09 0 1px,transparent 1px 5px),linear-gradient(90deg,#102f4a,#151d3b 64%,#291a43);box-shadow:inset 0 1px #a8f0ff2b,inset 0 -1px #020610}
+body[data-skin="nova"] .hifi-label span:last-child{color:#89c6df}
+body[data-skin="nova"] .reel-stage{background:repeating-linear-gradient(90deg,#ffffff08 0 1px,transparent 1px 5px),linear-gradient(180deg,#becbd0,#778c98 48%,#aebbc1 82%,#596d78)}
+body[data-skin="nova"] .reverb-display,body[data-skin="nova"] .meter-bank,body[data-skin="nova"] .cassette-stage{background:linear-gradient(180deg,#0b1b2a,#03070d)}
+body[data-skin="nova"] .turntable-stage{background:radial-gradient(circle at 22% 44%,#173855,#0a1624 48%,#03070c)}
+body[data-skin="nova"] .r83-control-panel,body[data-skin="nova"] .r83-reverb-console,body[data-skin="nova"] .turntable-controls{filter:saturate(.82) hue-rotate(164deg)}
+body[data-skin="nova"] .cassette{border-color:#4783a0;background:linear-gradient(#31566d,#132837 48%,#08121d)}
+body[data-skin="nova"] .cassette-counter span{color:#81edff;text-shadow:0 0 7px #3bdfff}
+
+/* Classic 99 desktop-rack finish */
+body[data-skin="classic"] .legacy83-rack{
+  padding:8px;border:3px solid #202326;border-top-color:#aeb3b4;border-left-color:#aeb3b4;border-radius:0;
+  background:linear-gradient(90deg,#4c5154 0 12px,#24282a 12px 20px,transparent 20px calc(100% - 20px),#24282a calc(100% - 20px) calc(100% - 12px),#4c5154 calc(100% - 12px)),linear-gradient(#303538,#090b0c);
+  box-shadow:0 12px 26px #000d,inset 0 0 0 1px #707678;
+}
+body[data-skin="classic"] .legacy83-rack-title{
+  margin:0 0 8px;border:2px solid #111416;border-top-color:#849be0;border-left-color:#849be0;border-radius:0;color:#fff;text-shadow:1px 1px #000;
+  background:linear-gradient(90deg,#071a73,#143ba0 52%,#5a2b72);box-shadow:inset 0 1px #8ba4ef,inset 0 -1px #020929;
+  font-family:"Courier New",monospace;
+}
+body[data-skin="classic"] .legacy83-rack-title span:first-child{font-size:0}
+body[data-skin="classic"] .legacy83-rack-title span:first-child::after{content:"CLASSIC 99 COMPONENT CENTER";font-size:.7rem}
+body[data-skin="classic"] .legacy83-rack-title small{color:#cfe5ff;font-family:"Courier New",monospace}
+body[data-skin="classic"] .legacy83-grid{gap:7px;padding:0}
+body[data-skin="classic"] .hifi-module{border:3px solid #17191a;border-top-color:#909596;border-left-color:#909596;border-radius:0;background:linear-gradient(#555a5c,#282d30 14%,#0b0e0f);box-shadow:0 7px 13px #000c,inset 0 0 0 1px #656a6c}
+body[data-skin="classic"] .hifi-label{color:#eff4ed;text-shadow:1px 1px #000;border-color:#101314;background:linear-gradient(#4e5355,#292d2f);box-shadow:inset 0 1px #9fa4a5,inset 0 -1px #090b0c;font-family:"Courier New",monospace}
+body[data-skin="classic"] .hifi-label span:last-child{color:#aaff7b}
+body[data-skin="classic"] .reverb-display,body[data-skin="classic"] .meter-bank,body[data-skin="classic"] .cassette-stage{background:linear-gradient(#171b1c,#050707)}
+body[data-skin="classic"] .reverb-tunnel{outline-color:#71826d;background:radial-gradient(ellipse at center,#8dff6747,#1f682e50 24%,#07170a 52%,#020503);box-shadow:inset 0 0 48px #61ff5891,inset 0 0 0 2px #65c85f55,0 0 16px #68e85a4f}
+body[data-skin="classic"] .reverb-tunnel span{border-color:#9cff75;box-shadow:0 0 var(--ring-glow) #72ff58,inset 0 0 var(--ring-glow) #72ff58}
+body[data-skin="classic"] .reverb-tunnel::after{color:#bcff9d;text-shadow:0 0 7px #69ff54}
+body[data-skin="classic"] .cassette-counter span{color:#a8ff72;background:#061006;border-color:#31532b;text-shadow:0 0 6px #75ff55}
+body[data-skin="classic"] .turntable-stage{background:linear-gradient(135deg,#575d60,#292e31 55%,#0a0c0d)}
+body[data-skin="classic"] .r83-key,body[data-skin="classic"] .cassette-controls button,body[data-skin="classic"] .turntable-controls button{border-radius:0}
+
+/* Cactus Forest copper-and-walnut rack finish */
+body[data-skin="desert"] .legacy83-rack{
+  border:4px solid #37180b;border-top-color:#7d421f;border-left-color:#6a3418;border-radius:9px;
+  background:
+    linear-gradient(90deg,#673315 0 13px,#321507 13px 23px,transparent 23px calc(100% - 23px),#321507 calc(100% - 23px) calc(100% - 13px),#673315 calc(100% - 13px)),
+    repeating-linear-gradient(90deg,#ffffff04 0 1px,transparent 1px 9px),linear-gradient(#241008,#080302);
+  box-shadow:0 20px 46px #000e,inset 0 0 0 1px #c6783f45,0 0 25px #e4772d22;
+}
+body[data-skin="desert"] .legacy83-rack-title{
+  border-color:#6d351b;border-radius:5px;color:#351407;text-shadow:0 1px #ffd8a56b;
+  background:repeating-linear-gradient(90deg,#ffffff20 0 1px,transparent 1px 5px),linear-gradient(#d59a61,#9b5732 48%,#6c351d 52%,#b66f3e);box-shadow:inset 0 1px #ffe3b0,inset 0 -1px #3b1608,0 4px 9px #000a;
+}
+body[data-skin="desert"] .legacy83-rack-title span:first-child{font-size:0}
+body[data-skin="desert"] .legacy83-rack-title span:first-child::after{content:"CACTUS FOREST COMPONENT SYSTEM";font-size:.7rem}
+body[data-skin="desert"] .legacy83-rack-title small{color:#54230f}
+body[data-skin="desert"] .hifi-module{border-color:#714124;background:linear-gradient(180deg,#ad744b,#744023 13%,#24120b 14%,#0b0503);box-shadow:inset 0 1px #ffe0b15c,inset 0 0 0 2px #1b0904,inset 0 -30px 50px #0009,0 9px 20px #000d}
+body[data-skin="desert"] .hifi-label{border-color:#6a341a;color:#351407;text-shadow:0 1px #ffd6a06b;background:repeating-linear-gradient(90deg,#ffffff16 0 1px,transparent 1px 5px),linear-gradient(#d29a66,#8b4e2e 52%,#b87348);box-shadow:inset 0 1px #ffe2b0,inset 0 -1px #3b190c}
+body[data-skin="desert"] .hifi-label span:last-child{color:#542512}
+body[data-skin="desert"] .reel-stage{background:repeating-linear-gradient(90deg,#ffffff0d 0 1px,transparent 1px 5px),linear-gradient(#d1b08f,#9a7458 48%,#b99676 82%,#755039)}
+body[data-skin="desert"] .reverb-display,body[data-skin="desert"] .meter-bank,body[data-skin="desert"] .cassette-stage{background:linear-gradient(#28120d,#090302)}
+body[data-skin="desert"] .reverb-tunnel{outline-color:#9a5437;background:radial-gradient(ellipse at center,#ffbd6252,#b944684f 28%,#42142b 51%,#100508 75%);box-shadow:inset 0 0 54px #ff8c4c83,inset 0 0 0 2px #d75f645f,0 0 18px #e36b4952}
+body[data-skin="desert"] .reverb-tunnel span{border-color:#ffbd69;box-shadow:0 0 var(--ring-glow) #f07855,inset 0 0 var(--ring-glow) #db5b72}
+body[data-skin="desert"] .reverb-tunnel::after{color:#ffd18b;text-shadow:0 0 8px #ef7750}
+body[data-skin="desert"] .r83-control-panel,body[data-skin="desert"] .r83-reverb-console,body[data-skin="desert"] .turntable-controls{filter:sepia(.22) saturate(1.12)}
+body[data-skin="desert"] .cassette{border-color:#9b6646;background:linear-gradient(#76503b,#342017 48%,#160b07)}
+body[data-skin="desert"] .cassette-counter span{color:#ffc16b;background:#140805;border-color:#6f3e24;text-shadow:0 0 6px #ed8745}
+body[data-skin="desert"] .turntable-stage{background:radial-gradient(circle at 22% 44%,#6c402a,#301a11 48%,#0c0503)}
+
+@media(max-width:620px){
+  body:not([data-skin="legacy83"]) .legacy83-rack-title span:first-child::after{font-size:.57rem}
 }
 @media(max-width:390px){
   .r83-key small{display:none}.r83-key{height:48px}.r83-transport{grid-template-columns:repeat(5,1fr)}
