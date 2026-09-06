@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "updated": "2026-09-05",
+  "library_name": "Astralis Nova Cloud Test",
+  "tracks": [
+    {
+      "id": "cloud-test-cactus-forest",
+      "title": "Cactus Forest",
+      "artist": "Astralis Nova",
+      "audio": "/Audio/mp3/Cactus%20Forest.mp3",
+      "cover": "/cover-3.jpg"
+    }
+  ]
+}
