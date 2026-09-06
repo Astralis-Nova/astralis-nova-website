@@ -2,7 +2,7 @@
   'use strict';
 
   const KMLE_PAGE = 'https://www.audacy.com/kmle1079';
-  const KMLE_STREAM = '/api/kmle';
+  const KMLE_STREAM = 'https://live.amperwave.net/direct/audacy-kmlefmaac-imc';
 
   function install(){
     const tuner = document.querySelector('.tuner-module');
@@ -18,8 +18,8 @@
     const mainAudio = document.getElementById('audio');
     if (!slider || !station || !status || !searchPanel) return false;
 
-    // Dedicated radio element. KMLE is routed through our same-origin endpoint so
-    // the radio can safely use its own EQ/reverb Web Audio graph.
+    // Dedicated radio element avoids the song EQ/reverb Web Audio graph, which can mute
+    // cross-origin live streams on some browsers.
     const radioAudio = new Audio();
     radioAudio.preload = 'none';
     radioAudio.src = KMLE_STREAM;
@@ -63,7 +63,7 @@
         mainAudio?.pause();
         setLabel();
         status.textContent='107.9 KMLE • CONNECTING…';
-        if(!radioAudio.src.endsWith(KMLE_STREAM)) radioAudio.src = KMLE_STREAM;
+        if(radioAudio.src !== KMLE_STREAM) radioAudio.src = KMLE_STREAM;
         radioAudio.load();
         await radioAudio.play();
         status.textContent='107.9 KMLE • LIVE';
@@ -71,7 +71,7 @@
         official.hidden = true;
         notify(true);
       }catch(err){
-        console.warn('KMLE stream failed',err);
+        console.warn('KMLE direct stream failed',err);
         status.textContent='107.9 KMLE • STREAM BLOCKED';
         btn.textContent='▶ 107.9 KMLE • RETRY LIVE';
         official.hidden=false;
@@ -112,8 +112,6 @@
       }
     }
 
-    // 107.9 has one owner only. Capture the dial change before the generic tuner
-    // can launch a second directory stream through the main song audio element.
     slider.addEventListener('change',e=>{
       if(!is1079()) return;
       e.stopImmediatePropagation();
@@ -123,8 +121,6 @@
 
     slider.addEventListener('input',()=>refresh());
 
-    // Searching 107.9/KMLE should tune and play immediately, without also running
-    // the generic Radio Browser search path.
     searchBtn?.addEventListener('click',e=>{
       const q=(searchInput?.value||'').trim().toUpperCase();
       if(q!=='107.9'&&q!=='107.9 FM'&&q!=='KMLE') return;
