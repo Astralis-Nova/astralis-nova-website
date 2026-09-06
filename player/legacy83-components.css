@@ -326,6 +326,48 @@ body[data-skin="legacy83"] .legacy83-rack{display:block}
 .tonearm::after{content:"";position:absolute;left:-13px;top:-5px;width:31px;height:18px;border:1px solid #aaa;background:linear-gradient(180deg,#454a4e,#1d2022);box-shadow:0 3px 5px #000c}
 .turntable-copy{position:absolute;right:9%;bottom:54px;text-align:right;color:#ddd7cc;font-size:.59rem;line-height:1.75;letter-spacing:.17em;text-shadow:0 2px #000}
 
+@keyframes r83-reel-spin{to{transform:rotate(360deg)}}
+@keyframes r83-tape-flow{to{background-position:18px 0}}
+@keyframes r83-tension-left{0%,100%{transform:rotate(19deg)}50%{transform:rotate(22deg)}}
+@keyframes r83-tension-right{0%,100%{transform:rotate(161deg)}50%{transform:rotate(158deg)}}
+@keyframes r83-roller-spin{to{transform:rotate(360deg)}}
+@keyframes r83-power-breathe{0%,100%{filter:brightness(.92)}50%{filter:brightness(1.24)}}
+@keyframes r83-glass-sweep{0%,100%{opacity:.52}50%{opacity:.9}}
+
+.reel-module.is-playing .r83-supply{animation:r83-reel-spin 4.4s linear infinite}
+.reel-module.is-playing .r83-takeup{animation:r83-reel-spin 3.65s linear infinite}
+.reel-module.is-playing .r83-tape{
+  background:repeating-linear-gradient(90deg,#8b4e32 0 5px,#bb7650 5px 7px,#3a1b10 7px 12px);
+  background-size:18px 100%;
+  animation:r83-tape-flow .42s linear infinite;
+}
+.reel-module.is-playing .r83-tension-left{animation:r83-tension-left 1.8s ease-in-out infinite}
+.reel-module.is-playing .r83-tension-right{animation:r83-tension-right 1.8s ease-in-out infinite}
+.r83-pinch::after{
+  content:"";position:absolute;width:4px;height:4px;left:5px;top:4px;border-radius:50%;
+  background:#b8b9b5;box-shadow:0 0 1px #000;
+}
+.reel-module.is-playing .r83-pinch,.reel-module.is-playing .r83-capstan{animation:r83-roller-spin .72s linear infinite}
+.reel-module.is-playing .r83-play{
+  transform:translateY(4px);
+  box-shadow:inset 0 3px 5px #0007,0 1px 1px #0005;
+  background:linear-gradient(180deg,#858783,#b9b7b0 55%,#d7d4cb);
+}
+.reel-module.is-playing .r83-power{animation:r83-power-breathe 1.8s ease-in-out infinite}
+.reel-module.is-playing .reel-stage::after{animation:r83-glass-sweep 7s ease-in-out infinite}
+
+@media(prefers-reduced-motion:reduce){
+  .reel-module.is-playing .r83-supply,
+  .reel-module.is-playing .r83-takeup,
+  .reel-module.is-playing .r83-tape,
+  .reel-module.is-playing .r83-tension-left,
+  .reel-module.is-playing .r83-tension-right,
+  .reel-module.is-playing .r83-pinch,
+  .reel-module.is-playing .r83-capstan,
+  .reel-module.is-playing .r83-power,
+  .reel-module.is-playing .reel-stage::after{animation:none}
+}
+
 @media(max-width:950px){
   .reverb-module,.meter-module,.cassette-module{grid-column:1/-1}
   .reverb-module{min-height:270px}
