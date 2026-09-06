@@ -9,7 +9,7 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../cover-3.jpg">
   <link rel="stylesheet" href="./player.css">
-  <link rel="stylesheet" href="./legacy83-components.css?v=67">
+  <link rel="stylesheet" href="./legacy83-components.css?v=68">
   <title>Astralis Nova Player</title>
 </head>
 <body data-skin="nova">
@@ -150,9 +150,27 @@
         </article>
 
         <article class="hifi-module reverb-module">
-          <div class="hifi-label"><span>STEREO REVERBERATOR</span><span>SPACE / HALL</span></div>
+          <div class="hifi-label"><span>STEREO REVERBERATOR</span><span id="reverbModeLabel">OFF</span></div>
           <div class="reverb-display">
             <div class="reverb-tunnel" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="r83-reverb-console">
+              <label class="r83-reverb-preset">Program
+                <select id="reverbPreset" aria-label="Reverberator program">
+                  <option value="off">Off</option>
+                  <option value="room">Room</option>
+                  <option value="hall">Hall</option>
+                  <option value="plate">Plate</option>
+                  <option value="ambient">Ambient</option>
+                  <option value="echo">Echo</option>
+                </select>
+              </label>
+              <div class="r83-reverb-sliders">
+                <label>Mix <output id="reverbMixValue">0%</output><input id="reverbMix" data-reverb-control="mix" type="range" min="0" max="100" value="0"></label>
+                <label>Depth <output id="reverbDepthValue">35%</output><input id="reverbDepth" data-reverb-control="depth" type="range" min="0" max="100" value="35"></label>
+                <label>Decay <output id="reverbDecayValue">1.1 s</output><input id="reverbDecay" data-reverb-control="decay" type="range" min="0.4" max="5" step="0.1" value="1.1"></label>
+                <label>Pre-delay <output id="reverbPreDelayValue">12 ms</output><input id="reverbPreDelay" data-reverb-control="preDelay" type="range" min="0" max="300" step="5" value="12"></label>
+              </div>
+            </div>
           </div>
         </article>
 
