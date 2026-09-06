@@ -30,7 +30,8 @@
     ['When The Lights Were Golden','Audio/mp3/WHEN THE LIGHTS WERE GOLDEN.mp3','cover-13.jpg'],
     ['We Are the Universe — Original','Audio/mp3/We Are the Universe Original.mp3','cover-9.jpg'],
     ['We Are the Universe — Remix','Audio/mp3/We Are the Universe Remix.mp3','cover-5.jpg'],
-    ['We Let It Pass Us By','Audio/mp3/We Let It Pass Us By.mp3','cover-23.jpg']
+    ['We Let It Pass Us By','Audio/mp3/We Let It Pass Us By.mp3','cover-23.jpg'],
+    ['Darktide Megamix','Audio/Darktide-Megamix.mp3','cover-16.jpg']
   ].map((item,id)=>({id,title:item[0],src:'../'+encodeURI(item[1]),cover:'../'+item[2],artist:'Astralis Nova',duration:''}));
 
   const $ = id => document.getElementById(id);
