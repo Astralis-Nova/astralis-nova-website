@@ -5,7 +5,7 @@
   function loadEndpointFix(){
     if(document.querySelector('script[data-legacy83-endpoint-v2]'))return;
     const s=document.createElement('script');
-    s.src='./legacy83-radio-endpoint-v2.js?v=001e4a4';
+    s.src='./legacy83-radio-endpoint-v2.js?v=7e4b07d';
     s.defer=true;
     s.dataset.legacy83EndpointV2='1';
     document.head.appendChild(s);
