@@ -10,6 +10,8 @@
   const cassetteLabel=()=>document.getElementById('cassetteModeLabel');
   const reverb=()=>document.querySelector('.reverb-module');
   const equalizer=()=>document.getElementById('equalizer');
+  const rack=()=>document.querySelector('.component-rack');
+  const playerWindow=()=>document.querySelector('.player-window');
   const needles=()=>[...document.querySelectorAll('.vu-needle')];
   const rings=()=>[...document.querySelectorAll('.reverb-tunnel span')];
   const eqSliders=()=>[...document.querySelectorAll('#eqBands input[type="range"]')];
@@ -24,14 +26,16 @@
     if(label) label.textContent=playing?'DOLBY B • RADIO PLAY':'DOLBY B • READY';
   }
 
-  function setEqState(playing){
+  function setRadioVisualState(playing){
     equalizer()?.classList.toggle('radio-visual-live',playing);
+    rack()?.classList.toggle('radio-visual-live',playing);
+    playerWindow()?.classList.toggle('radio-visual-live',playing);
     document.body.classList.toggle('legacy83-radio-components-live',playing);
   }
 
   function clearVisuals(){
     setCassetteState(false);
-    setEqState(false);
+    setRadioVisualState(false);
     reverb()?.classList.remove('radio-visual-live');
     needles().forEach(n=>n.style.removeProperty('transform'));
     rings().forEach(r=>{
@@ -55,7 +59,7 @@
     if(!radioLive){clearVisuals();return;}
 
     setCassetteState(true);
-    setEqState(true);
+    setRadioVisualState(true);
     reverb()?.classList.add('radio-visual-live');
 
     const t=(performance.now()-start)/1000;
@@ -143,16 +147,35 @@
 
   const style=document.createElement('style');
   style.textContent=`
-    .cassette-module.radio-visual-live .cassette-window{animation:legacy83CassetteRadioPulse .72s ease-in-out infinite alternate!important}
-    .cassette-module.radio-visual-live .cassette-hub{animation:legacy83CassetteHubSpin 1.05s linear infinite!important}
+    .cassette-module.radio-visual-live .cassette-window{animation:cassetteRadioPulse .75s ease-in-out infinite alternate!important}
+    .cassette-module.radio-visual-live .cassette-window::before{animation:cassetteTapeRadio 1.15s linear infinite!important}
     .reverb-module.radio-visual-live .reverb-tunnel{filter:brightness(1.08)}
-    #equalizer.radio-visual-live{box-shadow:inset 0 0 22px rgba(120,210,255,.08),0 0 14px rgba(120,210,255,.08)}
     #equalizer.radio-visual-live .window-title .tagline::after{content:' • RADIO VISUAL';opacity:.8}
-    #equalizer.radio-visual-live .eq-toolbar{animation:legacy83EqRadioGlow 1.25s ease-in-out infinite alternate}
-    body.legacy83-radio-components-live .meter-module{box-shadow:inset 0 0 18px rgba(255,210,120,.07)}
-    @keyframes legacy83EqRadioGlow{from{filter:brightness(.96)}to{filter:brightness(1.12)}}
-    @keyframes legacy83CassetteRadioPulse{from{filter:brightness(.92)}to{filter:brightness(1.16)}}
-    @keyframes legacy83CassetteHubSpin{to{transform:rotate(360deg)}}
+    #equalizer.radio-visual-live .eq-toolbar{animation:radioEqGlow 1.25s ease-in-out infinite alternate}
+    .component-rack.radio-visual-live{animation:radioRackPulse 1.8s ease-in-out infinite alternate}
+    .player-window.radio-visual-live #visualizer{animation:radioScreenPulse 1.4s ease-in-out infinite alternate}
+
+    body[data-skin="nova"].legacy83-radio-components-live .component-rack,
+    body[data-skin="nova"].legacy83-radio-components-live #equalizer{box-shadow:0 0 24px rgba(73,223,255,.18),0 0 42px rgba(157,102,255,.10),inset 0 0 18px rgba(73,223,255,.06)}
+    body[data-skin="nova"].legacy83-radio-components-live .reverb-tunnel{filter:drop-shadow(0 0 10px rgba(73,223,255,.55))}
+
+    body[data-skin="desert"].legacy83-radio-components-live .component-rack,
+    body[data-skin="desert"].legacy83-radio-components-live #equalizer{box-shadow:0 0 24px rgba(255,179,90,.18),0 0 40px rgba(218,105,255,.08),inset 0 0 18px rgba(255,179,90,.06)}
+    body[data-skin="desert"].legacy83-radio-components-live .reverb-tunnel{filter:drop-shadow(0 0 10px rgba(255,179,90,.5))}
+
+    body[data-skin="classic"].legacy83-radio-components-live .component-rack,
+    body[data-skin="classic"].legacy83-radio-components-live #equalizer{box-shadow:0 0 20px rgba(141,255,103,.16),inset 0 0 16px rgba(141,255,103,.06)}
+    body[data-skin="classic"].legacy83-radio-components-live .reverb-tunnel{filter:drop-shadow(0 0 9px rgba(141,255,103,.5))}
+    body[data-skin="classic"].legacy83-radio-components-live .meter-module{filter:sepia(.15) saturate(1.15)}
+
+    body[data-skin="legacy83"].legacy83-radio-components-live .component-rack,
+    body[data-skin="legacy83"].legacy83-radio-components-live #equalizer{box-shadow:0 0 22px rgba(57,168,255,.18),inset 0 0 18px rgba(57,168,255,.05)}
+
+    @keyframes cassetteRadioPulse{from{filter:brightness(.92)}to{filter:brightness(1.18)}}
+    @keyframes cassetteTapeRadio{to{background-position:120px 0,-120px 0,0 0}}
+    @keyframes radioEqGlow{from{filter:brightness(.96)}to{filter:brightness(1.12)}}
+    @keyframes radioRackPulse{from{filter:brightness(.985)}to{filter:brightness(1.035)}}
+    @keyframes radioScreenPulse{from{filter:brightness(.96)}to{filter:brightness(1.08)}}
   `;
   document.head.appendChild(style);
 
@@ -167,6 +190,7 @@
     document.getElementById(id)?.addEventListener('change',()=>{if(radioLive)animate();});
   });
 
+  document.getElementById('skinSelect')?.addEventListener('change',()=>{if(radioLive)requestAnimationFrame(animate);});
   installCassetteControls();
   window.addEventListener('pagehide',()=>{radioLive=false;cancelAnimationFrame(frame);clearVisuals();});
 })();
