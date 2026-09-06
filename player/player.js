@@ -214,8 +214,10 @@
     filters=frequencies.map(frequency=>{const f=audioContext.createBiquadFilter();f.type='peaking';f.frequency.value=frequency;f.Q.value=1;f.gain.value=0;return f});
     analyser=audioContext.createAnalyser();analyser.fftSize=256;
     reverbDryGain=audioContext.createGain();reverbWetGain=audioContext.createGain();reverbEchoGain=audioContext.createGain();
+    reverbDryGain.gain.value=1;reverbWetGain.gain.value=0;reverbEchoGain.gain.value=0;
     reverbPreDelayNode=audioContext.createDelay(.3);reverbConvolver=audioContext.createConvolver();reverbConvolver.normalize=true;
     reverbEchoDelay=audioContext.createDelay(.3);reverbEchoFeedback=audioContext.createGain();
+    reverbEchoDelay.delayTime.value=.18;reverbEchoFeedback.gain.value=0;
     let node=sourceNode;filters.forEach(filter=>{node.connect(filter);node=filter});
     node.connect(reverbDryGain);reverbDryGain.connect(analyser);
     node.connect(reverbPreDelayNode);reverbPreDelayNode.connect(reverbConvolver);reverbConvolver.connect(reverbWetGain);reverbWetGain.connect(analyser);
