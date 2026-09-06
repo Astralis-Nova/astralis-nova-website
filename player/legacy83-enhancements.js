@@ -68,8 +68,8 @@
 
     const audio=document.getElementById('audio');
     const preset=document.getElementById('reverbPreset');
-    const sync=()=>module.classList.toggle('is-active',!audio?.paused && preset?.value!=='off');
-    audio?.addEventListener('play',sync);audio?.addEventListener('pause',sync);audio?.addEventListener('ended',sync);preset?.addEventListener('change',sync);sync();
+    const sync=()=>module.classList.toggle('is-active',document.body.classList.contains('legacy83-radio-live')||(!audio?.paused&&preset?.value!=='off'));
+    audio?.addEventListener('play',sync);audio?.addEventListener('pause',sync);audio?.addEventListener('ended',sync);preset?.addEventListener('change',sync);window.addEventListener('legacy83-radio-state',sync);sync();
   }
 
   function installTurntableTracking(){
@@ -100,6 +100,7 @@
     if(!audio)return;
 
     let radioLive=false,frame=0,start=performance.now();
+    const sourcePlaying=()=>radioLive||(!audio.paused&&!audio.ended);
     const forceState=playing=>{
       reel?.classList.toggle('is-playing',playing);
       cassette?.classList.toggle('is-playing',playing);
@@ -110,7 +111,7 @@
     };
     const animateFallback=()=>{
       cancelAnimationFrame(frame);
-      if(!radioLive||audio.paused||audio.ended){needles.forEach(n=>n.style.removeProperty('transform'));rings.forEach(r=>{r.style.removeProperty('transform');r.style.removeProperty('opacity')});return;}
+      if(!radioLive){needles.forEach(n=>n.style.removeProperty('transform'));rings.forEach(r=>{r.style.removeProperty('transform');r.style.removeProperty('opacity')});return;}
       const t=(performance.now()-start)/1000;
       const beat=(Math.sin(t*6.4)+Math.sin(t*10.7)*.45+Math.sin(t*3.1)*.3)/1.75;
       needles.forEach((n,i)=>{const angle=-38+((beat+1)/2)*(56+i*4);n.style.transform=`rotate(${angle.toFixed(1)}deg)`;});
@@ -120,14 +121,15 @@
 
     window.addEventListener('legacy83-radio-state',e=>{
       radioLive=!!e.detail?.playing;
-      forceState(radioLive&&!audio.paused);
-      start=performance.now();animateFallback();
+      forceState(sourcePlaying());
+      start=performance.now();
+      animateFallback();
     });
-    audio.addEventListener('playing',()=>{forceState(true);if(radioLive)animateFallback();});
-    audio.addEventListener('play',()=>{forceState(true);if(radioLive)animateFallback();});
-    audio.addEventListener('pause',()=>{forceState(false);if(radioLive)animateFallback();});
-    audio.addEventListener('ended',()=>{radioLive=false;forceState(false);animateFallback();});
-    preset?.addEventListener('change',()=>{forceState(!audio.paused&&!audio.ended);if(radioLive)animateFallback();});
+    audio.addEventListener('playing',()=>{forceState(sourcePlaying());if(radioLive)animateFallback();});
+    audio.addEventListener('play',()=>{forceState(sourcePlaying());if(radioLive)animateFallback();});
+    audio.addEventListener('pause',()=>{forceState(sourcePlaying());if(radioLive)animateFallback();});
+    audio.addEventListener('ended',()=>{forceState(sourcePlaying());if(radioLive)animateFallback();});
+    preset?.addEventListener('change',()=>{forceState(sourcePlaying());if(radioLive)animateFallback();});
   }
 
   const install=()=>{installCassetteDeckFix();installReverbDeckFinish();installTurntableTracking();installRadioRackSync();};
