@@ -9,6 +9,7 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../cover-3.jpg">
   <link rel="stylesheet" href="./player.css">
+  <link rel="stylesheet" href="./legacy83-components.css">
   <title>Astralis Nova Player</title>
 </head>
 <body data-skin="nova">
@@ -71,6 +72,54 @@
         </div>
       </div>
       <audio id="audio" preload="metadata"></audio>
+    </section>
+
+    <section class="legacy83-rack" aria-label="Legacy 83 stereo components">
+      <div class="legacy83-rack-title"><span>LEGACY 83 COMPONENT SYSTEM</span><small>VISUAL RACK • STEP 1</small></div>
+      <div class="legacy83-grid">
+        <article class="hifi-module reel-module">
+          <div class="hifi-label"><span>OPEN REEL DECK</span><span>AN-83R</span></div>
+          <div class="reel-stage">
+            <div class="reel" aria-hidden="true"></div>
+            <div class="tape-path" aria-hidden="true"></div>
+            <div class="reel" aria-hidden="true"></div>
+          </div>
+        </article>
+
+        <article class="hifi-module reverb-module">
+          <div class="hifi-label"><span>STEREO REVERBERATOR</span><span>SPACE / HALL</span></div>
+          <div class="reverb-display">
+            <div class="reverb-tunnel" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+        </article>
+
+        <article class="hifi-module meter-module">
+          <div class="hifi-label"><span>POWER LEVEL</span><span>L / R</span></div>
+          <div class="meter-bank">
+            <div class="vu-meter"><div class="vu-caption">LEFT</div></div>
+            <div class="vu-meter"><div class="vu-caption">RIGHT</div></div>
+          </div>
+        </article>
+
+        <article class="hifi-module cassette-module">
+          <div class="hifi-label"><span>STEREO CASSETTE DECK</span><span>DOLBY STYLE</span></div>
+          <div class="cassette-stage">
+            <div class="cassette" aria-hidden="true">
+              <div class="cassette-window"><span class="cassette-hub"></span><span class="cassette-hub"></span></div>
+              <div class="cassette-name">ASTRALIS NOVA • TYPE II</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="hifi-module turntable-module">
+          <div class="hifi-label"><span>QUARTZ TURNTABLE</span><span>33⅓ RPM</span></div>
+          <div class="turntable-stage">
+            <div class="platter" aria-hidden="true"><div class="record-label"></div></div>
+            <div class="tonearm" aria-hidden="true"></div>
+            <div class="turntable-copy">ASTRALIS NOVA<br>DIRECT DRIVE<br>LEGACY 83</div>
+          </div>
+        </article>
+      </div>
     </section>
 
     <section id="equalizer" class="eq-window panel">
