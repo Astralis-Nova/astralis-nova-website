@@ -1,102 +1,74 @@
 (() => {
   'use strict';
 
-  function installDualCassetteDeck(){
+  function installCassetteDeckFix(){
     const module=document.querySelector('.cassette-module');
     const stage=module?.querySelector('.cassette-stage');
-    const deckA=stage?.querySelector('.cassette');
-    const counterA=stage?.querySelector('.cassette-counter');
-    if(!module||!stage||!deckA||stage.querySelector('.cassette.deck-b'))return;
+    const cassette=stage?.querySelector('.cassette');
+    if(!module||!stage||!cassette)return;
 
-    module.classList.add('is-dual-deck');
-    module.querySelector('.hifi-label span:first-child').textContent='DUAL STEREO CASSETTE DECK';
+    // One physical dual-cassette component only. Never clone the cassette body.
+    stage.querySelectorAll('.cassette.deck-b,.cassette-counter.counter-b,.cassette-dub-strip').forEach(el=>el.remove());
+    module.classList.remove('is-dual-deck');
+    module.classList.add('true-dual-cassette');
+    const label=module.querySelector('.hifi-label span:first-child');
+    if(label)label.textContent='DUAL STEREO CASSETTE DECK';
 
-    deckA.classList.add('deck-a');
-    const badgeA=document.createElement('span');
-    badgeA.className='cassette-deck-badge';
-    badgeA.textContent='DECK A • PLAY';
-    deckA.appendChild(badgeA);
-
-    const deckB=deckA.cloneNode(true);
-    deckB.classList.remove('deck-a');
-    deckB.classList.add('deck-b');
-    deckB.querySelector('.cassette-deck-badge').textContent='DECK B • REC / DUB';
-    deckB.querySelector('.cassette-name').textContent='ASTRALIS NOVA • TYPE II • DUB';
-    stage.insertBefore(deckB,counterA);
-
-    if(counterA){
-      counterA.classList.add('counter-a');
-      const counterB=counterA.cloneNode(true);
-      counterB.classList.remove('counter-a');
-      counterB.classList.add('counter-b');
-      counterB.setAttribute('aria-label','Cassette deck B counter');
-      stage.insertBefore(counterB,stage.querySelector('.cassette-controls'));
-    }
-
-    const controls=stage.querySelector('.cassette-controls');
-    if(controls){
-      controls.insertAdjacentHTML('beforebegin','<div class="cassette-dub-strip" aria-hidden="true"><span>DECK A</span><b>HIGH SPEED DUBBING</b><span>DECK B</span></div>');
+    let badge=stage.querySelector('.true-dual-labels');
+    if(!badge){
+      badge=document.createElement('div');
+      badge.className='true-dual-labels';
+      badge.innerHTML='<span>DECK A</span><b>HIGH SPEED DUBBING • DOLBY B</b><span>DECK B</span>';
+      stage.prepend(badge);
     }
 
     const style=document.createElement('style');
     style.textContent=`
-      .cassette-module.is-dual-deck{min-height:404px}
-      .cassette-module.is-dual-deck .cassette-stage{
-        height:366px;
-        grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-        grid-template-rows:184px 42px 34px 66px;
-        gap:8px 12px;
-        padding:12px 16px;
-      }
-      .cassette-module.is-dual-deck .cassette{width:100%;height:176px;grid-row:1;margin:0}
-      .cassette-module.is-dual-deck .cassette.deck-a{grid-column:1}
-      .cassette-module.is-dual-deck .cassette.deck-b{grid-column:2}
-      .cassette-deck-badge{
-        position:absolute;left:10px;top:8px;z-index:4;padding:2px 6px;border:1px solid #77736c;
-        border-radius:2px;color:#e9e4da;background:#202428;font-size:.4rem;font-weight:900;letter-spacing:.12em;
-        box-shadow:0 1px 3px #0009;
-      }
-      .cassette-module.is-dual-deck .cassette::before{top:28px}
-      .cassette-module.is-dual-deck .cassette-window{top:52px;height:78px}
-      .cassette-module.is-dual-deck .cassette-name{bottom:7px;font-size:.46rem}
-      .cassette-module.is-dual-deck .cassette-counter{grid-row:2;margin:0;align-self:center;justify-self:center;width:min(150px,88%)}
-      .cassette-module.is-dual-deck .cassette-counter.counter-a{grid-column:1}
-      .cassette-module.is-dual-deck .cassette-counter.counter-b{grid-column:2}
-      .cassette-dub-strip{
-        grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;
-        color:#aaa79f;font-size:.4rem;letter-spacing:.12em;text-align:center;border-top:1px solid #4f5355;border-bottom:1px solid #383b3d;
-      }
-      .cassette-dub-strip b{color:#d8d2c8;font-size:.43rem;letter-spacing:.15em}
-      .cassette-controls{grid-row:4!important}
-      .cassette-module.is-playing .deck-b .cassette-hub{animation-duration:1.18s}
-      .cassette-module.is-record-armed .deck-b{box-shadow:inset 0 0 0 4px #0b0d0f,inset 0 0 28px #000c,0 6px 13px #000c,0 0 13px #d53a3055}
-      @media(max-width:620px){
-        .cassette-module.is-dual-deck{min-height:332px}
-        .cassette-module.is-dual-deck .cassette-stage{height:294px;grid-template-rows:142px 34px 28px 58px;padding:9px 8px;gap:6px}
-        .cassette-module.is-dual-deck .cassette{height:136px}
-        .cassette-module.is-dual-deck .cassette::before{display:none}
-        .cassette-module.is-dual-deck .cassette-window{top:32px;height:66px;left:8%;right:8%}
-        .cassette-module.is-dual-deck .cassette-hub{width:38px;border-width:6px}
-        .cassette-module.is-dual-deck .cassette-name{font-size:.34rem;letter-spacing:.08em}
-        .cassette-deck-badge{font-size:.31rem;letter-spacing:.06em;top:6px;left:6px}
-        .cassette-module.is-dual-deck .cassette-counter{padding:4px 3px}
-        .cassette-module.is-dual-deck .cassette-counter span{font-size:.56rem}
-        .cassette-dub-strip{font-size:.3rem;gap:4px}.cassette-dub-strip b{font-size:.31rem;letter-spacing:.06em}
-      }
+      .true-dual-cassette{grid-column:1/-1!important;min-height:338px}
+      .true-dual-cassette .cassette-stage{height:300px;display:grid;grid-template-columns:minmax(0,1fr) 82px;grid-template-rows:28px 178px 66px;gap:8px 12px;padding:12px 18px}
+      .true-dual-labels{grid-column:1/-1;grid-row:1;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;color:#e8e3d9;font-size:.44rem;font-weight:900;letter-spacing:.13em;text-align:center;border-bottom:1px solid #56595b;padding-bottom:5px}
+      .true-dual-labels b{font-size:.36rem;color:#aaa79f;letter-spacing:.1em}
+      .true-dual-cassette .cassette{grid-column:1;grid-row:2;width:min(760px,100%);height:168px;justify-self:center}
+      .true-dual-cassette .cassette-counter{grid-column:2;grid-row:2;margin-top:22px}
+      .true-dual-cassette .cassette-controls{grid-column:1/-1;grid-row:3}
+      .true-dual-cassette .cassette::before{content:'DECK A                                      DECK B';font-size:.46rem;letter-spacing:.13em;top:9px;white-space:pre}
+      .true-dual-cassette .cassette-window{left:3%;right:3%;top:38px;height:94px;border:0;background:radial-gradient(circle at 12% 50%,#d2cdc3 0 7%,#211e1a 7.5% 12%,#0d0c0b 12.5% 16%,transparent 16.5%),radial-gradient(circle at 36% 50%,#d2cdc3 0 7%,#211e1a 7.5% 12%,#0d0c0b 12.5% 16%,transparent 16.5%),radial-gradient(circle at 64% 50%,#d2cdc3 0 7%,#211e1a 7.5% 12%,#0d0c0b 12.5% 16%,transparent 16.5%),radial-gradient(circle at 88% 50%,#d2cdc3 0 7%,#211e1a 7.5% 12%,#0d0c0b 12.5% 16%,transparent 16.5%),linear-gradient(90deg,#100d0b 0 47.5%,#77736b 47.7% 52.3%,#100d0b 52.5% 100%);box-shadow:inset 0 0 18px #000,inset 0 0 0 3px #aaa59b,0 1px #fff3}
+      .true-dual-cassette .cassette-window::after{content:'';position:absolute;left:49.85%;top:0;bottom:0;width:2px;background:#77736b;box-shadow:0 0 0 1px #151515}
+      .true-dual-cassette .cassette-hub{display:none}
+      @media(max-width:620px){.true-dual-cassette{min-height:326px}.true-dual-cassette .cassette-stage{height:288px;grid-template-columns:minmax(0,1fr) 58px;grid-template-rows:25px 168px 58px;padding:9px}.true-dual-labels{font-size:.34rem}.true-dual-labels b{font-size:.28rem}.true-dual-cassette .cassette{height:158px}.true-dual-cassette .cassette::before{font-size:.34rem;letter-spacing:.05em}.true-dual-cassette .cassette-window{height:88px;top:35px}}
+    `;
+    document.head.appendChild(style);
+  }
+
+  function installReverbDeckFinish(){
+    const module=document.querySelector('.reverb-module');
+    const display=module?.querySelector('.reverb-display');
+    if(!module||!display)return;
+    module.classList.add('complete-reverb-deck');
+    const label=module.querySelector('.hifi-label span:first-child');
+    if(label)label.textContent='STEREO REVERBERATOR / AMBIENCE PROCESSOR';
+
+    const style=document.createElement('style');
+    style.textContent=`
+      .complete-reverb-deck{grid-column:1/-1!important;min-height:438px}
+      .complete-reverb-deck .reverb-display{height:400px;grid-template-columns:minmax(0,1.55fr) minmax(260px,.75fr);grid-template-rows:1fr;gap:16px;padding:18px;background:linear-gradient(180deg,#181b1e,#07090b)}
+      .complete-reverb-deck .reverb-tunnel{height:330px;align-self:center;border-width:7px;background:radial-gradient(ellipse at center,#64c9ff60 0,#156ba46b 18%,#062641 42%,#01060d 75%);box-shadow:inset 0 0 80px #149dffaa,inset 0 0 0 2px #55bffc55,0 0 24px #138de86b}
+      .complete-reverb-deck .reverb-tunnel span{border-width:3px;transition:transform .08s linear,opacity .08s linear,box-shadow .08s linear}
+      .complete-reverb-deck .r83-reverb-console{align-self:center;min-height:330px;display:flex;flex-direction:column;justify-content:center;gap:18px;padding:18px;background:repeating-linear-gradient(90deg,#fff0 0 2px,#ffffff10 2px 3px,#00000008 3px 5px),linear-gradient(180deg,#d1cec5,#858681 52%,#bbb8af)}
+      .complete-reverb-deck .r83-reverb-preset{font-size:.52rem}
+      .complete-reverb-deck .r83-reverb-preset select{padding:11px 8px;font-size:.72rem}
+      .complete-reverb-deck .r83-reverb-sliders{grid-template-columns:1fr;gap:14px}
+      .complete-reverb-deck .r83-reverb-sliders label{font-size:.49rem}
+      .complete-reverb-deck .r83-reverb-sliders input{height:22px}
+      .complete-reverb-deck.is-active .reverb-tunnel{filter:brightness(calc(var(--reverb-brightness,1) * 1.08))}
+      @media(max-width:760px){.complete-reverb-deck{min-height:650px}.complete-reverb-deck .reverb-display{height:612px;grid-template-columns:1fr;grid-template-rows:270px 1fr;padding:12px}.complete-reverb-deck .reverb-tunnel{height:260px}.complete-reverb-deck .r83-reverb-console{min-height:300px}}
     `;
     document.head.appendChild(style);
 
     const audio=document.getElementById('audio');
-    const counterB=stage.querySelector('.cassette-counter.counter-b');
-    const syncDeckBCounter=()=>{
-      if(!audio||!counterB)return;
-      const count=Math.max(0,Math.floor((Number.isFinite(audio.currentTime)?audio.currentTime:0)*2)+83)%10000;
-      const digits=String(count).padStart(4,'0').split('');
-      counterB.querySelectorAll('span').forEach((span,i)=>span.textContent=digits[i]||'0');
-    };
-    audio?.addEventListener('timeupdate',syncDeckBCounter);
-    audio?.addEventListener('loadedmetadata',syncDeckBCounter);
-    syncDeckBCounter();
+    const preset=document.getElementById('reverbPreset');
+    const sync=()=>module.classList.toggle('is-active',!audio?.paused && preset?.value!=='off');
+    audio?.addEventListener('play',sync);audio?.addEventListener('pause',sync);audio?.addEventListener('ended',sync);preset?.addEventListener('change',sync);sync();
   }
 
   function installTurntableTracking(){
@@ -105,65 +77,16 @@
     const tonearm=module?.querySelector('.tonearm');
     const stage=module?.querySelector('.turntable-stage');
     if(!audio||!module||!tonearm)return;
-
-    let frame=0;
-    let lastAngle=6;
+    let frame=0,lastAngle=6;
     const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)');
-
-    const positionAngle=()=>{
-      const width=stage?.clientWidth||innerWidth;
-      const start=width<=620?6:width<=950?5:1;
-      const end=width<=620?-9:width<=950?-12:-11;
-      if(Number.isFinite(audio.duration)&&audio.duration>0){
-        const progress=Math.min(1,Math.max(0,audio.currentTime/audio.duration));
-        return start+((end-start)*progress);
-      }
-      return start;
-    };
-
-    const paint=()=>{
-      const playing=!audio.paused&&!audio.ended&&module.classList.contains('is-powered');
-      const cued=module.classList.contains('is-cued');
-      if(playing||audio.currentTime>0)lastAngle=positionAngle();
-      else if(audio.currentTime===0)lastAngle=6;
-      const now=performance.now();
-      const grooveMotion=playing&&!reduceMotion.matches?(Math.sin(now/850)*.72)+(Math.sin(now/310)*.2):0;
-      const visibleAngle=lastAngle+grooveMotion;
-      const lift=cued?' translateY(-8px)':'';
-      tonearm.style.transform=`rotate(${visibleAngle.toFixed(2)}deg)${lift}`;
-      tonearm.style.transition=playing?'transform .12s linear':'transform .7s cubic-bezier(.2,.75,.25,1)';
-      if(playing)frame=requestAnimationFrame(paint);
-    };
-
+    const positionAngle=()=>{const width=stage?.clientWidth||innerWidth;const start=width<=620?6:width<=950?5:1;const end=width<=620?-9:width<=950?-12:-11;if(Number.isFinite(audio.duration)&&audio.duration>0){const progress=Math.min(1,Math.max(0,audio.currentTime/audio.duration));return start+((end-start)*progress);}return start;};
+    const paint=()=>{const playing=!audio.paused&&!audio.ended&&module.classList.contains('is-powered');const cued=module.classList.contains('is-cued');if(playing||audio.currentTime>0)lastAngle=positionAngle();else if(audio.currentTime===0)lastAngle=6;const now=performance.now();const grooveMotion=playing&&!reduceMotion.matches?(Math.sin(now/850)*.72)+(Math.sin(now/310)*.2):0;const lift=cued?' translateY(-8px)':'';tonearm.style.transform=`rotate(${(lastAngle+grooveMotion).toFixed(2)}deg)${lift}`;tonearm.style.transition=playing?'transform .12s linear':'transform .7s cubic-bezier(.2,.75,.25,1)';if(playing)frame=requestAnimationFrame(paint);};
     const startTracking=()=>{cancelAnimationFrame(frame);lastAngle=positionAngle();paint();};
     const stopTracking=()=>{cancelAnimationFrame(frame);paint();};
-    const returnArm=()=>{
-      cancelAnimationFrame(frame);
-      lastAngle=6;
-      tonearm.style.transform='rotate(6deg)';
-      tonearm.style.transition='transform .85s cubic-bezier(.2,.75,.25,1)';
-    };
-
-    audio.addEventListener('play',startTracking);
-    audio.addEventListener('playing',startTracking);
-    audio.addEventListener('pause',stopTracking);
-    audio.addEventListener('seeking',paint);
-    audio.addEventListener('timeupdate',()=>{if(audio.paused)paint();});
-    audio.addEventListener('loadedmetadata',()=>{if(audio.currentTime===0)returnArm();else paint();});
-    audio.addEventListener('ended',()=>setTimeout(returnArm,350));
-    window.addEventListener('resize',paint);
-
-    module.querySelectorAll('[data-turntable-action]').forEach(button=>button.addEventListener('click',()=>setTimeout(()=>{
-      if(audio.currentTime===0&&audio.paused)returnArm();else paint();
-    },0)));
-
-    paint();
+    const returnArm=()=>{cancelAnimationFrame(frame);lastAngle=6;tonearm.style.transform='rotate(6deg)';tonearm.style.transition='transform .85s cubic-bezier(.2,.75,.25,1)';};
+    audio.addEventListener('play',startTracking);audio.addEventListener('playing',startTracking);audio.addEventListener('pause',stopTracking);audio.addEventListener('seeking',paint);audio.addEventListener('timeupdate',()=>{if(audio.paused)paint();});audio.addEventListener('loadedmetadata',()=>{if(audio.currentTime===0)returnArm();else paint();});audio.addEventListener('ended',()=>setTimeout(returnArm,350));window.addEventListener('resize',paint);module.querySelectorAll('[data-turntable-action]').forEach(button=>button.addEventListener('click',()=>setTimeout(()=>{if(audio.currentTime===0&&audio.paused)returnArm();else paint();},0)));paint();
   }
 
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',()=>{installDualCassetteDeck();installTurntableTracking();},{once:true});
-  }else{
-    installDualCassetteDeck();
-    installTurntableTracking();
-  }
+  const install=()=>{installCassetteDeckFix();installReverbDeckFinish();installTurntableTracking();};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
 })();
