@@ -9,7 +9,7 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../cover-3.jpg">
   <link rel="stylesheet" href="./player.css?v=79">
-  <link rel="stylesheet" href="./legacy83-components.css?v=80">
+  <link rel="stylesheet" href="./legacy83-components.css?v=83">
   <title>Astralis Nova Player</title>
 </head>
 <body data-skin="nova">
@@ -40,34 +40,12 @@
           <img id="cover" src="../cover-3.jpg" alt="Current track artwork">
           <button id="favoriteBtn" class="favorite" aria-label="Add current track to favorites" aria-pressed="false">☆</button>
         </div>
-
         <div class="now-playing">
-          <div class="track-heading">
-            <div>
-              <p class="eyebrow">NOW PLAYING</p>
-              <h1 id="trackTitle">Cactus Forest</h1>
-              <p id="trackArtist">Astralis Nova</p>
-            </div>
-            <div id="timeReadout" class="time-readout">0:00 / 0:00</div>
-          </div>
-
+          <div class="track-heading"><div><p class="eyebrow">NOW PLAYING</p><h1 id="trackTitle">Cactus Forest</h1><p id="trackArtist">Astralis Nova</p></div><div id="timeReadout" class="time-readout">0:00 / 0:00</div></div>
           <canvas id="visualizer" width="900" height="150" aria-label="Audio spectrum visualizer"></canvas>
           <div class="seek-row"><input id="seek" type="range" min="0" max="1000" value="0" aria-label="Song position"></div>
-
-          <div class="controls">
-            <button id="shuffleBtn" class="icon-btn small" aria-label="Shuffle" aria-pressed="false">⇄</button>
-            <button id="prevBtn" class="icon-btn" aria-label="Previous track">◀◀</button>
-            <button id="playBtn" class="play-btn" aria-label="Play">▶</button>
-            <button id="nextBtn" class="icon-btn" aria-label="Next track">▶▶</button>
-            <button id="repeatBtn" class="icon-btn small" aria-label="Repeat" aria-pressed="false">↻</button>
-          </div>
-
-          <div class="utility-row">
-            <label class="volume">🔊 <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volume"></label>
-            <button id="eqToggle" class="chip" aria-expanded="true" aria-controls="equalizer">EQ</button>
-            <button id="downloadTrackBtn" class="chip" type="button">⇩ Save song</button>
-            <button id="downloadAllBtn" class="chip" type="button">⇩ Save all</button>
-          </div>
+          <div class="controls"><button id="shuffleBtn" class="icon-btn small" aria-label="Shuffle" aria-pressed="false">⇄</button><button id="prevBtn" class="icon-btn" aria-label="Previous track">◀◀</button><button id="playBtn" class="play-btn" aria-label="Play">▶</button><button id="nextBtn" class="icon-btn" aria-label="Next track">▶▶</button><button id="repeatBtn" class="icon-btn small" aria-label="Repeat" aria-pressed="false">↻</button></div>
+          <div class="utility-row"><label class="volume">🔊 <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volume"></label><button id="eqToggle" class="chip" aria-expanded="true" aria-controls="equalizer">EQ</button><button id="downloadTrackBtn" class="chip" type="button">⇩ Save song</button><button id="downloadAllBtn" class="chip" type="button">⇩ Save all</button></div>
           <div id="offlineStatus" class="footer-note" aria-live="polite">Offline music: checking saved songs…</div>
         </div>
       </div>
@@ -77,197 +55,26 @@
     <section class="legacy83-rack component-rack" aria-label="Interactive Astralis Nova stereo component rack">
       <div class="legacy83-rack-title"><span>ASTRALIS NOVA COMPONENT RACK</span><small>INTERACTIVE HARDWARE • LIVE AUDIO</small></div>
       <div class="legacy83-grid">
-        <article class="hifi-module reel-module">
-          <div class="hifi-label"><span>OPEN REEL DECK</span><span>AN-83R • 3 HEAD</span></div>
-          <div class="reel-stage">
-            <span class="r83-screw r83-screw-tl" aria-hidden="true"></span>
-            <span class="r83-screw r83-screw-tr" aria-hidden="true"></span>
-            <span class="r83-screw r83-screw-bl" aria-hidden="true"></span>
-            <span class="r83-screw r83-screw-br" aria-hidden="true"></span>
+        <article class="hifi-module reel-module"><div class="hifi-label"><span>OPEN REEL DECK</span><span>AN-83R • 3 HEAD</span></div><div class="reel-stage"><span class="r83-screw r83-screw-tl"></span><span class="r83-screw r83-screw-tr"></span><span class="r83-screw r83-screw-bl"></span><span class="r83-screw r83-screw-br"></span><div class="r83-identity"><strong>ASTRALIS NOVA</strong><span>Precision stereo tape deck</span></div><div class="r83-reel-bay"><div class="r83-counter"><span>0</span><span>0</span><span>8</span><span>3</span></div><div class="r83-reel r83-supply"><span class="r83-tape-pack"></span><span class="r83-reel-hub"></span></div><div class="r83-reel r83-takeup"><span class="r83-tape-pack"></span><span class="r83-reel-hub"></span></div><span class="r83-tape r83-tape-left"></span><span class="r83-tape r83-tape-center"></span><span class="r83-tape r83-tape-right"></span><div class="r83-tension r83-tension-left"><span></span></div><div class="r83-tension r83-tension-right"><span></span></div><span class="r83-guide r83-guide-left"></span><span class="r83-guide r83-guide-right"></span><span class="r83-capstan"></span><span class="r83-pinch"></span><div class="r83-head-block"><span class="r83-head"></span><span class="r83-head"></span><small>ERASE&nbsp;&nbsp; RECORD&nbsp;&nbsp; PLAY</small></div></div><div class="r83-control-panel"><div class="r83-levels"><div class="r83-knob-wrap"><span class="r83-knob"></span><small>MIC LEVEL</small></div><div class="r83-knob-wrap"><span class="r83-knob"></span><small>OUTPUT</small></div></div><div class="r83-transport"><button class="r83-key r83-record" type="button" data-reel-action="record" aria-pressed="false"><b>●</b><small>RECORD</small></button><button class="r83-key" type="button" data-reel-action="rewind"><b>◀◀</b><small>REWIND</small></button><button class="r83-key" type="button" data-reel-action="stop"><b>■</b><small>STOP</small></button><button class="r83-key r83-play" type="button" data-reel-action="play" aria-pressed="false"><b>▶</b><small>PLAY</small></button><button class="r83-key" type="button" data-reel-action="forward"><b>▶▶</b><small>FAST FWD</small></button></div><div class="r83-switch-bank"><div><small>TAPE</small><span class="r83-toggle"></span><em>LH&nbsp;&nbsp;EE</em></div><div><small>MONITOR</small><span class="r83-toggle"></span><em>SOURCE&nbsp;&nbsp;TAPE</em></div><div><small>POWER</small><span class="r83-power"></span><em>ON</em></div></div></div><div class="r83-specs"><span>2 TRACK / 2 CHANNEL</span><span>7½ &nbsp; 3¾ IPS</span><span>DC SERVO CAPSTAN</span></div></div></article>
 
-            <div class="r83-identity" aria-hidden="true">
-              <strong>ASTRALIS NOVA</strong>
-              <span>Precision stereo tape deck</span>
-            </div>
+        <article class="hifi-module reverb-module"><div class="hifi-label"><span>STEREO REVERBERATOR</span><span id="reverbModeLabel">OFF</span></div><div class="reverb-display"><div class="reverb-tunnel"><span></span><span></span><span></span><span></span><span></span></div><div class="r83-reverb-console"><label class="r83-reverb-preset">Program<select id="reverbPreset"><option value="off">Off</option><option value="room">Room</option><option value="hall">Hall</option><option value="plate">Plate</option><option value="ambient">Ambient</option><option value="echo">Echo</option></select></label><div class="r83-reverb-sliders"><label>Mix <output id="reverbMixValue">0%</output><input id="reverbMix" data-reverb-control="mix" type="range" min="0" max="100" value="0"></label><label>Depth <output id="reverbDepthValue">35%</output><input id="reverbDepth" data-reverb-control="depth" type="range" min="0" max="100" value="35"></label><label>Decay <output id="reverbDecayValue">1.1 s</output><input id="reverbDecay" data-reverb-control="decay" type="range" min="0.4" max="5" step="0.1" value="1.1"></label><label>Pre-delay <output id="reverbPreDelayValue">12 ms</output><input id="reverbPreDelay" data-reverb-control="preDelay" type="range" min="0" max="300" step="5" value="12"></label></div></div></div></article>
 
-            <div class="r83-reel-bay" aria-hidden="true">
-              <div class="r83-counter"><span>0</span><span>0</span><span>8</span><span>3</span></div>
+        <article class="hifi-module meter-module"><div class="hifi-label"><span>POWER LEVEL</span><span>L / R</span></div><div class="meter-bank"><div class="vu-meter" data-vu-channel="left"><span class="vu-glass"></span><span class="vu-needle"></span><span class="vu-pivot"></span><div class="vu-caption">LEFT</div></div><div class="vu-meter" data-vu-channel="right"><span class="vu-glass"></span><span class="vu-needle"></span><span class="vu-pivot"></span><div class="vu-caption">RIGHT</div></div></div></article>
 
-              <div class="r83-reel r83-supply">
-                <span class="r83-tape-pack"></span>
-                <span class="r83-reel-hub"></span>
-              </div>
-              <div class="r83-reel r83-takeup">
-                <span class="r83-tape-pack"></span>
-                <span class="r83-reel-hub"></span>
-              </div>
+        <article class="hifi-module cassette-module"><div class="hifi-label"><span>STEREO CASSETTE DECK</span><span id="cassetteModeLabel">DOLBY B • READY</span></div><div class="cassette-stage"><div class="cassette"><div class="cassette-window"><span class="cassette-hub"></span><span class="cassette-hub"></span></div><div class="cassette-name">ASTRALIS NOVA • TYPE II</div></div><div class="cassette-counter"><span>0</span><span>0</span><span>0</span><span>0</span></div><div class="cassette-controls"><button type="button" data-cassette-action="eject"><b>⏏</b><small>EJECT</small></button><button type="button" data-cassette-action="stop"><b>■</b><small>STOP</small></button><button type="button" data-cassette-action="play" aria-pressed="false"><b>▶</b><small>PLAY</small></button><button type="button" data-cassette-action="rewind"><b>◀◀</b><small>REW</small></button><button type="button" data-cassette-action="forward"><b>▶▶</b><small>FF</small></button><button type="button" class="cassette-record" data-cassette-action="record" aria-pressed="false"><b>●</b><small>REC</small></button></div></div></article>
 
-              <span class="r83-tape r83-tape-left"></span>
-              <span class="r83-tape r83-tape-center"></span>
-              <span class="r83-tape r83-tape-right"></span>
-
-              <div class="r83-tension r83-tension-left"><span></span></div>
-              <div class="r83-tension r83-tension-right"><span></span></div>
-              <span class="r83-guide r83-guide-left"></span>
-              <span class="r83-guide r83-guide-right"></span>
-              <span class="r83-capstan"></span>
-              <span class="r83-pinch"></span>
-
-              <div class="r83-head-block">
-                <span class="r83-head"></span>
-                <span class="r83-head"></span>
-                <small>ERASE&nbsp;&nbsp; RECORD&nbsp;&nbsp; PLAY</small>
-              </div>
-            </div>
-
-            <div class="r83-control-panel">
-              <div class="r83-levels">
-                <div class="r83-knob-wrap"><span class="r83-knob"></span><small>MIC LEVEL</small></div>
-                <div class="r83-knob-wrap"><span class="r83-knob"></span><small>OUTPUT</small></div>
-              </div>
-
-              <div class="r83-transport" aria-label="Reel deck transport controls">
-                <button class="r83-key r83-record" type="button" data-reel-action="record" aria-label="Arm visual recording mode" aria-pressed="false"><b>●</b><small>RECORD</small></button>
-                <button class="r83-key" type="button" data-reel-action="rewind" aria-label="Rewind 10 seconds"><b>◀◀</b><small>REWIND</small></button>
-                <button class="r83-key" type="button" data-reel-action="stop" aria-label="Stop and return to beginning"><b>■</b><small>STOP</small></button>
-                <button class="r83-key r83-play" type="button" data-reel-action="play" aria-label="Play or pause" aria-pressed="false"><b>▶</b><small>PLAY</small></button>
-                <button class="r83-key" type="button" data-reel-action="forward" aria-label="Fast forward 10 seconds"><b>▶▶</b><small>FAST FWD</small></button>
-              </div>
-
-              <div class="r83-switch-bank">
-                <div><small>TAPE</small><span class="r83-toggle"></span><em>LH&nbsp;&nbsp;EE</em></div>
-                <div><small>MONITOR</small><span class="r83-toggle"></span><em>SOURCE&nbsp;&nbsp;TAPE</em></div>
-                <div><small>POWER</small><span class="r83-power"></span><em>ON</em></div>
-              </div>
-            </div>
-
-            <div class="r83-specs" aria-hidden="true">
-              <span>2 TRACK / 2 CHANNEL</span>
-              <span>7½ &nbsp; 3¾ IPS</span>
-              <span>DC SERVO CAPSTAN</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="hifi-module reverb-module">
-          <div class="hifi-label"><span>STEREO REVERBERATOR</span><span id="reverbModeLabel">OFF</span></div>
-          <div class="reverb-display">
-            <div class="reverb-tunnel" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
-            <div class="r83-reverb-console">
-              <label class="r83-reverb-preset">Program
-                <select id="reverbPreset" aria-label="Reverberator program">
-                  <option value="off">Off</option>
-                  <option value="room">Room</option>
-                  <option value="hall">Hall</option>
-                  <option value="plate">Plate</option>
-                  <option value="ambient">Ambient</option>
-                  <option value="echo">Echo</option>
-                </select>
-              </label>
-              <div class="r83-reverb-sliders">
-                <label>Mix <output id="reverbMixValue">0%</output><input id="reverbMix" data-reverb-control="mix" type="range" min="0" max="100" value="0"></label>
-                <label>Depth <output id="reverbDepthValue">35%</output><input id="reverbDepth" data-reverb-control="depth" type="range" min="0" max="100" value="35"></label>
-                <label>Decay <output id="reverbDecayValue">1.1 s</output><input id="reverbDecay" data-reverb-control="decay" type="range" min="0.4" max="5" step="0.1" value="1.1"></label>
-                <label>Pre-delay <output id="reverbPreDelayValue">12 ms</output><input id="reverbPreDelay" data-reverb-control="preDelay" type="range" min="0" max="300" step="5" value="12"></label>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="hifi-module meter-module">
-          <div class="hifi-label"><span>POWER LEVEL</span><span>L / R</span></div>
-          <div class="meter-bank">
-            <div class="vu-meter" data-vu-channel="left" role="meter" aria-label="Left audio level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-              <span class="vu-glass" aria-hidden="true"></span><span class="vu-needle" aria-hidden="true"></span><span class="vu-pivot" aria-hidden="true"></span><div class="vu-caption">LEFT</div>
-            </div>
-            <div class="vu-meter" data-vu-channel="right" role="meter" aria-label="Right audio level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-              <span class="vu-glass" aria-hidden="true"></span><span class="vu-needle" aria-hidden="true"></span><span class="vu-pivot" aria-hidden="true"></span><div class="vu-caption">RIGHT</div>
-            </div>
-          </div>
-        </article>
-
-        <article class="hifi-module cassette-module">
-          <div class="hifi-label"><span>STEREO CASSETTE DECK</span><span id="cassetteModeLabel">DOLBY B • READY</span></div>
-          <div class="cassette-stage">
-            <div class="cassette" aria-hidden="true">
-              <div class="cassette-window"><span class="cassette-hub"></span><span class="cassette-hub"></span></div>
-              <div class="cassette-name">ASTRALIS NOVA • TYPE II</div>
-            </div>
-            <div class="cassette-counter" aria-label="Cassette counter"><span>0</span><span>0</span><span>0</span><span>0</span></div>
-            <div class="cassette-controls" aria-label="Cassette transport controls">
-              <button type="button" data-cassette-action="eject" aria-label="Open or close cassette door" aria-pressed="false"><b>⏏</b><small>EJECT</small></button>
-              <button type="button" data-cassette-action="stop" aria-label="Stop cassette playback"><b>■</b><small>STOP</small></button>
-              <button type="button" data-cassette-action="play" aria-label="Play or pause cassette" aria-pressed="false"><b>▶</b><small>PLAY</small></button>
-              <button type="button" data-cassette-action="rewind" aria-label="Rewind 10 seconds"><b>◀◀</b><small>REW</small></button>
-              <button type="button" data-cassette-action="forward" aria-label="Fast forward 10 seconds"><b>▶▶</b><small>FF</small></button>
-              <button type="button" class="cassette-record" data-cassette-action="record" aria-label="Arm visual cassette recording mode" aria-pressed="false"><b>●</b><small>REC</small></button>
-            </div>
-          </div>
-        </article>
-
-        <article class="hifi-module turntable-module">
-          <div class="hifi-label"><span>QUARTZ DIRECT-DRIVE TURNTABLE</span><span id="turntableStatus">33⅓ RPM • READY</span></div>
-          <div class="turntable-stage">
-            <div class="platter" aria-hidden="true"><div class="record-label"></div><span class="record-spindle"></span></div>
-            <div class="tonearm" aria-hidden="true"><span class="stylus"></span></div>
-            <span class="turntable-power-light" aria-hidden="true"></span>
-            <div class="turntable-controls" aria-label="Turntable controls">
-              <button type="button" data-turntable-action="power" aria-label="Turn turntable power on or off" aria-pressed="true"><b>●</b><small>POWER</small></button>
-              <button type="button" data-turntable-action="start" aria-label="Start or pause turntable" aria-pressed="false"><b>▶</b><small>START / STOP</small></button>
-              <button type="button" data-turntable-action="speed33" aria-label="Select 33 and one third RPM" aria-pressed="true"><b>33⅓</b><small>RPM</small></button>
-              <button type="button" data-turntable-action="speed45" aria-label="Select 45 RPM" aria-pressed="false"><b>45</b><small>RPM</small></button>
-              <button type="button" data-turntable-action="cue" aria-label="Raise or lower tonearm" aria-pressed="false"><b>↥</b><small>CUE</small></button>
-              <label class="turntable-pitch">Pitch <output id="turntablePitchValue">0%</output><input id="turntablePitch" type="range" min="-8" max="8" step="1" value="0" aria-label="Turntable pitch adjustment"></label>
-            </div>
-            <div class="turntable-copy">ASTRALIS NOVA<br>QUARTZ LOCK<br>LEGACY 83</div>
-          </div>
-        </article>
+        <article class="hifi-module turntable-module"><div class="hifi-label"><span>QUARTZ DIRECT-DRIVE TURNTABLE</span><span id="turntableStatus">33⅓ RPM • READY</span></div><div class="turntable-stage"><div class="platter"><div class="record-label"></div><span class="record-spindle"></span></div><div class="tonearm"><span class="stylus"></span></div><span class="turntable-power-light"></span><div class="turntable-controls"><button type="button" data-turntable-action="power" aria-pressed="true"><b>●</b><small>POWER</small></button><button type="button" data-turntable-action="start" aria-pressed="false"><b>▶</b><small>START / STOP</small></button><button type="button" data-turntable-action="speed33" aria-pressed="true"><b>33⅓</b><small>RPM</small></button><button type="button" data-turntable-action="speed45" aria-pressed="false"><b>45</b><small>RPM</small></button><button type="button" data-turntable-action="cue" aria-pressed="false"><b>↥</b><small>CUE</small></button><label class="turntable-pitch">Pitch <output id="turntablePitchValue">0%</output><input id="turntablePitch" type="range" min="-8" max="8" step="0.1" value="0"></label></div><div class="turntable-copy">QUARTZ LOCK<br>DIRECT DRIVE<br>ANTI-SKATE</div></div></article>
       </div>
     </section>
 
-    <section id="equalizer" class="eq-window panel">
-      <div class="window-title"><span>✦ ASTRALIS NOVA EQUALIZER</span><span>SHAPE YOUR UNIVERSE</span></div>
-      <div class="eq-toolbar">
-        <button id="eqPower" class="chip active" aria-pressed="true">EQ ON</button>
-        <label class="skin-picker">Preset
-          <select id="eqPreset" aria-label="Equalizer preset">
-            <option value="flat">Flat</option>
-            <option value="bass">Bass Boost</option>
-            <option value="treble">Treble Boost</option>
-            <option value="vocal">Vocal</option>
-            <option value="rock">Rock</option>
-            <option value="pop">Pop</option>
-            <option value="classical">Classical</option>
-            <option value="hiphop">Hip-Hop</option>
-            <option value="electronic">Electronic</option>
-            <option value="podcast">Podcast / Spoken Word</option>
-            <option value="night">Night Mode</option>
-            <option value="custom">Custom</option>
-          </select>
-        </label>
-        <button id="eqReset" class="chip">Reset</button>
-      </div>
-      <div id="eqSliders" class="eq-sliders" aria-label="Equalizer controls"></div>
-    </section>
+    <section id="equalizer" class="equalizer panel"><div class="window-title"><span>10-BAND EQUALIZER</span><span class="tagline">60 Hz — 16 kHz</span></div><div class="eq-toolbar"><button id="eqPower" class="chip" type="button" aria-pressed="true">EQ ON</button><label>Preset <select id="eqPreset"><option value="flat">Flat</option><option value="bass">Bass</option><option value="treble">Treble</option><option value="vocal">Vocal</option><option value="rock">Rock</option><option value="pop">Pop</option><option value="classical">Classical</option><option value="hiphop">Hip-Hop</option><option value="electronic">Electronic</option><option value="podcast">Podcast</option><option value="night">Night</option></select></label><button id="eqReset" class="chip" type="button">Reset</button></div><div id="eqBands" class="eq-bands"></div></section>
 
-    <section class="library-window panel">
-      <div class="window-title"><span>✦ ASTRALIS NOVA LIBRARY</span><span id="trackCount"></span></div>
-      <div class="library-tools">
-        <div class="library-tabs" role="tablist" aria-label="Library filter">
-          <button class="tab active" data-filter="all" role="tab" aria-selected="true">All</button>
-          <button class="tab" data-filter="favorites" role="tab" aria-selected="false">Favorites</button>
-          <button class="tab" data-filter="offline" role="tab" aria-selected="false">Offline</button>
-        </div>
-        <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search library…" autocomplete="off"></label>
-      </div>
-      <div class="track-list-head" aria-hidden="true"><span>#</span><span>Title</span><span>Artist</span><span>Time</span></div>
-      <div id="trackList" class="track-list" role="list"></div>
-    </section>
+    <section class="library panel"><div class="library-toolbar"><div class="tabs"><button class="tab active" data-filter="all">All</button><button class="tab" data-filter="favorites">Favorites</button><span id="trackCount"></span></div><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search library…" autocomplete="off"></label></div><div class="track-list-head"><span>#</span><span>Title</span><span>Artist</span><span>Time</span></div><div id="trackList" class="track-list" role="list"></div></section>
 
     <footer class="footer-note"><span>Desktop + mobile</span><span>•</span><span>Skins saved on this device</span><span>•</span><span id="pwaStatus">Web app ready</span></footer>
   </main>
   <script src="./player.js?v=74" defer></script>
-  <script src="./legacy83-enhancements.js?v=2" defer></script>
-  <script src="./legacy83-radio.js?v=1" defer></script>
+  <script src="./legacy83-enhancements.js?v=3" defer></script>
+  <script src="./legacy83-radio.js?v=3" defer></script>
 </body>
 </html>
