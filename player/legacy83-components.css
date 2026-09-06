@@ -415,13 +415,14 @@ body[data-skin="legacy83"] .legacy83-rack{display:block}
 .record-label{position:absolute;inset:39%;border-radius:50%;background:radial-gradient(circle,#d9ecf8 0 13%,#65b4e8 14% 31%,#266fa4 32% 100%);box-shadow:0 0 9px #2d9eea77}
 .record-spindle{position:absolute;left:50%;top:50%;width:8px;height:8px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#7e817f 62%,#242625);box-shadow:0 1px 2px #000}
 .tonearm{
-  position:absolute;z-index:4;width:250px;height:9px;right:7%;top:63px;border-radius:8px;
+  position:absolute;z-index:4;width:clamp(240px,30vw,340px);height:9px;right:48%;top:63px;border-radius:8px;
   background:linear-gradient(180deg,#e4e1da,#777873 56%,#454748);
-  transform:rotate(22deg);transform-origin:right center;transition:transform .65s cubic-bezier(.2,.75,.25,1);
+  transform:rotate(6deg);transform-origin:right center;transition:transform .65s cubic-bezier(.2,.75,.25,1);
   box-shadow:0 4px 6px #000b;
 }
 .tonearm::before{content:"";position:absolute;right:-15px;top:-15px;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle,#eeeae2 0 22%,#797873 25% 52%,#25282a 55%);box-shadow:0 4px 8px #000b}
 .tonearm::after{content:"";position:absolute;left:-16px;top:-6px;width:35px;height:21px;border:1px solid #aaa;background:linear-gradient(180deg,#454a4e,#1d2022);box-shadow:0 3px 5px #000c}
+.stylus{position:absolute;z-index:2;left:-7px;top:13px;width:2px;height:11px;border-radius:0 0 2px 2px;background:linear-gradient(90deg,#35383a,#e4e0d8 48%,#56595a);transform:rotate(-8deg);transform-origin:top;box-shadow:0 2px 2px #000}
 .turntable-controls{
   position:absolute;z-index:5;right:5%;bottom:28px;width:40%;min-height:142px;padding:12px;
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;
@@ -445,8 +446,9 @@ body[data-skin="legacy83"] .legacy83-rack{display:block}
 @keyframes turntable-spin{to{transform:rotate(360deg)}}
 .turntable-module.is-playing .platter{animation:turntable-spin 3s linear infinite}
 .turntable-module.is-playing.is-45 .platter{animation-duration:2.2s}
-.turntable-module.is-playing:not(.is-cued) .tonearm{transform:rotate(12deg)}
-.turntable-module.is-cued .tonearm{transform:rotate(18deg) translateY(-5px)}
+.turntable-module.is-playing:not(.is-cued) .tonearm{transform:rotate(-12deg)}
+.turntable-module.is-playing:not(.is-cued) .stylus{box-shadow:0 2px 2px #000,0 7px 4px #78cfff55}
+.turntable-module.is-cued .tonearm{transform:rotate(-12deg) translateY(-7px)}
 @media(prefers-reduced-motion:reduce){.turntable-module .platter{animation:none!important}.turntable-module .tonearm{transition:none}}
 
 
@@ -565,7 +567,7 @@ body[data-skin="legacy83"] .legacy83-rack{display:block}
 
 @media(max-width:620px){
   .turntable-module{min-height:362px}.turntable-stage{height:328px}
-  .platter{width:165px;left:4%;top:42px}.tonearm{width:165px;right:3%;top:59px}
+  .platter{width:165px;left:4%;top:42px}.tonearm{width:165px;right:22%;top:59px}
   .turntable-controls{right:4%;bottom:23px;width:49%;padding:8px;gap:5px}
   .turntable-copy{display:none}
 }
