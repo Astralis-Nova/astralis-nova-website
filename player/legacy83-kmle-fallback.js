@@ -112,6 +112,8 @@
       }
     }
 
+    // 107.9 has one owner only. Capture the dial change before the generic tuner
+    // can launch a second directory stream through the main song audio element.
     slider.addEventListener('change',e=>{
       if(!is1079()) return;
       e.stopImmediatePropagation();
@@ -121,6 +123,8 @@
 
     slider.addEventListener('input',()=>refresh());
 
+    // Searching 107.9/KMLE should tune and play immediately, without also running
+    // the generic Radio Browser search path.
     searchBtn?.addEventListener('click',e=>{
       const q=(searchInput?.value||'').trim().toUpperCase();
       if(q!=='107.9'&&q!=='107.9 FM'&&q!=='KMLE') return;
