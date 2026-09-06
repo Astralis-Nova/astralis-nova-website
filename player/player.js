@@ -68,6 +68,7 @@
   let audioContext,sourceNode,analyser,filters=[],eqEnabled=true;
   let reverbPreDelayNode,reverbConvolver,reverbDryGain,reverbWetGain,reverbEchoDelay,reverbEchoFeedback,reverbEchoGain,reverbImpulseTimer;
   let vuSplitter,vuAnalyserLeft,vuAnalyserRight,vuLeftLevel=0,vuRightLevel=0;
+  const vuDataLeft=new Float32Array(256),vuDataRight=new Float32Array(256);
   let reverbState={preset:'off',...reverbPresets.off};
   try{
     const savedReverb=JSON.parse(localStorage.getItem('nova.reverb')||'null');
@@ -321,11 +322,10 @@
   }
   function updateVuMeters(){
     if(!vuAnalyserLeft||!vuAnalyserRight||vuNeedles.length<2)return;
-    const leftData=new Float32Array(vuAnalyserLeft.fftSize),rightData=new Float32Array(vuAnalyserRight.fftSize);
-    let leftTarget=audio.paused?0:readVuLevel(vuAnalyserLeft,leftData),rightTarget=audio.paused?0:readVuLevel(vuAnalyserRight,rightData);
+    let leftTarget=audio.paused?0:readVuLevel(vuAnalyserLeft,vuDataLeft),rightTarget=audio.paused?0:readVuLevel(vuAnalyserRight,vuDataRight);
     if(rightTarget<.001&&leftTarget>.01)rightTarget=leftTarget;
-    vuLeftLevel+=(leftTarget-vuLeftLevel)*(leftTarget>vuLeftLevel?.27:.075);
-    vuRightLevel+=(rightTarget-vuRightLevel)*(rightTarget>vuRightLevel?.27:.075);
+    vuLeftLevel+=(leftTarget-vuLeftLevel)*(leftTarget>vuLeftLevel ? .27 : .075);
+    vuRightLevel+=(rightTarget-vuRightLevel)*(rightTarget>vuRightLevel ? .27 : .075);
     [vuLeftLevel,vuRightLevel].forEach((level,index)=>{
       const angle=-43+level*78;
       vuNeedles[index].style.setProperty('--vu-angle',`${angle.toFixed(2)}deg`);
