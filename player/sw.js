@@ -1,4 +1,4 @@
-const SHELL_CACHE='astralis-nova-player-v3';
+const SHELL_CACHE='astralis-nova-player-v4';
 const AUDIO_CACHE='astralis-nova-offline-audio-v1';
 const SHELL=['./','./index.html','./player.css','./player.js','./manifest.webmanifest','./icon.svg','../cover-3.jpg','../cover-16.jpg'];
 
