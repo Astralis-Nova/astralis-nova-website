@@ -9,7 +9,7 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../cover-3.jpg">
   <link rel="stylesheet" href="./player.css">
-  <link rel="stylesheet" href="./legacy83-components.css?v=70">
+  <link rel="stylesheet" href="./legacy83-components.css?v=71">
   <title>Astralis Nova Player</title>
 </head>
 <body data-skin="nova">
@@ -206,11 +206,20 @@
         </article>
 
         <article class="hifi-module turntable-module">
-          <div class="hifi-label"><span>QUARTZ TURNTABLE</span><span>33⅓ RPM</span></div>
+          <div class="hifi-label"><span>QUARTZ DIRECT-DRIVE TURNTABLE</span><span id="turntableStatus">33⅓ RPM • READY</span></div>
           <div class="turntable-stage">
-            <div class="platter" aria-hidden="true"><div class="record-label"></div></div>
+            <div class="platter" aria-hidden="true"><div class="record-label"></div><span class="record-spindle"></span></div>
             <div class="tonearm" aria-hidden="true"></div>
-            <div class="turntable-copy">ASTRALIS NOVA<br>DIRECT DRIVE<br>LEGACY 83</div>
+            <span class="turntable-power-light" aria-hidden="true"></span>
+            <div class="turntable-controls" aria-label="Turntable controls">
+              <button type="button" data-turntable-action="power" aria-label="Turn turntable power on or off" aria-pressed="true"><b>●</b><small>POWER</small></button>
+              <button type="button" data-turntable-action="start" aria-label="Start or pause turntable" aria-pressed="false"><b>▶</b><small>START / STOP</small></button>
+              <button type="button" data-turntable-action="speed33" aria-label="Select 33 and one third RPM" aria-pressed="true"><b>33⅓</b><small>RPM</small></button>
+              <button type="button" data-turntable-action="speed45" aria-label="Select 45 RPM" aria-pressed="false"><b>45</b><small>RPM</small></button>
+              <button type="button" data-turntable-action="cue" aria-label="Raise or lower tonearm" aria-pressed="false"><b>↥</b><small>CUE</small></button>
+              <label class="turntable-pitch">Pitch <output id="turntablePitchValue">0%</output><input id="turntablePitch" type="range" min="-8" max="8" step="1" value="0" aria-label="Turntable pitch adjustment"></label>
+            </div>
+            <div class="turntable-copy">ASTRALIS NOVA<br>QUARTZ LOCK<br>LEGACY 83</div>
           </div>
         </article>
       </div>
