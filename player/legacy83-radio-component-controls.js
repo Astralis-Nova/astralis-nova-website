@@ -9,8 +9,10 @@
   const cassette=()=>document.querySelector('.cassette-module');
   const cassetteLabel=()=>document.getElementById('cassetteModeLabel');
   const reverb=()=>document.querySelector('.reverb-module');
+  const equalizer=()=>document.getElementById('equalizer');
   const needles=()=>[...document.querySelectorAll('.vu-needle')];
   const rings=()=>[...document.querySelectorAll('.reverb-tunnel span')];
+  const eqSliders=()=>[...document.querySelectorAll('#eqBands input[type="range"]')];
 
   function setCassetteState(playing){
     const deck=cassette();
@@ -22,8 +24,14 @@
     if(label) label.textContent=playing?'DOLBY B • RADIO PLAY':'DOLBY B • READY';
   }
 
+  function setEqState(playing){
+    equalizer()?.classList.toggle('radio-visual-live',playing);
+    document.body.classList.toggle('legacy83-radio-components-live',playing);
+  }
+
   function clearVisuals(){
     setCassetteState(false);
+    setEqState(false);
     reverb()?.classList.remove('radio-visual-live');
     needles().forEach(n=>n.style.removeProperty('transform'));
     rings().forEach(r=>{
@@ -31,6 +39,15 @@
       r.style.removeProperty('opacity');
       r.style.removeProperty('filter');
     });
+    eqSliders().forEach(s=>s.style.removeProperty('filter'));
+  }
+
+  function visualReverbAmount(){
+    const preset=document.getElementById('reverbPreset')?.value||'off';
+    if(preset==='off')return 0;
+    const mix=Number(document.getElementById('reverbMix')?.value||0)/100;
+    const depth=Number(document.getElementById('reverbDepth')?.value||35)/100;
+    return Math.max(.15,Math.min(1,(mix*.65)+(depth*.35)));
   }
 
   function animate(){
@@ -38,6 +55,7 @@
     if(!radioLive){clearVisuals();return;}
 
     setCassetteState(true);
+    setEqState(true);
     reverb()?.classList.add('radio-visual-live');
 
     const t=(performance.now()-start)/1000;
@@ -49,13 +67,13 @@
       n.style.transform=`rotate(${angle.toFixed(1)}deg)`;
     });
 
-    const preset=document.getElementById('reverbPreset')?.value||'off';
-    if(preset!=='off'){
+    const amount=visualReverbAmount();
+    if(amount>0){
       rings().forEach((r,i)=>{
-        const scale=1+level*(0.04+i*0.017);
+        const scale=1+level*amount*(0.04+i*0.017);
         r.style.transform=`scale(${scale.toFixed(3)})`;
-        r.style.opacity=String(Math.max(.3,1-i*.13+level*.1));
-        r.style.filter=`brightness(${(0.92+level*.4).toFixed(2)})`;
+        r.style.opacity=String(Math.max(.28,1-i*.13+level*amount*.16));
+        r.style.filter=`brightness(${(0.92+level*amount*.55).toFixed(2)})`;
       });
     }else{
       rings().forEach(r=>{
@@ -64,6 +82,14 @@
         r.style.removeProperty('filter');
       });
     }
+
+    const eqOn=document.getElementById('eqPower')?.getAttribute('aria-pressed')!=='false';
+    eqSliders().forEach((slider,i)=>{
+      if(!eqOn){slider.style.removeProperty('filter');return;}
+      const value=Math.abs(Number(slider.value||0));
+      const glow=.9+level*.3+Math.min(.25,value/48)+(i%2)*.02;
+      slider.style.filter=`brightness(${glow.toFixed(2)})`;
+    });
 
     frame=requestAnimationFrame(animate);
   }
@@ -119,6 +145,11 @@
   style.textContent=`
     .cassette-module.radio-visual-live .cassette-window{animation:cassetteRadioPulse .75s ease-in-out infinite alternate}
     .reverb-module.radio-visual-live .reverb-tunnel{filter:brightness(1.08)}
+    #equalizer.radio-visual-live{box-shadow:inset 0 0 22px rgba(120,210,255,.08),0 0 14px rgba(120,210,255,.08)}
+    #equalizer.radio-visual-live .window-title .tagline::after{content:' • RADIO VISUAL';opacity:.8}
+    #equalizer.radio-visual-live .eq-toolbar{animation:legacy83EqRadioGlow 1.25s ease-in-out infinite alternate}
+    body.legacy83-radio-components-live .meter-module{box-shadow:inset 0 0 18px rgba(255,210,120,.07)}
+    @keyframes legacy83EqRadioGlow{from{filter:brightness(.96)}to{filter:brightness(1.12)}}
   `;
   document.head.appendChild(style);
 
@@ -128,7 +159,11 @@
     animate();
   });
 
-  document.getElementById('reverbPreset')?.addEventListener('change',()=>{if(radioLive)animate();});
+  ['reverbPreset','reverbMix','reverbDepth','reverbDecay','reverbPreDelay','eqPower','eqPreset'].forEach(id=>{
+    document.getElementById(id)?.addEventListener('input',()=>{if(radioLive)animate();});
+    document.getElementById(id)?.addEventListener('change',()=>{if(radioLive)animate();});
+  });
+
   installCassetteControls();
   window.addEventListener('pagehide',()=>{radioLive=false;cancelAnimationFrame(frame);clearVisuals();});
 })();
