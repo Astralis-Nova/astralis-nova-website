@@ -7,7 +7,6 @@
     const cassette=stage?.querySelector('.cassette');
     if(!module||!stage||!cassette)return;
 
-    // One physical dual-cassette component only. Never clone the cassette body.
     stage.querySelectorAll('.cassette.deck-b,.cassette-counter.counter-b,.cassette-dub-strip').forEach(el=>el.remove());
     module.classList.remove('is-dual-deck');
     module.classList.add('true-dual-cassette');
@@ -35,6 +34,8 @@
       .true-dual-cassette .cassette-window{left:3%;right:3%;top:38px;height:94px;border:0;background:radial-gradient(circle at 12% 50%,#d2cdc3 0 7%,#211e1a 7.5% 12%,#0d0c0b 12.5% 16%,transparent 16.5%),radial-gradient(circle at 36% 50%,#d2cdc3 0 7%,#211e1a 7.5% 12%,#0d0c0b 12.5% 16%,transparent 16.5%),radial-gradient(circle at 64% 50%,#d2cdc3 0 7%,#211e1a 7.5% 12%,#0d0c0b 12.5% 16%,transparent 16.5%),radial-gradient(circle at 88% 50%,#d2cdc3 0 7%,#211e1a 7.5% 12%,#0d0c0b 12.5% 16%,transparent 16.5%),linear-gradient(90deg,#100d0b 0 47.5%,#77736b 47.7% 52.3%,#100d0b 52.5% 100%);box-shadow:inset 0 0 18px #000,inset 0 0 0 3px #aaa59b,0 1px #fff3}
       .true-dual-cassette .cassette-window::after{content:'';position:absolute;left:49.85%;top:0;bottom:0;width:2px;background:#77736b;box-shadow:0 0 0 1px #151515}
       .true-dual-cassette .cassette-hub{display:none}
+      .legacy83-radio-live .true-dual-cassette .cassette-window{animation:cassetteRadioPulse .9s ease-in-out infinite alternate}
+      @keyframes cassetteRadioPulse{from{filter:brightness(.92)}to{filter:brightness(1.14)}}
       @media(max-width:620px){.true-dual-cassette{min-height:326px}.true-dual-cassette .cassette-stage{height:288px;grid-template-columns:minmax(0,1fr) 58px;grid-template-rows:25px 168px 58px;padding:9px}.true-dual-labels{font-size:.34rem}.true-dual-labels b{font-size:.28rem}.true-dual-cassette .cassette{height:158px}.true-dual-cassette .cassette::before{font-size:.34rem;letter-spacing:.05em}.true-dual-cassette .cassette-window{height:88px;top:35px}}
     `;
     document.head.appendChild(style);
@@ -87,6 +88,48 @@
     audio.addEventListener('play',startTracking);audio.addEventListener('playing',startTracking);audio.addEventListener('pause',stopTracking);audio.addEventListener('seeking',paint);audio.addEventListener('timeupdate',()=>{if(audio.paused)paint();});audio.addEventListener('loadedmetadata',()=>{if(audio.currentTime===0)returnArm();else paint();});audio.addEventListener('ended',()=>setTimeout(returnArm,350));window.addEventListener('resize',paint);module.querySelectorAll('[data-turntable-action]').forEach(button=>button.addEventListener('click',()=>setTimeout(()=>{if(audio.currentTime===0&&audio.paused)returnArm();else paint();},0)));paint();
   }
 
-  const install=()=>{installCassetteDeckFix();installReverbDeckFinish();installTurntableTracking();};
+  function installRadioRackSync(){
+    const audio=document.getElementById('audio');
+    const reel=document.querySelector('.reel-module');
+    const cassette=document.querySelector('.cassette-module');
+    const turntable=document.querySelector('.turntable-module');
+    const reverb=document.querySelector('.reverb-module');
+    const preset=document.getElementById('reverbPreset');
+    const needles=[...document.querySelectorAll('.vu-needle')];
+    const rings=[...document.querySelectorAll('.reverb-tunnel span')];
+    if(!audio)return;
+
+    let radioLive=false,frame=0,start=performance.now();
+    const forceState=playing=>{
+      reel?.classList.toggle('is-playing',playing);
+      cassette?.classList.toggle('is-playing',playing);
+      turntable?.classList.toggle('is-playing',playing);
+      if(turntable)turntable.classList.add('is-powered');
+      if(reverb)reverb.classList.toggle('is-active',playing&&preset?.value!=='off');
+      document.body.classList.toggle('legacy83-radio-live',radioLive&&playing);
+    };
+    const animateFallback=()=>{
+      cancelAnimationFrame(frame);
+      if(!radioLive||audio.paused||audio.ended){needles.forEach(n=>n.style.removeProperty('transform'));rings.forEach(r=>{r.style.removeProperty('transform');r.style.removeProperty('opacity')});return;}
+      const t=(performance.now()-start)/1000;
+      const beat=(Math.sin(t*6.4)+Math.sin(t*10.7)*.45+Math.sin(t*3.1)*.3)/1.75;
+      needles.forEach((n,i)=>{const angle=-38+((beat+1)/2)*(56+i*4);n.style.transform=`rotate(${angle.toFixed(1)}deg)`;});
+      if(preset?.value!=='off')rings.forEach((r,i)=>{const pulse=1+Math.max(0,beat)*(.055+i*.018);r.style.transform=`scale(${pulse.toFixed(3)})`;r.style.opacity=String(Math.max(.28,1-i*.13+beat*.1));});
+      frame=requestAnimationFrame(animateFallback);
+    };
+
+    window.addEventListener('legacy83-radio-state',e=>{
+      radioLive=!!e.detail?.playing;
+      forceState(radioLive&&!audio.paused);
+      start=performance.now();animateFallback();
+    });
+    audio.addEventListener('playing',()=>{forceState(true);if(radioLive)animateFallback();});
+    audio.addEventListener('play',()=>{forceState(true);if(radioLive)animateFallback();});
+    audio.addEventListener('pause',()=>{forceState(false);if(radioLive)animateFallback();});
+    audio.addEventListener('ended',()=>{radioLive=false;forceState(false);animateFallback();});
+    preset?.addEventListener('change',()=>{forceState(!audio.paused&&!audio.ended);if(radioLive)animateFallback();});
+  }
+
+  const install=()=>{installCassetteDeckFix();installReverbDeckFinish();installTurntableTracking();installRadioRackSync();};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
 })();
