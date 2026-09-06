@@ -1,4 +1,4 @@
-const SHELL_CACHE='astralis-nova-player-v2';
+const SHELL_CACHE='astralis-nova-player-v3';
 const AUDIO_CACHE='astralis-nova-offline-audio-v1';
 const SHELL=['./','./index.html','./player.css','./player.js','./manifest.webmanifest','./icon.svg','../cover-3.jpg','../cover-16.jpg'];
 
@@ -27,6 +27,19 @@ async function rangeResponse(request,cached){
   }});
 }
 
+async function networkFirst(request){
+  const cache=await caches.open(SHELL_CACHE);
+  try{
+    const response=await fetch(request,{cache:'no-store'});
+    if(response.ok){ await cache.put(request,response.clone()); }
+    return response;
+  }catch{
+    const cached=await cache.match(request);
+    if(cached) return cached;
+    throw new Error('Offline and no cached shell response available');
+  }
+}
+
 self.addEventListener('fetch',event=>{
   const request=event.request;
   if(request.method!=='GET') return;
@@ -39,6 +52,19 @@ self.addEventListener('fetch',event=>{
       if(cached) return rangeResponse(request,cached);
       return fetch(request);
     })());
+    return;
+  }
+
+  const isPlayerShell = url.origin===location.origin && (
+    url.pathname.endsWith('/player/') ||
+    url.pathname.endsWith('/player/index.html') ||
+    url.pathname.endsWith('/player/player.js') ||
+    url.pathname.endsWith('/player/player.css') ||
+    url.pathname.endsWith('/player/manifest.webmanifest')
+  );
+
+  if(isPlayerShell){
+    event.respondWith(networkFirst(request));
     return;
   }
 
