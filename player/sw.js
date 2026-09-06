@@ -1,6 +1,6 @@
-const SHELL_CACHE='astralis-nova-player-v6';
+const SHELL_CACHE='astralis-nova-player-v7';
 const AUDIO_CACHE='astralis-nova-offline-audio-v1';
-const SHELL=['./','./index.html','./player.css','./player.js','./legacy83-components.css','./legacy83-enhancements.js','./legacy83-radio.js','./legacy83-radio-memory.js','./legacy83-kmle-fallback.js','./legacy83-radio-endpoint-v2.js','./manifest.webmanifest','./icon.svg','../cover-3.jpg','../cover-16.jpg'];
+const SHELL=['./','./index.html','./player.css','./player.js','./legacy83-components.css','./legacy83-enhancements.js','./legacy83-radio.js','./legacy83-radio-memory.js','./legacy83-kmle-fallback.js','./manifest.webmanifest','./icon.svg','../cover-3.jpg','../cover-16.jpg'];
 
 self.addEventListener('install',event=>event.waitUntil(
   caches.open(SHELL_CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())
@@ -55,10 +55,7 @@ self.addEventListener('fetch',event=>{
     return;
   }
 
-  // Keep every player shell asset network-first so hot fixes to the tuner,
-  // visualizer and component scripts cannot get trapped behind an old cache.
   const isPlayerShell = url.origin===location.origin && url.pathname.includes('/player/');
-
   if(isPlayerShell){
     event.respondWith(networkFirst(request));
     return;
