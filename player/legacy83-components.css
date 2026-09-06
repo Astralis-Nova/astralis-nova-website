@@ -244,11 +244,18 @@ body[data-skin="legacy83"] .legacy83-rack{display:block}
 .r83-transport{height:68px;display:grid;grid-template-columns:repeat(5,minmax(44px,1fr));gap:7px;align-items:end}
 .r83-key{
   height:57px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  appearance:none;padding:0;cursor:pointer;font:inherit;
   border:1px solid #454643;border-radius:2px;
   background:linear-gradient(180deg,#e5e2da 0,#999994 56%,#676966 59%,#b7b5ae 100%);
   box-shadow:inset 0 1px #fff,0 4px 3px #0007;color:#1b1c1a;
 }
 .r83-key b{font-size:.86rem;line-height:1}.r83-record b{color:#a41e18;text-shadow:0 1px #ffd0c8}.r83-play b{color:#184d2b}
+.r83-key:hover{filter:brightness(1.09)}
+.r83-key:focus-visible{outline:2px solid #69c9ff;outline-offset:2px}
+.r83-key:active{transform:translateY(3px);box-shadow:inset 0 3px 5px #0007,0 1px 1px #0005}
+.r83-record[aria-pressed="true"]{background:linear-gradient(180deg,#c98780,#8c3d38 58%,#c7837c);box-shadow:inset 0 2px 5px #4b0b08,0 1px 2px #0007}
+.r83-record[aria-pressed="true"] b{color:#ffdbd7;text-shadow:0 0 7px #ff2f20}
+.reel-module.is-record-armed .r83-power{box-shadow:0 0 12px #e33b30,inset 0 1px #ffd1cd}
 .r83-switch-bank{display:grid;grid-template-columns:1fr 1.35fr .72fr;gap:8px;text-align:center;align-items:center}
 .r83-switch-bank>div{min-width:0}
 .r83-toggle{
