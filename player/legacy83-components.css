@@ -96,3 +96,153 @@ body[data-skin="desert"] .cassette{
   .cassette-counter{margin-top:16px;padding:6px 3px}
   .cassette-counter span{font-size:.54rem}
 }
+
+/* Legacy 83 reel-to-reel realism pass: deeper glass, machined reels, visible tape path, believable transport hardware. */
+body[data-skin="legacy83"] .reel-module{
+  border-color:#77736a;
+  background:linear-gradient(180deg,#ddd9cf 0,#aaa69d 8%,#5b5d5c 14%,#181a1b 14.4%,#0b0c0d 100%);
+  box-shadow:inset 0 1px 0 #fff,inset 0 0 0 2px #222,0 11px 24px #000d;
+}
+body[data-skin="legacy83"] .reel-stage{
+  background:
+    repeating-linear-gradient(90deg,#fff0 0 2px,#ffffff12 2px 3px,#0000000b 3px 5px),
+    linear-gradient(180deg,#d8d5cc 0,#aaa79f 15%,#7d7b75 48%,#b9b5ac 84%,#75736d 100%);
+  box-shadow:inset 0 2px 1px #fff,inset 0 -13px 25px #0006,inset 10px 0 20px #fff1,inset -10px 0 20px #0003;
+}
+body[data-skin="legacy83"] .r83-identity{
+  color:#252521;
+  border-bottom-color:#6b6861;
+  text-shadow:0 1px #fff;
+}
+body[data-skin="legacy83"] .r83-reel-bay{
+  border-width:6px;
+  border-color:#242728;
+  outline-color:#858178;
+  background:
+    radial-gradient(ellipse at 50% 18%,#52616a 0,#263139 24%,#11171b 54%,#060809 82%),
+    linear-gradient(180deg,#293238,#080a0b);
+  box-shadow:
+    inset 0 0 70px #000f,
+    inset 0 1px 2px #fff4,
+    inset 0 -12px 22px #000b,
+    0 6px 11px #0009;
+}
+body[data-skin="legacy83"] .r83-reel-bay::before{
+  background:
+    linear-gradient(116deg,#ffffff1f 0 7%,transparent 16% 69%,#ffffff0c 78%,transparent 87%),
+    radial-gradient(ellipse at 50% -10%,#d4efff13,transparent 52%);
+}
+body[data-skin="legacy83"] .r83-reel{
+  border:3px solid #5d6060;
+  background:
+    radial-gradient(circle,transparent 0 14%,#d4d3cd 14.5% 17%,#696d6e 17.5% 19%,transparent 19.5%),
+    conic-gradient(from -4deg,
+      #d8d7d2 0 11deg,#838687 11.5deg 15deg,transparent 15.5deg 55deg,
+      #d8d7d2 55.5deg 69deg,#838687 69.5deg 73deg,transparent 73.5deg 115deg,
+      #d8d7d2 115.5deg 129deg,#838687 129.5deg 133deg,transparent 133.5deg 175deg,
+      #d8d7d2 175.5deg 189deg,#838687 189.5deg 193deg,transparent 193.5deg 235deg,
+      #d8d7d2 235.5deg 249deg,#838687 249.5deg 253deg,transparent 253.5deg 295deg,
+      #d8d7d2 295.5deg 309deg,#838687 309.5deg 313deg,transparent 313.5deg 355deg,
+      #d8d7d2 355.5deg 360deg),
+    radial-gradient(circle,transparent 0 62%,#c8c7c1 62.5% 67%,#565a5b 67.5% 70%,#d9d8d2 70.5% 74%,#4d5152 74.5% 78%,transparent 78.5%);
+  box-shadow:
+    inset 0 0 6px #fff8,
+    inset 0 0 18px #0009,
+    0 8px 13px #000d,
+    0 0 0 1px #101213;
+  filter:drop-shadow(0 1px 1px #000);
+}
+body[data-skin="legacy83"] .r83-reel::before{
+  inset:5%;
+  border-color:#fff5;
+  box-shadow:inset 0 0 9px #000c,0 0 0 1px #1b1d1e;
+}
+body[data-skin="legacy83"] .r83-tape-pack{
+  background:
+    repeating-radial-gradient(circle,#2c140d 0 1.4px,#4c2619 1.8px 3px,#1f0d08 3.4px 4px);
+  box-shadow:inset 0 0 20px #000,0 0 0 2px #160b07,0 0 7px #000b;
+}
+body[data-skin="legacy83"] .r83-reel-hub{
+  inset:36%;
+  border:2px solid #242728;
+  background:
+    radial-gradient(circle at 34% 29%,#fbfaf5 0 5%,#c5c6c2 7% 15%,#747878 18% 29%,#292c2d 31% 47%,#c9cac5 50% 66%,#545859 69% 100%);
+  box-shadow:inset 0 1px 2px #fff,0 3px 6px #000d,0 0 0 1px #111;
+}
+body[data-skin="legacy83"] .r83-reel-hub::after{
+  inset:31%;
+  background:linear-gradient(135deg,#202324,#858887 48%,#353839);
+  box-shadow:inset 0 0 0 1px #aaa,0 1px 2px #000;
+}
+body[data-skin="legacy83"] .r83-tape{
+  height:3px;
+  background:linear-gradient(180deg,#9b6245 0,#4a2416 45%,#231008 100%);
+  box-shadow:0 1px 1px #000,0 0 2px #6e3a22;
+}
+body[data-skin="legacy83"] .r83-guide{
+  border:1px solid #292c2d;
+  background:radial-gradient(circle,#17191a 0 21%,#e1dfd8 24% 43%,#777a79 47% 68%,#272a2b 72% 100%);
+}
+body[data-skin="legacy83"] .r83-capstan{
+  border:1px solid #222526;
+  background:radial-gradient(circle,#f1eee7 0 18%,#8d9090 22% 53%,#303334 58% 74%,#111314 78%);
+}
+body[data-skin="legacy83"] .r83-pinch{
+  border:1px solid #202223;
+  background:radial-gradient(circle,#aaa9a4 0 10%,#101213 13% 60%,#343738 64% 75%,#0b0c0d 79%);
+}
+body[data-skin="legacy83"] .r83-tension{
+  height:6px;
+  background:linear-gradient(#f1eee6,#777a79 50%,#333637);
+  box-shadow:0 2px 4px #000c,inset 0 1px #fff8;
+}
+body[data-skin="legacy83"] .r83-head-block{
+  width:138px;
+  height:58px;
+  border-color:#3d4041;
+  background:linear-gradient(120deg,#d9d7d0 0,#888b8b 34%,#4e5253 57%,#b5b5b0 78%,#686b6b 100%);
+  box-shadow:inset 0 2px 1px #fff9,0 5px 7px #000d;
+}
+body[data-skin="legacy83"] .r83-head{
+  width:27px;height:31px;
+  border-color:#2f3233;
+  background:linear-gradient(90deg,#2f3233,#f0ede6 42%,#b3b4af 55%,#4f5354 100%);
+  box-shadow:inset 0 1px #fff9,0 2px 3px #0007;
+}
+body[data-skin="legacy83"] .r83-counter{
+  border-color:#45494a;
+  background:linear-gradient(#030506,#0e171b 55%,#030506);
+  box-shadow:inset 0 0 10px #4fbff744,0 2px 4px #000c;
+}
+body[data-skin="legacy83"] .r83-counter span{
+  border-color:#263b43;
+  color:#8edcff;
+  background:#050b0e;
+  text-shadow:0 0 7px #39b7ff;
+}
+body[data-skin="legacy83"] .r83-control-panel{
+  border-color:#55534e;
+  background:
+    repeating-linear-gradient(90deg,#fff0 0 2px,#ffffff0c 2px 3px,#0000000a 3px 5px),
+    linear-gradient(180deg,#c6c2b9,#8a8984 52%,#b3afa6);
+  box-shadow:inset 0 3px 8px #0006,inset 0 -1px #fff8,0 3px 5px #0006;
+}
+body[data-skin="legacy83"] .r83-knob{
+  border-color:#454846;
+  background:repeating-conic-gradient(#3f4241 0 3deg,#bebdb7 3.5deg 7deg);
+  box-shadow:inset 0 0 0 7px #999994,inset 0 0 12px #0009,0 4px 6px #0009;
+}
+body[data-skin="legacy83"] .r83-key{
+  border-color:#454643;
+  background:linear-gradient(180deg,#e6e2d9 0,#989994 54%,#676966 58%,#b6b3ab 100%);
+  box-shadow:inset 0 1px #fff,0 4px 4px #0008;
+}
+body[data-skin="legacy83"] .r83-specs{
+  color:#33312d;
+  text-shadow:0 1px #fff9;
+}
+
+@media(max-width:620px){
+  body[data-skin="legacy83"] .r83-head-block{width:116px;height:53px}
+  body[data-skin="legacy83"] .r83-head{width:23px;height:28px}
+}
