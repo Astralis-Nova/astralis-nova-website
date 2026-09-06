@@ -9,7 +9,7 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="../cover-3.jpg">
   <link rel="stylesheet" href="./player.css">
-  <link rel="stylesheet" href="./legacy83-components.css?v=68">
+  <link rel="stylesheet" href="./legacy83-components.css?v=69">
   <title>Astralis Nova Player</title>
 </head>
 <body data-skin="nova">
@@ -183,11 +183,20 @@
         </article>
 
         <article class="hifi-module cassette-module">
-          <div class="hifi-label"><span>STEREO CASSETTE DECK</span><span>DOLBY STYLE</span></div>
+          <div class="hifi-label"><span>STEREO CASSETTE DECK</span><span id="cassetteModeLabel">DOLBY B • READY</span></div>
           <div class="cassette-stage">
             <div class="cassette" aria-hidden="true">
               <div class="cassette-window"><span class="cassette-hub"></span><span class="cassette-hub"></span></div>
               <div class="cassette-name">ASTRALIS NOVA • TYPE II</div>
+            </div>
+            <div class="cassette-counter" aria-label="Cassette counter"><span>0</span><span>0</span><span>0</span><span>0</span></div>
+            <div class="cassette-controls" aria-label="Cassette transport controls">
+              <button type="button" data-cassette-action="eject" aria-label="Open or close cassette door" aria-pressed="false"><b>⏏</b><small>EJECT</small></button>
+              <button type="button" data-cassette-action="stop" aria-label="Stop cassette playback"><b>■</b><small>STOP</small></button>
+              <button type="button" data-cassette-action="play" aria-label="Play or pause cassette" aria-pressed="false"><b>▶</b><small>PLAY</small></button>
+              <button type="button" data-cassette-action="rewind" aria-label="Rewind 10 seconds"><b>◀◀</b><small>REW</small></button>
+              <button type="button" data-cassette-action="forward" aria-label="Fast forward 10 seconds"><b>▶▶</b><small>FF</small></button>
+              <button type="button" class="cassette-record" data-cassette-action="record" aria-label="Arm visual cassette recording mode" aria-pressed="false"><b>●</b><small>REC</small></button>
             </div>
           </div>
         </article>

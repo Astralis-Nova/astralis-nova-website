@@ -37,6 +37,7 @@
   const audio=$('audio'),cover=$('cover'),title=$('trackTitle'),artist=$('trackArtist'),playBtn=$('playBtn'),prevBtn=$('prevBtn'),nextBtn=$('nextBtn'),shuffleBtn=$('shuffleBtn'),repeatBtn=$('repeatBtn'),favoriteBtn=$('favoriteBtn'),seek=$('seek'),volume=$('volume'),timeReadout=$('timeReadout'),trackList=$('trackList'),search=$('search'),trackCount=$('trackCount'),skinSelect=$('skinSelect'),eqWindow=$('equalizer'),eqToggle=$('eqToggle'),eqPower=$('eqPower'),eqReset=$('eqReset'),eqPreset=$('eqPreset'),canvas=$('visualizer'),ctx=canvas.getContext('2d'),downloadTrackBtn=$('downloadTrackBtn'),downloadAllBtn=$('downloadAllBtn'),offlineStatus=$('offlineStatus');
   const reelDeck=document.querySelector('.reel-module'),reelCounterDigits=[...document.querySelectorAll('.r83-counter span')],reelTransportButtons=[...document.querySelectorAll('[data-reel-action]')],reelPlayButton=document.querySelector('[data-reel-action="play"]'),reelRecordButton=document.querySelector('[data-reel-action="record"]');
   const reverbModule=document.querySelector('.reverb-module'),reverbTunnel=document.querySelector('.reverb-tunnel'),reverbModeLabel=$('reverbModeLabel'),reverbPreset=$('reverbPreset'),reverbMix=$('reverbMix'),reverbDepth=$('reverbDepth'),reverbDecay=$('reverbDecay'),reverbPreDelay=$('reverbPreDelay'),reverbMixValue=$('reverbMixValue'),reverbDepthValue=$('reverbDepthValue'),reverbDecayValue=$('reverbDecayValue'),reverbPreDelayValue=$('reverbPreDelayValue');
+  const cassetteModule=document.querySelector('.cassette-module'),cassetteModeLabel=$('cassetteModeLabel'),cassetteCounterDigits=[...document.querySelectorAll('.cassette-counter span')],cassetteButtons=[...document.querySelectorAll('[data-cassette-action]')],cassettePlayButton=document.querySelector('[data-cassette-action="play"]'),cassetteEjectButton=document.querySelector('[data-cassette-action="eject"]'),cassetteRecordButton=document.querySelector('[data-cassette-action="record"]');
 
   let current=Number(localStorage.getItem('nova.current')||2); if(!Number.isInteger(current)||!tracks[current]) current=0;
   let shuffle=localStorage.getItem('nova.shuffle')==='1',repeat=localStorage.getItem('nova.repeat')==='1';
@@ -70,7 +71,7 @@
     const savedReverb=JSON.parse(localStorage.getItem('nova.reverb')||'null');
     if(savedReverb&&reverbPresets[savedReverb.preset])reverbState={...reverbPresets[savedReverb.preset],...savedReverb};
   }catch{localStorage.removeItem('nova.reverb');}
-  let reelRecordArmed=false;
+  let reelRecordArmed=false,cassetteRecordArmed=false,cassetteEjected=false;
 
   const fmt=s=>{if(!Number.isFinite(s))return'0:00';const m=Math.floor(s/60),sec=Math.floor(s%60).toString().padStart(2,'0');return `${m}:${sec}`};
   const absoluteSrc=t=>new URL(t.src,location.href).href;
@@ -81,6 +82,7 @@
     const running=!audio.paused&&!audio.ended;
     reelDeck.classList.toggle('is-playing',running);
     if(reelPlayButton)reelPlayButton.setAttribute('aria-pressed',String(running));
+    updateCassetteMotion();
   }
   function updateReelCounter(){
     if(!reelCounterDigits.length)return;
@@ -106,6 +108,50 @@
     if(action==='forward'){seekReelBy(10);return;}
     if(action==='record')toggleReelRecord();
   }
+
+  function updateCassetteMotion(){
+    if(!cassetteModule)return;
+    const running=!audio.paused&&!audio.ended&&!cassetteEjected;
+    cassetteModule.classList.toggle('is-playing',running);
+    if(cassettePlayButton)cassettePlayButton.setAttribute('aria-pressed',String(running));
+    if(cassetteModeLabel)cassetteModeLabel.textContent=cassetteEjected?'EJECT':cassetteRecordArmed?'REC ARM':running?'DOLBY B • PLAY':'DOLBY B • READY';
+  }
+  function updateCassetteCounter(){
+    if(!cassetteCounterDigits.length)return;
+    const count=Math.max(0,Math.floor((Number.isFinite(audio.currentTime)?audio.currentTime:0)*2))%10000;
+    String(count).padStart(4,'0').split('').forEach((digit,index)=>{cassetteCounterDigits[index].textContent=digit;});
+  }
+  function toggleCassetteRecord(){
+    cassetteRecordArmed=!cassetteRecordArmed;
+    cassetteRecordButton?.setAttribute('aria-pressed',String(cassetteRecordArmed));
+    cassetteModule?.classList.toggle('is-record-armed',cassetteRecordArmed);
+    updateCassetteMotion();
+    offlineStatus.textContent=cassetteRecordArmed?'Cassette REC armed for visual monitoring — no audio file is being recorded.':'Cassette REC disarmed.';
+  }
+  function pulseCassetteTransport(name){
+    if(!cassetteModule)return;
+    cassetteModule.classList.remove('is-rewinding','is-forwarding');
+    cassetteModule.classList.add(name);
+    setTimeout(()=>cassetteModule.classList.remove(name),320);
+  }
+  function handleCassetteTransport(event){
+    const action=event.currentTarget.dataset.cassetteAction;
+    if(action==='eject'){
+      audio.pause();cassetteEjected=!cassetteEjected;
+      cassetteModule?.classList.toggle('is-ejected',cassetteEjected);
+      cassetteEjectButton?.setAttribute('aria-pressed',String(cassetteEjected));
+      updateCassetteMotion();return;
+    }
+    if(action==='play'){
+      if(cassetteEjected){cassetteEjected=false;cassetteModule?.classList.remove('is-ejected');cassetteEjectButton?.setAttribute('aria-pressed','false');}
+      togglePlayback();return;
+    }
+    if(action==='stop'){audio.pause();updateCassetteMotion();return;}
+    if(action==='rewind'){seekReelBy(-10);updateCassetteCounter();pulseCassetteTransport('is-rewinding');return;}
+    if(action==='forward'){seekReelBy(10);updateCassetteCounter();pulseCassetteTransport('is-forwarding');return;}
+    if(action==='record')toggleCassetteRecord();
+  }
+
 
 
   async function refreshOfflineState(){
@@ -264,17 +310,18 @@
 
   audio.addEventListener('play',()=>{playBtn.textContent='❚❚';playBtn.setAttribute('aria-label','Pause');updateReelDeckMotion();renderTracks();});
   audio.addEventListener('playing',updateReelDeckMotion);
-  audio.addEventListener('waiting',()=>reelDeck?.classList.remove('is-playing'));
-  audio.addEventListener('stalled',()=>reelDeck?.classList.remove('is-playing'));
+  audio.addEventListener('waiting',()=>{reelDeck?.classList.remove('is-playing');cassetteModule?.classList.remove('is-playing');});
+  audio.addEventListener('stalled',()=>{reelDeck?.classList.remove('is-playing');cassetteModule?.classList.remove('is-playing');});
   audio.addEventListener('pause',()=>{playBtn.textContent='▶';playBtn.setAttribute('aria-label','Play');updateReelDeckMotion();renderTracks();});
-  audio.addEventListener('emptied',updateReelCounter);
-  audio.addEventListener('loadedmetadata',()=>{updateReelCounter();tracks[current].duration=fmt(audio.duration);timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;renderTracks();});
-  audio.addEventListener('timeupdate',()=>{updateReelCounter();if(!userSeeking&&Number.isFinite(audio.duration)&&audio.duration>0)seek.value=String(Math.round((audio.currentTime/audio.duration)*1000));timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;if('mediaSession'in navigator&&Number.isFinite(audio.duration)&&audio.duration>0){try{navigator.mediaSession.setPositionState({duration:audio.duration,playbackRate:audio.playbackRate,position:Math.min(audio.currentTime,audio.duration)});}catch{}}});
+  audio.addEventListener('emptied',()=>{updateReelCounter();updateCassetteCounter();});
+  audio.addEventListener('loadedmetadata',()=>{updateReelCounter();updateCassetteCounter();tracks[current].duration=fmt(audio.duration);timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;renderTracks();});
+  audio.addEventListener('timeupdate',()=>{updateReelCounter();updateCassetteCounter();if(!userSeeking&&Number.isFinite(audio.duration)&&audio.duration>0)seek.value=String(Math.round((audio.currentTime/audio.duration)*1000));timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;if('mediaSession'in navigator&&Number.isFinite(audio.duration)&&audio.duration>0){try{navigator.mediaSession.setPositionState({duration:audio.duration,playbackRate:audio.playbackRate,position:Math.min(audio.currentTime,audio.duration)});}catch{}}});
   audio.addEventListener('ended',()=>{updateReelDeckMotion();repeat?(audio.currentTime=0,playAudio()):nextTrack();});
   audio.addEventListener('error',()=>{timeReadout.textContent='Track unavailable';if(!navigator.onLine&&!offlineIds.has(current))offlineStatus.textContent='This track was not downloaded. Reconnect to save it for offline use.';});
 
   playBtn.addEventListener('click',togglePlayback);prevBtn.addEventListener('click',prevTrack);nextBtn.addEventListener('click',nextTrack);
   reelTransportButtons.forEach(button=>button.addEventListener('click',handleReelTransport));
+  cassetteButtons.forEach(button=>button.addEventListener('click',handleCassetteTransport));
   shuffleBtn.addEventListener('click',()=>{shuffle=!shuffle;localStorage.setItem('nova.shuffle',shuffle?'1':'0');shuffleBtn.setAttribute('aria-pressed',String(shuffle));});
   repeatBtn.addEventListener('click',()=>{repeat=!repeat;localStorage.setItem('nova.repeat',repeat?'1':'0');repeatBtn.setAttribute('aria-pressed',String(repeat));});
   favoriteBtn.addEventListener('click',()=>{const id=tracks[current].id;favorites.has(id)?favorites.delete(id):favorites.add(id);localStorage.setItem('nova.favorites',JSON.stringify([...favorites]));updateFavoriteUI();renderTracks();});
