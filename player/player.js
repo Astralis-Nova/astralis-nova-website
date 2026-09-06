@@ -35,7 +35,7 @@
 
   const $ = id => document.getElementById(id);
   const audio=$('audio'),cover=$('cover'),title=$('trackTitle'),artist=$('trackArtist'),playBtn=$('playBtn'),prevBtn=$('prevBtn'),nextBtn=$('nextBtn'),shuffleBtn=$('shuffleBtn'),repeatBtn=$('repeatBtn'),favoriteBtn=$('favoriteBtn'),seek=$('seek'),volume=$('volume'),timeReadout=$('timeReadout'),trackList=$('trackList'),search=$('search'),trackCount=$('trackCount'),skinSelect=$('skinSelect'),eqWindow=$('equalizer'),eqToggle=$('eqToggle'),eqPower=$('eqPower'),eqReset=$('eqReset'),eqPreset=$('eqPreset'),canvas=$('visualizer'),ctx=canvas.getContext('2d'),downloadTrackBtn=$('downloadTrackBtn'),downloadAllBtn=$('downloadAllBtn'),offlineStatus=$('offlineStatus');
-  const reelDeck=document.querySelector('.reel-module'),reelCounterDigits=[...document.querySelectorAll('.r83-counter span')];
+  const reelDeck=document.querySelector('.reel-module'),reelCounterDigits=[...document.querySelectorAll('.r83-counter span')],reelTransportButtons=[...document.querySelectorAll('[data-reel-action]')],reelPlayButton=document.querySelector('[data-reel-action="play"]'),reelRecordButton=document.querySelector('[data-reel-action="record"]');
 
   let current=Number(localStorage.getItem('nova.current')||2); if(!Number.isInteger(current)||!tracks[current]) current=0;
   let shuffle=localStorage.getItem('nova.shuffle')==='1',repeat=localStorage.getItem('nova.repeat')==='1';
@@ -55,6 +55,7 @@
     night:[-5,-4,-2,0,1,1,0,-2,-3,-4]
   };
   let audioContext,sourceNode,analyser,filters=[],eqEnabled=true;
+  let reelRecordArmed=false;
 
   const fmt=s=>{if(!Number.isFinite(s))return'0:00';const m=Math.floor(s/60),sec=Math.floor(s%60).toString().padStart(2,'0');return `${m}:${sec}`};
   const absoluteSrc=t=>new URL(t.src,location.href).href;
@@ -62,12 +63,33 @@
 
   function updateReelDeckMotion(){
     if(!reelDeck)return;
-    reelDeck.classList.toggle('is-playing',!audio.paused&&!audio.ended);
+    const running=!audio.paused&&!audio.ended;
+    reelDeck.classList.toggle('is-playing',running);
+    if(reelPlayButton)reelPlayButton.setAttribute('aria-pressed',String(running));
   }
   function updateReelCounter(){
     if(!reelCounterDigits.length)return;
     const count=Math.max(0,Math.floor((Number.isFinite(audio.currentTime)?audio.currentTime:0)*3))%10000;
     String(count).padStart(4,'0').split('').forEach((digit,index)=>{reelCounterDigits[index].textContent=digit;});
+  }
+  function seekReelBy(seconds){
+    if(!Number.isFinite(audio.duration)||audio.duration<=0)return;
+    audio.currentTime=Math.min(audio.duration,Math.max(0,audio.currentTime+seconds));
+    updateReelCounter();
+  }
+  function toggleReelRecord(){
+    reelRecordArmed=!reelRecordArmed;
+    if(reelRecordButton)reelRecordButton.setAttribute('aria-pressed',String(reelRecordArmed));
+    reelDeck?.classList.toggle('is-record-armed',reelRecordArmed);
+    offlineStatus.textContent=reelRecordArmed?'Reel deck REC armed for visual monitoring — no audio file is being recorded.':'Reel deck REC disarmed.';
+  }
+  function handleReelTransport(event){
+    const action=event.currentTarget.dataset.reelAction;
+    if(action==='play'){togglePlayback();return;}
+    if(action==='stop'){audio.pause();audio.currentTime=0;updateReelCounter();return;}
+    if(action==='rewind'){seekReelBy(-10);return;}
+    if(action==='forward'){seekReelBy(10);return;}
+    if(action==='record')toggleReelRecord();
   }
 
 
@@ -170,6 +192,7 @@
   audio.addEventListener('error',()=>{timeReadout.textContent='Track unavailable';if(!navigator.onLine&&!offlineIds.has(current))offlineStatus.textContent='This track was not downloaded. Reconnect to save it for offline use.';});
 
   playBtn.addEventListener('click',togglePlayback);prevBtn.addEventListener('click',prevTrack);nextBtn.addEventListener('click',nextTrack);
+  reelTransportButtons.forEach(button=>button.addEventListener('click',handleReelTransport));
   shuffleBtn.addEventListener('click',()=>{shuffle=!shuffle;localStorage.setItem('nova.shuffle',shuffle?'1':'0');shuffleBtn.setAttribute('aria-pressed',String(shuffle));});
   repeatBtn.addEventListener('click',()=>{repeat=!repeat;localStorage.setItem('nova.repeat',repeat?'1':'0');repeatBtn.setAttribute('aria-pressed',String(repeat));});
   favoriteBtn.addEventListener('click',()=>{const id=tracks[current].id;favorites.has(id)?favorites.delete(id):favorites.add(id);localStorage.setItem('nova.favorites',JSON.stringify([...favorites]));updateFavoriteUI();renderTracks();});
