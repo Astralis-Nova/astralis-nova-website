@@ -30,24 +30,37 @@
       return Math.abs(Number(slider.value) - 107.9) < 0.05;
     }
 
+    let refreshing = false;
     function refresh(){
-      const at1079 = is1079();
-      const text = `${station.textContent || ''} ${status.textContent || ''}`.toUpperCase();
-      const streamProblem = /STREAM ERROR|NO STREAM|NO CALIBRATED|UNAVAILABLE|NO STATIONS/.test(text);
+      if (refreshing) return;
+      refreshing = true;
+      try {
+        const at1079 = is1079();
+        const text = `${station.textContent || ''} ${status.textContent || ''}`.toUpperCase();
+        const streamProblem = /STREAM ERROR|NO STREAM|NO CALIBRATED|UNAVAILABLE|NO STATIONS/.test(text);
 
-      if (at1079) {
-        station.textContent = 'KMLE • KMLE COUNTRY 107.9';
-        btn.hidden = !streamProblem;
-        tuner.classList.add('is-tuned');
-      } else {
-        btn.hidden = true;
+        if (at1079) {
+          const kmleLabel = 'KMLE • KMLE COUNTRY 107.9';
+          // MutationObserver watches this node. Only write when the value truly changes,
+          // otherwise textContent would retrigger the observer forever and freeze the UI.
+          if (station.textContent !== kmleLabel) station.textContent = kmleLabel;
+          btn.hidden = !streamProblem;
+          tuner.classList.add('is-tuned');
+        } else {
+          btn.hidden = true;
+        }
+      } finally {
+        refreshing = false;
       }
     }
 
     slider.addEventListener('input', refresh);
     slider.addEventListener('change', () => setTimeout(refresh, 250));
 
-    const observer = new MutationObserver(refresh);
+    const observer = new MutationObserver(() => {
+      // Coalesce status/station mutations into one refresh per frame.
+      requestAnimationFrame(refresh);
+    });
     observer.observe(status, {childList:true, characterData:true, subtree:true});
     observer.observe(station, {childList:true, characterData:true, subtree:true});
 
