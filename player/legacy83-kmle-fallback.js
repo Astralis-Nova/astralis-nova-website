@@ -2,7 +2,7 @@
   'use strict';
 
   const KMLE_PAGE = 'https://www.audacy.com/kmle1079';
-  const KMLE_STREAM = 'https://live.amperwave.net/direct/audacy-kmlefmaac-imc';
+  const KMLE_STREAM = '/api/kmle';
 
   function install(){
     const tuner = document.querySelector('.tuner-module');
@@ -18,8 +18,8 @@
     const mainAudio = document.getElementById('audio');
     if (!slider || !station || !status || !searchPanel) return false;
 
-    // Dedicated radio element avoids the song EQ/reverb Web Audio graph, which can mute
-    // cross-origin live streams on some browsers.
+    // Dedicated radio element. KMLE is routed through our same-origin endpoint so
+    // the radio can safely use its own EQ/reverb Web Audio graph.
     const radioAudio = new Audio();
     radioAudio.preload = 'none';
     radioAudio.src = KMLE_STREAM;
@@ -63,7 +63,7 @@
         mainAudio?.pause();
         setLabel();
         status.textContent='107.9 KMLE • CONNECTING…';
-        if(radioAudio.src !== KMLE_STREAM) radioAudio.src = KMLE_STREAM;
+        if(!radioAudio.src.endsWith(KMLE_STREAM)) radioAudio.src = KMLE_STREAM;
         radioAudio.load();
         await radioAudio.play();
         status.textContent='107.9 KMLE • LIVE';
@@ -71,7 +71,7 @@
         official.hidden = true;
         notify(true);
       }catch(err){
-        console.warn('KMLE direct stream failed',err);
+        console.warn('KMLE stream failed',err);
         status.textContent='107.9 KMLE • STREAM BLOCKED';
         btn.textContent='▶ 107.9 KMLE • RETRY LIVE';
         official.hidden=false;
