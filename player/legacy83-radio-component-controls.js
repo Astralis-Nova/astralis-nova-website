@@ -64,16 +64,16 @@
 
     needles().forEach((n,i)=>{
       const angle=-40+level*(58+i*5);
-      n.style.transform=`rotate(${angle.toFixed(1)}deg)`;
+      n.style.setProperty('transform',`rotate(${angle.toFixed(1)}deg)`,'important');
     });
 
     const amount=visualReverbAmount();
     if(amount>0){
       rings().forEach((r,i)=>{
         const scale=1+level*amount*(0.04+i*0.017);
-        r.style.transform=`scale(${scale.toFixed(3)})`;
-        r.style.opacity=String(Math.max(.28,1-i*.13+level*amount*.16));
-        r.style.filter=`brightness(${(0.92+level*amount*.55).toFixed(2)})`;
+        r.style.setProperty('transform',`scale(${scale.toFixed(3)})`,'important');
+        r.style.setProperty('opacity',String(Math.max(.28,1-i*.13+level*amount*.16)),'important');
+        r.style.setProperty('filter',`brightness(${(0.92+level*amount*.55).toFixed(2)})`,'important');
       });
     }else{
       rings().forEach(r=>{
@@ -88,7 +88,7 @@
       if(!eqOn){slider.style.removeProperty('filter');return;}
       const value=Math.abs(Number(slider.value||0));
       const glow=.9+level*.3+Math.min(.25,value/48)+(i%2)*.02;
-      slider.style.filter=`brightness(${glow.toFixed(2)})`;
+      slider.style.setProperty('filter',`brightness(${glow.toFixed(2)})`,'important');
     });
 
     frame=requestAnimationFrame(animate);
@@ -143,13 +143,16 @@
 
   const style=document.createElement('style');
   style.textContent=`
-    .cassette-module.radio-visual-live .cassette-window{animation:cassetteRadioPulse .75s ease-in-out infinite alternate}
+    .cassette-module.radio-visual-live .cassette-window{animation:legacy83CassetteRadioPulse .72s ease-in-out infinite alternate!important}
+    .cassette-module.radio-visual-live .cassette-hub{animation:legacy83CassetteHubSpin 1.05s linear infinite!important}
     .reverb-module.radio-visual-live .reverb-tunnel{filter:brightness(1.08)}
     #equalizer.radio-visual-live{box-shadow:inset 0 0 22px rgba(120,210,255,.08),0 0 14px rgba(120,210,255,.08)}
     #equalizer.radio-visual-live .window-title .tagline::after{content:' • RADIO VISUAL';opacity:.8}
     #equalizer.radio-visual-live .eq-toolbar{animation:legacy83EqRadioGlow 1.25s ease-in-out infinite alternate}
     body.legacy83-radio-components-live .meter-module{box-shadow:inset 0 0 18px rgba(255,210,120,.07)}
     @keyframes legacy83EqRadioGlow{from{filter:brightness(.96)}to{filter:brightness(1.12)}}
+    @keyframes legacy83CassetteRadioPulse{from{filter:brightness(.92)}to{filter:brightness(1.16)}}
+    @keyframes legacy83CassetteHubSpin{to{transform:rotate(360deg)}}
   `;
   document.head.appendChild(style);
 
