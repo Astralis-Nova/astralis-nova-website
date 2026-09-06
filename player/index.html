@@ -74,7 +74,26 @@
 
     <section id="equalizer" class="eq-window panel">
       <div class="window-title"><span>✦ ASTRALIS NOVA EQUALIZER</span><span>SHAPE YOUR UNIVERSE</span></div>
-      <div class="eq-toolbar"><button id="eqPower" class="chip active" aria-pressed="true">EQ ON</button><button id="eqReset" class="chip">Reset</button></div>
+      <div class="eq-toolbar">
+        <button id="eqPower" class="chip active" aria-pressed="true">EQ ON</button>
+        <label class="skin-picker">Preset
+          <select id="eqPreset" aria-label="Equalizer preset">
+            <option value="flat">Flat</option>
+            <option value="bass">Bass Boost</option>
+            <option value="treble">Treble Boost</option>
+            <option value="vocal">Vocal</option>
+            <option value="rock">Rock</option>
+            <option value="pop">Pop</option>
+            <option value="classical">Classical</option>
+            <option value="hiphop">Hip-Hop</option>
+            <option value="electronic">Electronic</option>
+            <option value="podcast">Podcast / Spoken Word</option>
+            <option value="night">Night Mode</option>
+            <option value="custom">Custom</option>
+          </select>
+        </label>
+        <button id="eqReset" class="chip">Reset</button>
+      </div>
       <div id="eqSliders" class="eq-sliders" aria-label="Equalizer controls"></div>
     </section>
 

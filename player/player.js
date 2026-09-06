@@ -34,12 +34,25 @@
   ].map((item,id)=>({id,title:item[0],src:'../'+encodeURI(item[1]),cover:'../'+item[2],artist:'Astralis Nova',duration:''}));
 
   const $ = id => document.getElementById(id);
-  const audio=$('audio'),cover=$('cover'),title=$('trackTitle'),artist=$('trackArtist'),playBtn=$('playBtn'),prevBtn=$('prevBtn'),nextBtn=$('nextBtn'),shuffleBtn=$('shuffleBtn'),repeatBtn=$('repeatBtn'),favoriteBtn=$('favoriteBtn'),seek=$('seek'),volume=$('volume'),timeReadout=$('timeReadout'),trackList=$('trackList'),search=$('search'),trackCount=$('trackCount'),skinSelect=$('skinSelect'),eqWindow=$('equalizer'),eqToggle=$('eqToggle'),eqPower=$('eqPower'),eqReset=$('eqReset'),canvas=$('visualizer'),ctx=canvas.getContext('2d'),downloadTrackBtn=$('downloadTrackBtn'),downloadAllBtn=$('downloadAllBtn'),offlineStatus=$('offlineStatus');
+  const audio=$('audio'),cover=$('cover'),title=$('trackTitle'),artist=$('trackArtist'),playBtn=$('playBtn'),prevBtn=$('prevBtn'),nextBtn=$('nextBtn'),shuffleBtn=$('shuffleBtn'),repeatBtn=$('repeatBtn'),favoriteBtn=$('favoriteBtn'),seek=$('seek'),volume=$('volume'),timeReadout=$('timeReadout'),trackList=$('trackList'),search=$('search'),trackCount=$('trackCount'),skinSelect=$('skinSelect'),eqWindow=$('equalizer'),eqToggle=$('eqToggle'),eqPower=$('eqPower'),eqReset=$('eqReset'),eqPreset=$('eqPreset'),canvas=$('visualizer'),ctx=canvas.getContext('2d'),downloadTrackBtn=$('downloadTrackBtn'),downloadAllBtn=$('downloadAllBtn'),offlineStatus=$('offlineStatus');
 
   let current=Number(localStorage.getItem('nova.current')||2); if(!Number.isInteger(current)||!tracks[current]) current=0;
   let shuffle=localStorage.getItem('nova.shuffle')==='1',repeat=localStorage.getItem('nova.repeat')==='1';
   let favorites=new Set(JSON.parse(localStorage.getItem('nova.favorites')||'[]')),offlineIds=new Set(),filter='all',userSeeking=false,deferredInstallPrompt=null;
   const frequencies=[60,170,310,600,1000,3000,6000,12000,14000,16000];
+  const eqPresets={
+    flat:[0,0,0,0,0,0,0,0,0,0],
+    bass:[7,6,5,3,1,0,0,0,0,0],
+    treble:[0,0,0,0,0,1,3,5,6,6],
+    vocal:[-2,-1,0,2,4,5,3,1,0,-1],
+    rock:[5,4,2,0,-1,1,3,4,5,5],
+    pop:[2,3,2,0,-1,1,2,3,3,2],
+    classical:[1,1,0,-1,-1,0,2,3,4,4],
+    hiphop:[7,6,4,1,0,1,3,4,3,2],
+    electronic:[6,5,3,1,0,2,4,5,5,4],
+    podcast:[-4,-3,-1,2,5,6,4,1,-1,-2],
+    night:[-5,-4,-2,0,1,1,0,-2,-3,-4]
+  };
   let audioContext,sourceNode,analyser,filters=[],eqEnabled=true;
 
   const fmt=s=>{if(!Number.isFinite(s))return'0:00';const m=Math.floor(s/60),sec=Math.floor(s%60).toString().padStart(2,'0');return `${m}:${sec}`};
@@ -103,7 +116,33 @@
   function visibleTracks(){const q=search.value.trim().toLowerCase();return tracks.filter(t=>(!q||t.title.toLowerCase().includes(q))&&(filter!=='favorites'||favorites.has(t.id))&&(filter!=='offline'||offlineIds.has(t.id)));}
   function renderTracks(){const visible=visibleTracks();trackCount.textContent=`${visible.length} TRACK${visible.length===1?'':'S'}`;trackList.textContent='';visible.forEach(track=>{const button=document.createElement('button');button.className='track-row'+(track.id===current?' active':'');button.type='button';button.setAttribute('role','listitem');const badges=[favorites.has(track.id)?'★ Favorite':'',offlineIds.has(track.id)?'✓ Offline':''].filter(Boolean).join(' • ');button.innerHTML=`<span class="track-index">${track.id===current&&!audio.paused?'▶':String(track.id+1).padStart(2,'0')}</span><span class="track-name">${escapeHtml(track.title)}<small>${badges||'Astralis Nova'}</small></span><span class="track-artist">Astralis Nova</span><span class="track-duration">${track.duration||'—:—'}</span>`;button.addEventListener('click',()=>loadTrack(track.id,true));trackList.appendChild(button);});}
 
-  function buildEq(){const saved=JSON.parse(localStorage.getItem('nova.eq')||'[]'),host=$('eqSliders');frequencies.forEach((freq,i)=>{const wrap=document.createElement('label');wrap.className='eq-channel';const output=document.createElement('output'),slider=document.createElement('input');slider.type='range';slider.min='-12';slider.max='12';slider.step='1';slider.value=Number.isFinite(saved[i])?saved[i]:0;slider.dataset.index=String(i);slider.setAttribute('aria-label',`${freq} hertz equalizer`);output.textContent=`${slider.value} dB`;slider.addEventListener('input',()=>{output.textContent=`${slider.value} dB`;const values=[...host.querySelectorAll('input')].map(el=>Number(el.value));localStorage.setItem('nova.eq',JSON.stringify(values));if(filters[i]&&eqEnabled)filters[i].gain.value=Number(slider.value);});const label=document.createElement('span');label.textContent=freq>=1000?`${freq/1000}K`:String(freq);wrap.append(output,slider,label);host.appendChild(wrap);});}
+  function applyPreset(name){
+    if(name==='custom'){localStorage.setItem('nova.eqPreset','custom');return;}
+    const values=eqPresets[name]||eqPresets.flat;
+    document.querySelectorAll('#eqSliders input').forEach((slider,i)=>{slider.value=String(values[i]||0);slider.dispatchEvent(new Event('input'));});
+    localStorage.setItem('nova.eqPreset',name);
+    eqPreset.value=name;
+  }
+
+  function buildEq(){
+    const saved=JSON.parse(localStorage.getItem('nova.eq')||'[]'),host=$('eqSliders');
+    frequencies.forEach((freq,i)=>{
+      const wrap=document.createElement('label');wrap.className='eq-channel';
+      const output=document.createElement('output'),slider=document.createElement('input');
+      slider.type='range';slider.min='-12';slider.max='12';slider.step='1';slider.value=Number.isFinite(saved[i])?saved[i]:0;slider.dataset.index=String(i);slider.setAttribute('aria-label',`${freq} hertz equalizer`);output.textContent=`${slider.value} dB`;
+      slider.addEventListener('input',()=>{
+        output.textContent=`${slider.value} dB`;
+        const values=[...host.querySelectorAll('input')].map(el=>Number(el.value));
+        localStorage.setItem('nova.eq',JSON.stringify(values));
+        if(filters[i]&&eqEnabled)filters[i].gain.value=Number(slider.value);
+        if(document.activeElement===slider){eqPreset.value='custom';localStorage.setItem('nova.eqPreset','custom');}
+      });
+      const label=document.createElement('span');label.textContent=freq>=1000?`${freq/1000}K`:String(freq);wrap.append(output,slider,label);host.appendChild(wrap);
+    });
+    const savedPreset=localStorage.getItem('nova.eqPreset')||'flat';
+    eqPreset.value=savedPreset;
+    if(savedPreset!=='custom') applyPreset(savedPreset);
+  }
   function applyEqValues(){document.querySelectorAll('#eqSliders input').forEach((slider,i)=>{if(filters[i])filters[i].gain.value=eqEnabled?Number(slider.value):0;});}
   function drawVisualizer(){if(!analyser)return;const data=new Uint8Array(analyser.frequencyBinCount);const render=()=>{requestAnimationFrame(render);const w=canvas.width,h=canvas.height;analyser.getByteFrequencyData(data);ctx.clearRect(0,0,w,h);const barW=w/data.length,accent=getComputedStyle(document.body).getPropertyValue('--accent').trim()||'#49dfff',accent2=getComputedStyle(document.body).getPropertyValue('--accent-2').trim()||'#9d66ff',gradient=ctx.createLinearGradient(0,h,0,0);gradient.addColorStop(0,accent);gradient.addColorStop(1,accent2);ctx.fillStyle=gradient;for(let i=0;i<data.length;i++){const barH=Math.max(2,(data[i]/255)*h*.92);ctx.fillRect(i*barW,h-barH,Math.max(1,barW-2),barH);}};render();}
 
@@ -122,7 +161,11 @@
   seek.addEventListener('pointerdown',()=>userSeeking=true);seek.addEventListener('pointerup',()=>userSeeking=false);seek.addEventListener('change',()=>{if(Number.isFinite(audio.duration))audio.currentTime=(Number(seek.value)/1000)*audio.duration;userSeeking=false;});
   volume.addEventListener('input',()=>{audio.volume=Number(volume.value);localStorage.setItem('nova.volume',volume.value);});search.addEventListener('input',renderTracks);
   document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t===tab);t.setAttribute('aria-selected',String(t===tab));});filter=tab.dataset.filter;renderTracks();}));
-  skinSelect.addEventListener('change',()=>{document.body.dataset.skin=skinSelect.value;localStorage.setItem('nova.skin',skinSelect.value);});eqToggle.addEventListener('click',()=>{const collapsed=eqWindow.classList.toggle('collapsed');eqToggle.setAttribute('aria-expanded',String(!collapsed));});eqPower.addEventListener('click',()=>{eqEnabled=!eqEnabled;eqPower.classList.toggle('active',eqEnabled);eqPower.setAttribute('aria-pressed',String(eqEnabled));eqPower.textContent=eqEnabled?'EQ ON':'EQ OFF';applyEqValues();});eqReset.addEventListener('click',()=>document.querySelectorAll('#eqSliders input').forEach(s=>{s.value='0';s.dispatchEvent(new Event('input'));}));
+  skinSelect.addEventListener('change',()=>{document.body.dataset.skin=skinSelect.value;localStorage.setItem('nova.skin',skinSelect.value);});
+  eqToggle.addEventListener('click',()=>{const collapsed=eqWindow.classList.toggle('collapsed');eqToggle.setAttribute('aria-expanded',String(!collapsed));});
+  eqPower.addEventListener('click',()=>{eqEnabled=!eqEnabled;eqPower.classList.toggle('active',eqEnabled);eqPower.setAttribute('aria-pressed',String(eqEnabled));eqPower.textContent=eqEnabled?'EQ ON':'EQ OFF';applyEqValues();});
+  eqPreset.addEventListener('change',()=>applyPreset(eqPreset.value));
+  eqReset.addEventListener('click',()=>{eqPreset.value='flat';applyPreset('flat');});
   window.addEventListener('online',refreshOfflineState);window.addEventListener('offline',refreshOfflineState);
 
   if('mediaSession'in navigator){for(const [action,handler] of [['play',playAudio],['pause',()=>audio.pause()],['previoustrack',prevTrack],['nexttrack',nextTrack],['seekbackward',d=>audio.currentTime=Math.max(0,audio.currentTime-(d.seekOffset||10))],['seekforward',d=>audio.currentTime=Math.min(audio.duration||Infinity,audio.currentTime+(d.seekOffset||10))],['seekto',d=>{if(d.seekTime!=null)audio.currentTime=d.seekTime;}]] ){try{navigator.mediaSession.setActionHandler(action,handler);}catch{}}}
