@@ -152,7 +152,7 @@ body[data-skin="legacy83"] .legacy83-rack{display:block}
   border:1px solid #fff6;box-shadow:inset 0 0 8px #000b,0 0 0 1px #1c1e1f;
 }
 .r83-tape-pack{
-  position:absolute;z-index:-1;left:50%;top:50%;transform:translate(-50%,-50%);
+  position:absolute;z-index:1;left:50%;top:50%;transform:translate(-50%,-50%);
   width:61%;aspect-ratio:1;border-radius:50%;
   background:repeating-radial-gradient(circle,#32180f 0 2px,#5b2c1d 2.5px 4px,#2a140d 4.5px 5px);
   box-shadow:inset 0 0 16px #000,0 0 0 2px #21100a;
