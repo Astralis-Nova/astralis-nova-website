@@ -71,8 +71,8 @@
   let reverbPreDelayNode,reverbConvolver,reverbDryGain,reverbWetGain,reverbEchoDelay,reverbEchoFeedback,reverbEchoGain,reverbImpulseTimer;
   let vuSplitter,vuAnalyserLeft,vuAnalyserRight,vuLeftLevel=0,vuRightLevel=0;
   const vuDataLeft=new Float32Array(256),vuDataRight=new Float32Array(256);
-  let reverbMotionLevel=0,reverbMotionFrame=0;
-  const reverbMotionHistory=[0,0,0,0,0],reverbRingOpacity=[1,.86,.72,.58,.45];
+  let reverbMotionLevel=0,reverbMotionPhase=0;
+  const reverbRingOpacity=[1,.86,.72,.58,.45];
   let reverbState={preset:'off',...reverbPresets.off};
   try{
     const savedReverb=JSON.parse(localStorage.getItem('nova.reverb')||'null');
@@ -387,14 +387,17 @@
     for(let i=0;i<bins;i++){const sample=data[i]/255;energy+=sample*sample;}
     const target=active?clamp(Math.sqrt(energy/bins)*2.15,0,1):0;
     reverbMotionLevel+=(target-reverbMotionLevel)*(target>reverbMotionLevel ? .38 : .105);
-    if(++reverbMotionFrame%3===0){reverbMotionHistory.unshift(reverbMotionLevel);reverbMotionHistory.pop();}
-    reverbTunnel.style.setProperty('--reverb-brightness',(1+reverbMotionLevel*.9).toFixed(3));
-    reverbTunnel.style.setProperty('--reverb-zoom',(1+reverbMotionLevel*.055).toFixed(3));
+    const motion=active?clamp(.22+reverbMotionLevel*4,0,1):clamp(reverbMotionLevel*4,0,1);
+    if(active)reverbMotionPhase=(reverbMotionPhase+.02+motion*.035)%(Math.PI*2);
+    const tunnelWave=(Math.sin(reverbMotionPhase)+1)/2;
+    reverbTunnel.style.setProperty('--reverb-brightness',(1+motion*(.42+tunnelWave*.38)).toFixed(3));
+    reverbTunnel.style.setProperty('--reverb-zoom',(1+motion*(tunnelWave-.42)*.09).toFixed(3));
     reverbRings.forEach((ring,index)=>{
-      const pulse=reverbMotionHistory[reverbRings.length-1-index]||0;
-      ring.style.setProperty('--ring-scale',(1+pulse*(.08+index*.035)).toFixed(3));
-      ring.style.setProperty('--ring-opacity',Math.min(1,reverbRingOpacity[index]+pulse*.3).toFixed(3));
-      ring.style.setProperty('--ring-glow',`${(12+pulse*22).toFixed(1)}px`);
+      const wave=(Math.sin(reverbMotionPhase-index*1.05)+1)/2;
+      const scale=1+motion*(wave-.38)*(.22+index*.055);
+      ring.style.setProperty('--ring-scale',scale.toFixed(3));
+      ring.style.setProperty('--ring-opacity',Math.min(1,reverbRingOpacity[index]+motion*(.05+wave*.22)).toFixed(3));
+      ring.style.setProperty('--ring-glow',`${(12+motion*(10+wave*30)).toFixed(1)}px`);
     });
   }
   function drawVisualizer(){if(!analyser)return;const data=new Uint8Array(analyser.frequencyBinCount);const render=()=>{requestAnimationFrame(render);const w=canvas.width,h=canvas.height;analyser.getByteFrequencyData(data);updateVuMeters();updateReverbMotion(data);ctx.clearRect(0,0,w,h);const barW=w/data.length,accent=getComputedStyle(document.body).getPropertyValue('--accent').trim()||'#49dfff',accent2=getComputedStyle(document.body).getPropertyValue('--accent-2').trim()||'#9d66ff',gradient=ctx.createLinearGradient(0,h,0,0);gradient.addColorStop(0,accent);gradient.addColorStop(1,accent2);ctx.fillStyle=gradient;for(let i=0;i<data.length;i++){const barH=Math.max(2,(data[i]/255)*h*.92);ctx.fillRect(i*barW,h-barH,Math.max(1,barW-2),barH);}};render();}
