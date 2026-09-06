@@ -50,10 +50,7 @@
           </div>
 
           <canvas id="visualizer" width="900" height="150" aria-label="Audio spectrum visualizer"></canvas>
-
-          <div class="seek-row">
-            <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Song position">
-          </div>
+          <div class="seek-row"><input id="seek" type="range" min="0" max="1000" value="0" aria-label="Song position"></div>
 
           <div class="controls">
             <button id="shuffleBtn" class="icon-btn small" aria-label="Shuffle" aria-pressed="false">⇄</button>
@@ -66,7 +63,10 @@
           <div class="utility-row">
             <label class="volume">🔊 <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volume"></label>
             <button id="eqToggle" class="chip" aria-expanded="true" aria-controls="equalizer">EQ</button>
+            <button id="downloadTrackBtn" class="chip" type="button">⇩ Save song</button>
+            <button id="downloadAllBtn" class="chip" type="button">⇩ Save all</button>
           </div>
+          <div id="offlineStatus" class="footer-note" aria-live="polite">Offline music: checking saved songs…</div>
         </div>
       </div>
       <audio id="audio" preload="metadata"></audio>
@@ -74,10 +74,7 @@
 
     <section id="equalizer" class="eq-window panel">
       <div class="window-title"><span>✦ ASTRALIS NOVA EQUALIZER</span><span>SHAPE YOUR UNIVERSE</span></div>
-      <div class="eq-toolbar">
-        <button id="eqPower" class="chip active" aria-pressed="true">EQ ON</button>
-        <button id="eqReset" class="chip">Reset</button>
-      </div>
+      <div class="eq-toolbar"><button id="eqPower" class="chip active" aria-pressed="true">EQ ON</button><button id="eqReset" class="chip">Reset</button></div>
       <div id="eqSliders" class="eq-sliders" aria-label="Equalizer controls"></div>
     </section>
 
@@ -87,6 +84,7 @@
         <div class="library-tabs" role="tablist" aria-label="Library filter">
           <button class="tab active" data-filter="all" role="tab" aria-selected="true">All</button>
           <button class="tab" data-filter="favorites" role="tab" aria-selected="false">Favorites</button>
+          <button class="tab" data-filter="offline" role="tab" aria-selected="false">Offline</button>
         </div>
         <label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search library…" autocomplete="off"></label>
       </div>
@@ -94,11 +92,8 @@
       <div id="trackList" class="track-list" role="list"></div>
     </section>
 
-    <footer class="footer-note">
-      <span>Desktop + mobile</span><span>•</span><span>Skins saved on this device</span><span>•</span><span id="pwaStatus">Web app ready</span>
-    </footer>
+    <footer class="footer-note"><span>Desktop + mobile</span><span>•</span><span>Skins saved on this device</span><span>•</span><span id="pwaStatus">Web app ready</span></footer>
   </main>
-
   <script src="./player.js" defer></script>
 </body>
 </html>
