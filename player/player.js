@@ -36,7 +36,7 @@
   const $ = id => document.getElementById(id);
   const audio=$('audio'),cover=$('cover'),title=$('trackTitle'),artist=$('trackArtist'),playBtn=$('playBtn'),prevBtn=$('prevBtn'),nextBtn=$('nextBtn'),shuffleBtn=$('shuffleBtn'),repeatBtn=$('repeatBtn'),favoriteBtn=$('favoriteBtn'),seek=$('seek'),volume=$('volume'),timeReadout=$('timeReadout'),trackList=$('trackList'),search=$('search'),trackCount=$('trackCount'),skinSelect=$('skinSelect'),eqWindow=$('equalizer'),eqToggle=$('eqToggle'),eqPower=$('eqPower'),eqReset=$('eqReset'),eqPreset=$('eqPreset'),canvas=$('visualizer'),ctx=canvas.getContext('2d'),downloadTrackBtn=$('downloadTrackBtn'),downloadAllBtn=$('downloadAllBtn'),offlineStatus=$('offlineStatus');
   const reelDeck=document.querySelector('.reel-module'),reelCounterDigits=[...document.querySelectorAll('.r83-counter span')],reelTransportButtons=[...document.querySelectorAll('[data-reel-action]')],reelPlayButton=document.querySelector('[data-reel-action="play"]'),reelRecordButton=document.querySelector('[data-reel-action="record"]');
-  const reverbModule=document.querySelector('.reverb-module'),reverbTunnel=document.querySelector('.reverb-tunnel'),reverbModeLabel=$('reverbModeLabel'),reverbPreset=$('reverbPreset'),reverbMix=$('reverbMix'),reverbDepth=$('reverbDepth'),reverbDecay=$('reverbDecay'),reverbPreDelay=$('reverbPreDelay'),reverbMixValue=$('reverbMixValue'),reverbDepthValue=$('reverbDepthValue'),reverbDecayValue=$('reverbDecayValue'),reverbPreDelayValue=$('reverbPreDelayValue');
+  const reverbModule=document.querySelector('.reverb-module'),reverbTunnel=document.querySelector('.reverb-tunnel'),reverbRings=[...document.querySelectorAll('.reverb-tunnel span')],reverbModeLabel=$('reverbModeLabel'),reverbPreset=$('reverbPreset'),reverbMix=$('reverbMix'),reverbDepth=$('reverbDepth'),reverbDecay=$('reverbDecay'),reverbPreDelay=$('reverbPreDelay'),reverbMixValue=$('reverbMixValue'),reverbDepthValue=$('reverbDepthValue'),reverbDecayValue=$('reverbDecayValue'),reverbPreDelayValue=$('reverbPreDelayValue');
   const cassetteModule=document.querySelector('.cassette-module'),cassetteModeLabel=$('cassetteModeLabel'),cassetteCounterDigits=[...document.querySelectorAll('.cassette-counter span')],cassetteButtons=[...document.querySelectorAll('[data-cassette-action]')],cassettePlayButton=document.querySelector('[data-cassette-action="play"]'),cassetteEjectButton=document.querySelector('[data-cassette-action="eject"]'),cassetteRecordButton=document.querySelector('[data-cassette-action="record"]');
   const vuMeters=[...document.querySelectorAll('.vu-meter')],vuNeedles=[...document.querySelectorAll('.vu-needle')];
   const turntableModule=document.querySelector('.turntable-module'),turntableStatus=$('turntableStatus'),turntableButtons=[...document.querySelectorAll('[data-turntable-action]')],turntablePowerButton=document.querySelector('[data-turntable-action="power"]'),turntableStartButton=document.querySelector('[data-turntable-action="start"]'),turntableSpeed33Button=document.querySelector('[data-turntable-action="speed33"]'),turntableSpeed45Button=document.querySelector('[data-turntable-action="speed45"]'),turntableCueButton=document.querySelector('[data-turntable-action="cue"]'),turntablePitch=$('turntablePitch'),turntablePitchValue=$('turntablePitchValue');
@@ -70,6 +70,8 @@
   let reverbPreDelayNode,reverbConvolver,reverbDryGain,reverbWetGain,reverbEchoDelay,reverbEchoFeedback,reverbEchoGain,reverbImpulseTimer;
   let vuSplitter,vuAnalyserLeft,vuAnalyserRight,vuLeftLevel=0,vuRightLevel=0;
   const vuDataLeft=new Float32Array(256),vuDataRight=new Float32Array(256);
+  let reverbMotionLevel=0,reverbMotionFrame=0;
+  const reverbMotionHistory=[0,0,0,0,0],reverbRingOpacity=[1,.86,.72,.58,.45];
   let reverbState={preset:'off',...reverbPresets.off};
   try{
     const savedReverb=JSON.parse(localStorage.getItem('nova.reverb')||'null');
@@ -376,7 +378,25 @@
       vuMeters[index].classList.toggle('is-peaking',level>.9);
     });
   }
-  function drawVisualizer(){if(!analyser)return;const data=new Uint8Array(analyser.frequencyBinCount);const render=()=>{requestAnimationFrame(render);const w=canvas.width,h=canvas.height;analyser.getByteFrequencyData(data);updateVuMeters();if(reverbTunnel&&reverbState.preset!=='off'){let total=0;for(let i=0;i<data.length;i++)total+=data[i];reverbTunnel.style.setProperty('--reverb-brightness',(1+(total/data.length/255)*.72).toFixed(2));}ctx.clearRect(0,0,w,h);const barW=w/data.length,accent=getComputedStyle(document.body).getPropertyValue('--accent').trim()||'#49dfff',accent2=getComputedStyle(document.body).getPropertyValue('--accent-2').trim()||'#9d66ff',gradient=ctx.createLinearGradient(0,h,0,0);gradient.addColorStop(0,accent);gradient.addColorStop(1,accent2);ctx.fillStyle=gradient;for(let i=0;i<data.length;i++){const barH=Math.max(2,(data[i]/255)*h*.92);ctx.fillRect(i*barW,h-barH,Math.max(1,barW-2),barH);}};render();}
+  function updateReverbMotion(data){
+    if(!reverbTunnel)return;
+    const active=reverbState.preset!=='off'&&reverbState.mix>0&&!audio.paused&&!audio.ended;
+    let energy=0;
+    const bins=Math.min(96,data.length);
+    for(let i=0;i<bins;i++){const sample=data[i]/255;energy+=sample*sample;}
+    const target=active?clamp(Math.sqrt(energy/bins)*2.15,0,1):0;
+    reverbMotionLevel+=(target-reverbMotionLevel)*(target>reverbMotionLevel ? .38 : .105);
+    if(++reverbMotionFrame%3===0){reverbMotionHistory.unshift(reverbMotionLevel);reverbMotionHistory.pop();}
+    reverbTunnel.style.setProperty('--reverb-brightness',(1+reverbMotionLevel*.9).toFixed(3));
+    reverbTunnel.style.setProperty('--reverb-zoom',(1+reverbMotionLevel*.055).toFixed(3));
+    reverbRings.forEach((ring,index)=>{
+      const pulse=reverbMotionHistory[reverbRings.length-1-index]||0;
+      ring.style.setProperty('--ring-scale',(1+pulse*(.08+index*.035)).toFixed(3));
+      ring.style.setProperty('--ring-opacity',Math.min(1,reverbRingOpacity[index]+pulse*.3).toFixed(3));
+      ring.style.setProperty('--ring-glow',`${(12+pulse*22).toFixed(1)}px`);
+    });
+  }
+  function drawVisualizer(){if(!analyser)return;const data=new Uint8Array(analyser.frequencyBinCount);const render=()=>{requestAnimationFrame(render);const w=canvas.width,h=canvas.height;analyser.getByteFrequencyData(data);updateVuMeters();updateReverbMotion(data);ctx.clearRect(0,0,w,h);const barW=w/data.length,accent=getComputedStyle(document.body).getPropertyValue('--accent').trim()||'#49dfff',accent2=getComputedStyle(document.body).getPropertyValue('--accent-2').trim()||'#9d66ff',gradient=ctx.createLinearGradient(0,h,0,0);gradient.addColorStop(0,accent);gradient.addColorStop(1,accent2);ctx.fillStyle=gradient;for(let i=0;i<data.length;i++){const barH=Math.max(2,(data[i]/255)*h*.92);ctx.fillRect(i*barW,h-barH,Math.max(1,barW-2),barH);}};render();}
 
   audio.addEventListener('play',()=>{playBtn.textContent='❚❚';playBtn.setAttribute('aria-label','Pause');updateReelDeckMotion();renderTracks();});
   audio.addEventListener('playing',updateReelDeckMotion);
