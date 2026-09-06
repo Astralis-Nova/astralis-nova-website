@@ -62,7 +62,7 @@
   });
 
   function installEndpointFix(tuner){
-    if(!tuner||tuner.dataset.endpointFix==='1')return;
+    if(!tuner||tuner.dataset.endpointFix==='2')return;
     const slider=tuner.querySelector('#tunerSlider');
     const needle=tuner.querySelector('.tuner-needle');
     const glass=tuner.querySelector('.tuner-glass');
@@ -72,9 +72,13 @@
     const status=tuner.querySelector('#tunerStatus');
     const knobMarker=tuner.querySelector('.tuner-knob span');
     const up=tuner.querySelector('[data-scan="up"]');
+    const down=tuner.querySelector('[data-scan="down"]');
+    const searchInput=tuner.querySelector('#radioSearch');
+    const searchBtn=tuner.querySelector('#radioSearchBtn');
+    const select=tuner.querySelector('#radioStationSelect');
     if(!slider||!needle||!glass||!freq||!station)return;
 
-    tuner.dataset.endpointFix='1';
+    tuner.dataset.endpointFix='2';
     const atFM=()=>tuner.querySelector('[data-band="FM"]')?.classList.contains('active');
     const needleX=ratio=>{
       const left=53,right=20;
@@ -82,7 +86,7 @@
     };
     const ensureFMRange=()=>{
       if(!atFM())return;
-      slider.min='88.0';
+      slider.min='88.1';
       slider.max='108.0';
       slider.step='0.1';
     };
@@ -99,6 +103,36 @@
       if(status)status.textContent='108.0 MHz • END OF BROADCAST FM';
       tuner.classList.remove('is-tuned');
     };
+    const tune1079=({play=true}={})=>{
+      if(!atFM())return;
+      ensureFMRange();
+      slider.value='107.9';
+      slider.dispatchEvent(new Event('input',{bubbles:true}));
+      if(!play)return;
+
+      // Force a fresh KMLE/107.9 lookup so the top real FM channel works
+      // even when the currently loaded Arizona directory page omitted it.
+      if(searchInput&&searchBtn&&select){
+        searchInput.value='107.9';
+        let done=false;
+        const tryPlay=()=>{
+          if(done)return;
+          const target=[...select.options].findIndex(o=>(o.textContent||'').includes('107.9'));
+          if(target>=0){
+            done=true;
+            observer.disconnect();
+            select.selectedIndex=target;
+            select.dispatchEvent(new Event('change',{bubbles:true}));
+          }
+        };
+        const observer=new MutationObserver(tryPlay);
+        observer.observe(select,{childList:true});
+        searchBtn.click();
+        setTimeout(()=>{tryPlay();observer.disconnect();},1800);
+      }else{
+        slider.dispatchEvent(new Event('change',{bubbles:true}));
+      }
+    };
 
     ensureFMRange();
 
@@ -106,11 +140,23 @@
       if(atFM()&&Number(slider.value)>=108){e.stopImmediatePropagation();show108();}
     },true);
     slider.addEventListener('change',e=>{
-      if(atFM()&&Number(slider.value)>=108){e.stopImmediatePropagation();show108();}
+      if(!atFM())return;
+      const value=Number(slider.value);
+      if(value>=108){e.stopImmediatePropagation();show108();return;}
+      if(value>=107.85){e.stopImmediatePropagation();tune1079({play:true});}
     },true);
+
     up?.addEventListener('click',e=>{
-      if(atFM()&&Number(slider.value)>=107.9){e.stopImmediatePropagation();show108();}
+      if(!atFM())return;
+      const value=Number(slider.value);
+      if(value>=107.85){e.stopImmediatePropagation();show108();return;}
+      if(value>=107.65){e.stopImmediatePropagation();tune1079({play:true});}
     },true);
+
+    down?.addEventListener('click',e=>{
+      if(atFM()&&Number(slider.value)>=107.95){e.stopImmediatePropagation();tune1079({play:true});}
+    },true);
+
     tuner.querySelector('[data-band="FM"]')?.addEventListener('click',()=>setTimeout(ensureFMRange,0));
     window.addEventListener('resize',()=>{
       if(atFM()&&Number(slider.value)>=108)needle.style.left=`${needleX(1).toFixed(1)}px`;
