@@ -1,6 +1,6 @@
-const SHELL_CACHE='astralis-nova-player-v9';
+const SHELL_CACHE='astralis-nova-player-v10';
 const AUDIO_CACHE='astralis-nova-offline-audio-v1';
-const SHELL=['./','./index.html','./player.css','./player.js','./folder-library.js','./local-library.js','./legacy83-components.css','./legacy83-enhancements.js','./legacy83-radio.js','./legacy83-radio-memory.js','./legacy83-kmle-fallback.js','./manifest.webmanifest','./icon.svg','../cover-3.jpg','../cover-16.jpg'];
+const SHELL=['./','./index.html','./player.css','./player.js','./folder-library.js','./local-library.js','./planet-orbit.js','./folder-library-core.js','./download-access.js','./first-run-folder.js','./legacy83-components.css','./legacy83-enhancements.js','./legacy83-radio.js','./legacy83-radio-memory.js','./legacy83-kmle-fallback.js','./manifest.webmanifest','./icon.svg','../cover-3.jpg','../cover-16.jpg','../astralis-gas-giant.png'];
 
 self.addEventListener('install',event=>event.waitUntil(
   caches.open(SHELL_CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting())
