@@ -31,7 +31,17 @@
 
   window.addEventListener('legacy83-radio-state',e=>{if(e.detail?.playing&&e.detail?.station)save(e.detail.station);});
 
+  function installLocalLibrary(){
+    if(document.querySelector('script[data-nova-local-library]'))return;
+    const script=document.createElement('script');
+    script.src='./local-library.js?v=1';
+    script.defer=true;
+    script.dataset.novaLocalLibrary='1';
+    document.head.appendChild(script);
+  }
+
   function install(){
+    installLocalLibrary();
     const wait=()=>{
       const tuner=document.querySelector('.tuner-module');
       const slider=document.getElementById('tunerSlider');
