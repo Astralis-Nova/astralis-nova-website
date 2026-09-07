@@ -1,4 +1,4 @@
-const SHELL_CACHE='astralis-nova-player-v11';
+const SHELL_CACHE='astralis-nova-player-v12';
 const AUDIO_CACHE='astralis-nova-offline-audio-v1';
 const SHELL=['./','./index.html','./player.css','./player.js','./folder-library.js','./local-library.js','./planet-orbit.js','./folder-library-core.js','./download-access.js','./first-run-folder.js','./legacy83-components.css','./legacy83-enhancements.js','./legacy83-radio.js','./legacy83-radio-memory.js','./legacy83-kmle-fallback.js','./manifest.webmanifest','./icon.svg','../cover-3.jpg','../cover-16.jpg','../astralis-gas-giant.png'];
 
