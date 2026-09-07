@@ -5,6 +5,5 @@
     .then(()=>load('./download-access.js?v=1'))
     .then(()=>load('./first-run-folder.js?v=1'))
     .then(()=>load('./folder-library-core.js?v=1'))
-    .then(()=>load('./planet-orbit.js?v=1'))
     .catch(err=>console.warn('Astralis Nova library bootstrap failed',err));
 })();
