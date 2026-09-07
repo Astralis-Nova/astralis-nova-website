@@ -40,8 +40,18 @@
     document.head.appendChild(script);
   }
 
+  function installPlanetOrbit(){
+    if(document.querySelector('script[data-nova-planet-orbit]'))return;
+    const script=document.createElement('script');
+    script.src='./planet-orbit.js?v=2';
+    script.defer=true;
+    script.dataset.novaPlanetOrbit='1';
+    document.head.appendChild(script);
+  }
+
   function install(){
     installLocalLibrary();
+    installPlanetOrbit();
     const wait=()=>{
       const tuner=document.querySelector('.tuner-module');
       const slider=document.getElementById('tunerSlider');
