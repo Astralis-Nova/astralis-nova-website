@@ -18,10 +18,7 @@
     const button=tuner.querySelector(`[data-band="${band}"]`);
     if(button&&!button.classList.contains('active'))button.click();
     setTimeout(()=>{
-      // Keep the U.S. FM dial strictly at 88.1-107.9 MHz.
-      if(band==='FM'){
-        slider.min='88.1';slider.max='107.9';slider.step='0.2';
-      }
+      if(band==='FM'){slider.min='88.1';slider.max='107.9';slider.step='0.2';}
       slider.value=String(saved.frequency);
       slider.dispatchEvent(new Event('input',{bubbles:true}));
       const status=document.getElementById('tunerStatus');
@@ -43,7 +40,7 @@
   function installPlanetOrbit(){
     if(document.querySelector('script[data-nova-planet-orbit]'))return;
     const script=document.createElement('script');
-    script.src='./planet-orbit.js?v=2';
+    script.src='./planet-orbit.js?v=3';
     script.defer=true;
     script.dataset.novaPlanetOrbit='1';
     document.head.appendChild(script);
@@ -56,7 +53,6 @@
       const tuner=document.querySelector('.tuner-module');
       const slider=document.getElementById('tunerSlider');
       if(!tuner||!slider){setTimeout(wait,120);return;}
-      // Undo any stale extended-dial script left in an older cached page.
       const fm=tuner.querySelector('[data-band="FM"]');
       if(fm?.classList.contains('active')){slider.min='88.1';slider.max='107.9';slider.step='0.2';}
       const scale=tuner.querySelector('.tuner-fm-scale');
