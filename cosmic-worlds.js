@@ -67,6 +67,14 @@
     }
   ];
 
+  const scriptureVisual = `
+    <span class="scripture-orbit scripture-orbit-b"><span class="scripture-moon scripture-moon-b"></span></span>
+    <span class="scripture-planet-core">
+      <img src="/astralis-gas-giant.png" alt="" loading="lazy" decoding="async">
+      <span class="scripture-atmosphere"></span>
+    </span>
+    <span class="scripture-orbit scripture-orbit-a"><span class="scripture-moon scripture-moon-a"></span></span>`;
+
   function renderWorldCard(world) {
     const externalAttributes = world.external ? ' target="_blank" rel="noopener noreferrer"' : "";
     const tag = world.placeholder ? "div" : "a";
@@ -75,6 +83,8 @@
       ? '<picture><source media="(prefers-reduced-motion: no-preference)" srcset="/assets/ac-portals/portal-space-motion.webp"><img src="/assets/ac-portals/portal-space-still.webp" alt="" width="320" height="180" loading="lazy" decoding="async"></picture>'
       : world.id === "reserved-world"
       ? '<picture><source type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" alt="" width="360" height="360" loading="lazy" decoding="async"></picture>'
+      : world.id === "scripture-nexus"
+      ? scriptureVisual
       : "";
     return `
       <${tag} class="astralis-planet-link" data-world="${world.id}"${destination} aria-label="${world.ariaLabel}"${externalAttributes}>
@@ -122,30 +132,46 @@
       .astralis-planet{position:relative;flex:0 0 72px;width:72px;height:72px;border-radius:50%;box-shadow:inset -13px -13px 18px rgba(0,0,0,.36),0 0 18px rgba(94,168,255,.25);transition:transform .28s ease}
       .astralis-planet-link:hover .astralis-planet{transform:rotate(8deg) scale(1.05)}
       .astralis-planet.ringed::after{content:"";position:absolute;left:-14px;top:27px;width:96px;height:22px;border:4px solid rgba(219,226,255,.72);border-left-color:rgba(87,155,255,.35);border-right-color:rgba(255,151,210,.62);border-radius:50%;transform:rotate(-14deg);box-shadow:0 0 11px rgba(122,168,255,.28)}
+
       .astralis-planet.ac-worlds-portal{flex:0 0 104px;width:104px;height:104px;border-radius:0;background:none;box-shadow:none;overflow:visible}
       .ac-worlds-portal picture{position:absolute;inset:-12px -18px;display:block;pointer-events:none}
       .ac-worlds-portal img{display:block;width:100%;height:100%;object-fit:fill;filter:brightness(1.3);-webkit-mask-image:radial-gradient(ellipse closest-side at 50% 50%,#000 32%,#000b 58%,#0004 80%,transparent 100%);mask-image:radial-gradient(ellipse closest-side at 50% 50%,#000 32%,#000b 58%,#0004 80%,transparent 100%)}
       .astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal{transform:scale(1.06)}
-      @media(max-width:640px){.astralis-planet.ac-worlds-portal{flex-basis:84px;width:84px;height:84px}}
-      @media(prefers-reduced-motion:reduce){.astralis-planet.ac-worlds-portal{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal{transform:none}}
+
       .astralis-planet.planet-nova-sphere{flex:0 0 96px;width:96px;height:96px;background:none;box-shadow:none;overflow:visible}
       .planet-nova-sphere picture{display:block;width:100%;height:100%;pointer-events:none}
       .planet-nova-sphere img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 9px rgba(50,151,255,.5))}
       .astralis-planet-link:hover .planet-nova-sphere{transform:scale(1.05)}
-      @media(max-width:640px){.astralis-planet.planet-nova-sphere{flex-basis:84px;width:84px;height:84px}}
-      @media(prefers-reduced-motion:reduce){.astralis-planet.planet-nova-sphere{transition:none}.astralis-planet-link:hover .planet-nova-sphere{transform:none}}
+
       .planet-board{background:radial-gradient(circle at 35% 30%,#d9fff1 0 5%,#32d899 16%,#147b72 47%,#16375c 76%,#07101e 100%)}
       .planet-biography{background:radial-gradient(circle at 35% 28%,#ffe4fa 0 5%,#e75ebd 17%,#7843c8 47%,#25205f 76%,#09091b 100%)}
       .planet-orbit{background:radial-gradient(circle at 37% 28%,#fff2c6 0 4%,#f1a85f 17%,#8c4d45 46%,#3b274a 75%,#0b0912 100%)}
       .planet-guestbook{background:radial-gradient(circle at 35% 30%,#e8f5ff 0 5%,#80bce7 17%,#3a6091 47%,#202747 75%,#090a16 100%)}
-      .planet-scripture{background:#082b45 url('/planet-ocean-real.svg?v=20260830a') center/cover no-repeat;box-shadow:inset -13px -13px 18px rgba(0,0,0,.42),inset 7px 6px 12px rgba(220,255,255,.15),0 0 20px rgba(64,216,255,.46),0 0 34px rgba(44,117,255,.18)}
+
+      .astralis-planet.planet-scripture{flex:0 0 112px;width:112px;height:104px;border-radius:0;background:none;box-shadow:none;overflow:visible;isolation:isolate;transform-style:preserve-3d}
+      .scripture-planet-core{position:absolute;left:50%;top:50%;width:76px;height:76px;transform:translate(-50%,-50%);border-radius:50%;overflow:visible;z-index:5;background:radial-gradient(circle at 50% 50%,#123a63,#050a15 72%);box-shadow:inset -12px -10px 22px rgba(0,0,0,.55),0 0 13px rgba(88,223,255,.6),0 0 31px rgba(73,108,255,.34)}
+      .scripture-planet-core img{display:block;width:100%;height:100%;border-radius:50%;object-fit:contain;animation:scripturePlanetRotate 42s linear infinite;filter:saturate(1.18) contrast(1.08) brightness(.98)}
+      .scripture-atmosphere{position:absolute;inset:-5.5%;border-radius:50%;border:1px solid rgba(140,236,255,.48);box-shadow:0 0 8px rgba(98,220,255,.62),0 0 20px rgba(58,111,255,.4),inset 0 0 14px rgba(116,231,255,.2);animation:scriptureAtmosphere 5.5s ease-in-out infinite;pointer-events:none}
+      .scripture-orbit{position:absolute;inset:0;z-index:6;pointer-events:none}
+      .scripture-orbit::before{content:"";position:absolute;left:50%;top:50%;width:88%;height:43%;transform:translate(-50%,-50%) rotate(-11deg);border:1px solid rgba(117,223,255,.18);border-radius:50%}
+      .scripture-orbit-b::before{width:98%;height:57%;transform:translate(-50%,-50%) rotate(24deg);border-color:rgba(155,124,255,.16)}
+      .scripture-moon{position:absolute;left:0;top:0;border-radius:50%;background:radial-gradient(circle at 30% 27%,#e4e7ec 0 7%,transparent 8%),radial-gradient(circle at 62% 37%,#676d78 0 10%,transparent 11%),radial-gradient(circle at 35% 30%,#d6d9df,#858b96 40%,#3d4350 68%,#161a23 100%);box-shadow:inset -5px -5px 9px rgba(5,7,11,.72),inset 2px 2px 4px rgba(255,255,255,.26),0 0 8px rgba(213,245,255,.54);will-change:offset-distance,transform,filter}
+      .scripture-moon-a{width:23px;height:23px;offset-path:ellipse(42% 20% at 50% 50%);offset-rotate:0deg;animation:scriptureMoonA 14s linear infinite}
+      .scripture-moon-b{width:15px;height:15px;offset-path:ellipse(47% 28% at 50% 50%);offset-rotate:0deg;animation:scriptureMoonB 23s linear infinite reverse;background:radial-gradient(circle at 34% 29%,#c9c3d9,#746e80 47%,#2d2a37 75%,#121119 100%)}
+      .astralis-planet-link:hover .planet-scripture{transform:scale(1.08)}
+      @keyframes scripturePlanetRotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+      @keyframes scriptureAtmosphere{0%,100%{opacity:.72;transform:scale(1)}50%{opacity:1;transform:scale(1.022)}}
+      @keyframes scriptureMoonA{0%{offset-distance:0%;transform:scale(.78);filter:brightness(.68)}24%{transform:scale(1);filter:brightness(.96)}50%{offset-distance:50%;transform:scale(1.26);filter:brightness(1.3)}76%{transform:scale(1);filter:brightness(.95)}100%{offset-distance:100%;transform:scale(.78);filter:brightness(.68)}}
+      @keyframes scriptureMoonB{0%{offset-distance:0%;transform:scale(.84);filter:brightness(.74)}50%{offset-distance:50%;transform:scale(1.18);filter:brightness(1.22)}100%{offset-distance:100%;transform:scale(.84);filter:brightness(.74)}}
+
       .astralis-planet-copy{position:relative;z-index:1;min-width:0}
       .astralis-planet-copy strong{display:block;font-size:1rem;color:#fff}
       .astralis-planet-copy span{display:block;margin-top:5px;color:#b9c7da;font-size:.83rem;line-height:1.45}
       .astralis-world-badge{display:inline-flex!important;width:max-content;margin-top:8px!important;padding:4px 8px;border:1px solid rgba(124,190,255,.35);border-radius:999px;color:#9dd6ff!important;font-size:.68rem!important;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+
       @media(max-width:980px){.astralis-system{grid-template-columns:repeat(2,minmax(0,1fr))}.astralis-sun-card{grid-column:span 2}}
-      @media(max-width:640px){.astralis-worlds{padding:20px}.astralis-system{grid-template-columns:1fr}.astralis-sun-card{grid-column:span 1;align-items:flex-start;justify-content:flex-start}.astralis-planet-link{min-height:118px}.astralis-worlds::before{display:none}}
-      @media(prefers-reduced-motion:reduce){.astralis-bio-comet,.astralis-sun{animation:none!important}}
+      @media(max-width:640px){.astralis-worlds{padding:20px}.astralis-system{grid-template-columns:1fr}.astralis-sun-card{grid-column:span 1;align-items:flex-start;justify-content:flex-start}.astralis-planet-link{min-height:118px}.astralis-worlds::before{display:none}.astralis-planet.ac-worlds-portal{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-nova-sphere{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-scripture{flex-basis:102px;width:102px;height:94px}}
+      @media(prefers-reduced-motion:reduce){.astralis-bio-comet,.astralis-sun,.scripture-planet-core img,.scripture-atmosphere,.scripture-moon{animation:none!important}.scripture-moon-a{offset-distance:18%}.scripture-moon-b{offset-distance:68%}.astralis-planet.ac-worlds-portal,.astralis-planet.planet-nova-sphere{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal,.astralis-planet-link:hover .planet-nova-sphere{transform:none}}
     `;
     document.head.appendChild(style);
   }
