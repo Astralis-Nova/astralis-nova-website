@@ -21,7 +21,8 @@
     loadScript('/nova-remove-hands.js?v=20260805e','novaRemoveHands');
     loadScript('/nova-intelligence.js?v=20260805a','novaIntelligence');
     loadScript('/nova-conversation.js?v=20260907a','novaConversation');
-    loadScript('/nova-rag.js?v=20260908d','novaRag');
+    loadScript('/nova-daily-intelligence.js?v=20260908a','novaDailyIntelligence');
+    loadScript('/nova-rag.js?v=20260908e','novaRag');
     loadScript('/nova-voice-uk.js?v=20260908b','novaVoiceUK');
     loadScript('/nova-autonomy.js?v=20260908a','novaAutonomy');
     loadScript('/nova-personality-sparks.js?v=20260908a','novaPersonalitySparks');
