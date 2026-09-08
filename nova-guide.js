@@ -27,6 +27,7 @@
     loadScript('/nova-personality-sparks.js?v=20260908a','novaPersonalitySparks');
     loadScript('/nova-capabilities.js?v=20260908a','novaCapabilities');
     loadScript('/nova-owner-console.js?v=20260908a','novaOwnerConsole');
+    loadScript('/nova-leveling.js?v=20260908a','novaLeveling');
     loadScript('/nova-home-primary.js?v=20260908a','novaHomePrimary');
     loadScript('/feeling-tipsy.js?v=20260805a','feelingTipsy');
   };
