@@ -1,13 +1,13 @@
 (()=>{
-  if(window.__astralisNovaRagV4)return;
-  window.__astralisNovaRagV4=true;
+  if(window.__astralisNovaRagV5)return;
+  window.__astralisNovaRagV5=true;
   const root=document.getElementById('novaGuide');if(!root)return;
   const input=root.querySelector('#novaCommand'),msg=root.querySelector('#novaMessage'),status=root.querySelector('#novaStatus'),face=root.querySelector('#novaFace'),mini=root.querySelector('#novaMini');
   let busy=false;
   const clean=s=>String(s||'').replace(/\s+/g,' ').trim();
   const get=k=>{try{return localStorage.getItem(k)}catch{return null}};
   const emote=e=>{if(face)face.textContent=e;if(mini)mini.textContent=e};
-  const speak=text=>{if(get('astralisNovaMuted')==='true'||!('speechSynthesis'in window))return;const u=new SpeechSynthesisUtterance(text);speechSynthesis.cancel();speechSynthesis.speak(u)};
+  const speak=text=>{if(get('astralisNovaMuted')==='true'||!('speechSynthesis'in window))return;const u=new SpeechSynthesisUtterance(text);const p=window.AstralisNovaPersonality?.current?.();if(p?.rate)u.rate=p.rate;if(p?.pitch)u.pitch=p.pitch;speechSynthesis.cancel();speechSynthesis.speak(u)};
   const say=(text,e='🧠')=>{if(msg)msg.textContent=text;if(status)status.textContent=text;emote(e);speak(text)};
   const history=()=>{try{return JSON.parse(get('astralisNovaConversationLog')||'[]')}catch{return[]}};
   const remember=(role,text)=>{const h=history();h.push({role,text:clean(text).slice(0,600),at:Date.now(),page:location.pathname});try{localStorage.setItem('astralisNovaConversationLog',JSON.stringify(h.slice(-16)))}catch{}};
@@ -48,11 +48,12 @@
     if(msg)msg.textContent='Thinking with the Deep Archive…';if(status)status.textContent='Vector memory active • Nova has the helm';emote('🔎');
     const local=localActionFor(question);
     try{
-      const response=await fetch('/api/nova',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,pageContext:pageContext(),history:history().slice(-8),availableLinks:siteLinks().slice(0,80)})});
+      const p=window.AstralisNovaPersonality?.current?.()||null;
+      const response=await fetch('/api/nova',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,pageContext:pageContext(),history:history().slice(-8),availableLinks:siteLinks().slice(0,80),personality:p?{id:p.id,name:p.name,tone:p.tone,level:p.level}:null})});
       const data=await response.json();if(!response.ok)throw new Error(data?.error||`HTTP ${response.status}`);
       const effectiveAction=data?.action||(local?{type:'navigate',href:local.href,label:local.label}:null);
-      const answer=clean(data?.answer)||'The archive answered with a suspicious amount of silence.';remember('nova',answer);say(answer,'🌌');root.dataset.novaRagMode=data?.mode||'rag';
-      if(status)status.textContent=`${String(data?.mode||'RAG').toUpperCase()} • ${effectiveAction?'Nova chose the course':'answer ready'}`;
+      const answer=clean(data?.answer)||'The archive answered with a suspicious amount of silence.';remember('nova',answer);say(answer,p?.icon||'🌌');root.dataset.novaRagMode=data?.mode||'rag';
+      if(status)status.textContent=`${String(data?.mode||'RAG').toUpperCase()} • ${p?.name||'Nova Prime'} • ${effectiveAction?'Nova chose the course':'answer ready'}`;
       renderSuggestions(data?.suggestions);executeAction(effectiveAction);
     }catch(error){console.error('Nova RAG request failed',error);if(local){say(`I picked ${local.label||'a destination'}. Course set.`,'🧭');executeAction({type:'navigate',href:local.href,label:local.label})}else say('My deep archive link is temporarily offline, but I still control local navigation.','🛰️')}
     finally{busy=false}
@@ -62,7 +63,7 @@
   document.addEventListener('click',event=>{const send=event.target.closest?.('#novaSend');if(!send||busy)return;const q=clean(input?.value);if(!q)return;setTimeout(()=>{if(clean(input?.value)===q||clean(input?.value)==='')ask(q)},0)},true);
   document.addEventListener('keydown',event=>{if(event.key!=='Enter'||event.target!==input||busy)return;const q=clean(input.value);if(!q)return;setTimeout(()=>{if(clean(input?.value)===q||clean(input?.value)==='')ask(q)},0)},true);
 
-  fetch('/api/nova').then(r=>r.ok?r.json():null).then(data=>{if(!data)return;root.dataset.novaKnowledgeVersion=data.version||'';root.dataset.novaRagReady='true';const actions=root.querySelector('.nova-actions');if(actions&&!root.querySelector('[data-nova-rag-info]')){const b=document.createElement('button');b.type='button';b.className='nova-action';b.dataset.novaRagInfo='true';b.innerHTML=`🧠 Deep Archive<small>${data.entries||0} memories • Nova has the helm</small>`;b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=window.AstralisNovaVoice?.current?.();say(`Deep Archive online with ${data.entries||0} curated memories. I can navigate the site's links, choose destinations, control my own voice profile, use live daily intelligence, and guide the voyage.${v?.name?` Today I picked ${v.name}.`:''}`,'🧠')});actions.appendChild(b)}}).catch(()=>{});
+  fetch('/api/nova').then(r=>r.ok?r.json():null).then(data=>{if(!data)return;root.dataset.novaKnowledgeVersion=data.version||'';root.dataset.novaRagReady='true';const actions=root.querySelector('.nova-actions');if(actions&&!root.querySelector('[data-nova-rag-info]')){const b=document.createElement('button');b.type='button';b.className='nova-action';b.dataset.novaRagInfo='true';b.innerHTML=`🧠 Deep Archive<small>${data.entries||0} memories • Nova has the helm</small>`;b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();const v=window.AstralisNovaVoice?.current?.(),p=window.AstralisNovaPersonality?.current?.();say(`Deep Archive online with ${data.entries||0} curated memories. I can navigate the site's links, choose destinations, control my voice, shift personality, use live daily intelligence, grow through experience, and guide the voyage.${p?.name?` Current mode: ${p.name}.`:''}${v?.name?` Voice: ${v.name}.`:''}`,'🧠')});actions.appendChild(b)}}).catch(()=>{});
   window.AstralisNovaAsk=ask;
   window.AstralisNovaDomain={links:siteLinks,choose:()=>localActionFor('surprise me')};
 })();
