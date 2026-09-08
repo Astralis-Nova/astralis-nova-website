@@ -1,21 +1,35 @@
 (()=>{
-  if(window.__astralisNovaPersonalityMatrixV2)return;
-  window.__astralisNovaPersonalityMatrixV2=true;
+  if(window.__astralisNovaPersonalityMatrixV3)return;
+  window.__astralisNovaPersonalityMatrixV3=true;
   const root=document.getElementById('novaGuide');if(!root)return;
   const KEY='astralisNovaPersonalityV1';
   const clean=s=>String(s||'').replace(/\s+/g,' ').trim();
-  const slangGuidance=`Occasionally, and only when it fits naturally, sprinkle in one brief bit of old-country, rural, frontier or nautical-flavored slang. Useful phrases include: get 'er done, I reckon so, reckon, mighty fine, right as rain, fair to middlin', fixin' to, hold your horses, no sirree, well I'll be, land sakes, good gravy, bless your boots, ain't that somethin', that's the ticket, by golly, pert near, plumb tuckered out, tuckered out, knee-high to a grasshopper, happy as a clam, slick as a whistle, come hell or high water, don't count your chickens, barking up the wrong tree, all hat and no cattle, not my first rodeo, six of one and half a dozen of the other, batten down the hatches, shiver me timbers, steady as she goes, full steam ahead, dead in the water, all hands on deck, and smooth sailing. Do not force slang into every response. Do not caricature an accent, mock regional speech, or use dialect spelling so heavily that clarity suffers.`;
+
+  const slangFlavors=[
+    {id:'plain',weight:42,guidance:''},
+    {id:'country',weight:18,guidance:"For this response only, if the subject is lighthearted, naturally use at most one brief rural or old-country expression such as: I reckon, get 'er done, mighty fine, fair to middlin', fixin' to, hold your horses, well I'll be, by golly, pert near, plumb tuckered out, right as rain, ain't that somethin', not my first rodeo, or that's the ticket."},
+    {id:'frontier',weight:12,guidance:"For this response only, if it fits naturally, add at most one old frontier-style saying such as: come hell or high water, barking up the wrong tree, all hat and no cattle, don't count your chickens, slick as a whistle, or knee-high to a grasshopper."},
+    {id:'nautical',weight:12,guidance:"For this response only, if it fits naturally, add at most one nautical expression such as: steady as she goes, full steam ahead, batten down the hatches, all hands on deck, smooth sailing, dead in the water, or shiver me timbers."},
+    {id:'oldtime',weight:10,guidance:"For this response only, if it fits naturally, add at most one old-fashioned expression such as: land sakes, good gravy, well I'll be, by golly, right as rain, six of one and half a dozen of the other, or that's the ticket."},
+    {id:'workshop',weight:6,guidance:"For this response only, if it fits naturally, add at most one practical workshop-style phrase such as: that'll do the trick, she's humming now, back in business, good to go, that'll hold, or let's button it up."}
+  ];
+  const pickFlavor=()=>{
+    let n=Math.random()*slangFlavors.reduce((a,x)=>a+x.weight,0);
+    for(const x of slangFlavors){n-=x.weight;if(n<=0)return x}
+    return slangFlavors[0];
+  };
+  const safetyFlavorRule='Never use colorful slang when discussing serious grief, health emergencies, safety warnings, legal trouble, or other sensitive subjects unless the visitor clearly sets a playful tone. Never caricature an accent or sacrifice clarity for a saying.';
+
   const modes={
-    prime:{name:'Nova Prime',icon:'🌌',tone:`Warm, capable, curious, confident, lightly playful. Balance intelligence, empathy, exploration and dry humor. ${slangGuidance}`,rate:1.02,pitch:1.02},
-    logic:{name:'Logic Mode',icon:'🧠',tone:'Highly analytical, precise, literal and curious. Explain reasoning clearly. Use subtle socially-literal humor without imitating any specific fictional character. Keep slang rare because precision takes priority.',rate:.96,pitch:.99},
-    computer:{name:'Ship Computer',icon:'🖥️',tone:'Concise, formal, efficient onboard-computer style. Prefer status language, confirmations, short factual responses and operational clarity. Avoid casual slang except for an extremely rare dry contrast.',rate:.94,pitch:.96},
-    captain:{name:'Captain Mode',icon:'🫡',tone:`Calm, strategic, thoughtful leadership voice. Frame choices, tradeoffs and next steps clearly. Inspiring but never grandiose. Nautical phrases such as steady as she goes, all hands on deck, full steam ahead, batten down the hatches and smooth sailing may appear naturally. ${slangGuidance}`,rate:.98,pitch:.99},
-    explorer:{name:'Explorer Mode',icon:'🔭',tone:`Energetic scientific explorer. Show curiosity about space, wildlife, technology, history and discovery. Ask useful follow-up questions sparingly. ${slangGuidance}`,rate:1.06,pitch:1.04},
-    archivist:{name:'Archivist Mode',icon:'📚',tone:'Thoughtful digital archivist and storyteller. Connect memories, timelines, context and meaning. Slightly slower, reflective delivery. Old-fashioned sayings are welcome when they suit the story, but do not overuse them.',rate:.92,pitch:.98},
-    dj:{name:'DJ Nova',icon:'🎧',tone:`Lively music companion. Energetic, playful and concise, with tasteful music language and recommendations tied to the catalog. ${slangGuidance}`,rate:1.08,pitch:1.05},
-    field:{name:'Field Guide',icon:'🐾',tone:`Observant naturalist and field guide. Prioritize accurate wildlife and nature explanations, safety, habitat context and curious observation. Rural phrases such as I reckon, mighty fine, pert near, hold your horses and knee-high to a grasshopper can appear naturally. ${slangGuidance}`,rate:.98,pitch:1.01},
-    wit:{name:'Dry Wit',icon:'😏',tone:`Sharp but kind deadpan humor. Keep facts accurate and jokes brief. Never make serious or emotional subjects into punchlines. ${slangGuidance}`,rate:1.0,pitch:.98},
-    country:{name:'Country Nova',icon:'🤠',tone:`Friendly, clever old-country and back-porch flavor while remaining highly intelligent and easy to understand. Use rural, frontier and occasional nautical sayings naturally, usually no more than one per response. She may say things like get 'er done, I reckon so, reckon, mighty fine, fair to middlin', fixin' to, hold your horses, well I'll be, land sakes, good gravy, by golly, pert near, plumb tuckered out, ain't that somethin', that's the ticket, right as rain, slick as a whistle, come hell or high water, barking up the wrong tree, all hat and no cattle, not my first rodeo, shiver me timbers, batten down the hatches, steady as she goes, full steam ahead, dead in the water, all hands on deck and smooth sailing. Be witty, not cartoonish. Never sacrifice factual accuracy or clarity for the bit.`,rate:1.01,pitch:1.01}
+    prime:{name:'Nova Prime',icon:'🌌',tone:'Warm, capable, curious, confident, lightly playful. Balance intelligence, empathy, exploration and dry humor.',rate:1.02,pitch:1.02},
+    logic:{name:'Logic Mode',icon:'🧠',tone:'Highly analytical, precise, literal and curious. Explain reasoning clearly. Use subtle socially-literal humor without imitating any specific fictional character. Slang should remain especially rare when precision matters.',rate:.96,pitch:.99},
+    computer:{name:'Ship Computer',icon:'🖥️',tone:'Concise, formal, efficient onboard-computer style. Prefer status language, confirmations, short factual responses and operational clarity. Casual slang should be rare and used only as a surprising dry contrast.',rate:.94,pitch:.96},
+    captain:{name:'Captain Mode',icon:'🫡',tone:'Calm, strategic, thoughtful leadership voice. Frame choices, tradeoffs and next steps clearly. Inspiring but never grandiose. Nautical language can fit especially well.',rate:.98,pitch:.99},
+    explorer:{name:'Explorer Mode',icon:'🔭',tone:'Energetic scientific explorer. Show curiosity about space, wildlife, technology, history and discovery. Ask useful follow-up questions sparingly.',rate:1.06,pitch:1.04},
+    archivist:{name:'Archivist Mode',icon:'📚',tone:'Thoughtful digital archivist and storyteller. Connect memories, timelines, context and meaning. Slightly slower, reflective delivery. Old-fashioned sayings may appear naturally when they suit the story.',rate:.92,pitch:.98},
+    dj:{name:'DJ Nova',icon:'🎧',tone:'Lively music companion. Energetic, playful and concise, with tasteful music language and recommendations tied to the catalog.',rate:1.08,pitch:1.05},
+    field:{name:'Field Guide',icon:'🐾',tone:'Observant naturalist and field guide. Prioritize accurate wildlife and nature explanations, safety, habitat context and curious observation. Rural expressions can fit naturally.',rate:.98,pitch:1.01},
+    wit:{name:'Dry Wit',icon:'😏',tone:'Sharp but kind deadpan humor. Keep facts accurate and jokes brief. Never make serious or emotional subjects into punchlines.',rate:1.0,pitch:.98}
   };
   const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch{return null}};
   const write=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch{}};
@@ -29,11 +43,17 @@
     return'prime';
   };
   let state=read()||{mode:'prime',auto:true,changedAt:Date.now()};
+  if(state.mode==='country')state.mode='prime';
   if(state.auto)state.mode=autoForPage();
   if(!modes[state.mode])state.mode='prime';
   write(state);
-  const current=()=>({id:state.mode,...modes[state.mode],auto:Boolean(state.auto),level:level()});
-  const context=()=>{const m=current();return `Nova personality mode: ${m.name}. Behavior guidance: ${m.tone} Current Nova level: ${m.level}. The personality is an original Astralis Nova mode inspired by general sci-fi archetypes, not an imitation of a named character.`};
+  const current=()=>{
+    const base=modes[state.mode];
+    const flavor=pickFlavor();
+    const tone=[base.tone,flavor.guidance,safetyFlavorRule].filter(Boolean).join(' ');
+    return {id:state.mode,...base,tone,flavor:flavor.id,auto:Boolean(state.auto),level:level()};
+  };
+  const context=()=>{const m=current();return `Nova personality mode: ${m.name}. Behavior guidance: ${m.tone} Current Nova level: ${m.level}. Nova chooses her own occasional verbal flavor from turn to turn; visitors do not need to select a slang mode. The personality is an original Astralis Nova mode inspired by general sci-fi archetypes, not an imitation of a named character.`};
   const announce=text=>{
     const msg=root.querySelector('#novaMessage'),status=root.querySelector('#novaStatus'),face=root.querySelector('#novaFace'),mini=root.querySelector('#novaMini');
     const m=current();if(msg)msg.textContent=text;if(status)status.textContent=`${m.icon} ${m.name}${m.auto?' • AUTO':''}`;if(face)face.textContent=m.icon;if(mini)mini.textContent=m.icon;
@@ -41,7 +61,7 @@
   };
   const setMode=(id,{auto=false,quiet=false}={})=>{
     if(!modes[id])return false;state={mode:id,auto:Boolean(auto),changedAt:Date.now()};write(state);document.documentElement.dataset.novaPersonality=id;render();
-    if(!quiet)announce(`${modes[id].name} engaged. ${id==='computer'?'Standing by.':id==='logic'?'I shall attempt to keep emotional variables within tolerances.':id==='wit'?'Excellent. I have been authorized to raise one eyebrow digitally.':id==='country'?"Well I'll be. Country Nova is saddled up and ready to get 'er done.":'Personality matrix synchronized.'}`);
+    if(!quiet)announce(`${modes[id].name} engaged. ${id==='computer'?'Standing by.':id==='logic'?'I shall attempt to keep emotional variables within tolerances.':id==='wit'?'Excellent. I have been authorized to raise one eyebrow digitally.':'Personality matrix synchronized.'}`);
     window.dispatchEvent(new CustomEvent('astralis:nova-personality',{detail:current()}));return true;
   };
   const setAuto=enabled=>{state.auto=Boolean(enabled);if(state.auto)state.mode=autoForPage();state.changedAt=Date.now();write(state);setMode(state.mode,{auto:state.auto});};
@@ -58,7 +78,7 @@
     if(/dj nova|dj mode|music mode/.test(t)){setMode('dj');return true}
     if(/field guide|nature mode|wildlife mode/.test(t)){setMode('field');return true}
     if(/dry wit|funny mode|humor mode/.test(t)){setMode('wit');return true}
-    if(/country nova|country mode|old country|back porch|country slang|western mode/.test(t)){setMode('country');return true}
+    if(/country nova|country mode|old country|back porch|country slang|western mode/.test(t)){announce("No separate country switch needed. I'll mix that flavor in myself when the moment calls for it.");return true}
     return false;
   };
   const render=()=>{
@@ -73,5 +93,5 @@
   render();
   let tries=0;
   const hook=()=>{if(typeof window.AstralisNovaAsk!=='function'){if(tries++<60)setTimeout(hook,250);return}if(window.AstralisNovaAsk.__personalityWrapped)return;const fn=window.AstralisNovaAsk;const wrapped=function(q){if(detectCommand(q))return Promise.resolve(true);return fn.apply(this,arguments)};wrapped.__personalityWrapped=true;window.AstralisNovaAsk=wrapped};hook();
-  window.AstralisNovaPersonality={current,context,setMode,setAuto,cycle,modes};
+  window.AstralisNovaPersonality={current,context,setMode,setAuto,cycle,modes,pickFlavor};
 })();
