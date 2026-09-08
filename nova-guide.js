@@ -20,7 +20,7 @@
   const loadUpgrades=()=>{
     loadScript('/nova-remove-hands.js?v=20260805e','novaRemoveHands');
     loadScript('/nova-intelligence.js?v=20260805a','novaIntelligence');
-    loadScript('/nova-conversation.js?v=20260805c','novaConversation');
+    loadScript('/nova-conversation.js?v=20260907a','novaConversation');
     loadScript('/feeling-tipsy.js?v=20260805a','feelingTipsy');
   };
 
