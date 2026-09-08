@@ -24,6 +24,7 @@
     loadScript('/nova-rag.js?v=20260908d','novaRag');
     loadScript('/nova-voice-uk.js?v=20260908b','novaVoiceUK');
     loadScript('/nova-autonomy.js?v=20260908a','novaAutonomy');
+    loadScript('/nova-alive.js?v=20260908a','novaAlive');
     loadScript('/nova-home-primary.js?v=20260908a','novaHomePrimary');
     loadScript('/feeling-tipsy.js?v=20260805a','feelingTipsy');
   };
