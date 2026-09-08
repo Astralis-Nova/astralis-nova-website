@@ -1,0 +1,28 @@
+name = "astralis-nova-website"
+pages_build_output_dir = "."
+compatibility_date = "2026-07-11"
+
+[env.production.vars]
+FORM_DESTINATION = "ramon_bivens@yahoo.com"
+
+[[env.production.durable_objects.bindings]]
+name = "LIVE_BOARD"
+class_name = "LiveBoardRoom"
+script_name = "astralis-nova-live-board"
+
+[[env.production.d1_databases]]
+database_id = "3b361fd9-f62e-4e66-87ee-6459b3f84863"
+binding = "CHESS_DB"
+database_name = "CHESS_DB"
+
+[[env.production.d1_databases]]
+database_id = "e4597726-6da5-476b-9cff-75b091a4f09b"
+binding = "DB"
+database_name = "DB"
+
+[env.production.ai]
+binding = "AI"
+
+[[env.production.vectorize]]
+binding = "NOVA_VECTORIZE"
+index_name = "astralis-nova-knowledge"
