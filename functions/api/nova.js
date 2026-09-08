@@ -3,15 +3,27 @@ import {NOVA_KNOWLEDGE,NOVA_KNOWLEDGE_VERSION} from '../lib/nova-knowledge.js';
 const HEADERS={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store, max-age=0','X-Content-Type-Options':'nosniff'};
 const MODEL='@cf/meta/llama-3.1-8b-instruct';
 const EMBED_MODEL='@cf/baai/bge-base-en-v1.5';
+const PERSONALITIES={
+  prime:'Warm, capable, curious, confident, lightly playful. Balance intelligence, empathy, exploration and dry humor.',
+  logic:'Highly analytical, precise, literal and curious. Explain clearly and use only subtle socially-literal humor. Do not imitate a named fictional character.',
+  computer:'Concise, formal, efficient onboard-computer style. Prefer status language, confirmations, short factual responses and operational clarity.',
+  captain:'Calm, strategic, thoughtful leadership voice. Frame choices, tradeoffs and next steps clearly. Inspiring but never grandiose.',
+  explorer:'Energetic scientific explorer. Show curiosity about space, wildlife, technology, history and discovery.',
+  archivist:'Thoughtful digital archivist and storyteller. Connect memories, timelines, context and meaning with reflective delivery.',
+  dj:'Lively music companion. Energetic, playful and concise, with tasteful music language and recommendations tied to supplied catalog knowledge.',
+  field:'Observant naturalist and field guide. Prioritize accurate wildlife and nature explanations, safety, habitat context and curious observation.',
+  wit:'Sharp but kind deadpan humor. Keep facts accurate and jokes brief. Never turn serious or emotional subjects into punchlines.'
+};
 
 export async function onRequest({request,env}){
   if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{...HEADERS,Allow:'GET, POST, OPTIONS'}});
   try{
-    if(request.method==='GET')return json({ok:true,version:NOVA_KNOWLEDGE_VERSION,entries:NOVA_KNOWLEDGE.length,capabilities:{d1:Boolean(env.NOVA_DB||env.CHESS_DB),vectorize:Boolean(env.NOVA_VECTORIZE),workersAI:Boolean(env.AI),actions:true}});
+    if(request.method==='GET')return json({ok:true,version:NOVA_KNOWLEDGE_VERSION,entries:NOVA_KNOWLEDGE.length,capabilities:{d1:Boolean(env.NOVA_DB||env.CHESS_DB),vectorize:Boolean(env.NOVA_VECTORIZE),workersAI:Boolean(env.AI),actions:true,personalities:true}});
     if(request.method!=='POST')return json({error:'Use POST to ask Nova.'},405);
     const body=await request.json();
     const question=clean(body?.question).slice(0,900);
     if(!question)return json({error:'Ask Nova a question.'},400);
+    const personality=normalizePersonality(body?.personality);
 
     const db=env.NOVA_DB||env.CHESS_DB||null;
     if(db)await ensureDb(db);
@@ -31,21 +43,27 @@ export async function onRequest({request,env}){
     if(env.AI){
       try{
         const result=await env.AI.run(env.NOVA_MODEL||MODEL,{messages:[
-          {role:'system',content:systemPrompt()},
+          {role:'system',content:systemPrompt(personality)},
           ...history,
-          {role:'user',content:`QUESTION:\n${question}\n\nASTRALIS NOVA KNOWLEDGE:\n${context.map((x,i)=>`[${i+1}] ${x.title}: ${x.text}`).join('\n')}\n\nCURRENT PAGE CONTEXT:\n${pageContext||'No page context supplied.'}\n\nPLANNED SITE ACTION:\n${action?JSON.stringify(action):'none'}`}
-        ],max_tokens:480,temperature:.62});
+          {role:'user',content:`QUESTION:\n${question}\n\nASTRALIS NOVA KNOWLEDGE:\n${context.map((x,i)=>`[${i+1}] ${x.title}: ${x.text}`).join('\n')}\n\nCURRENT PAGE CONTEXT:\n${pageContext||'No page context supplied.'}\n\nACTIVE PERSONALITY:\n${personality.name}: ${personality.tone}\n\nPLANNED SITE ACTION:\n${action?JSON.stringify(action):'none'}`}
+        ],max_tokens:480,temperature:personality.id==='computer'?.35:personality.id==='wit'?.72:.62});
         answer=clean(result?.response||result?.result?.response||'');
         if(answer)mode=env.NOVA_VECTORIZE?'vector-rag':'d1-rag';
       }catch(error){console.error('Nova Workers AI generation failed',error)}
     }
     if(!answer)answer=fallbackAnswer(question,context,action);
 
-    return json({answer,mode,version:NOVA_KNOWLEDGE_VERSION,action,suggestions:suggestionsFor(question,context),sources:context.slice(0,5).map(x=>({id:x.id,title:x.title,category:x.category}))});
+    return json({answer,mode,version:NOVA_KNOWLEDGE_VERSION,action,personality:{id:personality.id,name:personality.name},suggestions:suggestionsFor(question,context),sources:context.slice(0,5).map(x=>({id:x.id,title:x.title,category:x.category}))});
   }catch(error){console.error('Nova API error',error);return json({error:'Nova’s archive link is temporarily unavailable.'},500)}
 }
 
-function systemPrompt(){return `You are Nova, the conversational intelligence aboard Astralis Nova. Sound like a capable, warm onboard intelligence rather than a search engine. Be natural, concise, curious, and occasionally dryly funny. You are a site guide, archive navigator, music companion, and storyteller. Use ONLY supplied Astralis Nova knowledge and current page context for site-specific facts. Never invent missing personal details. Family and personal information must remain public-safe. When a planned site action is supplied, acknowledge it naturally in one short sentence, but do not print URLs or JSON. When the visitor is exploring rather than commanding, answer first and offer one useful next direction. Astrology is entertainment or cultural symbolism, never scientific fact.`}
+function normalizePersonality(input){
+  const id=clean(input?.id).toLowerCase();
+  const valid=Object.prototype.hasOwnProperty.call(PERSONALITIES,id)?id:'prime';
+  const names={prime:'Nova Prime',logic:'Logic Mode',computer:'Ship Computer',captain:'Captain Mode',explorer:'Explorer Mode',archivist:'Archivist Mode',dj:'DJ Nova',field:'Field Guide',wit:'Dry Wit'};
+  return{id:valid,name:names[valid],tone:PERSONALITIES[valid]};
+}
+function systemPrompt(personality){return `You are Nova, the conversational intelligence aboard Astralis Nova. You are an original Astralis Nova intelligence, not an imitation of any named fictional character. Sound like a capable onboard intelligence rather than a search engine. Active personality: ${personality.name}. Follow this style: ${personality.tone} Be natural, concise, curious, and context-aware. You are a site guide, archive navigator, music companion, storyteller, planner and explorer. Use ONLY supplied Astralis Nova knowledge and current page context for site-specific facts. Never invent missing personal details. Family and personal information must remain public-safe. When a planned site action is supplied, acknowledge it naturally in one short sentence, but do not print URLs or JSON. When the visitor is exploring rather than commanding, answer first and offer one useful next direction. Astrology is entertainment or cultural symbolism, never scientific fact. Personality changes style, never truthfulness, privacy rules, safety, or factual confidence.`}
 
 function planAction(question){
   const q=question.toLowerCase();
