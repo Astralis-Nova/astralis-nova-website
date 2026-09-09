@@ -24,7 +24,7 @@
     loadScript('/nova-daily-intelligence.js?v=20260908a','novaDailyIntelligence');
     loadScript('/nova-personality-matrix.js?v=20260908c','novaPersonalityMatrix');
     loadScript('/nova-rag.js?v=20260908f','novaRag');
-    loadScript('/nova-voice-uk.js?v=20260908d','novaVoiceUK');
+    loadScript('/nova-voice-uk.js?v=20260908e','novaVoiceUK');
     loadScript('/nova-autonomy.js?v=20260908a','novaAutonomy');
     loadScript('/nova-personality-sparks.js?v=20260908a','novaPersonalitySparks');
     loadScript('/nova-capabilities.js?v=20260908a','novaCapabilities');
