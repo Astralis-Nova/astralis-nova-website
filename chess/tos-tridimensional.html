@@ -4,9 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#020611">
-  <meta name="description" content="Astralis Nova floating clear-glass tri-dimensional chess board.">
+  <meta name="description" content="Astralis Nova floating clear-glass tri-dimensional chess board with illuminated LED edges.">
   <title>Astralis Nova Tri-Dimensional Chess</title>
-  <link rel="stylesheet" href="./tos-tridimensional.css?v=7">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./tos-tridimensional.css?v=8">
 </head>
 <body>
 <main>
@@ -14,38 +15,27 @@
     <div>
       <div class="eyebrow">ASTRALIS NOVA · TRI-DIMENSIONAL CHESS</div>
       <h1>Floating Glass Command Board</h1>
-      <p>Three clear command tiers and four floating attack boards.</p>
+      <p>Clear crystal fleets across seven illuminated glass planes.</p>
     </div>
     <div class="top-actions">
-      <button id="resetView" type="button">Reset View</button>
-      <a href="./index.html">Current Multi-Tier Board</a>
+      <a href="../">Return to Astralis Nova</a>
     </div>
   </header>
 
-  <section class="workspace">
+  <section class="board-stage" aria-label="Astralis Nova tri-dimensional chess">
     <div class="scene-wrap">
-      <div class="scene" id="scene" aria-label="Astralis Nova floating tri-dimensional chess board">
+      <div class="scene" id="scene" aria-label="Floating seven-plane tri-dimensional chess board">
         <section class="attack attack-a1" data-board="A1"><div class="grid two" id="A1"></div></section>
         <section class="main-board board-upper" data-board="U"><div class="grid four" id="U"></div></section>
         <section class="attack attack-a2" data-board="A2"><div class="grid two" id="A2"></div></section>
-
         <section class="main-board board-middle" data-board="M"><div class="grid four" id="M"></div></section>
-
         <section class="attack attack-b1" data-board="B1"><div class="grid two" id="B1"></div></section>
         <section class="main-board board-lower" data-board="L"><div class="grid four" id="L"></div></section>
         <section class="attack attack-b2" data-board="B2"><div class="grid two" id="B2"></div></section>
       </div>
     </div>
-
-    <aside class="panel">
-      <h2>Floating Glass Board</h2>
-      <p>Your custom board arrangement is now locked into the site.</p>
-      <div class="readout" id="readout">Select any square to inspect its board coordinate.</div>
-      <div class="legend"><span class="swatch light"></span> Clear glass <span class="swatch dark"></span> Blue glass</div>
-      <p class="small">Next: pieces, movement rules, legal move highlights, and online save/sync.</p>
-    </aside>
   </section>
 </main>
-<script src="./tos-tridimensional.js?v=3"></script>
+<script src="./tos-tridimensional.js?v=4"></script>
 </body>
 </html>
