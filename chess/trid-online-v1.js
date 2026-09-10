@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const GAME_KEY='astralisTriDGameV1';
+const GAME_KEY='astralisTriDGameV2';
 const SESSION_KEY='astralisTriDOnlineV1';
 const MODE='trideck';
 const panel=document.getElementById('onlineMission');
@@ -67,8 +67,13 @@ function winnerName(game=readGame()){
 function moveRecord(game=readGame()){
   const move=game?.lastMove||{};
   const mover=game?.turn==='w'?'black':'white';
+  const at=new Date().toISOString();
+  if(move.kind==='board'){
+    const notation=`${move.board||'AB'} ${move.fromSlot||'?'} → ${move.toSlot||'?'}${move.rotated?' + 180°':''}`;
+    return{color:mover,from:`AB:${move.board||'?'}:${move.fromSlot||'?'}`,to:`AB:${move.board||'?'}:${move.toSlot||'?'}`,capture:null,castle:null,notation,at};
+  }
   const label=move.castle||`${move.piece||'piece'} ${move.from||'?'} → ${move.to||'?'}`;
-  return{color:mover,from:move.from||null,to:move.to||null,capture:move.capture||null,castle:move.castle||null,notation:label,at:new Date().toISOString()};
+  return{color:mover,from:move.from||null,to:move.to||null,capture:move.capture||null,castle:move.castle||null,notation:label,at};
 }
 function sameState(a,b){
   try{return JSON.stringify({...a,selected:null,legal:[]})===JSON.stringify({...b,selected:null,legal:[]})}catch{return false}
@@ -170,7 +175,7 @@ function triggerOnlineNova(){
   const game=readGame();if(!game||game.turn!=='b')return;
   setGame('Nova is calculating Black’s Tri-D response…');
   if(novaToggle&&novaToggle.textContent.includes('OFF'))novaToggle.disabled=false,novaToggle.click(),novaToggle.disabled=true;
-  else if(novaToggle&&!readGame()?.novaBlack){novaToggle.disabled=false;novaToggle.click();novaToggle.disabled=true}
+  else if(novaToggle&&!readGame()?.novaBlack){novaToggle.disabled=false;novaToggle.click(),novaToggle.disabled=true}
   watchForAiMove(Number(game.ply||0));
 }
 function watchForAiMove(startPly){
@@ -228,10 +233,10 @@ async function health(){
 
 document.addEventListener('click',event=>{
   if(!session)return;
-  const square=event.target.closest?.('.sq');
-  if(square&&!canMoveHere()&&event.isTrusted){event.preventDefault();event.stopImmediatePropagation();setGame(`Online mission: ${remote?.currentTurn||'other commander'} to move.`);return}
+  const moveTarget=event.target.closest?.('.sq,.attack-mount');
+  if(moveTarget&&!canMoveHere()&&event.isTrusted){event.preventDefault();event.stopImmediatePropagation();setGame(`Online mission: ${remote?.currentTurn||'other commander'} to move.`);return}
   if((event.target===novaToggle||event.target===newGame)&&event.isTrusted){event.preventDefault();event.stopImmediatePropagation();setGame('That control is locked during an online mission.');return}
-  if(square&&canMoveHere()&&event.isTrusted){
+  if(moveTarget&&canMoveHere()&&event.isTrusted){
     const before=Number(readGame()?.ply||0);
     setTimeout(()=>{
       if(suppressLocal){suppressLocal=false;return}
