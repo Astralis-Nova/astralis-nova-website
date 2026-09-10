@@ -27,9 +27,9 @@ export async function onRequestPost({request,env}){
     const member=await env.DB.prepare(`SELECT id,status FROM memory_people WHERE email=? COLLATE NOCASE LIMIT 1`).bind(email).first();
     if(member?.status==="approved")return json({ok:true,alreadyApproved:true,message:"This email is already approved for the Memories archive."});
     const recent=await env.DB.prepare(`SELECT id,status,created_at FROM memory_access_requests WHERE email=? COLLATE NOCASE ORDER BY created_at DESC LIMIT 1`).bind(email).first();
-    if(recent?.status==="pending"){return json({ok:true,alreadyPending:true,message:"An access request for this email is already waiting for approval."});}
-    const row={id:crypto.randomUUID(),name,email,relationship,note,approval_token:crypto.randomUUID().replaceAll("-","")+crypto.randomUUID().replaceAll("-",""),created_at:now};
-    await env.DB.prepare(`INSERT INTO memory_access_requests (id,name,email,relationship,note,status,approval_token,created_at,updated_at,ip_hash) VALUES (?,?,?,?,?,'pending',?,?,?,?,?)`).bind(row.id,row.name,row.email,row.relationship,row.note,row.approval_token,now,now,ipHash).run();
+    if(recent?.status==="pending")return json({ok:true,alreadyPending:true,message:"An access request for this email is already waiting for approval."});
+    const row={id:crypto.randomUUID(),name,email,relationship,note,approval_token:crypto.randomUUID().replaceAll("-","")+crypto.randomUUID().replaceAll("-","")};
+    await env.DB.prepare(`INSERT INTO memory_access_requests (id,name,email,relationship,note,status,approval_token,created_at,updated_at,ip_hash) VALUES (?,?,?,?,?,'pending',?,?,?,?)`).bind(row.id,row.name,row.email,row.relationship,row.note,row.approval_token,now,now,ipHash).run();
     const url=new URL(request.url);const notified=await notifyOwner(env,row,`${url.protocol}//${url.host}`);
     return json({ok:true,notified,message:notified?"Your request was sent to Ramon for approval.":"Your request was saved and is waiting for Ramon to review."},201);
   }catch(error){console.error("Memories access request failed",error);return json({error:"The access request could not be saved right now."},500);}
