@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#050816">
-  <title>Astralis Nova TOS Tri-Dimensional Chess</title>
-  <link rel="stylesheet" href="./tos-tridimensional.css?v=3">
+  <meta name="theme-color" content="#020611">
+  <meta name="description" content="Astralis Nova floating clear-glass tri-dimensional chess board.">
+  <title>Astralis Nova Tri-Dimensional Chess</title>
+  <link rel="stylesheet" href="./tos-tridimensional.css?v=5">
 </head>
 <body>
 <main>
@@ -13,7 +14,7 @@
     <div>
       <div class="eyebrow">ASTRALIS NOVA · TRI-DIMENSIONAL CHESS</div>
       <h1>Floating Glass Command Board</h1>
-      <p>Three clear 4×4 command tiers with four floating 2×2 attack boards.</p>
+      <p>Three clear command tiers and four floating attack boards.</p>
     </div>
     <div class="top-actions">
       <button id="resetView" type="button">Reset View</button>
@@ -24,38 +25,24 @@
   <section class="workspace">
     <div class="scene-wrap">
       <div class="scene" id="scene" aria-label="Astralis Nova floating tri-dimensional chess board">
-        <section class="attack attack-a1" data-board="A1">
-          <div class="label">Attack A1</div><div class="grid two" id="A1"></div>
-        </section>
-        <section class="main-board board-upper" data-board="U">
-          <div class="label">Upper Command</div><div class="grid four" id="U"></div>
-        </section>
-        <section class="attack attack-a2" data-board="A2">
-          <div class="label">Attack A2</div><div class="grid two" id="A2"></div>
-        </section>
+        <section class="attack attack-a1" data-board="A1"><div class="grid two" id="A1"></div></section>
+        <section class="main-board board-upper" data-board="U"><div class="grid four" id="U"></div></section>
+        <section class="attack attack-a2" data-board="A2"><div class="grid two" id="A2"></div></section>
 
-        <section class="main-board board-middle" data-board="M">
-          <div class="label">Middle Command</div><div class="grid four" id="M"></div>
-        </section>
+        <section class="main-board board-middle" data-board="M"><div class="grid four" id="M"></div></section>
 
-        <section class="attack attack-b1" data-board="B1">
-          <div class="label">Attack B1</div><div class="grid two" id="B1"></div>
-        </section>
-        <section class="main-board board-lower" data-board="L">
-          <div class="label">Lower Command</div><div class="grid four" id="L"></div>
-        </section>
-        <section class="attack attack-b2" data-board="B2">
-          <div class="label">Attack B2</div><div class="grid two" id="B2"></div>
-        </section>
+        <section class="attack attack-b1" data-board="B1"><div class="grid two" id="B1"></div></section>
+        <section class="main-board board-lower" data-board="L"><div class="grid four" id="L"></div></section>
+        <section class="attack attack-b2" data-board="B2"><div class="grid two" id="B2"></div></section>
       </div>
     </div>
 
     <aside class="panel">
-      <h2>Floating Glass Prototype</h2>
-      <p>The stand, rods, and base are gone. Only the clear blue-glass playing surfaces remain.</p>
+      <h2>Floating Glass Board</h2>
+      <p>Only the playing surfaces remain. No stand, rods, base, or support hardware.</p>
       <div class="readout" id="readout">Select any square to inspect its board coordinate.</div>
       <div class="legend"><span class="swatch light"></span> Clear glass <span class="swatch dark"></span> Blue glass</div>
-      <p class="small">Next phase: piece setup, true tri-dimensional movement, movable attack boards, legal move highlights, and online save/sync.</p>
+      <p class="small">Next: chess pieces, true tri-dimensional movement, movable attack boards, legal move highlights, and online save/sync.</p>
     </aside>
   </section>
 </main>
