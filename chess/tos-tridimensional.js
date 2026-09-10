@@ -70,26 +70,35 @@ function columnAt(x,y){return columns.get(`${x},${y}`)||[]}
 function cellKeyByXYZ(x,y,z){return columnAt(x,y).find(c=>c.z===z)?.key||null}
 function opponent(color){return color==='w'?'b':'w'}
 
-function pathStepTargets(prevCells,x,y){
-  const next=columnAt(x,y);if(!next.length)return[];
-  const out=[];
-  for(const from of prevCells)for(const to of next)if(Math.abs(to.z-from.z)<=1)out.push(to);
-  return[...new Map(out.map(c=>[c.key,c])).values()];
-}
 function slideMoves(fromCell,piece,dirs,s=state){
   const moves=[];
   for(const[dx,dy]of dirs){
-    let step=1,frontier=[fromCell];
+    let step=1;
+    let frontier=[{cell:fromCell,departed:[]}];
     while(step<9&&frontier.length){
       const x=fromCell.x+dx*step,y=fromCell.y+dy*step;
-      const candidates=pathStepTargets(frontier,x,y);if(!candidates.length)break;
-      const nextFrontier=[];
-      for(const target of candidates){
-        const occ=pieceAt(target.key,s);
-        if(!occ){moves.push({from:fromCell.key,to:target.key});nextFrontier.push(target)}
-        else if(occ.color!==piece.color)moves.push({from:fromCell.key,to:target.key,capture:target.key});
+      const nextStates=[];
+      for(const route of frontier){
+        for(const target of columnAt(x,y)){
+          if(Math.abs(target.z-route.cell.z)>1)continue;
+          if(route.departed.includes(target.z))continue;
+          const departed=target.z===route.cell.z?[...route.departed]:[...route.departed,route.cell.z];
+          const occ=pieceAt(target.key,s);
+          if(!occ){
+            moves.push({from:fromCell.key,to:target.key});
+            nextStates.push({cell:target,departed});
+          }else if(occ.color!==piece.color){
+            moves.push({from:fromCell.key,to:target.key,capture:target.key});
+          }
+        }
       }
-      frontier=nextFrontier;step++;
+      const seen=new Set();
+      frontier=nextStates.filter(route=>{
+        const sig=`${route.cell.key}|${route.departed.slice().sort((a,b)=>a-b).join(',')}`;
+        if(seen.has(sig))return false;
+        seen.add(sig);return true;
+      });
+      step++;
     }
   }
   return dedupeMoves(moves);
@@ -161,40 +170,59 @@ function pawnMoves(fromCell,piece,s=state,attackOnly=false){
   }
   return dedupeMoves(moves);
 }
+function castleMoves(key,piece,s=state){
+  if(piece.type!=='k'||piece.moved||inCheck(piece.color,s))return[];
+  const plans=piece.color==='w'?
+    [{kingFrom:'B2:A1',rookFrom:'B2:B1',kingTo:'L:D1',rookTo:'L:C1',clear:['L:C1','L:D1'],name:'O-O'},{kingFrom:'B2:A1',rookFrom:'B1:A1',kingTo:'L:A1',rookTo:'L:B1',clear:['L:A1','L:B1','B1:B1'],name:'O-O-O'}]:
+    [{kingFrom:'A2:A1',rookFrom:'A2:B1',kingTo:'U:D4',rookTo:'U:C4',clear:['U:C4','U:D4'],name:'O-O'},{kingFrom:'A2:A1',rookFrom:'A1:A1',kingTo:'U:A4',rookTo:'U:B4',clear:['U:A4','U:B4','A1:B1'],name:'O-O-O'}];
+  const out=[];
+  for(const plan of plans){
+    if(key!==plan.kingFrom)continue;
+    const rook=pieceAt(plan.rookFrom,s);
+    if(!rook||rook.color!==piece.color||rook.type!=='r'||rook.moved)continue;
+    if(plan.clear.some(cell=>pieceAt(cell,s)))continue;
+    const testMove={from:key,to:plan.kingTo,castle:{rookFrom:plan.rookFrom,rookTo:plan.rookTo,name:plan.name}};
+    const test=applyMoveToState(testMove,s,'q');
+    if(inCheck(piece.color,test))continue;
+    out.push(testMove);
+  }
+  return out;
+}
 function pseudoMovesForCell(key,s=state,attackOnly=false){
   const piece=pieceAt(key,s),fromCell=cells.get(key);if(!piece||!fromCell)return[];
   if(piece.type==='p')return pawnMoves(fromCell,piece,s,attackOnly);
   if(piece.type==='n')return knightMoves(fromCell,piece,s);
-  if(piece.type==='k')return kingMoves(fromCell,piece,s);
+  if(piece.type==='k')return dedupeMoves([...kingMoves(fromCell,piece,s),...(attackOnly?[]:castleMoves(key,piece,s))]);
   let moves=[];
-  if(piece.type==='r'||piece.type==='q')moves.push(...slideMoves(fromCell,piece,[[1,0],[-1,0],[0,1],[0,-1]],s),...verticalMoves(fromCell,piece,s));
-  if(piece.type==='b'||piece.type==='q')moves.push(...slideMoves(fromCell,piece,[[1,1],[1,-1],[-1,1],[-1,-1]],s));
+  if(piece.type==='r'||piece.type==='q')moves.push(...slideMoves(fromCell,piece,[[1,0],[-1,0],[0,1],[0,-1]],s));
+  if(piece.type==='b'||piece.type==='q')moves.push(...slideMoves(fromCell,piece,[[1,1],[1,-1],[-1,1],[-1,-1]],s),...verticalMoves(fromCell,piece,s));
   return dedupeMoves(moves);
 }
 function dedupeMoves(moves){const map=new Map();for(const m of moves)map.set(`${m.from}>${m.to}>${m.capture||''}`,m);return[...map.values()]}
 function findKing(color,s=state){return Object.keys(s.pieces).find(k=>s.pieces[k]?.color===color&&s.pieces[k]?.type==='k')||null}
-function squareAttacked(targetKey,byColor,s=state){
-  for(const[key,p]of Object.entries(s.pieces))if(p.color===byColor&&pseudoMovesForCell(key,s,true).some(m=>m.to===targetKey))return true;
-  return false;
-}
+function squareAttacked(targetKey,byColor,s=state){for(const[key,p]of Object.entries(s.pieces))if(p.color===byColor&&pseudoMovesForCell(key,s,true).some(m=>m.to===targetKey))return true;return false}
 function inCheck(color,s=state){const king=findKing(color,s);return king?squareAttacked(king,opponent(color),s):true}
 function applyMoveToState(move,s=state,promotion='q'){
   const next=cloneState(s),piece=next.pieces[move.from];if(!piece)return next;
   delete next.pieces[move.from];if(move.capture)delete next.pieces[move.capture];piece.moved=true;
+  if(move.castle){const rook=next.pieces[move.castle.rookFrom];delete next.pieces[move.castle.rookFrom];if(rook){rook.moved=true;next.pieces[move.castle.rookTo]=rook}}
   const target=cells.get(move.to);if(piece.type==='p'&&(target.y===0||target.y===7))piece.type=promotion;
   next.pieces[move.to]=piece;next.enPassant=null;
   if(move.doublePawn)next.enPassant={x:move.pass.x,y:move.pass.y,victim:move.to,by:piece.color};
-  next.turn=opponent(piece.color);next.lastMove={from:move.from,to:move.to,capture:move.capture||null,piece:piece.type,color:piece.color};
+  next.turn=opponent(piece.color);next.lastMove={from:move.from,to:move.to,capture:move.capture||null,piece:piece.type,color:piece.color,castle:move.castle?.name||null};
   next.selected=null;next.legal=[];next.ply=(next.ply||0)+1;return next;
 }
 function legalMovesForCell(key,s=state){
   const piece=pieceAt(key,s);if(!piece)return[];
-  return pseudoMovesForCell(key,s,false).filter(move=>!inCheck(piece.color,applyMoveToState(move,s,'q')));
+  return pseudoMovesForCell(key,s,false).filter(move=>{
+    if(move.capture&&pieceAt(move.capture,s)?.type==='k')return false;
+    const test=applyMoveToState(move,s,'q');return!inCheck(piece.color,test);
+  });
 }
 function allLegalMoves(color,s=state){const out=[];for(const[key,p]of Object.entries(s.pieces))if(p.color===color)out.push(...legalMovesForCell(key,s));return out}
 function gameStatus(s=state){const moves=allLegalMoves(s.turn,s),check=inCheck(s.turn,s);if(moves.length)return{over:false,check};if(check)return{over:true,winner:opponent(s.turn),checkmate:true};return{over:true,winner:null,stalemate:true}}
 function choosePromotion(color){const answer=(window.prompt(`${color==='w'?'White':'Black'} pawn promotion: Q, R, B, or N`,'Q')||'Q').trim().toLowerCase()[0];return['q','r','b','n'].includes(answer)?answer:'q'}
-function moveLabel(move,piece){const a=cells.get(move.from),b=cells.get(move.to);return`${NAMES[piece.type]} ${a.board}-${a.local} → ${b.board}-${b.local}${move.capture?' ×':''}`}
+function moveLabel(move,piece){if(move.castle)return`${move.castle.name} Tri-D castle`;const a=cells.get(move.from),b=cells.get(move.to);return`${NAMES[piece.type]} ${a.board}-${a.local} → ${b.board}-${b.local}${move.capture?' ×':''}`}
 
 async function handleCell(key){
   if(state.gameOver)return;
@@ -218,7 +246,7 @@ function makeNovaMove(){
   for(const move of moves){
     const target=pieceAt(move.capture||move.to,state),moving=pieceAt(move.from,state);let score=(target?VALUES[target.type]*10:0)+Math.random()*2;
     const test=applyMoveToState(move,state,'q');if(inCheck('w',test))score+=3;
-    const dest=cells.get(move.to);score+=Math.max(0,3-Math.abs(3.5-dest.x))*.1;if(moving.type==='p'&&dest.y===7)score+=8;
+    const dest=cells.get(move.to);score+=Math.max(0,3-Math.abs(3.5-dest.x))*.1;if(moving.type==='p'&&dest.y===7)score+=8;if(move.castle)score+=1.4;
     if(score>best){best=score;choice=move}
   }
   const moving=pieceAt(choice.from,state),label=moveLabel(choice,moving);state=applyMoveToState(choice,state,'q');finishIfNeeded();save();render();
