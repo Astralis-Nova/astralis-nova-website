@@ -26,6 +26,7 @@ for(const [id,size] of boards){
         const token=document.createElement('span');
         token.className=`piece ${side}`;
         token.textContent=glyph;
+        token.dataset.glyph=glyph;
         token.setAttribute('role','img');
         token.setAttribute('aria-label',label);
         sq.appendChild(token);
