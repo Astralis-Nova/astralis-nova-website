@@ -7,7 +7,7 @@
   <meta name="description" content="Astralis Nova playable floating glass tri-dimensional chess board.">
   <title>Astralis Nova Tri-Dimensional Chess</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./tos-tridimensional.css?v=10">
+  <link rel="stylesheet" href="./tos-tridimensional.css?v=11">
 </head>
 <body>
 <main>
@@ -44,8 +44,24 @@
         <button id="flipBoard" type="button">Flip View</button>
       </div>
     </div>
+
+    <details class="online-dock" id="onlineMission">
+      <summary>Online Mission</summary>
+      <div class="online-grid">
+        <label>Commander name<input id="commanderName" maxlength="32" placeholder="Commander One"></label>
+        <label>Join code<input id="joinCode" maxlength="12" placeholder="NOVA-1234" autocapitalize="characters"></label>
+        <label class="online-check"><input id="novaTakeover" type="checkbox" checked> Nova controls Black until a challenger joins</label>
+        <div class="online-actions">
+          <button id="createOnline" type="button">Create Mission</button>
+          <button id="joinOnline" type="button">Join Mission</button>
+          <button id="copyInvite" type="button" disabled>Copy Invite</button>
+          <button id="leaveOnline" type="button" disabled>Leave Online</button>
+        </div>
+        <div id="onlineStatus" class="online-status" aria-live="polite">Checking mission archive…</div>
+      </div>
+    </details>
   </section>
 </main>
-<script src="./tos-tridimensional.js?v=6"></script>
+<script src="./tos-tridimensional.js?v=7"></script>
 </body>
 </html>
