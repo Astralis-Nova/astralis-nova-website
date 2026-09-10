@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Astralis Nova • Cherished Memories</title>
+  <style>
+    :root{color-scheme:dark;--bg:#050814;--panel:rgba(12,19,39,.86);--line:rgba(163,210,255,.2);--text:#f2f7ff;--muted:#aebbd0;--accent:#9bd7ff;--gold:#f6d58a;--ok:#8ce0b1}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:radial-gradient(circle at 20% 10%,#14254a 0,transparent 34%),radial-gradient(circle at 80% 85%,#2b173f 0,transparent 36%),var(--bg);color:var(--text)}
+    body{min-height:100vh;display:grid;place-items:center;padding:24px;overflow-x:hidden}.stars{position:fixed;inset:0;pointer-events:none;opacity:.38;background-image:radial-gradient(#fff 1px,transparent 1px);background-size:49px 49px;mask-image:linear-gradient(to bottom,#000,transparent 92%)}
+    main{width:min(970px,100%);position:relative;z-index:1}.brand{text-align:center;margin-bottom:22px}.eyebrow{letter-spacing:.24em;text-transform:uppercase;font-size:.75rem;color:var(--accent)}h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(2.2rem,6vw,4.5rem);margin:.25rem 0 .35rem}.tagline{color:var(--muted);max-width:680px;margin:auto;line-height:1.65}.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:clamp(22px,4vw,38px);box-shadow:0 24px 80px rgba(0,0,0,.34);backdrop-filter:blur(14px)}.card h2{margin:0 0 8px;font-size:1.35rem}.card p{color:var(--muted);line-height:1.6}.seal{width:76px;height:76px;border:1px solid rgba(246,213,138,.42);border-radius:50%;display:grid;place-items:center;font-size:2rem;margin-bottom:20px;box-shadow:0 0 40px rgba(246,213,138,.08)}label{display:block;margin:15px 0 7px;color:#d9e8fa;font-size:.92rem}input,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:rgba(2,7,18,.68);color:#fff;outline:none;font:inherit}textarea{min-height:96px;resize:vertical}input:focus,textarea:focus{border-color:rgba(155,215,255,.68);box-shadow:0 0 0 3px rgba(155,215,255,.08)}button{width:100%;margin-top:18px;padding:14px 18px;border:0;border-radius:12px;background:linear-gradient(135deg,#d8efff,#84caff);color:#06101f;font-weight:800;font-size:1rem;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.tiny{font-size:.82rem;color:#8191aa}.status{display:none;margin-top:14px;padding:12px;border-radius:12px;background:rgba(140,224,177,.09);border:1px solid rgba(140,224,177,.25);color:var(--ok)}.status.error{background:rgba(255,120,120,.08);border-color:rgba(255,120,120,.25);color:#ffb2b2}.feature{display:flex;gap:12px;margin:18px 0}.feature b{display:block;margin-bottom:3px}.feature span{color:var(--muted);font-size:.9rem;line-height:1.45}.dot{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--gold)}.back{display:inline-block;margin-top:20px;color:var(--accent);text-decoration:none}.hp{position:absolute!important;left:-9999px!important}.pending-note{border-top:1px solid var(--line);padding-top:18px;margin-top:20px}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}.brand{margin-bottom:16px}.card{border-radius:18px}}
+  </style>
+</head>
+<body>
+<div class="stars"></div>
+<main>
+  <header class="brand">
+    <div class="eyebrow">Astralis Nova • Private Archive</div>
+    <h1>Cherished Memories</h1>
+    <p class="tagline">A private collection of the people, places, creatures, and moments that made the journey. Access is granted personally by the archive owner.</p>
+  </header>
+
+  <section class="grid">
+    <div class="card">
+      <div class="seal">🔐</div>
+      <h2>Request access</h2>
+      <p>Enter your information below. Your request will be saved and the archive owner can approve or deny it from the private approval email.</p>
+      <form id="requestForm">
+        <label for="name">Your name</label>
+        <input id="name" name="name" autocomplete="name" maxlength="80" required>
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email" maxlength="160" required>
+        <label for="relationship">How do you know Ramon? <span class="tiny">(optional)</span></label>
+        <input id="relationship" name="relationship" maxlength="120" placeholder="Family, friend, coworker…">
+        <label for="note">Message <span class="tiny">(optional)</span></label>
+        <textarea id="note" name="note" maxlength="600" placeholder="A short note with your request"></textarea>
+        <label class="hp" aria-hidden="true">Website<input id="website" name="website" tabindex="-1" autocomplete="off"></label>
+        <button id="submitBtn" type="submit">Send access request</button>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </form>
+      <a class="back" href="/">← Return to Astralis Nova</a>
+    </div>
+
+    <aside class="card">
+      <h2>Private by design</h2>
+      <p>This archive is being built differently from the public Astralis Nova pages. The people list lives in the private database and the photographs will live in private storage, not in the public website repository.</p>
+      <div class="feature"><div class="dot">✉</div><div><b>Email approval</b><span>Each new request can generate an approval message with Approve and Deny links.</span></div></div>
+      <div class="feature"><div class="dot">👤</div><div><b>Saved people</b><span>Approved visitors become known members of the archive and can later receive album-specific permissions.</span></div></div>
+      <div class="feature"><div class="dot">🗂</div><div><b>Album permissions</b><span>The next stage can grant access to all memories or only selected albums.</span></div></div>
+      <div class="feature"><div class="dot">⏻</div><div><b>Revocable access</b><span>Access can be disabled without changing a shared password for everyone else.</span></div></div>
+      <p class="pending-note tiny">No private photographs are embedded on this request page. The gallery remains sealed until the private-storage and sign-in layer is activated.</p>
+    </aside>
+  </section>
+</main>
+<script>
+const form=document.getElementById('requestForm');
+const statusBox=document.getElementById('status');
+const button=document.getElementById('submitBtn');
+form.addEventListener('submit',async(e)=>{
+  e.preventDefault(); statusBox.style.display='none'; statusBox.className='status'; button.disabled=true; button.textContent='Transmitting request…';
+  const payload={name:form.name.value,email:form.email.value,relationship:form.relationship.value,note:form.note.value,website:form.website.value};
+  try{
+    const res=await fetch('/api/memories-request',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.error||'The request could not be sent.');
+    statusBox.textContent=data.message||'Your request has been sent for approval.'; statusBox.style.display='block'; form.reset();
+  }catch(err){statusBox.textContent=err.message;statusBox.className='status error';statusBox.style.display='block';}
+  finally{button.disabled=false;button.textContent='Send access request';}
+});
+</script>
+</body>
+</html>
