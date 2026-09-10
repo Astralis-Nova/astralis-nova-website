@@ -1,0 +1,1 @@
+(()=>{const map={L0:'P_U_NW_U',L1:'P_M_NW_U',L2:'P_L_NW_U',L3:'P_L_SW_D',R0:'P_U_NE_U',R1:'P_M_NE_U',R2:'P_L_NE_U',R3:'P_L_SE_D'};if(typeof state==='undefined'||!state?.attackMounts)return;for(const id of ['A1','A2','B1','B2'])if(map[state.attackMounts[id]])state.attackMounts[id]=map[state.attackMounts[id]];})();
