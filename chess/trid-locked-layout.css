@@ -1,0 +1,9 @@
+/* Locked visual layout for the Astralis Nova Tri-D board. */
+.scene.layout-custom .main-board{
+  left:var(--layout-left)!important;
+  top:var(--layout-top)!important;
+}
+.scene.layout-custom .attack{
+  left:calc(var(--ab-left) + var(--layout-dx,0px))!important;
+  top:calc(var(--ab-top) + var(--layout-dy,0px))!important;
+}
