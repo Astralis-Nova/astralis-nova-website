@@ -1,0 +1,2 @@
+.rule-summary{margin-top:8px;padding:8px 11px;border:1px solid rgba(83,174,222,.28);border-radius:11px;background:rgba(4,12,24,.62);color:#a9d9ee;font-size:.72rem;line-height:1.4;text-align:center;letter-spacing:.02em}
+@media(max-width:600px){.rule-summary{text-align:left}}
