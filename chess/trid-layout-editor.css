@@ -1,0 +1,80 @@
+/* Astralis Nova Tri-D layout editor. Visual positions only; game geometry stays untouched. */
+.scene.layout-custom .main-board{
+  left:var(--layout-left)!important;
+  top:var(--layout-top)!important;
+}
+.scene.layout-custom .attack{
+  left:calc(var(--ab-left) + var(--layout-dx,0px))!important;
+  top:calc(var(--ab-top) + var(--layout-dy,0px))!important;
+}
+body.layout-editing .scene .main-board,
+body.layout-editing .scene .attack{
+  cursor:grab;
+  touch-action:none;
+  outline:1px dashed rgba(126,239,255,.45);
+  outline-offset:8px;
+}
+body.layout-editing .scene .main-board:active,
+body.layout-editing .scene .attack:active{cursor:grabbing}
+body.layout-editing .scene .sq{pointer-events:none}
+body.layout-editing .scene .attack-mount{pointer-events:none;opacity:.18}
+body.layout-editing .scene .layout-active{
+  z-index:120!important;
+  outline:3px solid rgba(255,229,116,.95)!important;
+  outline-offset:9px!important;
+  filter:drop-shadow(0 0 18px rgba(255,221,88,.58)) drop-shadow(0 24px 32px rgba(0,0,0,.43))!important;
+}
+.layout-editor{
+  margin-top:12px;
+  padding:13px;
+  border:1px solid rgba(99,210,255,.58);
+  border-radius:16px;
+  background:linear-gradient(180deg,rgba(7,25,43,.96),rgba(4,13,26,.96));
+  box-shadow:0 0 24px rgba(35,178,255,.10),inset 0 0 18px rgba(116,229,255,.035);
+}
+.layout-editor-head{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
+.layout-editor-title{display:grid;gap:3px}
+.layout-editor-title strong{font-size:1rem;color:#eaffff}
+.layout-editor-title span{font-size:.78rem;color:#9fcce2}
+.layout-editor-head a{
+  border:1px solid rgba(107,217,255,.58);
+  border-radius:10px;
+  background:rgba(12,43,72,.88);
+  color:#fff;
+  padding:8px 11px;
+  text-decoration:none;
+  font-weight:850;
+}
+.layout-editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.layout-editor-actions button{
+  min-height:40px;
+  border:1px solid rgba(107,217,255,.58);
+  border-radius:10px;
+  background:rgba(12,43,72,.88);
+  color:white;
+  padding:8px 11px;
+  font-weight:850;
+  cursor:pointer;
+}
+.layout-editor-actions button.primary{border-color:rgba(111,255,212,.72);background:rgba(17,94,76,.78)}
+.layout-editor-actions button.danger{border-color:rgba(255,129,151,.58);background:rgba(93,25,43,.72)}
+.layout-selected{margin-top:10px;color:#ffe991;font-size:.8rem;font-weight:800}
+.layout-editor textarea{
+  width:100%;
+  margin-top:9px;
+  min-height:155px;
+  resize:vertical;
+  border:1px solid rgba(83,174,222,.42);
+  border-radius:10px;
+  background:rgba(0,7,16,.88);
+  color:#bdefff;
+  padding:10px;
+  font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace;
+}
+.layout-editor-note{margin:8px 0 0;color:#9fbcd0;font-size:.74rem;line-height:1.45}
+.layout-editor-note b{color:#e9fbff}
+@media(max-width:600px){
+  .layout-editor-actions{display:grid;grid-template-columns:1fr 1fr}
+  .layout-editor-actions button{width:100%}
+  .layout-editor-actions .primary{grid-column:1/-1}
+}
