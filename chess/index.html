@@ -9,11 +9,10 @@
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./tos-tridimensional.css?v=13">
   <link rel="stylesheet" href="./trid-core-v5.css?v=5">
-  <link rel="stylesheet" href="./trid-piece-visibility.css?v=2">
   <link rel="stylesheet" href="./trid-locked-layout.css?v=1">
   <link rel="stylesheet" href="./trid-rules-ready.css?v=1">
-  <link rel="stylesheet" href="./trid-mobile-piece-fallback.css?v=2">
   <link rel="stylesheet" href="./trid-concept-skin.css?v=1">
+  <link rel="stylesheet" href="./trid-command-board-v6.css?v=1">
 </head>
 <body>
 <main>
@@ -21,7 +20,7 @@
     <div>
       <div class="eyebrow">ASTRALIS NOVA · 64-SQUARE TRI-DIMENSIONAL CHESS</div>
       <h1>Floating Glass Tri-D Command Board</h1>
-      <p>Locked board layout · complete 32-piece set · legal chess movement adapted to Tri-D geometry.</p>
+      <p>Locked seven-deck layout · complete 32-piece set · researched Tri-D movement and attack-board rules.</p>
     </div>
     <div class="top-actions">
       <a href="../">Return to Astralis Nova</a>
@@ -50,7 +49,14 @@
         <button id="newGame" type="button">New Game</button>
         <button id="novaToggle" type="button" class="active">Nova Black: ON</button>
         <button id="flipBoard" type="button">Flip View</button>
+        <button id="attackBoardMode" type="button">Move Attack Board</button>
+        <button id="attackRotate" type="button" disabled>Rotate with Move: OFF</button>
       </div>
+    </div>
+
+    <div class="rule-summary" id="ruleSummary">
+      <span>32 pieces · alternating legal turns · captures · check/checkmate · castling · en passant · promotion</span>
+      <a href="https://meder.spacechess.org/3dschach/chess3d.htm" target="_blank" rel="noreferrer">W3DCF rule basis</a>
     </div>
 
     <details class="online-dock" id="onlineMission">
@@ -72,11 +78,9 @@
 </main>
 <script src="./trid-fresh-start.js?v=2"></script>
 <script src="./trid-locked-layout.js?v=1"></script>
-<script src="./trid-core-v5.js?v=4"></script>
-<script src="./trid-visible-glyphs.js?v=1"></script>
-<script src="./trid-mobile-piece-fallback.js?v=1"></script>
+<script src="./trid-core-v5.js?v=6"></script>
 <script src="./trid-middle-split.js?v=1"></script>
 <script src="./trid-online-v1.js?v=4"></script>
-<script src="./trid-rules-ready.js?v=1"></script>
+<script src="./trid-rules-ready.js?v=2"></script>
 </body>
 </html>

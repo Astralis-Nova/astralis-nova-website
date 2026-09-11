@@ -1,8 +1,8 @@
 (()=>{
 'use strict';
 
-const VERSION=5;
-const RULESET='W3DCF 2026';
+const VERSION=6;
+const RULESET='W3DCF 2013 · Astralis rotation';
 const SAVE_KEY='astralisTriDGameV2';
 const MAIN_DEFS={
   U:{size:4,ox:2,oy:0,level:2,left:166,top:64,zpx:110},
@@ -11,6 +11,7 @@ const MAIN_DEFS={
 };
 const BOARD_ORDER=['A1','U','A2','M','B1','L','B2'];
 const ATTACK_IDS=['A1','A2','B1','B2'];
+const ATTACK_ORIGINAL_OWNER={A1:'b',A2:'b',B1:'w',B2:'w'};
 const CORNERS={
   NW:{row:'N',col:'W',dx:-1,dy:-1,ax:0,ay:0},
   NE:{row:'N',col:'E',dx:3,dy:-1,ax:3,ay:0},
@@ -128,43 +129,54 @@ function applyAttackVisuals(s=state){
 }
 
 function dedupeMoves(moves){const m=new Map();for(const x of moves)m.set(`${x.from}>${x.to}>${x.capture||''}>${x.enPassant?'e':''}`,x);return[...m.values()]}
-function rayMoves(fromCell,piece,dirs,s=state){
+function rayMoves(fromCell,piece,dirs,s=state,attackOnly=false){
   const out=[];
   for(const [dx,dy] of dirs){
     for(let step=1;step<12;step++){
-      const targets=columnAt(fromCell.x+dx*step,fromCell.y+dy*step);if(!targets.length)break;
-      let openRoute=false;
+      const targets=columnAt(fromCell.x+dx*step,fromCell.y+dy*step);
+      // W3DCF 2.8: non-existent squares still continue a rank, file, or diagonal.
+      if(!targets.length)continue;
+      let blocked=false;
       for(const target of targets){
         const occ=pieceAt(target.key,s);
-        if(!occ){out.push({from:fromCell.key,to:target.key});openRoute=true}
-        else if(occ.color!==piece.color)out.push({from:fromCell.key,to:target.key,capture:target.key});
+        if(!occ)out.push({from:fromCell.key,to:target.key});
+        else{
+          blocked=true;
+          if(occ.color!==piece.color)out.push({from:fromCell.key,to:target.key,capture:target.key});
+          else if(attackOnly)out.push({from:fromCell.key,to:target.key,attackOnly:true});
+        }
       }
-      if(!openRoute)break;
+      // W3DCF 3.1(c): one occupied projected square blocks every level beyond it.
+      // A slider may still land on an open level above or below that blocker.
+      if(blocked)break;
     }
   }
   return dedupeMoves(out);
 }
-function kingMoves(fromCell,piece,s=state){
+function kingMoves(fromCell,piece,s=state,attackOnly=false){
   const out=[];for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){
     if(dx===0&&dy===0)continue;
     for(const target of columnAt(fromCell.x+dx,fromCell.y+dy)){
-      const occ=pieceAt(target.key,s);if(!occ||occ.color!==piece.color)out.push({from:fromCell.key,to:target.key,...(occ?{capture:target.key}:{})});
+      const occ=pieceAt(target.key,s);
+      if(!occ||occ.color!==piece.color||attackOnly)out.push({from:fromCell.key,to:target.key,...(occ&&occ.color!==piece.color?{capture:target.key}:{}),...(occ&&occ.color===piece.color?{attackOnly:true}:{})});
     }
   }return dedupeMoves(out);
 }
-function knightMoves(fromCell,piece,s=state){
+function knightMoves(fromCell,piece,s=state,attackOnly=false){
   const out=[];for(const [dx,dy] of [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]]){
     for(const target of columnAt(fromCell.x+dx,fromCell.y+dy)){
-      const occ=pieceAt(target.key,s);if(!occ||occ.color!==piece.color)out.push({from:fromCell.key,to:target.key,...(occ?{capture:target.key}:{})});
+      const occ=pieceAt(target.key,s);
+      if(!occ||occ.color!==piece.color||attackOnly)out.push({from:fromCell.key,to:target.key,...(occ&&occ.color!==piece.color?{capture:target.key}:{}),...(occ&&occ.color===piece.color?{attackOnly:true}:{})});
     }
   }return dedupeMoves(out);
 }
 function pawnMoves(fromCell,piece,s=state,attackOnly=false){
   const out=[],dir=piece.color==='w'?-1:1;
   if(!attackOnly){
-    const first=columnAt(fromCell.x,fromCell.y+dir).filter(t=>!pieceAt(t.key,s));
+    const firstColumn=columnAt(fromCell.x,fromCell.y+dir);
+    const first=firstColumn.filter(t=>!pieceAt(t.key,s));
     for(const t of first)out.push({from:fromCell.key,to:t.key});
-    if(!piece.moved&&first.length){
+    if(!piece.moved&&first.length&&!firstColumn.some(t=>pieceAt(t.key,s))){
       for(const t of columnAt(fromCell.x,fromCell.y+2*dir))if(!pieceAt(t.key,s))out.push({from:fromCell.key,to:t.key,doublePawn:true,pass:{x:fromCell.x,y:fromCell.y+dir}});
     }
   }
@@ -185,11 +197,11 @@ function pawnMoves(fromCell,piece,s=state,attackOnly=false){
 function pseudoMovesForCell(key,s=state,attackOnly=false){
   const piece=pieceAt(key,s),from=cells.get(key);if(!piece||!from)return[];
   if(piece.type==='p')return pawnMoves(from,piece,s,attackOnly);
-  if(piece.type==='n')return knightMoves(from,piece,s);
-  if(piece.type==='k')return dedupeMoves([...kingMoves(from,piece,s),...(attackOnly?[]:castleMoves(key,piece,s))]);
+  if(piece.type==='n')return knightMoves(from,piece,s,attackOnly);
+  if(piece.type==='k')return dedupeMoves([...kingMoves(from,piece,s,attackOnly),...(attackOnly?[]:castleMoves(key,piece,s))]);
   let out=[];
-  if(piece.type==='r'||piece.type==='q')out.push(...rayMoves(from,piece,[[1,0],[-1,0],[0,1],[0,-1]],s));
-  if(piece.type==='b'||piece.type==='q')out.push(...rayMoves(from,piece,[[1,1],[1,-1],[-1,1],[-1,-1]],s));
+  if(piece.type==='r'||piece.type==='q')out.push(...rayMoves(from,piece,[[1,0],[-1,0],[0,1],[0,-1]],s,attackOnly));
+  if(piece.type==='b'||piece.type==='q')out.push(...rayMoves(from,piece,[[1,1],[1,-1],[-1,1],[-1,-1]],s,attackOnly));
   return dedupeMoves(out);
 }
 function findKing(color,s=state){return Object.keys(s.pieces).find(k=>s.pieces[k]?.color===color&&s.pieces[k]?.type==='k')||null}
@@ -233,21 +245,27 @@ function legalMovesForCell(key,s=state){
 }
 function allLegalMoves(color,s=state){const out=[];for(const [k,p] of Object.entries(s.pieces))if(p.color===color)out.push(...legalMovesForCell(k,s));return out}
 
+function projectedColumnOccupied(key,s=state){
+  const cell=cells.get(key);if(!cell)return Boolean(pieceAt(key,s));
+  return columnAt(cell.x,cell.y).some(candidate=>Boolean(pieceAt(candidate.key,s)));
+}
+
 function castleMoves(key,piece,s=state){
   if(piece.type!=='k'||piece.moved||inCheck(piece.color,s))return[];
   const white=piece.color==='w',kingFrom=white?'L:C1':'U:C4';if(key!==kingFrom)return[];
+  if((white&&(s.ply||0)<2)||(!white&&(s.ply||0)<3))return[];
   const plans=white?[
-    {board:'B2',rookFrom:'B2:B1',kingTo:'B2:B1',rookTo:'L:D1',clear:['L:D1','B2:A1'],name:'O-O'},
-    {board:'B1',rookFrom:'B1:A1',kingTo:'B1:B1',rookTo:'L:B1',clear:['L:A1','L:B1','B1:B1'],name:'O-O-O'}
+    {board:'B2',rookFrom:'B2:B1',kingTo:'B2:B1',rookTo:'L:C1',clear:['L:D1','B2:A1'],name:'O-O'},
+    {board:'B1',rookFrom:'B1:A1',kingTo:'B1:B1',rookTo:'L:C1',clear:['L:A1','L:B1','B1:B1'],name:'O-O-O'}
   ]:[
-    {board:'A2',rookFrom:'A2:B1',kingTo:'A2:B1',rookTo:'U:D4',clear:['U:D4','A2:A1'],name:'O-O'},
-    {board:'A1',rookFrom:'A1:A1',kingTo:'A1:B1',rookTo:'U:B4',clear:['U:A4','U:B4','A1:B1'],name:'O-O-O'}
+    {board:'A2',rookFrom:'A2:B1',kingTo:'A2:B1',rookTo:'U:C4',clear:['U:D4','A2:A1'],name:'O-O'},
+    {board:'A1',rookFrom:'A1:A1',kingTo:'A1:B1',rookTo:'U:C4',clear:['U:A4','U:B4','A1:B1'],name:'O-O-O'}
   ];
   const out=[];
   for(const plan of plans){
     const rook=pieceAt(plan.rookFrom,s);if(!rook||rook.color!==piece.color||rook.type!=='r'||rook.moved)continue;
     if(s.attackMoved?.[plan.board]||s.attackMounts?.[plan.board]!==INITIAL_MOUNTS[plan.board])continue;
-    if(plan.clear.some(q=>pieceAt(q,s)))continue;
+    if(plan.clear.some(q=>projectedColumnOccupied(q,s)))continue;
     const m={from:key,to:plan.kingTo,castle:{...plan}};const test=applyMoveToState(m,s,'q');rebuildGeometry(test);const safe=!inCheck(piece.color,test);rebuildGeometry(s);if(safe)out.push(m);
   }
   return out;
@@ -271,10 +289,11 @@ function candidateAttackSlots(boardId,s=state){
   }
   return [...new Set(out)].filter(id=>!slotOccupied(id,boardId,s));
 }
-function attackBoardEligible(boardId,color,s=state){const occ=boardOccupants(boardId,s);return occ.length===1&&occ[0][1].color===color&&occ[0][1].type!=='k'}
-function cornerKey(main,corner){const c=CORNERS[corner],file=c.col==='W'?'A':'D',rank=c.row==='N'?4:1;return`${main}:${file}${rank}`}
-function extremeRear(slot){return(slot.main==='U'&&CORNERS[slot.corner].row==='N')||(slot.main==='L'&&CORNERS[slot.corner].row==='S')}
-function rearPawnBlocks(boardId,s=state){const slot=SLOTS[s.attackMounts?.[boardId]];if(!slot||!extremeRear(slot))return false;const p=pieceAt(cornerKey(slot.main,slot.corner),s);return p?.type==='p'&&p.color!==s.turn}
+function attackBoardEligible(boardId,color,s=state){
+  const occ=boardOccupants(boardId,s);if(occ.length>1)return false;
+  if(occ.length===1)return occ[0][1].color===color;
+  return ATTACK_ORIGINAL_OWNER[boardId]===color;
+}
 function applyAttackBoardMoveToState(boardId,targetSlot,rotate,s=state){
   const next=cloneState(s),color=s.turn,fromSlot=next.attackMounts[boardId];next.attackMounts[boardId]=targetSlot;
   if(rotate)next.attackRotations[boardId]=!next.attackRotations[boardId];next.attackMoved={...INITIAL_ATTACK_MOVED,...(next.attackMoved||{})};next.attackMoved[boardId]=true;
@@ -283,12 +302,12 @@ function applyAttackBoardMoveToState(boardId,targetSlot,rotate,s=state){
   next.lastMove={kind:'board',board:boardId,fromSlot,toSlot:targetSlot,rotated:Boolean(rotate),color};next.version=VERSION;next.ruleset=RULESET;return next;
 }
 function riderMotionAllowed(boardId,targetSlot,rotate,s=state){
-  const occ=boardOccupants(boardId,s);if(occ.length!==1)return false;const [key,p]=occ[0];if(p.type!=='p')return true;
-  rebuildGeometry(s);const before=cells.get(key)?.y;const test=cloneState(s);test.attackMounts[boardId]=targetSlot;if(rotate)test.attackRotations[boardId]=!test.attackRotations[boardId];rebuildGeometry(test);const after=cells.get(key)?.y;rebuildGeometry(s);
-  return p.color==='w'?after<=before:after>=before;
+  const occ=boardOccupants(boardId,s);if(occ.length===0)return true;if(occ.length!==1)return false;
+  const current=SLOTS[s.attackMounts?.[boardId]],target=SLOTS[targetSlot],p=occ[0][1];if(!current||!target)return false;
+  return p.color==='w'?target.anchorY<=current.anchorY:target.anchorY>=current.anchorY;
 }
 function attackBoardMoveSafe(boardId,targetSlot,rotate,s=state){
-  if(rearPawnBlocks(boardId,s)||!riderMotionAllowed(boardId,targetSlot,rotate,s))return false;
+  if(!attackBoardEligible(boardId,s.turn,s)||!riderMotionAllowed(boardId,targetSlot,rotate,s))return false;
   const color=s.turn,test=applyAttackBoardMoveToState(boardId,targetSlot,rotate,s);rebuildGeometry(test);const safe=!inCheck(color,test);rebuildGeometry(s);return safe;
 }
 function legalAttackBoardMoves(boardId,s=state){
@@ -346,10 +365,15 @@ function renderMountTargets(){
   }
 }
 function exitAttackMode(msg=''){attackMode=false;pendingAttackBoard=null;rotateOnMove=false;clearMountTargets();render();if(msg)setStatus(msg)}
-function maybePromoteRider(boardId,color){const occ=boardOccupants(boardId,state);if(occ.length!==1)return;const [key,p]=occ[0],cell=cells.get(key);if(promotionDue(p,cell,state))p.type=color==='b'&&state.novaBlack?'q':choosePromotion(color)}
+function promoteDuePawnsAfterBoardMove(moverColor,interactive=false){
+  for(const [key,p] of Object.entries(state.pieces)){
+    if(p.type!=='p'||!promotionDue(p,cells.get(key),state))continue;
+    p.type=interactive&&p.color===moverColor?choosePromotion(p.color):'q';
+  }
+}
 function commitAttackBoardMove(id,target,rotate){
   if(!attackMode||id!==pendingAttackBoard||!candidateAttackSlots(id,state).includes(target)||!attackBoardMoveSafe(id,target,rotate,state)){setStatus('That attack-board move is not legal.');return}
-  const color=state.turn,from=state.attackMounts[id];state=applyAttackBoardMoveToState(id,target,rotate,state);rebuildGeometry(state);maybePromoteRider(id,color);attackMode=false;pendingAttackBoard=null;rotateOnMove=false;clearMountTargets();const st=finishIfNeeded();save();render();
+  const color=state.turn,from=state.attackMounts[id];state=applyAttackBoardMoveToState(id,target,rotate,state);rebuildGeometry(state);promoteDuePawnsAfterBoardMove(color,true);attackMode=false;pendingAttackBoard=null;rotateOnMove=false;clearMountTargets();const st=finishIfNeeded();save();render();
   const label=`${id} attack board ${from} to ${target}${rotate?' with 180 degree rotation':''}`;setStatus(st.over?(st.checkmate?`${label}. Checkmate.`:`${label}. Stalemate.`):`${label}. ${inCheck(state.turn,state)?'Check. ':''}${state.turn==='w'?'White':'Black'} to move.`);if(!st.over&&state.novaBlack&&state.turn==='b')setTimeout(makeNovaMove,450);
 }
 
@@ -357,7 +381,7 @@ function makeNovaMove(){
   if(!state.novaBlack||state.turn!=='b'||state.gameOver)return;const pieceMoves=allLegalMoves('b',state),boardMoves=allLegalAttackBoardMoves('b',state);if(!pieceMoves.length&&!boardMoves.length){finishIfNeeded();save();render();return}
   if(boardMoves.length&&(pieceMoves.length===0||Math.random()<.12)){
     let choice=boardMoves[0],best=-1e9;for(const a of boardMoves){const t=applyAttackBoardMoveToState(a.board,a.target,a.rotate,state);rebuildGeometry(t);let score=Math.random()*1.2+(inCheck('w',t)?4:0);rebuildGeometry(state);if(score>best){best=score;choice=a}}
-    const from=state.attackMounts[choice.board];state=applyAttackBoardMoveToState(choice.board,choice.target,choice.rotate,state);rebuildGeometry(state);maybePromoteRider(choice.board,'b');finishIfNeeded();save();render();if(!state.gameOver)setStatus(`Nova moved ${choice.board} ${from} to ${choice.target}. White to move.`);return;
+    const from=state.attackMounts[choice.board];state=applyAttackBoardMoveToState(choice.board,choice.target,choice.rotate,state);rebuildGeometry(state);promoteDuePawnsAfterBoardMove('b',false);finishIfNeeded();save();render();if(!state.gameOver)setStatus(`Nova moved ${choice.board} ${from} to ${choice.target}. White to move.`);return;
   }
   let choice=pieceMoves[0],best=-1e9;for(const m of pieceMoves){const target=pieceAt(m.capture||m.to,state),moving=pieceAt(m.from,state);let score=(target?VALUES[target.type]*10:0)+Math.random()*2;const t=applyMoveToState(m,state,'q');rebuildGeometry(t);if(inCheck('w',t))score+=3;if(moving.type==='p'&&promotionDue(moving,cells.get(m.to),state))score+=8;if(m.castle)score+=1.5;rebuildGeometry(state);if(score>best){best=score;choice=m}}
   const moving=pieceAt(choice.from,state),label=moveLabel(choice,moving);state=applyMoveToState(choice,state,'q');rebuildGeometry(state);finishIfNeeded();save();render();if(!state.gameOver)setStatus(`Nova: ${label}. ${inCheck('w',state)?'Check. ':''}White to move.`);
@@ -401,8 +425,19 @@ function setStatus(t){if(statusEl)statusEl.textContent=t}
 for(const [key,cell] of cells)cell.el.addEventListener('click',()=>handleCell(key));
 newGameBtn?.addEventListener('click',resetGame);novaBtn?.addEventListener('click',toggleNova);flipBtn?.addEventListener('click',flip);attackModeBtn?.addEventListener('click',toggleAttackMode);rotateBtn?.addEventListener('click',toggleAttackRotation);
 const restored=load();rebuildGeometry(state);scene?.classList.toggle('flipped',state.orientation==='black');render();const st=gameStatus(state);
-if(st.over){state.gameOver=true;state.winner=st.winner;setStatus(st.checkmate?`Checkmate. ${st.winner==='w'?'White':'Black'} wins.`:'Stalemate.')}else setStatus(restored?`W3DCF game restored. ${state.turn==='w'?'White':'Black'} to move${st.check?' in check':''}.`:'W3DCF Tri-D V5 ready. White to move.');
+if(st.over){state.gameOver=true;state.winner=st.winner;setStatus(st.checkmate?`Checkmate. ${st.winner==='w'?'White':'Black'} wins.`:'Stalemate.')}else setStatus(restored?`W3DCF game restored. ${state.turn==='w'?'White':'Black'} to move${st.check?' in check':''}.`:'W3DCF-based Tri-D V6 ready. White to move.');
 if(state.novaBlack&&state.turn==='b'&&!state.gameOver)setTimeout(makeNovaMove,450);
-const chip=document.querySelector('.mode-chip');if(chip)chip.textContent='TRI-D CORE V5 · W3DCF';
-window.AstralisTriD={version:VERSION,ruleset:RULESET,state:()=>cloneState(state),legalMovesForCell:(k)=>legalMovesForCell(k,state),candidateAttackSlots:(id)=>candidateAttackSlots(id,state)};
+const chip=document.querySelector('.mode-chip');if(chip)chip.textContent='ASTRALIS TRI-D V6 · W3DCF-BASED';
+window.AstralisTriD={
+  version:VERSION,ruleset:RULESET,state:()=>cloneState(state),legalMovesForCell:(k)=>legalMovesForCell(k,state),candidateAttackSlots:(id)=>candidateAttackSlots(id,state),
+  test:{
+    freshState:(nova=false)=>freshState(nova),slots:()=>cloneState(SLOTS),
+    legalMoves:(key,input)=>{const prior=state,next=cloneState(input);state=next;rebuildGeometry(next);const result=cloneState(legalMovesForCell(key,next));state=prior;rebuildGeometry(prior);return result},
+    pseudoMoves:(key,input,attackOnly=false)=>{const prior=state,next=cloneState(input);state=next;rebuildGeometry(next);const result=cloneState(pseudoMovesForCell(key,next,attackOnly));state=prior;rebuildGeometry(prior);return result},
+    allLegalMoves:(color,input)=>{const prior=state,next=cloneState(input);state=next;rebuildGeometry(next);const result=cloneState(allLegalMoves(color,next));state=prior;rebuildGeometry(prior);return result},
+    attacked:(key,byColor,input)=>{const prior=state,next=cloneState(input);state=next;rebuildGeometry(next);const result=squareAttacked(key,byColor,next);state=prior;rebuildGeometry(prior);return result},
+    attackBoardMoves:(id,input)=>{const prior=state,next=cloneState(input);state=next;rebuildGeometry(next);const result=cloneState(legalAttackBoardMoves(id,next));state=prior;rebuildGeometry(prior);return result},
+    applyMove:(move,input,promotion='q')=>{const prior=state,next=cloneState(input);state=next;rebuildGeometry(next);const result=applyMoveToState(move,next,promotion);state=prior;rebuildGeometry(prior);return result}
+  }
+};
 })();
