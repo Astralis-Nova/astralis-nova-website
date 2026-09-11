@@ -181,6 +181,16 @@ test('promotion is applied immediately on the farthest main-board rank',()=>{
   assert.equal(rules.applyMove(move,state,'n').pieces['U:B4'].type,'n');
 });
 
+test('glass pieces pivot from the exact square center in normal and flipped views',()=>{
+  const css=fs.readFileSync(new URL('./trid-command-board-v6.css',import.meta.url),'utf8');
+  const source=fs.readFileSync(new URL('./trid-core-v5.js',import.meta.url),'utf8');
+  assert.match(css,/--piece-anchor-x:50%/);
+  assert.match(css,/--piece-anchor-y:50%/);
+  assert.match(css,/translate3d\(-50%,0,var\(--piece-deck-lift\)\) rotateX\(-90deg\)/);
+  assert.match(css,/\.scene\.flipped \.piece\{transform:translate3d\(-50%,0,var\(--piece-deck-lift\)\) rotateX\(-90deg\) rotateZ\(180deg\)/);
+  assert.match(source,/viewBox="0 0 100 164" preserveAspectRatio="xMidYMax meet"/);
+});
+
 test('a deterministic multi-move game keeps alternating without losing either king',()=>{
   let state=rules.freshState(false);
   let completed=0;

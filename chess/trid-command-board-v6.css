@@ -97,14 +97,27 @@ main{width:min(1180px,100%)!important;padding:10px!important}
 .sq.light{background:linear-gradient(145deg,rgba(224,249,255,.085),rgba(91,183,239,.025) 62%,rgba(6,42,81,.08))!important}
 .sq.dark{background:linear-gradient(145deg,rgba(19,131,221,.23),rgba(2,59,121,.2) 62%,rgba(0,29,69,.25))!important}
 
-/* Keep the custom vector chessmen visible and physically upright. */
+/*
+ * Keep every chessman planted on the center of its owning square.
+ * The board itself is tilted 61deg, so the -90deg local rotation stands the
+ * model on the deck instead of stretching it along the playing surface.
+ */
+.sq{
+  --piece-anchor-x:50%;
+  --piece-anchor-y:50%;
+}
 .piece{
-  left:50%!important;top:auto!important;bottom:50%!important;width:72%!important;height:172%!important;
+  --piece-deck-lift:2px;
+  left:var(--piece-anchor-x)!important;
+  top:auto!important;
+  bottom:var(--piece-anchor-y)!important;
+  width:72%!important;
+  height:172%!important;
   z-index:38!important;overflow:visible!important;
-  transform:translate3d(-50%,0,42px) rotateX(0deg) scaleY(2.5)!important;
+  transform:translate3d(-50%,0,var(--piece-deck-lift)) rotateX(-90deg)!important;
   transform-origin:50% 100%!important;
 }
-.scene.flipped .piece{transform:translate3d(-50%,0,42px) rotateX(0deg) rotateZ(180deg) scaleY(2.5)!important}
+.scene.flipped .piece{transform:translate3d(-50%,0,var(--piece-deck-lift)) rotateX(-90deg) rotateZ(180deg)!important}
 .piece .piece-glyph{display:none!important}
 .piece .piece-plane{display:block!important;opacity:1!important;visibility:visible!important}
 .piece-face{transform:translateZ(5px)!important}
