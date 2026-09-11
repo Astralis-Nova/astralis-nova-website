@@ -1,23 +1,26 @@
-/* Astralis Nova Tri-D V6: 8x8 main planes with readable glass chess pieces. */
+/* Astralis Nova Tri-D V6: 8x8 main planes with split middle platform and readable glass chess pieces. */
 .eight{grid-template-columns:repeat(8,minmax(0,1fr));aspect-ratio:1}
+.four-by-eight{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(8,minmax(0,1fr));width:200px;height:400px}
 .main-board{width:400px}
 .attack{width:120px}
 .board-upper{left:180px;top:55px;transform:translateZ(130px) rotateX(60deg)}
-.board-middle{left:180px;top:365px;transform:translateZ(65px) rotateX(60deg)}
+.board-middle{left:166px;top:365px;transform:translateZ(65px) rotateX(60deg);width:428px}
 .board-lower{left:180px;top:675px;transform:translateZ(0) rotateX(60deg)}
+.middle-pair{display:flex;gap:28px;align-items:stretch}
+.split-half{border-radius:2px}
 .attack-a1{left:42px;top:88px;transform:translateZ(170px) rotateX(60deg)}
 .attack-a2{left:598px;top:88px;transform:translateZ(170px) rotateX(60deg)}
 .attack-b1{left:42px;top:845px;transform:translateZ(40px) rotateX(60deg)}
 .attack-b2{left:598px;top:845px;transform:translateZ(40px) rotateX(60deg)}
 .scene-wrap{min-height:1085px}
 .scene{height:1070px}
-.eight .sq{min-width:0;aspect-ratio:1}
-.eight .piece{width:94%;height:135%;font-size:2.15rem;transform:translate3d(-50%,-8%,34px) rotateX(-60deg) scaleY(1.28)}
-.scene.flipped .eight .piece{transform:translate3d(-50%,-8%,34px) rotateX(-60deg) rotateZ(180deg) scaleY(1.28)}
+.eight .sq,.four-by-eight .sq{min-width:0;aspect-ratio:1}
+.eight .piece,.four-by-eight .piece{width:94%;height:135%;font-size:2.15rem;transform:translate3d(-50%,-8%,34px) rotateX(-60deg) scaleY(1.28)}
+.scene.flipped .eight .piece,.scene.flipped .four-by-eight .piece{transform:translate3d(-50%,-8%,34px) rotateX(-60deg) rotateZ(180deg) scaleY(1.28)}
 .piece.crystal{color:rgba(240,254,255,.48);-webkit-text-stroke:1px rgba(255,255,255,.96);text-shadow:0 0 2px #fff,0 0 8px rgba(178,244,255,.95),0 0 18px rgba(67,205,255,.58),0 8px 10px rgba(0,10,25,.55)}
 .piece.sapphire{color:rgba(17,101,218,.5);-webkit-text-stroke:1px rgba(145,224,255,.94);text-shadow:0 0 2px rgba(195,242,255,.9),0 0 9px rgba(0,162,255,.84),0 0 18px rgba(0,77,235,.58),0 8px 10px rgba(0,5,24,.68)}
-.eight .sq.selected{box-shadow:inset 0 0 0 2px rgba(255,236,128,.95),inset 0 0 18px rgba(255,220,72,.16);z-index:7}
-.eight .sq.legal:after{width:18%;transform:translateZ(14px)}
-.eight .sq.capture{box-shadow:inset 0 0 0 2px rgba(255,103,145,.9),inset 0 0 18px rgba(255,69,128,.18);z-index:7}
-@media(max-width:900px){.scene-wrap{min-height:900px}.scene{--scene-scale:.78;transform-origin:50% 37%}}
-@media(max-width:600px){.scene-wrap{min-height:740px}.scene{--scene-scale:.61;transform-origin:50% 30%}.eight .piece{font-size:2.3rem}}
+.eight .sq.selected,.four-by-eight .sq.selected{box-shadow:inset 0 0 0 2px rgba(255,236,128,.95),inset 0 0 18px rgba(255,220,72,.16);z-index:7}
+.eight .sq.legal:after,.four-by-eight .sq.legal:after{width:18%;transform:translateZ(14px)}
+.eight .sq.capture,.four-by-eight .sq.capture{box-shadow:inset 0 0 0 2px rgba(255,103,145,.9),inset 0 0 18px rgba(255,69,128,.18);z-index:7}
+@media(max-width:900px){.scene-wrap{min-height:900px}.scene{--scene-scale:.78;transform-origin:50% 37%}.board-middle{left:152px;width:400px}.middle-pair{gap:16px}.four-by-eight{width:192px;height:384px}}
+@media(max-width:600px){.scene-wrap{min-height:740px}.scene{--scene-scale:.61;transform-origin:50% 30%}.eight .piece,.four-by-eight .piece{font-size:2.3rem}.board-middle{left:145px;width:384px}.middle-pair{gap:12px}.four-by-eight{width:186px;height:372px}}
