@@ -99,8 +99,10 @@ main{width:min(1180px,100%)!important;padding:10px!important}
 
 /*
  * Keep every chessman planted on the center of its owning square.
- * The board itself is tilted 61deg, so the -90deg local rotation stands the
- * model on the deck instead of stretching it along the playing surface.
+ * Keep the artwork in the deck plane and use an optical vertical stretch.
+ * Mobile browsers can flatten nested 3-D layers; a perpendicular child plane
+ * then collapses edge-on and disappears. The bottom-center transform origin
+ * keeps this billboard treatment planted on the correct square.
  */
 .sq{
   --piece-anchor-x:50%;
@@ -114,10 +116,10 @@ main{width:min(1180px,100%)!important;padding:10px!important}
   width:72%!important;
   height:172%!important;
   z-index:38!important;overflow:visible!important;
-  transform:translate3d(-50%,0,var(--piece-deck-lift)) rotateX(-90deg)!important;
+  transform:translate3d(-50%,0,var(--piece-deck-lift)) rotateX(0deg) scaleY(2.5)!important;
   transform-origin:50% 100%!important;
 }
-.scene.flipped .piece{transform:translate3d(-50%,0,var(--piece-deck-lift)) rotateX(-90deg) rotateZ(180deg)!important}
+.scene.flipped .piece{transform:translate3d(-50%,0,var(--piece-deck-lift)) rotateX(0deg) rotateZ(180deg) scaleY(2.5)!important}
 .piece .piece-glyph{display:none!important}
 .piece .piece-plane{display:block!important;opacity:1!important;visibility:visible!important}
 .piece-face{transform:translateZ(5px)!important}
