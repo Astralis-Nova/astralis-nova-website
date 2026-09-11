@@ -59,6 +59,41 @@
 .piece .glass-cut{fill:none;stroke:rgba(235,255,255,.86);stroke-linecap:round;stroke-width:2.4;vector-effect:non-scaling-stroke}
 .piece .glass-base-shadow{fill:rgba(0,12,30,.30)}
 .scene.flipped .piece{transform:translate3d(-50%,0,24px) rotateX(-90deg) rotateZ(180deg)!important}
+
+/* Split only the middle 4x4 deck into two physical 2x4 panels. It remains 16 playable squares. */
+.board-middle{left:198px!important;width:364px!important}
+#M{
+  width:364px;
+  height:330px;
+  aspect-ratio:auto!important;
+  grid-template-columns:82.5px 82.5px 34px 82.5px 82.5px!important;
+  grid-template-rows:repeat(4,82.5px)!important;
+  border-color:transparent!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  animation:none!important;
+  overflow:visible;
+}
+#M>.sq:nth-child(4n+1){grid-column:1}
+#M>.sq:nth-child(4n+2){grid-column:2}
+#M>.sq:nth-child(4n+3){grid-column:4}
+#M>.sq:nth-child(4n+4){grid-column:5}
+#M:before,#M:after{
+  content:"";
+  position:absolute;
+  top:0;
+  width:165px;
+  height:330px;
+  transform:translateZ(-9px);
+  border:2px solid rgba(191,247,255,.92);
+  border-radius:6px;
+  background:rgba(77,193,255,.018);
+  box-shadow:0 15px 34px rgba(0,0,0,.36),0 0 6px rgba(165,245,255,.92),0 0 16px rgba(72,220,255,.64),0 0 34px rgba(0,151,255,.3),inset 0 0 8px rgba(215,252,255,.15);
+  pointer-events:none;
+}
+#M:before{left:0}
+#M:after{right:0;inset:auto 0 auto auto}
+
 @keyframes mountPulse{0%,100%{filter:brightness(.9);box-shadow:0 0 7px rgba(144,244,255,.62),0 0 15px rgba(30,194,255,.42)}50%{filter:brightness(1.16);box-shadow:0 0 9px rgba(202,255,255,.88),0 0 24px rgba(30,194,255,.68)}}
 @media(prefers-reduced-motion:reduce){.attack,.attack-mount{transition:none;animation:none}}
 @media(max-width:600px){
