@@ -1,42 +1,74 @@
-/* Mobile-safe chess-piece fallback. Keeps the locked board geometry untouched. */
+/* Mobile presentation for the Astralis Nova glass army.
+   Keep the real SVG pieces interactive with the rules engine and counter-rotate
+   them against the 60deg board tilt so they stand upright on phones/tablets. */
 @media (max-width: 900px), (pointer: coarse) {
-  .scene .sq { position: relative; overflow: visible !important; }
+  .scene .sq {
+    position: relative;
+    overflow: visible !important;
+  }
 
-  /* The original glass/3D piece can remain in the DOM for desktop and rules logic.
-     On mobile, hide only its visual planes and draw a direct square-level glyph instead. */
   .scene .sq > .piece {
-    opacity: 0 !important;
-    visibility: hidden !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+    left: 50% !important;
+    top: auto !important;
+    bottom: 46% !important;
+    width: 92% !important;
+    height: 182% !important;
+    z-index: 160 !important;
+    transform-origin: 50% 100% !important;
+    transform: translate3d(-50%, 0, 34px) rotateX(-60deg) scale(1.04) !important;
+    transform-style: preserve-3d !important;
     pointer-events: none !important;
+    filter: none !important;
   }
 
+  .scene.flipped .sq > .piece {
+    transform: translate3d(-50%, 0, 34px) rotateX(-60deg) rotateZ(180deg) scale(1.04) !important;
+  }
+
+  .scene .piece-plane {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    backface-visibility: visible !important;
+  }
+
+  .scene .piece-face {
+    transform: translateZ(5px) !important;
+  }
+
+  .scene .piece-side {
+    transform: rotateY(90deg) translateZ(2px) !important;
+    opacity: .34 !important;
+  }
+
+  .scene .piece.crystal .piece-face svg {
+    filter: drop-shadow(0 5px 5px rgba(0,8,22,.48)) drop-shadow(0 0 8px rgba(228,255,255,.92)) drop-shadow(0 0 18px rgba(86,211,255,.58)) !important;
+  }
+
+  .scene .piece.sapphire .piece-face svg {
+    filter: drop-shadow(0 5px 5px rgba(0,3,18,.62)) drop-shadow(0 0 9px rgba(106,211,255,.94)) drop-shadow(0 0 20px rgba(24,112,255,.72)) !important;
+  }
+
+  /* Disable the temporary flat-symbol fallback now that the real glass pieces
+     are rendered upright. The JS data attributes may remain for compatibility. */
   .scene .sq[data-mobile-piece]::after {
-    content: attr(data-mobile-piece);
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    z-index: 140;
-    transform: translate(-50%, -54%);
-    display: block;
-    width: 1em;
-    height: 1em;
-    line-height: 1;
-    font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", "Arial Unicode MS", serif;
-    font-size: clamp(2.4rem, 8.4vw, 4.4rem);
-    font-weight: 400;
-    text-align: center;
-    pointer-events: none;
-    user-select: none;
-    -webkit-user-select: none;
+    content: none !important;
+    display: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .scene .sq > .piece {
+    width: 98% !important;
+    height: 190% !important;
+    bottom: 45% !important;
+    transform: translate3d(-50%, 0, 36px) rotateX(-60deg) scale(1.06) !important;
   }
 
-  .scene .sq[data-mobile-color="w"]::after {
-    color: #f8ffff;
-    text-shadow: 0 0 2px #fff, 0 0 8px rgba(199,248,255,.98), 0 0 18px rgba(70,203,255,.72), 0 7px 9px rgba(0,8,22,.88);
-  }
-
-  .scene .sq[data-mobile-color="b"]::after {
-    color: #48a8ff;
-    text-shadow: 0 0 2px rgba(222,249,255,.96), 0 0 9px rgba(0,183,255,.98), 0 0 20px rgba(0,68,255,.8), 0 7px 9px rgba(0,3,20,.94);
+  .scene.flipped .sq > .piece {
+    transform: translate3d(-50%, 0, 36px) rotateX(-60deg) rotateZ(180deg) scale(1.06) !important;
   }
 }
