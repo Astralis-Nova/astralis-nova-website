@@ -4,40 +4,40 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#020611">
-  <meta name="description" content="Astralis Nova playable floating glass tri-dimensional chess board using the World Tri Dimensional Chess Federation ruleset.">
-  <title>Astralis Nova Tri-Dimensional Chess</title>
+  <meta name="description" content="Astralis Nova playable floating glass 8x8 tri-dimensional chess board with a complete 32-piece chess set.">
+  <title>Astralis Nova 8x8 Tri-Dimensional Chess</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./tos-tridimensional.css?v=13">
-  <link rel="stylesheet" href="./trid-core-v5.css?v=2">
+  <link rel="stylesheet" href="./trid-core-v6.css?v=1">
 </head>
 <body>
 <main>
   <header class="topbar">
     <div>
-      <div class="eyebrow">ASTRALIS NOVA · TRI-DIMENSIONAL CHESS</div>
-      <h1>Tri-Dimensional Command Board</h1>
-      <p>Seven floating glass planes · a taller TOS-inspired command layout · W3DCF rules.</p>
+      <div class="eyebrow">ASTRALIS NOVA · 8×8 TRI-DIMENSIONAL CHESS</div>
+      <h1>8×8 Floating Glass Command Board</h1>
+      <p>Three full 8×8 glass chess planes · four floating side platforms · complete 32-piece set.</p>
     </div>
     <div class="top-actions"><a href="../">Return to Astralis Nova</a></div>
   </header>
 
-  <section class="board-stage" aria-label="Astralis Nova tri-dimensional chess">
+  <section class="board-stage" aria-label="Astralis Nova 8 by 8 tri-dimensional chess">
     <div class="scene-wrap">
-      <div class="scene" id="scene" aria-label="Playable floating seven-plane tri-dimensional chess board">
+      <div class="scene" id="scene" aria-label="Playable floating 8 by 8 tri-dimensional chess board">
         <section class="attack attack-a1" data-board="A1"><div class="grid two" id="A1"></div></section>
-        <section class="main-board board-upper" data-board="U"><div class="grid four" id="U"></div></section>
+        <section class="main-board board-upper" data-board="U"><div class="grid eight" id="U"></div></section>
         <section class="attack attack-a2" data-board="A2"><div class="grid two" id="A2"></div></section>
-        <section class="main-board board-middle" data-board="M"><div class="grid four" id="M"></div></section>
+        <section class="main-board board-middle" data-board="M"><div class="grid eight" id="M"></div></section>
         <section class="attack attack-b1" data-board="B1"><div class="grid two" id="B1"></div></section>
-        <section class="main-board board-lower" data-board="L"><div class="grid four" id="L"></div></section>
+        <section class="main-board board-lower" data-board="L"><div class="grid eight" id="L"></div></section>
         <section class="attack attack-b2" data-board="B2"><div class="grid two" id="B2"></div></section>
       </div>
     </div>
 
     <div class="command-dock" aria-label="Game controls">
       <div class="status-cluster">
-        <span class="mode-chip">TRI-D CORE V5 · W3DCF</span>
-        <strong id="gameStatus" aria-live="polite">Loading verified Tri-D game…</strong>
+        <span class="mode-chip">ASTRALIS TRI-D V6 · 8×8</span>
+        <strong id="gameStatus" aria-live="polite">Loading 8×8 Tri-D board…</strong>
       </div>
       <div class="game-actions">
         <button id="newGame" type="button">New Game</button>
@@ -63,7 +63,7 @@
     </details>
   </section>
 </main>
-<script src="./trid-core-v5.js?v=1"></script>
+<script src="./trid-core-v6.js?v=1"></script>
 <script src="./trid-online-v1.js?v=4"></script>
 </body>
 </html>
