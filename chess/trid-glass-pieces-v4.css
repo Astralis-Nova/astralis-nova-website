@@ -1,0 +1,14 @@
+/* V4: upright layered glass chessmen. Three SVG shells create visible optical thickness. */
+.piece{width:94%;height:172%;transform:translate3d(-50%,-7%,72px) rotateX(-60deg);transform-origin:50% 100%;perspective:500px}
+.piece svg.glass-layer{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible;transform-style:preserve-3d}
+.piece svg.glass-back{transform:translate3d(5px,3px,-12px) scale(.985);opacity:.38;filter:blur(.15px) drop-shadow(0 10px 7px rgba(0,7,22,.44))}
+.piece svg.glass-mid{transform:translate3d(2.5px,1.5px,-6px) scale(.992);opacity:.62;filter:drop-shadow(0 10px 7px rgba(0,7,22,.42))}
+.piece svg.glass-front{transform:translateZ(0);opacity:.94;filter:drop-shadow(0 14px 9px rgba(0,7,22,.5)) drop-shadow(0 0 8px rgba(139,232,255,.48))}
+.piece.crystal svg.glass-front{filter:drop-shadow(0 14px 9px rgba(0,8,22,.44)) drop-shadow(0 0 10px rgba(205,251,255,.7))}
+.piece.sapphire svg.glass-front{filter:drop-shadow(0 14px 9px rgba(0,4,18,.62)) drop-shadow(0 0 11px rgba(28,151,255,.74))}
+.piece .glass-body{stroke-width:2.35;paint-order:stroke fill;vector-effect:non-scaling-stroke}
+.piece .glass-front .glass-highlight{opacity:.92;stroke-width:2.8}
+.piece .glass-mid .glass-highlight{opacity:.42}
+.piece .glass-back .glass-highlight{opacity:.2}
+.scene.flipped .piece{transform:translate3d(-50%,-7%,72px) rotateX(-60deg) rotateZ(180deg)}
+@media(max-width:600px){.piece{width:100%;height:178%;transform:translate3d(-50%,-5%,76px) rotateX(-60deg)}.scene.flipped .piece{transform:translate3d(-50%,-5%,76px) rotateX(-60deg) rotateZ(180deg)}}
