@@ -11,6 +11,8 @@ body.layout-editing .scene .main-board,
 body.layout-editing .scene .attack{
   cursor:grab;
   touch-action:none;
+  user-select:none;
+  transition:none!important;
   outline:1px dashed rgba(126,239,255,.45);
   outline-offset:8px;
 }
