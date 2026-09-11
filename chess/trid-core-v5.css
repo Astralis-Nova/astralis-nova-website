@@ -1,0 +1,52 @@
+/* Astralis Nova Tri-D V5: physically upright glass pieces and W3DCF attack-board presentation. */
+.attack{
+  left:var(--ab-left)!important;
+  top:var(--ab-top)!important;
+  transform:translateZ(var(--ab-z)) rotateX(60deg) rotateZ(var(--ab-rot,0deg))!important;
+  transition:left .42s cubic-bezier(.2,.75,.2,1),top .42s cubic-bezier(.2,.75,.2,1),transform .42s cubic-bezier(.2,.75,.2,1),filter .2s ease;
+}
+.attack.ab-eligible .grid{box-shadow:0 15px 34px rgba(0,0,0,.36),0 0 8px rgba(188,255,233,.96),0 0 22px rgba(73,255,199,.82),0 0 48px rgba(34,236,178,.38),inset 0 0 13px rgba(205,255,240,.16)}
+.attack.ab-selected .grid{box-shadow:0 15px 34px rgba(0,0,0,.36),0 0 8px rgba(255,236,135,.98),0 0 24px rgba(255,217,87,.86),0 0 52px rgba(255,185,50,.35),inset 0 0 15px rgba(255,241,177,.18)}
+.attack-mount{position:absolute;z-index:80;width:44px;height:44px;border-radius:50%;border:2px solid rgba(144,250,255,.92);background:radial-gradient(circle,rgba(198,252,255,.96) 0 10%,rgba(31,176,236,.78) 12% 26%,rgba(3,29,55,.92) 54%);color:#eaffff;font-size:1rem;line-height:1;box-shadow:0 0 8px rgba(144,244,255,.95),0 0 24px rgba(30,194,255,.72);cursor:pointer;animation:mountPulse 1.25s ease-in-out infinite}
+.attack-mount:hover,.attack-mount:focus-visible{outline:3px solid white;outline-offset:3px;transform:scale(1.08)}
+#attackRotate:disabled{opacity:.42;cursor:not-allowed}
+.piece{
+  position:absolute!important;
+  z-index:28!important;
+  left:50%!important;
+  top:auto!important;
+  bottom:50%!important;
+  width:82%!important;
+  height:158%!important;
+  display:block!important;
+  transform-origin:50% 100%!important;
+  transform:translate3d(-50%,0,24px) rotateX(-90deg)!important;
+  transform-style:preserve-3d!important;
+  pointer-events:none!important;
+  user-select:none!important;
+  font-size:0!important;
+  line-height:0!important;
+  color:transparent!important;
+  text-shadow:none!important;
+  -webkit-text-stroke:0!important;
+  filter:none!important;
+  isolation:isolate;
+}
+.piece:before,.piece:after{content:none!important;display:none!important}
+.piece-plane{position:absolute;inset:0;display:block;transform-origin:50% 50%;transform-style:preserve-3d;backface-visibility:visible}
+.piece-plane svg{display:block;width:100%;height:100%;overflow:visible}
+.piece-face{transform:translateZ(3px)}
+.piece-side{transform:rotateY(90deg) translateZ(1px);opacity:.28;filter:brightness(.88)}
+.piece.crystal .piece-face svg{filter:drop-shadow(0 8px 6px rgba(0,8,22,.44)) drop-shadow(0 0 9px rgba(205,251,255,.72))}
+.piece.sapphire .piece-face svg{filter:drop-shadow(0 8px 6px rgba(0,4,18,.62)) drop-shadow(0 0 10px rgba(28,151,255,.75))}
+.piece .glass-body{stroke-width:2.35;paint-order:stroke fill;vector-effect:non-scaling-stroke}
+.piece .glass-highlight{fill:none;stroke-linecap:round;stroke-width:2.6;opacity:.82;vector-effect:non-scaling-stroke}
+.piece .glass-cut{fill:none;stroke:rgba(235,255,255,.86);stroke-linecap:round;stroke-width:2.4;vector-effect:non-scaling-stroke}
+.piece .glass-base-shadow{fill:rgba(0,12,30,.30)}
+.scene.flipped .piece{transform:translate3d(-50%,0,24px) rotateX(-90deg) rotateZ(180deg)!important}
+@keyframes mountPulse{0%,100%{filter:brightness(.9);box-shadow:0 0 8px rgba(144,244,255,.8),0 0 19px rgba(30,194,255,.58)}50%{filter:brightness(1.2);box-shadow:0 0 11px rgba(202,255,255,1),0 0 31px rgba(30,194,255,.9)}}
+@media(prefers-reduced-motion:reduce){.attack,.attack-mount{transition:none;animation:none}}
+@media(max-width:600px){
+  .piece{width:86%!important;height:166%!important;transform:translate3d(-50%,0,25px) rotateX(-90deg)!important}
+  .scene.flipped .piece{transform:translate3d(-50%,0,25px) rotateX(-90deg) rotateZ(180deg)!important}
+}
