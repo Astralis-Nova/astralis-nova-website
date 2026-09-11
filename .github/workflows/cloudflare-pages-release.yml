@@ -66,6 +66,7 @@ jobs:
           node --check chess/chess.js
           node --check chess/pieces.js
           node --check chess/trideck-engine.js
+          node --check chess/trid-visible-glyphs.js
           node --test chess/trideck-engine.test.mjs
 
       - name: Inspect Cloudflare Pages production target
@@ -127,12 +128,15 @@ jobs:
           text = remote.decode('utf-8','replace')
           remote_hash = hashlib.sha256(remote).hexdigest()
           title = re.search(r'<title>(.*?)</title>', text, re.I|re.S)
+          has_css = 'trid-piece-visibility.css?v=2' in text
+          has_glyphs = 'trid-visible-glyphs.js?v=1' in text
           print('Production chess title:', title.group(1).strip() if title else 'missing')
-          print('Production has V5 marker:', 'trid-piece-visibility.css?v=1' in text)
+          print('Production has visible-piece CSS v2:', has_css)
+          print('Production has visible-glyph JS:', has_glyphs)
           print('Production has Arrange Boards:', 'Arrange Boards' in text)
           print('Local SHA256:', local_hash)
           print('Remote SHA256:', remote_hash)
           print('Production HTML matches repository:', local_hash == remote_hash)
-          if 'trid-piece-visibility.css?v=1' not in text:
-              raise RuntimeError('Production /chess/ does not contain the current V5 piece-visibility asset marker.')
+          if not (has_css and has_glyphs):
+              raise RuntimeError('Production /chess/ does not contain the current robust visible-piece assets.')
           PY
