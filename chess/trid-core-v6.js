@@ -17,9 +17,19 @@ const flipBtn=document.getElementById('flipBoard');
 const scene=document.getElementById('scene');
 const cells=new Map();
 
+const boardHosts={
+  A1:[document.getElementById('A1')],
+  U:[document.getElementById('U')],
+  A2:[document.getElementById('A2')],
+  M:[document.getElementById('M-left'),document.getElementById('M-right')],
+  B1:[document.getElementById('B1')],
+  L:[document.getElementById('L')],
+  B2:[document.getElementById('B2')],
+};
+
 for(const id of BOARD_ORDER){
-  const host=document.getElementById(id);if(!host)continue;
-  host.replaceChildren();
+  const hosts=(boardHosts[id]||[]).filter(Boolean);if(!hosts.length)continue;
+  hosts.forEach(host=>host.replaceChildren());
   const size=SIZE[id];
   for(let row=0;row<size;row++)for(let col=0;col<size;col++){
     const rank=size-row;
@@ -28,7 +38,10 @@ for(const id of BOARD_ORDER){
     const el=document.createElement('button');
     el.type='button';el.className='sq';el.dataset.cell=key;el.setAttribute('aria-label',`${id} ${local}`);
     el.classList.add((row+col)%2===0?'light':'dark');
-    host.appendChild(el);
+    if(id==='M'){
+      const host=col<4?hosts[0]:hosts[1];
+      host?.appendChild(el);
+    }else hosts[0].appendChild(el);
     cells.set(key,{key,board:id,row,col,rank,local,el});
   }
 }
@@ -51,10 +64,12 @@ function pieceAt(key,s=state){return s.pieces[key]||null}
 function opponent(c){return c==='w'?'b':'w'}
 function cellAt(board,row,col){
   if(row<0||row>=SIZE[board]||col<0||col>=SIZE[board])return null;
-  const rank=SIZE[board]-row;return cells.get(`${board}:${String.fromCharCode(65+col)}${rank}`)||null;
+  const rank=SIZE[board]-row;
+  return cells.get(`${board}:${String.fromCharCode(65+col)}${rank}`)||null;
 }
 function addMove(out,from,target,piece){
-  if(!target)return false;const occ=pieceAt(target.key);
+  if(!target)return false;
+  const occ=pieceAt(target.key);
   if(!occ){out.push({from,to:target.key});return true}
   if(occ.color!==piece.color)out.push({from,to:target.key,capture:target.key});
   return false;
@@ -89,7 +104,10 @@ function legalMovesForCell(key){
       const startRow=piece.color==='w'?6:1,two=cellAt(from.board,from.row+2*dir,from.col);
       if(from.row===startRow&&two&&!pieceAt(two.key))out.push({from:key,to:two.key});
     }
-    for(const dc of[-1,1]){const t=cellAt(from.board,from.row+dir,from.col+dc);if(t&&pieceAt(t.key)&&pieceAt(t.key).color!==piece.color)out.push({from:key,to:t.key,capture:t.key})}
+    for(const dc of[-1,1]){
+      const t=cellAt(from.board,from.row+dir,from.col+dc);
+      if(t&&pieceAt(t.key)&&pieceAt(t.key).color!==piece.color)out.push({from:key,to:t.key,capture:t.key});
+    }
     return out;
   }
   if(piece.type==='n'){
@@ -149,6 +167,6 @@ function flip(){state.orientation=state.orientation==='white'?'black':'white';sa
 
 for(const[key,cell]of cells)cell.el.addEventListener('click',()=>handleCell(key));
 newGameBtn?.addEventListener('click',resetGame);novaBtn?.addEventListener('click',toggleNova);flipBtn?.addEventListener('click',flip);
-const restored=load();render();setStatus(restored?`8×8 Tri-D game restored. ${state.turn==='w'?'White':'Black'} to move.`:'8×8 Tri-D board ready. Full 32-piece set loaded. White to move.');
+const restored=load();render();setStatus(restored?`8×8 Tri-D game restored. ${state.turn==='w'?'White':'Black'} to move.`:'8×8 Tri-D board ready. Full 32-piece set loaded. Split middle deck online. White to move.');
 if(state.novaBlack&&state.turn==='b')setTimeout(makeNovaMove,420);
 })();
