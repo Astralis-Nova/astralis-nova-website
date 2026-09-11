@@ -186,8 +186,9 @@ test('glass pieces pivot from the exact square center in normal and flipped view
   const source=fs.readFileSync(new URL('./trid-core-v5.js',import.meta.url),'utf8');
   assert.match(css,/--piece-anchor-x:50%/);
   assert.match(css,/--piece-anchor-y:50%/);
-  assert.match(css,/translate3d\(-50%,0,var\(--piece-deck-lift\)\) rotateX\(-90deg\)/);
-  assert.match(css,/\.scene\.flipped \.piece\{transform:translate3d\(-50%,0,var\(--piece-deck-lift\)\) rotateX\(-90deg\) rotateZ\(180deg\)/);
+  assert.match(css,/--piece-deck-lift:2px/);
+  assert.match(css,/translate3d\(-50%,0,var\(--piece-deck-lift\)\) rotateX\(0deg\) scaleY\(2\.5\)/);
+  assert.match(css,/\.scene\.flipped \.piece\{transform:translate3d\(-50%,0,var\(--piece-deck-lift\)\) rotateX\(0deg\) rotateZ\(180deg\) scaleY\(2\.5\)/);
   assert.match(source,/viewBox="0 0 100 164" preserveAspectRatio="xMidYMax meet"/);
 });
 
