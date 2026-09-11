@@ -1,0 +1,5 @@
+/* Composition guard for approved reference. Keep board coordinates/rules untouched. */
+@media(max-width:600px){
+ .scene-wrap{min-height:900px!important}
+ .scene{--scene-scale:.82!important;transform-origin:50% 38%!important}
+}
