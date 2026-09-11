@@ -1,0 +1,3 @@
+Astralis Nova chess reference-match v2
+Target: approved upright glass-army screenshot.
+Visual-only pass. Preserve locked layout and game logic.
