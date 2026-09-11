@@ -1,0 +1,42 @@
+/* Mobile-safe chess-piece fallback. Keeps the locked board geometry untouched. */
+@media (max-width: 900px), (pointer: coarse) {
+  .scene .sq { position: relative; overflow: visible !important; }
+
+  /* The original glass/3D piece can remain in the DOM for desktop and rules logic.
+     On mobile, hide only its visual planes and draw a direct square-level glyph instead. */
+  .scene .sq > .piece {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  .scene .sq[data-mobile-piece]::after {
+    content: attr(data-mobile-piece);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 140;
+    transform: translate(-50%, -54%);
+    display: block;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", "Arial Unicode MS", serif;
+    font-size: clamp(2.4rem, 8.4vw, 4.4rem);
+    font-weight: 400;
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .scene .sq[data-mobile-color="w"]::after {
+    color: #f8ffff;
+    text-shadow: 0 0 2px #fff, 0 0 8px rgba(199,248,255,.98), 0 0 18px rgba(70,203,255,.72), 0 7px 9px rgba(0,8,22,.88);
+  }
+
+  .scene .sq[data-mobile-color="b"]::after {
+    color: #48a8ff;
+    text-shadow: 0 0 2px rgba(222,249,255,.96), 0 0 9px rgba(0,183,255,.98), 0 0 20px rgba(0,68,255,.8), 0 7px 9px rgba(0,3,20,.94);
+  }
+}
