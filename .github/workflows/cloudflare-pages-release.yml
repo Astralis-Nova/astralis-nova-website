@@ -68,6 +68,29 @@ jobs:
           node --check chess/trideck-engine.js
           node --test chess/trideck-engine.test.mjs
 
+      - name: Inspect Cloudflare Pages production target
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          account = os.environ['CLOUDFLARE_ACCOUNT_ID']
+          token = os.environ['CLOUDFLARE_API_TOKEN']
+          url = f'https://api.cloudflare.com/client/v4/accounts/{account}/pages/projects/astralis-nova-website'
+          request = urllib.request.Request(url, headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'})
+          with urllib.request.urlopen(request) as response:
+              payload = json.load(response)
+          project = payload.get('result') or {}
+          latest = project.get('latest_deployment') or {}
+          trigger = (latest.get('deployment_trigger') or {}).get('metadata') or {}
+          print('Pages project:', project.get('name'))
+          print('Subdomain:', project.get('subdomain'))
+          print('Production branch:', project.get('production_branch'))
+          print('Latest deployment environment:', latest.get('environment'))
+          print('Latest deployment branch:', trigger.get('branch'))
+          PY
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
