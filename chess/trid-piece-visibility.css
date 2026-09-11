@@ -1,0 +1,40 @@
+/* Strong visible chess glyph layer over the existing glass SVG pieces. */
+.piece{overflow:visible!important}
+.piece .piece-plane{opacity:.42}
+.piece::after{
+  position:absolute!important;
+  inset:-8% -10% -2%!important;
+  z-index:40!important;
+  display:grid!important;
+  place-items:center!important;
+  font-family:"Segoe UI Symbol","Arial Unicode MS",serif!important;
+  font-size:4.1rem!important;
+  line-height:1!important;
+  font-weight:400!important;
+  transform:translateZ(10px)!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  filter:none!important;
+  -webkit-text-stroke:0!important;
+}
+.piece.crystal::after{
+  color:rgba(247,255,255,.94)!important;
+  text-shadow:0 0 2px #fff,0 0 8px rgba(201,249,255,.96),0 0 20px rgba(77,207,255,.66),0 8px 12px rgba(0,10,24,.78)!important;
+}
+.piece.sapphire::after{
+  color:rgba(64,156,255,.96)!important;
+  text-shadow:0 0 2px rgba(211,244,255,.9),0 0 9px rgba(0,174,255,.95),0 0 21px rgba(0,72,255,.72),0 8px 12px rgba(0,3,20,.9)!important;
+}
+.piece.crystal.piece-k::after{content:"♔"!important}
+.piece.crystal.piece-q::after{content:"♕"!important}
+.piece.crystal.piece-r::after{content:"♖"!important}
+.piece.crystal.piece-b::after{content:"♗"!important}
+.piece.crystal.piece-n::after{content:"♘"!important}
+.piece.crystal.piece-p::after{content:"♙"!important}
+.piece.sapphire.piece-k::after{content:"♚"!important}
+.piece.sapphire.piece-q::after{content:"♛"!important}
+.piece.sapphire.piece-r::after{content:"♜"!important}
+.piece.sapphire.piece-b::after{content:"♝"!important}
+.piece.sapphire.piece-n::after{content:"♞"!important}
+.piece.sapphire.piece-p::after{content:"♟"!important}
+@media(max-width:600px){.piece::after{font-size:4.45rem!important}}
