@@ -1,0 +1,170 @@
+/* Astralis Nova V6 command board — final visual layer. */
+:root{
+  --command-cyan:#63ecff;
+  --command-blue:#168dff;
+  --command-panel:rgba(3,13,27,.92);
+}
+
+html,body{overflow-x:hidden}
+body{
+  background:
+    radial-gradient(ellipse at 16% 30%,rgba(26,80,210,.2),transparent 36rem),
+    radial-gradient(ellipse at 88% 58%,rgba(73,37,196,.16),transparent 42rem),
+    linear-gradient(180deg,#020816 0,#01040b 58%,#000207 100%)!important;
+}
+main{width:min(1180px,100%)!important;padding:10px!important}
+
+.topbar{
+  min-height:132px;
+  padding:18px 22px!important;
+  border-color:rgba(66,177,239,.6)!important;
+  border-radius:22px!important;
+  background:linear-gradient(180deg,rgba(4,17,34,.97),rgba(2,10,23,.97))!important;
+  box-shadow:inset 0 0 36px rgba(17,116,185,.1),0 16px 50px rgba(0,0,0,.22)!important;
+}
+.eyebrow{font-size:.78rem!important;letter-spacing:.18em!important;color:#83ecff!important}
+.topbar h1{font-size:clamp(1.85rem,4.3vw,3.05rem)!important;line-height:1.04;margin:.32rem 0 .38rem!important}
+.topbar p{font-size:1rem;line-height:1.45;color:#bfd7e8!important}
+.top-actions a{
+  min-height:54px;display:grid;place-items:center;padding:12px 20px!important;border-radius:13px!important;
+  box-shadow:inset 0 0 18px rgba(54,192,255,.08),0 0 20px rgba(32,169,255,.08);
+}
+
+.scene-wrap{
+  min-height:1000px!important;
+  border-color:rgba(44,133,196,.62)!important;
+  border-radius:25px!important;
+  perspective:1900px!important;
+  background:
+    radial-gradient(ellipse at 9% 20%,rgba(21,122,255,.33),transparent 24%),
+    radial-gradient(ellipse at 92% 24%,rgba(62,55,223,.3),transparent 25%),
+    radial-gradient(ellipse at 15% 71%,rgba(12,119,240,.22),transparent 29%),
+    radial-gradient(ellipse at 87% 73%,rgba(75,41,210,.22),transparent 28%),
+    radial-gradient(circle at 50% 50%,rgba(9,37,78,.32),transparent 42%),
+    linear-gradient(180deg,#02091a,#01040d 76%,#00030a)!important;
+  box-shadow:inset 0 0 150px rgba(0,0,0,.58),0 20px 60px rgba(0,0,0,.24)!important;
+}
+.scene-wrap:before{
+  opacity:.84!important;
+  background-image:
+    radial-gradient(circle,rgba(255,255,255,.95) 0 1px,transparent 1.6px),
+    radial-gradient(circle,rgba(91,190,255,.84) 0 1px,transparent 1.7px),
+    radial-gradient(circle,rgba(185,128,255,.7) 0 .8px,transparent 1.5px)!important;
+  background-size:79px 79px,127px 127px,173px 173px!important;
+  background-position:12px 5px,47px 31px,81px 69px!important;
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 12%,rgba(0,0,0,.9) 65%,transparent 112%);
+  mask-image:radial-gradient(ellipse at center,#000 12%,rgba(0,0,0,.9) 65%,transparent 112%);
+}
+.scene-wrap:after{
+  left:5%;right:5%;bottom:4%;height:150px!important;
+  background:radial-gradient(ellipse at center,rgba(0,151,255,.13),transparent 66%)!important;
+  border:0!important;box-shadow:none!important;
+}
+.scene{width:880px!important;height:1000px!important;transform-origin:50% 46%!important}
+
+.main-board{width:360px!important}
+.attack{width:135px!important}
+.board-upper{transform:translateZ(150px) rotateX(61deg)!important}
+.board-middle{width:390px!important;transform:translateZ(72px) rotateX(61deg)!important}
+.board-lower{transform:translateZ(0) rotateX(61deg)!important}
+.attack{transform:translateZ(var(--ab-z)) rotateX(61deg) rotateZ(var(--ab-rot,0deg))!important}
+
+.middle-split-shell{width:390px!important;height:360px!important;gap:30px!important}
+.middle-half{
+  flex:0 0 180px!important;width:180px!important;height:360px!important;
+  grid-template-columns:repeat(2,90px)!important;grid-template-rows:repeat(4,90px)!important;
+}
+
+.grid{
+  border:2px solid rgba(226,253,255,.98)!important;
+  border-radius:7px!important;
+  background:linear-gradient(145deg,rgba(56,139,218,.12),rgba(1,17,39,.31))!important;
+  box-shadow:
+    0 17px 25px rgba(0,0,0,.48),
+    0 0 5px rgba(255,255,255,.98),
+    0 0 14px rgba(100,235,255,.98),
+    0 0 30px rgba(14,166,255,.84),
+    0 0 58px rgba(0,91,255,.38),
+    inset 0 0 16px rgba(107,218,255,.12)!important;
+}
+.grid:before{
+  transform:translateZ(-15px)!important;border-color:rgba(29,145,255,.72)!important;
+  background:linear-gradient(145deg,rgba(5,72,139,.34),rgba(1,18,43,.52))!important;
+  box-shadow:0 14px 21px rgba(0,0,0,.58),0 0 24px rgba(0,134,255,.34)!important;
+}
+.grid:after{box-shadow:inset 0 0 8px rgba(255,255,255,.38),0 0 10px #b8f8ff,0 0 25px rgba(36,202,255,.72)!important}
+.sq{border-color:rgba(190,234,255,.36)!important}
+.sq.light{background:linear-gradient(145deg,rgba(224,249,255,.085),rgba(91,183,239,.025) 62%,rgba(6,42,81,.08))!important}
+.sq.dark{background:linear-gradient(145deg,rgba(19,131,221,.23),rgba(2,59,121,.2) 62%,rgba(0,29,69,.25))!important}
+
+/* Keep the custom vector chessmen visible and physically upright. */
+.piece{
+  left:50%!important;top:auto!important;bottom:50%!important;width:72%!important;height:172%!important;
+  z-index:38!important;overflow:visible!important;
+  transform:translate3d(-50%,0,42px) rotateX(0deg) scaleY(2.5)!important;
+  transform-origin:50% 100%!important;
+}
+.scene.flipped .piece{transform:translate3d(-50%,0,42px) rotateX(0deg) rotateZ(180deg) scaleY(2.5)!important}
+.piece .piece-glyph{display:none!important}
+.piece .piece-plane{display:block!important;opacity:1!important;visibility:visible!important}
+.piece-face{transform:translateZ(5px)!important}
+.piece-side{transform:rotateY(90deg) translateZ(2px)!important;opacity:.36!important}
+.piece .glass-body{stroke-width:2.7!important}
+.piece .glass-highlight{stroke-width:3.1!important;opacity:.96!important}
+.piece.sapphire stop{stop-opacity:.82!important}
+.piece.crystal stop{stop-opacity:.72!important}
+.piece.sapphire .glass-body{stroke:#4bb4ff!important}
+.piece.sapphire .glass-highlight,.piece.sapphire .glass-cut{stroke:#a3e9ff!important}
+.piece.crystal .piece-face svg{filter:drop-shadow(0 7px 5px rgba(0,7,22,.66)) drop-shadow(0 0 3px rgba(255,255,255,.95)) drop-shadow(0 0 10px rgba(138,234,255,.78))!important}
+.piece.sapphire .piece-face svg{filter:drop-shadow(0 7px 5px rgba(0,2,18,.76)) drop-shadow(0 0 3px rgba(185,238,255,.9)) drop-shadow(0 0 11px rgba(0,133,255,.82))!important}
+
+.command-dock{
+  min-height:106px;margin-top:12px!important;padding:14px 16px!important;border-radius:18px!important;
+  border-color:rgba(51,145,209,.62)!important;background:linear-gradient(180deg,rgba(4,16,31,.98),rgba(2,9,20,.98))!important;
+}
+.status-cluster{flex:1 1 270px;align-items:flex-start!important;flex-direction:column!important}
+.mode-chip{font-size:.75rem!important;padding:7px 11px!important}
+#gameStatus{font-size:.94rem!important}
+.game-actions{flex:1 1 560px;display:grid!important;grid-template-columns:repeat(3,max-content);justify-content:flex-end!important}
+.game-actions button{min-height:46px!important;padding:9px 14px!important;border-radius:11px!important;font-size:.92rem!important}
+#attackBoardMode{min-width:172px}
+#attackRotate{min-width:196px}
+@media(min-width:681px){#attackBoardMode{grid-column:1/2}#attackRotate{grid-column:2/4}}
+
+.rule-summary{
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  min-height:48px;margin-top:10px!important;padding:10px 14px!important;
+  border-color:rgba(55,145,205,.5)!important;border-radius:14px!important;
+  background:linear-gradient(180deg,rgba(4,14,27,.95),rgba(2,8,18,.96))!important;
+  color:#c9e7f5!important;font-size:.82rem!important;
+}
+.rule-summary a{color:#7feaff;text-underline-offset:3px;font-weight:800}
+.online-dock{border-radius:16px!important}
+.online-dock summary{min-height:48px;display:flex;align-items:center;font-size:.9rem!important}
+
+@media(max-width:960px){
+  .scene-wrap{min-height:830px!important}
+  .scene{--scene-scale:.79!important;transform-origin:50% 38%!important;margin-left:50%;translate:-50% 0}
+  .command-dock{align-items:flex-start!important;flex-direction:column!important}
+  .game-actions{width:100%;justify-content:flex-start!important}
+}
+@media(max-width:680px){
+  main{padding:7px!important}
+  .topbar{min-height:0;padding:14px!important;border-radius:17px!important}
+  .topbar h1{font-size:1.62rem!important}
+  .topbar p{font-size:.88rem!important}
+  .eyebrow{font-size:.7rem!important}
+  .scene-wrap{min-height:660px!important;border-radius:18px!important}
+  .scene{--scene-scale:.61!important;transform-origin:50% 31%!important}
+  .game-actions{display:grid!important;grid-template-columns:1fr 1fr!important}
+  .game-actions button{min-width:0!important;width:100%}
+  #newGame{grid-column:auto!important}
+  #attackBoardMode,#attackRotate{grid-column:1/-1}
+  .rule-summary{font-size:.76rem!important;text-align:center!important}
+}
+@media(max-width:460px){
+  .scene-wrap{min-height:535px!important}
+  .scene{--scene-scale:.48!important;transform-origin:50% 25%!important}
+  .piece{width:78%!important;height:184%!important}
+}
+@media(prefers-reduced-motion:reduce){.attack,.grid,.scene{animation:none!important;transition:none!important}}

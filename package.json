@@ -2,7 +2,13 @@
   "name": "astralis-nova-website",
   "private": true,
   "type": "module",
+  "scripts": {
+    "dev": "vite"
+  },
   "dependencies": {
     "chess.js": "1.4.0"
+  },
+  "devDependencies": {
+    "vite": "7.1.5"
   }
 }

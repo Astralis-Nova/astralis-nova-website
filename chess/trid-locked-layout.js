@@ -5,16 +5,16 @@ const scene=document.getElementById('scene');
 if(!scene)return;
 
 const LAYOUT={
-  version:2,
-  scene:{width:760,height:1035},
+  version:3,
+  scene:{width:880,height:1000},
   boards:{
-    A1:{dx:-48,dy:91,left:7,top:176},
-    U:{left:215,top:65},
-    A2:{dx:34,dy:91,left:599,top:176},
-    M:{left:191,top:283},
-    B1:{dx:-57,dy:-199,left:-2,top:626},
-    L:{left:226,top:511},
-    B2:{dx:76,dy:-212,left:641,top:613}
+    A1:{dx:-10,dy:90,left:45,top:175},
+    U:{left:260,top:55},
+    A2:{dx:135,dy:90,left:700,top:175},
+    M:{left:245,top:335},
+    B1:{dx:-10,dy:-80,left:45,top:745},
+    L:{left:260,top:635},
+    B2:{dx:135,dy:-80,left:700,top:745}
   }
 };
 
