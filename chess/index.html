@@ -3,84 +3,109 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#020611">
-  <meta name="description" content="Astralis Nova playable 64-square tri-dimensional chess board with a complete 32-piece set and legal chess movement adapted to Tri-D geometry.">
-  <title>Astralis Nova Tri-Dimensional Chess</title>
+  <meta name="theme-color" content="#030713">
+  <meta name="description" content="Astralis Nova cosmic chess: every capture launches a real-time energy duel.">
+  <title>Astralis Nova — Stellar Conquest</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./tos-tridimensional.css?v=13">
-  <link rel="stylesheet" href="./trid-core-v5.css?v=5">
-  <link rel="stylesheet" href="./trid-locked-layout.css?v=1">
-  <link rel="stylesheet" href="./trid-rules-ready.css?v=1">
-  <link rel="stylesheet" href="./trid-concept-skin.css?v=1">
-  <link rel="stylesheet" href="./trid-command-board-v6.css?v=3">
+  <link rel="stylesheet" href="./astralis-combat.css?v=1">
 </head>
 <body>
-<main>
-  <header class="topbar">
-    <div>
-      <div class="eyebrow">ASTRALIS NOVA · 64-SQUARE TRI-DIMENSIONAL CHESS</div>
-      <h1>Floating Glass Tri-D Command Board</h1>
-      <p>Locked seven-deck layout · complete 32-piece set · researched Tri-D movement and attack-board rules.</p>
-    </div>
-    <div class="top-actions">
-      <a href="../">Return to Astralis Nova</a>
-    </div>
+  <div class="cosmos" aria-hidden="true"><span></span><span></span><span></span></div>
+  <header class="command-bar">
+    <a class="brand" href="../"><span class="brand-mark">AN</span><span><strong>Astralis Nova</strong><small>Stellar Conquest</small></span></a>
+    <nav>
+      <a href="./tridimensional.html">Tri-D Command Board</a>
+      <button id="rulesButton" type="button">How to Play</button>
+    </nav>
   </header>
 
-  <section class="board-stage" aria-label="Astralis Nova 64-square tri-dimensional chess">
-    <div class="scene-wrap">
-      <div class="scene" id="scene" aria-label="Playable 64-square tri-dimensional chess board">
-        <section class="attack attack-a1" data-board="A1"><div class="grid two" id="A1"></div></section>
-        <section class="main-board board-upper" data-board="U"><div class="grid four" id="U"></div></section>
-        <section class="attack attack-a2" data-board="A2"><div class="grid two" id="A2"></div></section>
-        <section class="main-board board-middle" data-board="M"><div class="middle-split-shell" id="M"></div></section>
-        <section class="attack attack-b1" data-board="B1"><div class="grid two" id="B1"></div></section>
-        <section class="main-board board-lower" data-board="L"><div class="grid four" id="L"></div></section>
-        <section class="attack attack-b2" data-board="B2"><div class="grid two" id="B2"></div></section>
+  <main class="game-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">TACTICAL CHESS · REAL-TIME COMBAT</p>
+        <h1>Every capture becomes a battle.</h1>
+        <p>Command the Silver Starfleet against Nova’s Void Fleet. Chess controls the war map; skill decides who survives contact.</p>
       </div>
-    </div>
+      <div class="turn-beacon" id="turnBeacon"><span></span><strong id="turnLabel">Silver to move</strong><small id="statusText" aria-live="polite">Initializing command grid…</small></div>
+    </section>
 
-    <div class="command-dock" aria-label="Game controls">
-      <div class="status-cluster">
-        <span class="mode-chip">ASTRALIS TRI-D V5 · 64 SQUARES</span>
-        <strong id="gameStatus" aria-live="polite">Loading Tri-D board…</strong>
-      </div>
-      <div class="game-actions">
-        <button id="newGame" type="button">New Game</button>
-        <button id="novaToggle" type="button" class="active">Nova Black: ON</button>
-        <button id="flipBoard" type="button">Flip View</button>
-        <button id="attackBoardMode" type="button">Move Attack Board</button>
-        <button id="attackRotate" type="button" disabled>Rotate with Move: OFF</button>
-      </div>
-    </div>
-
-    <div class="rule-summary" id="ruleSummary">
-      <span>32 pieces · alternating legal turns · captures · check/checkmate · castling · en passant · promotion</span>
-      <a href="https://meder.spacechess.org/3dschach/chess3d.htm" target="_blank" rel="noreferrer">W3DCF rule basis</a>
-    </div>
-
-    <details class="online-dock" id="onlineMission">
-      <summary>Online Mission</summary>
-      <div class="online-grid">
-        <label>Commander name<input id="commanderName" maxlength="32" placeholder="Commander One"></label>
-        <label>Join code<input id="joinCode" maxlength="12" placeholder="NOVA-1234" autocapitalize="characters"></label>
-        <label class="online-check"><input id="novaTakeover" type="checkbox" checked> Nova controls Black until a challenger joins</label>
-        <div class="online-actions">
-          <button id="createOnline" type="button">Create Mission</button>
-          <button id="joinOnline" type="button">Join Mission</button>
-          <button id="copyInvite" type="button" disabled>Copy Invite</button>
-          <button id="leaveOnline" type="button" disabled>Leave Online</button>
+    <section class="mission-layout">
+      <aside class="hud panel">
+        <div class="panel-title"><span>COMMAND</span><strong>Mission Control</strong></div>
+        <article class="fleet-card active" id="silverCard"><span class="fleet-orb silver"></span><div><small>YOU</small><strong>Silver Starfleet</strong></div><b id="silverCount">16</b></article>
+        <article class="fleet-card" id="voidCard"><span class="fleet-orb void"></span><div><small>NOVA AI</small><strong>Void Fleet</strong></div><b id="voidCount">16</b></article>
+        <div class="action-stack">
+          <button class="primary" id="newGame" type="button">New Campaign</button>
+          <button id="flipBoard" type="button">Rotate Grid</button>
         </div>
-        <div id="onlineStatus" class="online-status" aria-live="polite">Checking mission archive…</div>
+        <div class="readout"><span>Selected unit</span><strong id="selectedReadout">None</strong></div>
+        <div class="readout"><span>Last event</span><strong id="lastEvent">Opening formation</strong></div>
+        <p class="tip"><strong>Move:</strong> tap a unit, then a glowing square. Dragging also uses the inner grid—not the outer frame.</p>
+      </aside>
+
+      <section class="board-panel panel" aria-label="Astralis combat chess board">
+        <div class="board-frame" id="boardFrame">
+          <div class="frame-corner corner-nw"></div><div class="frame-corner corner-ne"></div>
+          <div class="frame-corner corner-sw"></div><div class="frame-corner corner-se"></div>
+          <div class="coordinate-strip ranks" id="rankCoordinates" aria-hidden="true"></div>
+          <div class="coordinate-strip files" id="fileCoordinates" aria-hidden="true"></div>
+          <div class="playable-grid" id="playableGrid" role="grid" aria-label="Eight by eight playable command grid"></div>
+        </div>
+        <div class="board-caption"><span><i class="legend selected"></i>Selected</span><span><i class="legend route"></i>Move</span><span><i class="legend capture"></i>Duel</span></div>
+      </section>
+
+      <aside class="telemetry panel">
+        <div class="panel-title"><span>TELEMETRY</span><strong>Battle Log</strong></div>
+        <ol id="battleLog"><li>Campaign ready.</li></ol>
+        <div class="system-line"><span>Board geometry</span><strong id="geometryStatus">Checking…</strong></div>
+        <div class="system-line"><span>Combat engine</span><strong>Online</strong></div>
+        <div class="system-line"><span>Rules core</span><strong>chess.js</strong></div>
+      </aside>
+    </section>
+  </main>
+
+  <section class="duel-layer" id="duelLayer" hidden aria-label="Astralis capture duel">
+    <div class="duel-shell">
+      <header class="duel-header">
+        <div><p>CAPTURE INTERCEPTED</p><h2 id="duelTitle">Astralis Duel</h2></div>
+        <div class="duel-objective" id="duelObjective">Destroy the opposing unit</div>
+      </header>
+      <div class="health-row">
+        <div class="health-block attacker"><span id="attackerName">Attacker</span><div><i id="attackerHealth"></i></div></div>
+        <strong>VS</strong>
+        <div class="health-block defender"><span id="defenderName">Defender</span><div><i id="defenderHealth"></i></div></div>
       </div>
-    </details>
+      <div class="arena-wrap" id="arenaWrap">
+        <canvas id="combatCanvas" aria-label="Two dimensional Astralis combat arena"></canvas>
+        <div class="countdown" id="duelCountdown">3</div>
+        <div class="duel-result" id="duelResult" hidden></div>
+      </div>
+      <div class="duel-controls">
+        <div class="control-copy"><strong>Your unit: <span id="humanRole">Attacker</span></strong><small>Keyboard: WASD or arrows · Fire: Space or Enter</small></div>
+        <div class="touch-pad" aria-label="Touch combat controls">
+          <button data-control="up" type="button">▲</button>
+          <button data-control="left" type="button">◀</button>
+          <button data-control="down" type="button">▼</button>
+          <button data-control="right" type="button">▶</button>
+          <button class="fire" data-control="fire" type="button">FIRE</button>
+        </div>
+      </div>
+    </div>
   </section>
-</main>
-<script src="./trid-fresh-start.js?v=2"></script>
-<script src="./trid-locked-layout.js?v=1"></script>
-<script src="./trid-core-v5.js?v=7"></script>
-<script src="./trid-middle-split.js?v=1"></script>
-<script src="./trid-online-v1.js?v=4"></script>
-<script src="./trid-rules-ready.js?v=2"></script>
+
+  <dialog id="rulesDialog">
+    <form method="dialog">
+      <header><div><p class="eyebrow">RULES OF ENGAGEMENT</p><h2>Chess chooses the battle. You choose the survivor.</h2></div><button value="close" aria-label="Close">×</button></header>
+      <div class="rules-grid">
+        <article><strong>1 · Maneuver</strong><p>All movement and legal destinations follow standard chess.</p></article>
+        <article><strong>2 · Intercept</strong><p>A capture pauses the board before either unit is removed.</p></article>
+        <article><strong>3 · Duel</strong><p>Move your ship and fire energy bolts. Nova controls the opposing unit.</p></article>
+        <article><strong>4 · Resolve</strong><p>The winner survives on the board; the loser is removed. Then the next turn begins.</p></article>
+      </div>
+      <button class="primary close-rules" value="close">Return to Command</button>
+    </form>
+  </dialog>
+
+  <script type="module" src="./chess-combat.js?v=1"></script>
 </body>
 </html>
