@@ -7,14 +7,13 @@
   <meta name="description" content="Astralis Nova cosmic chess: every capture launches a real-time energy duel.">
   <title>Astralis Nova — Stellar Conquest</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./astralis-combat.css?v=1">
+  <link rel="stylesheet" href="./astralis-combat.css?v=2">
 </head>
 <body>
   <div class="cosmos" aria-hidden="true"><span></span><span></span><span></span></div>
   <header class="command-bar">
     <a class="brand" href="../"><span class="brand-mark">AN</span><span><strong>Astralis Nova</strong><small>Stellar Conquest</small></span></a>
     <nav>
-      <a href="./tridimensional.html">Tri-D Command Board</a>
       <button id="rulesButton" type="button">How to Play</button>
     </nav>
   </header>
@@ -40,7 +39,7 @@
         </div>
         <div class="readout"><span>Selected unit</span><strong id="selectedReadout">None</strong></div>
         <div class="readout"><span>Last event</span><strong id="lastEvent">Opening formation</strong></div>
-        <p class="tip"><strong>Move:</strong> tap a unit, then a glowing square. Dragging also uses the inner grid—not the outer frame.</p>
+        <p class="tip"><strong>Move:</strong> tap a Silver unit, then a green MOVE square. A red DUEL square starts combat. Some units begin blocked behind the front line.</p>
       </aside>
 
       <section class="board-panel panel" aria-label="Astralis combat chess board">
@@ -106,6 +105,6 @@
     </form>
   </dialog>
 
-  <script type="module" src="./chess-combat.js?v=1"></script>
+  <script type="module" src="./chess-combat.js?v=2"></script>
 </body>
 </html>

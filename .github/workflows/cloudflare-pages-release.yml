@@ -70,7 +70,7 @@ jobs:
           node --check chess/chess-combat.js
           node --check chess/trideck-engine.js
           node --check chess/trid-visible-glyphs.js
-          node --test chess/combat-core.test.mjs chess/trideck-engine.test.mjs
+          node --test chess/combat-core.test.mjs chess/combat-ui.test.mjs chess/trideck-engine.test.mjs
 
       - name: Inspect Cloudflare Pages production target
         env:

@@ -23,11 +23,12 @@ function setStatus(message){statusText.textContent=message}
 function render(){
   grid.replaceChildren();const checked=findCheckedKing();
   for(const rank of orderedRanks())for(const file of orderedFiles()){
-    const square=`${file}${rank}`,piece=game.get(square),button=document.createElement('button');button.type='button';button.className=`board-square ${(FILES.indexOf(file)+rank)%2===1?'dark':'light'}`;button.dataset.square=square;button.setAttribute('role','gridcell');
+    const square=`${file}${rank}`,piece=game.get(square),button=document.createElement('button');button.type='button';button.className=`board-square ${(FILES.indexOf(file)+rank)%2===1?'dark':'light'}`;button.dataset.square=square;button.dataset.level=rank>=7?'upper':rank<=2?'lower':'mid';button.setAttribute('role','gridcell');
     if(selected===square)button.classList.add('selected');if(lastMove&&(lastMove.from===square||lastMove.to===square))button.classList.add('last');if(checked===square)button.classList.add('check');
-    const route=legal.find(move=>move.to===square);if(route)button.classList.add(route.captured?'capture':'legal');
+    const route=legal.find(move=>move.to===square);if(route){button.classList.add(route.captured?'capture':'legal');button.setAttribute('aria-label',`${square.toUpperCase()} · ${route.captured?'duel':'legal move'}`)}
     const coord=document.createElement('span');coord.className='coord';coord.textContent=square.toUpperCase();button.append(coord);
-    if(piece){button.append(createPiece(piece.type,piece.color==='w'?'white':'black'));button.setAttribute('aria-label',`${square.toUpperCase()} ${pieceName(piece)}`)}else button.setAttribute('aria-label',square.toUpperCase());
+    if(piece){button.append(createPiece(piece.type,piece.color==='w'?'white':'black'));button.setAttribute('aria-label',`${square.toUpperCase()} ${pieceName(piece)}${route?' · duel destination':''}`)}else if(!route)button.setAttribute('aria-label',square.toUpperCase());
+    if(route){const label=document.createElement('span');label.className='route-label';label.textContent=route.captured?'DUEL':'MOVE';button.append(label)}
     button.addEventListener('click',()=>handleSquare(square));grid.append(button);
   }
   document.getElementById('rankCoordinates').replaceChildren(...orderedRanks().map(value=>textSpan(value)));
@@ -49,7 +50,11 @@ function handleSquare(square){
   const destination=selected?legal.find(move=>move.to===square):null;
   if(destination){void attemptMove(destination);return}
   const piece=game.get(square);
-  if(piece?.color===game.turn()){selected=square;legal=game.moves({square,verbose:true});setStatus(legal.length?`${pieceName(piece)} selected. Choose a glowing destination.`:`${pieceName(piece)} is blocked.`)}else{clearSelection();setStatus('Select one of your Silver units.');render()}
+  if(piece?.color===game.turn()){
+    selected=square;legal=game.moves({square,verbose:true});
+    setStatus(legal.length?`${pieceName(piece)} selected. Green MOVE squares are legal; red DUEL squares start combat.`:`${pieceName(piece)} cannot move yet—it is blocked by your fleet or pinned to Nexus Prime.`);
+    render();
+  }else{clearSelection();setStatus(piece?.color==='b'?'Nova controls the purple Void Fleet. Select a Silver unit.':'Select one of your Silver units.');render()}
 }
 
 async function attemptMove(move){
