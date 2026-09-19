@@ -107,13 +107,15 @@ jobs:
       - name: Verify public chess release
         env:
           RELEASE_SHA: ${{ github.sha }}
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         run: |
           python - <<'PY'
           import hashlib, os, re, time, urllib.request
           release = os.environ['RELEASE_SHA']
           local = open('chess/index.html','rb').read()
           local_hash = hashlib.sha256(local).hexdigest()
-          url = f'https://astralis-nova-website.pages.dev/chess/?release={release}'
+          base = os.environ['DEPLOYMENT_URL'].rstrip('/')
+          url = f'{base}/chess/?release={release}'
           last_error = None
           remote = b''
           for attempt in range(6):
@@ -147,6 +149,7 @@ jobs:
       - name: Verify rendered chess army in Chrome
         env:
           RELEASE_SHA: ${{ github.sha }}
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
         run: |
           BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
           if [ -z "$BROWSER" ]; then
@@ -161,7 +164,7 @@ jobs:
             --disable-dev-shm-usage \
             --virtual-time-budget=6000 \
             --dump-dom \
-            "https://astralis-nova-website.pages.dev/chess/?render=${RELEASE_SHA}" \
+            "${DEPLOYMENT_URL%/}/chess/?render=${RELEASE_SHA}" \
             > /tmp/chess-rendered.html
           python - <<'PY'
           import os, re
@@ -179,4 +182,3 @@ jobs:
           if pieces != 32 or silver != 16 or void != 16 or squares != 64 or not geometry_ok:
               raise RuntimeError('Production browser render does not contain the aligned 64-cell, 32-piece combat board.')
           PY
-
