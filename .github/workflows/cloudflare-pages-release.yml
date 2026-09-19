@@ -133,8 +133,8 @@ jobs:
           text = remote.decode('utf-8','replace')
           remote_hash = hashlib.sha256(remote).hexdigest()
           title = re.search(r'<title>(.*?)</title>', text, re.I|re.S)
-          has_combat_css = 'astralis-combat.css?v=1' in text
-          has_combat_js = 'chess-combat.js?v=1' in text
+          has_combat_css = bool(re.search(r'astralis-combat\.css\?v=\d+', text))
+          has_combat_js = bool(re.search(r'chess-combat\.js\?v=\d+', text))
           print('Production chess title:', title.group(1).strip() if title else 'missing')
           print('Production has combat CSS:', has_combat_css)
           print('Production has combat controller:', has_combat_js)
