@@ -65,7 +65,16 @@
       description: "Ask Bible questions, explore life guidance, discover random learning signals, and browse all 66 books.",
       badge: "Bible Explorer"
     }
-  ];
+,
+    {
+      id: "faith-stories",
+      href: "/faith-stories.html",
+      ariaLabel: "Enter the Astralis Nova Faith Stories world",
+      planetClass: "planet-faith-stories",
+      title: "Faith Stories",
+      description: "Ancient accounts of courage, prayer, protection, hope, and the life lessons they still carry.",
+      badge: "Faith Story World"
+    },  ];
 
   const scriptureVisual = `
     <span class="scripture-orbit scripture-orbit-b"><span class="scripture-moon scripture-moon-b"></span></span>
@@ -74,6 +83,11 @@
       <span class="scripture-atmosphere"></span>
     </span>
     <span class="scripture-orbit scripture-orbit-a"><span class="scripture-moon scripture-moon-a"></span></span>`;
+
+  const faithStoriesVisual = `
+    <span class="faith-moon-halo"></span>
+    <img src="/assets/faith/faith-stories-moon.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+    <span class="faith-moon-orbit"></span>`;
 
   function renderWorldCard(world) {
     const externalAttributes = world.external ? ' target="_blank" rel="noopener noreferrer"' : "";
@@ -85,6 +99,8 @@
       ? '<picture><source type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" alt="" width="360" height="360" loading="lazy" decoding="async"></picture>'
       : world.id === "scripture-nexus"
       ? scriptureVisual
+      : world.id === "faith-stories"
+      ? faithStoriesVisual
       : "";
     return `
       <${tag} class="astralis-planet-link" data-world="${world.id}"${destination} aria-label="${world.ariaLabel}"${externalAttributes}>
@@ -159,6 +175,12 @@
       .scripture-moon-a{width:23px;height:23px;offset-path:ellipse(42% 20% at 50% 50%);offset-rotate:0deg;animation:scriptureMoonA 14s linear infinite}
       .scripture-moon-b{width:15px;height:15px;offset-path:ellipse(47% 28% at 50% 50%);offset-rotate:0deg;animation:scriptureMoonB 23s linear infinite reverse;background:radial-gradient(circle at 34% 29%,#c9c3d9,#746e80 47%,#2d2a37 75%,#121119 100%)}
       .astralis-planet-link:hover .planet-scripture{transform:scale(1.08)}
+      .astralis-planet.planet-faith-stories{flex:0 0 104px;width:104px;height:104px;border-radius:50%;background:#050914;box-shadow:none;overflow:visible;isolation:isolate}
+      .planet-faith-stories img{position:absolute;inset:4px;width:96px;height:96px;border-radius:50%;object-fit:cover;z-index:2;filter:contrast(1.07) brightness(.98);box-shadow:0 0 11px rgba(237,244,255,.9),0 0 28px rgba(123,129,255,.48)}
+      .faith-moon-halo{position:absolute;inset:-8px;border-radius:50%;z-index:1;background:radial-gradient(circle,rgba(224,235,255,.28),rgba(91,94,255,.12) 48%,transparent 72%);filter:blur(3px);animation:faithMoonPulse 5s ease-in-out infinite}
+      .faith-moon-orbit{position:absolute;left:-7px;top:41px;width:118px;height:28px;border:1px solid rgba(202,214,255,.36);border-radius:50%;z-index:3;transform:rotate(-12deg);box-shadow:0 0 9px rgba(133,153,255,.25)}
+      .astralis-planet-link:hover .planet-faith-stories{transform:scale(1.08) rotate(-2deg)}
+      @keyframes faithMoonPulse{0%,100%{opacity:.66;transform:scale(.98)}50%{opacity:1;transform:scale(1.08)}}
       @keyframes scripturePlanetRotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
       @keyframes scriptureAtmosphere{0%,100%{opacity:.72;transform:scale(1)}50%{opacity:1;transform:scale(1.022)}}
       @keyframes scriptureMoonA{0%{offset-distance:0%;transform:scale(.78);filter:brightness(.68)}24%{transform:scale(1);filter:brightness(.96)}50%{offset-distance:50%;transform:scale(1.26);filter:brightness(1.3)}76%{transform:scale(1);filter:brightness(.95)}100%{offset-distance:100%;transform:scale(.78);filter:brightness(.68)}}
@@ -170,8 +192,8 @@
       .astralis-world-badge{display:inline-flex!important;width:max-content;margin-top:8px!important;padding:4px 8px;border:1px solid rgba(124,190,255,.35);border-radius:999px;color:#9dd6ff!important;font-size:.68rem!important;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
 
       @media(max-width:980px){.astralis-system{grid-template-columns:repeat(2,minmax(0,1fr))}.astralis-sun-card{grid-column:span 2}}
-      @media(max-width:640px){.astralis-worlds{padding:20px}.astralis-system{grid-template-columns:1fr}.astralis-sun-card{grid-column:span 1;align-items:flex-start;justify-content:flex-start}.astralis-planet-link{min-height:118px}.astralis-worlds::before{display:none}.astralis-planet.ac-worlds-portal{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-nova-sphere{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-scripture{flex-basis:102px;width:102px;height:94px}}
-      @media(prefers-reduced-motion:reduce){.astralis-bio-comet,.astralis-sun,.scripture-planet-core img,.scripture-atmosphere,.scripture-moon{animation:none!important}.scripture-moon-a{offset-distance:18%}.scripture-moon-b{offset-distance:68%}.astralis-planet.ac-worlds-portal,.astralis-planet.planet-nova-sphere{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal,.astralis-planet-link:hover .planet-nova-sphere{transform:none}}
+      @media(max-width:640px){.astralis-worlds{padding:20px}.astralis-system{grid-template-columns:1fr}.astralis-sun-card{grid-column:span 1;align-items:flex-start;justify-content:flex-start}.astralis-planet-link{min-height:118px}.astralis-worlds::before{display:none}.astralis-planet.ac-worlds-portal{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-nova-sphere{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-scripture{flex-basis:102px;width:102px;height:94px}.astralis-planet.planet-faith-stories{flex-basis:94px;width:94px;height:94px}.planet-faith-stories img{width:86px;height:86px}}
+      @media(prefers-reduced-motion:reduce){.astralis-bio-comet,.astralis-sun,.scripture-planet-core img,.scripture-atmosphere,.scripture-moon,.faith-moon-halo{animation:none!important}.scripture-moon-a{offset-distance:18%}.scripture-moon-b{offset-distance:68%}.astralis-planet.ac-worlds-portal,.astralis-planet.planet-nova-sphere{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal,.astralis-planet-link:hover .planet-nova-sphere{transform:none}}
     `;
     document.head.appendChild(style);
   }
