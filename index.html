@@ -713,6 +713,13 @@
       .martian-head::after{right:8px}
     }
 
+    .faith-portal{position:relative;overflow:hidden;padding:0;min-height:360px;background:#070d18 url("assets/faith/daniel-lions-den-hero.webp") center 42%/cover no-repeat}
+    .faith-portal::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,6,14,.92),rgba(2,6,14,.48) 55%,rgba(2,6,14,.2)),linear-gradient(0deg,rgba(2,6,14,.8),transparent 55%)}
+    .faith-portal-inner{position:relative;z-index:1;max-width:670px;padding:clamp(28px,5vw,58px)}
+    .faith-portal h2{margin:5px 0 10px;font-family:Georgia,serif;font-size:clamp(2rem,5vw,3.8rem);line-height:1}
+    .faith-portal p{color:#dce5f1;line-height:1.65}.faith-portal .faith-tag{display:inline-flex;padding:7px 10px;border:1px solid rgba(242,191,98,.58);border-radius:999px;color:#ffd98e;font-size:.72rem;font-weight:900;letter-spacing:.13em}
+    .faith-portal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+
   </style>
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
   <link rel="stylesheet" href="astralis-celestial-drift.css">
@@ -1038,46 +1045,18 @@
   </section>
 
 
-  <section class="section-shell shell" id="live-board">
-    <div class="panel live-board-panel">
-      <div class="live-board-inner">
-        <div class="live-board-head">
-          <div>
-            <p class="eyebrow">LIVE SHARED CREATIVE CHANNEL</p>
-            <h2>The Cosmic Eraser Board</h2>
-            <p>Doodle with whoever is visiting right now. Every line appears live for fellow travelers across the Astralis Nova universe.</p>
-          </div>
-          <div class="board-presence" id="liveBoardPresence">
-            <span class="presence-dot"></span>
-            <span id="liveBoardCount">Connecting…</span>
-          </div>
-        </div>
-
-        <div class="live-board-tools" aria-label="Live drawing tools">
-          <button class="board-tool active" id="liveBoardPen" type="button">✏️ Pen</button>
-          <button class="board-tool" id="liveBoardEraser" type="button">🧽 Eraser</button>
-          <button class="board-color active" type="button" data-color="#172033" aria-label="Dark ink"></button>
-          <button class="board-color" type="button" data-color="#2368ff" aria-label="Blue ink"></button>
-          <button class="board-color" type="button" data-color="#df2e94" aria-label="Pink ink"></button>
-          <button class="board-color" type="button" data-color="#7b42db" aria-label="Purple ink"></button>
-          <button class="board-color" type="button" data-color="#138f66" aria-label="Green ink"></button>
-          <button class="board-color" type="button" data-color="#f28c28" aria-label="Orange ink"></button>
-          <label class="live-brush">Brush
-            <input id="liveBoardBrush" type="range" min="2" max="30" value="5">
-          </label>
-          <button class="board-tool danger" id="liveBoardClear" type="button">Clear Board</button>
-        </div>
-
-        <div class="live-canvas-wrap">
-          <canvas id="liveCosmicCanvas" width="1200" height="600" aria-label="Live shared cosmic doodle board"></canvas>
-        </div>
-
-        <div class="live-board-foot">
-          <span class="live-board-status" id="liveBoardStatus">Opening a live channel…</span>
-          <span class="live-board-note">Friendly doodles, messages, stars, aliens, and questionable starships welcome.</span>
+  <section class="section-shell shell" id="faith-stories">
+    <article class="panel faith-portal">
+      <div class="faith-portal-inner">
+        <span class="faith-tag">FAITH STORY • DANIEL 6</span>
+        <h2>Daniel and the Lions’ Den</h2>
+        <p>A story of courage, prayer, faith, and protection in the darkness. Discover what Daniel was praying, why he faced Jerusalem, and how this ancient account connects Babylon, Persia, modern Iraq, and Iran.</p>
+        <div class="faith-portal-actions">
+          <a class="btn primary" href="/lion-den-faith">ENTER THE STORY</a>
+          <a class="btn secondary" href="/scripture-nexus">OPEN SCRIPTURE NEXUS</a>
         </div>
       </div>
-    </div>
+    </article>
   </section>
 
   <section class="section-shell shell" id="contact">
