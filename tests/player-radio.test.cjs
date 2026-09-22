@@ -10,9 +10,14 @@ const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 test('player equalizer uses the current eqBands container', () => {
   const html = read('player/index.html');
   const player = read('player/player.js');
+  const css = read('player/player.css');
   assert.match(html, /id="eqBands"/);
+  assert.match(html, /player\.css\?v=80/);
   assert.match(player, /\$\('eqBands'\)/);
   assert.doesNotMatch(player, /eqSliders/);
+  assert.match(css, /\.eq-bands\{display:grid/);
+  assert.match(css, /\.equalizer\.collapsed \.eq-toolbar,\.equalizer\.collapsed \.eq-bands\{display:none\}/);
+  assert.doesNotMatch(css, /\.eq-sliders/);
 });
 
 test('radio directory only exposes secure streams and uses separate live audio', () => {
