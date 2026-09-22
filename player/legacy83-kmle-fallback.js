@@ -22,7 +22,6 @@
     // cross-origin live streams on some browsers.
     const radioAudio = new Audio();
     radioAudio.preload = 'none';
-    radioAudio.src = KMLE_STREAM;
     radioAudio.volume = Number(document.getElementById('volume')?.value || .85);
     radioAudio.setAttribute('playsinline','');
     window.legacy83KmleAudio = radioAudio;
@@ -37,7 +36,7 @@
 
     const official = document.createElement('button');
     official.type = 'button';
-    official.textContent = 'OPEN KMLE / AUDACY';
+    official.textContent = 'OPEN OFFICIAL KMLE PLAYER';
     official.hidden = true;
     official.style.cssText = btn.style.cssText + 'margin-top:4px;';
     official.addEventListener('click',()=>window.open(KMLE_PAGE,'_blank','noopener,noreferrer'));
@@ -57,38 +56,48 @@
       document.body.classList.toggle('legacy83-radio-live',!!playing);
       window.dispatchEvent(new CustomEvent('legacy83-radio-state',{detail:{playing:!!playing,station:{name:'KMLE Country 107.9',_call:'KMLE',_frequency:107.9,url:KMLE_STREAM}}}));
     }
+    let playAttempt=0,startTimer=0;
+    function stopStartTimer(){clearTimeout(startTimer);startTimer=0;}
+    function streamFailed(message='107.9 KMLE • STREAM BLOCKED • USE AUDACY'){
+      stopStartTimer();
+      status.textContent=message;
+      btn.textContent='▶ 107.9 KMLE • RETRY LIVE';
+      official.hidden=false;
+      notify(false);
+    }
     async function playKmle(){
       if(!is1079()) return;
+      const attempt=++playAttempt;
+      stopStartTimer();
       try{
         mainAudio?.pause();
+        window.legacy83RadioAudio?.pause();
         setLabel();
         status.textContent='107.9 KMLE • CONNECTING…';
         if(radioAudio.src !== KMLE_STREAM) radioAudio.src = KMLE_STREAM;
         radioAudio.load();
-        await radioAudio.play();
-        status.textContent='107.9 KMLE • LIVE';
-        btn.textContent='❚❚ 107.9 KMLE • PAUSE';
-        official.hidden = true;
-        notify(true);
-      }catch(err){
-        console.warn('KMLE direct stream failed',err);
-        status.textContent='107.9 KMLE • STREAM BLOCKED';
-        btn.textContent='▶ 107.9 KMLE • RETRY LIVE';
         official.hidden=false;
-        notify(false);
+        startTimer=setTimeout(()=>{if(attempt===playAttempt&&radioAudio.readyState<3){radioAudio.pause();streamFailed('107.9 KMLE • TIMEOUT • USE AUDACY');}},12000);
+        await radioAudio.play();
+      }catch(err){
+        if(attempt!==playAttempt)return;
+        console.warn('KMLE direct stream failed',err);
+        streamFailed();
       }
     }
     function stopKmle(){
+      ++playAttempt;
+      stopStartTimer();
       radioAudio.pause();
       btn.textContent='▶ 107.9 KMLE • PLAY LIVE';
       notify(false);
     }
 
     btn.addEventListener('click',()=>radioAudio.paused?playKmle():stopKmle());
-    radioAudio.addEventListener('playing',()=>{status.textContent='107.9 KMLE • LIVE';btn.textContent='❚❚ 107.9 KMLE • PAUSE';official.hidden=true;notify(true);});
+    radioAudio.addEventListener('playing',()=>{stopStartTimer();status.textContent='107.9 KMLE • LIVE';btn.textContent='❚❚ 107.9 KMLE • PAUSE';official.hidden=false;notify(true);});
     radioAudio.addEventListener('waiting',()=>{status.textContent='107.9 KMLE • BUFFERING…';});
     radioAudio.addEventListener('stalled',()=>{status.textContent='107.9 KMLE • BUFFERING…';});
-    radioAudio.addEventListener('error',()=>{status.textContent='107.9 KMLE • STREAM ERROR';btn.textContent='▶ 107.9 KMLE • RETRY LIVE';official.hidden=false;notify(false);});
+    radioAudio.addEventListener('error',()=>streamFailed('107.9 KMLE • STREAM ERROR • USE AUDACY'));
     radioAudio.addEventListener('pause',()=>{if(is1079())btn.textContent='▶ 107.9 KMLE • PLAY LIVE';notify(false);});
     document.getElementById('volume')?.addEventListener('input',e=>{radioAudio.volume=Number(e.currentTarget.value);});
 
@@ -101,7 +110,7 @@
         if (at1079) {
           setLabel();
           btn.hidden = false;
-          official.hidden = radioAudio.error ? false : true;
+          official.hidden = false;
         } else {
           btn.hidden = true;
           official.hidden = true;
