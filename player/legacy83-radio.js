@@ -23,6 +23,10 @@
   };
   const PHX_AM={KFYI:550,KTAR:620,KIDR:740,KNAI:860,KGME:910,KKNT:960,KXXT:1010,KDUS:1060,KFNX:1100,KCKY:1150,KNUV:1190,KOY:1230,KBSZ:1260,KIHP:1310,KIKO:1340,KPXQ:1360,KSUN:1400,KAZG:1440,KPHX:1480,KFNN:1510,KASA:1540,KQFN:1580};
   const CURRENT_LABELS={KVVA:'La Suavecita 107.1',KMLE:'KMLE Country 107.9'};
+  const TRUSTED_STATIONS=[
+    {name:'KBACH Classical 89.5 - Phoenix, AZ',homepage:'https://kbaq.org',url_resolved:'https://kbaq.streamguys1.com/kbaq_mp3_128',_call:'KBAQ',_frequency:89.5},
+    {name:'KJZZ 91.5 - Phoenix, AZ',homepage:'https://www.kjzz.org',url_resolved:'https://kjzz.streamguys1.com/kjzz_mp3_128',_call:'KJZZ',_frequency:91.5}
+  ];
   const FREQ_TO_CALL={};
   Object.entries(PHX_FM).forEach(([call,f])=>{(FREQ_TO_CALL[String(f)]??=[]).push(call)});
   Object.entries(PHX_AM).forEach(([call,f])=>{(FREQ_TO_CALL[String(f)]??=[]).push(call)});
@@ -112,11 +116,18 @@
       return `${call?`${call} • `:''}${s?.name||'Live Radio'}`.trim();
     };
     const withCalibration=rows=>rows.map(s=>{const call=getCall(s);const f=call?(band==='FM'?PHX_FM[call]:PHX_AM[call]):null;return {...s,_call:call,_frequency:Number.isFinite(f)?snapFrequency(f):null}});
+    const uniqueStations=rows=>rows.filter((s,i,a)=>a.findIndex(x=>(x.stationuuid&&x.stationuuid===s.stationuuid)||secureStreamUrl(x)===secureStreamUrl(s))===i);
+
+    const secureStreamUrl=s=>{
+      const raw=s?.url_resolved||s?.url;
+      if(!raw)return null;
+      try{const parsed=new URL(raw,location.href);return parsed.protocol==='https:'?parsed.href:null;}catch{return null;}
+    };
 
     async function apiSearch(params={}){
-      const query=new URLSearchParams({hidebroken:'true',order:'clickcount',reverse:'true',limit:'100',...params});
+      const query=new URLSearchParams({hidebroken:'true',is_https:'true',order:'clickcount',reverse:'true',limit:'100',...params});
       for(const server of API_SERVERS){
-        try{const r=await fetch(`${server}/json/stations/search?${query}`,{headers:{Accept:'application/json'}});if(!r.ok)continue;const rows=await r.json();const good=rows.filter(s=>s.name&&(s.url_resolved||s.url));if(good.length)return good;}catch(e){console.warn('radio search failed',server,e);}
+        try{const r=await fetch(`${server}/json/stations/search?${query}`,{headers:{Accept:'application/json'}});if(!r.ok)continue;const rows=await r.json();const good=rows.filter(s=>s.name&&secureStreamUrl(s));if(good.length)return good;}catch(e){console.warn('radio search failed',server,e);}
       }
       return [];
     }
@@ -142,16 +153,33 @@
       document.body.classList.toggle('legacy83-radio-live',!!playing);
       window.dispatchEvent(new CustomEvent('legacy83-radio-state',{detail:{playing:!!playing,station}}));
     }
+    const radioAudio=new Audio();
+    radioAudio.preload='none';
+    radioAudio.volume=Number(document.getElementById('volume')?.value||.85);
+    radioAudio.setAttribute('playsinline','');
+    window.legacy83RadioAudio=radioAudio;
+    let activeStation=null,playAttempt=0,startTimer=0;
+
+    function stopStartTimer(){clearTimeout(startTimer);startTimer=0;}
+    function streamFailed(message='STREAM ERROR • TRY NEXT'){
+      stopStartTimer();
+      status.textContent=message;
+      notifyRadio(false,activeStation);
+    }
     async function playStation(s){
-      if(!powered||!audio)return;
-      const url=s?.url_resolved||s?.url;if(!url){status.textContent='STATION UNAVAILABLE';return;}
-      try{
-        audio.pause();notifyRadio(false,s);audio.src=url;audio.removeAttribute('crossorigin');audio.load();
-        const label=stationLabel(s);
-        document.getElementById('trackTitle').textContent=label;
-        document.getElementById('trackArtist').textContent='Live Radio • Legacy 83 Tuner';
-        status.textContent='CONNECTING…';await audio.play();status.textContent='LIVE • PLAYING • RACK SYNC';notifyRadio(true,s);
-      }catch(e){console.warn('stream failed',e);status.textContent='STREAM ERROR • TRY NEXT';notifyRadio(false,s);}
+      if(!powered)return;
+      const url=secureStreamUrl(s);if(!url){streamFailed('SECURE STREAM UNAVAILABLE • TRY NEXT');return;}
+      const attempt=++playAttempt;
+      stopStartTimer();
+      window.legacy83KmleAudio?.pause();
+      audio?.pause();radioAudio.pause();notifyRadio(false,s);activeStation=s;radioAudio.src=url;radioAudio.load();
+      const label=stationLabel(s);
+      const title=document.getElementById('trackTitle'),artist=document.getElementById('trackArtist');
+      if(title)title.textContent=label;
+      if(artist)artist.textContent='Live Radio • Legacy 83 Tuner';
+      status.textContent='CONNECTING…';
+      startTimer=setTimeout(()=>{if(attempt===playAttempt&&radioAudio.readyState<3){radioAudio.pause();streamFailed('STREAM TIMEOUT • TRY NEXT');}},12000);
+      try{await radioAudio.play();}catch(e){if(attempt!==playAttempt)return;console.warn('stream failed',e);streamFailed('STREAM ERROR • TRY NEXT');}
     }
     function loadSelect(){
       select.innerHTML='';
@@ -160,7 +188,7 @@
     }
     async function loadGenre(name){
       module.querySelectorAll('[data-genre]').forEach(b=>b.classList.toggle('active',b.dataset.genre===name));status.textContent=`LOADING ${name.toUpperCase()}…`;
-      const rows=await apiSearch({countrycode:'US',...(GENRES[name]||{})});stations=withCalibration(rows);
+      const rows=await apiSearch({countrycode:'US',...(GENRES[name]||{})});stations=withCalibration(uniqueStations([...(name==='Arizona'?TRUSTED_STATIONS:[]),...rows]));
       if(name==='Arizona')stations.sort((a,b)=>(knownFrequency(a)??9999)-(knownFrequency(b)??9999));
       loadSelect();status.textContent=stations.length?`${stations.length} LIVE STATIONS`:'NO STATIONS FOUND';
     }
@@ -171,12 +199,13 @@
         band=numeric<88?'AM':'FM';
         configureBand(band,false);
         const tuned=snapFrequency(numeric),calls=FREQ_TO_CALL[String(tuned)]||[];
-        let found=[];
+        let found=TRUSTED_STATIONS.filter(s=>calls.includes(s._call));
         for(const call of calls){found.push(...await apiSearch({name:call,countrycode:'US',state:'Arizona'}));}
-        stations=withCalibration(found.filter((s,i,a)=>a.findIndex(x=>x.stationuuid===s.stationuuid)===i)).map(s=>({...s,_frequency:tuned}));
+        stations=withCalibration(uniqueStations(found)).map(s=>({...s,_frequency:tuned}));
         loadSelect();setDial(tuned);status.textContent=stations.length?`TUNED ${band==='FM'?tuned.toFixed(1):tuned} ${band}`:`${band==='FM'?tuned.toFixed(1):tuned} ${band} • NO STREAM IN DIRECTORY`;return;
       }
-      const byName=await apiSearch({name:raw}),byTag=await apiSearch({tag:raw});stations=withCalibration([...byName,...byTag].filter((s,i,a)=>a.findIndex(x=>x.stationuuid===s.stationuuid)===i));loadSelect();status.textContent=stations.length?`${stations.length} MATCHES`:'NO MATCHES';
+      const trusted=TRUSTED_STATIONS.filter(s=>`${s._call} ${s.name}`.toUpperCase().includes(raw.toUpperCase()));
+      const byName=await apiSearch({name:raw}),byTag=await apiSearch({tag:raw});stations=withCalibration(uniqueStations([...trusted,...byName,...byTag]));loadSelect();status.textContent=stations.length?`${stations.length} MATCHES`:'NO MATCHES';
     }
     function calibratedStations(){return stations.map((s,i)=>({s,i,f:knownFrequency(s)})).filter(x=>Number.isFinite(x.f)).sort((a,b)=>a.f-b.f);}
     function tuneDial(freq,{play=false}={}){
@@ -211,10 +240,15 @@
     module.querySelectorAll('[data-genre]').forEach(b=>b.addEventListener('click',()=>loadGenre(b.dataset.genre)));
     module.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{const list=calibratedStations();const target=list[Number(b.dataset.preset)];if(target){index=target.i;paintStation(index,{play:true});}}));
     module.querySelectorAll('[data-band]').forEach(b=>b.addEventListener('click',()=>configureBand(b.dataset.band)));
-    power.addEventListener('click',()=>{powered=!powered;module.classList.toggle('is-powered',powered);power.setAttribute('aria-pressed',String(powered));if(!powered){audio?.pause();notifyRadio(false);}status.textContent=powered?'LIVE RADIO READY':'POWER OFF';});
-    audio?.addEventListener('pause',()=>{if(document.body.classList.contains('legacy83-radio-live'))notifyRadio(false);});
-    audio?.addEventListener('ended',()=>notifyRadio(false));
-    audio?.addEventListener('waiting',()=>{if(document.body.classList.contains('legacy83-radio-live'))status.textContent='BUFFERING…';});
+    power.addEventListener('click',()=>{powered=!powered;module.classList.toggle('is-powered',powered);power.setAttribute('aria-pressed',String(powered));if(!powered){++playAttempt;stopStartTimer();radioAudio.pause();notifyRadio(false);}status.textContent=powered?'LIVE RADIO READY':'POWER OFF';});
+    radioAudio.addEventListener('playing',()=>{stopStartTimer();status.textContent='LIVE • PLAYING • RACK SYNC';notifyRadio(true,activeStation);});
+    radioAudio.addEventListener('pause',()=>{if(document.body.classList.contains('legacy83-radio-live'))notifyRadio(false,activeStation);});
+    radioAudio.addEventListener('ended',()=>notifyRadio(false,activeStation));
+    radioAudio.addEventListener('waiting',()=>{status.textContent='BUFFERING…';});
+    radioAudio.addEventListener('stalled',()=>{status.textContent='BUFFERING…';});
+    radioAudio.addEventListener('error',()=>streamFailed('STREAM ERROR • TRY NEXT'));
+    audio?.addEventListener('play',()=>{if(!radioAudio.paused){++playAttempt;stopStartTimer();radioAudio.pause();}});
+    document.getElementById('volume')?.addEventListener('input',e=>{radioAudio.volume=Number(e.currentTarget.value);});
     window.addEventListener('resize',()=>setDial(Number(slider.value)),{passive:true});
 
     configureBand('FM');loadGenre('Arizona');

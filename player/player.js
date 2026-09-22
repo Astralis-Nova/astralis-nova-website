@@ -333,13 +333,14 @@
   function applyPreset(name){
     if(name==='custom'){localStorage.setItem('nova.eqPreset','custom');return;}
     const values=eqPresets[name]||eqPresets.flat;
-    document.querySelectorAll('#eqSliders input').forEach((slider,i)=>{slider.value=String(values[i]||0);slider.dispatchEvent(new Event('input'));});
+    document.querySelectorAll('#eqBands input').forEach((slider,i)=>{slider.value=String(values[i]||0);slider.dispatchEvent(new Event('input'));});
     localStorage.setItem('nova.eqPreset',name);
     eqPreset.value=name;
   }
 
   function buildEq(){
-    const saved=JSON.parse(localStorage.getItem('nova.eq')||'[]'),host=$('eqSliders');
+    const saved=JSON.parse(localStorage.getItem('nova.eq')||'[]'),host=$('eqBands');
+    if(!host)return;
     frequencies.forEach((freq,i)=>{
       const wrap=document.createElement('label');wrap.className='eq-channel';
       const output=document.createElement('output'),slider=document.createElement('input');
@@ -357,7 +358,7 @@
     eqPreset.value=savedPreset;
     if(savedPreset!=='custom') applyPreset(savedPreset);
   }
-  function applyEqValues(){document.querySelectorAll('#eqSliders input').forEach((slider,i)=>{if(filters[i])filters[i].gain.value=eqEnabled?Number(slider.value):0;});}
+  function applyEqValues(){document.querySelectorAll('#eqBands input').forEach((slider,i)=>{if(filters[i])filters[i].gain.value=eqEnabled?Number(slider.value):0;});}
   function readVuLevel(meter,data){
     if(!meter)return 0;
     meter.getFloatTimeDomainData(data);
