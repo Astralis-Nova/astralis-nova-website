@@ -65,7 +65,8 @@ test('radio hub exposes all four source banks and official provider launchers', 
   assert.match(hub, /KMLE \/ Audacy/);
   assert.match(hub, /SiriusXM/);
   assert.match(html, /radio-playlist-core\.js\?v=1/);
-  assert.match(html, /radio-hub\.js\?v=1/);
+  assert.match(html, /radio-hub\.js\?v=2/);
+  assert.match(hub, /activeBank!=='astralis'/);
 });
 
 test('Astralis Nova Radio uses the owned catalog as a continuous channel', () => {
