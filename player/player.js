@@ -338,7 +338,7 @@
     let next=current;while(tracks.length>1&&next===current)next=Math.floor(Math.random()*tracks.length);
     loadTrack(next,false);await playAudio();return true;
   }
-  function stopNovaRadio(){if(!novaRadioMode)return;novaRadioMode=false;notifyNovaRadio(false);}
+  function stopNovaRadio(){if(!novaRadioMode)return;novaRadioMode=false;audio.pause();notifyNovaRadio(false);}
   window.AstralisNovaPlayer={playRadio:playNovaRadio,stopRadio:stopNovaRadio,isRadioMode:()=>novaRadioMode,station:novaRadioStation};
   function visibleTracks(){const q=search.value.trim().toLowerCase();return tracks.filter(t=>(!q||t.title.toLowerCase().includes(q))&&(filter!=='favorites'||favorites.has(t.id))&&(filter!=='offline'||offlineIds.has(t.id)));}
   function renderTracks(){const visible=visibleTracks();trackCount.textContent=`${visible.length} TRACK${visible.length===1?'':'S'}`;trackList.textContent='';visible.forEach(track=>{const button=document.createElement('button');button.className='track-row'+(track.id===current?' active':'');button.type='button';button.setAttribute('role','listitem');const badges=[favorites.has(track.id)?'★ Favorite':'',offlineIds.has(track.id)?'✓ Offline':''].filter(Boolean).join(' • ');button.innerHTML=`<span class="track-index">${track.id===current&&!audio.paused?'▶':String(track.id+1).padStart(2,'0')}</span><span class="track-name">${escapeHtml(track.title)}<small>${badges||'Astralis Nova'}</small></span><span class="track-artist">Astralis Nova</span><span class="track-duration">${track.duration||'—:—'}</span>`;button.addEventListener('click',()=>loadTrack(track.id,true));trackList.appendChild(button);});}

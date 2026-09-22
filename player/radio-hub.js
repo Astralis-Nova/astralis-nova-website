@@ -109,6 +109,11 @@
     async function showAstralis(){
       selectBank('astralis');
       controller.stop();
+      if(!controller.isPowered?.()){
+        controller.showVirtualStation({name:'ASTRALIS NOVA RADIO',_source:'astralis'},'POWER OFF');
+        notice.textContent='Turn the receiver power on to start Astralis Radio.';
+        return;
+      }
       controller.showVirtualStation({name:'ASTRALIS NOVA RADIO',_source:'astralis'},'ASTRALIS RADIO • CONNECTING…');
       notice.textContent='Continuous Astralis Nova rotation from our own music library—no outside station can change this signal.';
       try{await window.AstralisNovaPlayer?.playRadio?.();}catch(error){console.warn('Astralis Radio failed',error);controller.showVirtualStation({name:'ASTRALIS NOVA RADIO',_source:'astralis'},'ASTRALIS RADIO • TAP PLAY');}

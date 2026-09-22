@@ -66,7 +66,7 @@
       notify(false);
     }
     async function playKmle(){
-      if(!is1079()) return;
+      if(!is1079() || !tuner.classList.contains('is-powered')) return;
       const attempt=++playAttempt;
       stopStartTimer();
       try{
@@ -93,6 +93,7 @@
       btn.textContent='▶ 107.9 KMLE • PLAY LIVE';
       notify(false);
     }
+    window.legacy83KmleController={play:playKmle,stop:stopKmle};
 
     btn.addEventListener('click',()=>radioAudio.paused?playKmle():stopKmle());
     radioAudio.addEventListener('playing',()=>{stopStartTimer();status.textContent='107.9 KMLE • LIVE';btn.textContent='❚❚ 107.9 KMLE • PAUSE';official.hidden=false;notify(true);});
