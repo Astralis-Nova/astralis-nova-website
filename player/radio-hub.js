@@ -78,7 +78,9 @@
     document.head.appendChild(style);
 
     function selectBank(name){
+      const leavingAstralis=activeBank==='astralis'&&name!=='astralis';
       activeBank=name;
+      if(leavingAstralis){window.AstralisNovaPlayer?.stopRadio?.();document.getElementById('audio')?.pause();}
       bank.querySelectorAll('[data-radio-bank]').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.radioBank===name)));
       importer.hidden=name!=='playlists';
     }
@@ -150,7 +152,7 @@
     importer.querySelector('.radio-import-clear').addEventListener('click',()=>{localStorage.removeItem(STORAGE_KEY);showPlaylists('Imported channels cleared from this device.');});
 
     window.addEventListener('legacy83-radio-state',event=>{
-      if(event.detail?.station?._source!=='astralis')return;
+      if(activeBank!=='astralis'||event.detail?.station?._source!=='astralis')return;
       controller.showVirtualStation(event.detail.station,event.detail.playing?'ASTRALIS RADIO • PLAYING • RACK SYNC':'ASTRALIS RADIO • PAUSED');
     });
 
