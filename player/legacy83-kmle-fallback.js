@@ -70,6 +70,7 @@
       const attempt=++playAttempt;
       stopStartTimer();
       try{
+        window.AstralisNovaPlayer?.stopRadio?.();
         mainAudio?.pause();
         window.legacy83RadioAudio?.pause();
         setLabel();

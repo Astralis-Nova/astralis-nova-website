@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "updated": "2026-09-22",
+  "description": "Curated HTTPS stations whose direct streams are published by their official station sites.",
+  "stations": [
+    {
+      "id": "kbaq-895",
+      "name": "KBACH Classical 89.5 - Phoenix, AZ",
+      "call": "KBAQ",
+      "frequency": 89.5,
+      "genre": "Classical",
+      "stream": "https://kbaq.streamguys1.com/kbaq_mp3_128",
+      "homepage": "https://kbaq.org/listen-to-kbach/"
+    },
+    {
+      "id": "kjzz-915",
+      "name": "KJZZ 91.5 - Phoenix, AZ",
+      "call": "KJZZ",
+      "frequency": 91.5,
+      "genre": "News / Jazz",
+      "stream": "https://kjzz.streamguys1.com/kjzz_mp3_128",
+      "homepage": "https://www.kjzz.org/listen"
+    }
+  ]
+}

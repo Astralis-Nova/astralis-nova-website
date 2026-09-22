@@ -5,7 +5,7 @@
   let frame=0;
   let start=performance.now();
 
-  const radioAudio=()=>[window.legacy83KmleAudio,window.legacy83RadioAudio].find(audio=>audio&&!audio.paused)||window.legacy83KmleAudio||window.legacy83RadioAudio||null;
+  const radioAudio=()=>window.AstralisNovaPlayer?.isRadioMode?.()?document.getElementById('audio'):[window.legacy83KmleAudio,window.legacy83RadioAudio].find(audio=>audio&&!audio.paused)||window.legacy83KmleAudio||window.legacy83RadioAudio||null;
   const cassette=()=>document.querySelector('.cassette-module');
   const cassetteLabel=()=>document.getElementById('cassetteModeLabel');
   const reverb=()=>document.querySelector('.reverb-module');
