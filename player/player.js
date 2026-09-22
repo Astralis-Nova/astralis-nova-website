@@ -43,7 +43,7 @@
   const turntableModule=document.querySelector('.turntable-module'),turntableStatus=$('turntableStatus'),turntableButtons=[...document.querySelectorAll('[data-turntable-action]')],turntablePowerButton=document.querySelector('[data-turntable-action="power"]'),turntableStartButton=document.querySelector('[data-turntable-action="start"]'),turntableSpeed33Button=document.querySelector('[data-turntable-action="speed33"]'),turntableSpeed45Button=document.querySelector('[data-turntable-action="speed45"]'),turntableCueButton=document.querySelector('[data-turntable-action="cue"]'),turntablePitch=$('turntablePitch'),turntablePitchValue=$('turntablePitchValue');
 
   let current=Number(localStorage.getItem('nova.current')||2); if(!Number.isInteger(current)||!tracks[current]) current=0;
-  let shuffle=localStorage.getItem('nova.shuffle')==='1',repeat=localStorage.getItem('nova.repeat')==='1';
+  let shuffle=localStorage.getItem('nova.shuffle')==='1',repeat=localStorage.getItem('nova.repeat')==='1',novaRadioMode=false;
   let favorites=new Set(JSON.parse(localStorage.getItem('nova.favorites')||'[]')),offlineIds=new Set(),filter='all',userSeeking=false,deferredInstallPrompt=null;
   const frequencies=[60,170,310,600,1000,3000,6000,12000,14000,16000];
   const eqPresets={
@@ -325,8 +325,21 @@
   }
   async function playAudio(){try{await ensureAudioGraph();await audio.play();}catch(err){console.warn('Playback did not start',err);if(!navigator.onLine&&!offlineIds.has(current))offlineStatus.textContent='This song is not saved offline. Reconnect and tap Save song.';}}
   const togglePlayback=()=>audio.paused?playAudio():audio.pause();
-  function nextTrack(){if(shuffle){let next=current;while(tracks.length>1&&next===current)next=Math.floor(Math.random()*tracks.length);loadTrack(next,true);}else loadTrack(current+1,true);}
+  function nextTrack(){if(novaRadioMode||shuffle){let next=current;while(tracks.length>1&&next===current)next=Math.floor(Math.random()*tracks.length);loadTrack(next,true);}else loadTrack(current+1,true);}
   const prevTrack=()=>loadTrack(current-1,true);
+  const novaRadioStation={name:'ASTRALIS NOVA RADIO',_source:'astralis'};
+  function notifyNovaRadio(playing){
+    document.body.classList.toggle('astralis-radio-live',novaRadioMode&&!!playing);
+    window.dispatchEvent(new CustomEvent('legacy83-radio-state',{detail:{playing:novaRadioMode&&!!playing,station:novaRadioStation}}));
+  }
+  async function playNovaRadio(){
+    window.legacy83RadioAudio?.pause();window.legacy83KmleAudio?.pause();
+    novaRadioMode=true;
+    let next=current;while(tracks.length>1&&next===current)next=Math.floor(Math.random()*tracks.length);
+    loadTrack(next,false);await playAudio();return true;
+  }
+  function stopNovaRadio(){if(!novaRadioMode)return;novaRadioMode=false;notifyNovaRadio(false);}
+  window.AstralisNovaPlayer={playRadio:playNovaRadio,stopRadio:stopNovaRadio,isRadioMode:()=>novaRadioMode,station:novaRadioStation};
   function visibleTracks(){const q=search.value.trim().toLowerCase();return tracks.filter(t=>(!q||t.title.toLowerCase().includes(q))&&(filter!=='favorites'||favorites.has(t.id))&&(filter!=='offline'||offlineIds.has(t.id)));}
   function renderTracks(){const visible=visibleTracks();trackCount.textContent=`${visible.length} TRACK${visible.length===1?'':'S'}`;trackList.textContent='';visible.forEach(track=>{const button=document.createElement('button');button.className='track-row'+(track.id===current?' active':'');button.type='button';button.setAttribute('role','listitem');const badges=[favorites.has(track.id)?'★ Favorite':'',offlineIds.has(track.id)?'✓ Offline':''].filter(Boolean).join(' • ');button.innerHTML=`<span class="track-index">${track.id===current&&!audio.paused?'▶':String(track.id+1).padStart(2,'0')}</span><span class="track-name">${escapeHtml(track.title)}<small>${badges||'Astralis Nova'}</small></span><span class="track-artist">Astralis Nova</span><span class="track-duration">${track.duration||'—:—'}</span>`;button.addEventListener('click',()=>loadTrack(track.id,true));trackList.appendChild(button);});}
 
@@ -403,11 +416,11 @@
   }
   function drawVisualizer(){if(!analyser)return;const data=new Uint8Array(analyser.frequencyBinCount);const render=()=>{requestAnimationFrame(render);const w=canvas.width,h=canvas.height;analyser.getByteFrequencyData(data);updateVuMeters();updateReverbMotion(data);ctx.clearRect(0,0,w,h);const barW=w/data.length,accent=getComputedStyle(document.body).getPropertyValue('--accent').trim()||'#49dfff',accent2=getComputedStyle(document.body).getPropertyValue('--accent-2').trim()||'#9d66ff',gradient=ctx.createLinearGradient(0,h,0,0);gradient.addColorStop(0,accent);gradient.addColorStop(1,accent2);ctx.fillStyle=gradient;for(let i=0;i<data.length;i++){const barH=Math.max(2,(data[i]/255)*h*.92);ctx.fillRect(i*barW,h-barH,Math.max(1,barW-2),barH);}};render();}
 
-  audio.addEventListener('play',()=>{playBtn.textContent='❚❚';playBtn.setAttribute('aria-label','Pause');updateReelDeckMotion();renderTracks();});
+  audio.addEventListener('play',()=>{playBtn.textContent='❚❚';playBtn.setAttribute('aria-label','Pause');updateReelDeckMotion();renderTracks();if(novaRadioMode)notifyNovaRadio(true);});
   audio.addEventListener('playing',updateReelDeckMotion);
   audio.addEventListener('waiting',()=>{reelDeck?.classList.remove('is-playing');cassetteModule?.classList.remove('is-playing');turntableModule?.classList.remove('is-playing');});
   audio.addEventListener('stalled',()=>{reelDeck?.classList.remove('is-playing');cassetteModule?.classList.remove('is-playing');turntableModule?.classList.remove('is-playing');});
-  audio.addEventListener('pause',()=>{playBtn.textContent='▶';playBtn.setAttribute('aria-label','Play');updateReelDeckMotion();renderTracks();});
+  audio.addEventListener('pause',()=>{playBtn.textContent='▶';playBtn.setAttribute('aria-label','Play');updateReelDeckMotion();renderTracks();if(novaRadioMode)notifyNovaRadio(false);});
   audio.addEventListener('emptied',()=>{updateReelCounter();updateCassetteCounter();});
   audio.addEventListener('loadedmetadata',()=>{updateReelCounter();updateCassetteCounter();tracks[current].duration=fmt(audio.duration);timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;renderTracks();});
   audio.addEventListener('timeupdate',()=>{updateReelCounter();updateCassetteCounter();if(!userSeeking&&Number.isFinite(audio.duration)&&audio.duration>0)seek.value=String(Math.round((audio.currentTime/audio.duration)*1000));timeReadout.textContent=`${fmt(audio.currentTime)} / ${fmt(audio.duration)}`;if('mediaSession'in navigator&&Number.isFinite(audio.duration)&&audio.duration>0){try{navigator.mediaSession.setPositionState({duration:audio.duration,playbackRate:audio.playbackRate,position:Math.min(audio.currentTime,audio.duration)});}catch{}}});

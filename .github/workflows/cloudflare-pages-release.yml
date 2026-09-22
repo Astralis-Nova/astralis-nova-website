@@ -61,6 +61,16 @@ jobs:
           node --check our-new-star-community.js
           node --test tests/our-new-star-community.test.cjs tests/our-new-star-api.test.mjs tests/ac-community-api.test.mjs tests/ac-community-ui.test.cjs
 
+      - name: Validate Nova Player radio hub
+        run: |
+          node --check player/player.js
+          node --check player/radio-playlist-core.js
+          node --check player/legacy83-radio.js
+          node --check player/radio-hub.js
+          node --check player/legacy83-kmle-fallback.js
+          node --check player/legacy83-radio-component-controls.js
+          node --test tests/player-radio.test.cjs
+
       - name: Validate chess portal
         run: |
           node --check chess/chess.js
