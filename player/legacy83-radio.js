@@ -251,6 +251,7 @@
       playStation,
       stop:stopRadio,
       showVirtualStation,
+      isPowered:()=>powered,
       getStations:()=>stations.slice()
     };
     window.dispatchEvent(new CustomEvent('legacy83-radio-ready'));
@@ -267,7 +268,19 @@
     module.querySelectorAll('[data-genre]').forEach(b=>b.addEventListener('click',()=>loadGenre(b.dataset.genre)));
     module.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{const list=calibratedStations();const target=list[Number(b.dataset.preset)];if(target){index=target.i;paintStation(index,{play:true});}}));
     module.querySelectorAll('[data-band]').forEach(b=>b.addEventListener('click',()=>configureBand(b.dataset.band)));
-    power.addEventListener('click',()=>{powered=!powered;module.classList.toggle('is-powered',powered);power.setAttribute('aria-pressed',String(powered));if(!powered){++playAttempt;stopStartTimer();radioAudio.pause();notifyRadio(false);}status.textContent=powered?'LIVE RADIO READY':'POWER OFF';});
+    power.addEventListener('click',()=>{
+      powered=!powered;
+      module.classList.toggle('is-powered',powered);
+      power.setAttribute('aria-pressed',String(powered));
+      if(!powered){
+        stopRadio();
+        window.legacy83KmleController?.stop?.();
+        window.legacy83KmleAudio?.pause();
+        window.AstralisNovaPlayer?.stopRadio?.();
+      }
+      status.textContent=powered?'LIVE RADIO READY':'POWER OFF';
+      window.dispatchEvent(new CustomEvent('legacy83-radio-power',{detail:{powered}}));
+    });
     radioAudio.addEventListener('playing',()=>{stopStartTimer();status.textContent='LIVE • PLAYING • RACK SYNC';notifyRadio(true,activeStation);});
     radioAudio.addEventListener('pause',()=>{if(document.body.classList.contains('legacy83-radio-live'))notifyRadio(false,activeStation);});
     radioAudio.addEventListener('ended',()=>notifyRadio(false,activeStation));

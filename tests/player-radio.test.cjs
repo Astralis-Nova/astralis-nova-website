@@ -70,7 +70,7 @@ test('radio hub exposes all four source banks and official provider launchers', 
   assert.match(hub, /KMLE \/ Audacy/);
   assert.match(hub, /SiriusXM/);
   assert.match(html, /radio-playlist-core\.js\?v=1/);
-  assert.match(html, /radio-hub\.js\?v=2/);
+  assert.match(html, /radio-hub\.js\?v=3/);
   assert.match(hub, /activeBank!=='astralis'/);
 });
 
@@ -89,4 +89,24 @@ test('KMLE waits for real playback and keeps the official player available', () 
   assert.match(kmle, /addEventListener\('playing'.*notify\(true\)/);
   assert.match(kmle, /OPEN OFFICIAL KMLE PLAYER/);
   assert.match(kmle, /USE AUDACY/);
+});
+
+test('receiver power off stops every radio audio path', () => {
+  const html = read('player/index.html');
+  const tuner = read('player/legacy83-radio.js');
+  const kmle = read('player/legacy83-kmle-fallback.js');
+  const player = read('player/player.js');
+  const hub = read('player/radio-hub.js');
+  assert.match(tuner, /window\.legacy83KmleController\?\.stop\?\.\(\)/);
+  assert.match(tuner, /window\.AstralisNovaPlayer\?\.stopRadio\?\.\(\)/);
+  assert.match(tuner, /isPowered:\(\)=>powered/);
+  assert.match(kmle, /!tuner\.classList\.contains\('is-powered'\)/);
+  assert.match(kmle, /window\.legacy83KmleController=\{play:playKmle,stop:stopKmle\}/);
+  assert.match(player, /novaRadioMode=false;audio\.pause\(\);notifyNovaRadio\(false\)/);
+  assert.match(hub, /if\(!controller\.isPowered\?\.\(\)\)/);
+  assert.match(html, /player\.js\?v=77/);
+  assert.match(html, /legacy83-radio\.js\?v=7/);
+  assert.match(html, /legacy83-kmle-fallback\.js\?v=3/);
+  assert.match(html, /radio-hub\.js\?v=3/);
+  assert.match(read('player/sw.js'), /astralis-nova-player-v18/);
 });
