@@ -28,12 +28,14 @@ test('the inner grid remains gapless while opposing 4x4 quadrants rise in clear 
   assert.match(css, /\.board-square\[data-level="mid"\]/);
   assert.match(css, /\.board-square\[data-level="lower"\]/);
   assert.match(script, /const raised=\(row<4&&column>=4\)\|\|\(row>=4&&column<4\)/);
-  assert.match(css, /\.board-square\[data-platform="raised"\][^{]*\{[^}]*transform:translateY\(-5px\)/);
-  assert.match(css, /\.board-square\{[^}]*rgba\(229,251,255,\.14\)/);
+  assert.match(css, /\.board-square\[data-platform="raised"\][^{]*\{[^}]*transform:translateY\(-14px\)/);
+  assert.match(css, /\.playable-grid::before,\.playable-grid::after/);
+  assert.match(css, /\.board-square\{[^}]*rgba\(229,251,255,\.095\)/);
   assert.match(script, /document\.elementFromPoint\(event\.clientX,event\.clientY\)/);
 });
 
 test('new campaigns use rotating legal mission formations', () => {
+  assert.match(html, /astralis-combat\.css\?v=3/);
   assert.match(html, /New Random Campaign/);
   assert.match(script, /chooseMission\(Math\.random,lastMission\)/);
   assert.match(script, /for\(const move of mission\.moves\)game\.move\(move\)/);
