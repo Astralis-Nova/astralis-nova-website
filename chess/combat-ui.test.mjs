@@ -22,10 +22,20 @@ test('selecting a movable unit redraws visible route guides', () => {
   assert.match(script, /Green MOVE squares are legal; red DUEL squares start combat/);
 });
 
-test('the inner grid remains gapless while glass level bands are purely visual', () => {
+test('the inner grid remains gapless while opposing 4x4 quadrants rise in clear glass', () => {
   assert.match(css, /\.playable-grid\{[^}]*gap:0/);
   assert.match(css, /\.board-square\[data-level="upper"\]/);
   assert.match(css, /\.board-square\[data-level="mid"\]/);
   assert.match(css, /\.board-square\[data-level="lower"\]/);
-  assert.doesNotMatch(css, /\.board-square\[data-level="(?:upper|mid|lower)"\][^{]*\{[^}]*transform:/);
+  assert.match(script, /const raised=\(row<4&&column>=4\)\|\|\(row>=4&&column<4\)/);
+  assert.match(css, /\.board-square\[data-platform="raised"\][^{]*\{[^}]*transform:translateY\(-5px\)/);
+  assert.match(css, /\.board-square\{[^}]*rgba\(229,251,255,\.14\)/);
+  assert.match(script, /document\.elementFromPoint\(event\.clientX,event\.clientY\)/);
+});
+
+test('new campaigns use rotating legal mission formations', () => {
+  assert.match(html, /New Random Campaign/);
+  assert.match(script, /chooseMission\(Math\.random,lastMission\)/);
+  assert.match(script, /for\(const move of mission\.moves\)game\.move\(move\)/);
+  assert.match(script, /startRandomCampaign\(\);/);
 });

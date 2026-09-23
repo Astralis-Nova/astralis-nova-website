@@ -2,11 +2,12 @@ import{Chess}from'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
 import{createPiece}from'./pieces.js';
 import{PIECE_NAMES,makeCaptureIntent,duelResolution,squareFromPoint,defenderWinFen}from'./combat-core.js';
 import{AstralisCombatScene}from'./combat-scene.js';
+import{chooseMission}from'./mission-formations.js';
 
 const FILES=['a','b','c','d','e','f','g','h'];
 const grid=document.getElementById('playableGrid'),statusText=document.getElementById('statusText'),turnLabel=document.getElementById('turnLabel'),selectedReadout=document.getElementById('selectedReadout'),lastEvent=document.getElementById('lastEvent'),battleLog=document.getElementById('battleLog');
 const duelLayer=document.getElementById('duelLayer'),duelResult=document.getElementById('duelResult'),countdown=document.getElementById('duelCountdown');
-let game=new Chess(),orientation='white',selected=null,legal=[],lastMove=null,phase='board',pending=null,aiTimer=null,winnerOverride=null,dragStart=null;
+let game=new Chess(),orientation='white',selected=null,legal=[],lastMove=null,phase='board',pending=null,aiTimer=null,winnerOverride=null,dragStart=null,lastMission='';
 
 const scene=new AstralisCombatScene({
   canvas:document.getElementById('combatCanvas'),layer:duelLayer,
@@ -21,9 +22,10 @@ function pieceName(piece){return`${colorName(piece.color)} ${PIECE_NAMES[piece.t
 function setStatus(message){statusText.textContent=message}
 
 function render(){
-  grid.replaceChildren();const checked=findCheckedKing();
-  for(const rank of orderedRanks())for(const file of orderedFiles()){
+  grid.replaceChildren();const checked=findCheckedKing(),ranks=orderedRanks(),files=orderedFiles();
+  for(const [row,rank] of ranks.entries())for(const [column,file] of files.entries()){
     const square=`${file}${rank}`,piece=game.get(square),button=document.createElement('button');button.type='button';button.className=`board-square ${(FILES.indexOf(file)+rank)%2===1?'dark':'light'}`;button.dataset.square=square;button.dataset.level=rank>=7?'upper':rank<=2?'lower':'mid';button.setAttribute('role','gridcell');
+    const raised=(row<4&&column>=4)||(row>=4&&column<4);button.dataset.platform=raised?'raised':'base';
     if(selected===square)button.classList.add('selected');if(lastMove&&(lastMove.from===square||lastMove.to===square))button.classList.add('last');if(checked===square)button.classList.add('check');
     const route=legal.find(move=>move.to===square);if(route){button.classList.add(route.captured?'capture':'legal');button.setAttribute('aria-label',`${square.toUpperCase()} · ${route.captured?'duel':'legal move'}`)}
     const coord=document.createElement('span');coord.className='coord';coord.textContent=square.toUpperCase();button.append(coord);
@@ -97,12 +99,19 @@ function log(message){const li=document.createElement('li');li.textContent=messa
 function auditGeometry(){const rect=grid.getBoundingClientRect(),squares=[...grid.children];const expected=rect.width/8,valid=Math.abs(rect.width-rect.height)<1.5&&squares.length===64&&squares.every(square=>{const r=square.getBoundingClientRect();return Math.abs(r.width-expected)<1&&Math.abs(r.height-expected)<1});const node=document.getElementById('geometryStatus');node.textContent=valid?'64 cells locked':'Recalibrating';node.style.color=valid?'var(--success)':'var(--gold)'}
 
 grid.addEventListener('pointerdown',event=>{const square=event.target.closest('.board-square');if(!square)return;dragStart={square:square.dataset.square,x:event.clientX,y:event.clientY}});
-grid.addEventListener('pointerup',event=>{if(!dragStart)return;const moved=Math.hypot(event.clientX-dragStart.x,event.clientY-dragStart.y);if(moved>9&&phase==='board'){event.preventDefault();const target=squareFromPoint(grid.getBoundingClientRect(),event.clientX,event.clientY,orientation);if(!selected)handleSquare(dragStart.square);const route=legal.find(move=>move.to===target);if(route)void attemptMove(route)}dragStart=null});
+grid.addEventListener('pointerup',event=>{if(!dragStart)return;const moved=Math.hypot(event.clientX-dragStart.x,event.clientY-dragStart.y);if(moved>9&&phase==='board'){event.preventDefault();const visualTarget=document.elementFromPoint(event.clientX,event.clientY)?.closest('.board-square')?.dataset.square,target=visualTarget||squareFromPoint(grid.getBoundingClientRect(),event.clientX,event.clientY,orientation);if(!selected)handleSquare(dragStart.square);const route=legal.find(move=>move.to===target);if(route)void attemptMove(route)}dragStart=null});
 
-document.getElementById('newGame').addEventListener('click',()=>{clearTimeout(aiTimer);scene.stop();game=new Chess();orientation='white';selected=null;legal=[];lastMove=null;phase='board';pending=null;winnerOverride=null;duelLayer.hidden=true;lastEvent.textContent='Opening formation';battleLog.replaceChildren(textLi('New Astralis campaign started.'));setStatus('Silver to move. Select a unit.');render()});
+function startRandomCampaign(){
+  clearTimeout(aiTimer);scene.stop();game=new Chess();orientation='white';selected=null;legal=[];lastMove=null;phase='board';pending=null;winnerOverride=null;duelLayer.hidden=true;
+  const mission=chooseMission(Math.random,lastMission);lastMission=mission.name;
+  for(const move of mission.moves)game.move(move);
+  lastEvent.textContent=mission.name;battleLog.replaceChildren(textLi(`${mission.name} randomized formation deployed.`));setStatus(`${mission.name} ready. Silver to move—select a unit.`);render();
+}
+
+document.getElementById('newGame').addEventListener('click',startRandomCampaign);
 document.getElementById('flipBoard').addEventListener('click',()=>{orientation=orientation==='white'?'black':'white';render()});
 document.getElementById('rulesButton').addEventListener('click',()=>document.getElementById('rulesDialog').showModal());
 window.addEventListener('resize',()=>requestAnimationFrame(auditGeometry));
 function textLi(value){const li=document.createElement('li');li.textContent=value;return li}
 
-setStatus('Silver to move. Select a unit.');render();
+startRandomCampaign();

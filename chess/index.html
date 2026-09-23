@@ -34,12 +34,12 @@
         <article class="fleet-card active" id="silverCard"><span class="fleet-orb silver"></span><div><small>YOU</small><strong>Silver Starfleet</strong></div><b id="silverCount">16</b></article>
         <article class="fleet-card" id="voidCard"><span class="fleet-orb void"></span><div><small>NOVA AI</small><strong>Void Fleet</strong></div><b id="voidCount">16</b></article>
         <div class="action-stack">
-          <button class="primary" id="newGame" type="button">New Campaign</button>
+          <button class="primary" id="newGame" type="button">New Random Campaign</button>
           <button id="flipBoard" type="button">Rotate Grid</button>
         </div>
         <div class="readout"><span>Selected unit</span><strong id="selectedReadout">None</strong></div>
         <div class="readout"><span>Last event</span><strong id="lastEvent">Opening formation</strong></div>
-        <p class="tip"><strong>Move:</strong> tap a Silver unit, then a green MOVE square. A red DUEL square starts combat. Some units begin blocked behind the front line.</p>
+        <p class="tip"><strong>Move:</strong> tap a Silver unit, then a green MOVE square. A red DUEL square starts combat. Every campaign deploys a different legal opening formation.</p>
       </aside>
 
       <section class="board-panel panel" aria-label="Astralis combat chess board">
@@ -96,7 +96,7 @@
     <form method="dialog">
       <header><div><p class="eyebrow">RULES OF ENGAGEMENT</p><h2>Chess chooses the battle. You choose the survivor.</h2></div><button value="close" aria-label="Close">×</button></header>
       <div class="rules-grid">
-        <article><strong>1 · Maneuver</strong><p>All movement and legal destinations follow standard chess.</p></article>
+        <article><strong>1 · Maneuver</strong><p>Each campaign opens with a randomized legal formation; all movement and destinations follow standard chess.</p></article>
         <article><strong>2 · Intercept</strong><p>A capture pauses the board before either unit is removed.</p></article>
         <article><strong>3 · Duel</strong><p>Move your ship and fire energy bolts. Nova controls the opposing unit.</p></article>
         <article><strong>4 · Resolve</strong><p>The winner survives on the board; the loser is removed. Then the next turn begins.</p></article>
@@ -105,6 +105,6 @@
     </form>
   </dialog>
 
-  <script type="module" src="./chess-combat.js?v=2"></script>
+  <script type="module" src="./chess-combat.js?v=3"></script>
 </body>
 </html>
