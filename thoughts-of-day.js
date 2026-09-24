@@ -35,6 +35,7 @@
   const voice = document.getElementById("thought-nova-voice");
   const answer = document.getElementById("thought-nova-response");
   const host = document.getElementById("thought-nova-host");
+  const stemFace = document.getElementById("thought-nova-face");
   if (!chamber || !line || !novaToggle || !miniPanel || !thoughts.length) return;
 
   let current = 0;
@@ -92,6 +93,17 @@
     answer.hidden = false;
   };
 
+  let faceObserver;
+  const mirrorNovaFace = sourceFace => {
+    if (!stemFace || !sourceFace) return;
+    stemFace.textContent = sourceFace.textContent || "😁";
+    if (faceObserver) return;
+    faceObserver = new MutationObserver(() => {
+      stemFace.textContent = sourceFace.textContent || "😁";
+    });
+    faceObserver.observe(sourceFace, { childList: true, characterData: true, subtree: true });
+  };
+
   const waitForNova = async () => {
     for (let attempt = 0; attempt < 50; attempt++) {
       const root = document.getElementById("novaGuide");
@@ -99,6 +111,7 @@
       const input = root?.querySelector("#novaCommand");
       const send = root?.querySelector("#novaSend");
       const orb = root?.querySelector("#novaOrb");
+      mirrorNovaFace(root?.querySelector("#novaFace"));
       if (root && panel && input && send && orb && typeof window.AstralisNovaAsk === "function") {
         if (host && root.parentElement !== host) host.appendChild(root);
         return { root, panel, input, send, orb };

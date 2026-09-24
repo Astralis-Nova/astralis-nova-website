@@ -470,21 +470,25 @@
     }
     .thought-nova-node{
       position:absolute;z-index:9;left:50%;bottom:2.1%;transform:translateX(-50%);
-      display:grid;place-items:center;width:58px;height:58px;padding:0;
-      border:1px solid rgba(178,244,255,.92);border-radius:50%;
-      background:conic-gradient(from 20deg,#63eaff,#6b5cff,#d85cff,#63eaff);
-      box-shadow:0 0 0 6px rgba(74,167,255,.13),0 0 25px rgba(91,225,255,.82),0 0 44px rgba(154,93,255,.58),inset 0 0 12px rgba(255,255,255,.75);
-      cursor:pointer;animation:thought-orb-float 3.2s ease-in-out infinite
+      display:grid;place-items:center;width:66px;height:66px;padding:0;
+      border:1px solid rgba(190,241,255,.98);border-radius:50%;
+      color:#fff;background:radial-gradient(circle at 43% 35%,#fff 0 3%,#a7efff 5%,#36bfff 13%,#3158d8 31%,#351679 53%,#08091d 74%);
+      box-shadow:0 0 0 7px rgba(49,154,255,.12),0 0 26px rgba(78,210,255,.95),0 0 52px rgba(116,54,255,.68),inset 0 0 26px rgba(255,255,255,.24);
+      cursor:pointer;animation:thought-orb-breathe 2.5s ease-in-out infinite
     }
     .thought-nova-node::before{content:"";position:absolute;left:50%;top:-22px;width:3px;height:22px;transform:translateX(-50%);background:linear-gradient(#a9efff,rgba(142,234,255,.12));box-shadow:0 0 10px #80e8ff}
+    .thought-nova-node::after{content:"";position:absolute;inset:-10px;border:2px solid rgba(105,220,255,.72);border-left-color:transparent;border-bottom-color:rgba(196,72,255,.68);border-radius:50%;filter:drop-shadow(0 0 9px #60dfff);animation:thought-node-spin 5.2s linear infinite;pointer-events:none}
     .thought-nova-node:hover,.thought-nova-node:focus-visible{outline:2px solid #d8f9ff;outline-offset:5px;filter:brightness(1.18)}
-    .thought-nova-node[aria-expanded="true"]{animation:thought-orb-active 1.6s linear infinite;box-shadow:0 0 0 7px rgba(74,220,255,.18),0 0 34px #65eaff,0 0 58px #a65cff}
-    .thought-nova-core{position:relative;display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#fff 0 5%,#aef6ff 10%,#5579ee 38%,#241059 72%,#09061e 100%);box-shadow:inset 0 0 12px rgba(255,255,255,.7),0 0 12px #8cefff}
-    .thought-nova-core::before{content:"✦";color:#fff;font-size:1.12rem;text-shadow:0 0 9px #fff,0 0 15px #6ef1ff}
-    .thought-nova-core::after{content:"";position:absolute;inset:-5px;border:1px solid rgba(184,242,255,.64);border-radius:50%;border-left-color:transparent;border-bottom-color:#c77cff;animation:thought-node-spin 4s linear infinite}
-    @keyframes thought-orb-float{50%{transform:translate(-50%,-4px)}}
+    .thought-nova-node[aria-expanded="true"]{animation:thought-orb-active 1.6s ease-in-out infinite;box-shadow:0 0 0 9px rgba(116,221,255,.18),0 0 44px #74e7ff,0 0 72px #b144ff,inset 0 0 30px rgba(255,255,255,.35)}
+    .thought-nova-core{position:absolute;inset:0;display:grid;place-items:center;border-radius:50%;pointer-events:none}
+    .thought-nova-core::before{content:"";position:absolute;inset:-19px;border:2px solid rgba(228,92,255,.42);border-right-color:transparent;border-radius:50%;animation:thought-node-spin-reverse 8.4s linear infinite;pointer-events:none}
+    .thought-nova-face{font-size:1.72rem;line-height:1;filter:drop-shadow(0 0 8px #fff) drop-shadow(0 0 16px #69dcff);transition:transform .22s ease,filter .22s ease;animation:thought-nova-face-float 2.2s ease-in-out infinite}
+    .thought-nova-node:hover .thought-nova-face{transform:scale(1.2) rotate(-5deg)}
+    @keyframes thought-orb-breathe{50%{transform:translateX(-50%) scale(1.06);filter:brightness(1.2)}}
     @keyframes thought-orb-active{50%{transform:translateX(-50%) scale(1.08);filter:brightness(1.2)}}
     @keyframes thought-node-spin{to{transform:rotate(360deg)}}
+    @keyframes thought-node-spin-reverse{to{transform:rotate(-360deg)}}
+    @keyframes thought-nova-face-float{50%{transform:translateY(-3px) scale(1.06)}}
     .thought-nova[hidden]{display:none}
     .thought-nova{position:absolute;z-index:8;inset:8%;display:flex;flex-direction:column;justify-content:center;padding:clamp(44px,8vw,72px);border:1px solid rgba(147,229,255,.68);border-radius:50%;background:radial-gradient(circle at 50% 36%,rgba(21,58,112,.97) 0 26%,rgba(26,22,79,.98) 56%,rgba(7,7,31,.99) 78%);box-shadow:inset 0 0 34px rgba(119,235,255,.34),inset 0 0 85px rgba(151,84,255,.34),0 0 38px rgba(92,215,255,.4);text-align:center;overflow:auto;animation:thought-nova-open .26s ease-out}
     .thought-nova::before{content:"";position:absolute;inset:4%;border:1px solid rgba(148,237,255,.22);border-radius:50%;pointer-events:none;box-shadow:inset 0 0 28px rgba(95,209,255,.13)}
@@ -503,13 +507,13 @@
     .thought-nova-response{position:relative;z-index:1;max-height:88px;overflow:auto;margin-top:9px;padding:10px;border:1px solid rgba(130,233,255,.4);border-radius:18px;background:rgba(8,27,65,.72);color:#edf7ff;font-size:.82rem;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
     .thought-nova-response[hidden]{display:none}
     #thought-nova-host{display:none}
-    @media(max-width:600px){.thought-nova{inset:6%;padding:50px 34px 42px}.thought-nova-form{grid-template-columns:1fr}.thought-nova-form button{width:100%}.thought-nova-node{bottom:1.7%;width:50px;height:50px}.thought-nova-core{width:32px;height:32px}.thought-nova-actions{gap:5px}.thought-nova-actions button{padding:6px 8px;font-size:.72rem}.thought-nova-close{right:12%;top:10%}}
+    @media(max-width:600px){.thought-nova{inset:6%;padding:50px 34px 42px}.thought-nova-form{grid-template-columns:1fr}.thought-nova-form button{width:100%}.thought-nova-node{bottom:1.7%;width:58px;height:58px}.thought-nova-face{font-size:1.55rem}.thought-nova-actions{gap:5px}.thought-nova-actions button{padding:6px 8px;font-size:.72rem}.thought-nova-close{right:12%;top:10%}}
     @keyframes thought-orbit{to{transform:rotate(360deg)}}
     @media(max-width:600px){
       .thought-art{width:min(100%,420px)}
       .thought-line{width:68%;font-size:clamp(.83rem,3.2vw,1rem);line-height:1.3}
     }
-    @media(prefers-reduced-motion:reduce){.thought-vortex::after,.thought-brain,.thought-signals use{animation:none}}
+    @media(prefers-reduced-motion:reduce){.thought-vortex::after,.thought-brain,.thought-signals use,.thought-nova-node,.thought-nova-node::after,.thought-nova-core::before,.thought-nova-face{animation:none}}
     @media(max-width:900px){
       .culture-grid{grid-template-columns:1fr}
       .chuckle-card,.quote-card{padding:20px}
@@ -1151,7 +1155,7 @@
               </g>
             </svg>
             <blockquote class="thought-line" id="thought-line">We may learn to give a living mind a new body before we learn whether a mind can leave its original one.</blockquote>
-            <button class="thought-nova-node" id="thought-nova-toggle" type="button" aria-expanded="false" aria-controls="thought-nova-panel" aria-label="Open the Nova AI circle interface"><span class="thought-nova-core" aria-hidden="true"></span></button>
+            <button class="thought-nova-node" id="thought-nova-toggle" type="button" aria-expanded="false" aria-controls="thought-nova-panel" aria-label="Open the Nova AI circle interface"><span class="thought-nova-core" aria-hidden="true"><span class="thought-nova-face" id="thought-nova-face">😁</span></span></button>
             <div class="thought-nova" id="thought-nova-panel" aria-label="Nova AI circle interface" hidden>
               <button class="thought-nova-close" id="thought-nova-close" type="button" aria-label="Close Nova AI interface">×</button>
               <div class="thought-nova-head"><h3>Nova AI</h3><p>Explore this thought or ask anything.</p></div>
@@ -1898,7 +1902,7 @@
   })();
   </script>
 
-  <script src="thoughts-of-day.js?v=20260924brainstem" defer></script>
+  <script src="thoughts-of-day.js?v=20260924novaorb" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
