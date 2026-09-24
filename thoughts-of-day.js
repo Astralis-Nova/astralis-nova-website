@@ -26,24 +26,22 @@
 
   const chamber = document.getElementById("thought-of-the-day");
   const line = document.getElementById("thought-line");
-  const buttons = document.getElementById("thought-buttons");
-  const previous = document.getElementById("thought-previous");
-  const next = document.getElementById("thought-next");
+  const novaToggle = document.getElementById("thought-nova-toggle");
+  const miniPanel = document.getElementById("thought-nova-panel");
+  const closeButton = document.getElementById("thought-nova-close");
   const form = document.getElementById("thought-nova-form");
   const questionInput = document.getElementById("thought-nova-input");
   const explore = document.getElementById("thought-nova-explore");
   const voice = document.getElementById("thought-nova-voice");
-  const consoleButton = document.getElementById("thought-nova-console");
   const answer = document.getElementById("thought-nova-response");
   const host = document.getElementById("thought-nova-host");
-  const brain = document.getElementById("thought-brain-entry");
-  if (!chamber || !line || !buttons || !previous || !next || !thoughts.length) return;
+  if (!chamber || !line || !novaToggle || !miniPanel || !thoughts.length) return;
 
   let current = 0;
   let timer;
-  let paused = false;
   let questionActive = false;
   let requestIndex = -1;
+  const rotationMs = 3 * 60 * 1000;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   function show(index) {
@@ -53,26 +51,39 @@
     if (answer) answer.hidden = true;
   }
 
+  function showRandomThought() {
+    if (thoughts.length < 2) return;
+    const offset = 1 + Math.floor(Math.random() * (thoughts.length - 1));
+    show((current + offset) % thoughts.length);
+  }
+
   function start() {
     clearInterval(timer);
-    if (thoughts.length > 1 && !paused && !questionActive && !reducedMotion.matches && !document.hidden) {
-      timer = setInterval(() => show(current + 1), 45000);
+    if (thoughts.length > 1 && miniPanel.hidden && !questionActive && !document.hidden) {
+      timer = setInterval(showRandomThought, rotationMs);
     }
   }
 
-  if (thoughts.length > 1) {
-    buttons.hidden = false;
-    previous.addEventListener("click", () => { show(current - 1); start(); });
-    next.addEventListener("click", () => { show(current + 1); start(); });
-    chamber.addEventListener("mouseenter", () => { paused = true; start(); });
-    chamber.addEventListener("mouseleave", () => { paused = false; start(); });
-    chamber.addEventListener("focusin", () => { paused = true; start(); });
-    chamber.addEventListener("focusout", event => {
-      if (!chamber.contains(event.relatedTarget)) { paused = false; start(); }
-    });
-    document.addEventListener("visibilitychange", start);
-    reducedMotion.addEventListener("change", start);
-  }
+  const setPanelOpen = open => {
+    miniPanel.hidden = !open;
+    novaToggle.setAttribute("aria-expanded", String(open));
+    novaToggle.setAttribute("aria-label", open ? "Close the Nova AI thought interface" : "Open the Nova AI thought interface");
+    if (open) {
+      clearInterval(timer);
+      window.setTimeout(() => questionInput?.focus(), 0);
+    } else {
+      questionActive = false;
+      start();
+      novaToggle.focus();
+    }
+  };
+
+  novaToggle.addEventListener("click", () => setPanelOpen(miniPanel.hidden));
+  closeButton?.addEventListener("click", () => setPanelOpen(false));
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !miniPanel.hidden) setPanelOpen(false);
+  });
+  document.addEventListener("visibilitychange", start);
 
   // Use the existing Nova console and its handlers so every AI capability stays in one place.
   const setAnswer = message => {
@@ -89,12 +100,7 @@
       const send = root?.querySelector("#novaSend");
       const orb = root?.querySelector("#novaOrb");
       if (root && panel && input && send && orb && typeof window.AstralisNovaAsk === "function") {
-        if (host && root.parentElement !== host) {
-          host.appendChild(root);
-          const syncExpanded = () => brain?.setAttribute("aria-expanded", String(panel.classList.contains("open")));
-          new MutationObserver(syncExpanded).observe(panel, { attributes: true, attributeFilter: ["class"] });
-          syncExpanded();
-        }
+        if (host && root.parentElement !== host) host.appendChild(root);
         return { root, panel, input, send, orb };
       }
       await new Promise(resolve => setTimeout(resolve, 200));
@@ -109,7 +115,6 @@
       return null;
     }
     if (nova.orb.getAttribute("aria-expanded") !== "true") nova.orb.click();
-    if (host) nova.panel.scrollIntoView({ block: "nearest", behavior: reducedMotion.matches ? "auto" : "smooth" });
     return nova;
   };
 
@@ -150,14 +155,6 @@
   explore?.addEventListener("click", () => {
     sendQuestion(`Explore this Thought of the Day: "${thoughts[current]}". Share a thoughtful perspective, acknowledge uncertainty, and end with one question we can investigate together.`);
   });
-  consoleButton?.addEventListener("click", () => openConsole());
-  brain?.addEventListener("click", () => openConsole());
-  brain?.addEventListener("keydown", event => {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      openConsole();
-    }
-  });
   voice?.addEventListener("click", async () => {
     const nova = await openConsole();
     if (!nova) return;
@@ -168,10 +165,13 @@
     }
   });
 
-  show(0);
+  show(Math.floor(Math.random() * thoughts.length));
   start();
   if (host) waitForNova();
-  const revealBrain = () => chamber.scrollIntoView({ block: "start", behavior: reducedMotion.matches ? "auto" : "smooth" });
+  const revealBrain = () => {
+    setPanelOpen(true);
+    chamber.scrollIntoView({ block: "start", behavior: reducedMotion.matches ? "auto" : "smooth" });
+  };
   document.addEventListener("click", event => {
     if (event.target.closest?.(".nova-primary-send, .nova-primary-chip")) revealBrain();
   });

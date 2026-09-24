@@ -468,30 +468,37 @@
       color:#fff;font-family:Georgia,serif;font-size:clamp(.88rem,1.5vw,1.17rem);
       line-height:1.38;text-wrap:balance;text-shadow:0 1px 8px #020510,0 0 16px #071836
     }
-    .thought-buttons{display:flex;gap:12px}
-    .thought-buttons[hidden]{display:none}
-    .thought-buttons button{cursor:pointer;border:1px solid rgba(152,192,245,.55);background:#122039;color:#fff;border-radius:50%;width:40px;height:40px}
-    .thought-buttons button:hover,.thought-buttons button:focus-visible{background:#25558a;outline:2px solid #9cd6ff;outline-offset:2px}
-    .thought-nova{width:min(100%,700px);padding:18px;border:1px solid rgba(135,210,255,.42);border-radius:20px;background:radial-gradient(circle at 50% 0,rgba(95,79,214,.18),transparent 65%),rgba(5,15,35,.84);box-shadow:inset 0 0 24px rgba(102,150,255,.08);text-align:left}
-    .thought-nova h3{margin:0 0 5px;color:#eaf7ff;font-size:1.15rem}
-    .thought-nova p{margin:0 0 14px;color:#b9d3ec;font-size:.94rem;line-height:1.5}
-    .thought-nova-form{display:flex;gap:9px}
-    .thought-nova-form input{flex:1;min-width:0;min-height:46px;padding:10px 13px;border:1px solid rgba(132,193,246,.46);border-radius:12px;background:#07162f;color:#fff;font:inherit;font-size:1rem}
+    .thought-nova-node{
+      position:absolute;z-index:5;left:50%;bottom:3.2%;transform:translateX(-50%);
+      display:inline-flex;align-items:center;gap:7px;min-height:42px;padding:8px 14px;
+      border:1px solid rgba(157,234,255,.82);border-radius:999px;
+      background:linear-gradient(135deg,rgba(13,42,92,.96),rgba(82,37,156,.96));
+      color:#fff;font:900 .74rem/1 Inter,system-ui,sans-serif;letter-spacing:.12em;
+      box-shadow:0 0 0 5px rgba(74,167,255,.12),0 0 22px rgba(91,225,255,.72),0 0 38px rgba(154,93,255,.48);
+      cursor:pointer
+    }
+    .thought-nova-node::before{content:"";position:absolute;left:50%;top:-18px;width:2px;height:18px;transform:translateX(-50%);background:linear-gradient(#8eeaff,rgba(142,234,255,.15));box-shadow:0 0 9px #80e8ff}
+    .thought-nova-node::after{content:"";width:8px;height:8px;border-radius:50%;background:#7ff6ff;box-shadow:0 0 9px #7ff6ff;animation:thought-node-pulse 2s ease-in-out infinite}
+    .thought-nova-node:hover,.thought-nova-node:focus-visible{outline:2px solid #d8f9ff;outline-offset:4px;filter:brightness(1.14)}
+    @keyframes thought-node-pulse{50%{opacity:.35;transform:scale(.72)}}
+    .thought-nova[hidden]{display:none}
+    .thought-nova{width:min(100%,540px);padding:16px;border:1px solid rgba(135,210,255,.52);border-radius:18px;background:radial-gradient(circle at 50% 0,rgba(95,79,214,.24),transparent 68%),rgba(4,14,34,.96);box-shadow:0 20px 50px rgba(0,0,0,.42),inset 0 0 24px rgba(102,150,255,.09);text-align:left;animation:thought-nova-open .22s ease-out}
+    @keyframes thought-nova-open{from{opacity:0;transform:translateY(-8px) scale(.98)}}
+    .thought-nova-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+    .thought-nova h3{margin:0 0 4px;color:#eaf7ff;font-size:1.06rem}
+    .thought-nova p{margin:0 0 12px;color:#b9d3ec;font-size:.88rem;line-height:1.45}
+    .thought-nova-close{flex:none;width:34px;height:34px;min-height:34px!important;padding:0!important;border-radius:50%!important;font-size:1.25rem!important;line-height:1!important}
+    .thought-nova-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+    .thought-nova-form input{min-width:0;min-height:44px;padding:9px 12px;border:1px solid rgba(132,193,246,.46);border-radius:11px;background:#07162f;color:#fff;font:inherit;font-size:.95rem}
     .thought-nova-form input:focus-visible,.thought-nova button:focus-visible{outline:2px solid #a0eaff;outline-offset:2px}
-    .thought-nova button{min-height:44px;padding:9px 14px;border:1px solid rgba(138,207,255,.52);border-radius:12px;background:#132956;color:#f5faff;font:inherit;font-weight:700;cursor:pointer}
+    .thought-nova button{min-height:42px;padding:8px 12px;border:1px solid rgba(138,207,255,.52);border-radius:11px;background:#132956;color:#f5faff;font:inherit;font-weight:700;cursor:pointer}
     .thought-nova button:hover{background:#22467f}
     .thought-nova-form button,.thought-nova-explore{background:linear-gradient(110deg,#147df5,#7e38d5)!important;border-color:transparent!important}
-    .thought-nova-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .thought-nova-response{margin-top:14px;padding:14px;border-left:3px solid #82e9ff;border-radius:8px;background:rgba(23,43,76,.75);color:#edf7ff;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+    .thought-nova-actions{display:flex;gap:8px;margin-top:9px}.thought-nova-actions button{flex:1}
+    .thought-nova-response{margin-top:11px;padding:12px;border-left:3px solid #82e9ff;border-radius:8px;background:rgba(23,43,76,.75);color:#edf7ff;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
     .thought-nova-response[hidden]{display:none}
-    @media(max-width:600px){.thought-nova{padding:14px}.thought-nova-form{flex-direction:column}.thought-nova-form button{width:100%}.thought-nova-actions button{flex:1 1 auto}}
-    .thought-art[role="button"]{cursor:pointer}
-    .thought-art[role="button"]:focus-visible{outline:3px solid #a6eeff;outline-offset:11px}
-    .thought-nova #novaGuide{position:relative;left:auto;bottom:auto;z-index:auto;width:100%;margin-top:14px;text-align:left}
-    .thought-nova #novaGuide .nova-orb-wrap{display:none}
-    .thought-nova #novaGuide .nova-panel{display:none;position:relative;left:auto;bottom:auto;width:100%;max-height:min(74vh,800px);opacity:1;pointer-events:auto;transform:none;transform-origin:center;margin:0}
-    .thought-nova #novaGuide .nova-panel.open{display:block}
-    .thought-nova #novaGuide .nova-body{padding:16px}
+    #thought-nova-host{display:none}
+    @media(max-width:600px){.thought-nova{padding:13px}.thought-nova-form{grid-template-columns:1fr}.thought-nova-form button{width:100%}.thought-nova-node{bottom:2.6%;min-height:38px;padding:7px 12px;font-size:.67rem}.thought-nova-actions{flex-direction:column}}
     @keyframes thought-orbit{to{transform:rotate(360deg)}}
     @media(max-width:600px){
       .thought-art{width:min(100%,420px)}
@@ -1102,7 +1109,7 @@
       <article class="panel quote-card thought-card" id="thought-of-the-day" aria-label="Thoughts of the day">
         <div class="culture-inner thought-stage">
           <p class="eyebrow">THOUGHTS OF THE DAY</p>
-          <div class="thought-art" id="thought-brain-entry" role="button" tabindex="0" aria-label="Open Nova AI in the brain">
+          <div class="thought-art" id="thought-brain-entry">
             <picture class="thought-portal" aria-hidden="true">
               <source media="(prefers-reduced-motion: reduce)" srcset="/assets/ac-portals/portal-space-still.webp">
               <img src="/assets/ac-portals/portal-space-motion.webp" alt="" loading="lazy" decoding="async">
@@ -1139,14 +1146,10 @@
               </g>
             </svg>
             <blockquote class="thought-line" id="thought-line">We may learn to give a living mind a new body before we learn whether a mind can leave its original one.</blockquote>
+            <button class="thought-nova-node" id="thought-nova-toggle" type="button" aria-expanded="false" aria-controls="thought-nova-panel" aria-label="Open the Nova AI thought interface">✦ NOVA AI</button>
           </div>
-          <div class="thought-buttons" id="thought-buttons" hidden>
-            <button type="button" id="thought-previous" aria-label="Previous thought">←</button>
-            <button type="button" id="thought-next" aria-label="Next thought">→</button>
-          </div>
-          <div class="thought-nova" aria-label="Nova AI thought explorer">
-            <h3>Explore with Nova</h3>
-            <p>Talk through this thought or ask Nova anything.</p>
+          <div class="thought-nova" id="thought-nova-panel" aria-label="Nova AI thought explorer" hidden>
+            <div class="thought-nova-head"><div><h3>Talk to Nova</h3><p>Explore this thought or ask Nova anything.</p></div><button class="thought-nova-close" id="thought-nova-close" type="button" aria-label="Close Nova AI interface">×</button></div>
             <form class="thought-nova-form" id="thought-nova-form">
               <input id="thought-nova-input" type="text" maxlength="600" aria-label="Ask Nova from the brain" placeholder="What are you wondering about?">
               <button type="submit">Ask Nova</button>
@@ -1154,7 +1157,6 @@
             <div class="thought-nova-actions">
               <button class="thought-nova-explore" id="thought-nova-explore" type="button">Explore this thought</button>
               <button id="thought-nova-voice" type="button">🎙️ Talk to Nova</button>
-              <button id="thought-nova-console" type="button">Open full Nova console</button>
             </div>
             <div class="thought-nova-response" id="thought-nova-response" role="status" aria-live="polite" hidden></div>
             <div id="thought-nova-host"></div>
@@ -1890,7 +1892,7 @@
   })();
   </script>
 
-  <script src="thoughts-of-day.js?v=20260924brainai" defer></script>
+  <script src="thoughts-of-day.js?v=20260924brainstem" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
