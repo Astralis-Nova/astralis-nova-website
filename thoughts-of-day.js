@@ -33,6 +33,7 @@
   const questionInput = document.getElementById("thought-nova-input");
   const explore = document.getElementById("thought-nova-explore");
   const voice = document.getElementById("thought-nova-voice");
+  const memoryHotspot = document.getElementById("thought-memory-hotspot");
   const answer = document.getElementById("thought-nova-response");
   const host = document.getElementById("thought-nova-host");
   const stemFace = document.getElementById("thought-nova-face");
@@ -176,6 +177,18 @@
     } else {
       nova.root.querySelector("#novaMic")?.click();
     }
+  });
+  let secretTaps = 0;
+  let secretTapTimer;
+  memoryHotspot?.addEventListener("click", () => {
+    secretTaps += 1;
+    clearTimeout(secretTapTimer);
+    if (secretTaps >= 3) {
+      secretTaps = 0;
+      location.assign("/memories/");
+      return;
+    }
+    secretTapTimer = setTimeout(() => { secretTaps = 0; }, 1600);
   });
 
   show(Math.floor(Math.random() * thoughts.length));
