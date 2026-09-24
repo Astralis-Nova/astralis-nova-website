@@ -171,4 +171,13 @@
   show(0);
   start();
   if (host) waitForNova();
+  const revealBrain = () => chamber.scrollIntoView({ block: "start", behavior: reducedMotion.matches ? "auto" : "smooth" });
+  document.addEventListener("click", event => {
+    if (event.target.closest?.(".nova-primary-send, .nova-primary-chip")) revealBrain();
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Enter" && event.target.matches?.(".nova-primary-input") && event.target.value.trim()) {
+      setTimeout(revealBrain, 0);
+    }
+  });
 })();
