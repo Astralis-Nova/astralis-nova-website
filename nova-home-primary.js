@@ -67,7 +67,6 @@
       q=String(q||'').trim();if(!q)return;
       command.value=q;
       panel.classList.add('open');panel.setAttribute('aria-hidden','false');
-      document.getElementById('thought-of-the-day')?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
       send.click();
       topInput.value='';
     };
