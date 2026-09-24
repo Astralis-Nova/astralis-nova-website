@@ -453,6 +453,8 @@
       background:conic-gradient(from 0deg,transparent 0 16%,rgba(172,119,255,.25) 22%,transparent 34%,rgba(60,198,255,.28) 48%,transparent 66%,rgba(214,158,255,.24) 80%,transparent 95%);
       animation:thought-orbit 20s linear infinite}
     .thought-brain{position:relative;z-index:2;width:92%;height:92%;fill:rgba(13,20,51,.28);stroke:#d1edff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 10px #64caff) drop-shadow(0 0 22px #b886ff);animation:thought-brain-pulse 4.6s ease-in-out infinite}
+    .thought-brain-stem{fill:rgba(90,137,192,.3);stroke:#a8d8f8;stroke-width:2.5}
+    .thought-brain > #thought-brain-lines{fill:none;stroke:#aec8e9;stroke-width:2.1}
     .thought-signals{fill:none;stroke:#9efaff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px #63eaff) drop-shadow(0 0 12px #b693ff)}
     .thought-signals use{stroke-dasharray:7 63;animation:thought-signal-flow 3.4s linear infinite}
     .thought-signals use:nth-child(2){stroke:#c2a6ff;animation-duration:4.2s;animation-delay:-1.8s}
@@ -1087,9 +1089,29 @@
             </picture>
             <div class="thought-vortex" aria-hidden="true"></div>
             <svg class="thought-brain" viewBox="0 0 240 240" aria-hidden="true">
-              <path id="thought-brain-left" d="M118 187c-12 8-27 3-31-9-20 2-32-10-30-25-17-9-21-29-9-42-10-18 1-34 17-37 3-20 22-29 36-21 12-10 28-4 29 10v108c0 7-5 13-12 16Z" />
-              <path id="thought-brain-right" d="M122 187c12 8 27 3 31-9 20 2 32-10 30-25 17-9 21-29 9-42 10-18-1-34-17-37-3-20-22-29-36-21-12-10-28-4-29 10v108c0 7 5 13 12 16Z" />
-              <path id="thought-brain-lines" d="M65 76c17-2 23 9 21 23m-37 17c17-7 28 2 30 16m9 45c-3-19 3-29 19-34m-12-85c-5 18 6 28 21 30m-50 53c15-2 25 8 23 22m87-87c-17-2-23 9-21 23m37 17c-17-7-28 2-30 16m-9 45c3-19-3-29-19-34m12-85c5 18-6 28-21 30m50 53c-15-2-25 8-23 22" />
+              <path class="thought-brain-stem" d="M107 163 C105 175 106 184 112 188 C111 196 115 202 121 204 C127 201 131 195 129 188 C136 180 135 171 132 162 Z" />
+              <path id="thought-brain-left" d="M120 54 C110 44 98 43 90 51 C75 45 62 53 60 67 C47 66 39 79 44 91 C32 101 35 116 44 123 C38 136 45 148 57 150 C56 165 69 173 81 168 C86 182 104 184 112 176 C117 179 121 174 121 168 C118 151 122 137 119 120 C117 102 123 88 120 54 Z" />
+              <path id="thought-brain-right" d="M120 54 C128 43 141 46 150 51 C166 47 180 56 180 69 C195 73 199 87 192 98 C202 108 199 122 189 129 C195 141 190 152 177 156 C176 169 163 177 150 172 C144 184 128 186 119 175 C116 157 122 140 120 124 C124 101 116 83 120 54 Z" />
+              <path id="thought-brain-lines" d="
+                M90 51 C82 64 91 72 101 69 C110 68 112 79 106 88
+                M61 67 C72 71 81 79 76 88 C63 86 55 96 61 106
+                M45 91 C58 91 66 101 60 111
+                M82 83 C91 88 95 95 88 104 C75 101 69 112 76 121
+                M107 91 C98 91 93 100 98 109 C110 108 112 120 105 128
+                M44 123 C55 116 65 122 67 133 C75 130 81 135 79 145
+                M57 150 C69 145 76 154 75 163
+                M86 117 C94 117 96 127 91 137 C85 144 88 154 97 158
+                M112 139 C104 134 97 140 98 148 C110 151 112 163 105 174
+                M150 51 C157 62 150 72 141 71 C132 71 130 82 136 90
+                M180 69 C170 70 163 81 167 91 C180 90 187 101 181 111
+                M192 98 C181 98 174 106 179 118
+                M155 85 C145 88 141 97 147 106 C160 104 166 115 160 125
+                M132 94 C142 92 148 102 143 112 C130 113 127 122 135 130
+                M189 129 C177 122 169 130 169 141 C159 138 154 145 158 155
+                M177 156 C164 150 157 159 160 170
+                M151 117 C145 124 147 135 154 140 C159 148 155 157 146 160
+                M128 142 C137 138 143 145 140 153 C129 157 127 166 134 175
+                M120 55 C116 69 127 78 120 91 C113 105 126 116 120 128 C114 145 126 160 120 174" />
               <g class="thought-signals" aria-hidden="true">
                 <use href="#thought-brain-left" />
                 <use href="#thought-brain-right" />
