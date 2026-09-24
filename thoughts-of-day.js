@@ -35,6 +35,8 @@
   const voice = document.getElementById("thought-nova-voice");
   const consoleButton = document.getElementById("thought-nova-console");
   const answer = document.getElementById("thought-nova-response");
+  const host = document.getElementById("thought-nova-host");
+  const brain = document.getElementById("thought-brain-entry");
   if (!chamber || !line || !buttons || !previous || !next || !thoughts.length) return;
 
   let current = 0;
@@ -87,6 +89,12 @@
       const send = root?.querySelector("#novaSend");
       const orb = root?.querySelector("#novaOrb");
       if (root && panel && input && send && orb && typeof window.AstralisNovaAsk === "function") {
+        if (host && root.parentElement !== host) {
+          host.appendChild(root);
+          const syncExpanded = () => brain?.setAttribute("aria-expanded", String(panel.classList.contains("open")));
+          new MutationObserver(syncExpanded).observe(panel, { attributes: true, attributeFilter: ["class"] });
+          syncExpanded();
+        }
         return { root, panel, input, send, orb };
       }
       await new Promise(resolve => setTimeout(resolve, 200));
@@ -101,6 +109,7 @@
       return null;
     }
     if (nova.orb.getAttribute("aria-expanded") !== "true") nova.orb.click();
+    if (host) nova.panel.scrollIntoView({ block: "nearest", behavior: reducedMotion.matches ? "auto" : "smooth" });
     return nova;
   };
 
@@ -142,6 +151,13 @@
     sendQuestion(`Explore this Thought of the Day: "${thoughts[current]}". Share a thoughtful perspective, acknowledge uncertainty, and end with one question we can investigate together.`);
   });
   consoleButton?.addEventListener("click", () => openConsole());
+  brain?.addEventListener("click", () => openConsole());
+  brain?.addEventListener("keydown", event => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      openConsole();
+    }
+  });
   voice?.addEventListener("click", async () => {
     const nova = await openConsole();
     if (!nova) return;
@@ -154,4 +170,5 @@
 
   show(0);
   start();
+  if (host) waitForNova();
 })();
