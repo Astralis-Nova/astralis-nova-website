@@ -485,6 +485,13 @@
     .thought-nova-response{margin-top:14px;padding:14px;border-left:3px solid #82e9ff;border-radius:8px;background:rgba(23,43,76,.75);color:#edf7ff;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
     .thought-nova-response[hidden]{display:none}
     @media(max-width:600px){.thought-nova{padding:14px}.thought-nova-form{flex-direction:column}.thought-nova-form button{width:100%}.thought-nova-actions button{flex:1 1 auto}}
+    .thought-art[role="button"]{cursor:pointer}
+    .thought-art[role="button"]:focus-visible{outline:3px solid #a6eeff;outline-offset:11px}
+    .thought-nova #novaGuide{position:relative;left:auto;bottom:auto;z-index:auto;width:100%;margin-top:14px;text-align:left}
+    .thought-nova #novaGuide .nova-orb-wrap{display:none}
+    .thought-nova #novaGuide .nova-panel{display:none;position:relative;left:auto;bottom:auto;width:100%;max-height:min(74vh,800px);opacity:1;pointer-events:auto;transform:none;transform-origin:center;margin:0}
+    .thought-nova #novaGuide .nova-panel.open{display:block}
+    .thought-nova #novaGuide .nova-body{padding:16px}
     @keyframes thought-orbit{to{transform:rotate(360deg)}}
     @media(max-width:600px){
       .thought-art{width:min(100%,420px)}
@@ -1095,7 +1102,7 @@
       <article class="panel quote-card thought-card" id="thought-of-the-day" aria-label="Thoughts of the day">
         <div class="culture-inner thought-stage">
           <p class="eyebrow">THOUGHTS OF THE DAY</p>
-          <div class="thought-art">
+          <div class="thought-art" id="thought-brain-entry" role="button" tabindex="0" aria-label="Open Nova AI in the brain">
             <picture class="thought-portal" aria-hidden="true">
               <source media="(prefers-reduced-motion: reduce)" srcset="/assets/ac-portals/portal-space-still.webp">
               <img src="/assets/ac-portals/portal-space-motion.webp" alt="" loading="lazy" decoding="async">
@@ -1150,6 +1157,7 @@
               <button id="thought-nova-console" type="button">Open full Nova console</button>
             </div>
             <div class="thought-nova-response" id="thought-nova-response" role="status" aria-live="polite" hidden></div>
+            <div id="thought-nova-host"></div>
           </div>
         </div>
       </article>
