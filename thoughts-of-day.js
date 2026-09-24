@@ -12,7 +12,7 @@
       ],
       note: "A thought experiment, not a claim that minds can be transferred.",
       source: {
-        label: "Explore today's brain–computer research ↗",
+        label: "Explore brain–computer research ↗",
         url: "https://www.nih.gov/news-events/nih-research-matters/decoding-inner-speech-brain-signals"
       },
       related: {
