@@ -435,6 +435,27 @@
       margin-top:18px;padding:12px 14px;border-radius:10px;
       background:rgba(4,10,20,.46);color:#8fa4bf;font-size:.84rem;line-height:1.55
     }
+    .thought-card{grid-column:1 / -1}
+    .thought-card h2{margin:12px 0 14px;font-size:clamp(1.4rem,2.5vw,2rem)}
+    .thought-card p:not(.eyebrow){max-width:88ch;line-height:1.65}
+    .thought-card .quote-note a{color:#9cd6ff}
+    .thought-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,32%);gap:20px;align-items:center}
+    .thought-copy{min-width:0}
+    .thought-art{width:min(100%,320px);aspect-ratio:1;position:relative;justify-self:center;display:grid;place-items:center;isolation:isolate}
+    .thought-vortex{position:absolute;inset:3%;border-radius:50%;
+      background:radial-gradient(circle,rgba(3,5,15,.98) 0 18%,rgba(17,13,47,.95) 24%,rgba(29,80,145,.35) 33%,transparent 42%),
+      repeating-conic-gradient(from 30deg,rgba(95,178,255,.04) 0deg,rgba(164,108,255,.54) 20deg,rgba(51,172,237,.15) 41deg,transparent 63deg);
+      filter:drop-shadow(0 0 24px rgba(105,113,234,.55));animation:thought-orbit 32s linear infinite}
+    .thought-vortex::after{content:"";position:absolute;inset:14%;border:1px solid rgba(139,198,255,.34);border-radius:48% 52% 56% 44%;box-shadow:0 0 35px rgba(64,146,255,.65),inset 0 0 25px rgba(132,84,255,.48)}
+    .thought-brain{position:relative;width:70%;height:70%;fill:rgba(16,29,65,.18);stroke:#a6d6ff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 9px rgba(118,185,255,.85))}
+    .thought-footer{display:flex;align-items:center;gap:14px;justify-content:space-between;color:#b0c3df;font-size:.82rem;margin-top:18px}
+    .thought-buttons{display:flex;gap:8px}
+    .thought-buttons[hidden]{display:none}
+    .thought-buttons button{cursor:pointer;border:1px solid rgba(152,192,245,.55);background:#122039;color:#fff;border-radius:50%;width:36px;height:36px}
+    .thought-buttons button:hover,.thought-buttons button:focus-visible{background:#25558a;outline:2px solid #9cd6ff;outline-offset:2px}
+    @keyframes thought-orbit{to{transform:rotate(360deg)}}
+    @media(max-width:700px){.thought-layout{grid-template-columns:1fr}.thought-art{width:min(100%,220px);grid-row:1}}
+    @media(prefers-reduced-motion:reduce){.thought-vortex{animation:none}}
     @media(max-width:900px){
       .culture-grid{grid-template-columns:1fr}
       .chuckle-card,.quote-card{padding:20px}
@@ -1032,6 +1053,35 @@
           <p class="quote-credit">— Stephen Hawking</p>
           <div class="quote-note">
             A reminder to stay curious, keep looking outward, and never stop wondering what may be waiting beyond the next horizon.
+          </div>
+        </div>
+      </article>
+
+      <article class="panel quote-card thought-card" id="thought-of-the-day" aria-labelledby="thought-title">
+        <div class="culture-inner thought-layout">
+          <div class="thought-copy" aria-live="polite" aria-atomic="true">
+            <p class="eyebrow" id="thought-date">THOUGHT OF THE DAY · SEPTEMBER 24, 2026</p>
+            <h2 id="thought-title">If the Body Is Hardware, Where Is the Self?</h2>
+            <div id="thought-body">
+              <p>When a video card fails, the computer may still be there, but part of how it reaches the world goes quiet. Our bodies have parts that can fail, too. The brain is living tissue and an ongoing process: memory, thought, and experience emerge through its activity.</p>
+              <p>We can already use some signals from a living brain to guide a robotic device. Imagine extending that connection to an entire body. Would it feel like gaining new arms and eyes? If we someday recreated a person's mind inside a machine, would the one who woke there be the same person, or a new being with the same memories? And where, if anywhere, would a soul fit into that story?</p>
+            </div>
+            <div class="quote-note" id="thought-note">A thought experiment, not a claim that minds can be transferred. <a href="https://www.nih.gov/news-events/nih-research-matters/decoding-inner-speech-brain-signals" target="_blank" rel="noopener noreferrer">Explore today's brain–computer research ↗</a> · <a href="our-new-star.html#questions-exploring">Explore our questions about consciousness →</a></div>
+            <div class="thought-footer">
+              <span id="thought-count">First thought in orbit</span>
+              <div class="thought-buttons" id="thought-buttons" hidden>
+                <button type="button" id="thought-previous" aria-label="Previous thought">←</button>
+                <button type="button" id="thought-next" aria-label="Next thought">→</button>
+              </div>
+            </div>
+          </div>
+          <div class="thought-art" role="img" aria-label="A glowing brain within a swirling cosmic cloud and dark center">
+            <div class="thought-vortex"></div>
+            <svg class="thought-brain" viewBox="0 0 240 240" aria-hidden="true">
+              <path d="M118 187c-12 8-27 3-31-9-20 2-32-10-30-25-17-9-21-29-9-42-10-18 1-34 17-37 3-20 22-29 36-21 12-10 28-4 29 10v108c0 7-5 13-12 16Z" />
+              <path d="M122 187c12 8 27 3 31-9 20 2 32-10 30-25 17-9 21-29 9-42 10-18-1-34-17-37-3-20-22-29-36-21-12-10-28-4-29 10v108c0 7 5 13 12 16Z" />
+              <path d="M65 76c17-2 23 9 21 23m-37 17c17-7 28 2 30 16m9 45c-3-19 3-29 19-34m-12-85c-5 18 6 28 21 30m-50 53c15-2 25 8 23 22m87-87c-17-2-23 9-21 23m37 17c-17-7-28 2-30 16m-9 45c3-19-3-29-19-34m12-85c5 18-6 28-21 30m50 53c-15-2-25 8-23 22" />
+            </svg>
           </div>
         </div>
       </article>
@@ -1764,6 +1814,7 @@
   })();
   </script>
 
+  <script src="thoughts-of-day.js" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
