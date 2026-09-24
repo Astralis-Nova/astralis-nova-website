@@ -468,6 +468,10 @@
       color:#fff;font-family:Georgia,serif;font-size:clamp(.88rem,1.5vw,1.17rem);
       line-height:1.38;text-wrap:balance;text-shadow:0 1px 8px #020510,0 0 16px #071836
     }
+    .thought-memory-hotspot{position:absolute;z-index:7;left:70.5%;top:28.5%;width:42px;height:42px;min-height:0!important;padding:0!important;border:0!important;border-radius:50%!important;background:transparent!important;box-shadow:none!important;cursor:default;opacity:.18}
+    .thought-memory-hotspot::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;transform:translate(-50%,-50%);border-radius:50%;background:#cf7dff;box-shadow:0 0 6px #cd7cff,0 0 13px #6feaff;animation:thought-secret-pulse 3.8s ease-in-out infinite}
+    .thought-memory-hotspot:focus-visible{outline:none}
+    @keyframes thought-secret-pulse{50%{opacity:.42;transform:translate(-50%,-50%) scale(.72)}}
     .thought-nova-node{
       position:absolute;z-index:9;left:50%;bottom:2.1%;transform:translateX(-50%);
       display:grid;place-items:center;width:66px;height:66px;padding:0;
@@ -513,7 +517,7 @@
       .thought-art{width:min(100%,420px)}
       .thought-line{width:68%;font-size:clamp(.83rem,3.2vw,1rem);line-height:1.3}
     }
-    @media(prefers-reduced-motion:reduce){.thought-vortex::after,.thought-brain,.thought-signals use,.thought-nova-node,.thought-nova-node::after,.thought-nova-core::before,.thought-nova-face{animation:none}}
+    @media(prefers-reduced-motion:reduce){.thought-vortex::after,.thought-brain,.thought-signals use,.thought-nova-node,.thought-nova-node::after,.thought-nova-core::before,.thought-nova-face,.thought-memory-hotspot::after{animation:none}}
     @media(max-width:900px){
       .culture-grid{grid-template-columns:1fr}
       .chuckle-card,.quote-card{padding:20px}
@@ -1154,6 +1158,7 @@
                 <use href="#thought-brain-lines" />
               </g>
             </svg>
+            <button class="thought-memory-hotspot" id="thought-memory-hotspot" type="button" tabindex="-1" aria-hidden="true"></button>
             <blockquote class="thought-line" id="thought-line">We may learn to give a living mind a new body before we learn whether a mind can leave its original one.</blockquote>
             <button class="thought-nova-node" id="thought-nova-toggle" type="button" aria-expanded="false" aria-controls="thought-nova-panel" aria-label="Open the Nova AI circle interface"><span class="thought-nova-core" aria-hidden="true"><span class="thought-nova-face" id="thought-nova-face">😁</span></span></button>
             <div class="thought-nova" id="thought-nova-panel" aria-label="Nova AI circle interface" hidden>
@@ -1902,7 +1907,7 @@
   })();
   </script>
 
-  <script src="thoughts-of-day.js?v=20260924novaorb" defer></script>
+  <script src="thoughts-of-day.js?v=20260924memory" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
