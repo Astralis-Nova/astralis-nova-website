@@ -452,7 +452,13 @@
     .thought-vortex::after{content:"";position:absolute;inset:-18%;border-radius:50%;
       background:conic-gradient(from 0deg,transparent 0 16%,rgba(172,119,255,.25) 22%,transparent 34%,rgba(60,198,255,.28) 48%,transparent 66%,rgba(214,158,255,.24) 80%,transparent 95%);
       animation:thought-orbit 20s linear infinite}
-    .thought-brain{position:relative;z-index:2;width:92%;height:92%;fill:rgba(13,20,51,.28);stroke:#d1edff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 10px #64caff) drop-shadow(0 0 22px #b886ff)}
+    .thought-brain{position:relative;z-index:2;width:92%;height:92%;fill:rgba(13,20,51,.28);stroke:#d1edff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 10px #64caff) drop-shadow(0 0 22px #b886ff);animation:thought-brain-pulse 4.6s ease-in-out infinite}
+    .thought-signals{fill:none;stroke:#9efaff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px #63eaff) drop-shadow(0 0 12px #b693ff)}
+    .thought-signals use{stroke-dasharray:7 63;animation:thought-signal-flow 3.4s linear infinite}
+    .thought-signals use:nth-child(2){stroke:#c2a6ff;animation-duration:4.2s;animation-delay:-1.8s}
+    .thought-signals use:nth-child(3){stroke:#70f5ff;animation-duration:2.8s;animation-delay:-.8s}
+    @keyframes thought-signal-flow{to{stroke-dashoffset:-140}}
+    @keyframes thought-brain-pulse{0%,100%{filter:drop-shadow(0 0 8px #64caff) drop-shadow(0 0 20px #b886ff)}50%{filter:drop-shadow(0 0 17px #8dfaff) drop-shadow(0 0 36px #b291ff)}}
     .thought-line{
       position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);
       width:58%;margin:0;padding:.75em .4em;border-radius:28px;
@@ -469,7 +475,7 @@
       .thought-art{width:min(100%,420px)}
       .thought-line{width:68%;font-size:clamp(.83rem,3.2vw,1rem);line-height:1.3}
     }
-    @media(prefers-reduced-motion:reduce){.thought-vortex::after{animation:none}}
+    @media(prefers-reduced-motion:reduce){.thought-vortex::after,.thought-brain,.thought-signals use{animation:none}}
     @media(max-width:900px){
       .culture-grid{grid-template-columns:1fr}
       .chuckle-card,.quote-card{padding:20px}
@@ -1081,9 +1087,14 @@
             </picture>
             <div class="thought-vortex" aria-hidden="true"></div>
             <svg class="thought-brain" viewBox="0 0 240 240" aria-hidden="true">
-              <path d="M118 187c-12 8-27 3-31-9-20 2-32-10-30-25-17-9-21-29-9-42-10-18 1-34 17-37 3-20 22-29 36-21 12-10 28-4 29 10v108c0 7-5 13-12 16Z" />
-              <path d="M122 187c12 8 27 3 31-9 20 2 32-10 30-25 17-9 21-29 9-42 10-18-1-34-17-37-3-20-22-29-36-21-12-10-28-4-29 10v108c0 7 5 13 12 16Z" />
-              <path d="M65 76c17-2 23 9 21 23m-37 17c17-7 28 2 30 16m9 45c-3-19 3-29 19-34m-12-85c-5 18 6 28 21 30m-50 53c15-2 25 8 23 22m87-87c-17-2-23 9-21 23m37 17c-17-7-28 2-30 16m-9 45c3-19-3-29-19-34m12-85c5 18-6 28-21 30m50 53c-15-2-25 8-23 22" />
+              <path id="thought-brain-left" d="M118 187c-12 8-27 3-31-9-20 2-32-10-30-25-17-9-21-29-9-42-10-18 1-34 17-37 3-20 22-29 36-21 12-10 28-4 29 10v108c0 7-5 13-12 16Z" />
+              <path id="thought-brain-right" d="M122 187c12 8 27 3 31-9 20 2 32-10 30-25 17-9 21-29 9-42 10-18-1-34-17-37-3-20-22-29-36-21-12-10-28-4-29 10v108c0 7 5 13 12 16Z" />
+              <path id="thought-brain-lines" d="M65 76c17-2 23 9 21 23m-37 17c17-7 28 2 30 16m9 45c-3-19 3-29 19-34m-12-85c-5 18 6 28 21 30m-50 53c15-2 25 8 23 22m87-87c-17-2-23 9-21 23m37 17c-17-7-28 2-30 16m-9 45c3-19-3-29-19-34m12-85c5 18-6 28-21 30m50 53c-15-2-25 8-23 22" />
+              <g class="thought-signals" aria-hidden="true">
+                <use href="#thought-brain-left" />
+                <use href="#thought-brain-right" />
+                <use href="#thought-brain-lines" />
+              </g>
             </svg>
             <blockquote class="thought-line" id="thought-line">We may learn to give a living mind a new body before we learn whether a mind can leave its original one.</blockquote>
           </div>
