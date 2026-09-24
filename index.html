@@ -472,6 +472,26 @@
     .thought-buttons[hidden]{display:none}
     .thought-buttons button{cursor:pointer;border:1px solid rgba(152,192,245,.55);background:#122039;color:#fff;border-radius:50%;width:40px;height:40px}
     .thought-buttons button:hover,.thought-buttons button:focus-visible{background:#25558a;outline:2px solid #9cd6ff;outline-offset:2px}
+    .thought-nova{width:min(100%,700px);padding:18px;border:1px solid rgba(135,210,255,.42);border-radius:20px;background:radial-gradient(circle at 50% 0,rgba(95,79,214,.18),transparent 65%),rgba(5,15,35,.84);box-shadow:inset 0 0 24px rgba(102,150,255,.08);text-align:left}
+    .thought-nova h3{margin:0 0 5px;color:#eaf7ff;font-size:1.15rem}
+    .thought-nova p{margin:0 0 14px;color:#b9d3ec;font-size:.94rem;line-height:1.5}
+    .thought-nova-form{display:flex;gap:9px}
+    .thought-nova-form input{flex:1;min-width:0;min-height:46px;padding:10px 13px;border:1px solid rgba(132,193,246,.46);border-radius:12px;background:#07162f;color:#fff;font:inherit;font-size:1rem}
+    .thought-nova-form input:focus-visible,.thought-nova button:focus-visible{outline:2px solid #a0eaff;outline-offset:2px}
+    .thought-nova button{min-height:44px;padding:9px 14px;border:1px solid rgba(138,207,255,.52);border-radius:12px;background:#132956;color:#f5faff;font:inherit;font-weight:700;cursor:pointer}
+    .thought-nova button:hover{background:#22467f}
+    .thought-nova-form button,.thought-nova-explore{background:linear-gradient(110deg,#147df5,#7e38d5)!important;border-color:transparent!important}
+    .thought-nova-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+    .thought-nova-response{margin-top:14px;padding:14px;border-left:3px solid #82e9ff;border-radius:8px;background:rgba(23,43,76,.75);color:#edf7ff;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+    .thought-nova-response[hidden]{display:none}
+    @media(max-width:600px){.thought-nova{padding:14px}.thought-nova-form{flex-direction:column}.thought-nova-form button{width:100%}.thought-nova-actions button{flex:1 1 auto}}
+    .thought-art[role="button"]{cursor:pointer}
+    .thought-art[role="button"]:focus-visible{outline:3px solid #a6eeff;outline-offset:11px}
+    .thought-nova #novaGuide{position:relative;left:auto;bottom:auto;z-index:auto;width:100%;margin-top:14px;text-align:left}
+    .thought-nova #novaGuide .nova-orb-wrap{display:none}
+    .thought-nova #novaGuide .nova-panel{display:none;position:relative;left:auto;bottom:auto;width:100%;max-height:min(74vh,800px);opacity:1;pointer-events:auto;transform:none;transform-origin:center;margin:0}
+    .thought-nova #novaGuide .nova-panel.open{display:block}
+    .thought-nova #novaGuide .nova-body{padding:16px}
     @keyframes thought-orbit{to{transform:rotate(360deg)}}
     @media(max-width:600px){
       .thought-art{width:min(100%,420px)}
@@ -1082,7 +1102,7 @@
       <article class="panel quote-card thought-card" id="thought-of-the-day" aria-label="Thoughts of the day">
         <div class="culture-inner thought-stage">
           <p class="eyebrow">THOUGHTS OF THE DAY</p>
-          <div class="thought-art">
+          <div class="thought-art" id="thought-brain-entry" role="button" tabindex="0" aria-label="Open Nova AI in the brain">
             <picture class="thought-portal" aria-hidden="true">
               <source media="(prefers-reduced-motion: reduce)" srcset="/assets/ac-portals/portal-space-still.webp">
               <img src="/assets/ac-portals/portal-space-motion.webp" alt="" loading="lazy" decoding="async">
@@ -1123,6 +1143,21 @@
           <div class="thought-buttons" id="thought-buttons" hidden>
             <button type="button" id="thought-previous" aria-label="Previous thought">←</button>
             <button type="button" id="thought-next" aria-label="Next thought">→</button>
+          </div>
+          <div class="thought-nova" aria-label="Nova AI thought explorer">
+            <h3>Explore with Nova</h3>
+            <p>Talk through this thought or ask Nova anything.</p>
+            <form class="thought-nova-form" id="thought-nova-form">
+              <input id="thought-nova-input" type="text" maxlength="600" aria-label="Ask Nova from the brain" placeholder="What are you wondering about?">
+              <button type="submit">Ask Nova</button>
+            </form>
+            <div class="thought-nova-actions">
+              <button class="thought-nova-explore" id="thought-nova-explore" type="button">Explore this thought</button>
+              <button id="thought-nova-voice" type="button">🎙️ Talk to Nova</button>
+              <button id="thought-nova-console" type="button">Open full Nova console</button>
+            </div>
+            <div class="thought-nova-response" id="thought-nova-response" role="status" aria-live="polite" hidden></div>
+            <div id="thought-nova-host"></div>
           </div>
         </div>
       </article>
@@ -1855,7 +1890,7 @@
   })();
   </script>
 
-  <script src="thoughts-of-day.js" defer></script>
+  <script src="thoughts-of-day.js?v=20260924brainai" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
