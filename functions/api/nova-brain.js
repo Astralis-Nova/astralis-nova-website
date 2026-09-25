@@ -3,7 +3,7 @@ const HEADERS={
   'Cache-Control':'no-store, max-age=0',
   'X-Content-Type-Options':'nosniff'
 };
-const MODEL='@cf/meta/llama-3.1-8b-instruct-fp8';
+const MODEL='@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 const MODES=new Set(['think','connect','challenge']);
 const RESPONSE_SCHEMA={
   type:'object',
