@@ -239,13 +239,18 @@
   };
   memoryHotspot?.addEventListener("click", () => {
     secretTaps += 1;
+    memoryHotspot.classList.remove("tap-ack");
+    void memoryHotspot.offsetWidth;
+    memoryHotspot.classList.add("tap-ack");
+    setTimeout(() => memoryHotspot.classList.remove("tap-ack"), 260);
+    navigator.vibrate?.(35);
     clearTimeout(secretTapTimer);
     if (secretTaps >= 3) {
       secretTaps = 0;
       openAccess();
       return;
     }
-    secretTapTimer = setTimeout(() => { secretTaps = 0; }, 1600);
+    secretTapTimer = setTimeout(() => { secretTaps = 0; }, 4500);
   });
   accessForm?.addEventListener("submit", event => {
     event.preventDefault();

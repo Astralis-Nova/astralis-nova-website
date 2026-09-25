@@ -468,8 +468,9 @@
       color:#fff;font-family:Georgia,serif;font-size:clamp(.88rem,1.5vw,1.17rem);
       line-height:1.38;text-wrap:balance;text-shadow:0 1px 8px #020510,0 0 16px #071836
     }
-    .thought-memory-hotspot{position:absolute;z-index:7;left:70.5%;top:28.5%;width:42px;height:42px;min-height:0!important;padding:0!important;border:0!important;border-radius:50%!important;background:transparent!important;box-shadow:none!important;cursor:default;opacity:.18}
-    .thought-memory-hotspot::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;transform:translate(-50%,-50%);border-radius:50%;background:#cf7dff;box-shadow:0 0 6px #cd7cff,0 0 13px #6feaff;animation:thought-secret-pulse 3.8s ease-in-out infinite}
+    .thought-memory-hotspot{position:absolute;z-index:7;left:70.5%;top:28.5%;width:96px;height:96px;min-height:0!important;padding:0!important;transform:translate(-50%,-50%);border:0!important;border-radius:50%!important;background:transparent!important;box-shadow:none!important;cursor:pointer;opacity:.62;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .thought-memory-hotspot::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:11px;transform:translate(-50%,-50%);border-radius:50%;background:#d98aff;box-shadow:0 0 8px #e099ff,0 0 18px #6feaff,0 0 28px rgba(198,91,255,.72);animation:thought-secret-pulse 3.2s ease-in-out infinite}
+    .thought-memory-hotspot.tap-ack::after{background:#fff;box-shadow:0 0 10px #fff,0 0 24px #7ff3ff,0 0 38px #d55cff}
     .thought-memory-hotspot:focus-visible{outline:none}
     @keyframes thought-secret-pulse{50%{opacity:.42;transform:translate(-50%,-50%) scale(.72)}}
     .thought-access-lock[hidden]{display:none}
@@ -1930,7 +1931,7 @@
   })();
   </script>
 
-  <script src="thoughts-of-day.js?v=20260925phrase" defer></script>
+  <script src="thoughts-of-day.js?v=20260925phrase2" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
