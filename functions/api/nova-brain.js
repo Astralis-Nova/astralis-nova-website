@@ -5,6 +5,18 @@ const HEADERS={
 };
 const MODEL='@cf/meta/llama-3.1-8b-instruct-fp8';
 const MODES=new Set(['think','connect','challenge']);
+const RESPONSE_SCHEMA={
+  type:'object',
+  properties:{
+    answer:{type:'string'},
+    reasoning:{type:'array',items:{type:'object',properties:{label:{type:'string'},detail:{type:'string'}},required:['label','detail']}},
+    connections:{type:'array',items:{type:'object',properties:{memory:{type:'string'},why:{type:'string'}},required:['memory','why']}},
+    uncertainties:{type:'array',items:{type:'string'}},
+    nextQuestion:{type:'string'},
+    candidateInsight:{type:'object',properties:{title:{type:'string'},summary:{type:'string'},tags:{type:'array',items:{type:'string'}}},required:['title','summary','tags']}
+  },
+  required:['answer','reasoning','connections','uncertainties','nextQuestion','candidateInsight']
+};
 
 export async function onRequest({request,env}){
   if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{...HEADERS,Allow:'POST, OPTIONS'}});
@@ -24,8 +36,8 @@ export async function onRequest({request,env}){
         const response=await env.AI.run(env.NOVA_MODEL||MODEL,{messages:[
           {role:'system',content:systemPrompt(mode)},
           {role:'user',content:`QUESTION OR OBJECTIVE:\n${query}\n\nRETRIEVED MEMORY SIGNALS:\n${memories.map((memory,index)=>formatMemory(memory,index)).join('\n\n')}\n\nALGORITHMIC CONNECTION SCORES:\n${connections.length?connections.map(x=>`${x.a} <-> ${x.b}: ${Math.round(x.score*100)}%`).join('\n'):'No strong precomputed connection.'}`}
-        ],max_tokens:900,temperature:mode==='challenge'?.38:.55});
-        result=parseResult(response?.response||response?.result?.response||'',memories,query);
+        ],response_format:{type:'json_schema',json_schema:RESPONSE_SCHEMA},max_tokens:900,temperature:mode==='challenge'?.38:.55});
+        result=parseResult(response?.response??response?.result?.response??'',memories,query);
       }catch(error){console.warn('Nova Brain AI reasoning fallback',error)}
     }
     if(!result)result=fallback(memories,connections,query,mode);
@@ -46,10 +58,13 @@ function systemPrompt(mode){
 }
 
 function parseResult(raw,memories,query){
-  const match=String(raw||'').match(/\{[\s\S]*\}/);
-  if(!match)return null;
   try{
-    const value=JSON.parse(match[0]);
+    let value=raw;
+    if(!value||typeof value!=='object'){
+      const match=String(raw||'').match(/\{[\s\S]*\}/);
+      if(!match)return null;
+      value=JSON.parse(match[0]);
+    }
     const answer=clean(value?.answer).slice(0,1800);
     if(!answer)return null;
     const reasoning=normalizePairs(value?.reasoning,'label','detail',5);
