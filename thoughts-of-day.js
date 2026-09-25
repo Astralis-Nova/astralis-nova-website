@@ -33,7 +33,9 @@
   const questionInput = document.getElementById("thought-nova-input");
   const explore = document.getElementById("thought-nova-explore");
   const voice = document.getElementById("thought-nova-voice");
+  const thoughtArt = document.getElementById("thought-brain-entry");
   const memoryHotspot = document.getElementById("thought-memory-hotspot");
+  const constellationNodes = Array.from(document.querySelectorAll("[data-constellation-node]"));
   const accessLock = document.getElementById("thought-access-lock");
   const accessClose = document.getElementById("thought-access-close");
   const accessStatus = document.getElementById("thought-access-status");
@@ -184,12 +186,11 @@
       nova.root.querySelector("#novaMic")?.click();
     }
   });
-  let secretTaps = 0;
-  let secretTapTimer;
   let speechRecognition;
   const normalizePhrase = value => value.normalize("NFKC").trim().replace(/\s+/g, " ").toUpperCase();
   const closeAccess = () => {
     speechRecognition?.abort();
+    constellationLock?.reset();
     if (accessLock) accessLock.hidden = true;
     if (accessInput) accessInput.value = "";
     if (accessStatus) accessStatus.textContent = "Say the private wake phrase.";
@@ -237,21 +238,40 @@
     if (accessStatus) accessStatus.textContent = "Say the private wake phrase.";
     setTimeout(listenForWakePhrase, 80);
   };
-  memoryHotspot?.addEventListener("click", () => {
-    secretTaps += 1;
-    memoryHotspot.classList.remove("tap-ack");
-    void memoryHotspot.offsetWidth;
-    memoryHotspot.classList.add("tap-ack");
-    setTimeout(() => memoryHotspot.classList.remove("tap-ack"), 260);
-    navigator.vibrate?.(35);
-    clearTimeout(secretTapTimer);
-    if (secretTaps >= 3) {
-      secretTaps = 0;
-      openAccess();
-      return;
+  const clearConstellationVisuals = () => {
+    thoughtArt?.classList.remove("constellation-active", "constellation-complete");
+    thoughtArt?.removeAttribute("data-constellation-step");
+    constellationNodes.forEach(node => node.classList.remove("sequence-lit"));
+  };
+  const showConstellationProgress = step => {
+    thoughtArt?.classList.add("constellation-active");
+    thoughtArt?.setAttribute("data-constellation-step", String(step));
+    memoryHotspot?.classList.toggle("sequence-lit", step >= 3);
+    document.getElementById("thought-memory-left")?.classList.toggle("sequence-lit", step >= 5);
+    document.getElementById("thought-memory-bottom")?.classList.toggle("sequence-lit", step >= 6);
+  };
+  const constellationLock = window.AstralisConstellationLock?.create({
+    timeoutMs: 8000,
+    onProgress: showConstellationProgress,
+    onReset: clearConstellationVisuals,
+    onComplete: () => {
+      showConstellationProgress(6);
+      thoughtArt?.classList.add("constellation-complete");
+      navigator.vibrate?.([35, 45, 70]);
+      setTimeout(() => {
+        clearConstellationVisuals();
+        openAccess();
+      }, reducedMotion.matches ? 80 : 420);
     }
-    secretTapTimer = setTimeout(() => { secretTaps = 0; }, 4500);
   });
+  constellationNodes.forEach(node => node.addEventListener("click", () => {
+    node.classList.remove("tap-ack");
+    void node.offsetWidth;
+    node.classList.add("tap-ack");
+    setTimeout(() => node.classList.remove("tap-ack"), 260);
+    navigator.vibrate?.(35);
+    constellationLock?.tap(node.dataset.constellationNode);
+  }));
   accessForm?.addEventListener("submit", event => {
     event.preventDefault();
     unlockWithPhrase(accessInput?.value);
