@@ -3,7 +3,7 @@ const HEADERS={
   'Cache-Control':'no-store, max-age=0',
   'X-Content-Type-Options':'nosniff'
 };
-const MODEL='@cf/meta/llama-3.1-8b-instruct';
+const MODEL='@cf/meta/llama-3.1-8b-instruct-fp8';
 const MODES=new Set(['think','connect','challenge']);
 
 export async function onRequest({request,env}){
