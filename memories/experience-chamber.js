@@ -359,12 +359,14 @@
     status.textContent = 'Packaging the encrypted experience brain';
     const experienceRecords = await requestValue(db.transaction('experiences', 'readonly').objectStore('experiences').getAll());
     const attachmentRecords = await requestValue(db.transaction('attachments', 'readonly').objectStore('attachments').getAll());
+    const family = await window.NovaFamilyConstellation?.exportBundlePart?.() || null;
     const bundle = {
       format: 'astralis-nova-experience-brain',
-      version: 1,
+      version: 2,
       exportedAt: new Date().toISOString(),
       experiences: experienceRecords.map(record => ({ id: record.id, created: record.created, iv: toBase64(record.iv), data: toBase64(record.data) })),
-      attachments: attachmentRecords.map(record => ({ id: record.id, experienceId: record.experienceId, iv: toBase64(record.iv), data: toBase64(record.data) }))
+      attachments: attachmentRecords.map(record => ({ id: record.id, experienceId: record.experienceId, iv: toBase64(record.iv), data: toBase64(record.data) })),
+      family
     };
     const url = URL.createObjectURL(new Blob([JSON.stringify(bundle)], { type: 'application/json' }));
     const anchor = document.createElement('a');
@@ -374,7 +376,7 @@
     anchor.click();
     anchor.remove();
     setTimeout(() => URL.revokeObjectURL(url), 5000);
-    status.textContent = `Encrypted brain exported with ${experienceRecords.length} experience${experienceRecords.length === 1 ? '' : 's'}`;
+    status.textContent = `Encrypted brain exported with ${experienceRecords.length} experience${experienceRecords.length === 1 ? '' : 's'}${family ? ' and the family constellation' : ''}`;
   }
 
   async function importEncryptedBrain(file) {
@@ -382,7 +384,7 @@
     if (file.size > 250 * 1024 * 1024) throw new Error('That brain bundle is too large for this browser import.');
     status.textContent = 'Checking the encrypted brain bundle';
     const bundle = JSON.parse(await file.text());
-    if (bundle?.format !== 'astralis-nova-experience-brain' || bundle?.version !== 1 || !Array.isArray(bundle.experiences) || !Array.isArray(bundle.attachments)) throw new Error('That file is not an Astralis Nova encrypted brain bundle.');
+    if (bundle?.format !== 'astralis-nova-experience-brain' || ![1, 2].includes(bundle?.version) || !Array.isArray(bundle.experiences) || !Array.isArray(bundle.attachments)) throw new Error('That file is not an Astralis Nova encrypted brain bundle.');
     const first = bundle.experiences[0];
     if (first) {
       try { await decryptJson({ iv: fromBase64(first.iv), data: fromBase64(first.data) }); }
@@ -401,8 +403,9 @@
       attachmentStore.put({ id: String(record.id), experienceId: String(record.experienceId), iv: fromBase64(record.iv), data: fromBase64(record.data) });
     }
     await transactionDone(transaction);
+    if (bundle.family && window.NovaFamilyConstellation?.importBundlePart) await window.NovaFamilyConstellation.importBundlePart(bundle.family);
     await loadExperiences();
-    status.textContent = `Encrypted brain imported: ${experiences.length} experience${experiences.length === 1 ? '' : 's'} now available`;
+    status.textContent = `Encrypted brain imported: ${experiences.length} experience${experiences.length === 1 ? '' : 's'}${bundle.family ? ' plus the family constellation' : ''} now available`;
   }
 
   form.addEventListener('submit', async event => {
