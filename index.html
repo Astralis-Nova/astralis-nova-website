@@ -472,17 +472,18 @@
     .thought-memory-hotspot::after{content:"";position:absolute;left:50%;top:50%;width:7px;height:7px;transform:translate(-50%,-50%);border-radius:50%;background:#cf7dff;box-shadow:0 0 6px #cd7cff,0 0 13px #6feaff;animation:thought-secret-pulse 3.8s ease-in-out infinite}
     .thought-memory-hotspot:focus-visible{outline:none}
     @keyframes thought-secret-pulse{50%{opacity:.42;transform:translate(-50%,-50%) scale(.72)}}
-    .thought-pattern-lock[hidden]{display:none}
-    .thought-pattern-lock{position:absolute;z-index:12;inset:8%;border:1px solid rgba(145,231,255,.72);border-radius:50%;background:radial-gradient(circle at 50% 40%,rgba(21,61,112,.97),rgba(20,16,70,.98) 58%,rgba(5,6,26,.99) 82%);box-shadow:inset 0 0 36px rgba(113,232,255,.3),inset 0 0 78px rgba(163,77,255,.3),0 0 38px rgba(80,219,255,.42);animation:thought-pattern-open .3s ease-out;overflow:hidden}
-    .thought-pattern-lock::before{content:"";position:absolute;inset:4%;border:1px solid rgba(149,235,255,.2);border-radius:50%;pointer-events:none}
-    .thought-pattern-title{position:absolute;z-index:3;left:50%;top:9%;transform:translateX(-50%);width:70%;text-align:center;color:#eafaff;font:800 .72rem/1.35 Inter,system-ui,sans-serif;letter-spacing:.15em;text-transform:uppercase;text-shadow:0 0 12px #6feaff}
-    .thought-pattern-status{display:block;margin-top:4px;color:#a9c8e4;font-size:.62rem;font-weight:600;letter-spacing:.04em;text-transform:none}
-    .thought-pattern-close{position:absolute;z-index:5;right:12%;top:10%;width:32px;height:32px;min-height:0!important;padding:0!important;border:1px solid rgba(151,220,255,.42)!important;border-radius:50%!important;background:#10224a!important;color:#fff;font-size:1.15rem;cursor:pointer}
-    .thought-pattern-lines{position:absolute;z-index:1;inset:0;width:100%;height:100%;pointer-events:none}.thought-pattern-lines polyline{fill:none;stroke:#83f3ff;stroke-width:1.35;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px #69ecff) drop-shadow(0 0 9px #b26cff)}
-    .thought-pattern-grid{position:absolute;z-index:2;inset:23%;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);place-items:center}
-    .thought-pattern-node{position:relative;width:24px;height:24px;min-height:0!important;padding:0!important;border:1px solid rgba(193,244,255,.9)!important;border-radius:50%!important;background:radial-gradient(circle,#fff 0 7%,#78e8ff 12%,#3956ca 40%,#171344 72%)!important;box-shadow:0 0 0 5px rgba(89,210,255,.09),0 0 12px rgba(105,230,255,.75);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
-    .thought-pattern-node.active{transform:scale(1.28);background:radial-gradient(circle,#fff 0 8%,#e09aff 15%,#774ce2 46%,#201143 74%)!important;box-shadow:0 0 0 7px rgba(201,102,255,.16),0 0 20px #8ff5ff,0 0 30px #c065ff}
-    @keyframes thought-pattern-open{from{opacity:0;transform:scale(.62) rotate(-7deg)}}
+    .thought-access-lock[hidden]{display:none}
+    .thought-access-lock{position:absolute;z-index:12;inset:12%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(44px,8vw,72px);border:1px solid rgba(145,231,255,.72);border-radius:50%;background:radial-gradient(circle at 50% 38%,rgba(21,61,112,.98),rgba(20,16,70,.99) 58%,rgba(5,6,26,.99) 82%);box-shadow:inset 0 0 36px rgba(113,232,255,.3),inset 0 0 78px rgba(163,77,255,.3),0 0 38px rgba(80,219,255,.42);animation:thought-access-open .3s ease-out;text-align:center;overflow:hidden}
+    .thought-access-lock::before{content:"";position:absolute;inset:4%;border:1px solid rgba(149,235,255,.2);border-radius:50%;pointer-events:none}
+    .thought-access-close{position:absolute;z-index:5;right:12%;top:10%;width:32px;height:32px;min-height:0!important;padding:0!important;border:1px solid rgba(151,220,255,.42)!important;border-radius:50%!important;background:#10224a!important;color:#fff;font-size:1.15rem;cursor:pointer}
+    .thought-access-orb{position:relative;z-index:2;display:grid;place-items:center;width:72px;height:72px;margin-bottom:14px;border:1px solid #b9f3ff;border-radius:50%;background:radial-gradient(circle,#fff 0 4%,#65e8ff 8%,#315ada 28%,#4b197f 55%,#08091d 76%);box-shadow:0 0 0 8px rgba(85,207,255,.1),0 0 30px #68dcff,0 0 52px rgba(191,77,255,.65);font-size:1.75rem}
+    .thought-access-lock h3{position:relative;z-index:2;margin:0;color:#effcff;font-size:1.02rem;letter-spacing:.13em;text-transform:uppercase;text-shadow:0 0 12px #6feaff}
+    .thought-access-status{position:relative;z-index:2;margin:7px 0 14px;color:#c7ddf3;font-size:.82rem;line-height:1.4}
+    .thought-access-form{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;width:min(360px,90%)}
+    .thought-access-form input{min-width:0;min-height:44px;padding:9px 13px;border:1px solid rgba(143,222,255,.62);border-radius:999px;background:rgba(3,15,42,.86);color:#fff;font:inherit;font-size:.9rem;text-align:center}
+    .thought-access-form button,.thought-access-mic{min-height:44px;padding:8px 14px;border:1px solid rgba(138,207,255,.52);border-radius:999px;background:linear-gradient(110deg,#147df5,#7e38d5);color:#fff;font:inherit;font-size:.85rem;font-weight:800;cursor:pointer}
+    .thought-access-mic{position:relative;z-index:2;margin-top:9px;background:#132956}
+    @keyframes thought-access-open{from{opacity:0;transform:scale(.62) rotate(-7deg)}}
     .thought-nova-node{
       position:absolute;z-index:9;left:50%;bottom:2.1%;transform:translateX(-50%);
       display:grid;place-items:center;width:66px;height:66px;padding:0;
@@ -528,7 +529,7 @@
       .thought-art{width:min(100%,420px)}
       .thought-line{width:68%;font-size:clamp(.83rem,3.2vw,1rem);line-height:1.3}
     }
-    @media(prefers-reduced-motion:reduce){.thought-vortex::after,.thought-brain,.thought-signals use,.thought-nova-node,.thought-nova-node::after,.thought-nova-core::before,.thought-nova-face,.thought-memory-hotspot::after,.thought-pattern-lock{animation:none}}
+    @media(prefers-reduced-motion:reduce){.thought-vortex::after,.thought-brain,.thought-signals use,.thought-nova-node,.thought-nova-node::after,.thought-nova-core::before,.thought-nova-face,.thought-memory-hotspot::after,.thought-access-lock{animation:none}}
     @media(max-width:900px){
       .culture-grid{grid-template-columns:1fr}
       .chuckle-card,.quote-card{padding:20px}
@@ -1170,21 +1171,16 @@
               </g>
             </svg>
             <button class="thought-memory-hotspot" id="thought-memory-hotspot" type="button" tabindex="-1" aria-hidden="true"></button>
-            <div class="thought-pattern-lock" id="thought-pattern-lock" aria-label="Nova neural pattern" hidden>
-              <button class="thought-pattern-close" id="thought-pattern-close" type="button" aria-label="Close neural pattern">×</button>
-              <div class="thought-pattern-title">Neural key<span class="thought-pattern-status" id="thought-pattern-status">Trace the private constellation</span></div>
-              <svg class="thought-pattern-lines" viewBox="0 0 100 100" aria-hidden="true"><polyline id="thought-pattern-path" points=""></polyline></svg>
-              <div class="thought-pattern-grid">
-                <button class="thought-pattern-node" type="button" data-pattern-node="1" aria-label="Neural point 1"></button>
-                <button class="thought-pattern-node" type="button" data-pattern-node="2" aria-label="Neural point 2"></button>
-                <button class="thought-pattern-node" type="button" data-pattern-node="3" aria-label="Neural point 3"></button>
-                <button class="thought-pattern-node" type="button" data-pattern-node="4" aria-label="Neural point 4"></button>
-                <button class="thought-pattern-node" type="button" data-pattern-node="5" aria-label="Neural point 5"></button>
-                <button class="thought-pattern-node" type="button" data-pattern-node="6" aria-label="Neural point 6"></button>
-                <button class="thought-pattern-node" type="button" data-pattern-node="7" aria-label="Neural point 7"></button>
-                <button class="thought-pattern-node" type="button" data-pattern-node="8" aria-label="Neural point 8"></button>
-                <button class="thought-pattern-node" type="button" data-pattern-node="9" aria-label="Neural point 9"></button>
-              </div>
+            <div class="thought-access-lock" id="thought-access-lock" role="dialog" aria-modal="true" aria-labelledby="thought-access-title" hidden>
+              <button class="thought-access-close" id="thought-access-close" type="button" aria-label="Close private access">×</button>
+              <div class="thought-access-orb" aria-hidden="true">🧠</div>
+              <h3 id="thought-access-title">Nova is listening</h3>
+              <p class="thought-access-status" id="thought-access-status">Say the private wake phrase.</p>
+              <form class="thought-access-form" id="thought-access-form">
+                <input id="thought-access-input" type="text" autocomplete="off" autocapitalize="words" aria-label="Private wake phrase" placeholder="Or type the phrase…">
+                <button type="submit">Unlock</button>
+              </form>
+              <button class="thought-access-mic" id="thought-access-mic" type="button">🎙 Say it</button>
             </div>
             <blockquote class="thought-line" id="thought-line">We may learn to give a living mind a new body before we learn whether a mind can leave its original one.</blockquote>
             <button class="thought-nova-node" id="thought-nova-toggle" type="button" aria-expanded="false" aria-controls="thought-nova-panel" aria-label="Open the Nova AI circle interface"><span class="thought-nova-core" aria-hidden="true"><span class="thought-nova-face" id="thought-nova-face">😁</span></span></button>
@@ -1934,7 +1930,7 @@
   })();
   </script>
 
-  <script src="thoughts-of-day.js?v=20260925pattern" defer></script>
+  <script src="thoughts-of-day.js?v=20260925phrase" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
