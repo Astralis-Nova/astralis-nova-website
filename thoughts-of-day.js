@@ -34,6 +34,11 @@
   const explore = document.getElementById("thought-nova-explore");
   const voice = document.getElementById("thought-nova-voice");
   const memoryHotspot = document.getElementById("thought-memory-hotspot");
+  const patternLock = document.getElementById("thought-pattern-lock");
+  const patternClose = document.getElementById("thought-pattern-close");
+  const patternStatus = document.getElementById("thought-pattern-status");
+  const patternPath = document.getElementById("thought-pattern-path");
+  const patternNodes = [...document.querySelectorAll("[data-pattern-node]")];
   const answer = document.getElementById("thought-nova-response");
   const host = document.getElementById("thought-nova-host");
   const stemFace = document.getElementById("thought-nova-face");
@@ -180,15 +185,56 @@
   });
   let secretTaps = 0;
   let secretTapTimer;
+  let pattern = [];
+  let patternTimer;
+  const patternPoints = { 1:"32,32",2:"50,32",3:"68,32",4:"32,50",5:"50,50",6:"68,50",7:"32,68",8:"50,68",9:"68,68" };
+  const resetPattern = () => {
+    pattern = [];
+    clearTimeout(patternTimer);
+    patternPath?.setAttribute("points", "");
+    patternNodes.forEach(node => { node.classList.remove("active"); node.disabled = false; });
+    if (patternStatus) patternStatus.textContent = "Trace the private constellation";
+  };
+  const closePattern = () => {
+    if (patternLock) patternLock.hidden = true;
+    resetPattern();
+    start();
+  };
+  const openPattern = () => {
+    setPanelOpen(false);
+    clearInterval(timer);
+    resetPattern();
+    if (patternLock) patternLock.hidden = false;
+    patternNodes[0]?.focus({ preventScroll:true });
+  };
   memoryHotspot?.addEventListener("click", () => {
     secretTaps += 1;
     clearTimeout(secretTapTimer);
     if (secretTaps >= 3) {
       secretTaps = 0;
-      location.assign("/memories/");
+      openPattern();
       return;
     }
     secretTapTimer = setTimeout(() => { secretTaps = 0; }, 1600);
+  });
+  patternNodes.forEach(node => node.addEventListener("click", () => {
+    clearTimeout(patternTimer);
+    pattern.push(Number(node.dataset.patternNode));
+    node.classList.add("active");
+    patternPath?.setAttribute("points", pattern.map(value => patternPoints[value]).join(" "));
+    if (patternStatus) patternStatus.textContent = `${pattern.length} neural point${pattern.length === 1 ? "" : "s"} connected`;
+    if (pattern.length >= 11) {
+      patternNodes.forEach(item => { item.disabled = true; });
+      if (patternStatus) patternStatus.textContent = "Aligning memory constellation…";
+      sessionStorage.setItem("astralisNovaMemoryPattern", pattern.join("-"));
+      setTimeout(() => location.assign("/memories/"), 360);
+      return;
+    }
+    patternTimer = setTimeout(resetPattern, 6000);
+  }));
+  patternClose?.addEventListener("click", closePattern);
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && patternLock && !patternLock.hidden) closePattern();
   });
 
   show(Math.floor(Math.random() * thoughts.length));
