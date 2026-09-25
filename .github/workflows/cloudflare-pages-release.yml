@@ -52,6 +52,9 @@ jobs:
           node --check hawking-quote-data-b.js
           node --check hawking-quote.js
           node --check astralis-motion-restore.js
+          node --check constellation-lock.js
+          node --check thoughts-of-day.js
+          node --test tests/constellation-lock.test.mjs
           node --input-type=module --check < functions/_middleware.js
 
       - name: Validate Our New Star and community
