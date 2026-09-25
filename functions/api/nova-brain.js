@@ -33,7 +33,7 @@ export async function onRequest({request,env}){
     let result=null;
     if(env.AI){
       try{
-        const response=await env.AI.run(env.NOVA_MODEL||MODEL,{messages:[
+        const response=await env.AI.run(env.NOVA_BRAIN_MODEL||MODEL,{messages:[
           {role:'system',content:systemPrompt(mode)},
           {role:'user',content:`QUESTION OR OBJECTIVE:\n${query}\n\nRETRIEVED MEMORY SIGNALS:\n${memories.map((memory,index)=>formatMemory(memory,index)).join('\n\n')}\n\nALGORITHMIC CONNECTION SCORES:\n${connections.length?connections.map(x=>`${x.a} <-> ${x.b}: ${Math.round(x.score*100)}%`).join('\n'):'No strong precomputed connection.'}`}
         ],response_format:{type:'json_schema',json_schema:RESPONSE_SCHEMA},max_tokens:900,temperature:mode==='challenge'?.38:.55});
