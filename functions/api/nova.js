@@ -1,7 +1,7 @@
 import {NOVA_KNOWLEDGE,NOVA_KNOWLEDGE_VERSION} from '../lib/nova-knowledge.js';
 
 const HEADERS={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store, max-age=0','X-Content-Type-Options':'nosniff'};
-const MODEL='@cf/meta/llama-3.1-8b-instruct';
+const MODEL='@cf/meta/llama-3.1-8b-instruct-fp8';
 const EMBED_MODEL='@cf/baai/bge-base-en-v1.5';
 const PERSONALITIES={
   prime:'Warm, capable, curious, confident, lightly playful. Balance intelligence, empathy, exploration and dry humor.',
