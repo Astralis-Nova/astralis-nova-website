@@ -230,7 +230,7 @@
       setTimeout(() => location.assign("/memories/"), 360);
       return;
     }
-    patternTimer = setTimeout(resetPattern, 6000);
+    patternTimer = setTimeout(resetPattern, 20000);
   }));
   patternClose?.addEventListener("click", closePattern);
   document.addEventListener("keydown", event => {
