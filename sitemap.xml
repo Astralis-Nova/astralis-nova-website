@@ -63,4 +63,4 @@
   <url>
     <loc>https://astralis-nova-website.pages.dev/jesus-ransom-promise</loc>
   </url>
-</urlset>
+  <url>\n    <loc>https://astralis-nova-website.pages.dev/baby-moses</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n</urlset>
