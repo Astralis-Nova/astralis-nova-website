@@ -22,38 +22,125 @@
     const base = [[-1, -1, -1], [1, -1, -1], [1, -1, 1], [-1, -1, 1]].map(rotate);
     const tip = project(rotate([0, 1.46, 0]));
     ctx.clearRect(0, 0, 600, 400);
-    const shadow = ctx.createRadialGradient(300, 348, 12, 300, 348, 188);
-    shadow.addColorStop(0, '#6c4a2b77'); shadow.addColorStop(1, '#6c4a2b00');
-    ctx.fillStyle = shadow; ctx.beginPath(); ctx.ellipse(300, 348, 190, 28, 0, 0, Math.PI * 2); ctx.fill();
-    const faces = [0, 1, 2, 3].map(i => ({ i, depth: (base[i].z + base[(i + 1) % 4].z) / 2 })).sort((a, b) => a.depth - b.depth);
+
+    // A quiet star chart frames the stone without turning it into a panel.
+    const aura = ctx.createRadialGradient(300, 180, 18, 300, 180, 225);
+    aura.addColorStop(0, 'rgba(22,73,100,.35)');
+    aura.addColorStop(.56, 'rgba(12,42,65,.22)');
+    aura.addColorStop(1, 'rgba(7,24,40,0)');
+    ctx.fillStyle = aura; ctx.fillRect(70, 0, 460, 390);
+    ctx.save();
+    ctx.translate(300, 183);
+    ctx.strokeStyle = 'rgba(118,207,228,.23)'; ctx.lineWidth = 1;
+    ctx.setLineDash([44, 17, 5, 17]);
+    ctx.beginPath(); ctx.ellipse(0, 0, 178, 146, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+    for (let n = 0; n < 12; n++) {
+      const a = n * Math.PI / 6;
+      const x = Math.cos(a), y = Math.sin(a);
+      ctx.beginPath(); ctx.moveTo(x * 185, y * 153); ctx.lineTo(x * 197, y * 163);
+      ctx.strokeStyle = n % 3 ? 'rgba(136,213,226,.24)' : 'rgba(255,216,137,.38)';
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    const floor = ctx.createRadialGradient(300, 344, 10, 300, 344, 205);
+    floor.addColorStop(0, 'rgba(83,185,208,.3)');
+    floor.addColorStop(.55, 'rgba(205,146,72,.14)');
+    floor.addColorStop(1, 'rgba(24,60,84,0)');
+    ctx.fillStyle = floor; ctx.beginPath(); ctx.ellipse(300, 344, 200, 32, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = 'rgba(110,220,236,.3)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.ellipse(300, 349, 153, 17, 0, 0, Math.PI * 2); ctx.stroke();
+
+    const faces = [0, 1, 2, 3]
+      .map(i => ({ i, depth: (base[i].z + base[(i + 1) % 4].z) / 2 }))
+      .sort((a, b) => a.depth - b.depth);
     for (const { i, depth } of faces) {
       const left = project(base[i]), right = project(base[(i + 1) % 4]);
-      const path = new Path2D(); path.moveTo(tip.x, tip.y); path.lineTo(left.x, left.y); path.lineTo(right.x, right.y); path.closePath();
-      const glow = Math.max(0, Math.min(1, (depth + 1.4) / 2.8));
-      const gradient = ctx.createLinearGradient(tip.x, tip.y, (left.x + right.x) / 2, (left.y + right.y) / 2);
-      gradient.addColorStop(0, glow > .5 ? '#f5dba6' : '#d9b980');
-      gradient.addColorStop(.58, glow > .5 ? '#d6ad70' : '#b18b59');
-      gradient.addColorStop(1, glow > .5 ? '#a77a49' : '#81603c');
+      const middle = { x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 };
+      const path = new Path2D();
+      path.moveTo(tip.x, tip.y); path.lineTo(left.x, left.y); path.lineTo(right.x, right.y); path.closePath();
+      const light = Math.max(0, Math.min(1, (depth + 1.4) / 2.8));
+      const gradient = ctx.createLinearGradient(tip.x, tip.y, middle.x, middle.y);
+      gradient.addColorStop(0, light > .5 ? '#ffe8af' : '#d2ab72');
+      gradient.addColorStop(.48, light > .5 ? '#c99455' : '#8e6949');
+      gradient.addColorStop(1, light > .5 ? '#74523b' : '#4a3b37');
       ctx.fillStyle = gradient; ctx.fill(path);
-      ctx.strokeStyle = '#69482b'; ctx.lineWidth = 2; ctx.stroke(path);
+      ctx.strokeStyle = 'rgba(255,207,123,.74)'; ctx.lineWidth = 2; ctx.stroke(path);
       ctx.save(); ctx.clip(path);
-      for (let row = 1; row < 10; row++) {
-        const t = row / 10;
-        ctx.beginPath();
-        ctx.moveTo(tip.x + (left.x - tip.x) * t, tip.y + (left.y - tip.y) * t);
-        ctx.lineTo(tip.x + (right.x - tip.x) * t, tip.y + (right.y - tip.y) * t);
-        ctx.strokeStyle = '#66462988'; ctx.lineWidth = 1.7; ctx.stroke();
+
+      // Courses and staggered joins keep the object visibly made of stone.
+      for (let row = 1; row < 12; row++) {
+        const t = row / 12;
+        const lx = tip.x + (left.x - tip.x) * t, ly = tip.y + (left.y - tip.y) * t;
+        const rx = tip.x + (right.x - tip.x) * t, ry = tip.y + (right.y - tip.y) * t;
+        ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(rx, ry);
+        ctx.strokeStyle = 'rgba(43,31,35,.45)'; ctx.lineWidth = 1.5; ctx.stroke();
+        if (row > 2) {
+          const joints = row % 2 ? [1 / 3, 2 / 3] : [.5];
+          joints.forEach(f => {
+            const next = (row + 1) / 12;
+            const x1 = lx + (rx - lx) * f, y1 = ly + (ry - ly) * f;
+            const x2 = tip.x + ((left.x + (right.x - left.x) * f) - tip.x) * next;
+            const y2 = tip.y + ((left.y + (right.y - left.y) * f) - tip.y) * next;
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+            ctx.strokeStyle = 'rgba(47,34,35,.25)'; ctx.lineWidth = 1; ctx.stroke();
+          });
+        }
+      }
+
+      // A luminous axis and geometric marks suggest an ancient machine.
+      const axis = ctx.createLinearGradient(tip.x, tip.y, middle.x, middle.y);
+      axis.addColorStop(0, 'rgba(255,240,176,.9)');
+      axis.addColorStop(.3, 'rgba(127,237,233,.7)');
+      axis.addColorStop(1, 'rgba(70,171,195,.2)');
+      ctx.beginPath(); ctx.moveTo(tip.x, tip.y + 19); ctx.lineTo(middle.x, middle.y - 5);
+      ctx.strokeStyle = axis; ctx.lineWidth = 2; ctx.shadowColor = '#8ce8ef'; ctx.shadowBlur = 12; ctx.stroke();
+      ctx.shadowBlur = 0;
+      if (depth > -.2) {
+        for (let n = 0; n < 4; n++) {
+          const t = .36 + n * .14;
+          const x = tip.x + (middle.x - tip.x) * t;
+          const y = tip.y + (middle.y - tip.y) * t;
+          const size = 3 + t * 3;
+          ctx.beginPath(); ctx.moveTo(x, y - size); ctx.lineTo(x + size, y);
+          ctx.lineTo(x, y + size); ctx.lineTo(x - size, y); ctx.closePath();
+          ctx.strokeStyle = 'rgba(125,234,230,.76)'; ctx.lineWidth = 1.2; ctx.stroke();
+        }
       }
       const faceEntries = engravings.slice(i * 4, i * 4 + 4);
       faceEntries.forEach((entry, n) => {
-        const t = .43 + n * .12;
-        const centerX = tip.x + ((left.x + right.x) / 2 - tip.x) * t;
-        const centerY = tip.y + ((left.y + right.y) / 2 - tip.y) * t;
-        ctx.font = 'bold 20px Georgia, serif'; ctx.textAlign = 'center'; ctx.fillStyle = '#573a21';
-        ctx.fillText(Array.from(entry.message)[0] || '✦', centerX, centerY);
+        const t = .44 + n * .12;
+        const x = tip.x + (middle.x - tip.x) * t;
+        const y = tip.y + (middle.y - tip.y) * t;
+        ctx.font = 'bold 20px Georgia, serif'; ctx.textAlign = 'center';
+        ctx.fillStyle = '#293e42'; ctx.shadowColor = '#a9f3ec'; ctx.shadowBlur = 8;
+        ctx.fillText(Array.from(entry.message)[0] || '✦', x, y);
+        ctx.shadowBlur = 0;
       });
       ctx.restore();
     }
+
+    // A gilded capstone stays bright at every angle.
+    const cap = .18;
+    const tipEdges = base.map(v => {
+      const p = project(v);
+      return { x: tip.x + (p.x - tip.x) * cap, y: tip.y + (p.y - tip.y) * cap };
+    });
+    for (const { i } of faces) {
+      const path = new Path2D();
+      path.moveTo(tip.x, tip.y);
+      path.lineTo(tipEdges[i].x, tipEdges[i].y);
+      path.lineTo(tipEdges[(i + 1) % 4].x, tipEdges[(i + 1) % 4].y);
+      path.closePath();
+      ctx.fillStyle = '#f9d98f'; ctx.fill(path);
+      ctx.strokeStyle = '#fff3c3'; ctx.lineWidth = 1.4; ctx.stroke(path);
+    }
+    const crown = ctx.createRadialGradient(tip.x, tip.y, 1, tip.x, tip.y, 42);
+    crown.addColorStop(0, 'rgba(255,253,215,.82)');
+    crown.addColorStop(.3, 'rgba(255,222,136,.3)');
+    crown.addColorStop(1, 'rgba(255,211,127,0)');
+    ctx.fillStyle = crown; ctx.beginPath(); ctx.arc(tip.x, tip.y, 42, 0, Math.PI * 2); ctx.fill();
   }
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
