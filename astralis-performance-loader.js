@@ -115,7 +115,7 @@
   }
 
   function lazyLoadMidi() {
-    const target = document.getElementById("first-orbit") || document.querySelector("midi-player");
+    const target = document.querySelector("midi-player");
     if (!target) return;
 
     let requested = false;
@@ -144,7 +144,7 @@
 
   const critical = [
     `/site-fixes.js?v=20260720c`,
-    `/cosmic-worlds.js?v=20260903sphere`,
+    `/cosmic-worlds.js?v=20260929firstorbit`,
     `/realistic-orbit.js?v=20260721b`,
     `/astralis-celestial-drift.js?v=20260901jukebox`,
     `/astralis-ai-upgrades.js?v=20260722q`,

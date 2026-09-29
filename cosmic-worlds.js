@@ -40,11 +40,11 @@
     },
     {
       id: "first-orbit",
-      href: "#first-orbit",
-      ariaLabel: "Travel to Echoes From the First Orbit",
+      href: "/first-orbit.html",
+      ariaLabel: "Enter the First Orbit archive planet",
       planetClass: "planet-orbit ringed",
       title: "First Orbit",
-      description: "Archived pages and MIDI relics preserved from Ramon’s earliest corner of the web.",
+      description: "Echoes, original MIDI relics, Sandy’s Angels, and a recovered 51-track jukebox.",
       badge: "Archive World"
     },
     {
