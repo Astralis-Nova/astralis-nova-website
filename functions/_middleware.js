@@ -40,7 +40,7 @@ export async function onRequest(context) {
       })
       .on("body", {
         element(element) {
-          element.append('<script src="/astralis-performance-loader.js?v=20260929firstorbit" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script>', { html: true });
+          element.append('<script src="/astralis-performance-loader.js?v=20260929pyramidroam" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script>', { html: true });
         },
       });
   }

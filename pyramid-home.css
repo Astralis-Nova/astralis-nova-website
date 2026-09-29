@@ -4,3 +4,23 @@
 
 .pyr-art-tools{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 10px}.pyr-home-dialog .pyr-art-tools button{min-height:34px;padding:6px 10px;border:1px solid #668bac;border-radius:999px;background:#153451;color:#d8f4ff;font-size:.78rem;font-weight:750;cursor:pointer}.pyr-home-dialog .pyr-art-tools button:hover{background:#23587e;border-color:#a6eaff}.pyr-art-meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:6px 0 12px;color:#baa996;font-size:.79rem}.pyr-art-preview{margin:10px 0 14px;border:1px solid #526f8b;border-radius:10px;background:#081827}.pyr-art-preview summary{padding:9px 12px;color:#d8efff;font-size:.86rem;font-weight:800;cursor:pointer}.pyr-art-preview pre{min-height:55px;max-height:220px;overflow:auto;margin:0;padding:10px 12px;border-top:1px solid #344d66;color:#d6efff;white-space:pre;font: .9rem/1.35 ui-monospace,SFMono-Regular,Consolas,monospace}
 .pyr-home-results button.character-art,.pyr-home-detail.character-art{white-space:pre;overflow:auto;overflow-wrap:normal}
+
+/* A compact, roaming portal on the homepage. */
+.pyr-home.pyr-roaming{--pyr-width:180px;position:fixed;z-index:34;left:12px;top:var(--pyr-top,110px);width:var(--pyr-width);height:calc(var(--pyr-width) * 2 / 3);min-height:0;margin:0;padding:0;display:block;pointer-events:none;animation:pyr-roam 110s ease-in-out infinite;will-change:transform}
+.pyr-home.pyr-roaming::before{display:none}
+.pyr-roaming .pyr-home-title,.pyr-roaming .pyr-home-cue{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.pyr-roaming .pyr-home-scene{width:100%;height:100%;pointer-events:none}
+.pyr-roaming .pyr-home-canvas{width:100%;height:auto;filter:drop-shadow(0 0 10px #328bff66)}
+.pyr-roaming .pyr-home-open{inset:10% 20% 9%;width:60%;height:81%;pointer-events:auto;touch-action:manipulation}
+.pyr-roaming .pyr-home-open:focus-visible{outline:2px solid #a8ecff;outline-offset:3px;border-radius:12px}
+.pyr-roaming .pyr-home-dialog{pointer-events:auto}
+.pyr-roaming:hover,.pyr-roaming:focus-within,.pyr-roaming.pyr-dialog-open{animation-play-state:paused}
+.pyr-roaming.pyr-behind-brain .pyr-home-scene{visibility:hidden}
+@keyframes pyr-roam{
+  0%,100%{transform:translate3d(0,0,0)}
+  24%{transform:translate3d(var(--pyr-travel-x,60vw),calc(var(--pyr-travel-y,45vh) * .35),0)}
+  50%{transform:translate3d(calc(var(--pyr-travel-x,60vw) * .82),var(--pyr-travel-y,45vh),0)}
+  76%{transform:translate3d(0,calc(var(--pyr-travel-y,45vh) * .78),0)}
+}
+@media(max-width:650px){.pyr-home.pyr-roaming{--pyr-width:132px}}
+@media(prefers-reduced-motion:reduce){.pyr-home.pyr-roaming{animation:none;will-change:auto}}

@@ -175,10 +175,35 @@
     ctx.fillStyle = crown; ctx.beginPath(); ctx.arc(tip.x, tip.y, 42, 0, Math.PI * 2); ctx.fill();
   }
 
+  const roaming = root.classList.contains('pyr-roaming');
+  const brain = document.querySelector('.thought-art');
+  let lastCollisionCheck = 0;
+  function sizeRoamingRoute() {
+    if (!roaming) return;
+    const width = root.offsetWidth, height = root.offsetHeight;
+    const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 78;
+    const top = Math.min(Math.max(96, headerBottom + 12), Math.max(12, innerHeight - height - 140));
+    root.style.setProperty('--pyr-top', top + 'px');
+    root.style.setProperty('--pyr-travel-x', Math.max(0, innerWidth - width - 24) + 'px');
+    root.style.setProperty('--pyr-travel-y', Math.max(0, innerHeight - top - height - 130) + 'px');
+  }
+  function keepBrainClear(now) {
+    if (!roaming || !brain || now - lastCollisionCheck < 120) return;
+    lastCollisionCheck = now;
+    const a = root.getBoundingClientRect(), b = brain.getBoundingClientRect();
+    const overlap = a.right > b.left - 20 && a.left < b.right + 20 &&
+      a.bottom > b.top - 20 && a.top < b.bottom + 20;
+    root.classList.toggle('pyr-behind-brain', overlap && !dialog.open && !root.contains(document.activeElement));
+  }
+  sizeRoamingRoute();
+  window.addEventListener('resize', sizeRoamingRoute, { passive: true });
+  window.addEventListener('scroll', () => keepBrainClear(performance.now() + 121), { passive: true });
+
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let visible = true;
   let start = performance.now();
   function animate(now) {
+    keepBrainClear(now);
     if (visible && document.visibilityState === 'visible') draw(reducedMotion ? .55 : .55 + (now - start) / 25000 * Math.PI * 2, now);
     if (!reducedMotion) requestAnimationFrame(animate);
   }
@@ -248,7 +273,21 @@
     updatePreview();
   }));
 
-  $('pyrHomeOpen').addEventListener('click', () => { dialog.showModal(); thought.focus(); load(); });
+  function openPyramid() {
+    if (dialog.open) return;
+    root.classList.add('pyr-dialog-open');
+    root.classList.remove('pyr-behind-brain');
+    dialog.showModal();
+    thought.focus();
+    load();
+  }
+  $('pyrHomeOpen').addEventListener('click', openPyramid);
+  document.querySelectorAll('a[href="#pyrHome"]').forEach(link => {
+    link.setAttribute('aria-haspopup', 'dialog');
+    link.setAttribute('aria-controls', 'pyrHomeDialog');
+    link.addEventListener('click', event => { event.preventDefault(); openPyramid(); });
+  });
+  dialog.addEventListener('close', () => root.classList.remove('pyr-dialog-open'));
   $('pyrHomeClose').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
   query.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(load, 230); });
