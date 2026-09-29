@@ -14,8 +14,9 @@
   let latest = 0;
   let timer;
 
-  function draw(angle) {
+  function draw(angle, now = 0) {
     if (!ctx) return;
+    const pulse = .5 + .5 * Math.sin(now / 520);
     const cos = Math.cos(angle), sin = Math.sin(angle);
     const rotate = ([x, y, z]) => ({ x: x * cos + z * sin, y, z: -x * sin + z * cos });
     const project = ({ x, y, z }) => ({ x: 300 + x * 116, y: 195 - y * 105 + z * 28 });
@@ -25,13 +26,13 @@
 
     // A quiet star chart frames the stone without turning it into a panel.
     const aura = ctx.createRadialGradient(300, 180, 18, 300, 180, 225);
-    aura.addColorStop(0, 'rgba(22,73,100,.35)');
-    aura.addColorStop(.56, 'rgba(12,42,65,.22)');
-    aura.addColorStop(1, 'rgba(7,24,40,0)');
+    aura.addColorStop(0, 'rgba(37,132,230,' + (.32 + pulse * .16) + ')');
+    aura.addColorStop(.5, 'rgba(24,91,176,.25)');
+    aura.addColorStop(1, 'rgba(12,35,92,0)');
     ctx.fillStyle = aura; ctx.fillRect(70, 0, 460, 390);
     ctx.save();
     ctx.translate(300, 183);
-    ctx.strokeStyle = 'rgba(118,207,228,.23)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(110,190,255,.3)'; ctx.lineWidth = 1;
     ctx.setLineDash([44, 17, 5, 17]);
     ctx.beginPath(); ctx.ellipse(0, 0, 178, 146, 0, 0, Math.PI * 2); ctx.stroke();
     ctx.setLineDash([]);
@@ -39,17 +40,17 @@
       const a = n * Math.PI / 6;
       const x = Math.cos(a), y = Math.sin(a);
       ctx.beginPath(); ctx.moveTo(x * 185, y * 153); ctx.lineTo(x * 197, y * 163);
-      ctx.strokeStyle = n % 3 ? 'rgba(136,213,226,.24)' : 'rgba(255,216,137,.38)';
+      ctx.strokeStyle = n % 3 ? 'rgba(112,199,255,.3)' : 'rgba(186,225,255,.48)';
       ctx.stroke();
     }
     ctx.restore();
 
     const floor = ctx.createRadialGradient(300, 344, 10, 300, 344, 205);
-    floor.addColorStop(0, 'rgba(83,185,208,.3)');
-    floor.addColorStop(.55, 'rgba(205,146,72,.14)');
-    floor.addColorStop(1, 'rgba(24,60,84,0)');
+    floor.addColorStop(0, 'rgba(60,171,255,.42)');
+    floor.addColorStop(.55, 'rgba(38,117,204,.19)');
+    floor.addColorStop(1, 'rgba(20,54,114,0)');
     ctx.fillStyle = floor; ctx.beginPath(); ctx.ellipse(300, 344, 200, 32, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = 'rgba(110,220,236,.3)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(118,203,255,.42)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.ellipse(300, 349, 153, 17, 0, 0, Math.PI * 2); ctx.stroke();
 
     const faces = [0, 1, 2, 3]
@@ -66,6 +67,7 @@
       gradient.addColorStop(.48, light > .5 ? '#c99455' : '#8e6949');
       gradient.addColorStop(1, light > .5 ? '#74523b' : '#4a3b37');
       ctx.fillStyle = gradient; ctx.fill(path);
+      ctx.fillStyle = 'rgba(31,117,196,.12)'; ctx.fill(path);
       ctx.strokeStyle = 'rgba(255,207,123,.74)'; ctx.lineWidth = 2; ctx.stroke(path);
       ctx.save(); ctx.clip(path);
 
@@ -92,10 +94,10 @@
       // A luminous axis and geometric marks suggest an ancient machine.
       const axis = ctx.createLinearGradient(tip.x, tip.y, middle.x, middle.y);
       axis.addColorStop(0, 'rgba(255,240,176,.9)');
-      axis.addColorStop(.3, 'rgba(127,237,233,.7)');
-      axis.addColorStop(1, 'rgba(70,171,195,.2)');
+      axis.addColorStop(.3, 'rgba(127,211,255,.76)');
+      axis.addColorStop(1, 'rgba(67,150,230,.2)');
       ctx.beginPath(); ctx.moveTo(tip.x, tip.y + 19); ctx.lineTo(middle.x, middle.y - 5);
-      ctx.strokeStyle = axis; ctx.lineWidth = 2; ctx.shadowColor = '#8ce8ef'; ctx.shadowBlur = 12; ctx.stroke();
+      ctx.strokeStyle = axis; ctx.lineWidth = 2; ctx.shadowColor = '#69caff'; ctx.shadowBlur = 12; ctx.stroke();
       ctx.shadowBlur = 0;
       if (depth > -.2) {
         for (let n = 0; n < 4; n++) {
@@ -105,7 +107,7 @@
           const size = 3 + t * 3;
           ctx.beginPath(); ctx.moveTo(x, y - size); ctx.lineTo(x + size, y);
           ctx.lineTo(x, y + size); ctx.lineTo(x - size, y); ctx.closePath();
-          ctx.strokeStyle = 'rgba(125,234,230,.76)'; ctx.lineWidth = 1.2; ctx.stroke();
+          ctx.strokeStyle = 'rgba(142,215,255,.82)'; ctx.lineWidth = 1.2; ctx.stroke();
         }
       }
       const faceEntries = engravings.slice(i * 4, i * 4 + 4);
@@ -114,7 +116,7 @@
         const x = tip.x + (middle.x - tip.x) * t;
         const y = tip.y + (middle.y - tip.y) * t;
         ctx.font = 'bold 20px Georgia, serif'; ctx.textAlign = 'center';
-        ctx.fillStyle = '#293e42'; ctx.shadowColor = '#a9f3ec'; ctx.shadowBlur = 8;
+        ctx.fillStyle = '#293e42'; ctx.shadowColor = '#a9dcff'; ctx.shadowBlur = 8;
         ctx.fillText(Array.from(entry.message)[0] || '✦', x, y);
         ctx.shadowBlur = 0;
       });
@@ -133,13 +135,41 @@
       path.lineTo(tipEdges[i].x, tipEdges[i].y);
       path.lineTo(tipEdges[(i + 1) % 4].x, tipEdges[(i + 1) % 4].y);
       path.closePath();
-      ctx.fillStyle = '#f9d98f'; ctx.fill(path);
-      ctx.strokeStyle = '#fff3c3'; ctx.lineWidth = 1.4; ctx.stroke(path);
+      ctx.fillStyle = '#d8e8ed'; ctx.fill(path);
+      ctx.strokeStyle = '#e6f7ff'; ctx.lineWidth = 1.4; ctx.stroke(path);
     }
+    // The LED outline breathes like the signals running through the brain.
+    ctx.save();
+    ctx.lineCap = 'round';
+    for (const { i, depth } of faces) {
+      if (depth <= .02) continue;
+      const left = project(base[i]), right = project(base[(i + 1) % 4]);
+      const edge = (a, b, phase) => {
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+        ctx.globalAlpha = .42 + .28 * pulse;
+        ctx.strokeStyle = '#3d9dff'; ctx.lineWidth = 5 + pulse * 2;
+        ctx.shadowColor = '#3faaff'; ctx.shadowBlur = 16 + pulse * 19; ctx.stroke();
+        ctx.globalAlpha = .76 + .2 * pulse;
+        ctx.strokeStyle = '#c4f1ff'; ctx.lineWidth = 1.45;
+        ctx.shadowBlur = 7 + pulse * 6; ctx.stroke();
+        for (let n = 1; n <= 5; n++) {
+          const t = n / 6;
+          const shimmer = .45 + .55 * Math.sin(now / 400 - n * .85 - phase);
+          const x = a.x + (b.x - a.x) * t, y = a.y + (b.y - a.y) * t;
+          ctx.beginPath(); ctx.arc(x, y, 1.5 + Math.max(0, shimmer) * 1.7, 0, Math.PI * 2);
+          ctx.globalAlpha = .44 + .5 * Math.max(0, shimmer);
+          ctx.fillStyle = '#e7faff'; ctx.shadowBlur = 9 + pulse * 12; ctx.fill();
+        }
+      };
+      edge(tip, left, i);
+      edge(tip, right, i + 1);
+      edge(left, right, i + 2);
+    }
+    ctx.restore();
     const crown = ctx.createRadialGradient(tip.x, tip.y, 1, tip.x, tip.y, 42);
-    crown.addColorStop(0, 'rgba(255,253,215,.82)');
-    crown.addColorStop(.3, 'rgba(255,222,136,.3)');
-    crown.addColorStop(1, 'rgba(255,211,127,0)');
+    crown.addColorStop(0, 'rgba(237,251,255,.9)');
+    crown.addColorStop(.3, 'rgba(104,199,255,.43)');
+    crown.addColorStop(1, 'rgba(61,138,239,0)');
     ctx.fillStyle = crown; ctx.beginPath(); ctx.arc(tip.x, tip.y, 42, 0, Math.PI * 2); ctx.fill();
   }
 
@@ -147,7 +177,7 @@
   let visible = true;
   let start = performance.now();
   function animate(now) {
-    if (visible && document.visibilityState === 'visible') draw(reducedMotion ? .55 : .55 + (now - start) / 25000 * Math.PI * 2);
+    if (visible && document.visibilityState === 'visible') draw(reducedMotion ? .55 : .55 + (now - start) / 25000 * Math.PI * 2, now);
     if (!reducedMotion) requestAnimationFrame(animate);
   }
   new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(root);
@@ -157,7 +187,7 @@
     results.replaceChildren();
     const entries = (data.entries || []).slice(0, 16);
     engravings = entries;
-    if (reducedMotion) draw(.55);
+    if (reducedMotion) draw(.55, performance.now());
     $('pyrHomeCount').textContent = `${data.total} ${data.total === 1 ? 'thought' : 'thoughts'} within`;
     $('pyrHomeFound').textContent = prefix ? `${data.total} ${data.total === 1 ? 'match' : 'matches'} for “${prefix}”` : `${data.total} ${data.total === 1 ? 'thought' : 'thoughts'} in the pyramid`;
     if (!entries.length) {
