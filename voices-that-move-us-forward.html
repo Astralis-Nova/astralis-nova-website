@@ -31,48 +31,25 @@
       inset:0;
       z-index:0;
       pointer-events:none;
-      background:
-        linear-gradient(180deg,rgba(2,5,16,.18),rgba(3,7,18,.42)),
-        url('/assets/voices-neon-rain-background.webp?v=20260820c') center center/cover no-repeat;
-      filter:saturate(1.12) brightness(.88);
-      transform:scale(1.025);
-      animation:sceneDrift 22s ease-in-out infinite alternate;
+      overflow:hidden;
+      background:#263342 url('/assets/voices-rain-life-poster.webp') center center/cover no-repeat;
+    }
+    .scene-video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center;
+      display:block;
     }
     .scene-bg::after{
       content:"";
       position:absolute;
       inset:0;
       background:
-        radial-gradient(circle at 20% 12%,rgba(62,168,255,.08),transparent 28rem),
-        radial-gradient(circle at 82% 70%,rgba(232,62,217,.07),transparent 30rem),
-        linear-gradient(180deg,rgba(2,5,15,.04),rgba(2,5,15,.24));
+        radial-gradient(circle at 20% 12%,rgba(62,168,255,.10),transparent 28rem),
+        radial-gradient(circle at 82% 70%,rgba(232,62,217,.08),transparent 30rem),
+        linear-gradient(180deg,rgba(2,5,15,.50),rgba(2,5,15,.70));
     }
-    .rain{
-      position:fixed;
-      inset:-35vh -15vw;
-      z-index:1;
-      pointer-events:none;
-      transform:rotate(8deg);
-      transform-origin:center;
-      will-change:background-position;
-    }
-    .rain-far{
-      opacity:.22;
-      background-image:repeating-linear-gradient(180deg,transparent 0 18px,rgba(171,215,255,.48) 19px,rgba(171,215,255,.48) 21px,transparent 22px 48px);
-      background-size:5px 54px;
-      animation:rainFallFar .62s linear infinite;
-      filter:blur(.3px);
-    }
-    .rain-near{
-      opacity:.34;
-      background-image:repeating-linear-gradient(180deg,transparent 0 36px,rgba(218,239,255,.70) 37px,rgba(218,239,255,.70) 41px,transparent 42px 86px);
-      background-size:11px 94px;
-      animation:rainFallNear .38s linear infinite;
-      filter:drop-shadow(0 0 2px rgba(111,183,255,.28));
-    }
-    @keyframes rainFallFar{from{background-position:0 -54px}to{background-position:0 54px}}
-    @keyframes rainFallNear{from{background-position:0 -94px}to{background-position:0 94px}}
-    @keyframes sceneDrift{from{transform:scale(1.025) translate3d(-.5%,0,0)}to{transform:scale(1.055) translate3d(.5%,-.4%,0)}}
 
     header,main,footer{position:relative;z-index:2}
     .shell{width:var(--shell);margin:auto}
@@ -193,17 +170,17 @@
       blockquote{padding:18px 17px 18px 20px}
       .intel-grid{grid-template-columns:1fr;padding:18px}
       .intel-quote{min-height:0}
-      .rain-near{opacity:.27}
-      .rain-far{opacity:.16}
-      .scene-bg{background-position:center center;filter:saturate(1.16) brightness(.92)}
+      .scene-bg{background-position:center center}
     }
-    @media(prefers-reduced-motion:reduce){.rain,.scene-bg{animation:none!important}}
+    @media(prefers-reduced-motion:reduce){.scene-video{display:none}}
   </style>
 </head>
 <body>
-  <div class="scene-bg" aria-hidden="true"></div>
-  <div class="rain rain-far" aria-hidden="true"></div>
-  <div class="rain rain-near" aria-hidden="true"></div>
+  <div class="scene-bg" aria-hidden="true">
+    <video class="scene-video" autoplay muted loop playsinline preload="metadata" poster="/assets/voices-rain-life-poster.webp" tabindex="-1">
+      <source src="/assets/voices-rain-life.mp4" type="video/mp4">
+    </video>
+  </div>
 
   <header>
     <div class="shell">
