@@ -63,12 +63,12 @@
       path.moveTo(tip.x, tip.y); path.lineTo(left.x, left.y); path.lineTo(right.x, right.y); path.closePath();
       const light = Math.max(0, Math.min(1, (depth + 1.4) / 2.8));
       const gradient = ctx.createLinearGradient(tip.x, tip.y, middle.x, middle.y);
-      gradient.addColorStop(0, light > .5 ? '#ffe8af' : '#d2ab72');
-      gradient.addColorStop(.48, light > .5 ? '#c99455' : '#8e6949');
-      gradient.addColorStop(1, light > .5 ? '#74523b' : '#4a3b37');
+      gradient.addColorStop(0, light > .5 ? '#a9dfff' : '#7ab7ed');
+      gradient.addColorStop(.48, light > .5 ? '#397fbe' : '#2a5b9a');
+      gradient.addColorStop(1, light > .5 ? '#163f7b' : '#132b61');
       ctx.fillStyle = gradient; ctx.fill(path);
-      ctx.fillStyle = 'rgba(31,117,196,.12)'; ctx.fill(path);
-      ctx.strokeStyle = 'rgba(255,207,123,.74)'; ctx.lineWidth = 2; ctx.stroke(path);
+      ctx.fillStyle = 'rgba(75,169,255,' + (.07 + pulse * .13) + ')'; ctx.fill(path);
+      ctx.strokeStyle = 'rgba(140,219,255,.84)'; ctx.lineWidth = 2; ctx.stroke(path);
       ctx.save(); ctx.clip(path);
 
       // Courses and staggered joins keep the object visibly made of stone.
@@ -77,7 +77,13 @@
         const lx = tip.x + (left.x - tip.x) * t, ly = tip.y + (left.y - tip.y) * t;
         const rx = tip.x + (right.x - tip.x) * t, ry = tip.y + (right.y - tip.y) * t;
         ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(rx, ry);
-        ctx.strokeStyle = 'rgba(43,31,35,.45)'; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.strokeStyle = 'rgba(7,27,73,.58)'; ctx.lineWidth = 1.5; ctx.stroke();
+        const flow = Math.max(0, 1 - Math.abs(row - ((now / 260) % 13)) / 1.7);
+        if (flow > .02) {
+          ctx.strokeStyle = 'rgba(150,241,255,' + (flow * .85) + ')';
+          ctx.lineWidth = 2.1; ctx.shadowColor = '#66dfff'; ctx.shadowBlur = 9 + flow * 13;
+          ctx.stroke(); ctx.shadowBlur = 0;
+        }
         if (row > 2) {
           const joints = row % 2 ? [1 / 3, 2 / 3] : [.5];
           joints.forEach(f => {
@@ -86,14 +92,21 @@
             const x2 = tip.x + ((left.x + (right.x - left.x) * f) - tip.x) * next;
             const y2 = tip.y + ((left.y + (right.y - left.y) * f) - tip.y) * next;
             ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
-            ctx.strokeStyle = 'rgba(47,34,35,.25)'; ctx.lineWidth = 1; ctx.stroke();
+            ctx.strokeStyle = 'rgba(12,40,90,.38)'; ctx.lineWidth = 1; ctx.stroke();
           });
         }
       }
 
+      const sweepY = tip.y - 40 + ((now / 3400) % 1) * (middle.y - tip.y + 85);
+      const sweep = ctx.createLinearGradient(0, sweepY - 42, 0, sweepY + 42);
+      sweep.addColorStop(0, 'rgba(130,233,255,0)');
+      sweep.addColorStop(.5, 'rgba(165,243,255,' + (.18 + pulse * .19) + ')');
+      sweep.addColorStop(1, 'rgba(130,233,255,0)');
+      ctx.fillStyle = sweep; ctx.fillRect(0, sweepY - 42, 600, 84);
+
       // A luminous axis and geometric marks suggest an ancient machine.
       const axis = ctx.createLinearGradient(tip.x, tip.y, middle.x, middle.y);
-      axis.addColorStop(0, 'rgba(255,240,176,.9)');
+      axis.addColorStop(0, 'rgba(225,249,255,.96)');
       axis.addColorStop(.3, 'rgba(127,211,255,.76)');
       axis.addColorStop(1, 'rgba(67,150,230,.2)');
       ctx.beginPath(); ctx.moveTo(tip.x, tip.y + 19); ctx.lineTo(middle.x, middle.y - 5);
@@ -116,7 +129,7 @@
         const x = tip.x + (middle.x - tip.x) * t;
         const y = tip.y + (middle.y - tip.y) * t;
         ctx.font = 'bold 20px Georgia, serif'; ctx.textAlign = 'center';
-        ctx.fillStyle = '#293e42'; ctx.shadowColor = '#a9dcff'; ctx.shadowBlur = 8;
+        ctx.fillStyle = '#e0f6ff'; ctx.shadowColor = '#a9dcff'; ctx.shadowBlur = 8;
         ctx.fillText(Array.from(entry.message)[0] || '✦', x, y);
         ctx.shadowBlur = 0;
       });
