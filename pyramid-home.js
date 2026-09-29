@@ -201,10 +201,9 @@
     const entries = (data.entries || []).slice(0, 16);
     engravings = entries;
     if (reducedMotion) draw(.55, performance.now());
-    $('pyrHomeCount').textContent = `${data.total} ${data.total === 1 ? 'thought' : 'thoughts'} within`;
-    $('pyrHomeFound').textContent = prefix ? `${data.total} ${data.total === 1 ? 'match' : 'matches'} for “${prefix}”` : `${data.total} ${data.total === 1 ? 'thought' : 'thoughts'} in the pyramid`;
+    $('pyrHomeFound').textContent = prefix ? `Thoughts beginning with “${prefix}”` : 'Search by the first characters.';
     if (!entries.length) {
-      detail.textContent = prefix ? 'No thought begins that way yet.' : 'The pyramid is waiting for its first thought.';
+      detail.textContent = prefix ? 'No thought begins that way yet.' : 'Search by the first characters, or leave a thought of your own.';
       return;
     }
     entries.forEach(entry => {

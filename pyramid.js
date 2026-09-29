@@ -2,7 +2,7 @@ const $ = (id) => document.getElementById(id);
 const query = $("query");
 const thought = $("thought");
 const glyphs = $("glyphs");
-const count = $("count");
+const searchStatus = $("searchStatus");
 const detail = $("detail");
 const matches = $("matches");
 const matchList = $("matchList");
@@ -38,14 +38,14 @@ function render(data, prefix) {
   glyphs.replaceChildren();
   matchList.replaceChildren();
   matches.hidden = !prefix;
-  count.textContent = prefix
-    ? `${data.total} ${data.total === 1 ? "thought begins" : "thoughts begin"} with “${prefix}”${data.total > entries.length ? ` · showing ${entries.length}` : ""}`
-    : `${data.total} ${data.total === 1 ? "thought" : "thoughts"} in the pyramid${data.total > entries.length ? ` · showing ${entries.length} fragments` : ""}`;
+  searchStatus.textContent = prefix
+    ? (entries.length ? `Thoughts beginning with “${prefix}”` : "No matching thoughts.")
+    : "Select a glowing fragment to read it.";
   if (!entries.length) {
     detail.replaceChildren();
     const empty = document.createElement("span");
     empty.className = "empty";
-    empty.textContent = prefix ? "No thought begins that way yet. You could leave the first." : "The pyramid is waiting for its first thought.";
+    empty.textContent = prefix ? "No thought begins that way yet. You could leave the first." : "Search by the first characters, or leave a thought of your own.";
     detail.append(empty);
     return;
   }
@@ -86,14 +86,14 @@ function render(data, prefix) {
 async function load() {
   const serial = ++requestNumber;
   const prefix = query.value.trim();
-  count.textContent = "Searching the pyramid…";
+  searchStatus.textContent = "Searching the pyramid…";
   try {
     const response = await fetch(`/api/pyramid?q=${encodeURIComponent(prefix)}`, { headers: { Accept: "application/json" } });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "The pyramid could not be opened.");
     if (serial === requestNumber) render(data, prefix);
   } catch (error) {
-    if (serial === requestNumber) count.textContent = error.message || "The pyramid is unavailable. Please try again.";
+    if (serial === requestNumber) searchStatus.textContent = error.message || "The pyramid is unavailable. Please try again.";
   }
 }
 

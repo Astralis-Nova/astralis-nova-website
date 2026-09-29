@@ -19,11 +19,8 @@ export async function onRequestGet({ env, request }) {
     await tables(env.DB);
     const where = q ? "WHERE substr(search_key, 1, ?) = ?" : "";
     const bindings = q ? [Array.from(q.toLocaleLowerCase()).length, q.toLocaleLowerCase()] : [];
-    const [rows, total] = await Promise.all([
-      env.DB.prepare(`SELECT id, message, created_at FROM pyramid_thoughts ${where} ORDER BY created_at DESC LIMIT 48`).bind(...bindings).all(),
-      env.DB.prepare(`SELECT COUNT(*) AS total FROM pyramid_thoughts ${where}`).bind(...bindings).first(),
-    ]);
-    return json({ entries: (rows.results || []).map(publicEntry), total: Number(total?.total || 0) });
+    const rows = await env.DB.prepare(`SELECT id, message, created_at FROM pyramid_thoughts ${where} ORDER BY created_at DESC LIMIT 48`).bind(...bindings).all();
+    return json({ entries: (rows.results || []).map(publicEntry) });
   } catch (error) {
     console.error("Pyramid read failed", error);
     return json({ error: "The pyramid could not be opened." }, 500);

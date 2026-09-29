@@ -821,7 +821,7 @@
 
 
   </style>
-  <link rel="stylesheet" href="/pyramid-home.css?v=6">
+  <link rel="stylesheet" href="/pyramid-home.css?v=7">
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
   <link rel="stylesheet" href="astralis-celestial-drift.css">
 </head>
@@ -891,15 +891,14 @@
       <button class="pyr-home-open" id="pyrHomeOpen" type="button" aria-haspopup="dialog" aria-controls="pyrHomeDialog" aria-label="Open the Pyramid of Thoughts">Open the Pyramid of Thoughts</button>
     </div>
     <p class="pyr-home-cue">Tap the pyramid to leave or find a thought</p>
-    <small class="pyr-home-count" id="pyrHomeCount">Opening the pyramid…</small>
     <dialog class="pyr-home-dialog" id="pyrHomeDialog" aria-labelledby="pyrHomeDialogTitle">
       <div class="pyr-home-dialog-inner">
         <header><h2 id="pyrHomeDialogTitle">Inside the Pyramid</h2><button class="pyr-home-close" id="pyrHomeClose" type="button" aria-label="Close">×</button></header>
         <p>Leave a letter, word, or sentence. To find it later, enter its first characters below.</p>
         <label for="pyrHomeQuery">Find a thought</label><input id="pyrHomeQuery" type="search" maxlength="80" autocomplete="off" placeholder="Start with a letter or word">
-        <p id="pyrHomeFound" role="status">Searching…</p>
+        <p id="pyrHomeFound" role="status">Search by the first characters.</p>
         <div class="pyr-home-results" id="pyrHomeResults" aria-label="Matching thoughts"></div>
-        <div class="pyr-home-detail" id="pyrHomeDetail" aria-live="polite">The pyramid is waiting for its first thought.</div>
+        <div class="pyr-home-detail" id="pyrHomeDetail" aria-live="polite">Search by the first characters, or leave a thought of your own.</div>
         <form id="pyrHomeForm"><label for="pyrHomeThought">Leave a thought</label><textarea id="pyrHomeThought" maxlength="300" required placeholder="A character, word, or sentence"></textarea><p class="pyr-home-privacy">Messages are public and searchable by their beginning. Leave out private information.</p><button type="submit" id="pyrHomeSubmit">Place in the pyramid</button><p class="pyr-home-status" id="pyrHomeStatus" role="status" aria-live="polite"></p></form>
       </div>
     </dialog>
@@ -1970,7 +1969,7 @@
 
   <script src="constellation-lock.js?v=20260925constellation1" defer></script>
   <script src="thoughts-of-day.js?v=20260925constellation1" defer></script>
-  <script src="/pyramid-home.js?v=6" defer></script>
+  <script src="/pyramid-home.js?v=7" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
