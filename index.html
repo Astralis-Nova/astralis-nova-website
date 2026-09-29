@@ -821,7 +821,7 @@
 
 
   </style>
-  <link rel="stylesheet" href="/pyramid-home.css?v=3">
+  <link rel="stylesheet" href="/pyramid-home.css?v=4">
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
   <link rel="stylesheet" href="astralis-celestial-drift.css">
 </head>
@@ -887,12 +887,7 @@
   <section class="pyr-home shell" id="pyrHome" aria-labelledby="pyrHomeTitle">
     <h2 class="pyr-home-title" id="pyrHomeTitle">PYRAMID OF THOUGHTS</h2>
     <div class="pyr-home-scene">
-      <div class="pyr-home-rotor" aria-hidden="true">
-        <div class="pyr-home-face"><div class="pyr-home-glyphs"></div></div>
-        <div class="pyr-home-face"><div class="pyr-home-glyphs"></div></div>
-        <div class="pyr-home-face"><div class="pyr-home-glyphs"></div></div>
-        <div class="pyr-home-face"><div class="pyr-home-glyphs"></div></div>
-      </div>
+      <canvas class="pyr-home-canvas" id="pyrHomeCanvas" width="600" height="400" aria-hidden="true"></canvas>
       <button class="pyr-home-open" id="pyrHomeOpen" type="button" aria-haspopup="dialog" aria-controls="pyrHomeDialog" aria-label="Open the Pyramid of Thoughts">Open the Pyramid of Thoughts</button>
     </div>
     <p class="pyr-home-cue">Tap the pyramid to leave or find a thought</p>
@@ -1975,7 +1970,7 @@
 
   <script src="constellation-lock.js?v=20260925constellation1" defer></script>
   <script src="thoughts-of-day.js?v=20260925constellation1" defer></script>
-  <script src="/pyramid-home.js?v=2" defer></script>
+  <script src="/pyramid-home.js?v=3" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
