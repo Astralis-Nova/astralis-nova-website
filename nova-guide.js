@@ -31,7 +31,6 @@
     loadScript('/nova-owner-console.js?v=20260908a','novaOwnerConsole');
     loadScript('/nova-leveling.js?v=20260908a','novaLeveling');
     loadScript('/nova-planner.js?v=20260908a','novaPlanner');
-    loadScript('/nova-home-primary.js?v=20260908a','novaHomePrimary');
     loadScript('/feeling-tipsy.js?v=20260805a','feelingTipsy');
   };
 
