@@ -13,9 +13,41 @@
   let latest = 0;
   let timer;
 
+  const MORSE_MESSAGE = 'ASTRALIS NOVA';
+  const MORSE_UNIT_MS = 240;
+  const MORSE_ALPHABET = { A: '.-', S: '...', T: '-', R: '.-.', L: '.-..', I: '..', N: '-.', O: '---', V: '...-' };
+  const morseSequence = [];
+  const morseWords = MORSE_MESSAGE.split(' ');
+  morseWords.forEach((word, wordIndex) => {
+    [...word].forEach((letter, letterIndex) => {
+      const code = MORSE_ALPHABET[letter];
+      [...code].forEach((mark, markIndex) => {
+        morseSequence.push({ on: true, units: mark === '.' ? 1 : 3 });
+        if (markIndex < code.length - 1) morseSequence.push({ on: false, units: 1 });
+      });
+      if (letterIndex < word.length - 1) morseSequence.push({ on: false, units: 3 });
+    });
+    // Seven units separate words; a longer pause separates full messages.
+    morseSequence.push({ on: false, units: wordIndex < morseWords.length - 1 ? 7 : 14 });
+  });
+  const morseCycleMs = morseSequence.reduce((total, item) => total + item.units * MORSE_UNIT_MS, 0);
+  function morseLampOn(elapsed) {
+    let phase = ((elapsed % morseCycleMs) + morseCycleMs) % morseCycleMs;
+    for (const item of morseSequence) {
+      const duration = item.units * MORSE_UNIT_MS;
+      if (phase < duration) return item.on;
+      phase -= duration;
+    }
+    return false;
+  }
+  root.dataset.morseMessage = MORSE_MESSAGE;
+  root.dataset.morseUnitMs = String(MORSE_UNIT_MS);
+
   function draw(angle, now = 0) {
     if (!ctx) return;
     const pulse = .5 + .5 * Math.sin(now / 520);
+    const beaconLit = reducedMotion || morseLampOn(now - start);
+    root.dataset.morseLight = beaconLit ? 'on' : 'off';
     const cos = Math.cos(angle), sin = Math.sin(angle);
     const rotate = ([x, y, z]) => ({ x: x * cos + z * sin, y, z: -x * sin + z * cos });
     const project = ({ x, y, z }) => ({ x: 300 + x * 116, y: 195 - y * 105 + z * 28 });
@@ -125,7 +157,7 @@
       ctx.restore();
     }
 
-    // A gilded capstone stays bright at every angle.
+    // The blue capstone signals ASTRALIS NOVA in International Morse timing.
     const cap = .18;
     const tipEdges = base.map(v => {
       const p = project(v);
@@ -137,8 +169,8 @@
       path.lineTo(tipEdges[i].x, tipEdges[i].y);
       path.lineTo(tipEdges[(i + 1) % 4].x, tipEdges[(i + 1) % 4].y);
       path.closePath();
-      ctx.fillStyle = '#d8e8ed'; ctx.fill(path);
-      ctx.strokeStyle = '#e6f7ff'; ctx.lineWidth = 1.4; ctx.stroke(path);
+      ctx.fillStyle = beaconLit ? '#dcf8ff' : '#173a60'; ctx.fill(path);
+      ctx.strokeStyle = beaconLit ? '#f0fdff' : '#4986b2'; ctx.lineWidth = 1.4; ctx.stroke(path);
     }
     // The LED outline breathes like the signals running through the brain.
     ctx.save();
@@ -168,11 +200,19 @@
       edge(left, right, i + 2);
     }
     ctx.restore();
-    const crown = ctx.createRadialGradient(tip.x, tip.y, 1, tip.x, tip.y, 42);
-    crown.addColorStop(0, 'rgba(237,251,255,.9)');
-    crown.addColorStop(.3, 'rgba(104,199,255,.43)');
-    crown.addColorStop(1, 'rgba(61,138,239,0)');
-    ctx.fillStyle = crown; ctx.beginPath(); ctx.arc(tip.x, tip.y, 42, 0, Math.PI * 2); ctx.fill();
+    if (beaconLit) {
+      const crown = ctx.createRadialGradient(tip.x, tip.y, 1, tip.x, tip.y, 46);
+      crown.addColorStop(0, 'rgba(245,254,255,1)');
+      crown.addColorStop(.25, 'rgba(144,231,255,.85)');
+      crown.addColorStop(.6, 'rgba(63,170,255,.35)');
+      crown.addColorStop(1, 'rgba(61,138,239,0)');
+      ctx.fillStyle = crown; ctx.beginPath(); ctx.arc(tip.x, tip.y, 46, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.save();
+    ctx.fillStyle = beaconLit ? '#f4fdff' : '#1b4166';
+    ctx.shadowColor = '#79e4ff'; ctx.shadowBlur = beaconLit ? 28 : 0;
+    ctx.beginPath(); ctx.arc(tip.x, tip.y, beaconLit ? 6 : 3, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
   }
 
   const roaming = root.classList.contains('pyr-roaming');
