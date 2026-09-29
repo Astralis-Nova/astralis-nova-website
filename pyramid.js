@@ -27,6 +27,7 @@ function select(entry) {
   detail.replaceChildren();
   const message = document.createElement("p");
   message.textContent = entry.message;
+  message.classList.toggle("character-art", /\n|  /.test(entry.message));
   const date = document.createElement("small");
   date.textContent = new Date(entry.created_at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
   detail.append(message, date);
@@ -67,6 +68,7 @@ function render(data, prefix) {
       const item = document.createElement("button");
       item.type = "button";
       item.className = "match";
+      item.classList.toggle("character-art", /\n|  /.test(entry.message));
       const strong = document.createElement("strong");
       strong.textContent = Array.from(entry.message).slice(0, Array.from(prefix).length).join("");
       item.append(strong, document.createTextNode(Array.from(entry.message).slice(Array.from(prefix).length).join("")));

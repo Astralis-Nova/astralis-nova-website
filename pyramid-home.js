@@ -196,6 +196,11 @@
   new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(root);
   requestAnimationFrame(animate);
 
+  function showDetail(message) {
+    detail.textContent = message;
+    detail.classList.toggle('character-art', /\n|  /.test(message));
+  }
+
   function render(data, prefix) {
     results.replaceChildren();
     const entries = (data.entries || []).slice(0, 16);
@@ -203,7 +208,7 @@
     if (reducedMotion) draw(.55, performance.now());
     $('pyrHomeFound').textContent = prefix ? `Thoughts beginning with “${prefix}”` : 'Search by the first characters.';
     if (!entries.length) {
-      detail.textContent = prefix ? 'No thought begins that way yet.' : 'Search by the first characters, or leave a thought of your own.';
+      showDetail(prefix ? 'No thought begins that way yet.' : 'Search by the first characters, or leave a thought of your own.');
       return;
     }
     entries.forEach(entry => {
@@ -211,11 +216,12 @@
         const item = document.createElement('button');
         item.type = 'button';
         item.textContent = entry.message;
-        item.addEventListener('click', () => { detail.textContent = entry.message; });
+        item.classList.toggle('character-art', /\n|  /.test(entry.message));
+        item.addEventListener('click', () => { showDetail(entry.message); });
         results.append(item);
       }
     });
-    detail.textContent = prefix ? entries[0].message : 'Type a beginning to find a thought, or leave one of your own.';
+    showDetail(prefix ? entries[0].message : 'Type a beginning to find a thought, or leave one of your own.');
   }
 
   async function load() {
