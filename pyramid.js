@@ -58,7 +58,7 @@ function render(data, prefix) {
     button.style.left = `${x}%`;
     button.style.top = `${y}%`;
     button.style.setProperty("--delay", `${-(index % 11) * .35}s`);
-    button.textContent = Array.from(entry.message.trim())[0] || "✦";
+    button.textContent = Array.from(entry.message.trimStart())[0] || "✦";
     button.setAttribute("aria-label", `Read thought: ${entry.message.slice(0, 70)}`);
     button.setAttribute("aria-pressed", String(entry.id === selectedId));
     button.addEventListener("click", () => select(entry));
@@ -98,11 +98,31 @@ async function load() {
 }
 
 query.addEventListener("input", () => { clearTimeout(debounce); debounce = setTimeout(load, 220); });
-thought.addEventListener("input", () => { $("length").textContent = `${thought.value.length} / 300`; });
+const artTemplates = {"starfield":"  ✦          ·\n       ⋆\n ·          ✧\n    .    ✦","pyramid":"       ✦\n      /\\\n     /  \\\n    /____\\","ship":"       ✧\n    ___|___\n   /  ◇ ◇  \\\n   \\_______/\n      /_\\","symbols":"✦  ✧  ⋆  ·  ◇  △  ☾  ∞  ⟡"};
+const preview = $("preview");
+function updatePreview() {
+  preview.textContent = thought.value || "Your character art appears here.";
+  $("length").textContent = `${thought.value.length} / 2000`;
+}
+thought.addEventListener("input", updatePreview);
+document.querySelectorAll("[data-pyr-art]").forEach(button => button.addEventListener("click", () => {
+  const art = artTemplates[button.dataset.pyrArt];
+  if (!art) return;
+  const start = thought.selectionStart, end = thought.selectionEnd;
+  const lead = thought.value && start === thought.value.length ? "\n" : "";
+  const addition = lead + art;
+  if (thought.value.length - (end - start) + addition.length > thought.maxLength) {
+    $("status").textContent = "The character canvas is full.";
+    return;
+  }
+  thought.setRangeText(addition, start, end, "end");
+  thought.focus();
+  updatePreview();
+}));
 $("form").addEventListener("submit", async (event) => {
   event.preventDefault();
-  const message = thought.value.trim();
-  if (!message) { $("status").textContent = "Write at least one character."; thought.focus(); return; }
+  const message = thought.value;
+  if (!message.trim()) { $("status").textContent = "Write at least one character."; thought.focus(); return; }
   const submit = $("submit");
   submit.disabled = true;
   $("status").textContent = "Placing your thought…";
@@ -111,7 +131,7 @@ $("form").addEventListener("submit", async (event) => {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || "The thought could not be saved.");
     thought.value = "";
-    $("length").textContent = "0 / 300";
+    updatePreview();
     $("status").textContent = "Your thought is in the pyramid.";
     query.value = "";
     selectedId = data.entry.id;

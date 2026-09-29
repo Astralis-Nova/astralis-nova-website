@@ -130,7 +130,7 @@
         const y = tip.y + (middle.y - tip.y) * t;
         ctx.font = 'bold 20px Georgia, serif'; ctx.textAlign = 'center';
         ctx.fillStyle = '#e0f6ff'; ctx.shadowColor = '#a9dcff'; ctx.shadowBlur = 8;
-        ctx.fillText(Array.from(entry.message)[0] || '✦', x, y);
+        ctx.fillText(Array.from(entry.message.trimStart())[0] || '✦', x, y);
         ctx.shadowBlur = 0;
       });
       ctx.restore();
@@ -231,14 +231,37 @@
     }
   }
 
+  const artTemplates = {"starfield":"  ✦          ·\n       ⋆\n ·          ✧\n    .    ✦","pyramid":"       ✦\n      /\\\n     /  \\\n    /____\\","ship":"       ✧\n    ___|___\n   /  ◇ ◇  \\\n   \\_______/\n      /_\\","symbols":"✦  ✧  ⋆  ·  ◇  △  ☾  ∞  ⟡"};
+  const preview = $('pyrHomePreview');
+  const length = $('pyrHomeLength');
+  function updatePreview() {
+    preview.textContent = thought.value || 'Your character art appears here.';
+    length.textContent = `${thought.value.length} / 2000`;
+  }
+  thought.addEventListener('input', updatePreview);
+  root.querySelectorAll('[data-pyr-art]').forEach(button => button.addEventListener('click', () => {
+    const art = artTemplates[button.dataset.pyrArt];
+    if (!art) return;
+    const start = thought.selectionStart, end = thought.selectionEnd;
+    const lead = thought.value && start === thought.value.length ? '\n' : '';
+    const addition = lead + art;
+    if (thought.value.length - (end - start) + addition.length > thought.maxLength) {
+      status.textContent = 'The character canvas is full.';
+      return;
+    }
+    thought.setRangeText(addition, start, end, 'end');
+    thought.focus();
+    updatePreview();
+  }));
+
   $('pyrHomeOpen').addEventListener('click', () => { dialog.showModal(); thought.focus(); load(); });
   $('pyrHomeClose').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
   query.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(load, 230); });
   $('pyrHomeForm').addEventListener('submit', async event => {
     event.preventDefault();
-    const message = thought.value.trim();
-    if (!message) { status.textContent = 'Write at least one character.'; thought.focus(); return; }
+    const message = thought.value;
+    if (!message.trim()) { status.textContent = 'Write at least one character.'; thought.focus(); return; }
     const button = $('pyrHomeSubmit');
     button.disabled = true;
     status.textContent = 'Placing your thought…';
@@ -247,7 +270,8 @@
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'The thought could not be saved.');
       thought.value = '';
-      query.value = message.slice(0, Math.min(12, message.length));
+      updatePreview();
+      query.value = message.trimStart().split('\n')[0].slice(0, 12);
       status.textContent = 'Your thought is inside the pyramid.';
       await load();
     } catch (error) { status.textContent = error.message || 'Please try again.'; }

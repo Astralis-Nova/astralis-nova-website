@@ -31,11 +31,11 @@ export async function onRequestPost({ env, request }) {
   if (!env.DB) return json({ error: "The pyramid database is unavailable." }, 503);
   const origin = request.headers.get("Origin");
   if (origin && origin !== new URL(request.url).origin) return json({ error: "This form must be used on Astralis Nova." }, 403);
-  if (Number(request.headers.get("Content-Length") || 0) > 3000) return json({ error: "Message is too long." }, 413);
+  if (Number(request.headers.get("Content-Length") || 0) > 12000) return json({ error: "Message is too long." }, 413);
   let body;
   try { body = await request.json(); } catch { return json({ error: "Invalid message." }, 400); }
-  const message = String(body?.message ?? "").trim();
-  if (!message || Array.from(message).length > 300 || /[\u0000-\u0008\u000b\u000e-\u001f]/.test(message)) return json({ error: "Enter 1–300 characters of text." }, 400);
+  const message = String(body?.message ?? "").replace(/\r\n?/g, "\n");
+  if (!message.trim() || Array.from(message).length > 2000 || /[\u0000-\u0008\u000b\u000e-\u001f]/.test(message)) return json({ error: "Enter 1–2000 characters of text or character art." }, 400);
   if (/(?:https?:\/\/|www\.|<script|javascript:)/i.test(message)) return json({ error: "Please leave out links and code." }, 400);
   try {
     await tables(env.DB);
@@ -52,7 +52,7 @@ export async function onRequestPost({ env, request }) {
     if (!limit.meta?.changes) return json({ error: "Please wait 30 seconds before leaving another thought." }, 429);
     const entry = { id: crypto.randomUUID(), message, created_at: new Date(now).toISOString() };
     await env.DB.prepare("INSERT INTO pyramid_thoughts (id, message, search_key, created_at) VALUES (?, ?, ?, ?)")
-      .bind(entry.id, entry.message, entry.message.toLocaleLowerCase(), entry.created_at).run();
+      .bind(entry.id, entry.message, entry.message.trimStart().toLocaleLowerCase(), entry.created_at).run();
     return json({ entry }, 201);
   } catch (error) {
     console.error("Pyramid write failed", error);
