@@ -16,6 +16,6 @@
 #astralis-starman-roadster img{pointer-events:none}
 #astralis-starman-roadster:hover,#astralis-starman-roadster:focus-visible,#astralis-starman-roadster.starman-greeting-open{animation-play-state:paused}
 #astralis-starman-roadster:focus-visible{outline:2px solid #9cddff;outline-offset:3px;border-radius:14px}
-#starman-greeting{position:fixed;z-index:44;width:max-content;max-width:calc(100vw - 24px);padding:10px 16px;border:1px solid #87d9ff;border-radius:16px;background:rgba(5,19,39,.96);box-shadow:0 0 22px rgba(85,183,255,.25);color:#e7f8ff;font:700 16px/1.4 system-ui,sans-serif;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .18s ease}
+#starman-greeting{position:fixed;z-index:44;width:max-content;max-width:calc(100vw - 24px);padding:10px 16px;border:1px solid #87d9ff;border-radius:16px;background:rgba(5,19,39,.96);box-shadow:0 0 22px rgba(85,183,255,.25);color:#e7f8ff;font:700 16px/1.4 system-ui,sans-serif;pointer-events:none;visibility:hidden}
 #starman-greeting.show{opacity:1;visibility:visible}
 @media(prefers-reduced-motion:reduce){#starman-greeting{transition:none}}
