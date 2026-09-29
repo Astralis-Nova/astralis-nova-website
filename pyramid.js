@@ -100,7 +100,7 @@ async function load() {
 }
 
 query.addEventListener("input", () => { clearTimeout(debounce); debounce = setTimeout(load, 220); });
-const artTemplates = {"starfield":"  ✦          ·\n       ⋆\n ·          ✧\n    .    ✦","pyramid":"       ✦\n      /\\\n     /  \\\n    /____\\","ship":"       ✧\n    ___|___\n   /  ◇ ◇  \\\n   \\_______/\n      /_\\","symbols":"✦  ✧  ⋆  ·  ◇  △  ☾  ∞  ⟡"};
+const artTemplates = {"starfield":"  ✦          ·\n       ⋆\n ·          ✧\n    .    ✦","pyramid":"       ✦\n      /\\\n     /  \\\n    /____\\","ship":"             ✦\n      .-============-.\n  ___/  NXS ASTRALIS  \\___\n <___ ✧  EXPLORER  ✧ ___>\n     \\________________/\n         \\   ||   /\n     =====\\__||__/=====\n          /__||__\\\n          ✦  ||  ✦","symbols":"✦  ✧  ⋆  ·  ◇  △  ☾  ∞  ⟡"};
 const preview = $("preview");
 function updatePreview() {
   preview.textContent = thought.value || "Your character art appears here.";

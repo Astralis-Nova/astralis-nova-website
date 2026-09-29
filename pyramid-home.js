@@ -237,7 +237,7 @@
     }
   }
 
-  const artTemplates = {"starfield":"  ✦          ·\n       ⋆\n ·          ✧\n    .    ✦","pyramid":"       ✦\n      /\\\n     /  \\\n    /____\\","ship":"       ✧\n    ___|___\n   /  ◇ ◇  \\\n   \\_______/\n      /_\\","symbols":"✦  ✧  ⋆  ·  ◇  △  ☾  ∞  ⟡"};
+  const artTemplates = {"starfield":"  ✦          ·\n       ⋆\n ·          ✧\n    .    ✦","pyramid":"       ✦\n      /\\\n     /  \\\n    /____\\","ship":"             ✦\n      .-============-.\n  ___/  NXS ASTRALIS  \\___\n <___ ✧  EXPLORER  ✧ ___>\n     \\________________/\n         \\   ||   /\n     =====\\__||__/=====\n          /__||__\\\n          ✦  ||  ✦","symbols":"✦  ✧  ⋆  ·  ◇  △  ☾  ∞  ⟡"};
   const preview = $('pyrHomePreview');
   const length = $('pyrHomeLength');
   function updatePreview() {
