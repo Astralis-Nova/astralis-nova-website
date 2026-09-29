@@ -2,6 +2,41 @@
   const car = document.getElementById('astralis-starman-roadster');
   if (!car) return;
   const brain = document.querySelector('.thought-art');
+  const greeting = document.getElementById('starman-greeting');
+  let greetingTimer;
+  function positionGreeting() {
+    if (!greeting || !greeting.classList.contains('show')) return;
+    const rect = car.getBoundingClientRect();
+    const width = greeting.offsetWidth, height = greeting.offsetHeight;
+    const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 78;
+    const left = Math.max(12, Math.min(innerWidth - width - 12, rect.left + (rect.width - width) / 2));
+    const above = rect.top - height - 10;
+    const top = above >= headerBottom + 8 ? above : Math.min(innerHeight - height - 12, rect.bottom + 10);
+    greeting.style.left = left + 'px';
+    greeting.style.top = Math.max(12, top) + 'px';
+  }
+  car.addEventListener('click', () => {
+    if (!greeting) return;
+    clearTimeout(greetingTimer);
+    car.classList.add('starman-greeting-open');
+    greeting.textContent = 'Hello world!';
+    greeting.classList.add('show');
+    positionGreeting();
+    // Voice is initiated only by a click; the bubble works without speech support.
+    try {
+      if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window && !speechSynthesis.speaking) {
+        const message = new SpeechSynthesisUtterance('Hello world!');
+        message.lang = 'en-US';
+        message.rate = .95;
+        speechSynthesis.speak(message);
+      }
+    } catch {}
+    greetingTimer = setTimeout(() => {
+      greeting.classList.remove('show');
+      greeting.textContent = '';
+      car.classList.remove('starman-greeting-open');
+    }, 4000);
+  });
   function sizeRoute() {
     const width = car.offsetWidth, height = car.offsetHeight;
     const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 78;
@@ -10,6 +45,7 @@
     car.style.setProperty('--roadster-x', Math.max(0, innerWidth - width - 24) + 'px');
     car.style.setProperty('--roadster-y', Math.max(0, innerHeight - top - height - 140) + 'px');
     keepBrainClear();
+    positionGreeting();
   }
   function keepBrainClear() {
     if (!brain || document.hidden) return;

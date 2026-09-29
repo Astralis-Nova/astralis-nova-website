@@ -710,7 +710,7 @@
 
 
   </style>
-  <link rel="stylesheet" href="/starman-roadster.css?v=1">
+  <link rel="stylesheet" href="/starman-roadster.css?v=2">
   <link rel="stylesheet" href="/pyramid-home.css?v=10">
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
   <link rel="stylesheet" href="astralis-celestial-drift.css">
@@ -726,7 +726,8 @@
   </div>
 
   <!-- Decorative reconstruction based on SpaceX’s Starman / Roadster mission imagery. -->
-  <div id="astralis-starman-roadster" aria-hidden="true"><img src="/assets/starman-roadster.webp" alt="" decoding="async"></div>
+  <button id="astralis-starman-roadster" type="button" aria-label="Say hello with Starman" aria-controls="starman-greeting"><img src="/assets/starman-roadster.webp" alt="" decoding="async"></button>
+  <div id="starman-greeting" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <header>
     <div class="topbar shell">
@@ -1750,7 +1751,7 @@
   <script src="constellation-lock.js?v=20260925constellation1" defer></script>
   <script src="thoughts-of-day.js?v=20260925constellation1" defer></script>
   <script src="/pyramid-home.js?v=12" defer></script>
-  <script src="/starman-roadster.js?v=1" defer></script>
+  <script src="/starman-roadster.js?v=2" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
