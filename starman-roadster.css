@@ -1,6 +1,6 @@
 /* Starman's Roadster joins the Astralis Nova drift layer. */
 #astralis-starman-roadster{--roadster-width:clamp(140px,13vw,190px);position:fixed;left:12px;top:var(--roadster-top,110px);z-index:33;width:var(--roadster-width);aspect-ratio:1.5;pointer-events:auto;cursor:pointer;appearance:none;padding:0;border:0;background:transparent;color:inherit;user-select:none;animation:astralis-roadster-drift 145s ease-in-out infinite;will-change:transform}
-#astralis-starman-roadster img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 9px rgba(129,203,255,.22));animation:astralis-roadster-turn 16s ease-in-out infinite}
+#astralis-starman-roadster img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 9px rgba(129,203,255,.22));transform:rotate(var(--roadster-heading,0deg));transition:transform .35s ease-out;will-change:transform}
 #astralis-starman-roadster.starman-behind-brain{visibility:hidden}
 #astralis-starman-roadster.starman-page-hidden,#astralis-starman-roadster.starman-page-hidden img{animation-play-state:paused}
 @keyframes astralis-roadster-drift{
@@ -9,9 +9,8 @@
   53%{transform:translate3d(0,calc(var(--roadster-y,40vh) * .74),0)}
   78%{transform:translate3d(calc(var(--roadster-x,70vw) * .2),calc(var(--roadster-y,40vh) * .15),0)}
 }
-@keyframes astralis-roadster-turn{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(8deg)}}
 @media(max-width:650px){#astralis-starman-roadster{--roadster-width:112px}}
-@media(prefers-reduced-motion:reduce){#astralis-starman-roadster{animation:none;transform:translate3d(var(--roadster-x,70vw),0,0);will-change:auto}#astralis-starman-roadster img{animation:none}}
+@media(prefers-reduced-motion:reduce){#astralis-starman-roadster{animation:none;transform:translate3d(var(--roadster-x,70vw),0,0);will-change:auto}#astralis-starman-roadster img{transform:none;transition:none;will-change:auto}}
 
 #astralis-starman-roadster img{pointer-events:none}
 #astralis-starman-roadster:hover,#astralis-starman-roadster:focus-visible,#astralis-starman-roadster.starman-greeting-open{animation-play-state:paused}

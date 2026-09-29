@@ -4,6 +4,32 @@
   const brain = document.querySelector('.thought-art');
   const greeting = document.getElementById('starman-greeting');
   let greetingTimer;
+  let previousPosition;
+  let heading = 0;
+  // The photograph's nose points left. Rotate it to the actual drift tangent.
+  function forwardHeading(dx, dy, previousHeading) {
+    const target = Math.atan2(dy, dx) * 180 / Math.PI + 180;
+    const turn = ((target - previousHeading + 180) % 360 + 360) % 360 - 180;
+    return previousHeading + turn;
+  }
+  function faceTravelDirection() {
+    if (document.hidden) {
+      previousPosition = undefined;
+    } else {
+      const rect = car.getBoundingClientRect();
+      const position = { x: rect.left, y: rect.top };
+      if (!previousPosition) previousPosition = position;
+      const dx = position.x - previousPosition.x, dy = position.y - previousPosition.y;
+      // Accumulate very small movements rather than reacting to rounding noise.
+      if (Math.hypot(dx, dy) > .04) {
+        heading = forwardHeading(dx, dy, heading);
+        car.style.setProperty('--roadster-heading', heading + 'deg');
+        car.dataset.travelHeading = String(heading);
+        previousPosition = position;
+      }
+    }
+    requestAnimationFrame(faceTravelDirection);
+  }
   function positionGreeting() {
     if (!greeting || !greeting.classList.contains('show')) return;
     const rect = car.getBoundingClientRect();
@@ -38,6 +64,7 @@
     }, 4000);
   });
   function sizeRoute() {
+    previousPosition = undefined;
     const width = car.offsetWidth, height = car.offsetHeight;
     const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 78;
     const top = Math.min(Math.max(100, headerBottom + 16), Math.max(12, innerHeight - height - 140));
@@ -55,6 +82,7 @@
       a.bottom > b.top - 20 && a.top < b.bottom + 20);
   }
   sizeRoute();
+  requestAnimationFrame(faceTravelDirection);
   window.addEventListener('resize', sizeRoute, { passive: true });
   window.addEventListener('scroll', keepBrainClear, { passive: true });
   document.addEventListener('visibilitychange', () => {
