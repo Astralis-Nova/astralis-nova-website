@@ -821,6 +821,7 @@
 
 
   </style>
+  <link rel="stylesheet" href="/pyramid-home.css?v=1">
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
   <link rel="stylesheet" href="astralis-celestial-drift.css">
 </head>
@@ -880,6 +881,29 @@
       <div class="top-area">
         <h3>🔥 TOP SONGS</h3>
         <div class="feature-grid" id="features"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pyr-home shell" id="pyrHome" aria-labelledby="pyrHomeTitle">
+    <div class="pyr-home-header"><div><p class="eyebrow">A SHARED THOUGHT SPACE</p><h2 id="pyrHomeTitle">THE PYRAMID OF THOUGHTS</h2></div><a href="pyramid.html">Open the full pyramid</a></div>
+    <div class="pyr-home-grid">
+      <div class="pyr-home-scene" id="pyrHomeScene" aria-label="Revolving pyramid of public thoughts">
+        <div class="pyr-home-rotor" aria-hidden="false">
+          <div class="pyr-home-face"><div class="pyr-home-glyphs"></div></div>
+          <div class="pyr-home-face"><div class="pyr-home-glyphs"></div></div>
+          <div class="pyr-home-face"><div class="pyr-home-glyphs"></div></div>
+          <div class="pyr-home-face"><div class="pyr-home-glyphs"></div></div>
+        </div>
+        <button type="button" class="pyr-home-prompt" id="pyrHomePrompt">Tap to leave a thought</button>
+      </div>
+      <div class="pyr-home-controls">
+        <label for="pyrHomeQuery">Find a thought by its first characters</label>
+        <input id="pyrHomeQuery" type="search" maxlength="80" autocomplete="off" placeholder="A letter, word, or phrase">
+        <p id="pyrHomeCount" role="status">Opening the pyramid…</p>
+        <div class="pyr-home-detail empty" id="pyrHomeDetail" aria-live="polite">Tap a glowing character to read its thought.</div>
+        <div class="pyr-home-results" id="pyrHomeResults" aria-label="Matching thoughts"></div>
+        <form id="pyrHomeForm"><label for="pyrHomeThought">Leave a character, sentence, or thought</label><textarea id="pyrHomeThought" maxlength="300" required placeholder="Write something for the pyramid"></textarea><p>Public and searchable by its beginning. Leave out private information.</p><button type="submit" id="pyrHomeSubmit">Place in the pyramid</button><p class="pyr-home-status" id="pyrHomeStatus" role="status" aria-live="polite"></p></form>
       </div>
     </div>
   </section>
@@ -1949,6 +1973,7 @@
 
   <script src="constellation-lock.js?v=20260925constellation1" defer></script>
   <script src="thoughts-of-day.js?v=20260925constellation1" defer></script>
+  <script src="/pyramid-home.js?v=1" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
 </html>
