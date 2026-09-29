@@ -10,7 +10,6 @@
   const status = $('pyrHomeStatus');
   const canvas = $('pyrHomeCanvas');
   const ctx = canvas.getContext('2d');
-  let engravings = [];
   let latest = 0;
   let timer;
 
@@ -123,16 +122,6 @@
           ctx.strokeStyle = 'rgba(142,215,255,.82)'; ctx.lineWidth = 1.2; ctx.stroke();
         }
       }
-      const faceEntries = engravings.slice(i * 4, i * 4 + 4);
-      faceEntries.forEach((entry, n) => {
-        const t = .44 + n * .12;
-        const x = tip.x + (middle.x - tip.x) * t;
-        const y = tip.y + (middle.y - tip.y) * t;
-        ctx.font = 'bold 20px Georgia, serif'; ctx.textAlign = 'center';
-        ctx.fillStyle = '#e0f6ff'; ctx.shadowColor = '#a9dcff'; ctx.shadowBlur = 8;
-        ctx.fillText(Array.from(entry.message.trimStart())[0] || '✦', x, y);
-        ctx.shadowBlur = 0;
-      });
       ctx.restore();
     }
 
@@ -204,7 +193,6 @@
   function render(data, prefix) {
     results.replaceChildren();
     const entries = (data.entries || []).slice(0, 16);
-    engravings = entries;
     if (reducedMotion) draw(.55, performance.now());
     $('pyrHomeFound').textContent = prefix ? `Thoughts beginning with “${prefix}”` : 'Search by the first characters.';
     if (!entries.length) {
