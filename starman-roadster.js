@@ -4,31 +4,38 @@
   const brain = document.querySelector('.thought-art');
   const greeting = document.getElementById('starman-greeting');
   let greetingTimer;
-  let previousPosition;
-  let heading = 0;
-  // The photograph's nose points left. Rotate it to the actual drift tangent.
-  function forwardHeading(dx, dy, previousHeading) {
-    const target = Math.atan2(dy, dx) * 180 / Math.PI + 180;
-    const turn = ((target - previousHeading + 180) % 360 + 360) % 360 - 180;
-    return previousHeading + turn;
+  const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+  let elapsed = 0, lastFrame;
+  let travelWidth = 0, travelHeight = 0, floatPadding = 0;
+  // Independent waves give the weightless drift and tumble different rhythms.
+  function floatPose(milliseconds, width, height) {
+    const seconds = milliseconds / 1000;
+    const wave = period => seconds * Math.PI * 2 / period;
+    return {
+      x: width * (.5 + .42 * Math.cos(wave(170)) + .06 * Math.sin(wave(61))),
+      y: height * (.5 + .4 * Math.sin(wave(137) - 1.1) + .08 * Math.sin(wave(47))),
+      rotation: -8 + seconds * 360 / 220 + 9 * Math.sin(wave(37)),
+      scale: .97 + .03 * Math.sin(wave(73))
+    };
   }
-  function faceTravelDirection() {
-    if (document.hidden) {
-      previousPosition = undefined;
-    } else {
-      const rect = car.getBoundingClientRect();
-      const position = { x: rect.left, y: rect.top };
-      if (!previousPosition) previousPosition = position;
-      const dx = position.x - previousPosition.x, dy = position.y - previousPosition.y;
-      // Accumulate very small movements rather than reacting to rounding noise.
-      if (Math.hypot(dx, dy) > .04) {
-        heading = forwardHeading(dx, dy, heading);
-        car.style.setProperty('--roadster-heading', heading + 'deg');
-        car.dataset.travelHeading = String(heading);
-        previousPosition = position;
-      }
+  function positionCar() {
+    const pose = floatPose(elapsed, travelWidth, travelHeight);
+    car.style.setProperty('--roadster-pos-x', (floatPadding + pose.x) + 'px');
+    car.style.setProperty('--roadster-pos-y', pose.y + 'px');
+    car.style.setProperty('--roadster-rotation', pose.rotation + 'deg');
+    car.style.setProperty('--roadster-scale', String(pose.scale));
+    car.dataset.motion = 'free-floating';
+    car.dataset.floatRotation = String(pose.rotation);
+  }
+  function floatFrame(now) {
+    const paused = document.hidden || motionPreference.matches ||
+      car.matches(':hover, :focus-visible') || car.classList.contains('starman-greeting-open');
+    if (!paused) {
+      if (lastFrame !== undefined) elapsed += Math.min(now - lastFrame, 100);
+      positionCar();
     }
-    requestAnimationFrame(faceTravelDirection);
+    lastFrame = now;
+    requestAnimationFrame(floatFrame);
   }
   function positionGreeting() {
     if (!greeting || !greeting.classList.contains('show')) return;
@@ -64,13 +71,17 @@
     }, 4000);
   });
   function sizeRoute() {
-    previousPosition = undefined;
     const width = car.offsetWidth, height = car.offsetHeight;
     const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 78;
-    const top = Math.min(Math.max(100, headerBottom + 16), Math.max(12, innerHeight - height - 140));
+    // Reserve room around the car so its rotating corners stay inside the view.
+    floatPadding = Math.ceil((Math.hypot(width, height) - Math.min(width, height)) / 2) + 12;
+    const top = Math.min(Math.max(100, headerBottom + floatPadding), Math.max(12, innerHeight - height - 140));
+    travelWidth = Math.max(0, innerWidth - width - 24 - floatPadding * 2);
+    travelHeight = Math.max(0, innerHeight - top - height - 140 - floatPadding);
     car.style.setProperty('--roadster-top', top + 'px');
     car.style.setProperty('--roadster-x', Math.max(0, innerWidth - width - 24) + 'px');
     car.style.setProperty('--roadster-y', Math.max(0, innerHeight - top - height - 140) + 'px');
+    positionCar();
     keepBrainClear();
     positionGreeting();
   }
@@ -82,11 +93,12 @@
       a.bottom > b.top - 20 && a.top < b.bottom + 20);
   }
   sizeRoute();
-  requestAnimationFrame(faceTravelDirection);
+  requestAnimationFrame(floatFrame);
   window.addEventListener('resize', sizeRoute, { passive: true });
+  motionPreference.addEventListener('change', sizeRoute);
   window.addEventListener('scroll', keepBrainClear, { passive: true });
   document.addEventListener('visibilitychange', () => {
-    car.classList.toggle('starman-page-hidden', document.hidden);
+    lastFrame = undefined;
     keepBrainClear();
   });
   setInterval(keepBrainClear, 200);
