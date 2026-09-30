@@ -1,0 +1,11 @@
+/* A quiet time beacon beside the hero galaxy. */
+.galaxy-stardate{position:absolute;top:16px;right:18px;z-index:5;width:204px;padding:9px 14px 10px;border-right:1px solid rgba(135,213,255,.55);background:linear-gradient(270deg,rgba(6,16,37,.75),rgba(6,16,37,.12));color:#eaf7ff;text-align:right;border-radius:0 10px 10px 0;text-shadow:0 1px 8px #050916;font-variant-numeric:tabular-nums}
+.galaxy-stardate-label{display:block;color:#a8dbff;font:700 10px/1.3 system-ui,sans-serif;letter-spacing:.22em}
+.galaxy-stardate-label::before{content:'✦';margin-right:7px;color:#90dfff;text-shadow:0 0 10px #7bc6ff}
+.galaxy-stardate-value{display:block;margin:3px 0 5px;font:500 26px/1.05 ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:.025em}
+.galaxy-stardate-earth{display:flex;align-items:center;justify-content:flex-end;gap:9px;white-space:nowrap}
+.galaxy-stardate-earth span{color:#a5c4da;font:600 9px/1.5 system-ui,sans-serif;letter-spacing:.04em}
+.galaxy-stardate-earth time{font:500 11px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace}
+.galaxy-stardate-date{display:block;margin-top:2px;color:#b6c6db;font:400 10px/1.4 system-ui,sans-serif}
+@media(max-width:1050px){.galaxy-stardate{position:relative;inset:auto;margin:0 0 22px auto}}
+@media(max-width:520px){.galaxy-stardate{width:204px;margin-bottom:20px}}

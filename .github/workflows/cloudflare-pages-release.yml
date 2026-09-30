@@ -54,6 +54,9 @@ jobs:
           node --check astralis-motion-restore.js
           node --check constellation-lock.js
           node --check thoughts-of-day.js
+          node --input-type=module --check < galaxy-stardate.js
+          node --input-type=module --check < functions/api/stardate.js
+          node --test tests/stardate.test.mjs
           node --test tests/constellation-lock.test.mjs
           node --input-type=module --check < functions/_middleware.js
 

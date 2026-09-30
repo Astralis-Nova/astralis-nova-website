@@ -710,6 +710,7 @@
 
 
   </style>
+  <link rel="stylesheet" href="/galaxy-stardate.css?v=1">
   <link rel="stylesheet" href="/starman-roadster.css?v=5">
   <link rel="stylesheet" href="/pyramid-home.css?v=10">
   <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.23.1/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.4.0"></script>
@@ -772,6 +773,12 @@
         </div>
       </div>
       <div class="top-area">
+        <aside class="galaxy-stardate" id="galaxyStardate" aria-label="Stardate and Arizona time" title="Earth Stardate: year and day of the year. Advances at midnight in Phoenix, Arizona.">
+          <span class="galaxy-stardate-label">STARDATE</span>
+          <time class="galaxy-stardate-value" id="galaxyStardateValue">—</time>
+          <div class="galaxy-stardate-earth"><span>ARIZONA · MST</span><time id="galaxyArizonaTime">—</time></div>
+          <time class="galaxy-stardate-date" id="galaxyArizonaDate">Synchronizing…</time>
+        </aside>
         <h3>🔥 TOP SONGS</h3>
         <div class="feature-grid" id="features"></div>
       </div>
@@ -1751,6 +1758,7 @@
   <script src="constellation-lock.js?v=20260925constellation1" defer></script>
   <script src="thoughts-of-day.js?v=20260925constellation1" defer></script>
   <script src="/pyramid-home.js?v=13" defer></script>
+  <script type="module" src="/galaxy-stardate.js?v=1"></script>
   <script src="/starman-roadster.js?v=4" defer></script>
   <script src="astralis-celestial-drift.js"></script>
 </body>
