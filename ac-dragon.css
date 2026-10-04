@@ -1,14 +1,16 @@
-/* The restored dragon sits beside the AC Worlds title. */
-.hero .ac-dragon-emblem{position:absolute;top:30px;right:0;width:clamp(180px,28vw,330px);margin:0;z-index:2;mix-blend-mode:screen}
-.ac-dragon-art{aspect-ratio:6/5}
-.ac-dragon-art img,.ac-dragon-art video{display:block;width:100%;height:100%;object-fit:contain}
-.ac-dragon-emblem [hidden]{display:none}
-#acDragonToggle{position:absolute;right:8%;bottom:3%;display:grid;place-items:center;width:34px;height:34px;padding:8px;border:1px solid #b9935770;border-radius:50%;background:#080e18cc;color:#efd6a9;cursor:pointer;opacity:.7}
-#acDragonToggle:hover,#acDragonToggle:focus-visible{opacity:1;border-color:#edc987}
+/* A two-winged dragon flies around the viewport without catching clicks. */
+.hero .ac-dragon-emblem{position:absolute;top:30px;right:0;width:clamp(180px,28vw,290px);margin:0;z-index:25;pointer-events:none}
+.ac-dragon-art{aspect-ratio:1}
+.ac-dragon-art img,.ac-dragon-art canvas{display:block;width:100%;height:100%;object-fit:contain}
+.ac-dragon-emblem [hidden],#acDragonToggle[hidden]{display:none}
+.ac-dragon-emblem[data-flying="true"]{position:fixed;inset:0 auto auto 0;width:clamp(110px,20vw,250px);margin:0;z-index:25;pointer-events:none;transform-origin:center;will-change:transform}
+#acDragonToggle{position:fixed;right:14px;top:80px;z-index:31;display:grid;place-items:center;width:36px;height:36px;padding:9px;border:1px solid #b9935770;border-radius:50%;background:#080e18eb;color:#efd6a9;cursor:pointer;box-shadow:0 2px 10px #0005}
+#acDragonToggle:hover,#acDragonToggle:focus-visible{border-color:#edc987;background:#18202b}
 #acDragonToggle svg{width:16px;height:16px;fill:currentColor}
 .ac-dragon-pause{display:none}
 #acDragonToggle[data-playing="true"] .ac-dragon-play{display:none}
 #acDragonToggle[data-playing="true"] .ac-dragon-pause{display:block}
 @media(max-width:760px){.hero .ac-dragon-emblem{top:66px;width:clamp(100px,30vw,180px)}}
-@media(max-width:440px){.hero .ac-dragon-emblem{top:68px;right:-4px}#acDragonToggle{width:30px;height:30px;padding:7px;right:0;bottom:-8px}}
+@media(max-width:440px){.hero .ac-dragon-emblem{top:68px;right:-4px}}
 @media(max-width:360px){.hero .ac-dragon-emblem{width:90px;right:-8px}}
+@media(max-width:700px){#acDragonToggle{top:16px;z-index:35}}
