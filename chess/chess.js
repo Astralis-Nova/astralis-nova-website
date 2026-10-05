@@ -1,9 +1,6 @@
-import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
+import { Chess } from './vendor/chess.js';
 
-const CORE_URLS=[
-  'https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@f4ed377ed33cf21e28e47fcb0318021fe51af20e/chess/chess.js',
-  'https://cdn.statically.io/gh/Astralis-Nova/astralis-nova-website/f4ed377ed33cf21e28e47fcb0318021fe51af20e/chess/chess.js'
-];
+const CORE_URLS=['./legacy-core.js?v=20261005'];
 const nativeFetch=window.fetch.bind(window);
 const VALUES={p:1,n:3.2,b:3.35,r:5,q:9.2,k:0};
 let actualGame=null,creatorToken=null,aiBusy=false,aiTimer=null,generation=0,lastRevision=-1,handoff=false,decorateTimer=null;

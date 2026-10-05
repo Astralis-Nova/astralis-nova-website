@@ -1,4 +1,4 @@
-import{Chess}from'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
+import{Chess}from'./vendor/chess.js';
 import{createPiece}from'./pieces.js';
 import{PIECE_NAMES,makeCaptureIntent,duelResolution,squareFromPoint,defenderWinFen}from'./combat-core.js';
 import{AstralisCombatScene}from'./combat-scene.js';

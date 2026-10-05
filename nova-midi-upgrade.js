@@ -4,7 +4,7 @@
 
   const midis=[
     {src:'/Audio/goodvib.mid',title:'Good Vibrations'},
-    {src:'/Audio/turnyoureyes.mid',title:'Turn Your Eyes'},
+    {src:'/Audio/TurnYourEyes.mid',title:'Turn Your Eyes'},
     {src:'/Audio/angelswatching.mid',title:'Angels Watching'}
   ];
   const pick=a=>a[Math.floor(Math.random()*a.length)];

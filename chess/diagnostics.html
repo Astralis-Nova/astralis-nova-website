@@ -112,19 +112,19 @@
     row('Pointer Events',window.PointerEvent?'pass':'fail',window.PointerEvent?'supported':'missing');
     row('CSS.escape',window.CSS&&CSS.escape?'pass':'warn',window.CSS&&CSS.escape?'supported':'fallback required');
     row('Dynamic import syntax','warn','testing');
-    await fetchTest('Live chess HTML','./index.html','coordinate-guide.js?v=17');
-    await fetchTest('Main chess controller','./chess.js','CORE_URLS');
-    await fetchTest('Coordinate guide','./coordinate-guide.js','touch-bridge.js?v=17');
+    await fetchTest('Live chess HTML','./index.html','chess-combat.js?v=');
+    await fetchTest('Main chess controller','./chess-combat.js','startRandomCampaign');
+    await fetchTest('Coordinate guide','./coordinate-guide.js','safe-mode-link');
     await fetchTest('Touch bridge','./touch-bridge.js','Touch bridge v');
     await fetchTest('Move repair bridge','./move-repair.js','repairedChessFetch');
     await fetchTest('Tri-Deck engine','./trideck-engine.js','TRI_STATE_VERSION');
     await fetchTest('Piece renderer','./pieces.js','createPiece');
 
     try{
-      const mod=await import('https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm?diag='+Date.now());
+      const mod=await import('./vendor/chess.js?diag='+Date.now());
       const game=new mod.Chess();const move=game.move({from:'e2',to:'e4'});
-      const ok=Boolean(move&&move.to==='e4');row('Remote chess engine',''+(ok?'pass':'fail'),ok?'e2 → e4 legal':'move failed');line('Chess engine import',{ok,move:move?.san,fen:game.fen()});
-    }catch(error){row('Remote chess engine','fail',error.message);line('Chess engine import failed',error.message)}
+      const ok=Boolean(move&&move.to==='e4');row('Local chess engine',''+(ok?'pass':'fail'),ok?'e2 → e4 legal':'move failed');line('Chess engine import',{ok,move:move?.san,fen:game.fen()});
+    }catch(error){row('Local chess engine','fail',error.message);line('Chess engine import failed',error.message)}
 
     try{
       if('serviceWorker' in navigator){

@@ -29,6 +29,11 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Validate site resources and audio regressions
+        run: |
+          python scripts/check-site-resources.py
+          node --test tests/site-audit.test.mjs tests/ac-jukebox.test.cjs
+
       - name: Validate dragon transformation and flight
         run: |
           node --check ac-dragon.js

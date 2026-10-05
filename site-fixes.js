@@ -116,6 +116,14 @@
 
     player.volume = 0.8;
     let activeIndex = -1;
+    const backgroundAudio = document.getElementById("siteAudio");
+
+    // The catalog and background dock must not play over each other.
+    const pauseBackground = () => {
+      backgroundAudio?.pause();
+      try { localStorage.setItem("astralisNovaMusicPreference", "paused"); } catch {}
+    };
+    backgroundAudio?.addEventListener("play", () => player.pause());
 
     const updateButtons = () => {
       document.querySelectorAll(".play[data-song-index]").forEach((button) => {
@@ -149,6 +157,7 @@
         return;
       }
 
+      pauseBackground();
       const audioUrl = new URL(encodeAudioPath(song.audio), window.location.origin).href;
       activeIndex = index;
       directLink.href = audioUrl;
@@ -199,6 +208,7 @@
     );
 
     player.addEventListener("playing", () => {
+      pauseBackground();
       const song = typeof songs !== "undefined" ? songs[activeIndex] : null;
       status.textContent = song ? `Now playing: ${song.title}` : "Now playing";
       updateButtons();

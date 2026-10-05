@@ -5,7 +5,7 @@
   if (!wrap) return;
 
   const STORM = 'https://upload.wikimedia.org/wikipedia/commons/b/b2/Stormcloud.jpg';
-  const RAINBOW = 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/The_rainbow.jpg/768px-The_rainbow.jpg';
+  const RAINBOW = '/assets/rainbow-promise-photo.webp';
   const ARK_TEXTURE = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Ark_van_Noach_in_Dordrecht%2C_Noah%27s_Ark_replica_%28public_domain%29.jpg/1280px-Ark_van_Noach_in_Dordrecht%2C_Noah%27s_Ark_replica_%28public_domain%29.jpg';
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -159,7 +159,7 @@
     </div>
     <div class="rp-vapor"></div>
     <button class="rp-sound-toggle" type="button" aria-pressed="false" aria-label="Turn ambient sound on">Sound Off</button>
-    <div class="rp-credit">Storm and Ark texture: public domain/CC0 via Wikimedia Commons<br>Rainbow: Dietmar Rabich, CC BY-SA 4.0</div>
+    <div class="rp-credit">Storm and Ark texture: public domain/CC0 via Wikimedia Commons<br>Rainbow: <a href="https://commons.wikimedia.org/wiki/File:Double-alaskan-rainbow.jpg" target="_blank" rel="noopener">Eric Rolph</a>, <a href="https://creativecommons.org/licenses/by-sa/2.5/" target="_blank" rel="noopener">CC BY-SA 2.5</a> · resized, cropped and blended</div>
     <div class="rp-caption"><div><strong>The ark moves through living water as the promise gathers.</strong><span>Deep blue waves roll beneath the reconstructed wooden ark while foam, reflection, warm light, rain, and the emerging rainbow turn the storm toward hope.</span></div><div class="rp-tag">Living Covenant</div></div>`;
 
   const rainbow = wrap.querySelector('.rp-rainbow-photo');

@@ -1,4 +1,4 @@
-import { Chess } from 'https://cdn.jsdelivr.net/npm/chess.js@1.4.0/+esm';
+import { Chess } from './vendor/chess.js';
 
 const BUILD='v29';
 const LOCAL_KEY='novaChessLocalV20';

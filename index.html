@@ -1411,8 +1411,9 @@
       musicStatus.textContent=message;
     }
 
-    const savedVolume=Number(readStorage(MUSIC_VOLUME_KEY));
-    if(Number.isFinite(savedVolume)&&savedVolume>=0&&savedVolume<=1){
+    const savedVolumeValue=readStorage(MUSIC_VOLUME_KEY);
+    const savedVolume=Number(savedVolumeValue);
+    if(savedVolumeValue!==null&&savedVolumeValue.trim()!==""&&Number.isFinite(savedVolume)&&savedVolume>=0&&savedVolume<=1){
       musicVolume.value=String(savedVolume);
     }
     audio.volume=Number(musicVolume.value);
