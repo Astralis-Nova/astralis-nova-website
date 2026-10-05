@@ -42,6 +42,9 @@ jobs:
           node --check our-new-star.js
           node --check realistic-orbit.js
           node --check astralis-celestial-drift.js
+          node --check astralis-celestial-drift-core.js
+          node --check nova-guide.js
+          node --check nova-guide-core.js
           node --check astralis-ai-upgrades.js
           node --check astralis-stragglers.js
           node --check realistic-galaxy-upgrade.js

@@ -26,7 +26,6 @@
     loadScript('/nova-rag.js?v=20260908f','novaRag');
     loadScript('/nova-voice-uk.js?v=20260909a','novaVoiceUK');
     loadScript('/nova-autonomy.js?v=20260908a','novaAutonomy');
-    loadScript('/nova-personality-sparks.js?v=20260908a','novaPersonalitySparks');
     loadScript('/nova-capabilities.js?v=20260908a','novaCapabilities');
     loadScript('/nova-owner-console.js?v=20260908a','novaOwnerConsole');
     loadScript('/nova-leveling.js?v=20260908a','novaLeveling');
@@ -37,7 +36,7 @@
   if(window.__astralisNovaGuideV6){loadUpgrades();return}
 
   const core=document.createElement('script');
-  core.src='https://cdn.jsdelivr.net/gh/Astralis-Nova/astralis-nova-website@c4c7d4a338e5532fed8fe52d4e7a950c536ccd69/nova-guide.js';
+  core.src='/nova-guide-core.js?v=20261005';
   core.async=false;
   core.onload=loadUpgrades;
   core.onerror=loadUpgrades;
