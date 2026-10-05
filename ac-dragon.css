@@ -1,16 +1,23 @@
-/* A two-winged dragon flies around the viewport without catching clicks. */
-.hero .ac-dragon-emblem{position:absolute;top:30px;right:0;width:clamp(180px,28vw,290px);margin:0;z-index:25;pointer-events:none}
-.ac-dragon-art{aspect-ratio:1}
-.ac-dragon-art img,.ac-dragon-art canvas{display:block;width:100%;height:100%;object-fit:contain}
-.ac-dragon-emblem [hidden],#acDragonToggle[hidden]{display:none}
-.ac-dragon-emblem[data-flying="true"]{position:fixed;inset:0 auto auto 0;width:clamp(110px,20vw,250px);margin:0;z-index:25;pointer-events:none;transform-origin:center;will-change:transform}
-#acDragonToggle{position:fixed;right:14px;top:80px;z-index:31;display:grid;place-items:center;width:36px;height:36px;padding:9px;border:1px solid #b9935770;border-radius:50%;background:#080e18eb;color:#efd6a9;cursor:pointer;box-shadow:0 2px 10px #0005}
+/* The original emblem awakens, flies with fire, then returns to its resting form. */
+.hero .ac-dragon-emblem,.hero .ac-dragon-anchor{position:absolute;top:30px;right:0;width:clamp(180px,28vw,290px);margin:0;z-index:25;pointer-events:none}
+.ac-dragon-anchor{aspect-ratio:1;visibility:hidden}
+.ac-dragon-stage{position:fixed;inset:0;overflow:hidden;contain:paint;z-index:25;pointer-events:none}
+.ac-dragon-art{position:relative;aspect-ratio:1;isolation:isolate;--dragon-aura:0}
+.ac-dragon-art img,.ac-dragon-art #acDragonCanvas{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain}
+.ac-dragon-art img{z-index:2}
+#acDragonCanvas{z-index:3}
+.ac-dragon-emblem [hidden],#acDragonToggle[hidden]{display:none!important}
+.ac-dragon-emblem[data-flying="true"]{position:fixed;inset:0 auto auto 0;margin:0;z-index:25;pointer-events:none;transform-origin:center;will-change:transform}
+.ac-dragon-aura{position:absolute;inset:-10%;z-index:1;border-radius:50%;opacity:var(--dragon-aura);background:radial-gradient(ellipse,#fff2c955 0%,#e4b45144 20%,#b466ed66 39%,#7428cf33 54%,transparent 70%);filter:blur(7px);transform:scale(calc(.8 + var(--dragon-aura)*.3));pointer-events:none}
+.ac-dragon-aura:after{content:"";position:absolute;inset:12%;border:2px solid #ecd29cc0;border-radius:50%;box-shadow:0 0 22px #d886ff,0 0 42px #a336df88,inset 0 0 24px #ba69ee88;transform:scale(calc(.65 + var(--dragon-aura)*.4))}
+.ac-dragon-art .ac-dragon-fire{position:absolute;left:0;top:-25%;display:block;width:200%;height:150%;z-index:4;pointer-events:none}
+#acDragonToggle{position:fixed;right:14px;top:80px;z-index:31;display:grid;place-items:center;width:40px;height:40px;padding:10px;border:1px solid #b9935770;border-radius:50%;background:#080e18eb;color:#efd6a9;cursor:pointer;box-shadow:0 2px 10px #0005}
 #acDragonToggle:hover,#acDragonToggle:focus-visible{border-color:#edc987;background:#18202b}
 #acDragonToggle svg{width:16px;height:16px;fill:currentColor}
 .ac-dragon-pause{display:none}
 #acDragonToggle[data-playing="true"] .ac-dragon-play{display:none}
 #acDragonToggle[data-playing="true"] .ac-dragon-pause{display:block}
-@media(max-width:760px){.hero .ac-dragon-emblem{top:66px;width:clamp(100px,30vw,180px)}}
-@media(max-width:440px){.hero .ac-dragon-emblem{top:68px;right:-4px}}
-@media(max-width:360px){.hero .ac-dragon-emblem{width:90px;right:-8px}}
+@media(max-width:760px){.hero .ac-dragon-emblem,.hero .ac-dragon-anchor{top:66px;width:clamp(100px,30vw,180px)}}
+@media(max-width:440px){.hero .ac-dragon-emblem,.hero .ac-dragon-anchor{top:68px;right:-4px}}
+@media(max-width:360px){.hero .ac-dragon-emblem,.hero .ac-dragon-anchor{width:90px;right:-8px}}
 @media(max-width:700px){#acDragonToggle{top:16px;z-index:35}}

@@ -29,6 +29,11 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Validate dragon transformation and flight
+        run: |
+          node --check ac-dragon.js
+          node --test tests/ac-dragon.test.cjs
+
       - name: Validate homepage runtime
         run: |
           node --check astralis-performance-loader.js
