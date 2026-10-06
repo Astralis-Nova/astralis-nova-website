@@ -5,21 +5,17 @@
   if (!scene || scene.dataset.ready) return;
   scene.dataset.ready = 'true';
   const canvas = scene.querySelector('canvas');
-  const button = scene.querySelector('button');
+  const button = document.getElementById('dustDevilToggle');
   const ctx = canvas.getContext('2d');
   if (!ctx) {
     button.hidden = true;
     canvas.hidden = true;
-    const fallback = document.createElement('p');
-    fallback.className = 'dust-devil-fallback';
-    fallback.textContent = 'The dust devil animation needs a browser with Canvas support.';
-    scene.appendChild(fallback);
+    scene.hidden = true;
     return;
   }
 
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let paused = motion.matches;
-  let inView = true;
   let width = 0, height = 0, frame = 0, previous = 0, time = 0;
   const TAU = Math.PI * 2;
   // A shared soft dust stamp keeps the animation light on mobile and older GPUs.
@@ -56,9 +52,21 @@
       fade:Math.min(1,rise*7)*Math.pow(1-rise,.55), rise
     };
   };
+  const roam = () => {
+    // Stay in the visible page as visitors scroll, with room for the navigation and control.
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const margin = Math.min(10,Math.max(0,(viewportWidth-width)/2));
+    const top = Math.min(76,Math.max(0,viewportHeight-height));
+    const travelX = Math.max(0,viewportWidth-width-margin*2);
+    const travelY = Math.max(0,viewportHeight-height-top-68);
+    const x = margin+travelX*(.5+.5*Math.sin(time*.11+.85));
+    const y = top+travelY*(.5+.5*Math.sin(time*.079-1.05));
+    scene.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0)`;
+  };
   const paint = () => {
     ctx.clearRect(0,0,width,height);
-    const scale = Math.min(width/430,(height-92)/330);
+    const scale = Math.min(width/430,(height-32)/330);
     const center = width*.5+Math.sin(time*.22)*width*.035;
     const ground = height-24;
     ctx.save();
@@ -93,17 +101,18 @@
     ctx.restore();
     ctx.globalAlpha = 1;
   };
-  const canRun = () => !paused && inView && !document.hidden;
+  const canRun = () => !paused && !document.hidden;
   const tick = now => {
     frame = 0;
     if (!canRun()) { previous = 0; return; }
     if (previous) time += Math.min((now-previous)/1000,.05);
     previous = now;
+    roam();
     paint();
     frame = requestAnimationFrame(tick);
   };
   const sync = () => {
-    button.textContent = paused ? 'Play swirl' : 'Pause swirl';
+    button.textContent = paused ? 'Play dust devil' : 'Pause dust devil';
     button.setAttribute('aria-pressed',String(paused));
     button.setAttribute('aria-label',paused ? 'Play dust devil animation' : 'Pause dust devil animation');
     if (canRun() && !frame) frame = requestAnimationFrame(tick);
@@ -116,6 +125,7 @@
     canvas.width = Math.round(width*ratio);
     canvas.height = Math.round(height*ratio);
     ctx.setTransform(ratio,0,0,ratio,0,0);
+    roam();
     paint();
   };
   button.addEventListener('click',() => { paused = !paused; sync(); });
@@ -123,15 +133,8 @@
   if (motion.addEventListener) motion.addEventListener('change',onMotion);
   else if (motion.addListener) motion.addListener(onMotion);
   document.addEventListener('visibilitychange',sync);
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(entries => {
-      inView = entries[0].isIntersecting;
-      sync();
-    },{rootMargin:'80px'});
-    observer.observe(scene);
-  }
   if ('ResizeObserver' in window) new ResizeObserver(resize).observe(canvas);
-  else window.addEventListener('resize',resize,{passive:true});
+  window.addEventListener('resize',resize,{passive:true});
   resize();
   sync();
 })();

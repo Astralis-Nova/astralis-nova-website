@@ -1,9 +1,7 @@
-.dust-devil-scene{position:relative;margin:8px auto 22px;overflow:hidden;border:1px solid rgba(240,188,104,.3);border-radius:20px;background:radial-gradient(ellipse at 50% 100%,#342619 0%,#171c1b 46%,#091416 100%);isolation:isolate}
-.dust-devil-scene canvas{display:block;width:100%;height:clamp(330px,43vw,480px);pointer-events:none}
-.dust-devil-caption{position:absolute;top:22px;left:24px;right:24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;z-index:1}
-.dust-devil-caption strong{display:block;font-size:clamp(1.3rem,3vw,1.9rem);color:#ffe0ab}
-.dust-devil-caption span{display:block;margin-top:6px;color:#d1c1a8;font-size:.875rem;line-height:1.5}
-.dust-devil-toggle{flex:none;border:1px solid rgba(240,188,104,.55);border-radius:999px;padding:10px 15px;background:rgba(5,12,13,.85);color:#ffe0ab;font:700 .875rem/1.4 system-ui,sans-serif;cursor:pointer;min-height:44px}
+/* Free-floating dust only: no panel, backdrop or reserved space in the field log. */
+.dust-devil-scene{position:fixed;top:0;left:0;width:clamp(220px,28vw,340px);height:clamp(260px,34vw,380px);margin:0;z-index:18;pointer-events:none;contain:layout paint;will-change:transform;opacity:.88}
+.dust-devil-scene canvas{display:block;width:100%;height:100%;pointer-events:none}
+.dust-devil-toggle{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:22;border:1px solid rgba(240,188,104,.55);border-radius:999px;padding:10px 15px;background:rgba(5,12,13,.9);color:#ffe0ab;font:700 .875rem/1.4 system-ui,sans-serif;cursor:pointer;min-height:44px}
 .dust-devil-toggle:hover,.dust-devil-toggle:focus-visible{border-color:#ffe0ab;background:#332719;outline:2px solid #ffe0ab;outline-offset:3px}
-.dust-devil-fallback{padding:100px 24px 30px;color:#d1c1a8}
-@media(max-width:620px){.dust-devil-caption{top:18px;left:18px;right:18px;gap:10px}.dust-devil-caption span{max-width:180px}.dust-devil-toggle{padding:9px 12px}.dust-devil-scene canvas{height:380px}}
+@media(max-width:620px){.dust-devil-scene{width:210px;height:270px;opacity:.8}.dust-devil-toggle{right:12px;bottom:max(12px,env(safe-area-inset-bottom));padding:9px 12px}}
+@media(max-height:400px){.dust-devil-scene{width:170px;height:190px}}
