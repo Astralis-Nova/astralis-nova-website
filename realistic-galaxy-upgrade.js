@@ -2,8 +2,9 @@
   "use strict";
 
   const STYLE_ID = "astralisRealisticGalaxyStyles";
-  const WIDTH = 960;
-  const HEIGHT = 720;
+  const VERSION = "20261007wide";
+  const SIZE = 1280;
+  const CENTER = SIZE / 2;
 
   function installStyles() {
     if (document.getElementById(STYLE_ID)) return;
@@ -13,83 +14,49 @@
       .hero{overflow:hidden;isolation:isolate}
       .hero-inner{position:relative;z-index:3}
       .astralis-hero-galaxy.realistic-galaxy{
-        position:absolute!important;
-        z-index:2!important;
-        left:auto!important;
-        right:-5%!important;
-        top:-29%!important;
-        width:clamp(590px,66vw,1040px)!important;
-        aspect-ratio:4/3!important;
-        pointer-events:none!important;
-        opacity:.88!important;
-        mix-blend-mode:screen!important;
-        filter:saturate(1.06) contrast(1.10) brightness(1.02) drop-shadow(0 0 24px rgba(106,168,255,.18)) drop-shadow(0 0 56px rgba(193,105,255,.12))!important;
-        transform:none!important;
-        animation:none!important;
-        overflow:visible!important;
-        isolation:isolate!important;
+        position:absolute!important;z-index:2!important;left:auto!important;
+        right:-12%!important;top:-9%!important;
+        width:clamp(740px,83vw,1320px)!important;aspect-ratio:1.65!important;
+        pointer-events:none!important;opacity:.86!important;mix-blend-mode:screen!important;
+        filter:none!important;transform:none!important;animation:none!important;
+        overflow:visible!important;isolation:isolate!important;
       }
+      .astralis-hero-galaxy.realistic-galaxy::before,
+      .astralis-hero-galaxy.realistic-galaxy::after{content:none!important;display:none!important}
       .astralis-hero-galaxy.realistic-galaxy > img{display:none!important}
-      .astralis-hero-galaxy.realistic-galaxy canvas{
-        position:absolute;
-        inset:0;
-        display:block;
-        width:100%;
-        height:100%;
-        background:transparent;
+      /* Rotate the circular disk BEFORE projecting it: its inclination stays fixed. */
+      .astralis-galaxy-disk{
+        position:absolute;left:0;top:50%;width:100%;aspect-ratio:1;
+        transform:translateY(-50%) rotate(-14deg) scaleY(.56);
         transform-origin:50% 50%;
       }
       .astralis-galaxy-main{
-        z-index:2;
-        animation:astralisRealGalaxySpin 42s linear infinite,astralisRealGalaxyBreathe 10s ease-in-out infinite;
-        will-change:transform,filter,opacity;
-      }
-      .astralis-galaxy-core{
-        z-index:3;
-        opacity:.14;
-        mix-blend-mode:screen;
-        filter:brightness(1.20) saturate(1.08);
-        -webkit-mask-image:radial-gradient(circle at 50% 50%,black 0 34%,rgba(0,0,0,.72) 44%,transparent 61%);
-        mask-image:radial-gradient(circle at 50% 50%,black 0 34%,rgba(0,0,0,.72) 44%,transparent 61%);
-        animation:astralisRealGalaxyCounterSpin 24s linear infinite;
+        position:absolute;inset:0;display:block;width:100%;height:100%;
+        background:transparent;transform-origin:50% 50%;
+        animation:astralisRealGalaxySpin 68s linear infinite;
         will-change:transform;
       }
       .astralis-galaxy-glow{
-        position:absolute;
-        z-index:4;
-        inset:29%;
-        border-radius:50%;
-        background:radial-gradient(ellipse at center,rgba(255,251,224,.35) 0%,rgba(255,159,211,.16) 24%,rgba(125,116,255,.08) 49%,transparent 73%);
-        filter:blur(18px);
-        opacity:.54;
-        transform-origin:50% 50%;
-        animation:astralisRealGalaxyCorePulse 8s ease-in-out infinite;
+        position:absolute;inset:34%;border-radius:50%;
+        background:radial-gradient(ellipse,rgba(255,241,210,.19),rgba(255,202,159,.06) 38%,transparent 72%);
+        animation:astralisRealGalaxyCorePulse 13s ease-in-out infinite;
       }
-      @keyframes astralisRealGalaxySpin{
-        from{transform:rotate(0deg)}
-        to{transform:rotate(360deg)}
-      }
-      @keyframes astralisRealGalaxyCounterSpin{
-        from{transform:rotate(0deg) scale(.985)}
-        to{transform:rotate(-360deg) scale(.985)}
-      }
-      @keyframes astralisRealGalaxyBreathe{
-        0%,100%{opacity:.94;filter:brightness(.98) saturate(1.02)}
-        50%{opacity:1;filter:brightness(1.10) saturate(1.10)}
-      }
-      @keyframes astralisRealGalaxyCorePulse{
-        0%,100%{opacity:.40;transform:scale(.94)}
-        50%{opacity:.66;transform:scale(1.08)}
+      @keyframes astralisRealGalaxySpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+      @keyframes astralisRealGalaxyCorePulse{0%,100%{opacity:.5}50%{opacity:.8}}
+      html.astralis-page-hidden .realistic-galaxy *,
+      .astralis-hero-galaxy.realistic-galaxy.astralis-perf-paused *{animation-play-state:paused!important}
+      @media(max-width:1050px){
+        .astralis-hero-galaxy.realistic-galaxy{right:-24%!important;top:1%!important;width:1060px!important;opacity:.70!important}
       }
       @media(max-width:800px){
-        .astralis-hero-galaxy.realistic-galaxy{right:-34%!important;top:-12%!important;width:820px!important;opacity:.77!important}
+        .astralis-hero-galaxy.realistic-galaxy{right:-29%!important;top:1%!important;width:920px!important;opacity:.65!important}
       }
       @media(max-width:520px){
-        .astralis-hero-galaxy.realistic-galaxy{right:-70%!important;top:-3%!important;width:720px!important;opacity:.65!important;filter:saturate(1.02) contrast(1.08) brightness(.98) drop-shadow(0 0 18px rgba(106,168,255,.14))!important}
+        .astralis-hero-galaxy.realistic-galaxy{right:-43%!important;top:0!important;width:730px!important;opacity:.53!important}
+        .astralis-galaxy-disk{transform:translateY(-50%) rotate(-18deg) scaleY(.56)}
       }
       @media(prefers-reduced-motion:reduce){
-        .astralis-galaxy-main,.astralis-galaxy-core,.astralis-galaxy-glow{animation:none!important}
-        .astralis-galaxy-main{transform:rotate(-8deg)!important}
+        .astralis-galaxy-main,.astralis-galaxy-glow{animation:none!important}
       }
     `;
     document.head.appendChild(style);
@@ -107,245 +74,188 @@
   }
 
   function gaussian(random) {
-    const u = Math.max(random(), 1e-7);
-    const v = Math.max(random(), 1e-7);
-    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    return Math.sqrt(-2 * Math.log(Math.max(random(), 1e-7))) * Math.cos(2 * Math.PI * random());
   }
 
-  function spiralPath(ctx, offset, turns, radiusStart, radiusEnd, yScale, inwardShift = 0) {
-    ctx.beginPath();
-    const steps = 155;
-    for (let i = 0; i < steps; i += 1) {
-      const t = i / (steps - 1);
-      const theta = offset + turns * Math.PI * 2 * t;
-      const radius = radiusStart + (radiusEnd - radiusStart) * Math.pow(t, .88) + inwardShift;
-      const x = WIDTH * .52 + radius * Math.cos(theta);
-      const y = HEIGHT * .50 + radius * Math.sin(theta) * yScale;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
+  function cloudSprite(color) {
+    const sprite = document.createElement("canvas");
+    sprite.width = sprite.height = 64;
+    const ctx = sprite.getContext("2d");
+    if (!ctx) return null;
+    const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gradient.addColorStop(0, `rgba(${color},.65)`);
+    gradient.addColorStop(.25, `rgba(${color},.32)`);
+    gradient.addColorStop(.6, `rgba(${color},.08)`);
+    gradient.addColorStop(1, `rgba(${color},0)`);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 64, 64);
+    return sprite;
+  }
+
+  function armPoint(t, arm, random, spread = 1, angleOffset = 0) {
+    const radius = 62 + 464 * Math.pow(t, .86);
+    const angle = arm * Math.PI + 4.8 * t + .10 * Math.sin(t * 16 + arm) + angleOffset;
+    const scatter = (8 + 19 * t) * spread;
+    const r = radius + gaussian(random) * scatter;
+    const a = angle + gaussian(random) * .025 * spread;
+    return {x:CENTER + r * Math.cos(a), y:CENTER + r * Math.sin(a), t};
   }
 
   function drawGalaxy(canvas) {
     const ctx = canvas.getContext("2d", {alpha:true});
     if (!ctx) return false;
-    canvas.width = WIDTH;
-    canvas.height = HEIGHT;
-    const random = seededRandom(5202026);
-    const centerX = WIDTH * .52;
-    const centerY = HEIGHT * .50;
-    const yScale = .70;
-
-    ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.rotate(-8 * Math.PI / 180);
-    ctx.translate(-centerX, -centerY);
+    canvas.width = canvas.height = SIZE;
+    const random = seededRandom(20261007);
+    const clouds = [cloudSprite("194,214,241"), cloudSprite("147,185,235"), cloudSprite("229,221,201"), cloudSprite("230,158,186")];
+    const dust = cloudSprite("0,0,0");
+    if (clouds.some(sprite => !sprite) || !dust) return false;
     ctx.globalCompositeOperation = "screen";
 
-    const halo = ctx.createRadialGradient(centerX, centerY, 10, centerX, centerY, 420);
-    halo.addColorStop(0, "rgba(255,245,220,.48)");
-    halo.addColorStop(.16, "rgba(255,158,208,.28)");
-    halo.addColorStop(.42, "rgba(137,108,255,.15)");
-    halo.addColorStop(.72, "rgba(67,139,239,.07)");
-    halo.addColorStop(1, "rgba(10,6,30,0)");
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.scale(1, yScale);
-    ctx.translate(-centerX, -centerY);
+    const halo = ctx.createRadialGradient(CENTER, CENTER, 0, CENTER, CENTER, 550);
+    halo.addColorStop(0, "rgba(255,229,181,.34)");
+    halo.addColorStop(.20, "rgba(218,214,208,.19)");
+    halo.addColorStop(.49, "rgba(132,161,205,.08)");
+    halo.addColorStop(.83, "rgba(90,134,197,.025)");
+    halo.addColorStop(1, "rgba(90,134,197,0)");
     ctx.fillStyle = halo;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 430, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
+    ctx.fillRect(0, 0, SIZE, SIZE);
 
-    const armGradientA = ctx.createLinearGradient(130, 150, 870, 610);
-    armGradientA.addColorStop(0, "rgba(82,218,255,.12)");
-    armGradientA.addColorStop(.35, "rgba(125,130,255,.56)");
-    armGradientA.addColorStop(.68, "rgba(245,130,211,.60)");
-    armGradientA.addColorStop(1, "rgba(255,239,188,.24)");
-    const armGradientB = ctx.createLinearGradient(850, 130, 140, 630);
-    armGradientB.addColorStop(0, "rgba(91,220,255,.14)");
-    armGradientB.addColorStop(.36, "rgba(108,139,255,.54)");
-    armGradientB.addColorStop(.70, "rgba(237,122,207,.58)");
-    armGradientB.addColorStop(1, "rgba(255,232,183,.22)");
-
-    [0, Math.PI].forEach((offset, index) => {
-      const gradient = index ? armGradientB : armGradientA;
-      ctx.save();
-      ctx.filter = "blur(34px)";
-      ctx.strokeStyle = gradient;
-      ctx.lineWidth = 92;
-      ctx.lineCap = "round";
-      ctx.globalAlpha = .30;
-      spiralPath(ctx, offset, 1.08, 38, 435, yScale);
-      ctx.stroke();
-      ctx.restore();
-
-      ctx.save();
-      ctx.filter = "blur(13px)";
-      ctx.strokeStyle = gradient;
-      ctx.lineWidth = 46;
-      ctx.lineCap = "round";
-      ctx.globalAlpha = .48;
-      spiralPath(ctx, offset, 1.08, 42, 435, yScale);
-      ctx.stroke();
-      ctx.restore();
-
-      ctx.save();
-      ctx.filter = "blur(3px)";
-      ctx.strokeStyle = gradient;
-      ctx.lineWidth = 13;
-      ctx.lineCap = "round";
-      ctx.globalAlpha = .42;
-      spiralPath(ctx, offset, 1.08, 44, 430, yScale);
-      ctx.stroke();
-      ctx.restore();
-    });
-
-    [Math.PI * .53, Math.PI * 1.53].forEach(offset => {
-      ctx.save();
-      ctx.filter = "blur(11px)";
-      ctx.strokeStyle = "rgba(116,192,255,.25)";
-      ctx.lineWidth = 31;
-      ctx.lineCap = "round";
-      spiralPath(ctx, offset, .70, 145, 405, yScale);
-      ctx.stroke();
-      ctx.restore();
-    });
-
-    ctx.save();
-    ctx.globalCompositeOperation = "destination-out";
-    ctx.filter = "blur(5px)";
-    ctx.strokeStyle = "rgba(0,0,0,.44)";
-    ctx.lineWidth = 16;
-    ctx.lineCap = "round";
-    [0, Math.PI].forEach(offset => {
-      spiralPath(ctx, offset - .12, 1.08, 55, 426, yScale, -7);
-      ctx.stroke();
-    });
-    ctx.restore();
-    ctx.globalCompositeOperation = "screen";
-
-    const starColors = [
-      [245, 252, 255], [174, 229, 255], [206, 190, 255],
-      [255, 196, 232], [255, 240, 177]
-    ];
-
-    for (let armIndex = 0; armIndex < 2; armIndex += 1) {
-      const offset = armIndex * Math.PI;
-      for (let i = 0; i < 720; i += 1) {
-        const t = Math.pow(random(), .82);
-        const theta = offset + 1.08 * Math.PI * 2 * t + gaussian(random) * (.018 + .055 * t);
-        const radius = 43 + 392 * Math.pow(t, .88) + gaussian(random) * (6 + 18 * t);
-        const x = centerX + radius * Math.cos(theta);
-        const y = centerY + radius * Math.sin(theta) * yScale + gaussian(random) * (3 + 10 * t);
-        const color = starColors[Math.floor(random() * starColors.length)];
-        const size = random() < .055 ? 2.2 + random() * 2.2 : .45 + random() * 1.25;
-        const alpha = .24 + random() * .70;
-        ctx.fillStyle = `rgba(${color[0]},${color[1]},${color[2]},${alpha})`;
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fill();
-        if (size > 2.2) {
-          ctx.save();
-          ctx.filter = "blur(6px)";
-          ctx.globalAlpha = .36;
-          ctx.beginPath();
-          ctx.arc(x, y, size * 3.2, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        }
+    // Irregular luminous clouds, rather than smooth outlined spiral ribbons.
+    for (let arm = 0; arm < 2; arm += 1) {
+      for (let i = 0; i < 1550; i += 1) {
+        const t = random();
+        const p = armPoint(t, arm, random, 1.2);
+        const size = 18 + random() * 40 + 20 * t;
+        const density = .6 + .4 * Math.sin(t * 43 + arm * 2);
+        ctx.globalAlpha = (.06 + random() * .13) * density * (1 - .55 * t);
+        const sprite = t < .25 ? clouds[2] : clouds[random() < .55 ? 0 : 1];
+        ctx.drawImage(sprite, p.x - size / 2, p.y - size / 2, size, size);
+      }
+      // Fainter branching arms keep the outer disk asymmetric and feathered.
+      for (let i = 0; i < 360; i += 1) {
+        const t = .35 + random() * .62;
+        const p = armPoint(t, arm, random, 1.5, .46);
+        const size = 24 + random() * 35;
+        ctx.globalAlpha = .035 * (1 - t);
+        ctx.drawImage(clouds[1], p.x - size / 2, p.y - size / 2, size, size);
       }
     }
 
-    for (let i = 0; i < 320; i += 1) {
-      const angle = random() * Math.PI * 2;
-      const radius = 405 * Math.sqrt(random());
-      const x = centerX + radius * Math.cos(angle);
-      const y = centerY + radius * Math.sin(angle) * yScale;
-      const size = .35 + random() * .9;
-      ctx.fillStyle = `rgba(225,234,255,${.12 + random() * .38})`;
-      ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fill();
+    // Dust absorbs light along the inner edge of each arm. Ragged clouds avoid
+    // evenly spaced rings and allow the underlying space to show through.
+    ctx.globalCompositeOperation = "destination-out";
+    for (let arm = 0; arm < 2; arm += 1) {
+      for (let i = 0; i < 1600; i += 1) {
+        const t = .08 + random() * .86;
+        const p = armPoint(t, arm, random, .40, -.085);
+        const size = 8 + random() * 23;
+        ctx.globalAlpha = (.16 + random() * .28) * (1 - .45 * t);
+        ctx.drawImage(dust, p.x - size / 2, p.y - size / 2, size, size);
+      }
+    }
+    ctx.globalCompositeOperation = "screen";
+
+    // Fine individual stars blend into dense stellar populations at display size.
+    const starColors = ["235,242,253", "190,215,249", "161,198,239", "255,231,191"];
+    ctx.globalAlpha = 1;
+    for (let arm = 0; arm < 2; arm += 1) {
+      for (let i = 0; i < 6400; i += 1) {
+        const t = random();
+        const p = armPoint(t, arm, random, random() < .2 ? 2.6 : .85);
+        const size = .25 + random() * .75;
+        const alpha = (.13 + random() * .55) * (1 - .60 * Math.pow(t, 3));
+        const color = t < .24 ? starColors[3] : starColors[Math.floor(random() * 3)];
+        ctx.fillStyle = `rgba(${color},${alpha})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      // Small blue clusters and occasional rose emission nebulae.
+      for (let i = 0; i < 105; i += 1) {
+        const t = .22 + random() * .70;
+        const p = armPoint(t, arm, random, .8, .045);
+        const size = 8 + random() * 16;
+        ctx.globalAlpha = .18 + random() * .28;
+        ctx.drawImage(clouds[random() < .23 ? 3 : 1], p.x - size / 2, p.y - size / 2, size, size);
+      }
+      ctx.globalAlpha = 1;
     }
 
-    const bulge = ctx.createRadialGradient(centerX - 8, centerY - 7, 1, centerX, centerY, 145);
-    bulge.addColorStop(0, "rgba(255,255,242,1)");
-    bulge.addColorStop(.12, "rgba(255,247,201,.98)");
-    bulge.addColorStop(.34, "rgba(255,183,149,.82)");
-    bulge.addColorStop(.64, "rgba(239,112,194,.48)");
-    bulge.addColorStop(1, "rgba(116,89,255,0)");
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.scale(1.45, .72);
-    ctx.translate(-centerX, -centerY);
-    ctx.filter = "blur(8px)";
+    // Diffuse disk stars and the warm, densely packed older stellar bulge.
+    for (let i = 0; i < 2600; i += 1) {
+      const angle = random() * Math.PI * 2;
+      const radius = Math.min(555, Math.abs(gaussian(random)) * 170);
+      const x = CENTER + radius * Math.cos(angle);
+      const y = CENTER + radius * Math.sin(angle);
+      const warm = radius < 150;
+      ctx.fillStyle = `rgba(${warm ? "255,231,194" : "211,223,243"},${.08 + random() * (warm ? .36 : .20)})`;
+      ctx.fillRect(x, y, .5 + random() * .7, .5 + random() * .7);
+    }
+
+    const bulge = ctx.createRadialGradient(CENTER, CENTER, 0, CENTER, CENTER, 175);
+    bulge.addColorStop(0, "rgba(255,252,236,.99)");
+    bulge.addColorStop(.10, "rgba(255,243,214,.84)");
+    bulge.addColorStop(.28, "rgba(255,224,184,.46)");
+    bulge.addColorStop(.56, "rgba(230,192,157,.15)");
+    bulge.addColorStop(1, "rgba(210,183,162,0)");
     ctx.fillStyle = bulge;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 145, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.translate(centerX, centerY);
-    ctx.scale(1.5, .62);
-    ctx.translate(-centerX, -centerY);
-    ctx.filter = "blur(2px)";
-    ctx.fillStyle = "rgba(255,253,232,.98)";
-    ctx.beginPath();
-    ctx.ellipse(centerX, centerY, 35, 18, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.restore();
+    ctx.fillRect(0, 0, SIZE, SIZE);
+    // Fade every edge to transparency so no rotating rectangle can appear.
+    ctx.globalCompositeOperation = "destination-in";
+    const edge = ctx.createRadialGradient(CENTER, CENTER, 480, CENTER, CENTER, 603);
+    edge.addColorStop(0, "rgba(0,0,0,1)");
+    edge.addColorStop(.55, "rgba(0,0,0,.65)");
+    edge.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = edge;
+    ctx.fillRect(0, 0, SIZE, SIZE);
+    ctx.globalCompositeOperation = "source-over";
     return true;
   }
 
   function applyGalaxy() {
-    installStyles();
     const hero = document.querySelector(".hero");
     if (!hero) return false;
-
     let galaxy = hero.querySelector(".astralis-hero-galaxy");
-    if (!galaxy) {
-      galaxy = document.createElement("div");
-      galaxy.className = "astralis-hero-galaxy";
-      galaxy.setAttribute("aria-hidden", "true");
-      hero.appendChild(galaxy);
-    }
-    if (galaxy.dataset.realisticGalaxy === "true") return true;
-
+    if (galaxy?.dataset.galaxyVersion === VERSION) return true;
     const main = document.createElement("canvas");
     main.className = "astralis-galaxy-main";
     main.setAttribute("aria-hidden", "true");
+    // Keep the existing SVG fallback if this browser cannot draw a canvas.
     if (!drawGalaxy(main)) return false;
-
-    const core = document.createElement("canvas");
-    core.className = "astralis-galaxy-core";
-    core.width = WIDTH;
-    core.height = HEIGHT;
-    const coreContext = core.getContext("2d", {alpha:true});
-    if (coreContext) coreContext.drawImage(main, 0, 0);
-
+    installStyles();
+    if (!galaxy) {
+      galaxy = document.createElement("div");
+      galaxy.className = "astralis-hero-galaxy";
+      hero.appendChild(galaxy);
+    }
+    galaxy.setAttribute("aria-hidden", "true");
+    const disk = document.createElement("div");
+    disk.className = "astralis-galaxy-disk";
     const glow = document.createElement("span");
     glow.className = "astralis-galaxy-glow";
-    galaxy.replaceChildren(main, core, glow);
+    disk.append(main, glow);
+    galaxy.replaceChildren(disk);
     galaxy.classList.add("realistic-galaxy");
     galaxy.dataset.realisticGalaxy = "true";
+    galaxy.dataset.galaxyVersion = VERSION;
+    // Rasterize only once; the browser composites rotation without a draw loop.
+    if ("IntersectionObserver" in window) {
+      const visibility = new IntersectionObserver(entries => {
+        galaxy.classList.toggle("astralis-perf-paused", !entries[0].isIntersecting);
+      }, {rootMargin:"120px"});
+      visibility.observe(hero);
+    }
     return true;
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", applyGalaxy, {once:true});
-  } else {
-    applyGalaxy();
+  function boot() {
+    if (applyGalaxy()) return;
+    const observer = new MutationObserver(() => {
+      if (applyGalaxy()) observer.disconnect();
+    });
+    observer.observe(document.documentElement, {childList:true, subtree:true});
+    window.setTimeout(() => observer.disconnect(), 12000);
   }
-
-  const observer = new MutationObserver(() => {
-    if (applyGalaxy()) observer.disconnect();
-  });
-  observer.observe(document.documentElement, {childList:true, subtree:true});
-  window.setTimeout(() => observer.disconnect(), 12000);
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, {once:true});
+  else boot();
 })();
