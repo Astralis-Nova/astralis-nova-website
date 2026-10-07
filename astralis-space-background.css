@@ -1,0 +1,44 @@
+/* The homepage looks out into open space; all motion stays behind its controls. */
+body{background:#02040a}
+body::before{content:none!important;background:none!important}
+body::after{
+  background:linear-gradient(180deg,rgba(1,3,9,.04),rgba(1,3,9,.15)),
+    radial-gradient(ellipse at 12% 24%,rgba(31,60,106,.07),transparent 65%),
+    radial-gradient(ellipse at 90% 73%,rgba(75,43,94,.04),transparent 60%)!important;
+}
+.hero{background:transparent!important}
+.hero::before{background:linear-gradient(90deg,rgba(2,4,10,.68),rgba(2,4,10,.25) 38%,transparent 72%)!important}
+#astralisSpaceBackground{
+  position:fixed;inset:0;z-index:-2;overflow:hidden;
+  pointer-events:none;user-select:none;contain:strict;
+  background:radial-gradient(ellipse at 72% 20%,#080e1a 0,transparent 58%),#02040a;
+}
+#astralisSpaceBackground canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.astralis-space-asteroid{
+  position:absolute;left:0;top:0;width:var(--rock-size);aspect-ratio:2/3;
+  animation:astralisAsteroidPass var(--travel-time) linear infinite;
+  animation-delay:var(--travel-delay);will-change:transform;
+}
+.astralis-space-asteroid > span{
+  display:block;width:100%;height:100%;background-image:url('/assets/deep-space/asteroids.webp');
+  background-size:300% 200%;background-position:var(--atlas-x) var(--atlas-y);
+  background-repeat:no-repeat;transform-origin:center;
+  animation:astralisAsteroidTumble var(--spin-time) linear infinite;
+  animation-delay:var(--travel-delay);opacity:var(--rock-opacity);
+}
+@keyframes astralisAsteroidPass{
+  0%{transform:translate3d(var(--start-x),var(--start-y),0) scale(.87);opacity:0}
+  6%{opacity:1}94%{opacity:1}
+  100%{transform:translate3d(var(--end-x),var(--end-y),0) scale(1.12);opacity:0}
+}
+@keyframes astralisAsteroidTumble{from{transform:rotate(var(--rock-angle))}to{transform:rotate(calc(var(--rock-angle) + 360deg))}}
+html.astralis-page-hidden #astralisSpaceBackground *,
+#astralisSpaceBackground.space-motion-paused *{animation-play-state:paused!important}
+@media(max-width:700px){
+  .astralis-space-asteroid:nth-of-type(n+9){display:none}
+  .astralis-space-asteroid{width:calc(var(--rock-size) * .7)}
+}
+@media(prefers-reduced-motion:reduce){
+  #astralisSpaceBackground *{animation:none!important}
+  .astralis-space-asteroid{left:var(--rest-x);top:var(--rest-y);transform:none;opacity:.55}
+}

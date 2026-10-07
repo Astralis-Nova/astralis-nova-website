@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "20261007wide2";
+  const VERSION = "20261007space";
   const loaded = new Map();
 
   function loadScript(src, { module = false } = {}) {
