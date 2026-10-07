@@ -2,7 +2,7 @@
   "use strict";
 
   const STYLE_ID = "astralisRealisticGalaxyStyles";
-  const VERSION = "20261007wide";
+  const VERSION = "20261007wide2";
   const SIZE = 1280;
   const CENTER = SIZE / 2;
 
@@ -15,7 +15,7 @@
       .hero-inner{position:relative;z-index:3}
       .astralis-hero-galaxy.realistic-galaxy{
         position:absolute!important;z-index:2!important;left:auto!important;
-        right:-12%!important;top:-9%!important;
+        right:-12%!important;top:-44%!important;
         width:clamp(740px,83vw,1320px)!important;aspect-ratio:1.65!important;
         pointer-events:none!important;opacity:.86!important;mix-blend-mode:screen!important;
         filter:none!important;transform:none!important;animation:none!important;
