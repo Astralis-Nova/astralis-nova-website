@@ -38,7 +38,18 @@
     .rp-covenant-ring{position:absolute;left:50%;bottom:25%;width:min(450px,58%);height:138px;transform:translateX(-50%);z-index:13;border-radius:50%;opacity:.44;filter:blur(6px);border:2px solid rgba(255,247,207,.72);box-shadow:0 0 40px rgba(255,237,163,.5),inset 0 0 28px rgba(255,249,223,.32);animation:rpRing 7.4s ease-in-out infinite alternate}
     .rp-covenant-motes{position:absolute;left:18%;right:18%;bottom:19%;height:34%;z-index:14;opacity:.56;mix-blend-mode:screen;background-image:radial-gradient(circle,rgba(255,247,191,.9) 0 1px,transparent 1.7px),radial-gradient(circle,rgba(221,243,255,.8) 0 1px,transparent 1.8px);background-size:68px 64px,93px 86px;background-position:0 0,27px 18px;-webkit-mask-image:radial-gradient(ellipse at center,#000,transparent 76%);mask-image:radial-gradient(ellipse at center,#000,transparent 76%);animation:rpMotes 8s ease-in-out infinite alternate}
 
-    .rp-birds{position:absolute;inset:0;z-index:17;pointer-events:none;overflow:hidden}.rp-bird{--bird-color:rgba(226,237,241,.82);position:absolute;left:-12%;width:24px;height:12px;color:var(--bird-color);filter:drop-shadow(0 2px 3px rgba(0,0,0,.38));animation:rpBirdFlight 20s linear infinite;will-change:transform}.rp-bird::before,.rp-bird::after{content:"";position:absolute;top:4px;width:13px;height:7px;border-top:2px solid currentColor;border-radius:80% 80% 0 0;transform-origin:100% 50%;animation:rpBirdWingLeft .8s ease-in-out infinite alternate}.rp-bird::before{right:50%;transform:rotate(18deg)}.rp-bird::after{left:50%;transform-origin:0 50%;transform:rotate(-18deg);animation-name:rpBirdWingRight}.rp-bird-body{position:absolute;left:9px;top:5px;width:7px;height:2px;border-radius:999px;background:currentColor;opacity:.82}.rp-bird-raven{--bird-color:rgba(28,38,45,.88);top:26%;animation-duration:17s;animation-delay:-4s;scale:.9}.rp-bird-dove-one{top:34%;animation-duration:22s;animation-delay:-13s;scale:.78}.rp-bird-dove-two{--bird-color:rgba(239,244,241,.86);top:19%;animation-duration:26s;animation-delay:-8s;scale:.72}.rp-bird-raven::before,.rp-bird-raven::after{animation-duration:.68s}.rp-bird-dove-two::before,.rp-bird-dove-two::after{animation-duration:.92s}.rp-olive-leaf{position:absolute;left:15px;top:7px;width:8px;height:1px;background:rgba(116,154,86,.88);transform:rotate(18deg);transform-origin:left center}.rp-olive-leaf::before,.rp-olive-leaf::after{content:"";position:absolute;width:3px;height:2px;border-radius:100% 0 100% 0;background:rgba(139,176,103,.92)}.rp-olive-leaf::before{left:2px;top:-2px;transform:rotate(-22deg)}.rp-olive-leaf::after{left:5px;top:1px;transform:rotate(155deg)}
+    .rp-birds{position:absolute;inset:0;z-index:27;pointer-events:none;overflow:hidden;perspective:900px}
+    .rp-bird{position:absolute;left:0;top:0;width:clamp(160px,22vw,240px);height:clamp(90px,12.4vw,135px);transform-origin:50% 50%;will-change:transform,opacity;pointer-events:none}
+    .rp-bird::before,.rp-bird::after{display:none}
+    .rp-bird svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 3px 3px rgba(0,0,0,.22))}
+    .rp-bird-shape{transform-origin:50% 50%;will-change:transform}
+    .rp-wing{transform-box:view-box;will-change:transform}
+    .rp-wing-left{transform-origin:46% 46%}.rp-wing-right{transform-origin:54% 46%}
+    .rp-bird-raven{--feather:#263239;--feather-light:#52636b;--feather-shadow:#101c24;--feather-line:#839198;--bird-eye:#bda478;--bird-beak:#313b40}
+    .rp-bird-dove-one,.rp-bird-dove-two{--feather:#eef0e7;--feather-light:#fffdf3;--feather-shadow:#9caeb4;--feather-line:#b5c2c2;--bird-eye:#272d32;--bird-beak:#afa69b}
+    .rp-bird-olive{transform-origin:50% 35%}
+    @media(max-width:700px){.rp-bird{width:160px;height:90px}}
+
 
     .rp-ark-group{position:absolute;left:50%;bottom:21%;width:min(500px,58%);height:238px;transform:translateX(-50%);z-index:18;filter:drop-shadow(0 17px 23px rgba(0,0,0,.58)) drop-shadow(0 0 16px rgba(255,194,88,.3));animation:rpArkBob 5.6s ease-in-out infinite;will-change:transform}.rp-ark-group::after{content:"";position:absolute;left:1%;right:1%;bottom:17px;height:122px;z-index:9;clip-path:polygon(2% 18%,8% 6%,91% 6%,99% 28%,95% 58%,84% 83%,17% 84%,7% 65%);box-shadow:inset 0 0 0 2px rgba(255,207,126,.3),0 0 20px rgba(255,187,73,.2);pointer-events:none}
     .rp-ark-hull{position:absolute;left:0;right:0;bottom:18px;height:116px;z-index:3;clip-path:polygon(2% 18%,8% 6%,91% 6%,99% 28%,95% 58%,84% 83%,17% 84%,7% 65%);overflow:hidden;background:radial-gradient(ellipse at 50% 4%,rgba(255,223,165,.24),transparent 42%),repeating-linear-gradient(0deg,rgba(255,230,180,.07) 0 2px,transparent 2px 11px),linear-gradient(180deg,#97643d 0%,#6f4427 40%,#3b2415 78%,#1c120c 100%);box-shadow:inset 0 10px 18px rgba(255,218,154,.12),inset 0 -22px 28px rgba(7,4,2,.5)}.rp-ark-hull::before{content:"";position:absolute;inset:-15%;background:url('${ARK_TEXTURE}') center 82%/145% auto no-repeat;opacity:.16;filter:sepia(.75) saturate(.7) contrast(1.25) brightness(.78);mix-blend-mode:overlay}.rp-ark-hull::after{content:"";position:absolute;left:5%;right:5%;top:8%;height:7px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(255,233,190,.82) 42%,rgba(255,196,98,.48) 66%,transparent);filter:blur(1px);animation:rpHullGleam 4.8s ease-in-out infinite alternate}
@@ -73,9 +84,6 @@
     @keyframes rpHalo{from{opacity:.56;transform:translateX(-50%) scale(.93)}to{opacity:.9;transform:translateX(-50%) scale(1.07)}}
     @keyframes rpRing{from{opacity:.27;transform:translateX(-50%) scale(.95)}to{opacity:.58;transform:translateX(-50%) scale(1.07)}}
     @keyframes rpMotes{from{transform:translate3d(-2%,3%,0);opacity:.36}to{transform:translate3d(2%,-3%,0);opacity:.7}}
-    @keyframes rpBirdFlight{0%{transform:translate3d(-90px,4px,0)}18%{transform:translate3d(calc(22vw + 80px),-5px,0)}44%{transform:translate3d(calc(52vw + 100px),7px,0)}72%{transform:translate3d(calc(82vw + 120px),-3px,0)}100%{transform:translate3d(calc(112vw + 170px),5px,0)}}
-    @keyframes rpBirdWingLeft{from{transform:rotate(27deg) scaleY(.72)}to{transform:rotate(-8deg) scaleY(1.08)}}
-    @keyframes rpBirdWingRight{from{transform:rotate(-27deg) scaleY(.72)}to{transform:rotate(8deg) scaleY(1.08)}}
     @keyframes rpArkBob{0%,100%{transform:translateX(-50%) translateY(0) rotate(-.32deg)}50%{transform:translateX(-50%) translateY(8px) rotate(.36deg)}}
     @keyframes rpHullGleam{from{transform:translateX(-8%);opacity:.42}to{transform:translateX(8%);opacity:.9}}
     @keyframes rpWindowGlow{from{filter:brightness(.9);opacity:.84}to{filter:brightness(1.28);opacity:1}}
@@ -110,7 +118,7 @@
       .rp-covenant-motion main{padding-top:26px}.rp-covenant-motion .hero{padding:16px 0 24px}
       .rp-covenant-motion .rainbow-wrap{min-height:560px;height:min(680px,150vw);border-radius:24px}
       .rp-rainbow-photo{top:6%;height:65%}.rp-covenant-beam{width:96%;height:62%;bottom:20%}.rp-covenant-halo{width:112%;height:228px;bottom:16%}.rp-covenant-ring{width:80%;bottom:30%}.rp-covenant-motes{left:6%;right:6%;bottom:22%}
-      .rp-bird{width:20px;height:10px}.rp-bird::before,.rp-bird::after{width:11px;height:6px}.rp-bird-body{left:8px;top:5px;width:6px}.rp-bird-raven{top:28%;scale:.76}.rp-bird-dove-one{top:36%;scale:.67}.rp-bird-dove-two{top:21%;scale:.63}
+
       .rp-ark-group{width:82%;height:210px;bottom:23%;filter:drop-shadow(0 14px 18px rgba(0,0,0,.55)) drop-shadow(0 0 14px rgba(255,197,91,.3))}.rp-ark-hull{height:102px}.rp-ark-deck{bottom:100px;height:51px}.rp-ark-roof{bottom:143px}.rp-ark-window{bottom:115px;width:17px;height:12px}.rp-ark-keel{bottom:9px}.rp-ark-wake{height:48px;bottom:-5px}.rp-bow-foam{bottom:5px}
       .rp-water{height:49%;bottom:-7%}.rp-wave-a{height:72px}.rp-wave-b{height:84px}.rp-wave-c{height:96px}.rp-wave-d{height:106px}.rp-water-glint{height:42%;opacity:.13}.rp-shimmer-band{left:7%;right:7%;opacity:.075}.rp-foam-trail{left:18%;right:18%;top:7%;opacity:.46}
       .rp-ark-reflection{width:72%;height:132px;bottom:3%;opacity:.095}.rp-ref-hull{height:69px}.rp-ref-deck{bottom:83px;height:34px}.rp-ref-roof{bottom:112px}.rp-ref-windows{bottom:91px}
@@ -120,9 +128,38 @@
       .rp-covenant-motion .rainbow-wrap{min-height:555px;height:151vw}
       .rp-ark-group{width:86%;bottom:23.5%}.rp-water{height:50%}.rp-covenant-halo{height:215px}.rp-caption{padding:12px}.rp-caption span{font-size:.79rem}.rp-shimmer-band{opacity:.06}.rp-water-glint{opacity:.1}.rp-credit{top:66px;max-width:58%}
     }
-    @media(prefers-reduced-motion:reduce){.rp-rain-canvas{display:none}.rp-drizzle,.rp-fog,.rp-sky,.rp-cloud-photo,.rp-sunbreak,.rp-covenant-beam,.rp-covenant-halo,.rp-covenant-ring,.rp-covenant-motes,.rp-bird,.rp-bird::before,.rp-bird::after,.rp-ark-group,.rp-ark-hull::after,.rp-ark-window,.rp-ark-wake,.rp-bow-foam,.rp-water::after,.rp-wave,.rp-wave::before,.rp-water-glint,.rp-shimmer-band,.rp-foam-trail,.rp-ark-reflection,.rp-ref-ripple,.rp-vapor{animation:none!important}.rp-bird-raven{left:18%;top:28%;scale:.82}.rp-bird-dove-one{left:70%;top:35%;scale:.72}.rp-bird-dove-two{left:51%;top:20%;scale:.66}.rp-rainbow-photo{opacity:.8;filter:saturate(1.04) brightness(1.12);transform:translateX(-50%)}.rp-rainbow-haze{opacity:.94}}
+    @media(prefers-reduced-motion:reduce){.rp-rain-canvas{display:none}.rp-drizzle,.rp-fog,.rp-sky,.rp-cloud-photo,.rp-sunbreak,.rp-covenant-beam,.rp-covenant-halo,.rp-covenant-ring,.rp-covenant-motes,.rp-bird,.rp-bird::before,.rp-bird::after,.rp-ark-group,.rp-ark-hull::after,.rp-ark-window,.rp-ark-wake,.rp-bow-foam,.rp-water::after,.rp-wave,.rp-wave::before,.rp-water-glint,.rp-shimmer-band,.rp-foam-trail,.rp-ark-reflection,.rp-ref-ripple,.rp-vapor{animation:none!important}.rp-rainbow-photo{opacity:.8;filter:saturate(1.04) brightness(1.12);transform:translateX(-50%)}.rp-rainbow-haze{opacity:.94}}
   `;
   document.head.appendChild(style);
+
+  // Frontal birds with overlapping flight feathers, shaded breasts and fanned tails.
+  // Inline SVG keeps the flock crisp as it moves from the horizon to the foreground.
+  const birdMarkup = (kind, index, olive = false) => {
+    const id = `rp-feathers-${index}`;
+    const wing = `
+      <path d="M109 56 C94 38 74 24 48 18 C30 13 15 13 4 19 C15 23 22 28 26 33 L9 29 Q13 39 33 43 L16 42 Q23 51 42 52 L29 55 Q38 63 56 61 L45 67 Q58 73 74 65 L68 75 Q83 76 95 64 L104 69 Z" fill="url(#${id}-wing)" stroke="var(--feather-shadow)" stroke-width=".7"/>
+      <path d="M98 51 Q64 26 18 20 M95 55 Q61 35 26 33 M91 58 Q65 45 33 43 M88 61 Q66 54 42 52 M84 64 Q69 61 56 61" fill="none" stroke="var(--feather-line)" stroke-width=".8" opacity=".65"/>
+      <path d="M103 53 Q77 25 47 22 Q70 43 100 61 Z" fill="var(--feather-light)" opacity=".3"/>`;
+    return `<div class="rp-bird ${kind}" data-flight="${index}">
+      <svg class="rp-bird-shape" viewBox="0 0 240 135" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="${id}-wing" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="var(--feather-light)"/><stop offset=".55" stop-color="var(--feather)"/><stop offset="1" stop-color="var(--feather-shadow)"/></linearGradient>
+          <radialGradient id="${id}-body" cx=".37" cy=".3" r=".8"><stop stop-color="var(--feather-light)"/><stop offset=".6" stop-color="var(--feather)"/><stop offset="1" stop-color="var(--feather-shadow)"/></radialGradient>
+        </defs>
+        <path d="M112 81 L100 109 Q109 112 115 108 L120 115 L125 108 Q131 112 140 109 L128 81 Z" fill="url(#${id}-wing)" stroke="var(--feather-shadow)" stroke-width=".7"/>
+        <path d="M113 88 L109 107 M118 89 L118 108 M123 89 L124 108 M127 88 L132 107" stroke="var(--feather-line)" stroke-width=".8" opacity=".6"/>
+        <g class="rp-wing rp-wing-left">${wing}</g>
+        <g class="rp-wing rp-wing-right"><g transform="translate(240 0) scale(-1 1)">${wing}</g></g>
+        <path d="M109 49 Q102 58 105 78 Q109 94 120 98 Q131 94 135 78 Q138 58 131 49 Z" fill="url(#${id}-body)"/>
+        <path d="M111 70 Q120 78 129 70 M113 77 Q120 84 127 77 M116 85 Q120 89 124 85" fill="none" stroke="var(--feather-line)" stroke-width=".7" opacity=".4"/>
+        <ellipse cx="120" cy="47" rx="11" ry="13" fill="url(#${id}-body)"/>
+        <path d="M116 53 L120 64 L124 53 Q120 51 116 53" fill="var(--bird-beak)"/>
+        <ellipse cx="114" cy="46" rx="1.6" ry="2" fill="var(--bird-eye)"/><ellipse cx="126" cy="46" rx="1.6" ry="2" fill="var(--bird-eye)"/>
+        <circle cx="113.6" cy="45.4" r=".45" fill="#fff"/><circle cx="125.6" cy="45.4" r=".45" fill="#fff"/>
+        ${olive ? '<g class="rp-bird-olive"><path d="M120 59 Q137 63 153 52" fill="none" stroke="#627b43" stroke-width="1.5"/><path d="M132 61 Q127 50 139 54 Q142 59 132 61 M141 58 Q138 47 149 49 Q150 55 141 58 M143 57 Q150 65 156 57 Q153 53 143 57" fill="#89a664" stroke="#52683b" stroke-width=".5"/></g>' : ''}
+      </svg>
+    </div>`;
+  };
 
   wrap.innerHTML = `
     <div class="rp-sky"></div>
@@ -136,9 +173,9 @@
     <div class="rp-covenant-ring"></div>
     <div class="rp-covenant-motes"></div>
     <div class="rp-birds" aria-hidden="true">
-      <div class="rp-bird rp-bird-raven"><span class="rp-bird-body"></span></div>
-      <div class="rp-bird rp-bird-dove-one"><span class="rp-bird-body"></span></div>
-      <div class="rp-bird rp-bird-dove-two"><span class="rp-bird-body"></span><i class="rp-olive-leaf"></i></div>
+      ${birdMarkup('rp-bird-raven', 0)}
+      ${birdMarkup('rp-bird-dove-one', 1)}
+      ${birdMarkup('rp-bird-dove-two', 2, true)}
     </div>
     <div class="rp-water">
       <div class="rp-wave rp-wave-a"></div>
@@ -161,6 +198,98 @@
     <button class="rp-sound-toggle" type="button" aria-pressed="false" aria-label="Turn ambient sound on">Sound Off</button>
     <div class="rp-credit">Storm and Ark texture: public domain/CC0 via Wikimedia Commons<br>Rainbow: <a href="https://commons.wikimedia.org/wiki/File:Double-alaskan-rainbow.jpg" target="_blank" rel="noopener">Eric Rolph</a>, <a href="https://creativecommons.org/licenses/by-sa/2.5/" target="_blank" rel="noopener">CC BY-SA 2.5</a> · resized, cropped and blended</div>
     <div class="rp-caption"><div><strong>The ark moves through living water as the promise gathers.</strong><span>Deep blue waves roll beneath the reconstructed wooden ark while foam, reflection, warm light, rain, and the emerging rainbow turn the storm toward hope.</span></div><div class="rp-tag">Living Covenant</div></div>`;
+
+  // A closed orbit avoids snapping back to a tiny bird at the end of a pass.
+  // Depth uses perspective scaling: growth accelerates naturally near the viewer.
+  const flightPath = [
+    [.50, .23, 19], [.29, .18, 14], [.35, .24, 8], [.49, .34, 3.8],
+    [.60, .40, 1.4], [.83, .30, 1.1], [.90, .17, 4.8], [.70, .13, 12],
+    [.42, .20, 17]
+  ];
+  const flock = [...wrap.querySelectorAll('.rp-bird')].map((element, index) => ({
+    element, shape: element.querySelector('.rp-bird-shape'),
+    left: element.querySelector('.rp-wing-left'), right: element.querySelector('.rp-wing-right'),
+    duration: [32000, 39000, 45000][index], offset: [0.04, 0.40, 0.73][index],
+    mirror: index === 1 ? -1 : 1, vertical: [0, .045, -.045][index]
+  }));
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let birdFrame = 0;
+  let flightElapsed = 0;
+  let birdLastTime = null;
+  let sceneVisible = true;
+  let birdWidth = wrap.clientWidth;
+  let birdHeight = wrap.clientHeight;
+  const smoothOrbit = (phase) => {
+    const position = ((phase % 1 + 1) % 1) * flightPath.length;
+    const segment = Math.floor(position), t = position - segment;
+    const at = (offset) => flightPath[(segment + offset + flightPath.length) % flightPath.length];
+    const [a, b, c, d] = [at(-1), at(0), at(1), at(2)];
+    return b.map((value, axis) => .5 * ((2 * value) + (-a[axis] + c[axis]) * t +
+      (2 * a[axis] - 5 * value + 4 * c[axis] - d[axis]) * t * t +
+      (-a[axis] + 3 * value - 3 * c[axis] + d[axis]) * t * t * t));
+  };
+  const renderBirds = (elapsed, still = false) => {
+    flock.forEach((bird, index) => {
+      const phase = still ? [.10, .26, .86][index] : elapsed / bird.duration + bird.offset;
+      const [orbitX, orbitY, depth] = smoothOrbit(phase);
+      const [nextX, nextY, nextDepth] = smoothOrbit(phase + .003);
+      const size = 3.5 / (Math.max(.85, depth) + 1.2);
+      const x = (.5 + (orbitX - .5) * bird.mirror) * birdWidth;
+      const y = (orbitY + bird.vertical) * birdHeight;
+      const turn = Math.max(-1, Math.min(1, (nextX - orbitX) * bird.mirror * 90));
+      const retreating = nextDepth > depth;
+      const bank = turn * (retreating ? 30 : 18);
+      const pitch = Math.max(-12, Math.min(12, (nextY - orbitY) * 450));
+      bird.element.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-50%) scale(${size.toFixed(4)})`;
+      bird.element.style.opacity = String(.52 + .46 * Math.min(1, size));
+      bird.element.style.zIndex = String(100 - Math.round(depth * 3));
+      bird.shape.style.transform = `rotate(${bank.toFixed(2)}deg) rotateY(${(turn * 32).toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg)`;
+      // Short bursts of wingbeats alternate with long, level glides.
+      const seconds = elapsed / 1000;
+      const beatRate = index === 0 ? 3.0 : 3.7;
+      const burst = (seconds + index * 1.7) % 6.6;
+      const envelope = still ? 0 : Math.max(0, Math.min(1, (4.1 - burst) * 3, burst * 4));
+      const flap = Math.sin(seconds * Math.PI * 2 * beatRate + index * 1.8) * envelope;
+      const fold = 1 - Math.abs(flap) * .55;
+      bird.left.style.transform = `rotate(${(flap * 23 - bank * .10).toFixed(2)}deg) scaleY(${fold.toFixed(3)})`;
+      bird.right.style.transform = `rotate(${(-flap * 23 - bank * .10).toFixed(2)}deg) scaleY(${fold.toFixed(3)})`;
+    });
+  };
+  const flyBirds = (now) => {
+    birdFrame = 0;
+    if (document.hidden || !sceneVisible || motionQuery.matches) { birdLastTime = null; return; }
+    if (birdLastTime !== null) flightElapsed += Math.min(now - birdLastTime, 80);
+    birdLastTime = now;
+    renderBirds(flightElapsed);
+    birdFrame = requestAnimationFrame(flyBirds);
+  };
+  const syncBirdFlight = () => {
+    cancelAnimationFrame(birdFrame);
+    birdFrame = 0;
+    birdLastTime = null;
+    if (motionQuery.matches) renderBirds(0, true);
+    else if (!document.hidden && sceneVisible) birdFrame = requestAnimationFrame(flyBirds);
+  };
+  renderBirds(0, motionQuery.matches);
+  document.addEventListener('visibilitychange', syncBirdFlight);
+  motionQuery.addEventListener('change', syncBirdFlight);
+  const birdResize = typeof ResizeObserver === 'function' ? new ResizeObserver(() => {
+    birdWidth = wrap.clientWidth; birdHeight = wrap.clientHeight;
+    renderBirds(flightElapsed, motionQuery.matches);
+  }) : null;
+  birdResize?.observe(wrap);
+  const birdVisibility = typeof IntersectionObserver === 'function' ? new IntersectionObserver(([entry]) => {
+    sceneVisible = entry.isIntersecting;
+    syncBirdFlight();
+  }) : null;
+  birdVisibility?.observe(wrap);
+  syncBirdFlight();
+  window.addEventListener('pagehide', () => {
+    cancelAnimationFrame(birdFrame);
+    birdResize?.disconnect(); birdVisibility?.disconnect();
+    document.removeEventListener('visibilitychange', syncBirdFlight);
+    motionQuery.removeEventListener('change', syncBirdFlight);
+  }, { once: true });
 
   const rainbow = wrap.querySelector('.rp-rainbow-photo');
   const haze = wrap.querySelector('.rp-rainbow-haze');
@@ -400,3 +529,4 @@
     closeAudio();
   }, { once: true });
 })();
+
