@@ -38,7 +38,7 @@
     .rp-covenant-ring{position:absolute;left:50%;bottom:25%;width:min(450px,58%);height:138px;transform:translateX(-50%);z-index:13;border-radius:50%;opacity:.44;filter:blur(6px);border:2px solid rgba(255,247,207,.72);box-shadow:0 0 40px rgba(255,237,163,.5),inset 0 0 28px rgba(255,249,223,.32);animation:rpRing 7.4s ease-in-out infinite alternate}
     .rp-covenant-motes{position:absolute;left:18%;right:18%;bottom:19%;height:34%;z-index:14;opacity:.56;mix-blend-mode:screen;background-image:radial-gradient(circle,rgba(255,247,191,.9) 0 1px,transparent 1.7px),radial-gradient(circle,rgba(221,243,255,.8) 0 1px,transparent 1.8px);background-size:68px 64px,93px 86px;background-position:0 0,27px 18px;-webkit-mask-image:radial-gradient(ellipse at center,#000,transparent 76%);mask-image:radial-gradient(ellipse at center,#000,transparent 76%);animation:rpMotes 8s ease-in-out infinite alternate}
 
-    .rp-birds{position:absolute;inset:0;z-index:27;pointer-events:none;overflow:hidden;perspective:900px}
+    .rp-birds{position:absolute;inset:0;z-index:27;pointer-events:none;overflow:hidden}
     .rp-bird{position:absolute;left:0;top:0;width:clamp(160px,22vw,240px);height:clamp(90px,12.4vw,135px);transform-origin:50% 50%;will-change:transform,opacity;pointer-events:none}
     .rp-bird::before,.rp-bird::after{display:none}
     .rp-bird-photo{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,.18));user-select:none}
@@ -213,7 +213,6 @@
       const turn = Math.max(-1, Math.min(1, (nextX - orbitX) * bird.mirror * 90));
       const retreating = nextDepth > depth;
       const bank = turn * (retreating ? 30 : 18);
-      const pitch = Math.max(-12, Math.min(12, (nextY - orbitY) * 450));
       bird.element.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-50%) scale(${size.toFixed(4)})`;
       bird.element.style.opacity = String(.52 + .46 * Math.min(1, size));
       bird.element.style.zIndex = String(100 - Math.round(depth * 3));
@@ -221,7 +220,7 @@
       // bank in different directions as the flock approaches and circles away.
       const glide = still ? 0 : Math.sin(elapsed / 1050 + index * 2.1) * 2.2;
       const facing = index === 2 ? -1 : 1;
-      bird.shape.style.transform = `rotate(${(bank + glide).toFixed(2)}deg) rotateY(${(turn * 22).toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg) scaleX(${facing})`;
+      bird.shape.style.transform = `rotate(${(bank + glide).toFixed(2)}deg) scaleX(${facing})`;
     });
   };
   const flyBirds = (now) => {
