@@ -150,7 +150,7 @@
         <g class="rp-photo-wing rp-wing-right">${raven
           ? `<image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-right)"/>`
           : `<g transform="translate(1790 0) scale(-1 1)"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-left)"/></g>`}</g>
-        <image class="rp-bird-photo rp-photo-body" href="${photo}" width="1536" height="1024" mask="url(#${id}-body)"/>
+        <g${raven ? '' : ' transform="rotate(38 895 510)"'}><image class="rp-bird-photo rp-photo-body" href="${photo}" width="1536" height="1024" mask="url(#${id}-body)"/></g>
       </svg>
     </div>`;
   };
