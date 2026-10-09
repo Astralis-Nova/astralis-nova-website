@@ -25,6 +25,8 @@
     let enabled = false;
     let disposed = false;
     let thunderTimer = 0;
+    let birdTimer = 0;
+    const birdVoices = new Set();
     const liveNodes = [];
 
     const remember = (...nodes) => {
@@ -174,6 +176,102 @@
       }, 14000 + Math.random() * 18000);
     };
 
+    // Short, varied calls follow the flock's screen position and distance.
+    // Synthesized chirps/coos and a low raven croak need no external audio fetch.
+    const playBirdCall = () => {
+      if (!enabled || disposed || document.hidden || context?.state !== 'running') return;
+      const birds = [...document.querySelectorAll('.rp-bird')];
+      const scene = document.querySelector('.rainbow-wrap')?.getBoundingClientRect();
+      if (!birds.length || !scene || scene.bottom < 0 || scene.top > window.innerHeight) return;
+      const bird = birds[Math.floor(Math.random() * birds.length)];
+      const closeness = Math.min(1, Number(bird.dataset.flightSize || .2) / 1.7);
+      const pan = Number(bird.dataset.flightPan || 0);
+      const now = context.currentTime + .03;
+      const gain = context.createGain();
+      const panner = context.createStereoPanner?.();
+      gain.gain.value = .065 + closeness * .13;
+      if (panner) {
+        panner.pan.value = pan;
+        gain.connect(panner).connect(compressor);
+      } else gain.connect(compressor);
+      const nodes = [gain, ...(panner ? [panner] : [])];
+      const sources = [];
+      let remaining = 0;
+      let cleaned = false;
+      const cleanup = () => {
+        if (cleaned) return;
+        cleaned = true;
+        sources.forEach(source => { try { source.stop(); } catch (_) {} });
+        nodes.forEach(node => { try { node.disconnect(); } catch (_) {} });
+        birdVoices.delete(cleanup);
+      };
+      const track = (source) => {
+        remaining += 1;
+        sources.push(source);
+        nodes.push(source);
+        source.onended = () => { if (--remaining === 0) cleanup(); };
+      };
+      const note = (start, duration, frequencies, level = 1, type = 'sine') => {
+        const tone = context.createOscillator();
+        const envelope = context.createGain();
+        tone.type = type;
+        tone.frequency.setValueAtTime(frequencies[0], start);
+        tone.frequency.exponentialRampToValueAtTime(frequencies[1], start + duration * .42);
+        tone.frequency.exponentialRampToValueAtTime(frequencies[2], start + duration);
+        envelope.gain.setValueAtTime(.0001, start);
+        envelope.gain.exponentialRampToValueAtTime(level, start + .025);
+        envelope.gain.exponentialRampToValueAtTime(.0001, start + duration);
+        tone.connect(envelope).connect(gain);
+        nodes.push(envelope);
+        track(tone);
+        tone.start(start);
+        tone.stop(start + duration + .03);
+      };
+      birdVoices.add(cleanup);
+      if (bird.dataset.flight === '0') {
+        note(now, .3, [260, 180, 135], .55, 'triangle');
+        note(now + .38, .26, [225, 165, 120], .38, 'triangle');
+        const rasp = context.createBufferSource();
+        const filter = context.createBiquadFilter();
+        const envelope = context.createGain();
+        rasp.buffer = createNoiseBuffer(.35);
+        filter.type = 'bandpass';
+        filter.frequency.value = 490;
+        filter.Q.value = 1.8;
+        envelope.gain.setValueAtTime(.0001, now);
+        envelope.gain.exponentialRampToValueAtTime(.38, now + .04);
+        envelope.gain.exponentialRampToValueAtTime(.0001, now + .31);
+        rasp.connect(filter).connect(envelope).connect(gain);
+        nodes.push(filter, envelope);
+        track(rasp);
+        rasp.start(now);
+        rasp.stop(now + .35);
+      } else {
+        const variation = .9 + Math.random() * .18;
+        note(now, .48, [550, 490, 420].map(f => f * variation), .6);
+        note(now + .57, .6, [510, 465, 390].map(f => f * variation), .48);
+        // A little bright twitter between the softer coos adds life to the sky.
+        note(now + 1.3, .16, [1750, 2800, 2150].map(f => f * variation), .24);
+        note(now + 1.55, .12, [2150, 3200, 2450].map(f => f * variation), .18);
+      }
+      button.dataset.birdCalls = String(Number(button.dataset.birdCalls || 0) + 1);
+    };
+
+    const stopBirdCalls = () => {
+      window.clearTimeout(birdTimer);
+      birdTimer = 0;
+      [...birdVoices].forEach(stop => stop());
+    };
+
+    const scheduleBirds = (first = false) => {
+      window.clearTimeout(birdTimer);
+      if (!enabled || disposed || document.hidden) return;
+      birdTimer = window.setTimeout(() => {
+        playBirdCall();
+        scheduleBirds();
+      }, first ? 1200 : 2800 + Math.random() * 3900);
+    };
+
     const buildAmbience = () => {
       if (context || !AudioContextClass) return;
       context = new AudioContextClass({ latencyHint: 'interactive' });
@@ -224,6 +322,7 @@
     };
 
     const setSound = async (turnOn) => {
+      if (disposed) return;
       if (!AudioContextClass) {
         button.disabled = true;
         button.textContent = 'Sound Unavailable';
@@ -236,6 +335,7 @@
       updateButton(turnOn);
 
       if (turnOn && context.state !== 'running') await context.resume();
+      if (disposed || enabled !== turnOn) return;
       const now = context.currentTime;
       masterGain.gain.cancelScheduledValues(now);
       masterGain.gain.setValueAtTime(Math.max(masterGain.gain.value, 0.0001), now);
@@ -244,7 +344,9 @@
       if (turnOn) {
         playConfirmation();
         scheduleThunder();
+        scheduleBirds(true);
       } else {
+        stopBirdCalls();
         window.clearTimeout(thunderTimer);
         window.setTimeout(() => {
           if (!enabled && context?.state === 'running') context.suspend().catch(() => {});
@@ -255,13 +357,31 @@
     button.addEventListener('click', () => {
       setSound(!enabled).catch(() => {
         enabled = false;
+        stopBirdCalls();
         updateButton(false);
       });
     });
 
+    const syncVisibility = () => {
+      if (document.hidden) {
+        stopBirdCalls();
+        window.clearTimeout(thunderTimer);
+        context?.suspend().catch(() => {});
+      } else if (enabled && !disposed) {
+        context?.resume().then(() => {
+          if (!enabled || disposed || document.hidden) return;
+          scheduleThunder();
+          scheduleBirds(true);
+        }).catch(() => {});
+      }
+    };
+    document.addEventListener('visibilitychange', syncVisibility);
+
     window.addEventListener('pagehide', () => {
       disposed = true;
       enabled = false;
+      stopBirdCalls();
+      document.removeEventListener('visibilitychange', syncVisibility);
       window.clearTimeout(thunderTimer);
       liveNodes.forEach((node) => {
         try { node.stop?.(); } catch (_) {}

@@ -41,8 +41,8 @@
     .rp-birds{position:absolute;inset:0;z-index:27;pointer-events:none;overflow:hidden}
     .rp-bird{position:absolute;left:0;top:0;width:clamp(160px,22vw,240px);height:clamp(90px,12.4vw,135px);transform-origin:50% 50%;will-change:transform,opacity;pointer-events:none}
     .rp-bird::before,.rp-bird::after{display:none}
-    .rp-bird-photo{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,.18));user-select:none}
-    .rp-bird-shape{width:100%;height:100%;transform-origin:50% 50%;will-change:transform}
+    .rp-bird-shape{display:block;width:100%;height:100%;overflow:visible;transform-origin:50% 50%;will-change:transform;filter:drop-shadow(0 3px 3px rgba(0,0,0,.16))}
+    .rp-photo-wing{will-change:transform}
     @media(max-width:700px){.rp-bird{width:160px;height:90px}}
 
 
@@ -127,12 +127,29 @@
   `;
   document.head.appendChild(style);
 
-  // Cutouts of real public-domain photographs. Keep the complete photographed
-  // bird intact while perspective and banking carry it around the flight path.
+  // Articulate the photographed wings at their shoulders. The body and fanned
+  // tail stay intact, with overlapping shoulder edges hiding the moving joins.
   const birdMarkup = (kind, index) => {
-    const photo = index === 0 ? 'raven-flight-photo.webp' : 'dove-flight-photo.webp';
+    const raven = index === 0;
+    const photo = `assets/rainbow-promise/${raven ? 'raven' : 'dove'}-flight-photo.webp`;
+    const id = `rp-photo-${index}`;
+    const left = raven ? '0,0 720,0 720,450 660,500 480,400 0,180' : '0,380 700,380 740,470 820,590 880,680 850,760 790,1024 0,1024';
+    const right = raven ? '820,490 1000,470 1536,650 1536,1024 1080,1024 870,660' : '970,170 1450,170 1450,520 1350,550 1220,535 1070,440 970,390';
+    const leftCut = raven ? '0,0 690,0 690,440 630,480 460,390 0,180' : '0,380 675,380 715,470 795,590 850,680 820,760 765,1024 0,1024';
+    const rightCut = raven ? '850,515 1030,495 1536,675 1536,1024 1110,1024 900,685' : '1000,170 1450,170 1450,500 1350,530 1220,515 1100,420 1000,370';
     return `<div class="rp-bird ${kind}" data-flight="${index}">
-      <div class="rp-bird-shape"><img class="rp-bird-photo" src="assets/rainbow-promise/${photo}" alt="" width="1536" height="1024" decoding="async" draggable="false"></div>
+      <svg class="rp-bird-shape" viewBox="0 0 1536 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <clipPath id="${id}-left"><polygon points="${left}"/></clipPath>
+          <clipPath id="${id}-right"><polygon points="${right}"/></clipPath>
+          <mask id="${id}-body" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024" style="mask-type:luminance">
+            <rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/>
+          </mask>
+        </defs>
+        <g class="rp-photo-wing rp-wing-left"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-left)"/></g>
+        <g class="rp-photo-wing rp-wing-right"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-right)"/></g>
+        <image class="rp-bird-photo rp-photo-body" href="${photo}" width="1536" height="1024" mask="url(#${id}-body)"/>
+      </svg>
     </div>`;
   };
 
@@ -183,6 +200,8 @@
   ];
   const flock = [...wrap.querySelectorAll('.rp-bird')].map((element, index) => ({
     element, shape: element.querySelector('.rp-bird-shape'),
+    left: element.querySelector('.rp-wing-left'), right: element.querySelector('.rp-wing-right'),
+    shoulders: index === 0 ? [[665, 465], [860, 570]] : [[750, 510], [1040, 415]],
     duration: [32000, 39000, 45000][index], offset: [0.04, 0.40, 0.73][index],
     mirror: index === 1 ? -1 : 1, vertical: [0, .045, -.045][index]
   }));
@@ -193,6 +212,7 @@
   let sceneVisible = true;
   let birdWidth = wrap.clientWidth;
   let birdHeight = wrap.clientHeight;
+  let soundPositionTick = -1;
   const smoothOrbit = (phase) => {
     const position = ((phase % 1 + 1) % 1) * flightPath.length;
     const segment = Math.floor(position), t = position - segment;
@@ -203,25 +223,42 @@
       (-a[axis] + 3 * value - 3 * c[axis] + d[axis]) * t * t * t));
   };
   const renderBirds = (elapsed, still = false) => {
+    const soundTick = Math.floor(elapsed / 120);
     flock.forEach((bird, index) => {
       const phase = still ? [.10, .26, .86][index] : elapsed / bird.duration + bird.offset;
       const [orbitX, orbitY, depth] = smoothOrbit(phase);
       const [nextX, nextY, nextDepth] = smoothOrbit(phase + .003);
       const size = 3.5 / (Math.max(.85, depth) + 1.2);
       const x = (.5 + (orbitX - .5) * bird.mirror) * birdWidth;
-      const y = (orbitY + bird.vertical) * birdHeight;
+      const seconds = elapsed / 1000;
+      const beatRate = index === 0 ? 1.85 : 3.05 + index * .22;
+      const cycle = (seconds + index * 1.75) % 8.4;
+      const flapEnvelope = still ? 0 : Math.max(0, Math.min(1, cycle * 3, (5.6 - cycle) * 2));
+      const flap = Math.sin(seconds * Math.PI * 2 * beatRate + index * 2.1) * flapEnvelope;
+      const lift = still ? 0 : (Math.sin(seconds * 1.3 + index * 2) * 8 + flap * 3) * Math.min(1.3, size);
+      const y = (orbitY + bird.vertical) * birdHeight + lift;
       const turn = Math.max(-1, Math.min(1, (nextX - orbitX) * bird.mirror * 90));
       const retreating = nextDepth > depth;
       const bank = turn * (retreating ? 30 : 18);
       bird.element.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-50%) scale(${size.toFixed(4)})`;
       bird.element.style.opacity = String(.52 + .46 * Math.min(1, size));
       bird.element.style.zIndex = String(100 - Math.round(depth * 3));
-      // Gentle gliding keeps the photographed anatomy intact. Mirrored doves
-      // bank in different directions as the flock approaches and circles away.
-      const glide = still ? 0 : Math.sin(elapsed / 1050 + index * 2.1) * 2.2;
+      const glide = still ? 0 : Math.sin(seconds * 1.45 + index * 2.1) * 4;
       const facing = index === 2 ? -1 : 1;
-      bird.shape.style.transform = `rotate(${(bank + glide).toFixed(2)}deg) scaleX(${facing})`;
+      bird.shape.style.transform = `rotate(${(bank + glide + (index === 0 ? -32 : 0)).toFixed(2)}deg) scaleX(${facing})`;
+      const fold = 1 - Math.max(0, flap) * (index === 0 ? .28 : .42);
+      const wingAngle = flap * (index === 0 ? 15 : 23);
+      [bird.left, bird.right].forEach((wing, side) => {
+        const [sx, sy] = bird.shoulders[side];
+        const angle = side === 0 ? wingAngle : -wingAngle * .82;
+        wing.setAttribute('transform', `translate(${sx} ${sy}) rotate(${angle.toFixed(2)}) scale(1 ${fold.toFixed(3)}) translate(${-sx} ${-sy})`);
+      });
+      if (soundTick !== soundPositionTick || still) {
+        bird.element.dataset.flightSize = size.toFixed(3);
+        bird.element.dataset.flightPan = Math.max(-.85, Math.min(.85, x / birdWidth * 2 - 1)).toFixed(3);
+      }
     });
+    soundPositionTick = soundTick;
   };
   const flyBirds = (now) => {
     birdFrame = 0;
