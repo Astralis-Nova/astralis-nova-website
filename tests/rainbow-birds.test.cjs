@@ -26,7 +26,8 @@ test('photo wings flap independently; distance loops and reduced motion remain s
     };
     vm.runInNewContext(flight, env);
     const wings = birds.map(() => new Set()), sizes = birds.map(() => []);
-    const previousSizes = [];
+    const previousSizes = [], previousX = [], facingChecks = [0, 0, 0];
+    const angles = birds.map(() => []), tipPoses = birds.map(() => new Set()), bodyPoses = birds.map(() => new Set());
     for (let time = 0; time <= 90000; time += 16) {
       const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(f => f(time));
       birds.forEach((bird, i) => {
@@ -34,7 +35,7 @@ test('photo wings flap independently; distance loops and reduced motion remain s
         const otherWing = bird.querySelector('.rp-wing-right').attrs.transform;
         const angle = value => Number(value.match(/rotate\(([^)]+)\)/)[1]);
         assert(Math.abs(angle(wing) + angle(otherWing)) < .011, 'matched wings have equal, opposite flap angles');
-        assert.equal(wing.match(/scale\(1 ([^)]+)\)/)[1], otherWing.match(/scale\(1 ([^)]+)\)/)[1], 'both wings fold together');
+        assert.equal(wing.match(/scale\(([^)]+)\)/)[1], otherWing.match(/scale\(([^)]+)\)/)[1], 'both wings fold and extend together');
         const roots = [wing, otherWing].map(pose => pose.match(/^translate\(([-\d.]+) ([-\d.]+)\)/).slice(1).map(Number));
         assert.equal(roots[0][1], roots[1][1], 'shoulder roots must be level, not just the flap angles');
         const center = i === 0 ? 768 : 895;
@@ -45,6 +46,17 @@ test('photo wings flap independently; distance loops and reduced motion remain s
         if (size > previousSizes[i]) assert(Math.abs(roll) <= .05, 'approach stays level, including the smooth turn boundary');
         if (size > .68) assert.equal(Math.abs(roll), 0, 'nearby birds keep their wing line level');
         previousSizes[i] = size;
+        const x = Number(bird.style.transform.match(/translate3d\(([-\d.]+)px/)[1]);
+        const profile = Number(bird.querySelector('.rp-bird-shape').style.transform.match(/scaleX\(([-\d.]+)\)/)[1]);
+        const velocity = x - previousX[i];
+        if (Math.abs(velocity) > .3 && Math.abs(profile) > .2) {
+          assert(velocity * profile * (i === 0 ? 1 : -1) > 0, 'photographed beak must face travel, never tail-first');
+          facingChecks[i]++;
+        }
+        previousX[i] = x;
+        angles[i].push(angle(wing));
+        tipPoses[i].add(bird.querySelector('.rp-wing-left .rp-photo-tip').attrs.transform);
+        bodyPoses[i].add(bird.querySelector('.rp-photo-body-motion').attrs.transform);
         assert(!wing.includes('NaN'));
         assert(!bird.style.transform.includes('NaN'));
         wings[i].add(wing);
@@ -53,10 +65,14 @@ test('photo wings flap independently; distance loops and reduced motion remain s
       });
     }
     wings.forEach(poses => assert(poses.size > 100, 'wing poses must actually change'));
+    angles.forEach(values => assert(Math.max(...values) - Math.min(...values) > 80, 'wing stroke must have visible full excursion'));
+    tipPoses.forEach(values => assert(values.size > 100, 'wingtips flex instead of moving as one rigid panel'));
+    bodyPoses.forEach(values => assert(values.size > 100, 'body responds to wingbeats'));
+    facingChecks.forEach(count => assert(count > 300, 'direction checked throughout the orbit'));
     sizes.forEach(values => assert(Math.max(...values) / Math.min(...values) > 8));
     motion.matches = true; motionEvents.change(); assert.equal(frames.size, 0);
     const still = birds.map(b => b.querySelector('.rp-wing-left').attrs.transform);
-    still.forEach(pose => assert(pose.includes('rotate(0.00) scale(1 1.000)')));
+    still.forEach(pose => assert(pose.includes('rotate(0.00) scale(1.000 1.000)')));
     observers[0].f();
     assert.deepEqual(birds.map(b => b.querySelector('.rp-wing-left').attrs.transform), still);
     motion.matches = false; motionEvents.change(); assert.equal(frames.size, 1);

@@ -42,7 +42,7 @@
     .rp-bird{position:absolute;left:0;top:0;width:clamp(160px,22vw,240px);height:clamp(90px,12.4vw,135px);transform-origin:50% 50%;will-change:transform,opacity;pointer-events:none}
     .rp-bird::before,.rp-bird::after{display:none}
     .rp-bird-shape{display:block;width:100%;height:100%;overflow:visible;transform-origin:50% 50%;will-change:transform;filter:drop-shadow(0 3px 3px rgba(0,0,0,.16))}
-    .rp-photo-wing{will-change:transform}
+    .rp-photo-wing,.rp-photo-tip,.rp-photo-body-motion,.rp-photo-tail{will-change:transform}
     @media(max-width:700px){.rp-bird{width:160px;height:90px}}
 
 
@@ -134,10 +134,10 @@
     const photo = `assets/rainbow-promise/${raven ? 'raven' : 'dove'}-flight-photo.webp`;
     const id = `rp-photo-${index}`;
     const left = raven ? '0,0 720,0 720,450 660,500 480,400 0,180' : '0,380 700,380 740,470 820,590 880,680 850,760 790,1024 0,1024';
-    const right = raven ? '820,490 1000,470 1536,650 1536,1024 1080,1024 870,660' : '970,170 1450,170 1450,520 1350,550 1220,535 1070,440 970,390';
     const leftCut = raven ? '0,0 690,0 690,440 630,480 460,390 0,180' : '0,380 675,380 715,470 795,590 850,680 820,760 765,1024 0,1024';
     const rightCut = raven ? '850,515 1030,495 1536,675 1536,1024 1110,1024 900,685' : '1000,170 1450,170 1450,500 1350,530 1220,515 1100,420 1000,370';
-    const nearWing = `<image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-left)"/>`;
+    const wristX = raven ? 360 : 490;
+    const nearWing = `<g clip-path="url(#${id}-left)"><g clip-path="url(#${id}-inner)"><image href="${photo}" width="1536" height="1024"/></g><g class="rp-photo-tip"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-tip)"/></g></g>`;
     // Normalize the photographed near wing, then reflect the same geometry.
     // Both shoulders now sit on one horizontal line through the body.
     const wing = raven ? `<g transform="translate(-35 45) rotate(-36 665 465)">${nearWing}</g>` : nearWing;
@@ -146,14 +146,20 @@
       <svg class="rp-bird-shape" viewBox="0 0 ${raven ? 1536 : 1792} 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
           <clipPath id="${id}-left"><polygon points="${left}"/></clipPath>
-          <clipPath id="${id}-right"><polygon points="${right}"/></clipPath>
+          <clipPath id="${id}-inner"><rect x="${wristX - 30}" width="1536" height="1024"/></clipPath>
+          <clipPath id="${id}-tip"><rect width="${wristX + 30}" height="1024"/></clipPath>
+          <clipPath id="${id}-tail"><polygon points="920,640 1230,550 1536,620 1536,1024 760,1024 790,760"/></clipPath>
+          <mask id="${id}-tail-clean" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024" style="mask-type:luminance"><rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/></mask>
           <mask id="${id}-body" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024" style="mask-type:luminance">
-            <rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/>
+            <rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/>${raven ? '' : '<polygon points="945,670 1255,580 1536,645 1536,1024 790,1024 820,785" fill="black"/>'}
           </mask>
         </defs>
         <g class="rp-photo-wing rp-wing-left">${wing}</g>
         <g class="rp-photo-wing rp-wing-right"><g transform="translate(${center * 2} 0) scale(-1 1)">${wing}</g></g>
-        <g class="rp-photo-body-frame" transform="${raven ? 'rotate(-32 768 512)' : 'translate(-45 0) rotate(38 895 510)'}"><image class="rp-bird-photo rp-photo-body" href="${photo}" width="1536" height="1024" mask="url(#${id}-body)"/></g>
+        <g class="rp-photo-body-motion"><g class="rp-photo-body-frame" transform="${raven ? 'rotate(-32 768 512)' : 'translate(-45 0) rotate(38 895 510)'}">
+          ${raven ? '' : `<g class="rp-photo-tail" clip-path="url(#${id}-tail)"><image href="${photo}" width="1536" height="1024" mask="url(#${id}-tail-clean)"/></g>`}
+          <image class="rp-bird-photo rp-photo-body" href="${photo}" width="1536" height="1024" mask="url(#${id}-body)"/>
+        </g></g>
       </svg>
     </div>`;
   };
@@ -206,9 +212,12 @@
   const flock = [...wrap.querySelectorAll('.rp-bird')].map((element, index) => ({
     element, shape: element.querySelector('.rp-bird-shape'),
     left: element.querySelector('.rp-wing-left'), right: element.querySelector('.rp-wing-right'),
+    tips: [element.querySelector('.rp-wing-left .rp-photo-tip'), element.querySelector('.rp-wing-right .rp-photo-tip')],
+    body: element.querySelector('.rp-photo-body-motion'), tail: element.querySelector('.rp-photo-tail'),
+    center: index === 0 ? 768 : 895, wrist: index === 0 ? [360, 275] : [490, 620],
     // Each pair shares its photographed wing geometry and a level shoulder line.
     shoulders: index === 0 ? [[630, 510], [906, 510]] : [[750, 510], [1040, 510]],
-    duration: [32000, 39000, 45000][index], offset: [0.04, 0.40, 0.73][index],
+    duration: [28000, 34000, 39000][index], offset: [0.04, 0.40, 0.73][index],
     mirror: index === 1 ? -1 : 1, vertical: [0, .045, -.045][index]
   }));
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -237,31 +246,63 @@
       const size = 3.5 / (Math.max(.85, depth) + 1.2);
       const x = (.5 + (orbitX - .5) * bird.mirror) * birdWidth;
       const seconds = elapsed / 1000;
-      const beatRate = index === 0 ? 1.85 : 3.05 + index * .22;
-      const cycle = (seconds + index * 1.75) % 8.4;
-      const flapEnvelope = still ? 0 : Math.max(0, Math.min(1, cycle * 3, (5.6 - cycle) * 2));
-      const flap = Math.sin(seconds * Math.PI * 2 * beatRate + index * 2.1) * flapEnvelope;
-      const lift = still ? 0 : (Math.sin(seconds * 1.3 + index * 2) * 8 + flap * 3) * Math.min(1.3, size);
-      const y = (orbitY + bird.vertical) * birdHeight + lift;
-      const turn = Math.max(-1, Math.min(1, (nextX - orbitX) * bird.mirror * 90));
+      const raven = index === 0;
+      const dx = (nextX - orbitX) * bird.mirror;
       const retreating = nextDepth > depth;
-      // Hold the shoulders level on approach; bank gently only on the far turn.
+      // Video references: a broad power stroke, narrower recovery and delayed
+      // primary feathers. Doves flap in short bursts; the raven glides longer.
+      const beatRate = (raven ? 2.45 : 4.15 + index * .18);
+      const beat = seconds * beatRate + index * .37 + .045 * Math.sin(seconds * .7 + index);
+      const beatPhase = ((beat % 1) + 1) % 1;
+      const power = .43;
+      const stroke = beatPhase < power
+        ? Math.cos(Math.PI * beatPhase / power)
+        : -Math.cos(Math.PI * (beatPhase - power) / (1 - power));
+      const cycle = (seconds + index * 1.75) % (raven ? 6.8 : 4.7);
+      const glideStart = raven ? 4.7 : 3.95;
+      const glideEnd = raven ? 6.5 : 4.45;
+      const envelope = still ? 0 : Math.min(1, Math.max(0, (glideStart - cycle) * 5) + Math.max(0, (cycle - glideEnd) * 5));
+      const flap = stroke * envelope;
+      const lift = still ? 0 : (Math.sin(seconds * 1.1 + index * 2) * 5 - flap * 6) * Math.min(1.3, size);
+      const y = (orbitY + bird.vertical) * birdHeight + lift;
+      const turn = Math.max(-1, Math.min(1, dx * 90));
       const turnBlend = retreating ? Math.min(1, Math.max(0, (depth - 4) / 8)) : 0;
       const bank = turn * 5 * turnBlend;
+      // The raven's beak points right in its photo; the dove's points left.
+      // Smoothly pass through an edge-on turn instead of sliding tail-first.
+      const yaw = still ? 1 : Math.tanh(dx * 300);
+      const facing = raven ? yaw : -yaw;
       bird.element.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-50%) scale(${size.toFixed(4)})`;
       bird.element.style.opacity = String(.52 + .46 * Math.min(1, size));
       bird.element.style.zIndex = String(100 - Math.round(depth * 3));
-      const facing = index === 2 ? -1 : 1;
-      bird.shape.style.transform = `rotate(${(still ? 0 : bank).toFixed(2)}deg) scaleX(${facing})`;
-      const fold = 1 - Math.max(0, flap) * (index === 0 ? .24 : .30);
-      const wingAngle = flap * (index === 0 ? 13 : 19);
+      bird.shape.style.transform = `rotate(${(still ? 0 : bank).toFixed(2)}deg) scaleX(${facing.toFixed(4)})`;
+      const recovery = Math.max(0, Math.sin(Math.PI * Math.max(0, (beatPhase - power) / (1 - power)))) * envelope;
+      const fold = still ? 1 : 1 - recovery * (raven ? .18 : .24);
+      const span = still ? 1 : 1 - recovery * (raven ? .14 : .20);
+      // The dove photo starts with its wings sloping down by about 28 degrees.
+      // Raise that resting angle before applying the larger stroke excursion.
+      const wingAngle = still ? 0 : (raven ? 0 : 27) + flap * (raven ? 43 : 52);
       [bird.left, bird.right].forEach((wing, side) => {
         const [sx, sy] = bird.shoulders[side];
         const angle = side === 0 ? wingAngle : -wingAngle;
-        wing.setAttribute('transform', `translate(${sx} ${sy}) rotate(${angle.toFixed(2)}) scale(1 ${fold.toFixed(3)}) translate(${-sx} ${-sy})`);
+        wing.setAttribute('transform', `translate(${sx} ${sy}) rotate(${angle.toFixed(2)}) scale(${span.toFixed(3)} ${fold.toFixed(3)}) translate(${-sx} ${-sy})`);
       });
+      const tipAngle = still ? 0 : Math.sin(beat * Math.PI * 2 - .55) * envelope * (raven ? 7 : 10);
+      const [wx, wy] = bird.wrist;
+      // These tip groups are inside the reflected wing, so use the same angle.
+      bird.tips.forEach(tip => tip?.setAttribute('transform', `rotate(${tipAngle.toFixed(2)} ${wx} ${wy})`));
+      const bodyNod = still ? 0 : flap * (raven ? 1.4 : 2.5);
+      const bodyBob = still ? 0 : -flap * 14;
+      bird.body?.setAttribute('transform', `translate(0 ${bodyBob.toFixed(2)}) rotate(${bodyNod.toFixed(2)} ${bird.center} 510)`);
+      if (bird.tail) {
+        const rudder = still ? 0 : turn * 5 + Math.sin(seconds * 2.2 + index) * 2;
+        const fan = still ? 1 : .92 + .08 * (1 + flap) / 2;
+        bird.tail.setAttribute('transform', `translate(1070 680) rotate(${rudder.toFixed(2)}) scale(${fan.toFixed(3)} 1) translate(-1070 -680)`);
+      }
       if (soundTick !== soundPositionTick || still) {
         bird.element.dataset.flightSize = size.toFixed(3);
+        bird.element.dataset.flightDirection = dx < 0 ? 'left' : 'right';
+        bird.element.dataset.flightFacing = (facing * (raven ? 1 : -1)) < 0 ? 'left' : 'right';
         bird.element.dataset.flightPan = Math.max(-.85, Math.min(.85, x / birdWidth * 2 - 1)).toFixed(3);
       }
     });
