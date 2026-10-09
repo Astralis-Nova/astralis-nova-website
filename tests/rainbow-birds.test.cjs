@@ -26,6 +26,7 @@ test('photo wings flap independently; distance loops and reduced motion remain s
     };
     vm.runInNewContext(flight, env);
     const wings = birds.map(() => new Set()), sizes = birds.map(() => []);
+    const previousSizes = [];
     for (let time = 0; time <= 90000; time += 16) {
       const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(f => f(time));
       birds.forEach((bird, i) => {
@@ -34,6 +35,16 @@ test('photo wings flap independently; distance loops and reduced motion remain s
         const angle = value => Number(value.match(/rotate\(([^)]+)\)/)[1]);
         assert(Math.abs(angle(wing) + angle(otherWing)) < .011, 'matched wings have equal, opposite flap angles');
         assert.equal(wing.match(/scale\(1 ([^)]+)\)/)[1], otherWing.match(/scale\(1 ([^)]+)\)/)[1], 'both wings fold together');
+        const roots = [wing, otherWing].map(pose => pose.match(/^translate\(([-\d.]+) ([-\d.]+)\)/).slice(1).map(Number));
+        assert.equal(roots[0][1], roots[1][1], 'shoulder roots must be level, not just the flap angles');
+        const center = i === 0 ? 768 : 895;
+        assert.equal(roots[0][0] + roots[1][0], center * 2, 'shoulders straddle the body equally');
+        const size = Number(bird.dataset.flightSize);
+        const roll = Number(bird.querySelector('.rp-bird-shape').style.transform.match(/rotate\(([-\d.]+)deg\)/)[1]);
+        assert(Math.abs(roll) <= 5, 'whole-bird roll must not disguise one wing as shorter');
+        if (size > previousSizes[i]) assert(Math.abs(roll) <= .05, 'approach stays level, including the smooth turn boundary');
+        if (size > .68) assert.equal(Math.abs(roll), 0, 'nearby birds keep their wing line level');
+        previousSizes[i] = size;
         assert(!wing.includes('NaN'));
         assert(!bird.style.transform.includes('NaN'));
         wings[i].add(wing);
@@ -53,6 +64,18 @@ test('photo wings flap independently; distance loops and reduced motion remain s
     document.hidden = false; events.visibilitychange(); assert.equal(frames.size, 1);
     observers[1].f([{ isIntersecting: false }]); assert.equal(frames.size, 0);
     events.pagehide(); assert.equal(frames.size, 0);
+  }
+});
+
+test('both birds use one photographed wing reflected around their body axis', () => {
+  const source = fs.readFileSync(path.join(root, 'rainbow-promise-cinematic.js'), 'utf8');
+  const markup = source.slice(source.indexOf('  const birdMarkup'), source.indexOf('\n  wrap.innerHTML'));
+  const render = vm.runInNewContext(markup + '\nbirdMarkup');
+  for (const index of [0, 1, 2]) {
+    const html = render('test', index);
+    const left = html.match(/class="rp-photo-wing rp-wing-left">([\s\S]*?)<\/g>\s*<g class="rp-photo-wing rp-wing-right">/)[1];
+    const axis = index === 0 ? 1536 : 1790;
+    assert(html.includes(`<g transform="translate(${axis} 0) scale(-1 1)">${left}</g>`), 'the opposite wing must reflect the same image geometry');
   }
 });
 

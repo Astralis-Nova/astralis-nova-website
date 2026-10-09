@@ -137,6 +137,11 @@
     const right = raven ? '820,490 1000,470 1536,650 1536,1024 1080,1024 870,660' : '970,170 1450,170 1450,520 1350,550 1220,535 1070,440 970,390';
     const leftCut = raven ? '0,0 690,0 690,440 630,480 460,390 0,180' : '0,380 675,380 715,470 795,590 850,680 820,760 765,1024 0,1024';
     const rightCut = raven ? '850,515 1030,495 1536,675 1536,1024 1110,1024 900,685' : '1000,170 1450,170 1450,500 1350,530 1220,515 1100,420 1000,370';
+    const nearWing = `<image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-left)"/>`;
+    // Normalize the photographed near wing, then reflect the same geometry.
+    // Both shoulders now sit on one horizontal line through the body.
+    const wing = raven ? `<g transform="translate(-35 45) rotate(-36 665 465)">${nearWing}</g>` : nearWing;
+    const center = raven ? 768 : 895;
     return `<div class="rp-bird ${kind}" data-flight="${index}">
       <svg class="rp-bird-shape" viewBox="0 0 ${raven ? 1536 : 1792} 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
@@ -146,11 +151,9 @@
             <rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/>
           </mask>
         </defs>
-        <g class="rp-photo-wing rp-wing-left"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-left)"/></g>
-        <g class="rp-photo-wing rp-wing-right">${raven
-          ? `<image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-right)"/>`
-          : `<g transform="translate(1790 0) scale(-1 1)"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-left)"/></g>`}</g>
-        <g${raven ? '' : ' transform="rotate(38 895 510)"'}><image class="rp-bird-photo rp-photo-body" href="${photo}" width="1536" height="1024" mask="url(#${id}-body)"/></g>
+        <g class="rp-photo-wing rp-wing-left">${wing}</g>
+        <g class="rp-photo-wing rp-wing-right"><g transform="translate(${center * 2} 0) scale(-1 1)">${wing}</g></g>
+        <g class="rp-photo-body-frame" transform="${raven ? 'rotate(-32 768 512)' : 'translate(-45 0) rotate(38 895 510)'}"><image class="rp-bird-photo rp-photo-body" href="${photo}" width="1536" height="1024" mask="url(#${id}-body)"/></g>
       </svg>
     </div>`;
   };
@@ -203,9 +206,8 @@
   const flock = [...wrap.querySelectorAll('.rp-bird')].map((element, index) => ({
     element, shape: element.querySelector('.rp-bird-shape'),
     left: element.querySelector('.rp-wing-left'), right: element.querySelector('.rp-wing-right'),
-    // The oblique dove photograph foreshortens the rear wing. Mirror the
-    // photographed near wing to make a matched pair with level shoulder roots.
-    shoulders: index === 0 ? [[665, 465], [860, 570]] : [[750, 510], [1040, 510]],
+    // Each pair shares its photographed wing geometry and a level shoulder line.
+    shoulders: index === 0 ? [[630, 510], [906, 510]] : [[750, 510], [1040, 510]],
     duration: [32000, 39000, 45000][index], offset: [0.04, 0.40, 0.73][index],
     mirror: index === 1 ? -1 : 1, vertical: [0, .045, -.045][index]
   }));
@@ -243,13 +245,14 @@
       const y = (orbitY + bird.vertical) * birdHeight + lift;
       const turn = Math.max(-1, Math.min(1, (nextX - orbitX) * bird.mirror * 90));
       const retreating = nextDepth > depth;
-      const bank = turn * (retreating ? 30 : 18);
+      // Hold the shoulders level on approach; bank gently only on the far turn.
+      const turnBlend = retreating ? Math.min(1, Math.max(0, (depth - 4) / 8)) : 0;
+      const bank = turn * 5 * turnBlend;
       bird.element.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-50%) scale(${size.toFixed(4)})`;
       bird.element.style.opacity = String(.52 + .46 * Math.min(1, size));
       bird.element.style.zIndex = String(100 - Math.round(depth * 3));
-      const glide = still ? 0 : Math.sin(seconds * 1.45 + index * 2.1) * 4;
       const facing = index === 2 ? -1 : 1;
-      bird.shape.style.transform = `rotate(${(bank + glide + (index === 0 ? -32 : 0)).toFixed(2)}deg) scaleX(${facing})`;
+      bird.shape.style.transform = `rotate(${(still ? 0 : bank).toFixed(2)}deg) scaleX(${facing})`;
       const fold = 1 - Math.max(0, flap) * (index === 0 ? .24 : .30);
       const wingAngle = flap * (index === 0 ? 13 : 19);
       [bird.left, bird.right].forEach((wing, side) => {
