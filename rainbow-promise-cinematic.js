@@ -41,13 +41,8 @@
     .rp-birds{position:absolute;inset:0;z-index:27;pointer-events:none;overflow:hidden;perspective:900px}
     .rp-bird{position:absolute;left:0;top:0;width:clamp(160px,22vw,240px);height:clamp(90px,12.4vw,135px);transform-origin:50% 50%;will-change:transform,opacity;pointer-events:none}
     .rp-bird::before,.rp-bird::after{display:none}
-    .rp-bird svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 3px 3px rgba(0,0,0,.22))}
-    .rp-bird-shape{transform-origin:50% 50%;will-change:transform}
-    .rp-wing{transform-box:view-box;will-change:transform}
-    .rp-wing-left{transform-origin:46% 46%}.rp-wing-right{transform-origin:54% 46%}
-    .rp-bird-raven{--feather:#263239;--feather-light:#52636b;--feather-shadow:#101c24;--feather-line:#839198;--bird-eye:#bda478;--bird-beak:#313b40}
-    .rp-bird-dove-one,.rp-bird-dove-two{--feather:#eef0e7;--feather-light:#fffdf3;--feather-shadow:#9caeb4;--feather-line:#b5c2c2;--bird-eye:#272d32;--bird-beak:#afa69b}
-    .rp-bird-olive{transform-origin:50% 35%}
+    .rp-bird-photo{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 3px rgba(0,0,0,.18));user-select:none}
+    .rp-bird-shape{width:100%;height:100%;transform-origin:50% 50%;will-change:transform}
     @media(max-width:700px){.rp-bird{width:160px;height:90px}}
 
 
@@ -132,32 +127,12 @@
   `;
   document.head.appendChild(style);
 
-  // Frontal birds with overlapping flight feathers, shaded breasts and fanned tails.
-  // Inline SVG keeps the flock crisp as it moves from the horizon to the foreground.
-  const birdMarkup = (kind, index, olive = false) => {
-    const id = `rp-feathers-${index}`;
-    const wing = `
-      <path d="M109 56 C94 38 74 24 48 18 C30 13 15 13 4 19 C15 23 22 28 26 33 L9 29 Q13 39 33 43 L16 42 Q23 51 42 52 L29 55 Q38 63 56 61 L45 67 Q58 73 74 65 L68 75 Q83 76 95 64 L104 69 Z" fill="url(#${id}-wing)" stroke="var(--feather-shadow)" stroke-width=".7"/>
-      <path d="M98 51 Q64 26 18 20 M95 55 Q61 35 26 33 M91 58 Q65 45 33 43 M88 61 Q66 54 42 52 M84 64 Q69 61 56 61" fill="none" stroke="var(--feather-line)" stroke-width=".8" opacity=".65"/>
-      <path d="M103 53 Q77 25 47 22 Q70 43 100 61 Z" fill="var(--feather-light)" opacity=".3"/>`;
+  // Cutouts of real public-domain photographs. Keep the complete photographed
+  // bird intact while perspective and banking carry it around the flight path.
+  const birdMarkup = (kind, index) => {
+    const photo = index === 0 ? 'raven-flight-photo.png' : 'dove-flight-photo.png';
     return `<div class="rp-bird ${kind}" data-flight="${index}">
-      <svg class="rp-bird-shape" viewBox="0 0 240 135" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <defs>
-          <linearGradient id="${id}-wing" x1="0" y1="0" x2=".3" y2="1"><stop stop-color="var(--feather-light)"/><stop offset=".55" stop-color="var(--feather)"/><stop offset="1" stop-color="var(--feather-shadow)"/></linearGradient>
-          <radialGradient id="${id}-body" cx=".37" cy=".3" r=".8"><stop stop-color="var(--feather-light)"/><stop offset=".6" stop-color="var(--feather)"/><stop offset="1" stop-color="var(--feather-shadow)"/></radialGradient>
-        </defs>
-        <path d="M112 81 L100 109 Q109 112 115 108 L120 115 L125 108 Q131 112 140 109 L128 81 Z" fill="url(#${id}-wing)" stroke="var(--feather-shadow)" stroke-width=".7"/>
-        <path d="M113 88 L109 107 M118 89 L118 108 M123 89 L124 108 M127 88 L132 107" stroke="var(--feather-line)" stroke-width=".8" opacity=".6"/>
-        <g class="rp-wing rp-wing-left">${wing}</g>
-        <g class="rp-wing rp-wing-right"><g transform="translate(240 0) scale(-1 1)">${wing}</g></g>
-        <path d="M109 49 Q102 58 105 78 Q109 94 120 98 Q131 94 135 78 Q138 58 131 49 Z" fill="url(#${id}-body)"/>
-        <path d="M111 70 Q120 78 129 70 M113 77 Q120 84 127 77 M116 85 Q120 89 124 85" fill="none" stroke="var(--feather-line)" stroke-width=".7" opacity=".4"/>
-        <ellipse cx="120" cy="47" rx="11" ry="13" fill="url(#${id}-body)"/>
-        <path d="M116 53 L120 64 L124 53 Q120 51 116 53" fill="var(--bird-beak)"/>
-        <ellipse cx="114" cy="46" rx="1.6" ry="2" fill="var(--bird-eye)"/><ellipse cx="126" cy="46" rx="1.6" ry="2" fill="var(--bird-eye)"/>
-        <circle cx="113.6" cy="45.4" r=".45" fill="#fff"/><circle cx="125.6" cy="45.4" r=".45" fill="#fff"/>
-        ${olive ? '<g class="rp-bird-olive"><path d="M120 59 Q137 63 153 52" fill="none" stroke="#627b43" stroke-width="1.5"/><path d="M132 61 Q127 50 139 54 Q142 59 132 61 M141 58 Q138 47 149 49 Q150 55 141 58 M143 57 Q150 65 156 57 Q153 53 143 57" fill="#89a664" stroke="#52683b" stroke-width=".5"/></g>' : ''}
-      </svg>
+      <div class="rp-bird-shape"><img class="rp-bird-photo" src="assets/rainbow-promise/${photo}" alt="" width="1536" height="1024" decoding="async" draggable="false"></div>
     </div>`;
   };
 
@@ -175,7 +150,7 @@
     <div class="rp-birds" aria-hidden="true">
       ${birdMarkup('rp-bird-raven', 0)}
       ${birdMarkup('rp-bird-dove-one', 1)}
-      ${birdMarkup('rp-bird-dove-two', 2, true)}
+      ${birdMarkup('rp-bird-dove-two', 2)}
     </div>
     <div class="rp-water">
       <div class="rp-wave rp-wave-a"></div>
@@ -196,7 +171,7 @@
     </div>
     <div class="rp-vapor"></div>
     <button class="rp-sound-toggle" type="button" aria-pressed="false" aria-label="Turn ambient sound on">Sound Off</button>
-    <div class="rp-credit">Storm and Ark texture: public domain/CC0 via Wikimedia Commons<br>Rainbow: <a href="https://commons.wikimedia.org/wiki/File:Double-alaskan-rainbow.jpg" target="_blank" rel="noopener">Eric Rolph</a>, <a href="https://creativecommons.org/licenses/by-sa/2.5/" target="_blank" rel="noopener">CC BY-SA 2.5</a> · resized, cropped and blended</div>
+    <div class="rp-credit">Storm and Ark texture: public domain/CC0 via Wikimedia Commons<br>Rainbow: <a href="https://commons.wikimedia.org/wiki/File:Double-alaskan-rainbow.jpg" target="_blank" rel="noopener">Eric Rolph</a>, <a href="https://creativecommons.org/licenses/by-sa/2.5/" target="_blank" rel="noopener">CC BY-SA 2.5</a> · resized, cropped and blended<br>Bird photos: <a href="https://www.publicdomainpictures.net/en/view-image.php?image=256495&amp;picture=dove-flying-in-sky" target="_blank" rel="noopener">Karen Arnold</a> / <a href="https://commons.wikimedia.org/wiki/File:Raven_flying_(Corvus_corax)_(51192501139).jpg" target="_blank" rel="noopener">NPS, Emily Hassell</a> · public domain, backgrounds removed</div>
     <div class="rp-caption"><div><strong>The ark moves through living water as the promise gathers.</strong><span>Deep blue waves roll beneath the reconstructed wooden ark while foam, reflection, warm light, rain, and the emerging rainbow turn the storm toward hope.</span></div><div class="rp-tag">Living Covenant</div></div>`;
 
   // A closed orbit avoids snapping back to a tiny bird at the end of a pass.
@@ -208,7 +183,6 @@
   ];
   const flock = [...wrap.querySelectorAll('.rp-bird')].map((element, index) => ({
     element, shape: element.querySelector('.rp-bird-shape'),
-    left: element.querySelector('.rp-wing-left'), right: element.querySelector('.rp-wing-right'),
     duration: [32000, 39000, 45000][index], offset: [0.04, 0.40, 0.73][index],
     mirror: index === 1 ? -1 : 1, vertical: [0, .045, -.045][index]
   }));
@@ -243,16 +217,11 @@
       bird.element.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-50%) scale(${size.toFixed(4)})`;
       bird.element.style.opacity = String(.52 + .46 * Math.min(1, size));
       bird.element.style.zIndex = String(100 - Math.round(depth * 3));
-      bird.shape.style.transform = `rotate(${bank.toFixed(2)}deg) rotateY(${(turn * 32).toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg)`;
-      // Short bursts of wingbeats alternate with long, level glides.
-      const seconds = elapsed / 1000;
-      const beatRate = index === 0 ? 3.0 : 3.7;
-      const burst = (seconds + index * 1.7) % 6.6;
-      const envelope = still ? 0 : Math.max(0, Math.min(1, (4.1 - burst) * 3, burst * 4));
-      const flap = Math.sin(seconds * Math.PI * 2 * beatRate + index * 1.8) * envelope;
-      const fold = 1 - Math.abs(flap) * .55;
-      bird.left.style.transform = `rotate(${(flap * 23 - bank * .10).toFixed(2)}deg) scaleY(${fold.toFixed(3)})`;
-      bird.right.style.transform = `rotate(${(-flap * 23 - bank * .10).toFixed(2)}deg) scaleY(${fold.toFixed(3)})`;
+      // Gentle gliding keeps the photographed anatomy intact. Mirrored doves
+      // bank in different directions as the flock approaches and circles away.
+      const glide = still ? 0 : Math.sin(elapsed / 1050 + index * 2.1) * 2.2;
+      const facing = index === 2 ? -1 : 1;
+      bird.shape.style.transform = `rotate(${(bank + glide).toFixed(2)}deg) rotateY(${(turn * 22).toFixed(2)}deg) rotateX(${pitch.toFixed(2)}deg) scaleX(${facing})`;
     });
   };
   const flyBirds = (now) => {
