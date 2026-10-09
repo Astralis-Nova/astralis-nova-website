@@ -138,7 +138,7 @@
     const leftCut = raven ? '0,0 690,0 690,440 630,480 460,390 0,180' : '0,380 675,380 715,470 795,590 850,680 820,760 765,1024 0,1024';
     const rightCut = raven ? '850,515 1030,495 1536,675 1536,1024 1110,1024 900,685' : '1000,170 1450,170 1450,500 1350,530 1220,515 1100,420 1000,370';
     return `<div class="rp-bird ${kind}" data-flight="${index}">
-      <svg class="rp-bird-shape" viewBox="0 0 1536 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg class="rp-bird-shape" viewBox="0 0 ${raven ? 1536 : 1792} 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
           <clipPath id="${id}-left"><polygon points="${left}"/></clipPath>
           <clipPath id="${id}-right"><polygon points="${right}"/></clipPath>
@@ -147,7 +147,9 @@
           </mask>
         </defs>
         <g class="rp-photo-wing rp-wing-left"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-left)"/></g>
-        <g class="rp-photo-wing rp-wing-right"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-right)"/></g>
+        <g class="rp-photo-wing rp-wing-right">${raven
+          ? `<image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-right)"/>`
+          : `<g transform="translate(1790 0) scale(-1 1)"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-left)"/></g>`}</g>
         <image class="rp-bird-photo rp-photo-body" href="${photo}" width="1536" height="1024" mask="url(#${id}-body)"/>
       </svg>
     </div>`;
@@ -201,7 +203,9 @@
   const flock = [...wrap.querySelectorAll('.rp-bird')].map((element, index) => ({
     element, shape: element.querySelector('.rp-bird-shape'),
     left: element.querySelector('.rp-wing-left'), right: element.querySelector('.rp-wing-right'),
-    shoulders: index === 0 ? [[665, 465], [860, 570]] : [[750, 510], [1040, 415]],
+    // The oblique dove photograph foreshortens the rear wing. Mirror the
+    // photographed near wing to make a matched pair with level shoulder roots.
+    shoulders: index === 0 ? [[665, 465], [860, 570]] : [[750, 510], [1040, 510]],
     duration: [32000, 39000, 45000][index], offset: [0.04, 0.40, 0.73][index],
     mirror: index === 1 ? -1 : 1, vertical: [0, .045, -.045][index]
   }));
@@ -246,11 +250,11 @@
       const glide = still ? 0 : Math.sin(seconds * 1.45 + index * 2.1) * 4;
       const facing = index === 2 ? -1 : 1;
       bird.shape.style.transform = `rotate(${(bank + glide + (index === 0 ? -32 : 0)).toFixed(2)}deg) scaleX(${facing})`;
-      const fold = 1 - Math.max(0, flap) * (index === 0 ? .28 : .42);
-      const wingAngle = flap * (index === 0 ? 15 : 23);
+      const fold = 1 - Math.max(0, flap) * (index === 0 ? .24 : .30);
+      const wingAngle = flap * (index === 0 ? 13 : 19);
       [bird.left, bird.right].forEach((wing, side) => {
         const [sx, sy] = bird.shoulders[side];
-        const angle = side === 0 ? wingAngle : -wingAngle * .82;
+        const angle = side === 0 ? wingAngle : -wingAngle;
         wing.setAttribute('transform', `translate(${sx} ${sy}) rotate(${angle.toFixed(2)}) scale(1 ${fold.toFixed(3)}) translate(${-sx} ${-sy})`);
       });
       if (soundTick !== soundPositionTick || still) {

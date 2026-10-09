@@ -30,6 +30,10 @@ test('photo wings flap independently; distance loops and reduced motion remain s
       const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(f => f(time));
       birds.forEach((bird, i) => {
         const wing = bird.querySelector('.rp-wing-left').attrs.transform;
+        const otherWing = bird.querySelector('.rp-wing-right').attrs.transform;
+        const angle = value => Number(value.match(/rotate\(([^)]+)\)/)[1]);
+        assert(Math.abs(angle(wing) + angle(otherWing)) < .011, 'matched wings have equal, opposite flap angles');
+        assert.equal(wing.match(/scale\(1 ([^)]+)\)/)[1], otherWing.match(/scale\(1 ([^)]+)\)/)[1], 'both wings fold together');
         assert(!wing.includes('NaN'));
         assert(!bird.style.transform.includes('NaN'));
         wings[i].add(wing);
