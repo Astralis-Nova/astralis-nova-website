@@ -1,7 +1,7 @@
 # Rainbow Promise bird photographs
 
-- `dove-flight-photo.png`: Karen Arnold, “Dove Flying in Sky”, free public-domain photo: https://www.publicdomainpictures.net/en/view-image.php?image=256495&picture=dove-flying-in-sky
-- `raven-flight-photo.png`: NPS / Emily Hassell, Joshua Tree National Park, “Raven flying (Corvus corax)”, January 24, 2021. Public domain, work of a US National Park Service employee: https://commons.wikimedia.org/wiki/File:Raven_flying_(Corvus_corax)_(51192501139).jpg
+- `dove-flight-photo.webp`: Karen Arnold, “Dove Flying in Sky”, free public-domain photo: https://www.publicdomainpictures.net/en/view-image.php?image=256495&picture=dove-flying-in-sky
+- `raven-flight-photo.webp`: NPS / Emily Hassell, Joshua Tree National Park, “Raven flying (Corvus corax)”, January 24, 2021. Public domain, work of a US National Park Service employee: https://commons.wikimedia.org/wiki/File:Raven_flying_(Corvus_corax)_(51192501139).jpg
 
 These are cutouts edited from the downloaded photographs with the built-in image editing tool, rather than newly generated bird images. The original sky backgrounds were removed for transparent compositing. The website animates complete cutouts with depth, gliding and banking; it does not synthesize additional photographic poses.
 

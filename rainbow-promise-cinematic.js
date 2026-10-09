@@ -130,7 +130,7 @@
   // Cutouts of real public-domain photographs. Keep the complete photographed
   // bird intact while perspective and banking carry it around the flight path.
   const birdMarkup = (kind, index) => {
-    const photo = index === 0 ? 'raven-flight-photo.png' : 'dove-flight-photo.png';
+    const photo = index === 0 ? 'raven-flight-photo.webp' : 'dove-flight-photo.webp';
     return `<div class="rp-bird ${kind}" data-flight="${index}">
       <div class="rp-bird-shape"><img class="rp-bird-photo" src="assets/rainbow-promise/${photo}" alt="" width="1536" height="1024" decoding="async" draggable="false"></div>
     </div>`;
