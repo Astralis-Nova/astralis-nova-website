@@ -7,9 +7,11 @@
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const canvas = document.createElement('canvas');
   const plate = document.createElement('canvas');
+  const shipPlate = document.createElement('canvas');
   const context = canvas.getContext('2d');
   const plateContext = plate.getContext('2d');
-  if (!context || !plateContext) return;
+  const shipContext = shipPlate.getContext('2d');
+  if (!context || !plateContext || !shipContext) return;
   canvas.className = 'rp-living-flood';
   canvas.setAttribute('aria-hidden', 'true');
   const backdrop = document.createElement('img');
@@ -47,6 +49,9 @@
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    shipPlate.width = Math.ceil(width * ratio);
+    shipPlate.height = Math.ceil(height * ratio);
+    shipContext.setTransform(ratio, 0, 0, ratio, 0, 0);
     // Cache exactly the same centered cover crop as the static landscape.
     plate.width = Math.ceil(width + 32);
     plate.height = Math.ceil(height + 16);
@@ -73,31 +78,58 @@
 
     const shipWidth = Math.min(860, width * (width < 700 ? .93 : .76));
     const shipHeight = shipWidth * ark.naturalHeight / ark.naturalWidth;
-    const heave = still ? 0 : Math.sin(seconds * .82) * 2.1 + Math.sin(seconds * 1.37) * .6;
-    const roll = still ? 0 : Math.sin(seconds * .63 + .5) * .0024;
-    const waterline = height * .715 + heave;
-    const left = (width - shipWidth) / 2;
-    const aboveWater = .83;
+    const waterline = height * .715;
+    const amplitude = Math.max(3, Math.min(6, height * .0075));
+    const swell = x => still ? 0 : amplitude * (Math.sin((x / width - .5) * 3.8 + seconds * .85) + .33 * Math.sin((x / width - .5) * 9 - seconds * 1.4));
+    // A heavy hull responds more slowly than the passing crest. Water continues
+    // moving independently and intermittently covers/reveals the wet timber.
+    const heave = still ? 0 : amplitude * .72 * Math.sin(seconds * .85 - .35);
+    const sway = still ? 0 : Math.sin(seconds * .33) * width * .002;
+    const left = (width - shipWidth) / 2 + sway;
+    const roll = still ? 0 : Math.atan2(swell(left + shipWidth) - swell(left), shipWidth) * .62;
+    const aboveWater = .79;
     const visibleHeight = shipHeight * aboveWater;
+    const surface = x => waterline + swell(x) + (still ? 0 : Math.sin(x * .047 - seconds * 1.7) * 1.25);
+    const waveEdge = () => {
+      context.moveTo(0, surface(0));
+      for (let x = 8; x < width; x += 8) context.lineTo(x, surface(x));
+      context.lineTo(width, surface(width));
+    };
+    shipContext.clearRect(0, 0, width, height);
+    shipContext.save();
+    shipContext.translate(width / 2 + sway, waterline + heave);
+    shipContext.rotate(roll);
+    shipContext.drawImage(ark, -shipWidth / 2, -visibleHeight, shipWidth, shipHeight);
+    shipContext.restore();
 
     // Reflect the actual timber image from the waterline down, broken into
     // independent narrow strips rather than a blurred generic ship silhouette.
     for (let y = 0; y < visibleHeight; y += 3) {
       const band = Math.min(3, visibleHeight - y);
       const fraction = y / visibleHeight;
-      context.globalAlpha = .26 * (1 - fraction) ** 2;
+      context.globalAlpha = .33 * (1 - fraction) ** 1.7;
       const ripple = Math.sin(y * .21 - seconds * 1.5) * (2 + fraction * 9);
-      const sy = Math.max(0, (visibleHeight - y - band) / shipHeight * ark.naturalHeight);
-      context.drawImage(ark, 0, sy, ark.naturalWidth, band / shipHeight * ark.naturalHeight,
-        left + ripple, waterline + y * .55, shipWidth, band * .55 + .3);
+      const ratio = shipPlate.width / width;
+      const sy = Math.max(0, waterline - y - band);
+      context.drawImage(shipPlate, 0, sy * ratio, shipPlate.width, band * ratio,
+        ripple, waterline + swell(width / 2) + y * .65, width, band * .65 + .3);
     }
     context.globalAlpha = 1;
 
-    // Submerge the lower hull; both its pose and reflection share one heave.
+    // Soft contact shadow gives the hull weight without a hard sticker outline.
     context.save();
-    context.beginPath(); context.rect(0, 0, width, waterline + .5); context.clip();
-    context.translate(width / 2, waterline); context.rotate(roll);
-    context.drawImage(ark, -shipWidth / 2, -visibleHeight, shipWidth, shipHeight);
+    context.globalAlpha = .27;
+    const shadow = context.createRadialGradient(width / 2 + sway, waterline, 2, width / 2 + sway, waterline, shipWidth * .55);
+    shadow.addColorStop(0, '#07121b'); shadow.addColorStop(1, 'rgba(7,18,27,0)');
+    context.fillStyle = shadow;
+    context.translate(0, waterline); context.scale(1, .055);
+    context.beginPath(); context.ellipse(width / 2 + sway, 0, shipWidth * .55, shipWidth * .5, 0, 0, Math.PI * 2); context.fill();
+    context.restore();
+    // The clipping boundary is the water's moving surface, not the ship's pose.
+    context.save();
+    context.beginPath(); waveEdge();
+    context.lineTo(width, 0); context.lineTo(0, 0); context.closePath(); context.clip();
+    context.drawImage(shipPlate, 0, 0, width, height);
     context.restore();
 
     // A drifting ark displaces water gently, without a motorboat's V wake.
@@ -107,19 +139,23 @@
       context.strokeStyle = `rgba(203,221,220,${fade.toFixed(4)})`;
       context.lineWidth = .6 + phase * .8;
       context.beginPath();
-      context.ellipse(width / 2, waterline + 2 + phase * 12, shipWidth * (.47 + phase * .13), 3 + phase * 13, 0, .05, Math.PI - .05);
+      context.ellipse(width / 2 + sway, surface(width / 2) + 4 + phase * 16, shipWidth * (.47 + phase * .13), 3 + phase * 13, 0, .05, Math.PI - .05);
       context.stroke();
     }
     // Short irregular wavelets hide the cutout seam where wet timber meets water.
     for (let i = 0; i < 35; i++) {
       const x = left + shipWidth * (.045 + i / 38);
-      const wave = Math.sin(i * 2.1 - seconds * 1.3);
-      context.strokeStyle = `rgba(171,197,204,${(.12 + .07 * wave).toFixed(4)})`;
-      context.lineWidth = .8;
-      context.beginPath(); context.moveTo(x, waterline + wave * 1.7);
-      context.lineTo(x + 3 + (i % 4) * 2, waterline + wave * 1.7 + .3); context.stroke();
+      const wave = still ? 0 : Math.sin(i * 2.1 - seconds * 1.3);
+      context.strokeStyle = `rgba(191,210,213,${(.23 + .13 * wave).toFixed(4)})`;
+      context.lineWidth = 1 + Math.max(0, wave) * .7;
+      context.beginPath(); context.moveTo(x, surface(x) + .4);
+      const end = x + 5 + (i % 4) * 2;
+      context.quadraticCurveTo((x + end) / 2, surface(x) - 1.2, end, surface(end) + .3); context.stroke();
     }
     wrap.dataset.arkWaterTime = seconds.toFixed(2);
+    wrap.dataset.arkHeave = heave.toFixed(3);
+    wrap.dataset.arkRoll = roll.toFixed(5);
+    wrap.dataset.arkSurface = surface(width / 2).toFixed(3);
   }
 
   function tick(now) {

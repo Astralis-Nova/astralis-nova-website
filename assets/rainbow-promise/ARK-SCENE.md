@@ -26,3 +26,9 @@ waterline, and uses the actual ark image for its broken reflection. Both share a
 gentle heave. It uses small displacement ripples rather than a powered wake.
 It pauses offscreen and in hidden tabs, follows reduced-motion settings and
 cleans up on page exit. Original birds, rainbow and opt-in audio remain intact.
+
+The October 9 refinement gives the water a varying crest across the hull,
+independent of the ship's delayed heave and pitch. The submerged hull boundary
+follows those crests; reflection samples the same rotated ship rendering.
+Contact shadow, short foam curves and gentle displacement ripples help the
+vessel sit within the water instead of above a straight horizontal cut.

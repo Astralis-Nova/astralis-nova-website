@@ -28,6 +28,7 @@ test('photo wings flap independently; distance loops and reduced motion remain s
     const wings = birds.map(() => new Set()), sizes = birds.map(() => []);
     const previousSizes = [], previousX = [], facingChecks = [0, 0, 0];
     const angles = birds.map(() => []), tipPoses = birds.map(() => new Set()), bodyPoses = birds.map(() => new Set());
+    const headPoses = birds.map(() => new Set()), footPoses = birds.map(() => new Set()), blinkStates = birds.map(() => new Set());
     for (let time = 0; time <= 90000; time += 16) {
       const callbacks = [...frames.values()]; frames.clear(); callbacks.forEach(f => f(time));
       birds.forEach((bird, i) => {
@@ -57,6 +58,12 @@ test('photo wings flap independently; distance loops and reduced motion remain s
         angles[i].push(angle(wing));
         tipPoses[i].add(bird.querySelector('.rp-wing-left .rp-photo-tip').attrs.transform);
         bodyPoses[i].add(bird.querySelector('.rp-photo-body-motion').attrs.transform);
+        headPoses[i].add(bird.querySelector('.rp-photo-head').attrs.transform);
+        footPoses[i].add(bird.querySelector('.rp-leg-left').attrs.transform);
+        blinkStates[i].add(bird.querySelector('.rp-photo-eyelid').attrs.opacity);
+        for (const selector of ['.rp-photo-head', '.rp-leg-left', '.rp-leg-right', '.rp-photo-eyelid']) {
+          assert(!bird.querySelector(selector).attrs.transform.includes('NaN'), 'all articulated anatomy must remain finite');
+        }
         assert(!wing.includes('NaN'));
         assert(!bird.style.transform.includes('NaN'));
         wings[i].add(wing);
@@ -68,11 +75,18 @@ test('photo wings flap independently; distance loops and reduced motion remain s
     angles.forEach(values => assert(Math.max(...values) - Math.min(...values) > 80, 'wing stroke must have visible full excursion'));
     tipPoses.forEach(values => assert(values.size > 100, 'wingtips flex instead of moving as one rigid panel'));
     bodyPoses.forEach(values => assert(values.size > 100, 'body responds to wingbeats'));
+    headPoses.forEach(values => assert(values.size > 100, 'heads glance independently'));
+    footPoses.forEach(values => assert(values.size > 100, 'tucked feet occasionally stretch and curl'));
+    blinkStates.forEach(values => assert(values.has('0') && values.has('1'), 'eyes briefly blink and reopen'));
     facingChecks.forEach(count => assert(count > 300, 'direction checked throughout the orbit'));
     sizes.forEach(values => assert(Math.max(...values) / Math.min(...values) > 8));
     motion.matches = true; motionEvents.change(); assert.equal(frames.size, 0);
     const still = birds.map(b => b.querySelector('.rp-wing-left').attrs.transform);
     still.forEach(pose => assert(pose.includes('rotate(0.00) scale(1.000 1.000)')));
+    birds.forEach(bird => {
+      assert.equal(bird.querySelector('.rp-photo-eyelid').attrs.opacity, '0', 'reduced motion leaves eyes open');
+      assert(bird.querySelector('.rp-leg-left').attrs.transform.includes('scale(1 1.000)'), 'reduced motion leaves feet tucked');
+    });
     observers[0].f();
     assert.deepEqual(birds.map(b => b.querySelector('.rp-wing-left').attrs.transform), still);
     motion.matches = false; motionEvents.change(); assert.equal(frames.size, 1);

@@ -133,7 +133,7 @@
     const raven = index === 0;
     const photo = `assets/rainbow-promise/${raven ? 'raven' : 'dove'}-flight-photo.webp`;
     const id = `rp-photo-${index}`;
-    const left = raven ? '0,0 720,0 720,450 660,500 480,400 0,180' : '0,380 700,380 740,470 820,590 880,680 850,760 790,1024 0,1024';
+    const left = raven ? '0,0 720,0 720,450 660,500 480,400 0,180' : '0,380 700,380 740,470 820,590 850,650 790,710 725,760 570,815 410,860 0,910';
     const leftCut = raven ? '0,0 690,0 690,440 630,480 460,390 0,180' : '0,380 675,380 715,470 795,590 850,680 820,760 765,1024 0,1024';
     const rightCut = raven ? '850,515 1030,495 1536,675 1536,1024 1110,1024 900,685' : '1000,170 1450,170 1450,500 1350,530 1220,515 1100,420 1000,370';
     const wristX = raven ? 360 : 490;
@@ -142,6 +142,10 @@
     // Both shoulders now sit on one horizontal line through the body.
     const wing = raven ? `<g transform="translate(-35 45) rotate(-36 665 465)">${nearWing}</g>` : nearWing;
     const center = raven ? 768 : 895;
+    const head = raven ? 'M685 558 Q740 580 817 590 L835 653 L824 737 L757 727 L706 650 Z' : 'M660 182 H860 L924 315 Q859 379 732 380 L659 313 Z';
+    const headCut = raven ? 'M700 574 Q752 593 804 603 L819 653 L811 726 L765 713 L719 646 Z' : 'M674 196 H852 L907 313 Q858 365 743 365 L674 306 Z';
+    const eye = raven ? [781, 634] : [785, 252];
+    const feet = raven ? `<g class="rp-photo-leg rp-leg-left"><path d="M645 505 Q665 518 671 539 L659 556 M671 539 L682 553 M671 539 L674 559" fill="none" stroke="#343943" stroke-width="8" stroke-linecap="round"/><path d="M647 506 L671 538" stroke="#7a8189" stroke-width="2" opacity=".7"/></g><g class="rp-photo-leg rp-leg-right"><path d="M692 526 Q711 535 718 551 L706 567 M718 551 L732 563 M718 551 L722 573" fill="none" stroke="#292e36" stroke-width="8" stroke-linecap="round"/><path d="M693 526 L718 550" stroke="#69717a" stroke-width="2" opacity=".7"/></g>` : `<g class="rp-photo-leg rp-leg-left"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-foot-left)"/></g><g class="rp-photo-leg rp-leg-right"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-foot-right)"/></g>`;
     return `<div class="rp-bird ${kind}" data-flight="${index}">
       <svg class="rp-bird-shape" viewBox="0 0 ${raven ? 1536 : 1792} 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
@@ -149,9 +153,13 @@
           <clipPath id="${id}-inner"><rect x="${wristX - 30}" width="1536" height="1024"/></clipPath>
           <clipPath id="${id}-tip"><rect width="${wristX + 30}" height="1024"/></clipPath>
           <clipPath id="${id}-tail"><polygon points="920,640 1230,550 1536,620 1536,1024 760,1024 790,760"/></clipPath>
+          <clipPath id="${id}-head"><path d="${head}"/></clipPath>
+          <clipPath id="${id}-foot-left"><ellipse cx="1033" cy="657" rx="47" ry="47"/></clipPath>
+          <clipPath id="${id}-foot-right"><ellipse cx="1117" cy="638" rx="39" ry="56"/></clipPath>
           <mask id="${id}-tail-clean" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024" style="mask-type:luminance"><rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/></mask>
           <mask id="${id}-body" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024" style="mask-type:luminance">
-            <rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/>${raven ? '' : '<polygon points="945,670 1255,580 1536,645 1536,1024 790,1024 820,785" fill="black"/>'}
+            ${raven ? `<rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/>` : '<rect width="1536" height="1024" fill="black"/><path d="M706 270 Q716 212 782 212 Q824 206 861 264 Q895 292 958 290 Q1000 294 1030 325 L992 372 Q1010 447 1116 546 L1220 604 Q1246 649 1178 676 Q1130 710 1058 700 Q925 689 825 610 Q737 550 711 426 L720 345 Z" fill="white"/>'}
+            <path d="${headCut}" fill="black"/>${raven ? '' : '<ellipse cx="1033" cy="657" rx="38" ry="38" fill="black"/><ellipse cx="1117" cy="638" rx="31" ry="47" fill="black"/>'}
           </mask>
         </defs>
         <g class="rp-photo-wing rp-wing-left">${wing}</g>
@@ -159,6 +167,8 @@
         <g class="rp-photo-body-motion"><g class="rp-photo-body-frame" transform="${raven ? 'rotate(-32 768 512)' : 'translate(-45 0) rotate(38 895 510)'}">
           ${raven ? '' : `<g class="rp-photo-tail" clip-path="url(#${id}-tail)"><image href="${photo}" width="1536" height="1024" mask="url(#${id}-tail-clean)"/></g>`}
           <image class="rp-bird-photo rp-photo-body" href="${photo}" width="1536" height="1024" mask="url(#${id}-body)"/>
+          ${feet}
+          <g class="rp-photo-head"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-head)"/>${raven ? `<ellipse cx="${eye[0]}" cy="${eye[1]}" rx="7" ry="6" fill="#090d13"/><circle cx="${eye[0]-2}" cy="${eye[1]-2}" r="1.6" fill="#adbac8" opacity=".7"/>` : ''}<g class="rp-photo-eyelid"><ellipse cx="${eye[0]}" cy="${eye[1]}" rx="${raven ? 8 : 15}" ry="${raven ? 7 : 17}" fill="${raven ? '#252c37' : '#dce1e7'}"/></g></g>
         </g></g>
       </svg>
     </div>`;
@@ -214,6 +224,8 @@
     left: element.querySelector('.rp-wing-left'), right: element.querySelector('.rp-wing-right'),
     tips: [element.querySelector('.rp-wing-left .rp-photo-tip'), element.querySelector('.rp-wing-right .rp-photo-tip')],
     body: element.querySelector('.rp-photo-body-motion'), tail: element.querySelector('.rp-photo-tail'),
+    head: element.querySelector('.rp-photo-head'), eyelid: element.querySelector('.rp-photo-eyelid'),
+    legs: [element.querySelector('.rp-leg-left'), element.querySelector('.rp-leg-right')],
     center: index === 0 ? 768 : 895, wrist: index === 0 ? [360, 275] : [490, 620],
     // Each pair shares its photographed wing geometry and a level shoulder line.
     shoulders: index === 0 ? [[630, 510], [906, 510]] : [[750, 510], [1040, 510]],
@@ -294,6 +306,23 @@
       const bodyNod = still ? 0 : flap * (raven ? 1.4 : 2.5);
       const bodyBob = still ? 0 : -flap * 14;
       bird.body?.setAttribute('transform', `translate(0 ${bodyBob.toFixed(2)}) rotate(${bodyNod.toFixed(2)} ${bird.center} 510)`);
+      const glance = still ? 0 : Math.sin(seconds * .73 + index * 1.8) * 3.8 + turn * 3;
+      const neck = raven ? [745, 602] : [805, 353];
+      bird.head?.setAttribute('transform', `rotate(${glance.toFixed(2)} ${neck[0]} ${neck[1]})`);
+      const blinkPhase = (seconds + index * 2.37) % (raven ? 6.7 : 5.3);
+      const blink = still ? 0 : Math.max(0, 1 - Math.abs(blinkPhase - .14) / .095);
+      const [eyeX, eyeY] = raven ? [781, 634] : [785, 252];
+      bird.eyelid?.setAttribute('transform', `translate(${eyeX} ${eyeY}) scale(1 ${blink.toFixed(3)}) translate(${-eyeX} ${-eyeY})`);
+      bird.eyelid?.setAttribute('opacity', blink > .01 ? '1' : '0');
+      // Feet stay tucked during cruise, then briefly stretch and curl near a
+      // turn. A slower adjustment has its own timing, rather than leg pedalling.
+      const adjustment = still ? 0 : (Math.max(0, Math.sin(seconds * .64 + index * 1.9)) ** 8) * .7 + Math.abs(turn) * turnBlend * .3;
+      bird.legs.forEach((leg, side) => {
+        const [lx, ly] = raven ? (side ? [692, 526] : [645, 505]) : (side ? [1113, 608] : [1017, 625]);
+        const stretch = still ? 1 : 1 + adjustment * (side ? .42 : .55);
+        const angle = still ? 0 : (side ? -1 : 1) * (adjustment * 13 + flap * 1.7);
+        leg?.setAttribute('transform', `translate(${lx} ${ly}) rotate(${angle.toFixed(2)}) scale(1 ${stretch.toFixed(3)}) translate(${-lx} ${-ly})`);
+      });
       if (bird.tail) {
         const rudder = still ? 0 : turn * 5 + Math.sin(seconds * 2.2 + index) * 2;
         const fan = still ? 1 : .92 + .08 * (1 + flap) / 2;
