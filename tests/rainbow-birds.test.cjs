@@ -56,7 +56,15 @@ test('photo wings flap independently; distance loops and reduced motion remain s
         }
         previousX[i] = x;
         angles[i].push(angle(wing));
-        tipPoses[i].add(bird.querySelector('.rp-wing-left .rp-photo-tip').attrs.transform);
+        tipPoses[i].add(bird.querySelector('.rp-wing-left .rp-mesh-cell-0').attrs.transform);
+        assert(Math.abs(profile) >= .72, 'the body must not flatten into a zero-width cutout during turns');
+        for (let cell = 0; cell < 16; cell++) {
+          const matrix = bird.querySelector(`.rp-wing-left .rp-mesh-cell-${cell}`).attrs.transform;
+          assert.equal(matrix, bird.querySelector(`.rp-wing-right .rp-mesh-cell-${cell}`).attrs.transform, 'mirrored wings share the same continuous surface deformation');
+          const [a, b, c, d, e, f] = matrix.slice(7, -1).split(' ').map(Number);
+          assert([a, b, c, d, e, f].every(Number.isFinite), 'mesh matrices must remain finite');
+          assert(a * d - b * c > .1, `surface triangles must retain area without inverting: bird ${i}, cell ${cell}, det ${a*d-b*c}`);
+        }
         bodyPoses[i].add(bird.querySelector('.rp-photo-body-motion').attrs.transform);
         headPoses[i].add(bird.querySelector('.rp-photo-head').attrs.transform);
         footPoses[i].add(bird.querySelector('.rp-leg-left').attrs.transform);

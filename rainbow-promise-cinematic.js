@@ -137,7 +137,19 @@
     const leftCut = raven ? '0,0 690,0 690,440 630,480 460,390 0,180' : '0,380 675,380 715,470 795,590 850,680 820,760 765,1024 0,1024';
     const rightCut = raven ? '850,515 1030,495 1536,675 1536,1024 1110,1024 900,685' : '1000,170 1450,170 1450,500 1350,530 1220,515 1100,420 1000,370';
     const wristX = raven ? 360 : 490;
-    const nearWing = `<g clip-path="url(#${id}-left)"><g clip-path="url(#${id}-inner)"><image href="${photo}" width="1536" height="1024"/></g><g class="rp-photo-tip"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-tip)"/></g></g>`;
+    // Each photographed wing becomes a continuous triangular surface. Shared
+    // vertices let the wrist bend and the feather chord twist without opening
+    // gaps. Clip in texture space, before deformation, so tips never get cut off.
+    const xs = [0, wristX / 2, wristX, raven ? 560 : 650, raven ? 730 : 850];
+    const ys = raven ? [0, 260, 530] : [380, 650, 930];
+    const cells = [];
+    for (let col = 0; col < 4; col++) for (let row = 0; row < 2; row++) {
+      const a = [xs[col], ys[row]], b = [xs[col + 1], ys[row]];
+      const c = [xs[col + 1], ys[row + 1]], d = [xs[col], ys[row + 1]];
+      for (const triangle of [[a, b, c], [a, c, d]]) cells.push({ triangle, tip: col < 2 });
+    }
+    const texture = (cell, n) => `<g class="rp-mesh-cell-${n}"><g clip-path="url(#${id}-mesh-${n})"><image href="${photo}" width="1536" height="1024" clip-path="url(#${id}-left)"/></g></g>`;
+    const nearWing = `<g>${cells.map((cell, n) => cell.tip ? '' : texture(cell, n)).join('')}<g class="rp-photo-tip">${cells.map((cell, n) => cell.tip ? texture(cell, n) : '').join('')}</g></g>`;
     // Normalize the photographed near wing, then reflect the same geometry.
     // Both shoulders now sit on one horizontal line through the body.
     const wing = raven ? `<g transform="translate(-35 45) rotate(-36 665 465)">${nearWing}</g>` : nearWing;
@@ -149,6 +161,11 @@
     return `<div class="rp-bird ${kind}" data-flight="${index}">
       <svg class="rp-bird-shape" viewBox="0 0 ${raven ? 1536 : 1792} 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <defs>
+          ${cells.map(({triangle}, n) => {
+            const center = triangle.reduce((p, v) => [p[0] + v[0] / 3, p[1] + v[1] / 3], [0, 0]);
+            const points = triangle.map(p => p.map((v, axis) => center[axis] + (v - center[axis]) * 1.008).join(',')).join(' ');
+            return `<clipPath id="${id}-mesh-${n}"><polygon points="${points}"/></clipPath>`;
+          }).join('')}
           <clipPath id="${id}-left"><polygon points="${left}"/></clipPath>
           <clipPath id="${id}-inner"><rect x="${wristX - 30}" width="1536" height="1024"/></clipPath>
           <clipPath id="${id}-tip"><rect width="${wristX + 30}" height="1024"/></clipPath>
@@ -158,7 +175,7 @@
           <clipPath id="${id}-foot-right"><ellipse cx="1117" cy="638" rx="39" ry="56"/></clipPath>
           <mask id="${id}-tail-clean" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024" style="mask-type:luminance"><rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/></mask>
           <mask id="${id}-body" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024" style="mask-type:luminance">
-            ${raven ? `<rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/>` : '<rect width="1536" height="1024" fill="black"/><path d="M706 270 Q716 212 782 212 Q824 206 861 264 Q895 292 958 290 Q1000 294 1030 325 L992 372 Q1010 447 1116 546 L1220 604 Q1246 649 1178 676 Q1130 710 1058 700 Q925 689 825 610 Q737 550 711 426 L720 345 Z" fill="white"/>'}
+            ${raven ? `<rect width="1536" height="1024" fill="white"/><polygon points="${leftCut}" fill="black"/><polygon points="${rightCut}" fill="black"/>` : '<rect width="1536" height="1024" fill="black"/><path d="M706 270 Q716 212 782 212 Q824 206 861 264 Q895 292 925 310 Q960 340 970 405 Q1010 477 1116 546 L1220 604 Q1246 649 1178 676 Q1130 710 1058 700 Q925 689 825 610 Q737 550 711 426 L720 345 Z" fill="white"/>'}
             <path d="${headCut}" fill="black"/>${raven ? '' : '<ellipse cx="1033" cy="657" rx="38" ry="38" fill="black"/><ellipse cx="1117" cy="638" rx="31" ry="47" fill="black"/>'}
           </mask>
         </defs>
@@ -215,15 +232,17 @@
   // A closed orbit avoids snapping back to a tiny bird at the end of a pass.
   // Depth uses perspective scaling: growth accelerates naturally near the viewer.
   const flightPath = [
-    [.50, .23, 19], [.29, .18, 14], [.35, .24, 8], [.49, .34, 3.8],
-    [.60, .40, 1.4], [.83, .30, 1.1], [.90, .17, 4.8], [.70, .13, 12],
+    [.50, .23, 19], [.27, .18, 18], [.35, .24, 8], [.49, .34, 3.8],
+    [.60, .40, 1.4], [.79, .30, 1.1], [.91, .17, 13], [.70, .13, 18],
     [.42, .20, 17]
   ];
   const flock = [...wrap.querySelectorAll('.rp-bird')].map((element, index) => ({
     element, shape: element.querySelector('.rp-bird-shape'),
     left: element.querySelector('.rp-wing-left'), right: element.querySelector('.rp-wing-right'),
     tips: [element.querySelector('.rp-wing-left .rp-photo-tip'), element.querySelector('.rp-wing-right .rp-photo-tip')],
+    mesh: ['left', 'right'].map(side => Array.from({length: 16}, (_, cell) => element.querySelector(`.rp-wing-${side} .rp-mesh-cell-${cell}`))),
     body: element.querySelector('.rp-photo-body-motion'), tail: element.querySelector('.rp-photo-tail'),
+    bodyFrame: element.querySelector('.rp-photo-body-frame'),
     head: element.querySelector('.rp-photo-head'), eyelid: element.querySelector('.rp-photo-eyelid'),
     legs: [element.querySelector('.rp-leg-left'), element.querySelector('.rp-leg-right')],
     center: index === 0 ? 768 : 895, wrist: index === 0 ? [360, 275] : [490, 620],
@@ -278,7 +297,7 @@
       const lift = still ? 0 : (Math.sin(seconds * 1.1 + index * 2) * 5 - flap * 6) * Math.min(1.3, size);
       const y = (orbitY + bird.vertical) * birdHeight + lift;
       const turn = Math.max(-1, Math.min(1, dx * 90));
-      const turnBlend = retreating ? Math.min(1, Math.max(0, (depth - 4) / 8)) : 0;
+      const turnBlend = retreating ? Math.min(1, Math.max(0, (depth - 4.3) / 8)) : 0;
       const bank = turn * 5 * turnBlend;
       // The raven's beak points right in its photo; the dove's points left.
       // Smoothly pass through an edge-on turn instead of sliding tail-first.
@@ -287,10 +306,13 @@
       bird.element.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) translate(-50%,-50%) scale(${size.toFixed(4)})`;
       bird.element.style.opacity = String(.52 + .46 * Math.min(1, size));
       bird.element.style.zIndex = String(100 - Math.round(depth * 3));
-      bird.shape.style.transform = `rotate(${(still ? 0 : bank).toFixed(2)}deg) scaleX(${facing.toFixed(4)})`;
+      // Direction changes happen at the far end of the route. Keep the breast
+      // volumetric through a turn rather than squeezing it to a zero-width line.
+      const profile = (facing < 0 ? -1 : 1) * (.72 + .28 * Math.abs(facing));
+      bird.shape.style.transform = `rotate(${(still ? 0 : bank).toFixed(2)}deg) scaleX(${profile.toFixed(4)})`;
       const recovery = Math.max(0, Math.sin(Math.PI * Math.max(0, (beatPhase - power) / (1 - power)))) * envelope;
-      const fold = still ? 1 : 1 - recovery * (raven ? .18 : .24);
-      const span = still ? 1 : 1 - recovery * (raven ? .14 : .20);
+      const fold = still ? 1 : 1 - recovery * (raven ? .08 : .10);
+      const span = still ? 1 : 1 - recovery * (raven ? .04 : .06);
       // The dove photo starts with its wings sloping down by about 28 degrees.
       // Raise that resting angle before applying the larger stroke excursion.
       const wingAngle = still ? 0 : (raven ? 0 : 27) + flap * (raven ? 43 : 52);
@@ -299,13 +321,47 @@
         const angle = side === 0 ? wingAngle : -wingAngle;
         wing.setAttribute('transform', `translate(${sx} ${sy}) rotate(${angle.toFixed(2)}) scale(${span.toFixed(3)} ${fold.toFixed(3)}) translate(${-sx} ${-sy})`);
       });
-      const tipAngle = still ? 0 : Math.sin(beat * Math.PI * 2 - .55) * envelope * (raven ? 7 : 10);
       const [wx, wy] = bird.wrist;
-      // These tip groups are inside the reflected wing, so use the same angle.
-      bird.tips.forEach(tip => tip?.setAttribute('transform', `rotate(${tipAngle.toFixed(2)} ${wx} ${wy})`));
+      // All flex now happens on the connected surface, including the primaries.
+      // Rotating the tip panel separately would tear its shared wrist edge.
+      bird.tips.forEach(tip => tip?.setAttribute('transform', 'translate(0 0)'));
+      // Recovery bends the outer wing much more than the arm. The wing chord
+      // narrows and primaries lag the wrist, tracing a curved, swept stroke.
+      const xs = [0, wx / 2, wx, raven ? 560 : 650, raven ? 730 : 850];
+      const ys = raven ? [0, 260, 530] : [380, 650, 930];
+      const root = raven ? [665, 465] : [750, 510];
+      const foreshorten = still ? 0 : (1 - Math.abs(yaw)) * .16;
+      const deform = ([px, py]) => {
+        const reach = Math.max(0, Math.min(1, (root[0] - px) / root[0]));
+        const bend = recovery * reach * reach;
+        const lag = still ? 0 : Math.sin(beat * Math.PI * 2 - reach * .8) * envelope;
+        return [root[0] + (px - root[0]) * (1 - bend * .28),
+          root[1] + (py - root[1]) * (1 - bend * .36 - foreshorten * reach) - bend * 85 + lag * reach * reach * 28];
+      };
+      let cell = 0;
+      for (let col = 0; col < 4; col++) for (let row = 0; row < 2; row++) {
+        const p = [xs[col], ys[row]], q = [xs[col + 1], ys[row]];
+        const r = [xs[col + 1], ys[row + 1]], s = [xs[col], ys[row + 1]];
+        for (const [a, b, c] of [[p, q, r], [p, r, s]]) {
+          const [A, B, C] = [a, b, c].map(deform);
+          const ux = b[0] - a[0], uy = b[1] - a[1], vx = c[0] - a[0], vy = c[1] - a[1];
+          const det = ux * vy - uy * vx;
+          const m = [(vy * (B[0] - A[0]) - uy * (C[0] - A[0])) / det,
+            (vy * (B[1] - A[1]) - uy * (C[1] - A[1])) / det,
+            (ux * (C[0] - A[0]) - vx * (B[0] - A[0])) / det,
+            (ux * (C[1] - A[1]) - vx * (B[1] - A[1])) / det];
+          m.push(A[0] - m[0] * a[0] - m[2] * a[1], A[1] - m[1] * a[0] - m[3] * a[1]);
+          const matrix = `matrix(${m.map(value => value.toFixed(5)).join(' ')})`;
+          bird.mesh.forEach(wing => wing[cell]?.setAttribute('transform', matrix));
+          cell++;
+        }
+      }
       const bodyNod = still ? 0 : flap * (raven ? 1.4 : 2.5);
       const bodyBob = still ? 0 : -flap * 14;
       bird.body?.setAttribute('transform', `translate(0 ${bodyBob.toFixed(2)}) rotate(${bodyNod.toFixed(2)} ${bird.center} 510)`);
+      const climb = Math.max(-1, Math.min(1, -(nextY - orbitY) * 45));
+      const attitude = raven ? -32 + climb * 6 : 12 + climb * 7;
+      bird.bodyFrame?.setAttribute('transform', raven ? `rotate(${attitude.toFixed(2)} 768 512)` : `translate(-45 0) rotate(${attitude.toFixed(2)} 895 510)`);
       const glance = still ? 0 : Math.sin(seconds * .73 + index * 1.8) * 3.8 + turn * 3;
       const neck = raven ? [745, 602] : [805, 353];
       bird.head?.setAttribute('transform', `rotate(${glance.toFixed(2)} ${neck[0]} ${neck[1]})`);

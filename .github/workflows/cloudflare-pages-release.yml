@@ -34,6 +34,13 @@ jobs:
           python scripts/check-site-resources.py
           node --test tests/site-audit.test.mjs tests/ac-jukebox.test.cjs
 
+      - name: Validate Rainbow Promise flight and flotation
+        run: |
+          node --check rainbow-promise-cinematic.js
+          node --check rainbow-promise-ark.js
+          node --check rainbow-promise-audio-fix.js
+          node --test tests/rainbow-birds.test.cjs tests/rainbow-water.test.cjs
+
       - name: Validate dragon transformation and flight
         run: |
           node --check ac-dragon.js
