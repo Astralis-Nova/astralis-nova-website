@@ -38,8 +38,9 @@ jobs:
         run: |
           node --check rainbow-promise-cinematic.js
           node --check rainbow-promise-ark.js
+          node --check rainbow-promise-flight.js
           node --check rainbow-promise-audio-fix.js
-          node --test tests/rainbow-birds.test.cjs tests/rainbow-water.test.cjs
+          node --test tests/rainbow-birds.test.cjs tests/rainbow-water.test.cjs tests/rainbow-flight-cycle.test.cjs
 
       - name: Validate dragon transformation and flight
         run: |

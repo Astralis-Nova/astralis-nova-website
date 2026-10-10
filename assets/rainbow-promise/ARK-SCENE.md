@@ -72,3 +72,50 @@ crest-dependent contact highlights and subdued displacement rings. Motion pauses
 without advancing its clock in hidden tabs and offscreen. Reduced motion preserves
 a still, internally consistent pose. Wave sizes and timing are artistic choices,
 not a calibrated reconstruction of the ancient flood or the vessel's hydrostatics.
+
+## October 10: whole-body flight and shoreline cleanup
+
+The previous landscape contained tiny person-like upright forms at the waterline.
+They were unintended generated shapes, not an identified person or a depiction of
+a named biblical character. `ancient-flood-landscape-clean.webp` removes those
+forms, using low rocks, exposed shore and fallen branches instead. The original
+landscape is retained as a previous asset; the scene now loads the cleaned version.
+
+The active birds use `dove-flight-cycle.webp` and `raven-flight-cycle.webp`. Each is
+a transparent 1536 × 1024 atlas of six complete photographic-style poses: broad
+power stroke, downward sweep, lower reversal, folded recovery, upper reversal,
+and opening into the next stroke. Body, neck, tail, feather overlap and tucked
+feet vary with the pose. The poses were created with the built-in image-generation
+tool, using the original public-domain bird cutouts as plumage references. These
+are AI-created images, not frames from a real wildlife recording.
+
+The generated poses were isolated from their source atlas and packed on equal
+512 × 512 cells with fixed photographic scale and aligned eye anchors. This keeps
+the flight sequence from jumping in size or position. `rainbow-promise-flight.js`
+blends adjacent poses on transparent canvases using premultiplied additive colors,
+so the breast stays opaque during each transition. It holds a glide pose between
+bursts, adds a small stroke response and brief eyelid closure, and follows the
+same direction, perspective path, clock and reduced-motion state as the scene.
+The older articulated photos remain available if an atlas fails to load. After
+activation, the hidden fallback wing meshes stop updating.
+
+Generation briefs:
+
+- Shoreline edit: preserve mountains, clouds, warm light and open foreground
+  waves; remove all person-like shapes on both distant shores; replace with low
+  irregular rocks, exposed shore and horizontal fallen branches. No people,
+  animals, modern objects, vessels or text.
+- Both flight atlases: exactly six full-body, photorealistic sequential flight
+  poses on genuine transparency, arranged in three columns and two rows. One
+  consistent bird, camera, scale and diffuse daylight; close three-quarter front
+  view from slightly below, beak turned left. Compact breast, balanced flexible
+  wings with bent elbows/wrists and distinct primaries, changing neck/tail/feet,
+  no detached limbs, clipped feathers, labels, floor shadows or illustration look.
+  Dove: white plumage with subtle dark marks, gray beak, orange eye and pink-red
+  feet. Raven: blue-black plumage, substantial black beak, glossy eye, scaly black
+  feet, wedge-shaped tail and finger-like primary feathers.
+
+Validation includes unloaded-asset fallback, species-specific activation, pose
+coverage, opaque blend weights, forward facing, a static reduced-motion pose and
+cleanup. Native canvas rendering also checks changing actual pixels through a
+full stroke. Browser visual inspection is unavailable in this editing environment.

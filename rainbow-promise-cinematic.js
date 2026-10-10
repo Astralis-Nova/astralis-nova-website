@@ -310,79 +310,82 @@
       // volumetric through a turn rather than squeezing it to a zero-width line.
       const profile = (facing < 0 ? -1 : 1) * (.72 + .28 * Math.abs(facing));
       bird.shape.style.transform = `rotate(${(still ? 0 : bank).toFixed(2)}deg) scaleX(${profile.toFixed(4)})`;
-      const recovery = Math.max(0, Math.sin(Math.PI * Math.max(0, (beatPhase - power) / (1 - power)))) * envelope;
-      const fold = still ? 1 : 1 - recovery * (raven ? .08 : .10);
-      const span = still ? 1 : 1 - recovery * (raven ? .04 : .06);
-      // The dove photo starts with its wings sloping down by about 28 degrees.
-      // Raise that resting angle before applying the larger stroke excursion.
-      const wingAngle = still ? 0 : (raven ? 0 : 27) + flap * (raven ? 43 : 52);
-      [bird.left, bird.right].forEach((wing, side) => {
-        const [sx, sy] = bird.shoulders[side];
-        const angle = side === 0 ? wingAngle : -wingAngle;
-        wing.setAttribute('transform', `translate(${sx} ${sy}) rotate(${angle.toFixed(2)}) scale(${span.toFixed(3)} ${fold.toFixed(3)}) translate(${-sx} ${-sy})`);
-      });
-      const [wx, wy] = bird.wrist;
-      // All flex now happens on the connected surface, including the primaries.
-      // Rotating the tip panel separately would tear its shared wrist edge.
-      bird.tips.forEach(tip => tip?.setAttribute('transform', 'translate(0 0)'));
-      // Recovery bends the outer wing much more than the arm. The wing chord
-      // narrows and primaries lag the wrist, tracing a curved, swept stroke.
-      const xs = [0, wx / 2, wx, raven ? 560 : 650, raven ? 730 : 850];
-      const ys = raven ? [0, 260, 530] : [380, 650, 930];
-      const root = raven ? [665, 465] : [750, 510];
-      const foreshorten = still ? 0 : (1 - Math.abs(yaw)) * .16;
-      const deform = ([px, py]) => {
-        const reach = Math.max(0, Math.min(1, (root[0] - px) / root[0]));
-        const bend = recovery * reach * reach;
-        const lag = still ? 0 : Math.sin(beat * Math.PI * 2 - reach * .8) * envelope;
-        return [root[0] + (px - root[0]) * (1 - bend * .28),
-          root[1] + (py - root[1]) * (1 - bend * .36 - foreshorten * reach) - bend * 85 + lag * reach * reach * 28];
-      };
-      let cell = 0;
-      for (let col = 0; col < 4; col++) for (let row = 0; row < 2; row++) {
-        const p = [xs[col], ys[row]], q = [xs[col + 1], ys[row]];
-        const r = [xs[col + 1], ys[row + 1]], s = [xs[col], ys[row + 1]];
-        for (const [a, b, c] of [[p, q, r], [p, r, s]]) {
-          const [A, B, C] = [a, b, c].map(deform);
-          const ux = b[0] - a[0], uy = b[1] - a[1], vx = c[0] - a[0], vy = c[1] - a[1];
-          const det = ux * vy - uy * vx;
-          const m = [(vy * (B[0] - A[0]) - uy * (C[0] - A[0])) / det,
-            (vy * (B[1] - A[1]) - uy * (C[1] - A[1])) / det,
-            (ux * (C[0] - A[0]) - vx * (B[0] - A[0])) / det,
-            (ux * (C[1] - A[1]) - vx * (B[1] - A[1])) / det];
-          m.push(A[0] - m[0] * a[0] - m[2] * a[1], A[1] - m[1] * a[0] - m[3] * a[1]);
-          const matrix = `matrix(${m.map(value => value.toFixed(5)).join(' ')})`;
-          bird.mesh.forEach(wing => wing[cell]?.setAttribute('transform', matrix));
-          cell++;
+      const fullPose = window.rainbowPromiseRenderPose?.(index, { seconds, still, beatPhase, envelope, bank, dx });
+      if (!fullPose) {
+        const recovery = Math.max(0, Math.sin(Math.PI * Math.max(0, (beatPhase - power) / (1 - power)))) * envelope;
+        const fold = still ? 1 : 1 - recovery * (raven ? .08 : .10);
+        const span = still ? 1 : 1 - recovery * (raven ? .04 : .06);
+        // The dove photo starts with its wings sloping down by about 28 degrees.
+        // Raise that resting angle before applying the larger stroke excursion.
+        const wingAngle = still ? 0 : (raven ? 0 : 27) + flap * (raven ? 43 : 52);
+        [bird.left, bird.right].forEach((wing, side) => {
+          const [sx, sy] = bird.shoulders[side];
+          const angle = side === 0 ? wingAngle : -wingAngle;
+          wing.setAttribute('transform', `translate(${sx} ${sy}) rotate(${angle.toFixed(2)}) scale(${span.toFixed(3)} ${fold.toFixed(3)}) translate(${-sx} ${-sy})`);
+        });
+        const [wx, wy] = bird.wrist;
+        // All flex now happens on the connected surface, including the primaries.
+        // Rotating the tip panel separately would tear its shared wrist edge.
+        bird.tips.forEach(tip => tip?.setAttribute('transform', 'translate(0 0)'));
+        // Recovery bends the outer wing much more than the arm. The wing chord
+        // narrows and primaries lag the wrist, tracing a curved, swept stroke.
+        const xs = [0, wx / 2, wx, raven ? 560 : 650, raven ? 730 : 850];
+        const ys = raven ? [0, 260, 530] : [380, 650, 930];
+        const root = raven ? [665, 465] : [750, 510];
+        const foreshorten = still ? 0 : (1 - Math.abs(yaw)) * .16;
+        const deform = ([px, py]) => {
+          const reach = Math.max(0, Math.min(1, (root[0] - px) / root[0]));
+          const bend = recovery * reach * reach;
+          const lag = still ? 0 : Math.sin(beat * Math.PI * 2 - reach * .8) * envelope;
+          return [root[0] + (px - root[0]) * (1 - bend * .28),
+            root[1] + (py - root[1]) * (1 - bend * .36 - foreshorten * reach) - bend * 85 + lag * reach * reach * 28];
+        };
+        let cell = 0;
+        for (let col = 0; col < 4; col++) for (let row = 0; row < 2; row++) {
+          const p = [xs[col], ys[row]], q = [xs[col + 1], ys[row]];
+          const r = [xs[col + 1], ys[row + 1]], s = [xs[col], ys[row + 1]];
+          for (const [a, b, c] of [[p, q, r], [p, r, s]]) {
+            const [A, B, C] = [a, b, c].map(deform);
+            const ux = b[0] - a[0], uy = b[1] - a[1], vx = c[0] - a[0], vy = c[1] - a[1];
+            const det = ux * vy - uy * vx;
+            const m = [(vy * (B[0] - A[0]) - uy * (C[0] - A[0])) / det,
+              (vy * (B[1] - A[1]) - uy * (C[1] - A[1])) / det,
+              (ux * (C[0] - A[0]) - vx * (B[0] - A[0])) / det,
+              (ux * (C[1] - A[1]) - vx * (B[1] - A[1])) / det];
+            m.push(A[0] - m[0] * a[0] - m[2] * a[1], A[1] - m[1] * a[0] - m[3] * a[1]);
+            const matrix = `matrix(${m.map(value => value.toFixed(5)).join(' ')})`;
+            bird.mesh.forEach(wing => wing[cell]?.setAttribute('transform', matrix));
+            cell++;
+          }
         }
-      }
-      const bodyNod = still ? 0 : flap * (raven ? 1.4 : 2.5);
-      const bodyBob = still ? 0 : -flap * 14;
-      bird.body?.setAttribute('transform', `translate(0 ${bodyBob.toFixed(2)}) rotate(${bodyNod.toFixed(2)} ${bird.center} 510)`);
-      const climb = Math.max(-1, Math.min(1, -(nextY - orbitY) * 45));
-      const attitude = raven ? -32 + climb * 6 : 12 + climb * 7;
-      bird.bodyFrame?.setAttribute('transform', raven ? `rotate(${attitude.toFixed(2)} 768 512)` : `translate(-45 0) rotate(${attitude.toFixed(2)} 895 510)`);
-      const glance = still ? 0 : Math.sin(seconds * .73 + index * 1.8) * 3.8 + turn * 3;
-      const neck = raven ? [745, 602] : [805, 353];
-      bird.head?.setAttribute('transform', `rotate(${glance.toFixed(2)} ${neck[0]} ${neck[1]})`);
-      const blinkPhase = (seconds + index * 2.37) % (raven ? 6.7 : 5.3);
-      const blink = still ? 0 : Math.max(0, 1 - Math.abs(blinkPhase - .14) / .095);
-      const [eyeX, eyeY] = raven ? [781, 634] : [785, 252];
-      bird.eyelid?.setAttribute('transform', `translate(${eyeX} ${eyeY}) scale(1 ${blink.toFixed(3)}) translate(${-eyeX} ${-eyeY})`);
-      bird.eyelid?.setAttribute('opacity', blink > .01 ? '1' : '0');
-      // Feet stay tucked during cruise, then briefly stretch and curl near a
-      // turn. A slower adjustment has its own timing, rather than leg pedalling.
-      const adjustment = still ? 0 : (Math.max(0, Math.sin(seconds * .64 + index * 1.9)) ** 8) * .7 + Math.abs(turn) * turnBlend * .3;
-      bird.legs.forEach((leg, side) => {
-        const [lx, ly] = raven ? (side ? [692, 526] : [645, 505]) : (side ? [1113, 608] : [1017, 625]);
-        const stretch = still ? 1 : 1 + adjustment * (side ? .42 : .55);
-        const angle = still ? 0 : (side ? -1 : 1) * (adjustment * 13 + flap * 1.7);
-        leg?.setAttribute('transform', `translate(${lx} ${ly}) rotate(${angle.toFixed(2)}) scale(1 ${stretch.toFixed(3)}) translate(${-lx} ${-ly})`);
-      });
-      if (bird.tail) {
-        const rudder = still ? 0 : turn * 5 + Math.sin(seconds * 2.2 + index) * 2;
-        const fan = still ? 1 : .92 + .08 * (1 + flap) / 2;
-        bird.tail.setAttribute('transform', `translate(1070 680) rotate(${rudder.toFixed(2)}) scale(${fan.toFixed(3)} 1) translate(-1070 -680)`);
+        const bodyNod = still ? 0 : flap * (raven ? 1.4 : 2.5);
+        const bodyBob = still ? 0 : -flap * 14;
+        bird.body?.setAttribute('transform', `translate(0 ${bodyBob.toFixed(2)}) rotate(${bodyNod.toFixed(2)} ${bird.center} 510)`);
+        const climb = Math.max(-1, Math.min(1, -(nextY - orbitY) * 45));
+        const attitude = raven ? -32 + climb * 6 : 12 + climb * 7;
+        bird.bodyFrame?.setAttribute('transform', raven ? `rotate(${attitude.toFixed(2)} 768 512)` : `translate(-45 0) rotate(${attitude.toFixed(2)} 895 510)`);
+        const glance = still ? 0 : Math.sin(seconds * .73 + index * 1.8) * 3.8 + turn * 3;
+        const neck = raven ? [745, 602] : [805, 353];
+        bird.head?.setAttribute('transform', `rotate(${glance.toFixed(2)} ${neck[0]} ${neck[1]})`);
+        const blinkPhase = (seconds + index * 2.37) % (raven ? 6.7 : 5.3);
+        const blink = still ? 0 : Math.max(0, 1 - Math.abs(blinkPhase - .14) / .095);
+        const [eyeX, eyeY] = raven ? [781, 634] : [785, 252];
+        bird.eyelid?.setAttribute('transform', `translate(${eyeX} ${eyeY}) scale(1 ${blink.toFixed(3)}) translate(${-eyeX} ${-eyeY})`);
+        bird.eyelid?.setAttribute('opacity', blink > .01 ? '1' : '0');
+        // Feet stay tucked during cruise, then briefly stretch and curl near a
+        // turn. A slower adjustment has its own timing, rather than leg pedalling.
+        const adjustment = still ? 0 : (Math.max(0, Math.sin(seconds * .64 + index * 1.9)) ** 8) * .7 + Math.abs(turn) * turnBlend * .3;
+        bird.legs.forEach((leg, side) => {
+          const [lx, ly] = raven ? (side ? [692, 526] : [645, 505]) : (side ? [1113, 608] : [1017, 625]);
+          const stretch = still ? 1 : 1 + adjustment * (side ? .42 : .55);
+          const angle = still ? 0 : (side ? -1 : 1) * (adjustment * 13 + flap * 1.7);
+          leg?.setAttribute('transform', `translate(${lx} ${ly}) rotate(${angle.toFixed(2)}) scale(1 ${stretch.toFixed(3)}) translate(${-lx} ${-ly})`);
+        });
+        if (bird.tail) {
+          const rudder = still ? 0 : turn * 5 + Math.sin(seconds * 2.2 + index) * 2;
+          const fan = still ? 1 : .92 + .08 * (1 + flap) / 2;
+          bird.tail.setAttribute('transform', `translate(1070 680) rotate(${rudder.toFixed(2)}) scale(${fan.toFixed(3)} 1) translate(-1070 -680)`);
+        }
       }
       if (soundTick !== soundPositionTick || still) {
         bird.element.dataset.flightSize = size.toFixed(3);

@@ -19,7 +19,7 @@
   const backdrop = document.createElement('img');
   backdrop.className = 'rp-ancient-landscape';
   backdrop.alt = 'An imagined ancient landscape after the flood: rugged mountains, exposed stone, bare trees and receding water.';
-  backdrop.src = '/assets/rainbow-promise/ancient-flood-landscape.webp';
+  backdrop.src = '/assets/rainbow-promise/ancient-flood-landscape-clean.webp';
   const style = document.createElement('style');
   style.textContent = `
     .rp-ancient-landscape,.rp-living-flood{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -255,7 +255,7 @@
     const credit = wrap.querySelector('.rp-credit');
     if (credit) {
       const originalCredits = credit.innerHTML.replace(/^Storm and Ark texture:.*?<br>/, '');
-      credit.innerHTML = `<details><summary>Scene &amp; image credits</summary><p>Ark and landscape: AI-created artistic reconstruction. The story’s precise date, terrain and vessel details are not established.</p><p>${originalCredits}</p><p><a href="https://www.biblegateway.com/passage/?search=Genesis%206%3A14-16%3B8%3A3-5&amp;version=KJV" target="_blank" rel="noopener">Genesis: timber ark, proportions and mountains</a></p></details>`;
+      credit.innerHTML = `<details><summary>Scene &amp; image credits</summary><p>Ark, landscape and full bird flight poses: AI-created artistic reconstruction. The story’s precise date, terrain and vessel details are not established.</p><p>${originalCredits}</p><p><a href="https://www.biblegateway.com/passage/?search=Genesis%206%3A14-16%3B8%3A3-5&amp;version=KJV" target="_blank" rel="noopener">Genesis: timber ark, proportions and mountains</a></p></details>`;
     }
     resize(); resizeObserver?.observe(wrap); observer?.observe(wrap);
     if (!resizeObserver) window.addEventListener('resize', onResize, {passive: true});
@@ -265,7 +265,7 @@
   }
   landscape.onload = activate; ark.onload = activate;
   // Keep the existing scene if either local asset cannot load.
-  landscape.src = '/assets/rainbow-promise/ancient-flood-landscape.webp';
+  landscape.src = '/assets/rainbow-promise/ancient-flood-landscape-clean.webp';
   ark.src = '/assets/rainbow-promise/timber-ark.webp';
   if (landscape.complete && ark.complete) activate();
   window.addEventListener('pagehide', () => {
