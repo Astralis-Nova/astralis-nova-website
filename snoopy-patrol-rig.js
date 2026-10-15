@@ -51,13 +51,27 @@
   const n = value => Number(value.toFixed(3));
   function armPath(side, wrist) {
     const shoulder = shoulders[side], joint = elbow(shoulder, wrist);
-    const toward = (from, to, length) => {
-      const d = Math.max(1, Math.hypot(to.x - from.x, to.y - from.y));
-      return { x: from.x + (to.x - from.x) * length / d, y: from.y + (to.y - from.y) * length / d };
+    // A filled, tapered silhouette gives Snoopy a rounded foreleg rather than a thin line.
+    const unit = (a, b) => {
+      const d = Math.max(1, Math.hypot(b.x - a.x, b.y - a.y));
+      return { x: (b.x - a.x) / d, y: (b.y - a.y) / d };
     };
-    const before = toward(joint, shoulder, 7), after = toward(joint, wrist, 7);
-    return `M${shoulder.x} ${shoulder.y}L${n(before.x)} ${n(before.y)}Q${n(joint.x)} ${n(joint.y)} ${n(after.x)} ${n(after.y)}L${n(wrist.x)} ${n(wrist.y)}`;
+    const u = unit(shoulder, joint), v = unit(joint, wrist);
+    const normalA = { x: -u.y, y: u.x }, normalB = { x: -v.y, y: v.x };
+    const sum = { x: normalA.x + normalB.x, y: normalA.y + normalB.y };
+    const norm = Math.max(.01, Math.hypot(sum.x, sum.y));
+    const middle = { x: sum.x / norm, y: sum.y / norm };
+    const widths = side === 'near' ? { shoulder: 8.5, elbow: 9.5, wrist: 6.8 } : { shoulder: 7.3, elbow: 8, wrist: 5.8 };
+    const offset = (p, axis, distance) => `${n(p.x + axis.x * distance)} ${n(p.y + axis.y * distance)}`;
+    return `M${offset(shoulder, normalA, widths.shoulder)}` +
+      `Q${offset(joint, normalA, widths.elbow)} ${offset(joint, middle, widths.elbow)}` +
+      `Q${offset(joint, normalB, widths.elbow)} ${offset(wrist, normalB, widths.wrist)}` +
+      `Q${offset(wrist, v, widths.wrist)} ${offset(wrist, normalB, -widths.wrist)}` +
+      `Q${offset(joint, normalB, -widths.elbow)} ${offset(joint, middle, -widths.elbow)}` +
+      `Q${offset(joint, normalA, -widths.elbow)} ${offset(shoulder, normalA, -widths.shoulder)}` +
+      `Q${offset(shoulder, u, -widths.shoulder)} ${offset(shoulder, normalA, widths.shoulder)}Z`;
   }
+
   function goggleTransform(p) {
     return `translate(${n(180 + p.down * 39)} ${n(50 + p.down * 33)}) rotate(${n(p.angle)}) scale(${p.scale}) translate(-180 -50)`;
   }
@@ -67,19 +81,18 @@
     const sides = ['far', 'near'].map(side => ({
       side,
       outline: visitor.querySelector(`[data-ace-arm="${side}"]`),
-      fill: visitor.querySelector(`[data-ace-arm-fill="${side}"]`),
       paw: visitor.querySelector(`[data-ace-paw="${side}"]`)
     }));
-    if (!goggles || sides.some(s => !s.paw || !s.outline || !s.fill)) return;
+    if (!goggles || sides.some(s => !s.paw || !s.outline)) return;
     let frame = 0, last, painted = -Infinity, elapsed = 0;
     function draw() {
       const p = pose(elapsed);
       goggles.setAttribute('transform', goggleTransform(p));
       if (strap) strap.style.opacity = String(p.down);
-      for (const { side, outline, fill, paw } of sides) {
+      for (const { side, outline, paw } of sides) {
         const point = p.paws[side], path = armPath(side, point);
-        outline.setAttribute('d', path); fill.setAttribute('d', path);
-        paw.setAttribute('transform', `translate(${n(point.x)} ${n(point.y)}) rotate(${n(p.angle * p.reach)}) scale(.64)`);
+        outline.setAttribute('d', path);
+        paw.setAttribute('transform', `translate(${n(point.x)} ${n(point.y)}) rotate(${n(p.angle * p.reach)}) scale(.95)`);
       }
       visitor.dataset.goggleAction = p.contact ? 'gripping' : p.reach > 0 ? 'reaching' : p.down ? 'wearing' : 'resting';
     }

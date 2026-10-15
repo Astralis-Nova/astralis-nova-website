@@ -32,8 +32,8 @@
       <ellipse cx="215" cy="222" rx="46" ry="5" fill="#752b36" stroke="none" opacity=".3"/>
       <g class="ace-pilot">
         <path class="ace-tail" d="M183 216c-20 2-38-3-47 5 11 8 30 5 49 1" fill="#fffdf2"/>
-        <path d="M199 130c-17 17-20 39-21 62-3 15-3 26 10 30l42-1c7-3 6-12 0-15l-14-5c6-19 8-39-1-61" fill="url(#aceWhite)"/>
-        <path d="M184 168c-7 8-8 25-4 31 8-5 11-17 9-29" fill="#24202a" stroke-width="2"/>
+        <path d="M199 130c-19 7-28 27-29 53-2 22 2 36 20 41 16 5 40 2 47-9 5-9-10-12-14-25 8-18 3-37-8-49" fill="url(#aceWhite)"/>
+        <path d="M176 164c-8 3-10 14-8 25 1 9 6 14 11 10 7-6 10-19 6-28-2-5-5-8-9-7" fill="#24202a" stroke-width="2"/>
         <path d="M202 209c14-7 27 0 39 7" stroke="#79746e" stroke-width="2"/>
         <g class="ace-feet">
           <!-- Far bent leg and its complete foot are visible behind the near leg. -->
@@ -54,8 +54,7 @@
         </g>
         <g class="ace-head">
           <g class="ace-goggle-arms">
-            <path data-ace-arm="far" d="M200 150Q226 190 251 160" stroke="#27202a" stroke-width="10"/>
-            <path data-ace-arm-fill="far" d="M200 150Q226 190 251 160" stroke="#e4e1d7" stroke-width="6"/>
+            <path data-ace-arm="far" d="M193 152Q217 195 250 166L256 154Q224 174 207 146Z" fill="#e4e1d7" stroke="#27202a" stroke-width="3.2"/>
           </g>
           <!-- Rounded forehead, broad muzzle, and eyes clear of the goggles. -->
           <path d="M204 133c-29-3-42-24-39-52 2-27 17-40 42-36 18 2 25 17 37 22 18 1 30-8 47-1 20 8 30 27 26 46-5 24-33 28-57 19-16-5-23-11-28-7l-11 16Z" fill="#fffdf2"/>
@@ -108,8 +107,7 @@
           <path d="m243 109 1 6" stroke-width="2"/>
           <g class="ace-goggle-arms">
 
-            <path data-ace-arm="near" d="M215 151Q246 187 269 163" stroke="#27202a" stroke-width="11"/>
-            <path data-ace-arm-fill="near" d="M215 151Q246 187 269 163" stroke="#fffdf2" stroke-width="7"/>
+            <path data-ace-arm="near" d="M207 152Q233 196 270 170L275 158Q244 179 222 146Z" fill="#fffdf2" stroke="#27202a" stroke-width="3.4"/>
             <g data-ace-paw="far" transform="translate(251 160)">
               <path d="M-8 5C-11-1-9-7-5-7-5-12 2-12 4-7 10-9 15-3 11 2 15 8 7 13 2 9-4 13-9 10-8 5Z" fill="#e4e1d7" stroke-width="2.7"/>
               <path d="m-3-4 5 2m0-3 5 3" stroke-width="1.6"/>

@@ -4,7 +4,6 @@
 #novaFlyingAce:focus-visible{outline:2px solid #9ee9ff;outline-offset:2px;border-radius:20px}
 #novaFlyingAce .ace-flight-rig{transform-origin:215px 235px;animation:aceAirframe 2.7s ease-in-out infinite}
 #novaFlyingAce .ace-pilot{transform-origin:205px 220px;animation:aceSeatedLean 3.8s ease-in-out infinite}
-#novaFlyingAce .ace-goggle-arms path[data-ace-arm],#novaFlyingAce .ace-goggle-arms path[data-ace-arm-fill]{fill:none}
 #novaFlyingAce .ace-head{transform-origin:213px 134px;animation:aceLookout 7.6s ease-in-out infinite}
 #novaFlyingAce .ace-tail{transform-origin:183px 218px;animation:aceTail 1.5s ease-in-out infinite alternate}
 #novaFlyingAce .ace-scarf-long{transform-origin:203px 139px;animation:aceScarfLong .82s ease-in-out infinite}
