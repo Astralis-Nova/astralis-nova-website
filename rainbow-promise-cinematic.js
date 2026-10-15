@@ -29,7 +29,10 @@
     .rp-sky,.rp-cloud-photo{position:absolute;inset:-10%;background-image:url('${STORM}');background-size:cover;background-position:center 35%;will-change:transform}.rp-sky{z-index:1;filter:saturate(.84) contrast(1.07) brightness(.87);animation:rpSkyPan 31s ease-in-out infinite alternate}.rp-cloud-photo{z-index:5;pointer-events:none;mix-blend-mode:screen}.rp-cloud-back{opacity:.21;filter:blur(4px) brightness(.78) saturate(.74);transform:scale(1.16);-webkit-mask-image:linear-gradient(180deg,#000 0 64%,transparent 91%);mask-image:linear-gradient(180deg,#000 0 64%,transparent 91%);animation:rpCloudBack 35s ease-in-out infinite alternate}.rp-cloud-front{opacity:.27;filter:blur(1.6px) brightness(.71) contrast(1.08);transform:scale(1.23);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 17% 74%,transparent 98%);mask-image:linear-gradient(180deg,transparent 0,#000 17% 74%,transparent 98%);animation:rpCloudFront 25s ease-in-out infinite alternate-reverse}
     .rp-sunbreak{position:absolute;left:51%;top:-4%;width:72%;height:82%;transform:translateX(-50%);z-index:6;opacity:.36;filter:blur(24px);clip-path:polygon(38% 0,62% 0,93% 100%,7% 100%);background:linear-gradient(180deg,rgba(255,255,245,.82),rgba(255,236,174,.2) 49%,rgba(225,240,251,.05) 79%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 24% 76%,transparent);mask-image:linear-gradient(90deg,transparent,#000 24% 76%,transparent);animation:rpLight 9.5s ease-in-out infinite alternate}
 
+    .rp-rainbow-optics,.rp-rainbow-shade{position:absolute;inset:0;width:100%;height:100%;z-index:8;pointer-events:none}
+    .rp-rainbow-optics{mix-blend-mode:screen}
     .rp-rainbow-light{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:8;pointer-events:none;mix-blend-mode:screen;opacity:0;animation:rpBowReveal 42s ease-in-out infinite;will-change:opacity}
+    .rp-rainbow-light[hidden]{display:none!important}
     @keyframes rpBowReveal{0%,6%,80%,100%{opacity:0}27%,49%{opacity:.94}66%{opacity:.15}}
     .rp-scene-resting .rp-rainbow-light{animation-play-state:paused}
 

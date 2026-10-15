@@ -138,3 +138,36 @@ its opacity rises, holds, dissolves and rests in a 42-second cycle. The scene's
 visibility state pauses that cycle; reduced motion shows a stationary bow.
 Natural appearance reference: Met Office, “Rainbows: optical wonders,”
 https://weather.metoffice.gov.uk/learn-about/weather/optical-effects/rainbows .
+
+
+## October 15: dispersion and rain-curtain rendering
+
+The active bow now uses `rainbow-promise-optics.js` rather than fading a uniform
+SVG ribbon. Visible wavelengths are integrated at their approximate water-drop
+primary and secondary caustic angles. Finite caustic widths and a soft interior
+tail are artistic approximations of droplet-size/camera blur; this is not a
+calibrated spectral or wave-optics simulation. A circular projected arc, a small
+interior light wash and a darker gap separate the bows. Light and atmosphere use
+separate canvases, so bright clouds wash out the spectrum while the gap can still
+slightly darken the sky.
+
+Broad diagonal rain curtains pass across each bow independently. The main bow
+gathers and dissolves, and its weaker secondary appears later and disappears
+earlier. The radius and color placement stay fixed. Cached light plates keep
+per-frame work to canvas composites and a low-resolution gradient mask at 12 fps;
+resizing rebuilds the plates only when their dimensions change. Hidden/offscreen
+states stop the clock; reduced motion holds one stable, visible scene. The
+person-free SVG remains the no-canvas fallback.
+
+Research references (studied, not embedded or redistributed):
+
+- National Weather Service Flagstaff, “How Do Rainbows Form?”
+  https://www.weather.gov/fgz/Rainbow — circular arcs, refraction/reflection and
+  observer/sun/rain geometry.
+- NOAA NESDIS, “What Causes a Rainbow?”
+  https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-causes-rainbow
+  — dispersion and the reversed, fainter secondary bow.
+- Michael Frye, “Rainbow Weather,” March 31, 2014.
+  https://www.michaelfrye.com/2014/03/31/rainbow-weather/ — real rainbow appearance,
+  partial arcs becoming complete, intermittent secondary visibility and rapid
+  fading as showers and sunlight change.
