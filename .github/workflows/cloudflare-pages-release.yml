@@ -39,6 +39,8 @@ jobs:
           node --check rainbow-promise-cinematic.js
           node --check rainbow-promise-optics.js
           node --test tests/rainbow-optics.test.cjs
+          node --check rainbow-promise-sky.js
+          node --test tests/rainbow-sky.test.cjs
           node --check rainbow-promise-ark.js
           node --check rainbow-promise-flight.js
           node --check rainbow-promise-audio-fix.js

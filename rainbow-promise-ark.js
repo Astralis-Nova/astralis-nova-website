@@ -111,6 +111,7 @@
     const start = height * .56;
     const still = motion.matches;
     const t = still ? 0 : seconds;
+    const daylight = window.RainbowPromiseSky?.lightAt(t, still).strength ?? 0;
     for (let y = start; y < height; y += 3) {
       const wave = waterAt(width * .5, y, t);
       const dx = wave.drift;
@@ -148,6 +149,10 @@
     shipContext.rotate(pitch);
     shipContext.drawImage(ark, -shipWidth / 2, -visibleHeight, shipWidth, shipHeight);
     shipContext.restore();
+    // The same passing sunlight warms both the timber and its real reflection.
+    shipContext.save(); shipContext.globalCompositeOperation = 'source-atop';
+    shipContext.fillStyle = `rgba(255,194,113,${daylight * .065})`;
+    shipContext.fillRect(0, 0, width, height); shipContext.restore();
 
     // Reflect the actual timber image from the waterline down, broken into
     // independent narrow strips rather than a blurred generic ship silhouette.
@@ -165,6 +170,24 @@
     context.globalAlpha = 1;
     lightWater(t);
     context.drawImage(lightPlate, 0, start, width, height - start);
+
+    // Small horizontal glints follow the moving water slopes beneath the
+    // opening in the clouds. Perspective broadens the path towards the viewer.
+    const cover = Math.max(width / 1536, height / 1024);
+    const sunX = (width - 1536 * cover) / 2 + 1160 * cover;
+    context.save(); context.globalCompositeOperation = 'screen';
+    for (let i = 0; i < 66; i++) {
+      const depth = (i + 1) / 67, y = height * (.575 + depth * .425);
+      const spread = (22 + depth * 155) * cover;
+      const x = sunX + Math.sin(i * 2.399) * spread;
+      const wave = waterAt(x, y, t);
+      const shimmer = Math.max(0, wave.slope) * daylight * (.10 + depth * .2);
+      context.strokeStyle = `rgba(255,219,149,${shimmer.toFixed(4)})`;
+      context.lineWidth = .5 + depth * .8;
+      context.beginPath(); context.moveTo(x, y + wave.height * .25);
+      context.lineTo(x + (3 + depth * 17) * cover, y + wave.height * .25); context.stroke();
+    }
+    context.restore();
 
     // Soft contact shadow gives the hull weight without a hard sticker outline.
     context.save();
@@ -215,6 +238,7 @@
       const end = x + 5 + (i % 4) * 2;
       context.quadraticCurveTo((x + end) / 2, surface(x) - 1.2, end, surface(end) + .3); context.stroke();
     }
+    wrap.dataset.sunlight = daylight.toFixed(3);
     wrap.dataset.arkWaterTime = seconds.toFixed(2);
     wrap.dataset.arkHeave = heave.toFixed(3);
     wrap.dataset.arkPitch = pitch.toFixed(5);

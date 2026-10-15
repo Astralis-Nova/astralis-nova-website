@@ -171,3 +171,26 @@ Research references (studied, not embedded or redistributed):
   https://www.michaelfrye.com/2014/03/31/rainbow-weather/ — real rainbow appearance,
   partial arcs becoming complete, intermittent secondary visibility and rapid
   fading as showers and sunlight change.
+
+## October 15: living clouds and opening sunlight
+
+`rainbow-promise-sky.js` animates the retained landscape's own cloud texture.
+Depth-dependent advection and soft billowing use two overlapping flow phases;
+each phase resets at zero weight, avoiding a visible reverse or loop seam.
+A conservative traced skyline with a feathered margin keeps mountains and rocks
+stationary and prevents terrain pixels from entering the moving sky. The cloud
+buffer is capped at 640 by 360 pixels and refreshed at eight frames per second.
+
+A separate light canvas adds broad, soft crepuscular rays, a warm opening in the
+clouds and a restrained ambient temperature shift. A shared slow daylight
+function also warms the ark texture and its actual reflection. Small golden
+highlights follow the existing water slopes beneath the sunward opening, with
+perspective widening towards the foreground. These are artistic lighting effects,
+not a physical atmospheric simulation; no new photographs or external embeds
+are introduced.
+
+Hidden and offscreen scenes pause their clocks. Reduced motion holds one fixed
+cloud and sunlight pose. Canvas or image failure retains the existing landscape
+and light. Unit tests cover flow reset continuity, stable terrain masks, actual
+cloud pixel changes, slow light bounds, reduced motion, visibility and cleanup.
+Native Canvas renders were inspected at 1120x720 and 370x560 at three times.

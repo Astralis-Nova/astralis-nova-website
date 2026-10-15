@@ -11,6 +11,7 @@ test('water and hull move independently, pause their clock, and retain a still r
     const motion = { matches: false, addEventListener: (n, f) => motionEvents[n] = f, removeEventListener() {} };
     const ctx = new Proxy({
       createImageData: (w, h) => ({ data: new Uint8ClampedArray(w * h * 4) }),
+      createLinearGradient: () => ({ addColorStop() {} }),
       createRadialGradient: () => ({ addColorStop() {} })
     }, { get: (target, key) => target[key] ?? (() => {}) });
     const children = [];
@@ -29,7 +30,7 @@ test('water and hull move independently, pause their clock, and retain a still r
     }
     vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'rainbow-promise-ark.js'), 'utf8'), {
       document, Image, ResizeObserver: Observer, IntersectionObserver: Observer,
-      window: { devicePixelRatio: 1, matchMedia: () => motion, addEventListener: (n, f) => events[n] = f, removeEventListener() {} },
+      window: { RainbowPromiseSky: { lightAt: t => ({ strength: .5 + .2 * Math.sin(t * .11) }) }, devicePixelRatio: 1, matchMedia: () => motion, addEventListener: (n, f) => events[n] = f, removeEventListener() {} },
       requestAnimationFrame: f => { frames.set(++id, f); return id; }, cancelAnimationFrame: n => frames.delete(n)
     });
     assert.equal(children.length, 0, 'asset failures retain the existing fallback');
@@ -42,6 +43,7 @@ test('water and hull move independently, pause their clock, and retain a still r
     for (let time = 0; time < 15000; time += 40) {
       advance(time);
       for (const key of ['arkSurface', 'arkHeave', 'arkPitch']) assert(Number.isFinite(Number(wrap.dataset[key])));
+      assert(Math.abs(Number(wrap.dataset.sunlight) - (.5 + .2 * Math.sin(Number(wrap.dataset.arkWaterTime) * .11))) < .002);
       assert(Math.abs(Number(wrap.dataset.arkPitch)) < .04, 'a substantial hull should not pitch like a small toy');
       assert(Math.abs(Number(wrap.dataset.arkHeave)) < 12);
       assert(Math.abs(Number(wrap.dataset.arkSurface) - height * .715) < 15);
