@@ -5,7 +5,6 @@
   if (!wrap) return;
 
   const STORM = 'https://upload.wikimedia.org/wikipedia/commons/b/b2/Stormcloud.jpg';
-  const RAINBOW = '/assets/rainbow-promise-photo.webp';
   const ARK_TEXTURE = 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Ark_van_Noach_in_Dordrecht%2C_Noah%27s_Ark_replica_%28public_domain%29.jpg/1280px-Ark_van_Noach_in_Dordrecht%2C_Noah%27s_Ark_replica_%28public_domain%29.jpg';
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -30,8 +29,10 @@
     .rp-sky,.rp-cloud-photo{position:absolute;inset:-10%;background-image:url('${STORM}');background-size:cover;background-position:center 35%;will-change:transform}.rp-sky{z-index:1;filter:saturate(.84) contrast(1.07) brightness(.87);animation:rpSkyPan 31s ease-in-out infinite alternate}.rp-cloud-photo{z-index:5;pointer-events:none;mix-blend-mode:screen}.rp-cloud-back{opacity:.21;filter:blur(4px) brightness(.78) saturate(.74);transform:scale(1.16);-webkit-mask-image:linear-gradient(180deg,#000 0 64%,transparent 91%);mask-image:linear-gradient(180deg,#000 0 64%,transparent 91%);animation:rpCloudBack 35s ease-in-out infinite alternate}.rp-cloud-front{opacity:.27;filter:blur(1.6px) brightness(.71) contrast(1.08);transform:scale(1.23);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 17% 74%,transparent 98%);mask-image:linear-gradient(180deg,transparent 0,#000 17% 74%,transparent 98%);animation:rpCloudFront 25s ease-in-out infinite alternate-reverse}
     .rp-sunbreak{position:absolute;left:51%;top:-4%;width:72%;height:82%;transform:translateX(-50%);z-index:6;opacity:.36;filter:blur(24px);clip-path:polygon(38% 0,62% 0,93% 100%,7% 100%);background:linear-gradient(180deg,rgba(255,255,245,.82),rgba(255,236,174,.2) 49%,rgba(225,240,251,.05) 79%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 24% 76%,transparent);mask-image:linear-gradient(90deg,transparent,#000 24% 76%,transparent);animation:rpLight 9.5s ease-in-out infinite alternate}
 
-    .rp-rainbow-photo{position:absolute;left:50%;top:3%;width:98%;height:73%;transform:translateX(-50%) scale(1.035);z-index:8;opacity:0;object-fit:cover;object-position:center 43%;filter:saturate(.92) contrast(1.02) brightness(1.04) blur(6px);mix-blend-mode:screen;-webkit-mask-image:radial-gradient(ellipse at 50% 100%,transparent 0 36%,#000 45% 78%,transparent 92%);mask-image:radial-gradient(ellipse at 50% 100%,transparent 0 36%,#000 45% 78%,transparent 92%);transition:opacity 7.5s ease,filter 7.5s ease,transform 8s ease}.rp-rainbow-photo.is-visible{opacity:.8;filter:saturate(1.04) contrast(1.04) brightness(1.12) blur(.35px);transform:translateX(-50%) scale(1);animation:rpRainbowBreathe 12s ease-in-out 8s infinite alternate}
-    .rp-rainbow-haze{position:absolute;left:50%;top:4%;width:100%;height:76%;transform:translateX(-50%);z-index:9;opacity:0;background:radial-gradient(ellipse at 50% 100%,transparent 0 42%,rgba(255,150,159,.14) 49%,rgba(243,205,111,.12) 55%,rgba(118,202,143,.1) 61%,rgba(107,183,232,.11) 67%,rgba(145,112,210,.1) 72%,transparent 80%);filter:blur(18px);transition:opacity 8s ease 1s}.rp-rainbow-haze.is-visible{opacity:.94}
+    .rp-rainbow-light{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:8;pointer-events:none;mix-blend-mode:screen;opacity:0;animation:rpBowReveal 42s ease-in-out infinite;will-change:opacity}
+    @keyframes rpBowReveal{0%,6%,80%,100%{opacity:0}27%,49%{opacity:.94}66%{opacity:.15}}
+    .rp-scene-resting .rp-rainbow-light{animation-play-state:paused}
+
 
     .rp-covenant-beam{position:absolute;left:50%;bottom:19%;width:64%;height:65%;transform:translateX(-50%);z-index:11;opacity:.26;filter:blur(22px);clip-path:polygon(41% 0,59% 0,93% 100%,7% 100%);background:linear-gradient(180deg,rgba(255,255,247,.92),rgba(255,235,165,.28) 47%,rgba(231,241,249,.05) 82%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 24% 76%,transparent);mask-image:linear-gradient(90deg,transparent,#000 24% 76%,transparent);animation:rpBeam 6.8s ease-in-out infinite alternate}.rp-covenant-beam::after{content:"";position:absolute;inset:10% 29% 0;filter:blur(13px);background:linear-gradient(180deg,rgba(255,255,251,.72),rgba(255,225,132,.13) 64%,transparent)}
     .rp-covenant-halo{position:absolute;left:50%;bottom:14%;width:min(720px,88%);height:280px;transform:translateX(-50%);z-index:12;border-radius:50%;opacity:.73;filter:blur(23px);background:radial-gradient(ellipse at center,rgba(255,254,235,.86) 0%,rgba(255,232,145,.43) 27%,rgba(211,232,245,.16) 55%,transparent 77%);box-shadow:0 0 90px rgba(255,224,129,.18);animation:rpHalo 5.8s ease-in-out infinite alternate}.rp-covenant-halo::after{content:"";position:absolute;inset:24% 22%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,255,245,.68),rgba(255,218,110,.22) 43%,transparent 73%);filter:blur(10px)}
@@ -74,7 +75,6 @@
     @keyframes rpCloudBack{from{transform:scale(1.16) translateX(-6%)}to{transform:scale(1.16) translateX(7%)}}
     @keyframes rpCloudFront{from{transform:scale(1.23) translateX(-8%)}to{transform:scale(1.23) translateX(6%)}}
     @keyframes rpLight{from{opacity:.27;transform:translateX(-50%) scaleX(.92)}to{opacity:.48;transform:translateX(-50%) scaleX(1.08)}}
-    @keyframes rpRainbowBreathe{from{opacity:.74;filter:saturate(.98) brightness(1.06)}to{opacity:.84;filter:saturate(1.08) brightness(1.15)}}
     @keyframes rpBeam{from{opacity:.18;transform:translateX(-50%) scaleX(.92)}to{opacity:.36;transform:translateX(-50%) scaleX(1.08)}}
     @keyframes rpHalo{from{opacity:.56;transform:translateX(-50%) scale(.93)}to{opacity:.9;transform:translateX(-50%) scale(1.07)}}
     @keyframes rpRing{from{opacity:.27;transform:translateX(-50%) scale(.95)}to{opacity:.58;transform:translateX(-50%) scale(1.07)}}
@@ -112,7 +112,7 @@
       .rp-covenant-motion .shell{width:calc(100% - 20px)}
       .rp-covenant-motion main{padding-top:26px}.rp-covenant-motion .hero{padding:16px 0 24px}
       .rp-covenant-motion .rainbow-wrap{min-height:560px;height:min(680px,150vw);border-radius:24px}
-      .rp-rainbow-photo{top:6%;height:65%}.rp-covenant-beam{width:96%;height:62%;bottom:20%}.rp-covenant-halo{width:112%;height:228px;bottom:16%}.rp-covenant-ring{width:80%;bottom:30%}.rp-covenant-motes{left:6%;right:6%;bottom:22%}
+      .rp-covenant-beam{width:96%;height:62%;bottom:20%}.rp-covenant-halo{width:112%;height:228px;bottom:16%}.rp-covenant-ring{width:80%;bottom:30%}.rp-covenant-motes{left:6%;right:6%;bottom:22%}
 
       .rp-ark-group{width:82%;height:210px;bottom:23%;filter:drop-shadow(0 14px 18px rgba(0,0,0,.55)) drop-shadow(0 0 14px rgba(255,197,91,.3))}.rp-ark-hull{height:102px}.rp-ark-deck{bottom:100px;height:51px}.rp-ark-roof{bottom:143px}.rp-ark-window{bottom:115px;width:17px;height:12px}.rp-ark-keel{bottom:9px}.rp-ark-wake{height:48px;bottom:-5px}.rp-bow-foam{bottom:5px}
       .rp-water{height:49%;bottom:-7%}.rp-wave-a{height:72px}.rp-wave-b{height:84px}.rp-wave-c{height:96px}.rp-wave-d{height:106px}.rp-water-glint{height:42%;opacity:.13}.rp-shimmer-band{left:7%;right:7%;opacity:.075}.rp-foam-trail{left:18%;right:18%;top:7%;opacity:.46}
@@ -123,7 +123,7 @@
       .rp-covenant-motion .rainbow-wrap{min-height:555px;height:151vw}
       .rp-ark-group{width:86%;bottom:23.5%}.rp-water{height:50%}.rp-covenant-halo{height:215px}.rp-caption{padding:12px}.rp-caption span{font-size:.79rem}.rp-shimmer-band{opacity:.06}.rp-water-glint{opacity:.1}.rp-credit{top:66px;max-width:58%}
     }
-    @media(prefers-reduced-motion:reduce){.rp-rain-canvas{display:none}.rp-drizzle,.rp-fog,.rp-sky,.rp-cloud-photo,.rp-sunbreak,.rp-covenant-beam,.rp-covenant-halo,.rp-covenant-ring,.rp-covenant-motes,.rp-bird,.rp-bird::before,.rp-bird::after,.rp-ark-group,.rp-ark-hull::after,.rp-ark-window,.rp-ark-wake,.rp-bow-foam,.rp-water::after,.rp-wave,.rp-wave::before,.rp-water-glint,.rp-shimmer-band,.rp-foam-trail,.rp-ark-reflection,.rp-ref-ripple,.rp-vapor{animation:none!important}.rp-rainbow-photo{opacity:.8;filter:saturate(1.04) brightness(1.12);transform:translateX(-50%)}.rp-rainbow-haze{opacity:.94}}
+    @media(prefers-reduced-motion:reduce){.rp-rain-canvas{display:none}.rp-drizzle,.rp-fog,.rp-sky,.rp-cloud-photo,.rp-sunbreak,.rp-covenant-beam,.rp-covenant-halo,.rp-covenant-ring,.rp-covenant-motes,.rp-bird,.rp-bird::before,.rp-bird::after,.rp-ark-group,.rp-ark-hull::after,.rp-ark-window,.rp-ark-wake,.rp-bow-foam,.rp-water::after,.rp-wave,.rp-wave::before,.rp-water-glint,.rp-shimmer-band,.rp-foam-trail,.rp-ark-reflection,.rp-ref-ripple,.rp-vapor{animation:none!important}.rp-rainbow-light{animation:none!important;opacity:.8;will-change:auto}}
   `;
   document.head.appendChild(style);
 
@@ -196,8 +196,7 @@
     <div class="rp-cloud-photo rp-cloud-back"></div>
     <div class="rp-cloud-photo rp-cloud-front"></div>
     <div class="rp-sunbreak"></div>
-    <img class="rp-rainbow-photo" src="${RAINBOW}" alt="A real rainbow appearing through storm clouds">
-    <div class="rp-rainbow-haze"></div>
+    <img class="rp-rainbow-light" src="/assets/rainbow-promise/rainbow-light.svg" alt="Soft rainbow colors slowly appear and dissolve in the rain above the mountains">
     <div class="rp-covenant-beam"></div>
     <div class="rp-covenant-halo"></div>
     <div class="rp-covenant-ring"></div>
@@ -226,7 +225,7 @@
     </div>
     <div class="rp-vapor"></div>
     <button class="rp-sound-toggle" type="button" aria-pressed="false" aria-label="Turn ambient sound on">Sound Off</button>
-    <div class="rp-credit">Storm and Ark texture: public domain/CC0 via Wikimedia Commons<br>Rainbow: <a href="https://commons.wikimedia.org/wiki/File:Double-alaskan-rainbow.jpg" target="_blank" rel="noopener">Eric Rolph</a>, <a href="https://creativecommons.org/licenses/by-sa/2.5/" target="_blank" rel="noopener">CC BY-SA 2.5</a> · resized, cropped and blended<br>Bird photos: <a href="https://www.publicdomainpictures.net/en/view-image.php?image=256495&amp;picture=dove-flying-in-sky" target="_blank" rel="noopener">Karen Arnold</a> / <a href="https://commons.wikimedia.org/wiki/File:Raven_flying_(Corvus_corax)_(51192501139).jpg" target="_blank" rel="noopener">NPS, Emily Hassell</a> · public domain, backgrounds removed</div>
+    <div class="rp-credit">Storm and Ark texture: public domain/CC0 via Wikimedia Commons<br>Rainbow: original transparent light effect · <a href="https://weather.metoffice.gov.uk/learn-about/weather/optical-effects/rainbows" target="_blank" rel="noopener">rainbow optics</a><br>Bird photos: <a href="https://www.publicdomainpictures.net/en/view-image.php?image=256495&amp;picture=dove-flying-in-sky" target="_blank" rel="noopener">Karen Arnold</a> / <a href="https://commons.wikimedia.org/wiki/File:Raven_flying_(Corvus_corax)_(51192501139).jpg" target="_blank" rel="noopener">NPS, Emily Hassell</a> · public domain, backgrounds removed</div>
     <div class="rp-caption"><div><strong>The ark moves through living water as the promise gathers.</strong><span>Deep blue waves roll beneath the reconstructed wooden ark while foam, reflection, warm light, rain, and the emerging rainbow turn the storm toward hope.</span></div><div class="rp-tag">Living Covenant</div></div>`;
 
   // A closed orbit avoids snapping back to a tiny bird at the end of a pass.
@@ -405,6 +404,7 @@
     birdFrame = requestAnimationFrame(flyBirds);
   };
   const syncBirdFlight = () => {
+    wrap.classList?.toggle('rp-scene-resting', document.hidden || !sceneVisible || motionQuery.matches);
     cancelAnimationFrame(birdFrame);
     birdFrame = 0;
     birdLastTime = null;
@@ -431,13 +431,6 @@
     document.removeEventListener('visibilitychange', syncBirdFlight);
     motionQuery.removeEventListener('change', syncBirdFlight);
   }, { once: true });
-
-  const rainbow = wrap.querySelector('.rp-rainbow-photo');
-  const haze = wrap.querySelector('.rp-rainbow-haze');
-  requestAnimationFrame(() => setTimeout(() => {
-    rainbow?.classList.add('is-visible');
-    haze?.classList.add('is-visible');
-  }, reduced ? 0 : 1400));
 
   const soundButton = wrap.querySelector('.rp-sound-toggle');
   let audioContext = null;

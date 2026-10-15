@@ -119,3 +119,22 @@ Validation includes unloaded-asset fallback, species-specific activation, pose
 coverage, opaque blend weights, forward facing, a static reduced-motion pose and
 cleanup. Native canvas rendering also checks changing actual pixels through a
 full stroke. Browser visual inspection is unavailable in this editing environment.
+
+
+## October 15: person-free rainbow light
+
+The remaining visible human figure came from `assets/rainbow-promise-photo.webp`,
+a separate Eric Rolph rainbow photograph composited over the cleaned mountain
+landscape. That photograph also contains a smaller visitor and a foreground
+shadow. The scene no longer loads it. The original asset remains archived, with
+its earlier attribution and CC BY-SA 2.5 source at
+https://commons.wikimedia.org/wiki/File:Double-alaskan-rainbow.jpg .
+
+`rainbow-light.svg` contains only transparent spectral light. Soft continuous
+bands run from inner violet to outer red, with a weaker, reversed secondary bow,
+horizon mist attenuation and a very subtle interior wash. There is no photograph,
+foreground, person or shadow in this layer. The bow keeps a fixed position while
+its opacity rises, holds, dissolves and rests in a 42-second cycle. The scene's
+visibility state pauses that cycle; reduced motion shows a stationary bow.
+Natural appearance reference: Met Office, “Rainbows: optical wonders,”
+https://weather.metoffice.gov.uk/learn-about/weather/optical-effects/rainbows .

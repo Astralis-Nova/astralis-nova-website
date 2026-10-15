@@ -7,19 +7,19 @@ const root = path.join(__dirname, '..');
 
 test('photo wings flap independently; distance loops and reduced motion remain stable', () => {
   const source = fs.readFileSync(path.join(root, 'rainbow-promise-cinematic.js'), 'utf8');
-  const flight = source.slice(source.indexOf('  // A closed orbit'), source.indexOf('  const rainbow = wrap.querySelector'));
+  const flight = source.slice(source.indexOf('  // A closed orbit'), source.indexOf('  const soundButton = wrap.querySelector'));
   for (const [width, height] of [[1120, 720], [370, 560]]) {
     const birds = Array.from({ length: 3 }, () => {
       const parts = {};
       return { style: {}, dataset: {}, querySelector: s => parts[s] ||= { style: {}, attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } } };
     });
-    const events = {}, motionEvents = {}, frames = new Map(), observers = [];
+    const events = {}, motionEvents = {}, frames = new Map(), observers = [], restClasses = new Set();
     let id = 0;
     const motion = { matches: false, addEventListener: (n, f) => motionEvents[n] = f, removeEventListener() {} };
     const document = { hidden: false, addEventListener: (n, f) => events[n] = f, removeEventListener() {} };
     class Observer { constructor(f) { this.f = f; observers.push(this); } observe() {} disconnect() {} }
     const env = {
-      wrap: { clientWidth: width, clientHeight: height, querySelectorAll: () => birds }, document,
+      wrap: { clientWidth: width, clientHeight: height, querySelectorAll: () => birds, classList: { toggle(name, on) { if (on) restClasses.add(name); else restClasses.delete(name); } } }, document,
       window: { matchMedia: () => motion, addEventListener: (n, f) => events[n] = f },
       ResizeObserver: Observer, IntersectionObserver: Observer,
       requestAnimationFrame: f => { frames.set(++id, f); return id; }, cancelAnimationFrame: i => frames.delete(i)
@@ -98,9 +98,9 @@ test('photo wings flap independently; distance loops and reduced motion remain s
     observers[0].f();
     assert.deepEqual(birds.map(b => b.querySelector('.rp-wing-left').attrs.transform), still);
     motion.matches = false; motionEvents.change(); assert.equal(frames.size, 1);
-    document.hidden = true; events.visibilitychange(); assert.equal(frames.size, 0);
-    document.hidden = false; events.visibilitychange(); assert.equal(frames.size, 1);
-    observers[1].f([{ isIntersecting: false }]); assert.equal(frames.size, 0);
+    document.hidden = true; events.visibilitychange(); assert.equal(frames.size, 0); assert(restClasses.has('rp-scene-resting'), 'the rainbow must pause with the hidden scene');
+    document.hidden = false; events.visibilitychange(); assert.equal(frames.size, 1); assert(!restClasses.has('rp-scene-resting'));
+    observers[1].f([{ isIntersecting: false }]); assert.equal(frames.size, 0); assert(restClasses.has('rp-scene-resting'), 'an offscreen rainbow must pause');
     events.pagehide(); assert.equal(frames.size, 0);
   }
 });
