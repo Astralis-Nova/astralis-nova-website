@@ -72,7 +72,7 @@
     for(const [front,weight] of [[false,1-view],[true,view]]){
       if(weight<.0001)continue;
       const image=front?forwardSheet:sheet,anchors=front?puppet.forwardAnchors:sideAnchors;
-      const target=front?[314,240]:[441,276],state={...pose,frontView:front};
+      const target=front?[314,240]:[441,276],state={...pose,frontView:front,limbAnchors:puppet.limbAnchors(front,weights)};
       poseContext.clearRect(0,0,512,512);poseContext.globalCompositeOperation='lighter';
       for(const [frame,alpha] of weights){
         poseContext.globalAlpha=alpha;
@@ -161,10 +161,13 @@
     const homeRect=anchor.getBoundingClientRect();
     let x=homeRect.x,y=homeRect.y,size=homeRect.width;
     let blend=1,glow=0,targetFacing=1,targetBank=0,firePower=0,approach=0,depth=2.6,profile=1,atmosphere=1,forwardBlend=0;
+    const departureFacing=route[0].x+flightSize/2>=homeRect.x+homeRect.width/2?1:-1;
     if(phase==='awaken'){
+      targetFacing=departureFacing;
       glow=Math.sin(progress*Math.PI);blend=ease((progress-.3)/.6);
     }else if(phase==='launch'){
       const p=ease(progress),start=route[0];
+      targetFacing=departureFacing;
       x=mix(homeRect.x,start.x,p);y=mix(homeRect.y,start.y,p)-Math.sin(progress*Math.PI)*24;
       size=mix(homeRect.width,flightSize,p);glow=(1-progress)*.3;forwardBlend=ease((progress-.75)/.25);
     }else if(phase==='flight'){
@@ -179,6 +182,7 @@
       }
     }else if(phase==='return'){
       const p=ease(progress),start=route[0];
+      targetFacing=-departureFacing;
       x=mix(start.x,homeRect.x,p);y=mix(start.y,homeRect.y,p);
       size=mix(flightSize,homeRect.width,p);forwardBlend=1-ease(progress/.3);
     }else if(phase==='restore'){
@@ -186,7 +190,9 @@
     }
     const smoothing=1-Math.exp(-dt/110);
     facing=mix(facing,targetFacing,smoothing);bank=mix(bank,targetBank,smoothing);
-    if(phase==='awaken'||phase==='restore'){facing=1;bank=0;}
+    // Choose the departure heading while still docked, before any translation.
+    if(phase==='awaken'||phase==='restore'){facing=targetFacing;bank=0;}
+    if(phase==='launch'||phase==='return')facing=targetFacing;
     dragon.style.width=size+'px';
     // Keep the original AC artwork. Banking foreshortens it during turns,
     // without the old zero-width mirror collapse.

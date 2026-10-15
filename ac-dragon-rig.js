@@ -49,21 +49,21 @@
     const stroke = Math.sin(angle), lag = Math.sin(angle - .65), activity = 1-glide*.88;
     const adjustment=Math.max(0,Math.sin(seconds*.62-.4))**8;
     const limbs=[0,.9,2.1,2.9].map((offset,index)=>({
-      knee:-7+adjustment*(index<2?13:10)+Math.sin(seconds*.9+offset)*2.7+lag*.7*activity,
-      ankle:5-adjustment*8+Math.sin(seconds*.73+offset-.4)*3.5,
-      curl:clamp(.58+Math.sin(seconds*.82+offset)*.19+adjustment*.15+glide*.08)
+      knee:-7+adjustment*(index<2?17:14)+Math.sin(seconds*1.12+offset)*8+lag*2*activity,
+      ankle:7-adjustment*13+Math.sin(seconds*1.37+offset-.4)*9,
+      curl:clamp(.47+Math.sin(seconds*1.67+offset)*.39+adjustment*.12+glide*.08)
     }));
     const eyePhase=(seconds+.83)%6.9;
     const blinkPulse=(center,half)=>1-smooth(0,half,Math.abs(eyePhase-center));
-    const blink=Math.max(blinkPulse(.18,.10),Math.floor((seconds+.83)/6.9)%3===1?blinkPulse(.44,.085):0);
+    const blink=Math.max(blinkPulse(.18,.18),Math.floor((seconds+.83)/6.9)%3===1?blinkPulse(.52,.14):0);
     return { phase, glide, activity,limbs,blink,
-      gaze:[Math.sin(seconds*.37)*.65+Math.sin(seconds*1.21)*.25,Math.sin(seconds*.49-.7)*.35],
+      gaze:[Math.sin(seconds*.37)*1.05+Math.sin(seconds*1.21)*.35,Math.sin(seconds*.49-.7)*.55],
       bob: Math.sin(angle-.9)*3*activity,
-      chest: Math.sin(angle-.6)*3.5*activity,
+      chest: Math.sin(angle-.6)*4.2*activity,
       neck: Math.sin(seconds*1.35-.6)*1.5-lag*1.5*activity,
       legs: -6+Math.sin(seconds*1.15-1.2)*4+lag*2*activity,
       wrist: Math.sin(angle-.9)*2.6*activity,
-      head: Math.sin(angle-.9)*-.75*activity,
+      head: Math.sin(seconds*1.08-.9)*1.6+Math.sin(angle-.9)*-.25*activity,
       tail: Math.sin(seconds*2.05-.6)*8+lag*4.5*activity,
       bank: Math.sin(seconds*.65)*1.3*(1-approach)
     };

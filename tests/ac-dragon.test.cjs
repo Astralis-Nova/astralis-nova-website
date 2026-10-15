@@ -93,7 +93,7 @@ test('pose blending preserves full body opacity across strokes and glides',()=>{
  for(let t=0;t<60;t+=.017){
   const pose=rig.pose(t),weights=rig.weights(pose.phase,pose.glide);
   assert(Math.abs(weights.reduce((sum,[,w])=>sum+w,0)-1)<.00001);
-  assert(Math.abs(pose.tail)<13 && Math.abs(pose.head)<1 && Math.abs(pose.bob)<=3);
+  assert(Math.abs(pose.tail)<13 && Math.abs(pose.head)<2 && Math.abs(pose.bob)<=3);
   weights.forEach(([i,w])=>{assert(i>=0&&i<6&&w>=0&&w<=1);poses.add(i);});
  }
  assert.equal(poses.size,6);
@@ -234,4 +234,52 @@ test('blinks close over the tracked eye in every forward pose and reopen between
  rectangles.length=0;const open=puppet.face(ctx,21,{...rig.pose(21),frontView:true},[[2,.5],[3,.5]]);
  assert.equal(open.blink,0);assert.equal(rectangles.length,0);assert(open.eye.every(Number.isFinite));
  assert.equal(puppet.face(ctx,21,rig.pose(21),[[0,1]]),null,'do not draw an extra eye onto the original profile');
+});
+
+
+test('takeoff and docking face their real travel direction from the first moving frame',()=>{
+ for(const [width,height] of [[1440,900],[390,844],[320,568],[844,390]]){
+  const s=setup({width,height});s.step(7500);
+  assert.equal(s.dragon.dataset.flightDirection,'left','turn toward departure while still docked');
+  let last=Number(s.dragon.dataset.flightCenterX),samples=0;
+  for(let i=0;i<160;i++){
+   s.step(20);const cx=Number(s.dragon.dataset.flightCenterX);
+   if(s.dragon.dataset.phase==='launch' && Math.abs(cx-last)>.01){
+    assert.equal(s.dragon.dataset.flightDirection,cx>last?'right':'left','the snout must lead the takeoff');samples++;
+   }
+   last=cx;
+  }
+  assert(samples>100);
+  s.step(27900);last=Number(s.dragon.dataset.flightCenterX);
+  for(let i=0;i<170;i++){
+   s.step(20);const cx=Number(s.dragon.dataset.flightCenterX);
+   if(s.dragon.dataset.phase==='return' && Math.abs(cx-last)>.01)assert.equal(s.dragon.dataset.flightDirection,cx>last?'right':'left');
+   last=cx;
+  }
+ }
+});
+
+test('front claw axes mirror anatomically and track every stabilized atlas pose',()=>{
+ const rig=rigEnv.window.AstralisDragonRig,puppet=rigEnv.window.AstralisDragonPuppet;
+ const neutral={...rig.pose(12),frontView:true,limbs:Array.from({length:4},()=>({knee:0,ankle:0,curl:0}))};
+ for(let frame=0;frame<6;frame++){
+  const anchors=puppet.limbAnchors(true,[[frame,1]]),p={...neutral,limbAnchors:anchors};
+  for(const i of [0,1]){
+   const toe=anchors[i][2],bent={...p,limbs:p.limbs.map((v,j)=>j===i?{...v,knee:12}:v)};
+   const offset=puppet.limbOffset(...toe,bent);
+   assert(i===0?offset[0]<-2:offset[0]>2,'left and right elbows must bend in opposite anatomical directions');
+   assert(Math.hypot(...puppet.limbOffset(260,280,bent))<.05,'do not rotate the torso with a claw');
+  }
+ }
+ const frame=1,anchors=puppet.limbAnchors(true,[[frame,1]]),ranges=anchors.map(()=>({min:Infinity,max:-Infinity}));
+ for(let t=0;t<12;t+=.1){const pose={...rig.pose(t),frontView:true,limbAnchors:anchors};anchors.forEach((chain,i)=>{const [dx]=puppet.limbOffset(...chain[2],pose);ranges[i].min=Math.min(ranges[i].min,dx);ranges[i].max=Math.max(ranges[i].max,dx);});}
+ assert(ranges.every(r=>r.max-r.min>3) && ranges.slice(0,2).every(r=>r.max-r.min>10),'foreclaws need a clear excursion, with smaller independent flex in the overlapping rear feet');
+ // Check the actual animated anchors and both rendering meshes, not only the default pose.
+ for(let t=0;t<12;t+=.17){
+  const pose=rig.pose(t),state={...pose,frontView:true,limbAnchors:puppet.limbAnchors(true,rig.weights(pose.phase,pose.glide))};
+  for(const mesh of [puppet,puppet.cpuMesh]){
+   const points=mesh.vertices.map(([x,y])=>puppet.deform(x,y,t,state));
+   for(let i=0;i<mesh.indices.length;i+=3){const[a,b,c]=mesh.indices.slice(i,i+3).map(n=>points[n]);assert((b[0]-a[0])*(c[1]-a[1])-(c[0]-a[0])*(b[1]-a[1])>20,'moving claws must not fold or invert their skin');}
+  }
+ }
 });

@@ -3,24 +3,44 @@
   'use strict';
   const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
   const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t);};
-  const frontLimbs=[[[236,310],[242,334],[245,351]],[[280,305],[295,321],[300,335]],
-    [[225,327],[227,348],[229,362]],[[264,329],[270,346],[269,360]]];
+  // Coordinates are in the head-stabilized atlas, not the raw source cells.
+  // Near/far forelegs and the two overlapping rear legs get separate chains.
+  const frontFrames=[
+    [[[244,300],[239,330],[235,351]],[[291,296],[300,317],[289,330]],[[252,319],[257,338],[255,347]],[[246,326],[247,344],[246,353]]],
+    [[[245,300],[249,330],[246,351]],[[294,297],[306,320],[300,333]],[[259,322],[266,339],[265,347]],[[251,327],[255,344],[254,354]]],
+    [[[246,300],[248,331],[244,352]],[[291,297],[302,318],[296,332]],[[257,321],[264,338],[264,346]],[[250,326],[253,343],[251,354]]],
+    [[[250,302],[260,334],[252,352]],[[305,300],[319,321],[307,335]],[[265,323],[275,340],[274,348]],[[258,329],[266,347],[265,356]]],
+    [[[253,302],[262,332],[257,352]],[[311,299],[325,323],[315,339]],[[271,322],[282,340],[280,350]],[[263,328],[270,346],[269,357]]],
+    [[[247,299],[252,331],[246,350]],[[297,296],[307,317],[299,331]],[[260,320],[268,337],[267,346]],[[253,325],[258,342],[256,352]]]
+  ];
   const sideLimbs=[[[317,293],[340,309],[353,324]],[[337,282],[357,296],[367,309]],
     [[254,323],[237,350],[231,370]],[[275,316],[277,336],[280,353]]];
+  function limbAnchors(front,weights){
+    if(!front)return sideLimbs;
+    return frontFrames[0].map((chain,i)=>chain.map((point,j)=>point.map((_,axis)=>
+      weights.reduce((sum,[frame,weight])=>sum+frontFrames[frame][i][j][axis]*weight,0))));
+  }
   function limbOffset(x,y,pose){
-    const limbs=pose.frontView?frontLimbs:sideLimbs;
+    const limbs=pose.limbAnchors||(pose.frontView?frontFrames[0]:sideLimbs);
     let dx=0,dy=0,total=0;
     limbs.forEach(([hip,ankle,toe],i)=>{
       const joint=pose.limbs?.[i];if(!joint)return;
-      const weight=Math.exp(-(((x-ankle[0])/23)**2))*smooth(hip[1]-3,ankle[1]+4,y)*(1-smooth(toe[1]+8,toe[1]+25,y));
+      const weight=Math.exp(-(((x-ankle[0])/17)**2))*smooth(hip[1],ankle[1],y)*(1-smooth(toe[1]+5,toe[1]+20,y));
       if(weight<.0001)return;
-      const knee=joint.knee*Math.PI/180,lower=joint.ankle*Math.PI/180;
-      const lowerWeight=smooth(ankle[1]-2,toe[1]+3,y);
-      const claw=smooth(toe[1]-5,toe[1]+5,y)*Math.exp(-(((x-toe[0])/14)**2));
-      dx+=(-(y-hip[1])*Math.sin(knee)+(x-hip[0])*(Math.cos(knee)-1)
-        +lowerWeight*(-(y-ankle[1])*Math.sin(lower))+(toe[0]-x)*joint.curl*.19*claw)*weight;
-      dy+=((x-hip[0])*Math.sin(knee)+(y-hip[1])*(Math.cos(knee)-1)
-        +lowerWeight*(x-ankle[0])*Math.sin(lower)-joint.curl*3.4*claw)*weight;
+      // Mirrored anatomical axes: elbows tuck in; wrists counter-rotate.
+      // The palm follows the forearm instead of turning both claws the same way.
+      const handed=pose.frontView?(i%2===0?1:-1):1;
+      const knee=joint.knee*handed*Math.PI/180,lower=joint.ankle*handed*Math.PI/180;
+      const lowerWeight=smooth(ankle[1]-6,toe[1],y);
+      const claw=smooth(toe[1]-10,toe[1]+3,y)*Math.exp(-(((x-toe[0])/15)**2));
+      const localX=x-ankle[0],localY=y-ankle[1];
+      const footX=localX*Math.cos(lower)-localY*Math.sin(lower);
+      const footY=localX*Math.sin(lower)+localY*Math.cos(lower);
+      const px=x+(footX-localX)*lowerWeight,py=y+(footY-localY)*lowerWeight;
+      dx+=((px-hip[0])*Math.cos(knee)-(py-hip[1])*Math.sin(knee)+hip[0]-x
+        +(x-toe[0])*(.5-joint.curl)*.34*claw)*weight;
+      dy+=((px-hip[0])*Math.sin(knee)+(py-hip[1])*Math.cos(knee)+hip[1]-y
+        -joint.curl*5.5*claw)*weight;
       total+=weight;
     });
     return [dx/Math.max(1,total),dy/Math.max(1,total)];
@@ -32,10 +52,14 @@
       const chest=middle*Math.exp(-(((y-305)/65)**2));
       const neck=middle*(1-smooth(240,310,y));
       const reach=smooth(325,470,y),tail=reach*reach*middle;
-      const breath=(x-255)*.009*Math.sin(seconds*1.7)*chest;
+      const breath=(x-255)*.015*Math.sin(seconds*1.7)*chest;
       const wing=(1-middle)*(1-smooth(250,330,y));
-      return [x+limb[0]+breath+Math.sin(seconds*2.05-reach*2.5)*(4+reach*12)*tail+pose.neck*neck+pose.wrist*wing*(x<255?-1:1),
-        y+limb[1]+pose.bob*.7+pose.chest*chest-pose.chest*.65*neck+Math.sin(seconds*1.4-reach*2)*3*tail+pose.wrist*.45*wing];
+      const head=smooth(266,291,x)*smooth(160,190,y)*(1-smooth(226,252,y));
+      const headAngle=pose.head*Math.PI/180;
+      const hx=(-(y-224)*Math.sin(headAngle)+(x-285)*(Math.cos(headAngle)-1))*head;
+      const hy=((x-285)*Math.sin(headAngle)+(y-224)*(Math.cos(headAngle)-1))*head;
+      return [x+hx+limb[0]+breath+Math.sin(seconds*2.05-reach*2.5)*(4+reach*12)*tail+pose.neck*neck+pose.wrist*wing*(x<255?-1:1),
+        y+hy+limb[1]+pose.bob*.7+pose.chest*chest-pose.chest*.65*neck+Math.sin(seconds*1.4-reach*2)*3*tail+pose.wrist*.45*wing];
     }
     let dx=limb[0],dy=limb[1]+pose.bob*.7;
     const chest=Math.exp(-(((x-292)/68)**2)-((y-298)/64)**2);
@@ -65,7 +89,8 @@
   // Extra vertices around knees, ankles, claws and neck keep their movement local.
   const {vertices,indices}=mesh([0,32,64,96,128,160,190,210,225,240,255,270,285,300,315,330,350,380,420,460,490,512],
     [0,32,64,96,128,160,185,205,225,245,270,290,305,320,335,350,365,380,405,440,475,512]);
-  const cpuMesh=mesh([0,85,170,210,240,270,300,330,380,440,512],[0,85,170,240,285,315,340,365,395,450,512]);
+  const cpuMesh=mesh([0,85,170,205,220,232,244,256,268,280,292,304,318,335,355,380,440,512],
+    [0,85,170,205,235,270,290,302,314,326,338,350,362,374,395,450,512]);
   function positions(seconds,pose) { return vertices.map(([x,y])=>deform(x,y,seconds,pose)); }
   const forwardAnchors=[[320,250],[307,249],[312,250],[306,201],[302,204],[307,204]];
   const forwardEyes=Array.from({length:6},()=>[293,203]);
@@ -76,7 +101,7 @@
     ctx.save();ctx.globalCompositeOperation='source-atop';ctx.translate(...eye);ctx.rotate(.55);
     ctx.beginPath();ctx.ellipse(0,0,3.6,2.15,0,0,Math.PI*2);ctx.clip();
     if(blink<.95){
-      ctx.globalAlpha=.6*(1-blink);ctx.fillStyle='#120a0c';ctx.beginPath();ctx.ellipse(gaze[0],gaze[1],.85,1.5,0,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=.8*(1-blink);ctx.fillStyle='#120a0c';ctx.beginPath();ctx.ellipse(gaze[0],gaze[1],1.05,1.65,0,0,Math.PI*2);ctx.fill();
       ctx.globalAlpha=.7*(1-blink);ctx.fillStyle='#ffe9c3';ctx.beginPath();ctx.ellipse(-.9+gaze[0]*.4,-.6,.55,.4,0,0,Math.PI*2);ctx.fill();
     }
     if(blink>.001){
@@ -149,5 +174,5 @@
       ctx.drawImage(texture,minX,minY,sw,sh,minX,minY,sw,sh);ctx.restore();
     }
   }
-  root.AstralisDragonPuppet={forwardAnchors,forwardEyes,limbOffset,face,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
+  root.AstralisDragonPuppet={forwardAnchors,forwardEyes,limbAnchors,limbOffset,face,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
 })(typeof window==='undefined'?globalThis:window);

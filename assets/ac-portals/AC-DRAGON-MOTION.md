@@ -88,3 +88,28 @@ phase differences, and check eye closure, reopening and attachment in every
 pose. Both skin meshes retain positive triangle areas through their motions.
 Native desktop/phone renders and enlarged eye/foot samples were inspected,
 including fully open, closed and reopened eyelids. No image assets changed.
+
+
+## October 15: nose-first departure and anatomical claw axes
+
+Takeoff previously kept the default right-facing profile while moving left
+from the emblem. The animated body now faces its actual departure tangent
+while awakening, before translation starts. Docking also uses its own travel
+heading. The approved Promise patrol camera is unchanged.
+
+The forward limb chains now follow measured positions in each head-stabilized
+atlas cell, blended with the same weights as the artwork. Left and right joints
+use mirrored anatomical axes, with sequential elbow/wrist rotations rather than
+independent offsets. Stronger asynchronous tuck/reach, wrist counter-flex and
+localized toe splay/curl make the motion visible without rotating the torso.
+The Canvas fallback has more vertices at the feet. Small independent head
+turns and stronger chest motion accompany the existing neck/tail response.
+The tracked eye has a longer blink and clearer pupil movement; its size and
+position remain attached to the original eye.
+
+Regression tests check actual center travel against facing from the opening
+moving frame on four viewport sizes, mirrored foreclaw bend directions, limb
+excursion across time, all six landmark sets, and positive triangles in both
+meshes with animated landmarks. Native Canvas desktop/phone flybys, opening
+frames, and enlarged eyes/claws were inspected. Browser GPU visual inspection
+remains unavailable; GPU draw/resource contracts are covered by tests.
