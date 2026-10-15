@@ -1,44 +1,66 @@
-# Original AC dragon: articulated flight
+# Original AC dragon: Promise-style forward flight
 
-The existing crimson emblem and six-pose `ac-dragon-flight-sheet.webp` remain
-unchanged. No replacement creature or additional sprite sheet is used.
+The original crimson emblem and `ac-dragon-flight-sheet.webp` remain unchanged.
+`ac-dragon-toward-cycle.webp` adds six complementary forward three-quarter poses
+for the same slender crimson design. The original side cycle remains in takeoff,
+return and the fallback if the new angle cannot load. A short opacity blend joins
+the views; this is not a replacement of the parked emblem.
 
-## Camera approach
+## Reference comparison
 
-The depth orbit now follows the Rainbow Promise birds' accelerating perspective
-relation: the dragon travels from depth 19 to about 1, with one sustained side-forward pass per
-patrol. Its apparent width grows roughly tenfold as it approaches the viewer,
-then recedes continuously. Near passes centre the creature in world space and
-may briefly crop outer wings; they no longer shrink and slide the whole flight
-into an inset bounding box. A restrained atmospheric fade reinforces distance. The lateral route now follows
-the Promise birds' actual control points: distant left entry, diagonal approach,
-rightward close pass and distant return. All near flight continues nose-first;
-direction reversal occurs only after the dragon has receded. Body pitch follows
-the projected flight tangent instead of remaining level during the diagonal pass.
+The active Rainbow Promise bird renderer was executed with its actual raven
+atlas to inspect its approach and retreat frames. Its camera keeps the body
+nearly level while approaching, increases scale with depth, and banks only during
+the distant return. The dragon's former 20-degree tangent tilt and CSS 3D card
+rotation have been removed. Its flight uses the same normalized position loop,
+28-second period, .04 start offset, perspective relation, light lift, retreat-only
+banking and opacity. Dragon-sized art uses its own base width.
 
-## Articulation
+Tests execute the current `renderBirds` function from
+`rainbow-promise-cinematic.js` and compare the dragon's camera state with the
+reference. They check position, scale, opacity and bank over a complete loop.
+They also enforce a level approach and the forward-view asset selection.
 
-`ac-dragon-puppet.js` replaces the former full-column bend and whole-image
-breathing scale. A continuous skin mesh gives the chest, neck, feet, tail and
-wrists separate motion. Chest lift follows the wingbeat; neck compensation
-steadies the head; the legs tuck; a delayed wave travels down the tail. The
-original six poses still supply the main wing stroke, with opaque additive
-transitions and a spread-wing glide. Turning foreshortening is restrained so the
-creature does not visibly squash like a rotating card. Fire follows the deformed
-mouth and retains its bounded particle count.
+## Articulation and rendering
 
-A WebGL mesh handles skinning in one indexed draw when supported. It uses the
-original atlas and at most three premultiplied pose samples. Shader/context failure
-uses an articulated Canvas triangle mesh. Artwork refreshes at up to 40 fps with
-GPU skinning and 20 fps for the Canvas fallback; flight transforms remain smooth.
-GPU resources and event listeners are released on page exit. Hidden tabs pause;
-reduced motion retains the parked original emblem and explicit play control.
+`ac-dragon-puppet.js` has separate skin weights for profile and forward views.
+Chest lift follows the wingbeat; the neck steadies the head; feet tuck; a delayed
+wave travels down the tail. The six full poses supply the main wing stroke with
+opaque additive transitions. Fire follows the selected view's deformed mouth.
 
-## Validation
+Each view can use a WebGL mesh with the retained atlas and up to three
+premultiplied pose samples. Shader/context failure uses the articulated Canvas
+mesh. Independent asset failure retains the original working side cycle. GPU
+resources and listeners are released on page exit. Hidden tabs pause; reduced
+motion retains the parked emblem and explicit play control.
 
-Node tests cover complete patrols, depth growth and continuous return, independent
-joints, positive mesh triangle areas, pose opacity, pause, reduced motion, asset
-failure, GPU draw/resource contracts, context loss and cleanup. Native Canvas
-renders of the actual fallback were inspected at 1440x900 and 390x844, including
-close passes and a wing/body cycle. Browser automation is unavailable in the
-managed workspace; browser GPU rendering was not visually inspected here.
+## New angle asset provenance
+
+Created with the built-in image generation tool from the existing AC flight
+sheet and emblem, then format-converted to a 1536x1024 WebP with alpha.
+No cyan accents, armor or replacement creature design were introduced.
+
+Generation prompt:
+
+> Use case: identity-preserve. Complementary animation artwork for the exact
+> existing Asheron's Call crimson dragon in the two reference images. Preserve
+> its slender serpentine body, long narrow curved neck, elongated angular snout,
+> small swept-back red horns, cheek spikes, small dark eyes, layered pointed
+> crimson scales, curling whip tail, four lean clawed limbs and red Gothic bat
+> wings. Match the original monochrome scarlet/crimson and black fantasy game
+> rendering. No cyan, glowing veins, armor, metallic robot, bulky chest or new
+> monster identity. Front three-quarter view flying toward the viewer, with
+> the front of the narrow chest and snout visible, slight 15-degree yaw, wings
+> either side, claws tucked and tail trailing behind. Six consistent phases:
+> upstroke, half opening, horizontal, downstroke, low recovery and rising.
+> Equal three-column/two-row 1536x1024 atlas; each full creature inside its own
+> 512x512 cell with transparent padding and consistent head/body anchors.
+> Genuine alpha outside the creature; no background, aura, fire, text or grid.
+
+## Validation limits
+
+Native Canvas renders of the actual dragon fallback and the actual Promise
+raven renderer were inspected at desktop and phone sizes. Tests cover complete
+patrols, reference camera equivalence, both skin meshes, opacity, pause, reduced
+motion, independent asset failures, GPU contracts and cleanup. Browser GPU
+rendering is not available for visual inspection in this managed workspace.

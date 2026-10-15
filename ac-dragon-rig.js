@@ -4,8 +4,8 @@
   const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
   const mix = (a, b, t) => a + (b - a) * t;
   const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
-  // Promise flight pattern: a sustained side-forward approach, a near pass
-  // continuing nose-first to the right, then a distant return behind the scene.
+  // Retain the Promise camera loop. Approach attitude is level; banking is
+  // reserved for the distant retreat, rather than following the path tangent.
   const knots = [[.50,.23,19],[.27,.18,18],[.35,.24,8],[.49,.34,3.8],
     [.60,.40,1.4],[.79,.30,1.1],[.91,.17,13],[.70,.13,18],[.42,.20,17]];
   const at = index => knots[(index % knots.length + knots.length) % knots.length];
@@ -17,22 +17,28 @@
       return .5 * (2*b + (-a+c)*t + (2*a-5*b+4*c-d)*t*t + (-a+3*b-3*c+d)*t*t*t);
     });
   }
-  function route(progress, width, height, top = 80) {
-    const [nx,ny,depth] = spline(progress), before = spline(progress - .0005), after = spline(progress + .0005);
-    const dx = (after[0] - before[0]) / .001, dy = (after[1] - before[1]) / .001, dz = (after[2] - before[2]) / .001;
-    top = Math.min(top, Math.max(12, height * .24));
-    const near=Math.min(1250,width*1.04,(height-top)*1.35);
-    // Same accelerating perspective relation as the Promise birds. Centre the
-    // animal in world space; do not slide it around to fit a shrinking box.
-    const size=near*2.3/(Math.max(.85,depth)+1.2);
-    const x=nx*width-size/2;
-    const y=top+ny*(height-top)-size/2;
-    const approach = clamp(smooth(-.4, 3, -dz) * .82 + (1 - smooth(1.1,4.5,depth)) * .42);
-    const heading=Math.atan2(dy*(height-top),Math.abs(dx*width))*180/Math.PI;
-    return { x, y, size, depth, dx, dy, dz, approach, heading,
-      facing: dx >= 0 ? 1 : -1,
-      bank: clamp(heading*.55,-20,20)*(dx>=0?1:-1),
-      pitch: clamp(-dz * .9, -8, 9) };
+  function route(progress,width,height,top=80,seconds=0) {
+    const phase=((progress%1)+1)%1+.04;
+    const [nx,ny,depth]=spline(phase),next=spline(phase+.003);
+    const dx=next[0]-nx,dy=next[1]-ny,dz=next[2]-depth;
+    top=Math.min(top,Math.max(12,height*.24));
+    const scale=3.5/(Math.max(.85,depth)+1.2);
+    const base=Math.min(380,Math.max(220,width*.32),Math.max(150,(height-top)*.65));
+    const size=base*scale;
+    // Promise's centred depth growth and light flight lift, with dragon-sized art.
+    const beat=seconds*2.45+.045*Math.sin(seconds*.7),p=((beat%1)+1)%1;
+    const stroke=p<.43?Math.cos(Math.PI*p/.43):-Math.cos(Math.PI*(p-.43)/.57);
+    const cycle=seconds%6.8;
+    const envelope=Math.min(1,Math.max(0,(4.7-cycle)*5)+Math.max(0,(cycle-6.5)*5));
+    const lift=(Math.sin(seconds*1.1)*5-stroke*envelope*6)*Math.min(1.3,scale);
+    const x=nx*width-size/2,y=top+ny*(height-top)+lift-size/2;
+    const retreating=dz>0;
+    const turn=clamp(dx*90,-1,1),turnBlend=retreating?clamp((depth-4.3)/8):0;
+    const yaw=Math.tanh(dx*300);
+    const approach=clamp(smooth(-.4,3,-dz/.003)*.82+(1-smooth(1.1,4.5,depth))*.42);
+    return {x,y,size,depth,dx,dy,dz,approach,scale,lift,
+      facing:dx>=0?1:-1,profile:.82+.18*Math.abs(yaw),
+      bank:turn*5*turnBlend,pitch:0,opacity:.52+.46*Math.min(1,scale)};
   }
   function pose(seconds, approach = 0, launch = false) {
     // A firm downstroke, slower recovery and short glides give the body weight.

@@ -6,7 +6,7 @@ const path = require('node:path');
 const rigEnv={window:{}}; vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../ac-dragon-rig.js'),'utf8'),rigEnv);
 vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../ac-dragon-puppet.js'),'utf8'),rigEnv);
 const source = fs.readFileSync(path.join(__dirname,'../ac-dragon.js'),'utf8');
-function setup({width=1440,height=900,reduced=false,failed=false}={}) {
+function setup({width=1440,height=900,reduced=false,failed=false,forwardFailed=false}={}) {
   let clock=0,id=0,frames=new Map(),images=[];
   const listeners={};
   const context=()=>new Proxy({arcs:0,draws:[],clearRect(){this.arcs=0;this.draws=[];},drawImage(...args){this.draws.push({args,alpha:this.globalAlpha,blend:this.globalCompositeOperation});},createRadialGradient(){return{addColorStop(){}};},createLinearGradient(){return{addColorStop(){}};},beginPath(){},arc(x,y,r){assert.ok([x,y,r].every(Number.isFinite));this.arcs++;},fill(){}},{get:(o,k)=>o[k]??(()=>{})});
@@ -18,7 +18,7 @@ function setup({width=1440,height=900,reduced=false,failed=false}={}) {
   const document={body,hidden:false,querySelector(q){return q==='.ac-dragon-emblem'?dragon:q==='.topbar'?{getBoundingClientRect:()=>({bottom:68})}:null;},getElementById(q){return {acDragonCanvas:canvas,acDragonStill:still,acDragonToggle:toggle}[q];},createElement:element,addEventListener(k,v){listeners[k]=v;},removeEventListener(k){delete listeners[k];}};
   const window={AstralisDragonRig:rigEnv.window.AstralisDragonRig,AstralisDragonPuppet:rigEnv.window.AstralisDragonPuppet,matchMedia:()=>preference,addEventListener(k,v){listeners[k]=v;},removeEventListener(k){delete listeners[k];}};
   vm.runInNewContext(source,{document,window,innerWidth:width,innerHeight:height,Image:class{constructor(){images.push(this);this.naturalWidth=1536;this.naturalHeight=1024;}},requestAnimationFrame(fn){frames.set(++id,fn);return id;},cancelAnimationFrame(id){frames.delete(id);},Math});
-  if(failed)images[0].onerror();else images[0].onload();
+  if(failed)images[0].onerror();else{images[0].onload();if(forwardFailed)images[1].onerror();else images[1].onload();}
   function step(ms){const target=clock+ms;while(clock<target){clock=Math.min(target,clock+20);const pending=[...frames.values()];frames.clear();pending.forEach(fn=>fn(clock));}}
   step(20);
   return{dragon,art,canvas,still,toggle,body,home,document,preference,step,listeners,images,frames:()=>frames.size,fire:()=>art.children.find(c=>c.className==='ac-dragon-fire')};
@@ -31,7 +31,7 @@ test('desktop and phone complete the emblem, aura, flight, fire, return, and rep
   s.step(2800);assert.equal(s.dragon.dataset.phase,'launch');
   s.step(4200);assert.equal(s.dragon.dataset.phase,'flight');assert.equal(s.canvas.hidden,false);assert.equal(s.still.style.opacity,'0');
   let breaths=0,maxArcs=0;
-  for(let i=0;i<234;i++){s.step(100);if(s.dragon.dataset.breathing==='true')breaths++;maxArcs=Math.max(maxArcs,s.fire().context.arcs);}
+  for(let i=0;i<254;i++){s.step(100);if(s.dragon.dataset.breathing==='true')breaths++;maxArcs=Math.max(maxArcs,s.fire().context.arcs);}
   assert.ok(breaths>0,'fire is visible during flight');assert.ok(maxArcs<=170,'particles stay bounded');
   assert.equal(s.dragon.dataset.phase,'return');assert.equal(s.dragon.dataset.breathing,'false');
   s.step(3500);assert.equal(s.dragon.dataset.phase,'restore');
@@ -56,7 +56,7 @@ test('sprite loading failure leaves the original emblem available',()=>{
 });
 
 test('close approaches grow visibly, articulate the tail and stop all work on page exit',()=>{
- const s=setup();assert.equal(s.images.length,1,'retain the original AC artwork');assert.equal(s.images[0].src,'/assets/ac-portals/ac-dragon-flight-sheet.webp');s.step(10700);
+ const s=setup();assert.equal(s.images.length,2,'retain the original and add a matching forward view');assert.equal(s.images[0].src,'/assets/ac-portals/ac-dragon-flight-sheet.webp');s.step(10700);
  const sizes=new Set(),tails=new Set(),views=new Set(),phases=new Set();
  for(let i=0;i<250;i++){
   s.step(100);sizes.add(Number(s.dragon.dataset.flightSize));tails.add(s.dragon.dataset.tailFlex);views.add(Number(s.dragon.dataset.approach));phases.add(s.dragon.dataset.wingPhase);
@@ -78,7 +78,7 @@ test('Promise-style approaches grow from distant to screen-filling, with continu
    assert(Object.values(pose).every(Number.isFinite));
    assert(pose.x+pose.size/2>0 && pose.x+pose.size/2<width);
    assert(pose.y+pose.size/2>0 && pose.y+pose.size/2<height);
-   assert(pose.size<width*1.3,'close passes may crop wings but must not fill the page with an unbounded image');
+   assert(pose.size<width*1.8,'close passes may crop wings but must not fill the page with an unbounded image');
    const near=pose.depth<2;if(near&&!wasNear)nearPasses++;wasNear=near;
    if(previous)maxStep=Math.max(maxStep,Math.hypot(pose.x-previous.x,pose.y-previous.y),Math.abs(pose.size-previous.size));previous=pose;
   }
@@ -129,11 +129,11 @@ test('local joints move independently, stay connected and never invert the skin 
 
 test('GPU skinning draws one indexed mesh and releases resources; context loss enables fallback',()=>{
  const puppet=rigEnv.window.AstralisDragonPuppet;
- const calls=[],events={},resources=[];let id=0;
+ const calls=[],events={},resources=[],shifts={};let id=0;
  const gl=new Proxy({
   NO_ERROR:0,getError:()=>0,getShaderParameter:()=>true,getProgramParameter:()=>true,getAttribLocation:()=>0,getUniformLocation:(_,name)=>name,isContextLost:()=>false,
   bufferSubData:(_,offset,data)=>{assert([...data].every(Number.isFinite));calls.push(['vertices',data.length]);},
-  drawElements:(_,count)=>calls.push(['draw',count]),uniform3f:(name,...values)=>{if(name==='uWeights')assert(Math.abs(values.reduce((a,b)=>a+b,0)-1)<.00001);},
+  drawElements:(_,count)=>calls.push(['draw',count]),uniform2f:(name,...values)=>shifts[name]=values,uniform3f:(name,...values)=>{if(name==='uWeights')assert(Math.abs(values.reduce((a,b)=>a+b,0)-1)<.00001);},
   createShader:()=>++id,createProgram:()=>++id,createBuffer:()=>++id,createTexture:()=>++id,
   deleteShader:v=>resources.push(v),deleteProgram:v=>resources.push(v),deleteBuffer:v=>resources.push(v),deleteTexture:v=>resources.push(v)
  },{get:(o,k)=>o[k]??(k.toUpperCase()===k?1:()=>{})});
@@ -145,6 +145,7 @@ test('GPU skinning draws one indexed mesh and releases resources; context loss e
  let prevented=false;events.webglcontextlost({preventDefault(){prevented=true;}});assert(prevented);
  assert.equal(gpu.draw(13,pose,[[1,1]]),false,'a lost context must hand rendering to Canvas');
  gpu.destroy();assert.equal(resources.length,7);assert.equal(events.webglcontextlost,undefined);
+ const forward=puppet.createGPU(canvas,{},true);assert(forward.draw(12,{...pose,frontView:true},[[1,1]]));assert.deepEqual(shifts.uShift0,[-1,10]);forward.destroy();
  gl.getShaderParameter=()=>false;assert.equal(puppet.createGPU(canvas,{}),null,'shader errors preserve the Canvas fallback');
 });
 
@@ -165,8 +166,42 @@ test('the close flyby travels nose-first across the screen and turns only at dis
    if(p.facing<0)assert(p.depth>12,'direction reversals belong in the distant return');
   }
   assert(count>200);assert(last-first>width*.3,'the forward pass needs substantial lateral travel');
-  const entering=rig.route(.25,width,height),passing=rig.route(.57,width,height);
+  const entering=rig.route(.20,width,height),passing=rig.route(.46,width,height);
   assert(entering.dz<0 && passing.dx>0);
   assert(passing.size>entering.size*2,'forward travel and perspective growth must happen together');
+ }
+});
+
+test('the dragon follows the actual Promise camera position, growth, opacity and level approach',()=>{
+ const source=fs.readFileSync(path.join(__dirname,'../rainbow-promise-cinematic.js'),'utf8');
+ const pathSource=source.slice(source.indexOf('  const flightPath ='),source.indexOf('  const flock ='));
+ const orbitSource=source.slice(source.indexOf('  const smoothOrbit ='),source.indexOf('  const renderBirds ='));
+ const renderSource=source.slice(source.indexOf('  const renderBirds ='),source.indexOf('  const flyBirds ='));
+ for(const[width,height]of[[1440,900],[390,844]]){
+  const top=80,element={style:{},dataset:{}},bird={element,shape:{style:{}},duration:28000,offset:.04,mirror:1,vertical:0};let state;
+  const reference={flock:[bird],birdWidth:width,birdHeight:height-top,soundPositionTick:-1,window:{rainbowPromiseRenderPose:(_,s)=>{state=s;return true;}}};
+  vm.runInNewContext(pathSource+orbitSource+renderSource+';this.render=renderBirds;',reference);
+  for(let time=0;time<28000;time+=137){
+   reference.render(time);const p=rigEnv.window.AstralisDragonRig.route(time/28000,width,height,top,time/1000);
+   const m=element.style.transform.match(/translate3d\(([^p]+)px,([^p]+)px,0\).*scale\(([^)]+)\)/);
+   assert(Math.abs(p.x+p.size/2-Number(m[1]))<.006);
+   assert(Math.abs(p.y+p.size/2-top-Number(m[2]))<.006);
+   assert(Math.abs(p.scale-Number(m[3]))<.00006);
+   assert(Math.abs(p.opacity-Number(element.style.opacity))<1e-10);
+   assert(Math.abs(p.bank-state.bank)<1e-10);
+   if(p.dz<=0)assert.equal(Math.abs(p.bank),0,'the approaching dragon must not be tilted diagonally');
+  }
+ }
+});
+
+test('the approaching dragon uses its forward-facing cycle; failed forward art retains the original',()=>{
+ const s=setup();s.step(23000);assert.equal(s.dragon.dataset.phase,'flight');assert.equal(s.dragon.dataset.flightView,'toward-viewer');
+ assert.equal(s.images[1].src,'/assets/ac-portals/ac-dragon-toward-cycle.webp');
+ assert(!/perspective|rotate[XY]/.test(s.canvas.style.transform));
+ const fallback=setup({forwardFailed:true});fallback.step(23000);assert.equal(fallback.dragon.dataset.flightView,'side');assert.equal(fallback.canvas.hidden,false);
+ const rig=rigEnv.window.AstralisDragonRig,puppet=rigEnv.window.AstralisDragonPuppet;
+ for(let t=0;t<15;t+=.19){
+  const points=puppet.positions(t,{...rig.pose(t),frontView:true});
+  for(let i=0;i<puppet.indices.length;i+=3){const[a,b,c]=puppet.indices.slice(i,i+3).map(n=>points[n]);assert((b[0]-a[0])*(c[1]-a[1])-(c[0]-a[0])*(b[1]-a[1])>20);}
  }
 });

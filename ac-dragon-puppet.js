@@ -4,6 +4,16 @@
   const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
   const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t);};
   function deform(x,y,seconds,pose) {
+    if(pose.frontView){
+      const middle=Math.exp(-(((x-255)/90)**2));
+      const chest=middle*Math.exp(-(((y-305)/65)**2));
+      const neck=middle*(1-smooth(240,310,y));
+      const reach=smooth(325,470,y),tail=reach*reach*middle;
+      const feet=smooth(305,345,y)*(1-smooth(370,405,y))*middle;
+      const wing=(1-middle)*(1-smooth(250,330,y));
+      return [x+Math.sin(seconds*2.05-reach*2.5)*(4+reach*12)*tail+pose.neck*neck+pose.wrist*wing*(x<255?-1:1),
+        y+pose.bob*.7+pose.chest*chest-pose.chest*.65*neck+pose.legs*.35*feet+pose.wrist*.45*wing];
+    }
     let dx=0,dy=pose.bob*.7;
     const chest=Math.exp(-(((x-292)/68)**2)-((y-298)/64)**2);
     dx+=(x-292)*.008*Math.sin(seconds*1.7)*chest;
@@ -36,7 +46,8 @@
   }
   const {vertices,indices}=mesh(20,16),cpuMesh=mesh(8,6);
   function positions(seconds,pose) { return vertices.map(([x,y])=>deform(x,y,seconds,pose)); }
-  function createGPU(canvas,image) {
+  const forwardAnchors=[[320,250],[313,250],[316,245],[314,222],[314,219],[307,242]];
+  function createGPU(canvas,image,front=false) {
     let gl;
     try { gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:true,preserveDrawingBuffer:true}); } catch(_){return null;}
     if(!gl || typeof gl.createShader!=='function')return null;
@@ -67,7 +78,7 @@
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
       gl.uniform1i(gl.getUniformLocation(program,'uAtlas'),0);gl.disable(gl.DEPTH_TEST);gl.disable(gl.BLEND);gl.viewport(0,0,512,512);
       const uniforms={};for(const n of ['uFrames','uWeights','uShift0','uShift1','uShift2'])uniforms[n]=gl.getUniformLocation(program,n);
-      const shifts=[[0,0],[7,4],[4,-2],[0,-2],[6,2],[10,2]];
+      const shifts=front?forwardAnchors.map(([x,y])=>[x-314,y-240]):[[0,0],[7,4],[4,-2],[0,-2],[6,2],[10,2]];
       let lost=false;
       const onLost=event=>{event.preventDefault();lost=true;};canvas.addEventListener('webglcontextlost',onLost);
       return {draw(seconds,pose,weights){
@@ -100,5 +111,5 @@
       ctx.drawImage(texture,minX,minY,sw,sh,minX,minY,sw,sh);ctx.restore();
     }
   }
-  root.AstralisDragonPuppet={deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
+  root.AstralisDragonPuppet={forwardAnchors,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
 })(typeof window==='undefined'?globalThis:window);

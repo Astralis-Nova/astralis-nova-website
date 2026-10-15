@@ -32,19 +32,19 @@
   art.append(fire);
   const flame = fire.getContext('2d');
   const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const sheet = new Image();
+  const sheet = new Image(),forwardSheet=new Image();
   const posePlate = document.createElement('canvas'), bodyPlate = document.createElement('canvas');
   posePlate.width = posePlate.height = bodyPlate.width = bodyPlate.height = 512;
   const poseContext = posePlate.getContext('2d'), bodyContext = bodyPlate.getContext('2d');
   if (!poseContext || !bodyContext) return;
-  const gpuCanvas=document.createElement('canvas');
-  let gpu=null,disposed = false;
+  const gpuCanvas=document.createElement('canvas'),forwardGpuCanvas=document.createElement('canvas');
+  let gpu=null,forwardGPU=null,forwardReady=false,forwardLoaded=0,disposed = false;
   let ready=false, playing=!preference.matches, request=0, previousTime=null, elapsed=0;
   let facing=1, bank=0, particles=[], emission=0, paintClock=-Infinity;
   let mouth={x:441,y:276};
   let route=[], flightSize=180;
   // Rest, awaken, take off, patrol, return, and become the original emblem.
-  const timing = {rest:5000,awaken:2800,launch:2800,flight:26000,return:3600,restore:2800};
+  const timing = {rest:5000,awaken:2800,launch:2800,flight:28000,return:3600,restore:2800};
   const end = {};
   let duration=0;
   for (const [phase,length] of Object.entries(timing)) end[phase]=duration+=length;
@@ -64,46 +64,41 @@
     flightSize=route[0].size;
     route.top=top;
   };
-  const flightPosition = progress => rig.route(progress, innerWidth, innerHeight, route.top);
-  function paintBody(seconds, approach, launching) {
-    const pose=rig.pose(seconds,approach,launching), weights=rig.weights(pose.phase,pose.glide);
-    poseContext.clearRect(0,0,512,512);
-    poseContext.globalCompositeOperation='lighter';
-    const mouths=[[441,276],[448,280],[445,274],[441,274],[447,278],[451,278]];
-    poseContext.save();
-    for(const [frame,weight] of weights) {
-      poseContext.globalAlpha=weight;
-      const ox=441-mouths[frame][0], oy=276-mouths[frame][1];
-      poseContext.drawImage(sheet,(frame%3)*512,Math.floor(frame/3)*512,512,512,ox,oy,512,512);
+  const flightPosition = progress => rig.route(progress, innerWidth, innerHeight, route.top,progress*28);
+  function paintBody(seconds,approach,launching,view=0) {
+    const pose=rig.pose(seconds,approach,launching),weights=rig.weights(pose.phase,pose.glide);
+    const sideAnchors=[[441,276],[448,280],[445,274],[441,274],[447,278],[451,278]];
+    context.clearRect(0,0,512,512);
+    for(const [front,weight] of [[false,1-view],[true,view]]){
+      if(weight<.0001)continue;
+      const image=front?forwardSheet:sheet,anchors=front?puppet.forwardAnchors:sideAnchors;
+      const target=front?[314,240]:[441,276],state={...pose,frontView:front};
+      poseContext.clearRect(0,0,512,512);poseContext.globalCompositeOperation='lighter';
+      for(const [frame,alpha] of weights){
+        poseContext.globalAlpha=alpha;
+        poseContext.drawImage(image,(frame%3)*512,Math.floor(frame/3)*512,512,512,target[0]-anchors[frame][0],target[1]-anchors[frame][1],512,512);
+      }
+      poseContext.globalAlpha=1;poseContext.globalCompositeOperation='source-over';
+      bodyContext.clearRect(0,0,512,512);
+      const renderer=front?forwardGPU:gpu,surface=front?forwardGpuCanvas:gpuCanvas;
+      const accelerated=renderer?.draw(seconds,state,weights);
+      if(renderer&&!accelerated){renderer.destroy();if(front)forwardGPU=null;else gpu=null;}
+      if(accelerated)bodyContext.drawImage(surface,0,0);else puppet.drawCPU(bodyContext,posePlate,seconds,state);
+      dragon.dataset.renderer=accelerated?'gpu':'canvas';
+      context.save();context.globalCompositeOperation='lighter';context.globalAlpha=weight;
+      context.translate(256,290);if(facing<0)context.scale(-1,1);
+      context.rotate(pose.bank*Math.PI/180);context.drawImage(bodyPlate,-256,-290,512,512);context.restore();
     }
-    poseContext.restore();
-    poseContext.globalAlpha=1;poseContext.globalCompositeOperation='source-over';
-    bodyContext.clearRect(0,0,512,512);
-    const accelerated=gpu?.draw(seconds,pose,weights);
-    if(gpu && !accelerated){gpu.destroy();gpu=null;}
-    if(accelerated)bodyContext.drawImage(gpuCanvas,0,0);
-    else puppet.drawCPU(bodyContext,posePlate,seconds,pose);
-    dragon.dataset.renderer=accelerated?'gpu':'canvas';
-    // Digital light remains clipped to the scales and membranes.
-    bodyContext.save();bodyContext.globalCompositeOperation='source-atop';
-    const sheen=bodyContext.createLinearGradient(40,0,470,512);
+    context.save();context.globalCompositeOperation='source-atop';
+    const sheen=context.createLinearGradient(40,0,470,512);
     sheen.addColorStop(0,'rgba(255,176,108,.06)');sheen.addColorStop(.5,'rgba(255,97,57,.02)');sheen.addColorStop(1,'rgba(255,50,35,.07)');
-    bodyContext.fillStyle=sheen;bodyContext.fillRect(0,0,512,512);
-    const scan=(seconds*32)%560-24;
-    const light=bodyContext.createLinearGradient(0,scan-24,0,scan+24);
-    light.addColorStop(0,'rgba(255,195,138,0)');light.addColorStop(.5,'rgba(255,195,138,.17)');light.addColorStop(1,'rgba(255,195,138,0)');
-    bodyContext.fillStyle=light;bodyContext.fillRect(0,scan-24,512,48);bodyContext.restore();
-    context.clearRect(0,0,512,512);context.save();
-    context.translate(256,290);
-    if(facing<0)context.scale(-1,1);
-    context.rotate(pose.bank*Math.PI/180);
-    context.drawImage(bodyPlate,-256,-290,512,512);context.restore();
-    const head=puppet.deform(441,276,seconds,pose),angle=pose.bank*Math.PI/180;
+    context.fillStyle=sheen;context.fillRect(0,0,512,512);context.restore();
+    const activeFront=view>.5,anchor=activeFront?[314,240]:[441,276];
+    const head=puppet.deform(...anchor,seconds,{...pose,frontView:activeFront}),angle=pose.bank*Math.PI/180;
     mouth={x:256+(head[0]-256)*Math.cos(angle)-(head[1]-290)*Math.sin(angle),
       y:290+(head[0]-256)*Math.sin(angle)+(head[1]-290)*Math.cos(angle)};
     dragon.dataset.wingPhase=pose.phase.toFixed(3);dragon.dataset.glide=pose.glide.toFixed(3);
-    dragon.dataset.tailFlex=pose.tail.toFixed(3);
-    return pose;
+    dragon.dataset.tailFlex=pose.tail.toFixed(3);dragon.dataset.flightView=view>.5?'toward-viewer':'side';
   }
   const clearFire = () => {
     particles=[];emission=0;
@@ -163,17 +158,17 @@
     dragon.dataset.flying='true';canvas.hidden=false;
     const homeRect=anchor.getBoundingClientRect();
     let x=homeRect.x,y=homeRect.y,size=homeRect.width;
-    let blend=1,glow=0,targetFacing=1,targetBank=0,firePower=0,approach=0,depth=2.6,pitch=0;
+    let blend=1,glow=0,targetFacing=1,targetBank=0,firePower=0,approach=0,depth=2.6,profile=1,atmosphere=1,forwardBlend=0;
     if(phase==='awaken'){
       glow=Math.sin(progress*Math.PI);blend=ease((progress-.3)/.6);
     }else if(phase==='launch'){
       const p=ease(progress),start=route[0];
       x=mix(homeRect.x,start.x,p);y=mix(homeRect.y,start.y,p)-Math.sin(progress*Math.PI)*24;
-      size=mix(homeRect.width,flightSize,p);glow=(1-progress)*.3;
+      size=mix(homeRect.width,flightSize,p);glow=(1-progress)*.3;forwardBlend=ease((progress-.75)/.25);
     }else if(phase==='flight'){
       const p=flightPosition(progress);
       x=p.x;y=p.y;size=p.size;targetFacing=p.facing;targetBank=p.bank;
-      approach=p.approach;depth=p.depth;pitch=p.pitch;glow=.10+approach*.12;
+      forwardBlend=1;approach=p.approach;depth=p.depth;profile=p.profile;atmosphere=p.opacity;glow=.10+approach*.12;
       // Three brief breaths during each circuit.
       const flightTime=progress*timing.flight;
       for(const start of [3500,12000,20000]){
@@ -183,7 +178,7 @@
     }else if(phase==='return'){
       const p=ease(progress),start=route[0];
       x=mix(start.x,homeRect.x,p);y=mix(start.y,homeRect.y,p);
-      size=mix(flightSize,homeRect.width,p);
+      size=mix(flightSize,homeRect.width,p);forwardBlend=1-ease(progress/.3);
     }else if(phase==='restore'){
       glow=Math.sin(progress*Math.PI);blend=1-ease((progress-.2)/.65);
     }
@@ -202,17 +197,17 @@
     dragon.dataset.flightCenterY=(y+size/2).toFixed(2);
     art.style.setProperty('--dragon-proximity',String(1/(1+Math.max(0,depth))));
     canvas.style.filter='drop-shadow(0 1px 2px rgba(0,0,0,.45)) drop-shadow(0 0 '+(1+approach*2).toFixed(1)+'px rgba(255,88,38,.22))';
-    const profile=.84+.16*Math.abs(facing);
-    const yaw=(1-Math.abs(facing))*15;
-    canvas.style.transform='perspective(850px) rotateX('+pitch.toFixed(2)+'deg) rotateY('+yaw.toFixed(2)+'deg) scaleX('+profile.toFixed(3)+')';
-    const atmosphere=phase==='flight'?.68+.32*Math.min(1,3/(Math.max(.85,depth)+.3)):1;
+    // Promise's camera motion keeps the approaching silhouette level.
+    canvas.style.transform='scaleX('+profile.toFixed(4)+')';
     canvas.style.opacity=String(blend*atmosphere);still.style.opacity=String(1-blend);
     art.style.setProperty('--dragon-aura',glow.toFixed(3));
+    forwardBlend=forwardReady?forwardBlend*ease((elapsed-forwardLoaded)/700):0;
     const seconds=elapsed/1000;
-    if(elapsed-paintClock>=1000/(gpu?40:20) || dt===0) {
-      paintBody(seconds,approach,phase==='launch');paintClock=elapsed;
+    if(elapsed-paintClock>=1000/((forwardBlend>.5?forwardGPU:gpu)?40:20) || dt===0) {
+      paintBody(seconds,approach,phase==='launch',forwardBlend);paintClock=elapsed;
     }
-    const freeSpace=targetFacing>0?innerWidth-(x+size*.87):x+size*.13;
+    const headFraction=forwardBlend>.5?314/512:.87;
+    const freeSpace=targetFacing>0?innerWidth-(x+size*headFraction):x+size*(1-headFraction);
     const available=Math.max(0,(freeSpace-12)*512/Math.max(1,size));
     renderFire(dt,phase==='flight'&&Math.abs(facing)>.8&&available>70?firePower:0,available);
   };
@@ -244,10 +239,16 @@
     ready=true;measureRoute();dock();sync();
   };
   sheet.onerror=()=>{park();toggle.hidden=true;};
+  forwardSheet.onload=()=>{
+    if(disposed||forwardSheet.naturalWidth!==1536||forwardSheet.naturalHeight!==1024)return;
+    forwardReady=true;forwardLoaded=elapsed;forwardGPU=puppet.createGPU(forwardGpuCanvas,forwardSheet,true);
+  };
+  forwardSheet.onerror=()=>{forwardReady=false;};
+  forwardSheet.src='/assets/ac-portals/ac-dragon-toward-cycle.webp';
   sheet.src='/assets/ac-portals/ac-dragon-flight-sheet.webp';
   window.addEventListener('pagehide',()=>{
-    disposed=true;cancelAnimationFrame(request);request=0;clearFire();gpu?.destroy();gpu=null;
-    sheet.onload=sheet.onerror=null;
+    disposed=true;cancelAnimationFrame(request);request=0;clearFire();gpu?.destroy();forwardGPU?.destroy();gpu=null;forwardGPU=null;
+    sheet.onload=sheet.onerror=forwardSheet.onload=forwardSheet.onerror=null;
     document.removeEventListener('visibilitychange',sync);
     window.removeEventListener('resize',onResize);
     preference.removeEventListener('change',onPreference);
