@@ -6,6 +6,9 @@
     <linearGradient id="aceCapPaint" x1="175" y1="50" x2="208" y2="121" gradientUnits="userSpaceOnUse"><stop stop-color="#89af50"/><stop offset="1" stop-color="#4a752f"/></linearGradient>
     <linearGradient id="aceWhite" x1="217" y1="110" x2="190" y2="222" gradientUnits="userSpaceOnUse"><stop stop-color="#fffef5"/><stop offset="1" stop-color="#e9e7db"/></linearGradient>
     <linearGradient id="aceLens" x1="190" y1="43" x2="210" y2="64" gradientUnits="userSpaceOnUse"><stop stop-color="#d0f7fa"/><stop offset=".55" stop-color="#698f93"/><stop offset="1" stop-color="#263b44"/></linearGradient>
+    <radialGradient id="aceOpticalGlass" cx="32%" cy="24%" r="80%"><stop stop-color="#f2ffff" stop-opacity=".95"/><stop offset=".22" stop-color="#a9dce6" stop-opacity=".85"/><stop offset=".54" stop-color="#497e91" stop-opacity=".74"/><stop offset=".83" stop-color="#1b3448" stop-opacity=".94"/><stop offset="1" stop-color="#0d1c2d"/></radialGradient>
+    <linearGradient id="aceBrassRim" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0bc"/><stop offset=".2" stop-color="#d7b477"/><stop offset=".48" stop-color="#8a5534"/><stop offset=".73" stop-color="#f1d399"/><stop offset="1" stop-color="#6c452f"/></linearGradient>
+    <clipPath id="aceGlassClips"><path d="M180 41c-10 4-13 14-7 19 7 5 18-2 20-10 2-8-6-13-13-9Z"/><path d="M211 35c-8 0-11 10-7 18 5 7 14 9 19 4 6-7-3-21-12-22Z"/></clipPath>
   </defs>
   <g stroke="#27202a" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
     <g class="ace-wind" stroke="#d4eaff" stroke-width="2.2" opacity=".45">
@@ -50,16 +53,42 @@
           <path class="ace-ear" d="M177 79c-12-8-23 1-23 17 0 13 7 22 16 19 8-4 9-18 7-36Z" fill="#24202a"/>
           <path d="M163 92c-4 7-3 13 1 16" stroke="#64545a" stroke-width="2"/>
           <path d="m169 57 43-14" stroke="#795032" stroke-width="8"/>
-          <g class="ace-goggles">
-            <path d="M177 38c-13 5-16 20-8 27 8 6 23-2 27-14 3-10-8-18-19-13Z" fill="#ba8249"/>
-            <path d="M180 43c-9 4-11 12-6 16 6 3 15-3 16-10 1-6-4-9-10-6Z" fill="url(#aceLens)" stroke-width="2.4"/>
-            <path d="M210 31c-11-1-16 13-10 24 5 8 18 10 25 4 10-10-2-27-15-28Z" fill="#ba8249"/>
-            <path d="M210 37c-7 0-9 9-5 15 4 5 12 6 15 2 5-5-3-16-10-17Z" fill="url(#aceLens)" stroke-width="2.4"/>
-            <path class="ace-lens-glint" d="m178 47-2 7m33-13 4 6" stroke="#fff" stroke-width="2.6"/>
-            <path d="m194 47 5-3" stroke="#ad7947" stroke-width="5"/>
+          <!-- Eyes sit behind the moving goggles when the lenses lower. -->
+          <g class="ace-eyes">
+            <ellipse cx="222" cy="82" rx="6" ry="10" fill="#fffef7" stroke="#e3ded2" stroke-width=".8"/>
+            <ellipse cx="241" cy="84" rx="5.6" ry="9.5" fill="#fffef7" stroke="#e3ded2" stroke-width=".8"/>
+            <g class="ace-pupils" stroke="none">
+              <ellipse cx="222" cy="82" rx="3.9" ry="7.6" fill="#24202a"/><ellipse cx="241" cy="84" rx="3.7" ry="7.2" fill="#24202a"/>
+              <circle cx="223" cy="79" r="1.1" fill="#fff"/><circle cx="242" cy="81" r="1" fill="#fff"/>
+            </g>
           </g>
-          <g class="ace-eyes" fill="#24202a" stroke="none">
-            <ellipse cx="222" cy="82" rx="3.4" ry="8"/><ellipse cx="241" cy="84" rx="3.2" ry="7.6"/>
+          <g class="ace-goggle-side-strap">
+            <path d="M168 90q17 6 43-5" stroke="#5c3b28" stroke-width="6"/>
+            <path d="M168 88q17 6 43-5" stroke="#c29a67" stroke-width="1.1" stroke-dasharray="2 3"/>
+          </g>
+          <g class="ace-goggles">
+            <path d="m169 57 43-14" stroke="#543724" stroke-width="8"/>
+            <path d="m168 55 43-14" stroke="#c79c65" stroke-width="1.3" stroke-dasharray="2 3"/>
+            <path d="M176 36c-15 5-19 22-10 31 10 8 27-1 32-15 4-12-9-22-22-16Z" fill="#65412d"/>
+            <path d="M178 38c-13 5-16 19-8 26 9 6 23-1 27-14 3-10-8-17-19-12Z" fill="url(#aceBrassRim)" stroke-width="1.5"/>
+            <path d="M180 41c-10 4-13 14-7 19 7 5 18-2 20-10 2-8-6-13-13-9Z" fill="url(#aceOpticalGlass)" stroke="#3d3734" stroke-width="2"/>
+            <path d="M210 29c-13-1-19 15-12 27 7 12 22 13 30 5 11-11-2-31-18-32Z" fill="#65412d"/>
+            <path d="M211 31c-12-1-17 13-10 24 5 9 20 11 26 4 9-9-3-27-16-28Z" fill="url(#aceBrassRim)" stroke-width="1.5"/>
+            <path d="M211 35c-8 0-11 10-7 18 5 7 14 9 19 4 6-7-3-21-12-22Z" fill="url(#aceOpticalGlass)" stroke="#3d3734" stroke-width="2"/>
+            <g clip-path="url(#aceGlassClips)" stroke="none">
+              <g class="ace-lens-reflections">
+                <path d="m156 34 7-3 39 42-7 3Z" fill="#fff" opacity=".65"/>
+                <path d="m167 32 2-1 39 42-2 1Z" fill="#d2f7ff" opacity=".8"/>
+                <path d="m193 22 7-3 39 42-7 3Z" fill="#fff" opacity=".55"/>
+                <path d="m205 23 2-1 39 42-2 1Z" fill="#d2f7ff" opacity=".7"/>
+              </g>
+              <path d="M168 56q14-9 29 0m5-4q13-6 23 5" stroke="#b6e4ed" stroke-width="1" opacity=".5"/>
+              <g class="ace-glass-stars" fill="#fff"><circle cx="182" cy="48" r="1"/><circle cx="212" cy="45" r="1.1"/><circle cx="218" cy="50" r=".6"/></g>
+            </g>
+            <path d="M169 48c2-6 9-11 14-11m21-4c6-4 15 1 19 7" stroke="#ffedc6" stroke-width="1.4"/>
+            <path d="m195 46 5-2" stroke="#5c3e2c" stroke-width="6"/>
+            <path d="m195 45 5-2" stroke="#d4ad70" stroke-width="2"/>
+            <circle cx="167" cy="59" r="1.2" fill="#f6d6a0" stroke="none"/><circle cx="227" cy="55" r="1.2" fill="#f6d6a0" stroke="none"/>
           </g>
           <path class="ace-brows" d="M217 68c3-3 7-2 9 1m9 2c3-2 6-1 8 2" stroke-width="2.2"/>
           <ellipse cx="305" cy="99" rx="12" ry="8.6" fill="#24202a"/>

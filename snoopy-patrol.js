@@ -40,6 +40,7 @@
     const w = visitor.offsetWidth, h = visitor.offsetHeight;
     const right = pass++ % 2 === 0;
     const dir = right ? 1 : -1;
+    visitor.dataset.heading = right ? 'right' : 'left';
     const start = right ? -w - 25 : innerWidth + 25;
     const end = right ? innerWidth + 25 : -w - 25;
     const top = Math.min(110, Math.max(12, innerHeight - h - 80));
@@ -70,7 +71,7 @@
   }
   async function boot() {
     // Keep the small animation local; no third-party embeds or autoplay audio.
-    const response = await fetch('/snoopy-patrol.svg?v=20261014seated2', { credentials: 'same-origin' });
+    const response = await fetch('/snoopy-patrol.svg?v=20261014eyes3', { credentials: 'same-origin' });
     if (!response.ok) return;
     const svg = await response.text();
     if (!svg.startsWith('<svg')) return;
@@ -92,6 +93,19 @@
     document.body.append(visitor, message, controls);
     pauseButton = controls.querySelector('[data-ace="pause"]');
     visitor.addEventListener('click', tellJoke);
+    visitor.addEventListener('pointermove', event => {
+      if (paused || reduced.matches || document.hidden || dismissed) return;
+      const rect = visitor.getBoundingClientRect();
+      // Use normalized coordinates so the gaze works at every sprite size.
+      if (!rect.width || !rect.height) return;
+      const facingLeft = visitor.dataset.heading === 'left';
+      const x = ((event.clientX - rect.left) / rect.width - (facingLeft ? .45 : .55)) * (facingLeft ? -1 : 1);
+      const y = (event.clientY - rect.top) / rect.height - .24;
+      visitor.style.setProperty('--ace-gaze-x', `${Math.max(-2.5, Math.min(2.5, x * 8))}px`);
+      visitor.style.setProperty('--ace-gaze-y', `${Math.max(-2, Math.min(2, y * 6))}px`);
+      visitor.classList.add('ace-tracking');
+    }, { passive: true });
+    visitor.addEventListener('pointerleave', () => visitor.classList.remove('ace-tracking'));
     // Hold position while a keyboard user is interacting with the character.
     visitor.addEventListener('focus', () => flight?.pause());
     visitor.addEventListener('blur', sync);
