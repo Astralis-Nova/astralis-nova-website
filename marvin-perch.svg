@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" fill="none">
   <title>Marvin the Martian with his ray gun on the Nova sphere</title>
+  <!-- Movement study: user-supplied Oct 14 clips (head turn and costumed full-body gesture). -->
   <!-- Design reference: https://chuckjones.com/characters/marvin-the-martian/ -->
   <defs>
     <linearGradient id="marvinHelmet" x1="77" y1="58" x2="165" y2="130" gradientUnits="userSpaceOnUse"><stop stop-color="#91d85a"/><stop offset=".48" stop-color="#4fa244"/><stop offset="1" stop-color="#23703b"/></linearGradient>
@@ -9,12 +10,18 @@
     <linearGradient id="marvinGun" x1="185" y1="141" x2="192" y2="176" gradientUnits="userSpaceOnUse"><stop stop-color="#ffef9c"/><stop offset=".3" stop-color="#e2b746"/><stop offset=".65" stop-color="#a77b2c"/><stop offset="1" stop-color="#684c25"/></linearGradient>
     <linearGradient id="marvinBarrel" x1="216" y1="143" x2="216" y2="169" gradientUnits="userSpaceOnUse"><stop stop-color="#d6f0de"/><stop offset=".35" stop-color="#6ea389"/><stop offset="1" stop-color="#234f48"/></linearGradient>
     <radialGradient id="marvinCharge"><stop stop-color="#faffd6"/><stop offset=".3" stop-color="#afff91" stop-opacity=".8"/><stop offset="1" stop-color="#53e6c0" stop-opacity="0"/></radialGradient>
+    <clipPath id="marvinEyeClip">
+      <path d="M89 106c8-8 22-8 29 0 4 21 2 36-7 38-10 0-19-18-22-38Z"/>
+      <path d="M126 106c9-9 24-8 31-1-1 23-9 39-19 38-9-1-12-18-12-37Z"/>
+    </clipPath>
   </defs>
   <ellipse cx="123" cy="306" rx="67" ry="5" fill="#041323" opacity=".4"/>
   <g stroke="#202335" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
-    <!-- Two separate basketball shoes stay planted while his upper body balances. -->
-    <path d="M99 233 97 276l18 1 9-45" fill="#da3342"/>
-    <path d="m133 232 7 47 18-2-3-45" fill="#e83c45"/>
+    <!-- Knee joints flex between the moving hips and fixed shoe contacts. -->
+    <path class="marvin-left-leg-outline" d="M102 236L98.17200161864497 250.62739991906778Q96.68333558145135 256.31583322092746 98.73200161864497 261.8273999190678L104 276" stroke="#202335" stroke-width="17"/>
+    <path class="marvin-left-leg" d="M102 236L98.17200161864497 250.62739991906778Q96.68333558145135 256.31583322092746 98.73200161864497 261.8273999190678L104 276" stroke="#df3543" stroke-width="11"/>
+    <path class="marvin-right-leg-outline" d="M145 236L151.0115621074152 249.8735547365731Q153.34939181585443 255.2688260230182 152.4115621074152 261.0735547365731L150 276" stroke="#202335" stroke-width="17"/>
+    <path class="marvin-right-leg" d="M145 236L151.0115621074152 249.8735547365731Q153.34939181585443 255.2688260230182 152.4115621074152 261.0735547365731L150 276" stroke="#ed414a" stroke-width="11"/>
     <g class="marvin-shoes">
       <path d="M87 268c-3 9-7 11-17 14-13 4-21 9-20 16 0 8 31 8 58 6 14-1 19-6 14-14l-8-23Z" fill="url(#marvinShoe)"/>
       <path d="M52 297c17 4 44 4 70-2l1 6c-20 8-57 9-71 3Z" fill="#e44848" stroke-width="2.3"/>
@@ -25,11 +32,16 @@
     </g>
     <g class="marvin-balance">
       <path d="M102 168c-8 13-10 34-8 52l56 1c2-20-1-40-11-52" fill="url(#marvinRed)"/>
-      <path d="M104 181c-15 2-24 15-27 28l16 9 9-16" fill="#d63140"/>
-      <g class="marvin-hip-glove">
-        <path d="M79 201c-8-7-16-2-15 6-7 4-5 12 2 15 5 9 15 8 20 2 8-1 10-10 4-14l-1-6Z" fill="#fffdf5"/>
-        <path d="m70 207 8 5m-10 1 7 5m5-9 6 7" stroke-width="1.9"/>
-        <path d="m86 200 11 7-5 10-10-7Z" fill="#5ca84e" stroke-width="2.4"/>
+      <path class="marvin-free-arm-outline" d="M103 184L82.15074449444194 182.86732843950395Q74.04270068672491 182.4268450548666 75.43074449444194 190.42732843950395L79 211" stroke="#202335" stroke-width="19"/>
+      <path class="marvin-free-arm" d="M103 184L82.15074449444194 182.86732843950395Q74.04270068672491 182.4268450548666 75.43074449444194 190.42732843950395L79 211" stroke="url(#marvinRed)" stroke-width="13"/>
+      <g class="marvin-free-hand" transform="translate(79 211)">
+        <path class="marvin-fist" d="M-8 0c-8-2-11-8-7-12 1-5 6-6 10-3 4-5 10-3 10 2 7 0 9 8 4 12-4 6-12 6-17 1Z" fill="url(#marvinShoe)"/>
+        <g class="marvin-fist-lines" stroke-width="1.7"><path d="m-10-9 11 4m-12 1 10 4"/></g>
+        <g class="marvin-open-hand" opacity="0">
+          <path d="M-8 0c-4-3-8-9-6-12 2-3 5 0 7 2l-3-13c-1-4 4-5 5-1l3 10-1-16c0-4 6-4 6 0l1 15 3-12c1-4 6-2 5 2l-3 16c6-3 10 0 7 4-5 7-13 10-20 5Z" fill="url(#marvinShoe)"/>
+          <path d="M-5-8q6-3 12 1m-5-2L3-1" stroke-width="1.6"/>
+        </g>
+        <path d="m-9 0 18 1-1 8-16-1Z" fill="#63b554" stroke-width="2.4"/>
       </g>
       <!-- Shoulder, sleeve, gripping glove and ray gun share one pivot. -->
       <g class="marvin-gun-arm" transform="rotate(13 145 183)">
@@ -67,15 +79,19 @@
         </g>
       </g>
       <!-- Roman skirt with distinct pleats and a sturdy red belt. -->
-      <path d="m98 213-20 30 21 5 12-5 12 7 13-7 13 5 23-6-23-29Z" fill="#4da344"/>
+      <path d="m98 213-20 30 21 5 12-5 12 7 13-7 13 5 23-6-23-29Z" fill="url(#marvinHelmet)"/>
       <path d="m105 219-7 26m18-25-5 23m15-22-3 25m13-27 2 23m6-24 9 26" stroke="#27723b" stroke-width="2.5"/>
       <path d="m98 211 51 1 1 9-54-1Z" fill="#e44540" stroke-width="2.6"/>
       <g class="marvin-head">
         <path d="M73 115c-2-33 20-55 49-55 31 0 54 22 55 53 1 29-17 57-47 61-30 3-54-25-57-59Z" fill="url(#marvinFace)"/>
+        <g class="marvin-face-features">
         <g class="marvin-eyes">
-          <path d="M92 112l25 9c1 9-1 15-7 16-8-1-15-12-18-25Z" fill="#fffdf5" stroke-width="1.8"/>
-          <path d="M126 121l28-10c-3 16-10 25-17 24-6-1-10-6-11-14Z" fill="#fffdf5" stroke-width="1.8"/>
-          <g class="marvin-pupils" fill="#15151f" stroke="none"><ellipse cx="109" cy="119" rx="3.7" ry="9"/><ellipse cx="137" cy="118" rx="3.7" ry="9"/></g>
+          <path d="M89 106c8-8 22-8 29 0 4 21 2 36-7 38-10 0-19-18-22-38Z" fill="#fffdf5" stroke-width="1.8"/>
+          <path d="M126 106c9-9 24-8 31-1-1 23-9 39-19 38-9-1-12-18-12-37Z" fill="#fffdf5" stroke-width="1.8"/>
+          <g clip-path="url(#marvinEyeClip)"><g class="marvin-pupils" fill="#15151f" stroke="none"><ellipse cx="109" cy="129" rx="4.2" ry="9"/><ellipse cx="140" cy="129" rx="4.2" ry="9"/></g></g>
+          <path class="marvin-left-lid" d="M87 99H121V111L87 106Z" fill="url(#marvinFace)" stroke="none"/>
+          <path class="marvin-right-lid" d="M123 99H160V106L123 111Z" fill="url(#marvinFace)" stroke="none"/>
+        </g>
         </g>
         <!-- Cheek guards frame the black face without inventing a mouth. -->
         <path d="M75 98c-7 16-7 40 3 55l14 4-5-45Z" fill="#377e3d"/>

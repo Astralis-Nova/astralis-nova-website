@@ -20,9 +20,24 @@
   function draw() {
     if (!parts) return;
     const p = rig.pose(clock);
-    parts.balance.setAttribute('transform', `rotate(${p.balance} 124 270)`);
+    parts.balance.setAttribute('transform', `translate(${p.shift} ${p.bob}) rotate(${p.balance} 124 236)`);
+    for (const side of ['left', 'right']) {
+      const d = rig.limbPath(p.hips[side], p.knees[side], p.ankles[side]);
+      parts[`${side}Leg`].setAttribute('d', d);
+      parts[`${side}LegOutline`].setAttribute('d', d);
+    }
+    const arm = rig.limbPath(p.shoulder, p.elbow, p.wrist);
+    parts.freeArm.setAttribute('d', arm);
+    parts.freeArmOutline.setAttribute('d', arm);
+    parts.hand.setAttribute('transform', `translate(${p.wrist.x} ${p.wrist.y}) rotate(${p.handAngle})`);
+    parts.openHand.setAttribute('opacity', p.gesture);
+    parts.fist.setAttribute('opacity', 1 - p.gesture);
+    parts.fistLines.setAttribute('opacity', 1 - p.gesture);
     parts.arm.setAttribute('transform', `rotate(${p.arm} 145 183)`);
-    parts.head.setAttribute('transform', `rotate(${p.head} 123 165)`);
+    parts.head.setAttribute('transform', `translate(123 165) rotate(${p.head}) scale(${p.headWidth} 1) translate(-123 -165)`);
+    parts.face.setAttribute('transform', `translate(${p.faceShift} 0)`);
+    parts.leftLid.setAttribute('d', `M87 99H121V${111 + p.aim * 13}L87 ${106 + p.aim * 6}Z`);
+    parts.rightLid.setAttribute('d', `M123 99H160V${106 + p.aim * 6}L123 ${111 + p.aim * 13}Z`);
     parts.pupils.setAttribute('transform', `translate(${p.gaze} 0)`);
     parts.eyes.setAttribute('transform', `translate(0 120) scale(1 ${p.eyeScale}) translate(0 -120)`);
     parts.plume.setAttribute('transform', `rotate(${p.plume} 120 48)`);
@@ -64,13 +79,13 @@
     observer.observe(button);
   }
   sync();
-  fetch('/marvin-perch.svg?v=20261015laser2', { credentials: 'same-origin' })
+  fetch('/marvin-perch.svg?v=20261015gesture3', { credentials: 'same-origin' })
     .then(response => response.ok ? response.text() : '')
     .then(svg => {
       if (!svg.startsWith('<svg')) return;
       button.innerHTML = svg;
       button.querySelector('svg').setAttribute('aria-hidden', 'true');
-      const names = { balance: 'balance', arm: 'gun-arm', head: 'head', pupils: 'pupils', eyes: 'eyes', plume: 'plume', light: 'gun-light', laser: 'laser', rings: 'laser-rings' };
+      const names = { leftLeg: 'left-leg', leftLegOutline: 'left-leg-outline', rightLeg: 'right-leg', rightLegOutline: 'right-leg-outline', freeArm: 'free-arm', freeArmOutline: 'free-arm-outline', hand: 'free-hand', openHand: 'open-hand', fist: 'fist', fistLines: 'fist-lines', face: 'face-features', leftLid: 'left-lid', rightLid: 'right-lid', balance: 'balance', arm: 'gun-arm', head: 'head', pupils: 'pupils', eyes: 'eyes', plume: 'plume', light: 'gun-light', laser: 'laser', rings: 'laser-rings' };
       parts = Object.fromEntries(Object.entries(names).map(([key, name]) => [key, button.querySelector(`.marvin-${name}`)]));
       draw(); sync();
     }).catch(() => { /* The local image remains available as a still fallback. */ });

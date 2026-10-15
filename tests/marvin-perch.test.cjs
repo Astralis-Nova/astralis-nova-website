@@ -32,11 +32,41 @@ test('Marvin aims and charges before firing, then recoils and recovers', () => {
 });
 
 test('poses are continuous at the loop seam and the arm never snaps during recovery', () => {
-  for (const key of ['arm', 'balance', 'head', 'gaze', 'eyeScale', 'plume']) {
+  for (const key of ['arm', 'balance', 'shift', 'bob', 'gesture', 'head', 'headWidth', 'faceShift', 'gaze', 'eyeScale', 'plume']) {
     assert.ok(Math.abs(pose(11999)[key] - pose(0)[key]) < .03, key);
   }
   for (let ms = 1; ms < 12000; ms++) {
     assert.ok(Math.abs(pose(ms).arm - pose(ms - 1).arm) < .12);
+  }
+});
+
+test('weight shifts flex both knees without sliding either shoe or stretching a limb', () => {
+  let sway = 0;
+  for (let ms = 0; ms < 12000; ms += 10) {
+    const p = pose(ms);
+    sway = Math.max(sway, Math.abs(p.shift));
+    for (const [side, x] of [['left', 104], ['right', 150]]) {
+      assert.equal(p.ankles[side].x, x);
+      assert.equal(p.ankles[side].y, 276);
+      assert.ok(Math.abs(Math.hypot(p.hips[side].x - p.knees[side].x, p.hips[side].y - p.knees[side].y) - 21) < 1e-8);
+      assert.ok(Math.abs(Math.hypot(p.ankles[side].x - p.knees[side].x, p.ankles[side].y - p.knees[side].y) - 21) < 1e-8);
+    }
+    assert.ok(Math.abs(Math.hypot(p.shoulder.x - p.elbow.x, p.shoulder.y - p.elbow.y) - 29) < 1e-8);
+    assert.ok(Math.abs(Math.hypot(p.wrist.x - p.elbow.x, p.wrist.y - p.elbow.y) - 29) < 1e-8);
+  }
+  assert.ok(sway > 4);
+});
+
+test('the open-hand gesture travels continuously from the hip and settles before aiming', () => {
+  assert.equal(pose(0).gesture, 0);
+  assert.equal(pose(1500).gesture, 1);
+  assert.ok(pose(1500).wrist.x < pose(0).wrist.x - 25);
+  assert.equal(pose(3000).gesture, 0);
+  assert.equal(pose(4900).gesture, 0);
+  for (let ms = 0; ms < 12000; ms += 10) {
+    const a = pose(ms - 10), b = pose(ms);
+    assert.ok(Math.hypot(a.wrist.x - b.wrist.x, a.wrist.y - b.wrist.y) < 1);
+    for (const side of ['left', 'right']) assert.ok(Math.hypot(a.knees[side].x - b.knees[side].x, a.knees[side].y - b.knees[side].y) < 1);
   }
 });
 
