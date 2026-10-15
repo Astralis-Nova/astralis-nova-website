@@ -77,8 +77,7 @@
     if (reducedMotion.matches) stop();
   });
 
-  // Phones, touch devices and data-saving connections keep the still scene
-  // until the visitor explicitly asks for motion.
-  if (!reducedMotion.matches && !navigator.connection?.saveData &&
-      window.matchMedia('(min-width: 701px) and (hover: hover) and (pointer: fine)').matches) start();
+  // Start muted, inline rain on phones as well as desktops. Keep the poster
+  // visible until a frame is decoded, and retain the blocked-playback fallback.
+  if (!reducedMotion.matches && !navigator.connection?.saveData) start();
 })();

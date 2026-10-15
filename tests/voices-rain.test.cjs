@@ -22,14 +22,18 @@ function page({ desktop = false, reduced = false, saveData = false, rejected = f
   return { created, toggle, classes, timers, document };
 }
 
-test('mobile loads the entire static page without creating a video decoder', () => {
+test('mobile starts rain automatically, muted and inline, and the visitor can pause it', () => {
   const p = page();
-  assert.equal(p.created.length, 0);
   assert.equal(p.toggle.hidden, false);
-  p.toggle.click();
   assert.equal(p.created.length, 1);
   assert.equal(p.created[0].muted, true);
   assert.equal(p.created[0].playsInline, true);
+  assert.equal(p.toggle.attributes['aria-pressed'], 'true');
+  p.toggle.click();
+  assert.equal(p.created[0].removed, true);
+  assert.equal(p.toggle.attributes['aria-pressed'], 'false');
+  p.toggle.click();
+  assert.equal(p.created.length, 2);
 });
 
 test('the poster stays visible until the first decoded frame and returns during buffering', () => {
