@@ -82,7 +82,7 @@ test('Promise-style approaches grow from distant to screen-filling, with continu
    const near=pose.depth<2;if(near&&!wasNear)nearPasses++;wasNear=near;
    if(previous)maxStep=Math.max(maxStep,Math.hypot(pose.x-previous.x,pose.y-previous.y),Math.abs(pose.size-previous.size));previous=pose;
   }
-  assert.equal(nearPasses,2);assert(maxStep<width*.025);
+  assert.equal(nearPasses,1);assert(maxStep<width*.025);
   const start=rig.route(0,width,height),end=rig.route(1,width,height);assert.deepEqual(start,end);
  }
 });
@@ -146,4 +146,27 @@ test('GPU skinning draws one indexed mesh and releases resources; context loss e
  assert.equal(gpu.draw(13,pose,[[1,1]]),false,'a lost context must hand rendering to Canvas');
  gpu.destroy();assert.equal(resources.length,7);assert.equal(events.webglcontextlost,undefined);
  gl.getShaderParameter=()=>false;assert.equal(puppet.createGPU(canvas,{}),null,'shader errors preserve the Canvas fallback');
+});
+
+
+test('the close flyby travels nose-first across the screen and turns only at distance',()=>{
+ const rig=rigEnv.window.AstralisDragonRig;
+ for(const [width,height] of [[1440,900],[390,844],[844,390]]){
+  let first,last,count=0,previous;
+  for(let i=0;i<=1000;i++){
+   const p=rig.route(i/1000,width,height),cx=p.x+p.size/2;
+   if(p.depth<5){
+    first??=cx;last=cx;count++;
+    assert(p.dx>0 && p.facing===1,'all approaching and close flight must be nose-first to the right');
+    assert(Math.abs(p.bank)<=20);
+    if(previous)assert(cx>previous,'the near dragon must travel across the screen rather than grow at a fixed centre');
+    previous=cx;
+   }
+   if(p.facing<0)assert(p.depth>12,'direction reversals belong in the distant return');
+  }
+  assert(count>200);assert(last-first>width*.3,'the forward pass needs substantial lateral travel');
+  const entering=rig.route(.25,width,height),passing=rig.route(.57,width,height);
+  assert(entering.dz<0 && passing.dx>0);
+  assert(passing.size>entering.size*2,'forward travel and perspective growth must happen together');
+ }
 });

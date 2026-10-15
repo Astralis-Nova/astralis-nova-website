@@ -4,9 +4,10 @@
   const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
   const mix = (a, b, t) => a + (b - a) * t;
   const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
-  // Distant crossings, two deliberate camera approaches, then a wide retreat.
-  const knots = [[.48,.25,19],[.27,.23,17],[.40,.38,7],[.51,.53,1.15],
-    [.78,.33,14],[.72,.20,19],[.58,.36,7],[.55,.57,1.05],[.24,.40,15],[.38,.24,19]];
+  // Promise flight pattern: a sustained side-forward approach, a near pass
+  // continuing nose-first to the right, then a distant return behind the scene.
+  const knots = [[.50,.23,19],[.27,.18,18],[.35,.24,8],[.49,.34,3.8],
+    [.60,.40,1.4],[.79,.30,1.1],[.91,.17,13],[.70,.13,18],[.42,.20,17]];
   const at = index => knots[(index % knots.length + knots.length) % knots.length];
   function spline(progress) {
     const phase = ((progress % 1) + 1) % 1 * knots.length;
@@ -27,9 +28,10 @@
     const x=nx*width-size/2;
     const y=top+ny*(height-top)-size/2;
     const approach = clamp(smooth(-.4, 3, -dz) * .82 + (1 - smooth(1.1,4.5,depth)) * .42);
-    return { x, y, size, depth, dx, dy, dz, approach,
+    const heading=Math.atan2(dy*(height-top),Math.abs(dx*width))*180/Math.PI;
+    return { x, y, size, depth, dx, dy, dz, approach, heading,
       facing: dx >= 0 ? 1 : -1,
-      bank: clamp(dy * 5, -19, 19) * (dx >= 0 ? 1 : -1) * (1-approach*.65),
+      bank: clamp(heading*.55,-20,20)*(dx>=0?1:-1),
       pitch: clamp(-dz * .9, -8, 9) };
   }
   function pose(seconds, approach = 0, launch = false) {

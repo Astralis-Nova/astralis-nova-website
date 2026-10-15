@@ -197,6 +197,9 @@
     fire.style.transform=facing<0?'scaleX(-1)':'none';
     dragon.dataset.depth=depth.toFixed(3);dragon.dataset.approach=approach.toFixed(3);
     dragon.dataset.flightSize=size.toFixed(2);
+    dragon.dataset.flightDirection=facing>=0?'right':'left';
+    dragon.dataset.flightCenterX=(x+size/2).toFixed(2);
+    dragon.dataset.flightCenterY=(y+size/2).toFixed(2);
     art.style.setProperty('--dragon-proximity',String(1/(1+Math.max(0,depth))));
     canvas.style.filter='drop-shadow(0 1px 2px rgba(0,0,0,.45)) drop-shadow(0 0 '+(1+approach*2).toFixed(1)+'px rgba(255,88,38,.22))';
     const profile=.84+.16*Math.abs(facing);
