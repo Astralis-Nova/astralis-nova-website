@@ -51,12 +51,15 @@
     const limbs=[0,.9,2.1,2.9].map((offset,index)=>({
       knee:-7+adjustment*(index<2?17:14)+Math.sin(seconds*1.12+offset)*8+lag*2*activity,
       ankle:7-adjustment*13+Math.sin(seconds*1.37+offset-.4)*9,
-      curl:clamp(.47+Math.sin(seconds*1.67+offset)*.39+adjustment*.12+glide*.08)
+      curl:clamp(.47+Math.sin(seconds*1.67+offset)*.39+adjustment*.12+glide*.08),
+      lift:(Math.sin(angle-.85-index*.18)*1.8+Math.sin(seconds*1.3+offset)*.7)*activity
     }));
     const eyePhase=(seconds+.83)%6.9;
-    const blinkPulse=(center,half)=>1-smooth(0,half,Math.abs(eyePhase-center));
+    // Hold the lid shut for 70ms so a 20fps fallback can show a full blink.
+    const blinkPulse=(center,half)=>1-smooth(.035,half,Math.abs(eyePhase-center));
     const blink=Math.max(blinkPulse(.18,.18),Math.floor((seconds+.83)/6.9)%3===1?blinkPulse(.52,.14):0);
-    return { phase, glide, activity,limbs,blink,
+    const wingTips=[0,.16].map(delay=>Math.sin(angle-1.1-delay)*(3.2*activity+.8)+Math.sin(seconds*1.9-delay)*2.3*glide);
+    return { phase, glide, activity,limbs,blink,wingTips,
       gaze:[Math.sin(seconds*.37)*1.05+Math.sin(seconds*1.21)*.35,Math.sin(seconds*.49-.7)*.55],
       bob: Math.sin(angle-.9)*3*activity,
       chest: Math.sin(angle-.6)*4.2*activity,

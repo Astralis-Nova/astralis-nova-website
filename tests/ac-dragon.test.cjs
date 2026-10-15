@@ -283,3 +283,38 @@ test('front claw axes mirror anatomically and track every stabilized atlas pose'
   }
  }
 });
+
+
+test('gliding wingtips flex without moving shoulders, eyes or feet',()=>{
+ const rig=rigEnv.window.AstralisDragonRig,puppet=rigEnv.window.AstralisDragonPuppet;
+ const glides=[];
+ for(let t=0;t<20;t+=.08){const pose=rig.pose(t);if(pose.glide>.99)glides.push({t,pose});}
+ assert(glides.length>10);
+ const ranges=[[Infinity,-Infinity],[Infinity,-Infinity]];
+ for(const {t,pose} of glides){
+  for(const frontView of [false,true]){
+   const state={...pose,frontView};
+   for(const point of frontView?[[255,295],[293,203],[245,350],[195,225],[315,225]]:[[292,298],[441,276],[353,324]]){
+    assert(Math.hypot(...puppet.wingOffset(...point,state))<.03,'wingtip flex must stay out of the attached body parts');
+   }
+  }
+  for(const [i,x] of [80,440].entries()){
+   const offset=puppet.wingOffset(x,115,{...pose,frontView:true});ranges[i][0]=Math.min(ranges[i][0],offset[1]);ranges[i][1]=Math.max(ranges[i][1],offset[1]);
+  }
+ }
+ assert(ranges.every(([lo,hi])=>hi-lo>2),'a glide must retain visible membrane flex');
+});
+
+test('even a 20fps paint clock sees a fully shut lid and reopened eye',()=>{
+ const rig=rigEnv.window.AstralisDragonRig;
+ for(let offset=0;offset<.05;offset+=.005){
+  const samples=[];for(let t=19.6+offset;t<20.5;t+=.05)samples.push(rig.pose(t).blink);
+  assert(samples.some(b=>b>.999),'full eye closure must last beyond a single missed frame');
+  assert(samples[0]===0 && samples.at(-1)===0,'the eyelid must reopen fully');
+ }
+ const pose={...rig.pose(12),frontView:true},puppet=rigEnv.window.AstralisDragonPuppet;
+ const neutral={...pose,limbs:pose.limbs.map(limb=>({...limb,lift:0}))};
+ const toe=puppet.limbAnchors(true,[[0,1]])[0][2],a=puppet.limbOffset(...toe,neutral),b=puppet.limbOffset(...toe,{...neutral,limbs:neutral.limbs.map(limb=>({...limb,lift:2}))});
+ assert(b[1]-a[1]>1,'feet need a localized response to the power stroke');
+ assert(Math.hypot(...puppet.limbOffset(260,280,{...neutral,limbs:neutral.limbs.map(limb=>({...limb,lift:2}))}))<.05);
+});

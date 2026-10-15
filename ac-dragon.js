@@ -100,6 +100,7 @@
       y:290+(head[0]-256)*Math.sin(angle)+(head[1]-290)*Math.cos(angle)};
     dragon.dataset.wingPhase=pose.phase.toFixed(3);dragon.dataset.glide=pose.glide.toFixed(3);
     dragon.dataset.tailFlex=pose.tail.toFixed(3);dragon.dataset.eyeBlink=pose.blink.toFixed(3);
+    dragon.dataset.wingFlex=pose.wingTips.map(tip=>tip.toFixed(2)).join(':');
     dragon.dataset.clawCurl=pose.limbs.map(limb=>limb.curl.toFixed(2)).join(':');dragon.dataset.flightView=view>.5?'toward-viewer':'side';
   }
   const clearFire = () => {

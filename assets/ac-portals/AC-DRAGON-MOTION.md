@@ -113,3 +113,21 @@ excursion across time, all six landmark sets, and positive triangles in both
 meshes with animated landmarks. Native Canvas desktop/phone flybys, opening
 frames, and enlarged eyes/claws were inspected. Browser GPU visual inspection
 remains unavailable; GPU draw/resource contracts are covered by tests.
+
+
+## October 15: wingtip and foot follow-through
+
+A separate delayed flex now moves the outer wing membranes during flaps and
+glides. Its weights fade out before the shoulder, face and claws, with a small
+left/right phase difference. Feet have a delayed vertical response to the wing
+power stroke as well as their existing independent bends. Toe curl/splay is
+slightly more visible; mirrored joint axes and per-pose anchors are retained.
+
+The eyelid holds full closure for 70ms before reopening. A 20fps rendering
+clock can now catch a closed eye regardless of its phase relative to the blink.
+Tests exercise ten paint-clock offsets, localize wing flex away from attached
+body parts, and check movement during glides. Existing path, takeoff, mesh,
+loading-failure, reduced-motion and lifecycle checks remain in place. Native
+Canvas eye/foot close-ups and desktop/phone flybys were inspected; browser GPU
+visual review remains unavailable in this workspace. No art assets or camera
+path were changed.

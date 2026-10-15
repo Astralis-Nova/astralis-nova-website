@@ -38,15 +38,26 @@
       const footY=localX*Math.sin(lower)+localY*Math.cos(lower);
       const px=x+(footX-localX)*lowerWeight,py=y+(footY-localY)*lowerWeight;
       dx+=((px-hip[0])*Math.cos(knee)-(py-hip[1])*Math.sin(knee)+hip[0]-x
-        +(x-toe[0])*(.5-joint.curl)*.34*claw)*weight;
+        +(x-toe[0])*(.5-joint.curl)*.52*claw)*weight;
       dy+=((px-hip[0])*Math.sin(knee)+(py-hip[1])*Math.cos(knee)+hip[1]-y
-        -joint.curl*5.5*claw)*weight;
+        -joint.curl*6.5*claw+(joint.lift||0)*lowerWeight)*weight;
       total+=weight;
     });
     return [dx/Math.max(1,total),dy/Math.max(1,total)];
   }
+  function wingOffset(x,y,pose){
+    if(!pose.wingTips)return [0,0];
+    if(pose.frontView){
+      const side=x<255?0:1,reach=clamp((Math.abs(x-255)-65)/180);
+      const membrane=reach*reach*(1-smooth(235,315,y));
+      const flex=pose.wingTips[side]*membrane;
+      return [flex*(side===0?-.3:.3),flex];
+    }
+    const reach=(1-smooth(125,275,x))*(1-smooth(220,285,y));
+    return [pose.wingTips[0]*reach*.25,pose.wingTips[0]*reach];
+  }
   function deform(x,y,seconds,pose) {
-    const limb=limbOffset(x,y,pose);
+    const limb=limbOffset(x,y,pose),flex=wingOffset(x,y,pose);
     if(pose.frontView){
       const middle=Math.exp(-(((x-255)/90)**2));
       const chest=middle*Math.exp(-(((y-305)/65)**2));
@@ -58,10 +69,10 @@
       const headAngle=pose.head*Math.PI/180;
       const hx=(-(y-224)*Math.sin(headAngle)+(x-285)*(Math.cos(headAngle)-1))*head;
       const hy=((x-285)*Math.sin(headAngle)+(y-224)*(Math.cos(headAngle)-1))*head;
-      return [x+hx+limb[0]+breath+Math.sin(seconds*2.05-reach*2.5)*(4+reach*12)*tail+pose.neck*neck+pose.wrist*wing*(x<255?-1:1),
-        y+hy+limb[1]+pose.bob*.7+pose.chest*chest-pose.chest*.65*neck+Math.sin(seconds*1.4-reach*2)*3*tail+pose.wrist*.45*wing];
+      return [x+flex[0]+hx+limb[0]+breath+Math.sin(seconds*2.05-reach*2.5)*(4+reach*12)*tail+pose.neck*neck+pose.wrist*wing*(x<255?-1:1),
+        y+flex[1]+hy+limb[1]+pose.bob*.7+pose.chest*chest-pose.chest*.65*neck+Math.sin(seconds*1.4-reach*2)*3*tail+pose.wrist*.45*wing];
     }
-    let dx=limb[0],dy=limb[1]+pose.bob*.7;
+    let dx=limb[0]+flex[0],dy=limb[1]+flex[1]+pose.bob*.7;
     const chest=Math.exp(-(((x-292)/68)**2)-((y-298)/64)**2);
     dx+=(x-292)*.008*Math.sin(seconds*1.7)*chest;
     dy+=pose.chest*chest;
@@ -174,5 +185,5 @@
       ctx.drawImage(texture,minX,minY,sw,sh,minX,minY,sw,sh);ctx.restore();
     }
   }
-  root.AstralisDragonPuppet={forwardAnchors,forwardEyes,limbAnchors,limbOffset,face,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
+  root.AstralisDragonPuppet={forwardAnchors,forwardEyes,limbAnchors,limbOffset,wingOffset,face,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
 })(typeof window==='undefined'?globalThis:window);
