@@ -12,9 +12,15 @@
     'The navigation system said “turn left at the Moon.” I may have missed it.'
   ];
   let flight, timer, bubbleTimer, pass = 0, joke = 0, paused = false, dismissed = false;
-  let visitor, controls, pauseButton, message;
+  let visitor, controls, pauseButton, message, greetingTimer;
   function tellJoke() {
     clearTimeout(bubbleTimer);
+    clearTimeout(greetingTimer);
+    visitor.classList.remove('ace-greeting');
+    // Reflow restarts the short paw salute and happy head nod on each click.
+    void visitor.offsetWidth;
+    visitor.classList.add('ace-greeting');
+    greetingTimer = setTimeout(() => visitor.classList.remove('ace-greeting'), 2500);
     message.textContent = jokes[joke++ % jokes.length];
     message.hidden = false;
     bubbleTimer = setTimeout(() => { message.hidden = true; }, 6500);
@@ -38,11 +44,11 @@
     const end = right ? innerWidth + 25 : -w - 25;
     const top = Math.min(110, Math.max(12, innerHeight - h - 80));
     const span = Math.max(0, innerHeight - h - top - 100);
-    const frames = Array.from({ length: 25 }, (_, i) => {
-      const t = i / 24;
+    const frames = Array.from({ length: 49 }, (_, i) => {
+      const t = i / 48;
       const y = top + span * (.46 + .3 * Math.sin(t * Math.PI * 2 + pass));
-      const size = .68 + .35 * Math.sin(t * Math.PI);
-      const bank = 7 * Math.cos(t * Math.PI * 2 + pass);
+      const size = .65 + .47 * Math.sin(t * Math.PI);
+      const bank = 11 * Math.cos(t * Math.PI * 2 + pass) + 3 * Math.sin(t * Math.PI * 6);
       return { transform: `translate(${start + (end-start)*t}px,${y}px) scale(${dir*size},${size}) rotate(${bank}deg)` };
     });
     visitor.style.visibility = 'visible';
@@ -64,7 +70,7 @@
   }
   async function boot() {
     // Keep the small animation local; no third-party embeds or autoplay audio.
-    const response = await fetch('/snoopy-patrol.svg?v=20261014', { credentials: 'same-origin' });
+    const response = await fetch('/snoopy-patrol.svg?v=20261014seated2', { credentials: 'same-origin' });
     if (!response.ok) return;
     const svg = await response.text();
     if (!svg.startsWith('<svg')) return;
@@ -96,7 +102,7 @@
       clearTimeout(timer); flight?.cancel(); flight = undefined; sync(); tellJoke();
     });
     controls.querySelector('[data-ace="hide"]').addEventListener('click', event => {
-      dismissed = true; clearTimeout(timer); clearTimeout(bubbleTimer); flight?.cancel();
+      dismissed = true; clearTimeout(timer); clearTimeout(bubbleTimer); clearTimeout(greetingTimer); flight?.cancel();
       visitor.hidden = true; message.hidden = true; event.currentTarget.disabled = true;
       controls.open = false;
     });
