@@ -4,6 +4,7 @@ const vm = require('node:vm');
 const fs = require('node:fs');
 const path = require('node:path');
 const rigEnv={window:{}}; vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../ac-dragon-rig.js'),'utf8'),rigEnv);
+vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../ac-dragon-puppet.js'),'utf8'),rigEnv);
 const source = fs.readFileSync(path.join(__dirname,'../ac-dragon.js'),'utf8');
 function setup({width=1440,height=900,reduced=false,failed=false}={}) {
   let clock=0,id=0,frames=new Map(),images=[];
@@ -15,7 +16,7 @@ function setup({width=1440,height=900,reduced=false,failed=false}={}) {
   dragon.querySelector=()=>art;
   const preference={matches:reduced,addEventListener(k,v){this.change=v;},removeEventListener(){this.change=null;}};
   const document={body,hidden:false,querySelector(q){return q==='.ac-dragon-emblem'?dragon:q==='.topbar'?{getBoundingClientRect:()=>({bottom:68})}:null;},getElementById(q){return {acDragonCanvas:canvas,acDragonStill:still,acDragonToggle:toggle}[q];},createElement:element,addEventListener(k,v){listeners[k]=v;},removeEventListener(k){delete listeners[k];}};
-  const window={AstralisDragonRig:rigEnv.window.AstralisDragonRig,matchMedia:()=>preference,addEventListener(k,v){listeners[k]=v;},removeEventListener(k){delete listeners[k];}};
+  const window={AstralisDragonRig:rigEnv.window.AstralisDragonRig,AstralisDragonPuppet:rigEnv.window.AstralisDragonPuppet,matchMedia:()=>preference,addEventListener(k,v){listeners[k]=v;},removeEventListener(k){delete listeners[k];}};
   vm.runInNewContext(source,{document,window,innerWidth:width,innerHeight:height,Image:class{constructor(){images.push(this);this.naturalWidth=1536;this.naturalHeight=1024;}},requestAnimationFrame(fn){frames.set(++id,fn);return id;},cancelAnimationFrame(id){frames.delete(id);},Math});
   if(failed)images[0].onerror();else images[0].onload();
   function step(ms){const target=clock+ms;while(clock<target){clock=Math.min(target,clock+20);const pending=[...frames.values()];frames.clear();pending.forEach(fn=>fn(clock));}}
@@ -61,22 +62,24 @@ test('close approaches grow visibly, articulate the tail and stop all work on pa
   s.step(100);sizes.add(Number(s.dragon.dataset.flightSize));tails.add(s.dragon.dataset.tailFlex);views.add(Number(s.dragon.dataset.approach));phases.add(s.dragon.dataset.wingPhase);
   assert(!s.dragon.style.transform.includes('scaleX'), 'the whole body must never flatten to turn');
  }
- assert(Math.max(...sizes)>Math.min(...sizes)*2.5,'camera approaches must be unmistakable');
+ assert(Math.max(...sizes)>Math.min(...sizes)*7,'camera approaches must be unmistakable');
  assert(Math.max(...views)>.95 && Math.min(...views)<.1,'approach and retreat both appear');
  assert(tails.size>150 && phases.size>100,'body flex and wing phase must evolve continuously');
  s.listeners.pagehide();assert.equal(s.frames(),0);assert.equal(s.fire().hidden,true);
  assert(s.images.every(i=>i.onload===null));assert.equal(s.listeners.visibilitychange,undefined);
 });
 
-test('depth route stays inside phones and desktops, has two close passes and joins without a jump',()=>{
+test('Promise-style approaches grow from distant to screen-filling, with continuous retreats',()=>{
  const rig=rigEnv.window.AstralisDragonRig;
  for(const [width,height] of [[1440,900],[390,844],[320,568],[844,390]]){
   let nearPasses=0,wasNear=false,maxStep=0,previous;
   for(let i=0;i<=2000;i++){
    const pose=rig.route(i/2000,width,height);
    assert(Object.values(pose).every(Number.isFinite));
-   assert(pose.x>=0 && pose.y>=0 && pose.x+pose.size<=width+1 && pose.y+pose.size<=height+1);
-   const near=pose.depth<.4;if(near&&!wasNear)nearPasses++;wasNear=near;
+   assert(pose.x+pose.size/2>0 && pose.x+pose.size/2<width);
+   assert(pose.y+pose.size/2>0 && pose.y+pose.size/2<height);
+   assert(pose.size<width*1.3,'close passes may crop wings but must not fill the page with an unbounded image');
+   const near=pose.depth<2;if(near&&!wasNear)nearPasses++;wasNear=near;
    if(previous)maxStep=Math.max(maxStep,Math.hypot(pose.x-previous.x,pose.y-previous.y),Math.abs(pose.size-previous.size));previous=pose;
   }
   assert.equal(nearPasses,2);assert(maxStep<width*.025);
@@ -90,7 +93,7 @@ test('pose blending preserves full body opacity across strokes and glides',()=>{
  for(let t=0;t<60;t+=.017){
   const pose=rig.pose(t),weights=rig.weights(pose.phase,pose.glide);
   assert(Math.abs(weights.reduce((sum,[,w])=>sum+w,0)-1)<.00001);
-  assert(Math.abs(pose.tail)<13 && Math.abs(pose.head)<1 && Math.abs(pose.bob)<3);
+  assert(Math.abs(pose.tail)<13 && Math.abs(pose.head)<1 && Math.abs(pose.bob)<=3);
   weights.forEach(([i,w])=>{assert(i>=0&&i<6&&w>=0&&w<=1);poses.add(i);});
  }
  assert.equal(poses.size,6);
@@ -103,4 +106,44 @@ test('blended pose weights stay continuous through phase wrap and partial glides
   const a=vector(i/1000,glide),b=vector(((i+1)/1000)%1,glide);
   assert(a.every((w,j)=>Math.abs(w-b[j])<.03),'no silhouette snap while entering a glide');
  }
+});
+
+test('local joints move independently, stay connected and never invert the skin mesh',()=>{
+ const puppet=rigEnv.window.AstralisDragonPuppet,rig=rigEnv.window.AstralisDragonRig;
+ let maxTail=0,maxChest=0,maxLeg=0,maxNeck=0;
+ for(let t=0;t<25;t+=.137){
+  const pose=rig.pose(t),points=puppet.positions(t,pose);
+  for(let i=0;i<puppet.indices.length;i+=3){
+   const [a,b,c]=puppet.indices.slice(i,i+3).map(n=>points[n]);
+   const area=(b[0]-a[0])*(c[1]-a[1])-(c[0]-a[0])*(b[1]-a[1]);
+   assert(area>20,'the body must not fold over or tear at a joint');
+  }
+  const displacement=(x,y)=>{const p=puppet.deform(x,y,t,pose);assert(p.every(Number.isFinite));return Math.hypot(p[0]-x,p[1]-y);};
+  maxTail=Math.max(maxTail,displacement(35,370));maxChest=Math.max(maxChest,displacement(292,298));
+  maxLeg=Math.max(maxLeg,displacement(270,380));maxNeck=Math.max(maxNeck,displacement(435,270));
+  const upperWing=puppet.deform(85,115,t,pose),lowerTail=puppet.deform(85,375,t,pose);
+  assert(Math.abs((upperWing[1]-115)-(lowerTail[1]-375))>0 || Math.abs(pose.bob)<1e-8);
+ }
+ assert(maxTail>15 && maxChest>4 && maxLeg>9 && maxNeck>4);
+});
+
+test('GPU skinning draws one indexed mesh and releases resources; context loss enables fallback',()=>{
+ const puppet=rigEnv.window.AstralisDragonPuppet;
+ const calls=[],events={},resources=[];let id=0;
+ const gl=new Proxy({
+  NO_ERROR:0,getError:()=>0,getShaderParameter:()=>true,getProgramParameter:()=>true,getAttribLocation:()=>0,getUniformLocation:(_,name)=>name,isContextLost:()=>false,
+  bufferSubData:(_,offset,data)=>{assert([...data].every(Number.isFinite));calls.push(['vertices',data.length]);},
+  drawElements:(_,count)=>calls.push(['draw',count]),uniform3f:(name,...values)=>{if(name==='uWeights')assert(Math.abs(values.reduce((a,b)=>a+b,0)-1)<.00001);},
+  createShader:()=>++id,createProgram:()=>++id,createBuffer:()=>++id,createTexture:()=>++id,
+  deleteShader:v=>resources.push(v),deleteProgram:v=>resources.push(v),deleteBuffer:v=>resources.push(v),deleteTexture:v=>resources.push(v)
+ },{get:(o,k)=>o[k]??(k.toUpperCase()===k?1:()=>{})});
+ const canvas={getContext:()=>gl,addEventListener:(n,f)=>events[n]=f,removeEventListener:n=>delete events[n]};
+ const gpu=puppet.createGPU(canvas,{});assert(gpu);
+ const pose=rigEnv.window.AstralisDragonRig.pose(12);
+ assert.equal(gpu.draw(12,pose,[[0,.3],[1,.7]]),true);
+ assert.deepEqual(calls,[['vertices',puppet.vertices.length*2],['draw',puppet.indices.length]]);
+ let prevented=false;events.webglcontextlost({preventDefault(){prevented=true;}});assert(prevented);
+ assert.equal(gpu.draw(13,pose,[[1,1]]),false,'a lost context must hand rendering to Canvas');
+ gpu.destroy();assert.equal(resources.length,7);assert.equal(events.webglcontextlost,undefined);
+ gl.getShaderParameter=()=>false;assert.equal(puppet.createGPU(canvas,{}),null,'shader errors preserve the Canvas fallback');
 });

@@ -1,7 +1,8 @@
 (() => {
   'use strict';
   const rig = window.AstralisDragonRig;
-  if (!rig) return;
+  const puppet=window.AstralisDragonPuppet;
+  if (!rig || !puppet) return;
   const dragon = document.querySelector('.ac-dragon-emblem');
   const canvas = document.getElementById('acDragonCanvas');
   const still = document.getElementById('acDragonStill');
@@ -36,9 +37,11 @@
   posePlate.width = posePlate.height = bodyPlate.width = bodyPlate.height = 512;
   const poseContext = posePlate.getContext('2d'), bodyContext = bodyPlate.getContext('2d');
   if (!poseContext || !bodyContext) return;
-  let disposed = false;
+  const gpuCanvas=document.createElement('canvas');
+  let gpu=null,disposed = false;
   let ready=false, playing=!preference.matches, request=0, previousTime=null, elapsed=0;
   let facing=1, bank=0, particles=[], emission=0, paintClock=-Infinity;
+  let mouth={x:441,y:276};
   let route=[], flightSize=180;
   // Rest, awaken, take off, patrol, return, and become the original emblem.
   const timing = {rest:5000,awaken:2800,launch:2800,flight:26000,return:3600,restore:2800};
@@ -68,7 +71,6 @@
     poseContext.globalCompositeOperation='lighter';
     const mouths=[[441,276],[448,280],[445,274],[441,274],[447,278],[451,278]];
     poseContext.save();
-    if(facing<0){poseContext.translate(512,0);poseContext.scale(-1,1);}
     for(const [frame,weight] of weights) {
       poseContext.globalAlpha=weight;
       const ox=441-mouths[frame][0], oy=276-mouths[frame][1];
@@ -77,21 +79,11 @@
     poseContext.restore();
     poseContext.globalAlpha=1;poseContext.globalCompositeOperation='source-over';
     bodyContext.clearRect(0,0,512,512);
-    // Small continuous deformations supplement the full wing/body poses. The
-    // tail lags the torso; neck compensation steadies the head during a stroke.
-    const flex = x => {
-      const sx=facing<0?512-x:x;
-      const tail=1-rig.smooth(45,280,sx), neck=rig.smooth(320,460,sx);
-      return pose.tail*tail*tail+pose.head*neck;
-    };
-    // Piecewise affine strips interpolate the bend continuously. Wider strips
-    // keep the moving tail smooth with just 16 texture draws.
-    for(let x=0;x<512;x+=32) {
-      const shift=flex(x), slope=(flex(x+32)-shift)/32;
-      bodyContext.setTransform(1,slope,0,1,0,shift-slope*x);
-      bodyContext.drawImage(posePlate,x,0,32,512,x,0,32,512);
-    }
-    bodyContext.setTransform(1,0,0,1,0,0);
+    const accelerated=gpu?.draw(seconds,pose,weights);
+    if(gpu && !accelerated){gpu.destroy();gpu=null;}
+    if(accelerated)bodyContext.drawImage(gpuCanvas,0,0);
+    else puppet.drawCPU(bodyContext,posePlate,seconds,pose);
+    dragon.dataset.renderer=accelerated?'gpu':'canvas';
     // Digital light remains clipped to the scales and membranes.
     bodyContext.save();bodyContext.globalCompositeOperation='source-atop';
     const sheen=bodyContext.createLinearGradient(40,0,470,512);
@@ -102,9 +94,13 @@
     light.addColorStop(0,'rgba(255,195,138,0)');light.addColorStop(.5,'rgba(255,195,138,.17)');light.addColorStop(1,'rgba(255,195,138,0)');
     bodyContext.fillStyle=light;bodyContext.fillRect(0,scan-24,512,48);bodyContext.restore();
     context.clearRect(0,0,512,512);context.save();
-    context.translate(256,290+pose.bob);context.scale(pose.breath,1/pose.breath);
+    context.translate(256,290);
+    if(facing<0)context.scale(-1,1);
     context.rotate(pose.bank*Math.PI/180);
     context.drawImage(bodyPlate,-256,-290,512,512);context.restore();
+    const head=puppet.deform(441,276,seconds,pose),angle=pose.bank*Math.PI/180;
+    mouth={x:256+(head[0]-256)*Math.cos(angle)-(head[1]-290)*Math.sin(angle),
+      y:290+(head[0]-256)*Math.sin(angle)+(head[1]-290)*Math.cos(angle)};
     dragon.dataset.wingPhase=pose.phase.toFixed(3);dragon.dataset.glide=pose.glide.toFixed(3);
     dragon.dataset.tailFlex=pose.tail.toFixed(3);
     return pose;
@@ -117,7 +113,7 @@
   const renderFire = (dt,power,available) => {
     if(!flame)return;
     // The full-body poses are stabilized to this common mouth anchor.
-    const origin={x:441,y:404};
+    const origin={x:mouth.x,y:mouth.y+128};
     const length=Math.max(50,Math.min(335,available));
     emission+=dt*power*.18;
     while(emission>=1&&particles.length<170){
@@ -203,13 +199,14 @@
     dragon.dataset.flightSize=size.toFixed(2);
     art.style.setProperty('--dragon-proximity',String(1/(1+Math.max(0,depth))));
     canvas.style.filter='drop-shadow(0 1px 2px rgba(0,0,0,.45)) drop-shadow(0 0 '+(1+approach*2).toFixed(1)+'px rgba(255,88,38,.22))';
-    const profile=.55+.45*Math.abs(facing);
-    const yaw=approach*18+(1-Math.abs(facing))*32;
+    const profile=.84+.16*Math.abs(facing);
+    const yaw=(1-Math.abs(facing))*15;
     canvas.style.transform='perspective(850px) rotateX('+pitch.toFixed(2)+'deg) rotateY('+yaw.toFixed(2)+'deg) scaleX('+profile.toFixed(3)+')';
-    canvas.style.opacity=String(blend);still.style.opacity=String(1-blend);
+    const atmosphere=phase==='flight'?.68+.32*Math.min(1,3/(Math.max(.85,depth)+.3)):1;
+    canvas.style.opacity=String(blend*atmosphere);still.style.opacity=String(1-blend);
     art.style.setProperty('--dragon-aura',glow.toFixed(3));
     const seconds=elapsed/1000;
-    if(elapsed-paintClock>=1000/30 || dt===0) {
+    if(elapsed-paintClock>=1000/(gpu?40:20) || dt===0) {
       paintBody(seconds,approach,phase==='launch');paintClock=elapsed;
     }
     const freeSpace=targetFacing>0?innerWidth-(x+size*.87):x+size*.13;
@@ -240,12 +237,13 @@
     if(disposed)return;
     if(sheet.naturalWidth!==1536||sheet.naturalHeight!==1024){park();toggle.hidden=true;return;}
     canvas.width=sheet.naturalWidth/3;canvas.height=sheet.naturalHeight/2;
+    gpu=puppet.createGPU(gpuCanvas,sheet);
     ready=true;measureRoute();dock();sync();
   };
   sheet.onerror=()=>{park();toggle.hidden=true;};
   sheet.src='/assets/ac-portals/ac-dragon-flight-sheet.webp';
   window.addEventListener('pagehide',()=>{
-    disposed=true;cancelAnimationFrame(request);request=0;clearFire();
+    disposed=true;cancelAnimationFrame(request);request=0;clearFire();gpu?.destroy();gpu=null;
     sheet.onload=sheet.onerror=null;
     document.removeEventListener('visibilitychange',sync);
     window.removeEventListener('resize',onResize);

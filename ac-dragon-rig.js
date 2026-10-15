@@ -5,8 +5,8 @@
   const mix = (a, b, t) => a + (b - a) * t;
   const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
   // Distant crossings, two deliberate camera approaches, then a wide retreat.
-  const knots = [[.18,.12,2.6],[.82,.18,2.3],[.56,.40,.16],[.14,.65,1.1],
-    [.20,.25,2.5],[.78,.22,2.8],[.65,.60,.10],[.35,.76,1.1]];
+  const knots = [[.48,.25,19],[.27,.23,17],[.40,.38,7],[.51,.53,1.15],
+    [.78,.33,14],[.72,.20,19],[.58,.36,7],[.55,.57,1.05],[.24,.40,15],[.38,.24,19]];
   const at = index => knots[(index % knots.length + knots.length) % knots.length];
   function spline(progress) {
     const phase = ((progress % 1) + 1) % 1 * knots.length;
@@ -20,13 +20,13 @@
     const [nx,ny,depth] = spline(progress), before = spline(progress - .0005), after = spline(progress + .0005);
     const dx = (after[0] - before[0]) / .001, dy = (after[1] - before[1]) / .001, dz = (after[2] - before[2]) / .001;
     top = Math.min(top, Math.max(12, height * .24));
-    const space = Math.max(64, height - top - 18);
-    const near = Math.min(720, width * .92, space * .97);
-    const size = near / (1 + Math.max(.075, depth));
-    const margin = Math.min(18, width * .025);
-    const x = margin + clamp(nx) * Math.max(0, width - size - margin * 2);
-    const y = top + clamp(ny) * Math.max(0, height - top - size - margin);
-    const approach = clamp(smooth(-.4, 3, -dz) * .82 + (1 - smooth(.2,.9,depth)) * .42);
+    const near=Math.min(1250,width*1.04,(height-top)*1.35);
+    // Same accelerating perspective relation as the Promise birds. Centre the
+    // animal in world space; do not slide it around to fit a shrinking box.
+    const size=near*2.3/(Math.max(.85,depth)+1.2);
+    const x=nx*width-size/2;
+    const y=top+ny*(height-top)-size/2;
+    const approach = clamp(smooth(-.4, 3, -dz) * .82 + (1 - smooth(1.1,4.5,depth)) * .42);
     return { x, y, size, depth, dx, dy, dz, approach,
       facing: dx >= 0 ? 1 : -1,
       bank: clamp(dy * 5, -19, 19) * (dx >= 0 ? 1 : -1) * (1-approach*.65),
@@ -40,20 +40,22 @@
     const phase = ((beat % 1)+1)%1, angle = phase*Math.PI*2;
     const stroke = Math.sin(angle), lag = Math.sin(angle - .65), activity = 1-glide*.88;
     return { phase, glide, activity,
-      bob: Math.sin(angle-.9) * 2.2 * activity,
-      breath: 1 + Math.sin(seconds*1.75)*.008,
+      bob: Math.sin(angle-.9)*3*activity,
+      chest: Math.sin(angle-.6)*3.5*activity,
+      neck: Math.sin(seconds*1.35-.6)*1.5-lag*1.5*activity,
+      legs: -6+Math.sin(seconds*1.15-1.2)*4+lag*2*activity,
+      wrist: Math.sin(angle-.9)*2.6*activity,
       head: Math.sin(angle-.9)*-.75*activity,
-      tail: Math.sin(seconds*2.15-.6)*8 + lag*4.5*activity,
-      toes: Math.sin(angle-1.4)*1.2*activity,
-      bank: Math.sin(seconds*.8)*1.8*(1-approach),
-      stroke, lag };
+      tail: Math.sin(seconds*2.05-.6)*8+lag*4.5*activity,
+      bank: Math.sin(seconds*.65)*1.3*(1-approach)
+    };
   }
   function weights(phase, glide) {
     const frame=phase*6, first=Math.floor(frame)%6;
     // Brief eased transitions keep the original scales crisp between poses.
     const blend=smooth(.28,.72,frame-Math.floor(frame));
     const map=new Map();
-    for(const [index,weight] of [[first,(1-blend)*(1-glide)],[(first+1)%6,blend*(1-glide)],[2,glide]]) map.set(index,(map.get(index)||0)+weight);
+    for(const [index,weight] of [[first,(1-blend)*(1-glide)],[(first+1)%6,blend*(1-glide)],[1,glide]]) map.set(index,(map.get(index)||0)+weight);
     return [...map].filter(([,w])=>w>0);
   }
   const rig = { clamp, mix, smooth, route, pose, weights };

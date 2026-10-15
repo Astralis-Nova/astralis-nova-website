@@ -1,28 +1,40 @@
-# Original AC dragon: depth flight update
+# Original AC dragon: articulated flight
 
 The existing crimson emblem and six-pose `ac-dragon-flight-sheet.webp` remain
 unchanged. No replacement creature or additional sprite sheet is used.
 
-`ac-dragon-rig.js` supplies a continuous depth route with two close approaches
-per patrol. Perspective changes its apparent size by more than 2.5 times, then
-returns it to the original emblem. Positions and sizes stay within the viewport,
-including narrow phones and landscape screens. Banking and foreshortening support
-turns without the former zero-width mirror collapse.
+## Camera approach
 
-The renderer interpolates all six existing full-body poses using additive
-premultiplied colors, keeping the torso opaque between wing strokes. Common mouth
-anchors stabilize the head. Power strokes alternate with short glides; continuous
-neck compensation, chest breathing, body heave and delayed tail flex supplement
-the original poses. A restrained warm sheen is clipped to the original artwork.
-The original fire remains, emitted from the stabilized mouth anchor with bounded
-particles. The artwork redraws at 30 fps while flight transforms remain smooth.
+The depth orbit now follows the Rainbow Promise birds' accelerating perspective
+relation: the dragon travels from depth 19 to about 1, with two close passes per
+patrol. Its apparent width grows roughly tenfold as it approaches the viewer,
+then recedes continuously. Near passes centre the creature in world space and
+may briefly crop outer wings; they no longer shrink and slide the whole flight
+into an inset bounding box. A restrained atmospheric fade reinforces distance.
 
-Pause and hidden-tab behavior preserve elapsed animation time. Reduced motion
-parks the original emblem; explicit playback remains available. Page exit cancels
-animation, clears particles and removes listeners. Asset failure retains the
-original static emblem. Tests cover the full cycle, opacity, two close passes,
-viewport bounds, route continuity, pause, reduced motion, failure and cleanup.
+## Articulation
 
-Validation uses Node VM controller tests and native Canvas renders of the actual
-renderer at desktop and phone sizes. Browser automation is unavailable in the
-managed workspace; these are renderer and behavior checks, not browser screenshots.
+`ac-dragon-puppet.js` replaces the former full-column bend and whole-image
+breathing scale. A continuous skin mesh gives the chest, neck, feet, tail and
+wrists separate motion. Chest lift follows the wingbeat; neck compensation
+steadies the head; the legs tuck; a delayed wave travels down the tail. The
+original six poses still supply the main wing stroke, with opaque additive
+transitions and a spread-wing glide. Turning foreshortening is restrained so the
+creature does not visibly squash like a rotating card. Fire follows the deformed
+mouth and retains its bounded particle count.
+
+A WebGL mesh handles skinning in one indexed draw when supported. It uses the
+original atlas and at most three premultiplied pose samples. Shader/context failure
+uses an articulated Canvas triangle mesh. Artwork refreshes at up to 40 fps with
+GPU skinning and 20 fps for the Canvas fallback; flight transforms remain smooth.
+GPU resources and event listeners are released on page exit. Hidden tabs pause;
+reduced motion retains the parked original emblem and explicit play control.
+
+## Validation
+
+Node tests cover complete patrols, depth growth and continuous return, independent
+joints, positive mesh triangle areas, pose opacity, pause, reduced motion, asset
+failure, GPU draw/resource contracts, context loss and cleanup. Native Canvas
+renders of the actual fallback were inspected at 1440x900 and 390x844, including
+close passes and a wing/body cycle. Browser automation is unavailable in the
+managed workspace; browser GPU rendering was not visually inspected here.
