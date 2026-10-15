@@ -72,7 +72,7 @@
   }
   async function boot() {
     // Keep the small animation local; no third-party embeds or autoplay audio.
-    const response = await fetch('/snoopy-patrol.svg?v=20261014body5', { credentials: 'same-origin' });
+    const response = await fetch('/snoopy-patrol.svg?v=20261015flight6', { credentials: 'same-origin' });
     if (!response.ok) return;
     const svg = await response.text();
     if (!svg.startsWith('<svg')) return;
