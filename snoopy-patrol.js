@@ -12,12 +12,12 @@
     'The navigation system said “turn left at the Moon.” I may have missed it.'
   ];
   let flight, timer, bubbleTimer, pass = 0, joke = 0, paused = false, dismissed = false;
-  let visitor, controls, pauseButton, message, greetingTimer;
+  let visitor, controls, pauseButton, message, greetingTimer, goggleRig;
   function tellJoke() {
     clearTimeout(bubbleTimer);
     clearTimeout(greetingTimer);
     visitor.classList.remove('ace-greeting');
-    // Reflow restarts the short paw salute and happy head nod on each click.
+    // The greeting nod leaves the hands free to complete their goggle action.
     void visitor.offsetWidth;
     visitor.classList.add('ace-greeting');
     greetingTimer = setTimeout(() => visitor.classList.remove('ace-greeting'), 2500);
@@ -60,6 +60,7 @@
     };
   }
   function sync() {
+    goggleRig?.sync();
     const still = paused || document.hidden || reduced.matches || document.activeElement === visitor;
     visitor.classList.toggle('ace-still', still);
     pauseButton.textContent = paused ? 'Resume patrol' : 'Pause patrol';
@@ -71,7 +72,7 @@
   }
   async function boot() {
     // Keep the small animation local; no third-party embeds or autoplay audio.
-    const response = await fetch('/snoopy-patrol.svg?v=20261014eyes3', { credentials: 'same-origin' });
+    const response = await fetch('/snoopy-patrol.svg?v=20261014grip4', { credentials: 'same-origin' });
     if (!response.ok) return;
     const svg = await response.text();
     if (!svg.startsWith('<svg')) return;
@@ -92,6 +93,9 @@
     controls.innerHTML = `<summary>✈ Flying Ace</summary><div class="ace-panel"><p>A doghouse has wandered into Astralis Nova airspace. Click Snoopy for a little cosmic nonsense.</p><button type="button" data-ace="pause" aria-pressed="false">Pause patrol</button><button type="button" data-ace="recall">Call Snoopy</button><button type="button" data-ace="hide">Hide visitor</button><small>Unofficial fan tribute. Snoopy / Peanuts © Peanuts Worldwide LLC.<br><a href="https://schulzmuseum.org/snoopy-red-baron/" target="_blank" rel="noopener noreferrer">The Flying Ace story ↗</a></small></div>`;
     document.body.append(visitor, message, controls);
     pauseButton = controls.querySelector('[data-ace="pause"]');
+    goggleRig = window.NovaFlyingAceRig?.create(visitor, () =>
+      paused || dismissed || reduced.matches || document.hidden || document.activeElement === visitor);
+
     visitor.addEventListener('click', tellJoke);
     visitor.addEventListener('pointermove', event => {
       if (paused || reduced.matches || document.hidden || dismissed) return;
@@ -107,7 +111,7 @@
     }, { passive: true });
     visitor.addEventListener('pointerleave', () => visitor.classList.remove('ace-tracking'));
     // Hold position while a keyboard user is interacting with the character.
-    visitor.addEventListener('focus', () => flight?.pause());
+    visitor.addEventListener('focus', () => { flight?.pause(); goggleRig?.sync(); });
     visitor.addEventListener('blur', sync);
     pauseButton.addEventListener('click', () => { paused = !paused; sync(); });
     controls.querySelector('[data-ace="recall"]').addEventListener('click', () => {
@@ -117,7 +121,7 @@
     });
     controls.querySelector('[data-ace="hide"]').addEventListener('click', event => {
       dismissed = true; clearTimeout(timer); clearTimeout(bubbleTimer); clearTimeout(greetingTimer); flight?.cancel();
-      visitor.hidden = true; message.hidden = true; event.currentTarget.disabled = true;
+      visitor.hidden = true; message.hidden = true; goggleRig?.sync(); event.currentTarget.disabled = true;
       controls.open = false;
     });
     document.addEventListener('visibilitychange', sync);

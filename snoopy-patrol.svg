@@ -35,9 +35,16 @@
         <path d="M199 130c-17 17-20 39-21 62-3 15-3 26 10 30l42-1c7-3 6-12 0-15l-14-5c6-19 8-39-1-61" fill="url(#aceWhite)"/>
         <path d="M184 168c-7 8-8 25-4 31 8-5 11-17 9-29" fill="#24202a" stroke-width="2"/>
         <path d="M202 209c14-7 27 0 39 7" stroke="#79746e" stroke-width="2"/>
-        <g class="ace-knee">
-          <path d="M225 208c-3-13-3-25 0-34 2-9 13-11 17-2l6 37c9 0 17 5 17 10l-32 3-8-14Z" fill="#fffdf2"/>
-          <path d="m230 181 9-1m9 31 2 7m7-5 1 5" stroke-width="2.2"/>
+        <g class="ace-feet">
+          <!-- Far bent leg and its complete foot are visible behind the near leg. -->
+          <path d="M211 205c0-14 2-26 9-29 8-3 13 4 14 15l2 12c28-5 50-1 55 7 5 8-12 13-34 11l-30-2Z" fill="#e4e1d7"/>
+          <path d="m266 205 2 8m9-7 2 7" stroke-width="2"/>
+          <!-- Near knee, ankle, and broad rounded paw, planted on the roof. -->
+          <path d="M222 211c-3-16-4-30-1-39 3-10 15-11 20-1 4 9 5 22 7 38 18-2 35 1 39 9 5 10-13 15-35 14l-19-3c-6-4-9-10-11-18Z" fill="#fffdf2"/>
+          <path d="M225 182c4-3 10-3 14 0" stroke="#79746e" stroke-width="2"/>
+          <path d="M250 212c9-1 19 0 25 3" stroke="#c9c5bb" stroke-width="1.6"/>
+          <path d="m262 217 2 9m8-8 2 7" stroke-width="2.3"/>
+          <path d="M240 229q23 7 40-2" stroke="#c3bfb4" stroke-width="1.8"/>
         </g>
         <g class="ace-scarf">
           <path class="ace-scarf-long" d="M204 133c-24-13-41-3-58-4-21 0-37-15-61-9l-20 2 10 19c25-9 42 10 66 4 20-4 38-4 59-3Z" fill="#ec3547"/>
@@ -46,6 +53,10 @@
           <path d="m80 127 4 7m-7-5 3 7" stroke="#ff8a7c" stroke-width="1.8"/>
         </g>
         <g class="ace-head">
+          <g class="ace-goggle-arms">
+            <path data-ace-arm="far" d="M200 150Q226 190 251 160" stroke="#27202a" stroke-width="10"/>
+            <path data-ace-arm-fill="far" d="M200 150Q226 190 251 160" stroke="#e4e1d7" stroke-width="6"/>
+          </g>
           <!-- Rounded forehead, broad muzzle, and eyes clear of the goggles. -->
           <path d="M204 133c-29-3-42-24-39-52 2-27 17-40 42-36 18 2 25 17 37 22 18 1 30-8 47-1 20 8 30 27 26 46-5 24-33 28-57 19-16-5-23-11-28-7l-11 16Z" fill="#fffdf2"/>
           <path d="M166 101c-14-21-10-50 9-61 14-8 31-8 41 3l-8 11c-17 4-27 17-29 36 0 18 10 29 19 37-13 0-26-10-32-26Z" fill="url(#aceCapPaint)"/>
@@ -95,12 +106,21 @@
           <ellipse cx="308" cy="96" rx="3.3" ry="1.5" fill="#66606b" stroke="none"/>
           <path class="ace-smile" d="M245 112c13 9 31 8 42 0" stroke-width="2.5"/>
           <path d="m243 109 1 6" stroke-width="2"/>
+          <g class="ace-goggle-arms">
+
+            <path data-ace-arm="near" d="M215 151Q246 187 269 163" stroke="#27202a" stroke-width="11"/>
+            <path data-ace-arm-fill="near" d="M215 151Q246 187 269 163" stroke="#fffdf2" stroke-width="7"/>
+            <g data-ace-paw="far" transform="translate(251 160)">
+              <path d="M-8 5C-11-1-9-7-5-7-5-12 2-12 4-7 10-9 15-3 11 2 15 8 7 13 2 9-4 13-9 10-8 5Z" fill="#e4e1d7" stroke-width="2.7"/>
+              <path d="m-3-4 5 2m0-3 5 3" stroke-width="1.6"/>
+            </g>
+            <g data-ace-paw="near" transform="translate(269 163)">
+              <path d="M-8 5C-11-1-9-7-5-7-5-12 2-12 4-7 10-9 15-3 11 2 15 8 7 13 2 9-4 13-9 10-8 5Z" fill="#fffdf2" stroke-width="2.7"/>
+              <path d="m-3-4 5 2m0-3 5 3" stroke-width="1.6"/>
+            </g>
+          </g>
         </g>
-        <g class="ace-paws">
-          <path d="M212 151c10 7 19 4 29 5l7-8c5-6 10-3 12 1 6-3 11 1 11 6 8 2 8 9 4 14-2 8-12 8-18 3-13 5-31 4-44-1" fill="#fffdf2"/>
-          <path d="m255 155 7 4m0-2 5 5m-14 2 8 2" stroke-width="2.2"/>
-          <path d="M216 170c10 4 21 5 31 1" stroke="#aaa69b" stroke-width="1.6"/>
-        </g>
+
       </g>
     </g>
   </g>

@@ -4,9 +4,8 @@
 #novaFlyingAce:focus-visible{outline:2px solid #9ee9ff;outline-offset:2px;border-radius:20px}
 #novaFlyingAce .ace-flight-rig{transform-origin:215px 235px;animation:aceAirframe 2.7s ease-in-out infinite}
 #novaFlyingAce .ace-pilot{transform-origin:205px 220px;animation:aceSeatedLean 3.8s ease-in-out infinite}
+#novaFlyingAce .ace-goggle-arms path[data-ace-arm],#novaFlyingAce .ace-goggle-arms path[data-ace-arm-fill]{fill:none}
 #novaFlyingAce .ace-head{transform-origin:213px 134px;animation:aceLookout 7.6s ease-in-out infinite}
-#novaFlyingAce .ace-paws{transform-origin:214px 160px;animation:acePilotPaws 1.9s ease-in-out infinite}
-#novaFlyingAce .ace-knee{transform-origin:231px 214px;animation:aceKnee 3.8s ease-in-out infinite}
 #novaFlyingAce .ace-tail{transform-origin:183px 218px;animation:aceTail 1.5s ease-in-out infinite alternate}
 #novaFlyingAce .ace-scarf-long{transform-origin:203px 139px;animation:aceScarfLong .82s ease-in-out infinite}
 #novaFlyingAce .ace-scarf-short{transform-origin:202px 142px;animation:aceScarfShort .57s ease-in-out infinite}
@@ -15,13 +14,12 @@
 #novaFlyingAce .ace-pupils{animation:aceEyeScan 8.6s ease-in-out infinite}
 #novaFlyingAce.ace-tracking .ace-pupils{animation:none;transform:translate(var(--ace-gaze-x,0px),var(--ace-gaze-y,0px))}
 #novaFlyingAce .ace-brows{transform-origin:230px 70px;animation:aceEyebrows 8.6s ease-in-out infinite}
-#novaFlyingAce .ace-goggles{transform-origin:180px 50px;animation:aceGoggleFlight 17.2s ease-in-out infinite}
-#novaFlyingAce .ace-goggle-side-strap{opacity:0;animation:aceStrapFlight 17.2s ease-in-out infinite}
+#novaFlyingAce .ace-goggles{transform-origin:0 0}
+#novaFlyingAce .ace-goggle-side-strap{opacity:0}
 #novaFlyingAce .ace-lens-reflections{animation:aceLensSweep 4.3s ease-in-out infinite alternate}
 #novaFlyingAce .ace-glass-stars{animation:aceGlint 3.1s ease-in-out infinite}
 #novaFlyingAce.ace-greeting .ace-pupils{animation:aceEyeGreeting .8s ease-in-out 3}
 #novaFlyingAce .ace-wind{stroke-dasharray:24 12;animation:aceWind 1.3s linear infinite}
-#novaFlyingAce.ace-greeting .ace-paws{animation:aceSalute .65s ease-in-out 3}
 #novaFlyingAce.ace-greeting .ace-head{animation:aceHappyNod .8s ease-in-out 3}
 #novaFlyingAce.ace-still *{animation-play-state:paused!important}
 #novaAceControl{position:fixed;bottom:14px;left:14px;z-index:65;font:12px/1.45 system-ui,sans-serif;color:#eaf4ff;max-width:calc(100vw - 90px)}
@@ -38,8 +36,6 @@
 @keyframes aceAirframe{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-4px) rotate(1.2deg)}}
 @keyframes aceSeatedLean{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2.2deg)}}
 @keyframes aceLookout{0%,15%,100%{transform:rotate(0)}32%,45%{transform:rotate(-6deg)}64%,77%{transform:rotate(4deg)}}
-@keyframes acePilotPaws{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-1px)}}
-@keyframes aceKnee{0%,100%{transform:rotate(0)}50%{transform:rotate(-2deg)}}
 @keyframes aceTail{from{transform:rotate(-5deg)}to{transform:rotate(7deg)}}
 @keyframes aceScarfLong{0%,100%{transform:rotate(-4deg) skewY(-3deg) scaleY(.85)}33%{transform:rotate(3deg) skewY(3deg) scaleY(1.12)}66%{transform:rotate(-1deg) skewY(-2deg) scaleY(.94)}}
 @keyframes aceScarfShort{0%,100%{transform:rotate(5deg) scaleY(.83)}50%{transform:rotate(-5deg) scaleY(1.15)}}
@@ -47,13 +43,10 @@
 @keyframes aceBlink{0%,42%,46%,90%,94%,100%{transform:scaleY(1)}44%,92%{transform:scaleY(.08)}}
 @keyframes aceEyeScan{0%,10%,100%{transform:translate(0,0)}18%,29%{transform:translate(2.4px,-1.7px)}34%,39%{transform:translate(.5px,1.8px)}48%,60%{transform:translate(-2.3px,.6px)}68%,78%{transform:translate(1.7px,-2px)}86%,92%{transform:translate(0,0)}}
 @keyframes aceEyebrows{0%,10%,39%,60%,100%{transform:translateY(0)}18%,29%,68%,78%{transform:translateY(-2px) rotate(-3deg)}48%,55%{transform:translateY(1px) rotate(2deg)}}
-@keyframes aceGoggleFlight{0%,16%,76%,100%{transform:translate(0,0) rotate(0) scale(1)}24%{transform:translate(0,-4px) rotate(-7deg) scale(1)}34%,57%{transform:translate(42px,32px) rotate(8deg) scale(.63)}66%{transform:translate(0,-5px) rotate(-5deg) scale(1)}}
-@keyframes aceStrapFlight{0%,27%,65%,100%{opacity:0}34%,57%{opacity:1}}
 @keyframes aceLensSweep{from{transform:translateX(-9px) skewX(-5deg);opacity:.4}to{transform:translateX(12px) skewX(4deg);opacity:.9}}
 @keyframes aceEyeGreeting{0%,100%{transform:translate(0,0)}50%{transform:translate(-2px,-1.5px)}}
 @keyframes aceGlint{0%,30%,70%,100%{opacity:.6}45%,55%{opacity:1}}
 @keyframes aceWind{0%{stroke-dashoffset:0;opacity:0}25%,65%{opacity:.4}100%{stroke-dashoffset:72;opacity:0}}
-@keyframes aceSalute{0%,100%{transform:rotate(0)}50%{transform:rotate(-22deg) translateY(-4px)}}
 @keyframes aceHappyNod{0%,100%{transform:rotate(0)}50%{transform:rotate(7deg)}}
 @media(prefers-reduced-motion:reduce){#novaFlyingAce *{animation:none!important}}
 @media(max-width:680px){#novaAceControl{bottom:110px}#novaAceMessage{bottom:160px}}

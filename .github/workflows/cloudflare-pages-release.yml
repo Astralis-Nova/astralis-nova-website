@@ -65,6 +65,8 @@ jobs:
           node --check final-visual-fixes.js
           node --check astralis-nova-explorer.js
           node --check snoopy-patrol.js
+          node --check snoopy-patrol-rig.js
+          node --test tests/snoopy-patrol-rig.test.cjs
           node --check rickroll-planet.js
           node --check recent-exoplanets.js
           node --check conquest-media.js
