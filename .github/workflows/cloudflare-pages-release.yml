@@ -34,6 +34,11 @@ jobs:
           python scripts/check-site-resources.py
           node --test tests/site-audit.test.mjs tests/ac-jukebox.test.cjs
 
+      - name: Validate Voices mobile background fallback
+        run: |
+          node --check voices-rain.js
+          node --test tests/voices-rain.test.cjs
+
       - name: Validate Rainbow Promise flight and flotation
         run: |
           node --check rainbow-promise-cinematic.js
