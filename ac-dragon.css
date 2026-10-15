@@ -21,3 +21,9 @@
 @media(max-width:440px){.hero .ac-dragon-emblem,.hero .ac-dragon-anchor{top:68px;right:-4px}}
 @media(max-width:360px){.hero .ac-dragon-emblem,.hero .ac-dragon-anchor{width:90px;right:-8px}}
 @media(max-width:700px){#acDragonToggle{top:16px;z-index:35}}
+
+/* Living Astralis dragon: close flybys retain a clear, restrained digital edge. */
+.ac-dragon-art #acDragonCanvas{transform-origin:50% 57%;will-change:transform}
+.ac-dragon-art .ac-dragon-fire{transform-origin:25% 50%}
+.ac-dragon-emblem[data-flying="true"] .ac-dragon-aura{background:radial-gradient(ellipse,#ff7b3612 0%,#e94a270a 38%,transparent 69%);filter:blur(12px)}
+.ac-dragon-emblem[data-phase="flight"] .ac-dragon-aura:after{display:none}

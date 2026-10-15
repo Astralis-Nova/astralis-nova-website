@@ -1,4 +1,7 @@
 (() => {
+  'use strict';
+  const rig = window.AstralisDragonRig;
+  if (!rig) return;
   const dragon = document.querySelector('.ac-dragon-emblem');
   const canvas = document.getElementById('acDragonCanvas');
   const still = document.getElementById('acDragonStill');
@@ -29,9 +32,14 @@
   const flame = fire.getContext('2d');
   const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
   const sheet = new Image();
+  const posePlate = document.createElement('canvas'), bodyPlate = document.createElement('canvas');
+  posePlate.width = posePlate.height = bodyPlate.width = bodyPlate.height = 512;
+  const poseContext = posePlate.getContext('2d'), bodyContext = bodyPlate.getContext('2d');
+  if (!poseContext || !bodyContext) return;
+  let disposed = false;
   let ready=false, playing=!preference.matches, request=0, previousTime=null, elapsed=0;
-  let lastFrame=-1, facing=1, bank=0, particles=[], emission=0;
-  let route=[], lengths=[], distance=0, flightSize=180;
+  let facing=1, bank=0, particles=[], emission=0, paintClock=-Infinity;
+  let route=[], flightSize=180;
   // Rest, awaken, take off, patrol, return, and become the original emblem.
   const timing = {rest:5000,awaken:2800,launch:2800,flight:26000,return:3600,restore:2800};
   const end = {};
@@ -47,40 +55,69 @@
     toggle.title=label;
   };
   const measureRoute = () => {
-    flightSize=Math.min(230,Math.max(110,innerWidth*.19));
     const topbar=document.querySelector('.topbar');
     const top=Math.max(78,(topbar?topbar.getBoundingClientRect().bottom:68)+12);
-    const margin=Math.max(12,flightSize*.16);
-    const left=margin, right=Math.max(left,innerWidth-flightSize-margin);
-    const bottom=Math.max(top,innerHeight-flightSize-margin);
-    const width=right-left,height=bottom-top;
-    // A rounded oval replaces sharp corners.
-    route=[];lengths=[];distance=0;
-    for(let i=0;i<=160;i++){
-      const angle=-Math.PI/2+i/160*Math.PI*2;
-      const point={x:left+width*(.5+.5*Math.cos(angle)),y:top+height*(.5+.5*Math.sin(angle))};
-      if(i) distance+=Math.hypot(point.x-route[i-1].x,point.y-route[i-1].y);
-      route.push(point);lengths.push(distance);
+    route = [rig.route(0, innerWidth, innerHeight, top)];
+    flightSize=route[0].size;
+    route.top=top;
+  };
+  const flightPosition = progress => rig.route(progress, innerWidth, innerHeight, route.top);
+  function paintBody(seconds, approach, launching) {
+    const pose=rig.pose(seconds,approach,launching), weights=rig.weights(pose.phase,pose.glide);
+    poseContext.clearRect(0,0,512,512);
+    poseContext.globalCompositeOperation='lighter';
+    const mouths=[[441,276],[448,280],[445,274],[441,274],[447,278],[451,278]];
+    poseContext.save();
+    if(facing<0){poseContext.translate(512,0);poseContext.scale(-1,1);}
+    for(const [frame,weight] of weights) {
+      poseContext.globalAlpha=weight;
+      const ox=441-mouths[frame][0], oy=276-mouths[frame][1];
+      poseContext.drawImage(sheet,(frame%3)*512,Math.floor(frame/3)*512,512,512,ox,oy,512,512);
     }
-  };
-  const flightPosition = progress => {
-    const travelled=clamp(progress)*distance;
-    let i=1;
-    while(i<route.length-1&&lengths[i]<travelled)i++;
-    const a=route[i-1],b=route[i],length=lengths[i]-lengths[i-1];
-    const p=length?(travelled-lengths[i-1])/length:0;
-    return {x:mix(a.x,b.x,p),y:mix(a.y,b.y,p),dx:b.x-a.x,dy:b.y-a.y};
-  };
+    poseContext.restore();
+    poseContext.globalAlpha=1;poseContext.globalCompositeOperation='source-over';
+    bodyContext.clearRect(0,0,512,512);
+    // Small continuous deformations supplement the full wing/body poses. The
+    // tail lags the torso; neck compensation steadies the head during a stroke.
+    const flex = x => {
+      const sx=facing<0?512-x:x;
+      const tail=1-rig.smooth(45,280,sx), neck=rig.smooth(320,460,sx);
+      return pose.tail*tail*tail+pose.head*neck;
+    };
+    // Piecewise affine strips interpolate the bend continuously. Wider strips
+    // keep the moving tail smooth with just 16 texture draws.
+    for(let x=0;x<512;x+=32) {
+      const shift=flex(x), slope=(flex(x+32)-shift)/32;
+      bodyContext.setTransform(1,slope,0,1,0,shift-slope*x);
+      bodyContext.drawImage(posePlate,x,0,32,512,x,0,32,512);
+    }
+    bodyContext.setTransform(1,0,0,1,0,0);
+    // Digital light remains clipped to the scales and membranes.
+    bodyContext.save();bodyContext.globalCompositeOperation='source-atop';
+    const sheen=bodyContext.createLinearGradient(40,0,470,512);
+    sheen.addColorStop(0,'rgba(255,176,108,.06)');sheen.addColorStop(.5,'rgba(255,97,57,.02)');sheen.addColorStop(1,'rgba(255,50,35,.07)');
+    bodyContext.fillStyle=sheen;bodyContext.fillRect(0,0,512,512);
+    const scan=(seconds*32)%560-24;
+    const light=bodyContext.createLinearGradient(0,scan-24,0,scan+24);
+    light.addColorStop(0,'rgba(255,195,138,0)');light.addColorStop(.5,'rgba(255,195,138,.17)');light.addColorStop(1,'rgba(255,195,138,0)');
+    bodyContext.fillStyle=light;bodyContext.fillRect(0,scan-24,512,48);bodyContext.restore();
+    context.clearRect(0,0,512,512);context.save();
+    context.translate(256,290+pose.bob);context.scale(pose.breath,1/pose.breath);
+    context.rotate(pose.bank*Math.PI/180);
+    context.drawImage(bodyPlate,-256,-290,512,512);context.restore();
+    dragon.dataset.wingPhase=pose.phase.toFixed(3);dragon.dataset.glide=pose.glide.toFixed(3);
+    dragon.dataset.tailFlex=pose.tail.toFixed(3);
+    return pose;
+  }
   const clearFire = () => {
     particles=[];emission=0;
     if(flame)flame.clearRect(0,0,fire.width,fire.height);
     dragon.dataset.breathing='false';fire.hidden=true;
   };
-  const renderFire = (dt,power,frame,available) => {
+  const renderFire = (dt,power,available) => {
     if(!flame)return;
-    // Mouth coordinates follow the six wing frames.
-    const mouths=[[441,276],[448,280],[445,274],[441,274],[447,278],[451,278]];
-    const mouth=mouths[frame],origin={x:mouth[0],y:mouth[1]+128};
+    // The full-body poses are stabilized to this common mouth anchor.
+    const origin={x:441,y:404};
     const length=Math.max(50,Math.min(335,available));
     emission+=dt*power*.18;
     while(emission>=1&&particles.length<170){
@@ -130,7 +167,7 @@
     dragon.dataset.flying='true';canvas.hidden=false;
     const homeRect=anchor.getBoundingClientRect();
     let x=homeRect.x,y=homeRect.y,size=homeRect.width;
-    let blend=1,glow=0,targetFacing=1,targetBank=0,firePower=0;
+    let blend=1,glow=0,targetFacing=1,targetBank=0,firePower=0,approach=0,depth=2.6,pitch=0;
     if(phase==='awaken'){
       glow=Math.sin(progress*Math.PI);blend=ease((progress-.3)/.6);
     }else if(phase==='launch'){
@@ -139,8 +176,8 @@
       size=mix(homeRect.width,flightSize,p);glow=(1-progress)*.3;
     }else if(phase==='flight'){
       const p=flightPosition(progress);
-      x=p.x;y=p.y;size=flightSize;targetFacing=p.dx>=0?1:-1;
-      targetBank=Math.max(-16,Math.min(16,Math.atan2(p.dy,Math.abs(p.dx))*15))*targetFacing;
+      x=p.x;y=p.y;size=p.size;targetFacing=p.facing;targetBank=p.bank;
+      approach=p.approach;depth=p.depth;pitch=p.pitch;glow=.10+approach*.12;
       // Three brief breaths during each circuit.
       const flightTime=progress*timing.flight;
       for(const start of [3500,12000,20000]){
@@ -148,7 +185,7 @@
         if(breath>0&&breath<1)firePower=Math.sin(breath*Math.PI);
       }
     }else if(phase==='return'){
-      const p=ease(progress),start=route[route.length-1];
+      const p=ease(progress),start=route[0];
       x=mix(start.x,homeRect.x,p);y=mix(start.y,homeRect.y,p);
       size=mix(flightSize,homeRect.width,p);
     }else if(phase==='restore'){
@@ -158,44 +195,62 @@
     facing=mix(facing,targetFacing,smoothing);bank=mix(bank,targetBank,smoothing);
     if(phase==='awaken'||phase==='restore'){facing=1;bank=0;}
     dragon.style.width=size+'px';
-    dragon.style.transform='translate3d('+x+'px,'+y+'px,0) rotate('+bank+'deg) scaleX('+facing+')';
+    // Keep the original AC artwork. Banking foreshortens it during turns,
+    // without the old zero-width mirror collapse.
+    dragon.style.transform='translate3d('+x+'px,'+y+'px,0) rotate('+bank+'deg)';
+    fire.style.transform=facing<0?'scaleX(-1)':'none';
+    dragon.dataset.depth=depth.toFixed(3);dragon.dataset.approach=approach.toFixed(3);
+    dragon.dataset.flightSize=size.toFixed(2);
+    art.style.setProperty('--dragon-proximity',String(1/(1+Math.max(0,depth))));
+    canvas.style.filter='drop-shadow(0 1px 2px rgba(0,0,0,.45)) drop-shadow(0 0 '+(1+approach*2).toFixed(1)+'px rgba(255,88,38,.22))';
+    const profile=.55+.45*Math.abs(facing);
+    const yaw=approach*18+(1-Math.abs(facing))*32;
+    canvas.style.transform='perspective(850px) rotateX('+pitch.toFixed(2)+'deg) rotateY('+yaw.toFixed(2)+'deg) scaleX('+profile.toFixed(3)+')';
     canvas.style.opacity=String(blend);still.style.opacity=String(1-blend);
     art.style.setProperty('--dragon-aura',glow.toFixed(3));
-    const frame=Math.floor(elapsed/140)%6;
-    if(frame!==lastFrame){
-      context.clearRect(0,0,canvas.width,canvas.height);
-      context.drawImage(sheet,(frame%3)*canvas.width,Math.floor(frame/3)*canvas.height,
-        canvas.width,canvas.height,0,0,canvas.width,canvas.height);lastFrame=frame;
+    const seconds=elapsed/1000;
+    if(elapsed-paintClock>=1000/30 || dt===0) {
+      paintBody(seconds,approach,phase==='launch');paintClock=elapsed;
     }
     const freeSpace=targetFacing>0?innerWidth-(x+size*.87):x+size*.13;
     const available=Math.max(0,(freeSpace-12)*512/Math.max(1,size));
-    renderFire(dt,phase==='flight'&&available>70?firePower:0,frame,available);
+    renderFire(dt,phase==='flight'&&Math.abs(facing)>.8&&available>70?firePower:0,available);
   };
   const draw = time => {
     request=0;
-    if(!playing||document.hidden||!ready){previousTime=null;return;}
+    if(disposed||!playing||document.hidden||!ready){previousTime=null;return;}
     const dt=previousTime===null?0:Math.min(time-previousTime,100);
     previousTime=time;elapsed+=dt;render(dt);request=requestAnimationFrame(draw);
   };
   const sync = () => {
     if(request)cancelAnimationFrame(request);
     request=0;previousTime=null;updateButton();
-    if(playing&&ready&&!document.hidden)request=requestAnimationFrame(draw);
+    if(!disposed&&playing&&ready&&!document.hidden)request=requestAnimationFrame(draw);
   };
-  const park = () => {playing=false;elapsed=0;lastFrame=-1;dock();sync();};
+  const park = () => {playing=false;elapsed=0;paintClock=-Infinity;dock();sync();};
   document.body.append(toggle);toggle.hidden=false;
-  toggle.addEventListener('click',()=>{playing=!playing;sync();});
-  preference.addEventListener('change',()=>{
-    if(preference.matches)park();else{playing=true;sync();}
-  });
+  const onToggle=()=>{playing=!playing;sync();};
+  toggle.addEventListener('click',onToggle);
+  const onPreference=()=>{if(preference.matches)park();else{playing=true;sync();}};
+  preference.addEventListener('change',onPreference);
   document.addEventListener('visibilitychange',sync);
-  window.addEventListener('resize',()=>{measureRoute();if(ready&&playing)render(0);},{passive:true});
+  const onResize=()=>{measureRoute();if(ready&&playing)render(0);};
+  window.addEventListener('resize',onResize,{passive:true});
   sheet.onload=()=>{
-    if(!sheet.naturalWidth||sheet.naturalWidth%3||sheet.naturalHeight%2){park();toggle.hidden=true;return;}
+    if(disposed)return;
+    if(sheet.naturalWidth!==1536||sheet.naturalHeight!==1024){park();toggle.hidden=true;return;}
     canvas.width=sheet.naturalWidth/3;canvas.height=sheet.naturalHeight/2;
     ready=true;measureRoute();dock();sync();
   };
   sheet.onerror=()=>{park();toggle.hidden=true;};
   sheet.src='/assets/ac-portals/ac-dragon-flight-sheet.webp';
+  window.addEventListener('pagehide',()=>{
+    disposed=true;cancelAnimationFrame(request);request=0;clearFire();
+    sheet.onload=sheet.onerror=null;
+    document.removeEventListener('visibilitychange',sync);
+    window.removeEventListener('resize',onResize);
+    preference.removeEventListener('change',onPreference);
+    toggle.removeEventListener('click',onToggle);
+  },{once:true});
   updateButton();
 })();

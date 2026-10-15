@@ -53,6 +53,7 @@ jobs:
 
       - name: Validate dragon transformation and flight
         run: |
+          node --check ac-dragon-rig.js
           node --check ac-dragon.js
           node --test tests/ac-dragon.test.cjs
 
