@@ -22,3 +22,5 @@
 @keyframes aceEar{to{transform:rotate(7deg)}}
 @keyframes aceBlink{0%,92%,96%,100%{opacity:1}94%{opacity:0}}
 @media(prefers-reduced-motion:reduce){#novaFlyingAce *{animation:none!important}}
+
+@media(max-width:680px){#novaAceControl{bottom:110px}#novaAceMessage{bottom:160px}}
