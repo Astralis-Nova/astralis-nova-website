@@ -64,6 +64,7 @@ jobs:
           node --check astralis-brand-orbit.js
           node --check final-visual-fixes.js
           node --check astralis-nova-explorer.js
+          node --check snoopy-patrol.js
           node --check rickroll-planet.js
           node --check recent-exoplanets.js
           node --check conquest-media.js
