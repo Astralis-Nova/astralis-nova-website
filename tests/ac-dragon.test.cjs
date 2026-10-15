@@ -120,7 +120,7 @@ test('local joints move independently, stay connected and never invert the skin 
   }
   const displacement=(x,y)=>{const p=puppet.deform(x,y,t,pose);assert(p.every(Number.isFinite));return Math.hypot(p[0]-x,p[1]-y);};
   maxTail=Math.max(maxTail,displacement(35,370));maxChest=Math.max(maxChest,displacement(292,298));
-  maxLeg=Math.max(maxLeg,displacement(270,380));maxNeck=Math.max(maxNeck,displacement(435,270));
+  maxLeg=Math.max(maxLeg,displacement(353,324));maxNeck=Math.max(maxNeck,displacement(435,270));
   const upperWing=puppet.deform(85,115,t,pose),lowerTail=puppet.deform(85,375,t,pose);
   assert(Math.abs((upperWing[1]-115)-(lowerTail[1]-375))>0 || Math.abs(pose.bob)<1e-8);
  }
@@ -145,7 +145,7 @@ test('GPU skinning draws one indexed mesh and releases resources; context loss e
  let prevented=false;events.webglcontextlost({preventDefault(){prevented=true;}});assert(prevented);
  assert.equal(gpu.draw(13,pose,[[1,1]]),false,'a lost context must hand rendering to Canvas');
  gpu.destroy();assert.equal(resources.length,7);assert.equal(events.webglcontextlost,undefined);
- const forward=puppet.createGPU(canvas,{},true);assert(forward.draw(12,{...pose,frontView:true},[[1,1]]));assert.deepEqual(shifts.uShift0,[-1,10]);forward.destroy();
+ const forward=puppet.createGPU(canvas,{},true);assert(forward.draw(12,{...pose,frontView:true},[[1,1]]));assert.deepEqual(shifts.uShift0,[-7,9]);forward.destroy();
  gl.getShaderParameter=()=>false;assert.equal(puppet.createGPU(canvas,{}),null,'shader errors preserve the Canvas fallback');
 });
 
@@ -204,4 +204,34 @@ test('the approaching dragon uses its forward-facing cycle; failed forward art r
   const points=puppet.positions(t,{...rig.pose(t),frontView:true});
   for(let i=0;i<puppet.indices.length;i+=3){const[a,b,c]=puppet.indices.slice(i,i+3).map(n=>points[n]);assert((b[0]-a[0])*(c[1]-a[1])-(c[0]-a[0])*(b[1]-a[1])>20);}
  }
+});
+
+
+test('knees, ankles and claw curl deform their own joints while the torso stays anchored',()=>{
+ const rig=rigEnv.window.AstralisDragonRig,puppet=rigEnv.window.AstralisDragonPuppet;
+ const neutral={...rig.pose(12),frontView:true,limbs:Array.from({length:4},()=>({knee:0,ankle:0,curl:0}))};
+ const change=(index,joint,value)=>({...neutral,limbs:neutral.limbs.map((v,i)=>i===index?{...v,[joint]:value}:v)});
+ const delta=(x,y,pose)=>{const a=puppet.deform(x,y,12,neutral),b=puppet.deform(x,y,12,pose);return [b[0]-a[0],b[1]-a[1]];};
+ const curl=change(0,'curl',1);assert(Math.hypot(...delta(245,355,curl))>1);
+ for(const[x,y]of[[236,310],[255,295],[120,120]])assert(Math.hypot(...delta(x,y,curl))<.1,'claws must curl without pulling the chest or wing');
+ const knee=delta(300,335,change(1,'knee',10)),ankle=delta(300,335,change(1,'ankle',15));
+ assert(Math.hypot(...knee)>2);assert(Math.hypot(...ankle)>1.5);assert(Math.hypot(knee[0]-ankle[0],knee[1]-ankle[1])>1);
+ const lows=Array(4).fill(Infinity),highs=Array(4).fill(-Infinity);let blinkMax=0;
+ for(let t=0;t<35;t+=.04){const pose=rig.pose(t);blinkMax=Math.max(blinkMax,pose.blink);pose.limbs.forEach((limb,i)=>{assert(limb.curl>=0&&limb.curl<=1);lows[i]=Math.min(lows[i],limb.knee);highs[i]=Math.max(highs[i],limb.knee);});}
+ assert(highs.every((v,i)=>v-lows[i]>8));assert(blinkMax>.95);
+ assert(new Set(rig.pose(12).limbs.map(limb=>limb.curl.toFixed(3))).size>2,'limbs should adjust independently');
+});
+
+test('blinks close over the tracked eye in every forward pose and reopen between blinks',()=>{
+ const rig=rigEnv.window.AstralisDragonRig,puppet=rigEnv.window.AstralisDragonPuppet,rectangles=[];
+ const ctx=new Proxy({fillRect:(...args)=>rectangles.push(args)},{get:(o,k)=>o[k]??(()=>{})});
+ for(let frame=0;frame<6;frame++){
+  const pose={...rig.pose(20.05),frontView:true};rectangles.length=0;
+  const face=puppet.face(ctx,20.05,pose,[[frame,1]]);
+  const point=puppet.deform(...puppet.forwardEyes[frame],20.05,pose);
+  assert.deepEqual(face.eye,point);assert(face.blink>.999);assert(rectangles.some(rect=>rect[3]>5),'the lid must cover the eye at full closure');
+ }
+ rectangles.length=0;const open=puppet.face(ctx,21,{...rig.pose(21),frontView:true},[[2,.5],[3,.5]]);
+ assert.equal(open.blink,0);assert.equal(rectangles.length,0);assert(open.eye.every(Number.isFinite));
+ assert.equal(puppet.face(ctx,21,rig.pose(21),[[0,1]]),null,'do not draw an extra eye onto the original profile');
 });

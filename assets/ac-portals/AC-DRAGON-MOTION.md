@@ -64,3 +64,27 @@ raven renderer were inspected at desktop and phone sizes. Tests cover complete
 patrols, reference camera equivalence, both skin meshes, opacity, pause, reduced
 motion, independent asset failures, GPU contracts and cleanup. Browser GPU
 rendering is not available for visual inspection in this managed workspace.
+
+## October 15: flight joints and facial motion
+
+The approved Promise camera loop, crimson artwork and forward view are retained.
+Four soft limb chains now give knees, ankles and claw tips distinct motions.
+Occasional slower tuck/reach adjustments and different limb phases keep them
+from pedalling in lockstep. Claw curl is localized at the toes, with negligible
+pull on the chest, hips or wings. Additional skin vertices around the joints
+support those small bends without separating the texture.
+
+The forward atlas's eye landmarks are aligned between all six poses. This
+steadies the face while the chest and wings move, and avoids two displaced eyes
+in blended frames. A clipped upper eyelid closes over the tracked eye and
+reopens, with occasional double blinks, restrained pupil tracking and a small
+warm glint. Facial overlays use the same deformed coordinates as the skin in
+both GPU and Canvas rendering. No extra eye is painted onto the old profile.
+Fire now follows the stabilized forward snout. Local chest breathing and an
+additional tail-curl response supplement the existing wing/body motion.
+
+New tests isolate knee, ankle and claw effects, verify joint locality and limb
+phase differences, and check eye closure, reopening and attachment in every
+pose. Both skin meshes retain positive triangle areas through their motions.
+Native desktop/phone renders and enlarged eye/foot samples were inspected,
+including fully open, closed and reopened eyelids. No image assets changed.

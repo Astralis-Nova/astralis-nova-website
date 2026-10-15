@@ -47,7 +47,17 @@
     const beat = seconds * frequency + Math.sin(seconds*.7)*.035;
     const phase = ((beat % 1)+1)%1, angle = phase*Math.PI*2;
     const stroke = Math.sin(angle), lag = Math.sin(angle - .65), activity = 1-glide*.88;
-    return { phase, glide, activity,
+    const adjustment=Math.max(0,Math.sin(seconds*.62-.4))**8;
+    const limbs=[0,.9,2.1,2.9].map((offset,index)=>({
+      knee:-7+adjustment*(index<2?13:10)+Math.sin(seconds*.9+offset)*2.7+lag*.7*activity,
+      ankle:5-adjustment*8+Math.sin(seconds*.73+offset-.4)*3.5,
+      curl:clamp(.58+Math.sin(seconds*.82+offset)*.19+adjustment*.15+glide*.08)
+    }));
+    const eyePhase=(seconds+.83)%6.9;
+    const blinkPulse=(center,half)=>1-smooth(0,half,Math.abs(eyePhase-center));
+    const blink=Math.max(blinkPulse(.18,.10),Math.floor((seconds+.83)/6.9)%3===1?blinkPulse(.44,.085):0);
+    return { phase, glide, activity,limbs,blink,
+      gaze:[Math.sin(seconds*.37)*.65+Math.sin(seconds*1.21)*.25,Math.sin(seconds*.49-.7)*.35],
       bob: Math.sin(angle-.9)*3*activity,
       chest: Math.sin(angle-.6)*3.5*activity,
       neck: Math.sin(seconds*1.35-.6)*1.5-lag*1.5*activity,

@@ -3,18 +3,41 @@
   'use strict';
   const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
   const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t);};
+  const frontLimbs=[[[236,310],[242,334],[245,351]],[[280,305],[295,321],[300,335]],
+    [[225,327],[227,348],[229,362]],[[264,329],[270,346],[269,360]]];
+  const sideLimbs=[[[317,293],[340,309],[353,324]],[[337,282],[357,296],[367,309]],
+    [[254,323],[237,350],[231,370]],[[275,316],[277,336],[280,353]]];
+  function limbOffset(x,y,pose){
+    const limbs=pose.frontView?frontLimbs:sideLimbs;
+    let dx=0,dy=0,total=0;
+    limbs.forEach(([hip,ankle,toe],i)=>{
+      const joint=pose.limbs?.[i];if(!joint)return;
+      const weight=Math.exp(-(((x-ankle[0])/23)**2))*smooth(hip[1]-3,ankle[1]+4,y)*(1-smooth(toe[1]+8,toe[1]+25,y));
+      if(weight<.0001)return;
+      const knee=joint.knee*Math.PI/180,lower=joint.ankle*Math.PI/180;
+      const lowerWeight=smooth(ankle[1]-2,toe[1]+3,y);
+      const claw=smooth(toe[1]-5,toe[1]+5,y)*Math.exp(-(((x-toe[0])/14)**2));
+      dx+=(-(y-hip[1])*Math.sin(knee)+(x-hip[0])*(Math.cos(knee)-1)
+        +lowerWeight*(-(y-ankle[1])*Math.sin(lower))+(toe[0]-x)*joint.curl*.19*claw)*weight;
+      dy+=((x-hip[0])*Math.sin(knee)+(y-hip[1])*(Math.cos(knee)-1)
+        +lowerWeight*(x-ankle[0])*Math.sin(lower)-joint.curl*3.4*claw)*weight;
+      total+=weight;
+    });
+    return [dx/Math.max(1,total),dy/Math.max(1,total)];
+  }
   function deform(x,y,seconds,pose) {
+    const limb=limbOffset(x,y,pose);
     if(pose.frontView){
       const middle=Math.exp(-(((x-255)/90)**2));
       const chest=middle*Math.exp(-(((y-305)/65)**2));
       const neck=middle*(1-smooth(240,310,y));
       const reach=smooth(325,470,y),tail=reach*reach*middle;
-      const feet=smooth(305,345,y)*(1-smooth(370,405,y))*middle;
+      const breath=(x-255)*.009*Math.sin(seconds*1.7)*chest;
       const wing=(1-middle)*(1-smooth(250,330,y));
-      return [x+Math.sin(seconds*2.05-reach*2.5)*(4+reach*12)*tail+pose.neck*neck+pose.wrist*wing*(x<255?-1:1),
-        y+pose.bob*.7+pose.chest*chest-pose.chest*.65*neck+pose.legs*.35*feet+pose.wrist*.45*wing];
+      return [x+limb[0]+breath+Math.sin(seconds*2.05-reach*2.5)*(4+reach*12)*tail+pose.neck*neck+pose.wrist*wing*(x<255?-1:1),
+        y+limb[1]+pose.bob*.7+pose.chest*chest-pose.chest*.65*neck+Math.sin(seconds*1.4-reach*2)*3*tail+pose.wrist*.45*wing];
     }
-    let dx=0,dy=pose.bob*.7;
+    let dx=limb[0],dy=limb[1]+pose.bob*.7;
     const chest=Math.exp(-(((x-292)/68)**2)-((y-298)/64)**2);
     dx+=(x-292)*.008*Math.sin(seconds*1.7)*chest;
     dy+=pose.chest*chest;
@@ -26,27 +49,42 @@
     const distance=clamp((265-x)/245);
     dx+=Math.sin(seconds*1.7-distance*2)*2*tail;
     dy+=Math.sin(seconds*2.05-distance*3.3)*(4+21*distance*distance)*tail;
-    const legs=smooth(316,356,y)*smooth(195,245,x)*(1-smooth(365,405,x));
-    const tuck=pose.legs*Math.PI/180;
-    dx+=(-(y-315)*Math.sin(tuck)+(x-295)*(Math.cos(tuck)-1))*legs;
-    dy+=((x-295)*Math.sin(tuck)+(y-315)*(Math.cos(tuck)-1))*legs;
     // Wrist flex is small and delayed; the atlas supplies the main power stroke.
     const wing=(1-smooth(230,305,x))*(1-smooth(200,270,y));
     dx+=pose.wrist*wing;dy+=pose.wrist*.45*wing;
     return [x+dx,y+dy];
   }
-  function mesh(columns,rows){
-    const vertices=[],indices=[];
-    for(let y=0;y<=rows;y++)for(let x=0;x<=columns;x++)vertices.push([x*512/columns,y*512/rows]);
+  function mesh(xs,ys){
+    const vertices=[],indices=[],columns=xs.length-1,rows=ys.length-1;
+    for(const y of ys)for(const x of xs)vertices.push([x,y]);
     for(let y=0;y<rows;y++)for(let x=0;x<columns;x++){
-      const a=y*(columns+1)+x,b=a+1,c=a+columns+2,d=a+columns+1;
-      indices.push(a,b,c,a,c,d);
+      const a=y*(columns+1)+x,b=a+1,c=a+columns+2,d=a+columns+1;indices.push(a,b,c,a,c,d);
     }
     return {vertices,indices};
   }
-  const {vertices,indices}=mesh(20,16),cpuMesh=mesh(8,6);
+  // Extra vertices around knees, ankles, claws and neck keep their movement local.
+  const {vertices,indices}=mesh([0,32,64,96,128,160,190,210,225,240,255,270,285,300,315,330,350,380,420,460,490,512],
+    [0,32,64,96,128,160,185,205,225,245,270,290,305,320,335,350,365,380,405,440,475,512]);
+  const cpuMesh=mesh([0,85,170,210,240,270,300,330,380,440,512],[0,85,170,240,285,315,340,365,395,450,512]);
   function positions(seconds,pose) { return vertices.map(([x,y])=>deform(x,y,seconds,pose)); }
-  const forwardAnchors=[[320,250],[313,250],[316,245],[314,222],[314,219],[307,242]];
+  const forwardAnchors=[[320,250],[307,249],[312,250],[306,201],[302,204],[307,204]];
+  const forwardEyes=Array.from({length:6},()=>[293,203]);
+  function face(ctx,seconds,pose,weights){
+    if(!pose.frontView)return null;
+    const center=weights.reduce((v,[frame,weight])=>[v[0]+forwardEyes[frame][0]*weight,v[1]+forwardEyes[frame][1]*weight],[0,0]);
+    const eye=deform(...center,seconds,pose),blink=pose.blink||0,gaze=pose.gaze||[0,0];
+    ctx.save();ctx.globalCompositeOperation='source-atop';ctx.translate(...eye);ctx.rotate(.55);
+    ctx.beginPath();ctx.ellipse(0,0,3.6,2.15,0,0,Math.PI*2);ctx.clip();
+    if(blink<.95){
+      ctx.globalAlpha=.6*(1-blink);ctx.fillStyle='#120a0c';ctx.beginPath();ctx.ellipse(gaze[0],gaze[1],.85,1.5,0,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=.7*(1-blink);ctx.fillStyle='#ffe9c3';ctx.beginPath();ctx.ellipse(-.9+gaze[0]*.4,-.6,.55,.4,0,0,Math.PI*2);ctx.fill();
+    }
+    if(blink>.001){
+      ctx.globalAlpha=1;ctx.fillStyle='#9b2523';const edge=-2.5+5.5*blink;
+      ctx.fillRect(-4,-3,8,edge+3);ctx.lineWidth=.85;ctx.strokeStyle='#d64c3d';ctx.beginPath();ctx.moveTo(-3.5,edge);ctx.quadraticCurveTo(0,edge+.4,3.5,edge);ctx.stroke();
+    }
+    ctx.restore();return {eye,blink,gaze};
+  }
   function createGPU(canvas,image,front=false) {
     let gl;
     try { gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:true,preserveDrawingBuffer:true}); } catch(_){return null;}
@@ -111,5 +149,5 @@
       ctx.drawImage(texture,minX,minY,sw,sh,minX,minY,sw,sh);ctx.restore();
     }
   }
-  root.AstralisDragonPuppet={forwardAnchors,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
+  root.AstralisDragonPuppet={forwardAnchors,forwardEyes,limbOffset,face,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
 })(typeof window==='undefined'?globalThis:window);

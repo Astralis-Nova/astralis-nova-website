@@ -84,6 +84,7 @@
       const accelerated=renderer?.draw(seconds,state,weights);
       if(renderer&&!accelerated){renderer.destroy();if(front)forwardGPU=null;else gpu=null;}
       if(accelerated)bodyContext.drawImage(surface,0,0);else puppet.drawCPU(bodyContext,posePlate,seconds,state);
+      puppet.face(bodyContext,seconds,state,weights);
       dragon.dataset.renderer=accelerated?'gpu':'canvas';
       context.save();context.globalCompositeOperation='lighter';context.globalAlpha=weight;
       context.translate(256,290);if(facing<0)context.scale(-1,1);
@@ -93,12 +94,13 @@
     const sheen=context.createLinearGradient(40,0,470,512);
     sheen.addColorStop(0,'rgba(255,176,108,.06)');sheen.addColorStop(.5,'rgba(255,97,57,.02)');sheen.addColorStop(1,'rgba(255,50,35,.07)');
     context.fillStyle=sheen;context.fillRect(0,0,512,512);context.restore();
-    const activeFront=view>.5,anchor=activeFront?[314,240]:[441,276];
+    const activeFront=view>.5,anchor=activeFront?[322,232]:[441,276];
     const head=puppet.deform(...anchor,seconds,{...pose,frontView:activeFront}),angle=pose.bank*Math.PI/180;
     mouth={x:256+(head[0]-256)*Math.cos(angle)-(head[1]-290)*Math.sin(angle),
       y:290+(head[0]-256)*Math.sin(angle)+(head[1]-290)*Math.cos(angle)};
     dragon.dataset.wingPhase=pose.phase.toFixed(3);dragon.dataset.glide=pose.glide.toFixed(3);
-    dragon.dataset.tailFlex=pose.tail.toFixed(3);dragon.dataset.flightView=view>.5?'toward-viewer':'side';
+    dragon.dataset.tailFlex=pose.tail.toFixed(3);dragon.dataset.eyeBlink=pose.blink.toFixed(3);
+    dragon.dataset.clawCurl=pose.limbs.map(limb=>limb.curl.toFixed(2)).join(':');dragon.dataset.flightView=view>.5?'toward-viewer':'side';
   }
   const clearFire = () => {
     particles=[];emission=0;
