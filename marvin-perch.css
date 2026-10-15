@@ -1,0 +1,27 @@
+.nova-perch{position:relative;width:100%;padding-top:36%;isolation:isolate}
+.nova-perch #novaVisual{position:relative;z-index:1}
+#novaMarvin{position:absolute;z-index:2;left:30%;top:0;width:40%;aspect-ratio:3/4;display:block;margin:0;padding:0;border:0;border-radius:16px;background:transparent;cursor:pointer;transform-origin:50% 95%}
+#novaMarvin:disabled{opacity:1;cursor:default}
+#novaMarvin svg,#novaMarvin img{display:block;width:100%;height:auto;mix-blend-mode:normal;filter:drop-shadow(0 4px 4px #0006)}
+#novaMarvin:focus-visible{outline:2px solid #a0e0ff;outline-offset:4px}
+#novaMarvin .marvin-balance{transform-origin:124px 270px;animation:marvinBalance 4.8s ease-in-out infinite}
+#novaMarvin .marvin-head{transform-origin:123px 165px;animation:marvinSurvey 9s ease-in-out infinite}
+#novaMarvin .marvin-pupils{animation:marvinScan 7s ease-in-out infinite}
+#novaMarvin .marvin-eyes{transform-origin:123px 120px;animation:marvinBlink 5.8s infinite}
+#novaMarvin .marvin-plume{transform-origin:120px 48px;animation:marvinPlume 1.8s ease-in-out infinite alternate}
+#novaMarvin .marvin-wave-hand{transform-origin:190px 168px;animation:marvinWave 6s ease-in-out infinite}
+#novaMarvin.is-greeting .marvin-wave-arm{transform-origin:145px 183px;animation:marvinHello .55s ease-in-out 4}
+#novaMarvin.is-greeting .marvin-wave-hand{animation:marvinWaveQuick .5s ease-in-out 4}
+.space-motion-paused #novaMarvin *,#novaMarvin.is-resting *{animation-play-state:paused!important}
+.marvin-message{position:absolute;z-index:4;left:50%;top:20%;transform:translateX(-50%);width:min(270px,90%);padding:12px 15px;border:2px solid #304828;border-radius:14px;background:#f1f7de;color:#182d25;font:600 13px/1.45 system-ui,sans-serif;box-shadow:0 8px 22px #0005;pointer-events:none}
+.marvin-credit{display:block;font-size:9px;line-height:1.5;color:#8fa5ba;max-width:290px;text-align:center;margin:8px 0 0}
+.marvin-credit a{color:inherit}
+@keyframes marvinBalance{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@keyframes marvinSurvey{0%,15%,100%{transform:rotate(0)}35%,45%{transform:rotate(-5deg)}65%,78%{transform:rotate(4deg)}}
+@keyframes marvinScan{0%,10%,100%{transform:translateX(0)}25%,40%{transform:translateX(-3px)}60%,75%{transform:translateX(3px)}}
+@keyframes marvinBlink{0%,37%,41%,86%,90%,100%{transform:scaleY(1)}39%,88%{transform:scaleY(.08)}}
+@keyframes marvinPlume{from{transform:skewX(-4deg)}to{transform:skewX(5deg)}}
+@keyframes marvinWave{0%,65%,100%{transform:rotate(0)}73%,89%{transform:rotate(-9deg)}81%,96%{transform:rotate(7deg)}}
+@keyframes marvinHello{0%,100%{transform:rotate(0)}50%{transform:rotate(-7deg)}}
+@keyframes marvinWaveQuick{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(10deg)}}
+@media(prefers-reduced-motion:reduce){#novaMarvin *{animation:none!important}}

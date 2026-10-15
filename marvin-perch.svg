@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" fill="none">
+  <title>Marvin the Martian balancing on the Nova sphere</title>
+  <defs>
+    <linearGradient id="marvinHelmet" x1="77" y1="58" x2="165" y2="130" gradientUnits="userSpaceOnUse"><stop stop-color="#91d85a"/><stop offset=".48" stop-color="#4fa244"/><stop offset="1" stop-color="#23703b"/></linearGradient>
+    <linearGradient id="marvinRed" x1="97" y1="171" x2="145" y2="231" gradientUnits="userSpaceOnUse"><stop stop-color="#f94e4a"/><stop offset="1" stop-color="#bb253a"/></linearGradient>
+    <linearGradient id="marvinShoe" x1="100" y1="272" x2="112" y2="302" gradientUnits="userSpaceOnUse"><stop stop-color="#fffef5"/><stop offset="1" stop-color="#cbd6da"/></linearGradient>
+    <radialGradient id="marvinFace" cx="35%" cy="30%" r="75%"><stop stop-color="#262735"/><stop offset=".55" stop-color="#12131d"/><stop offset="1" stop-color="#03050c"/></radialGradient>
+  </defs>
+  <ellipse cx="123" cy="306" rx="67" ry="5" fill="#041323" opacity=".4"/>
+  <g stroke="#202335" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Two separate basketball shoes stay planted while his upper body balances. -->
+    <path d="M99 233 97 276l18 1 9-45" fill="#da3342"/>
+    <path d="m133 232 7 47 18-2-3-45" fill="#e83c45"/>
+    <g class="marvin-shoes">
+      <path d="M87 268c-3 9-7 11-17 14-13 4-21 9-20 16 0 8 31 8 58 6 14-1 19-6 14-14l-8-23Z" fill="url(#marvinShoe)"/>
+      <path d="M52 297c17 4 44 4 70-2l1 6c-20 8-57 9-71 3Z" fill="#e44848" stroke-width="2.3"/>
+      <path d="M139 268c-5 9-5 20-1 29 6 8 40 9 60 6 15-2 14-10 2-17-10-6-21-7-28-18Z" fill="url(#marvinShoe)"/>
+      <path d="M138 296c20 5 45 6 66-1l1 7c-19 8-53 7-66 0Z" fill="#e44848" stroke-width="2.3"/>
+      <path d="m89 274 21 1m-24 6 23 1m-27 6 24 1m40-13 20-1m-18 8 23-1m-21 8 24-1" stroke="#969da9" stroke-width="2"/>
+      <path d="M64 289c9-5 14-6 21-5m94 1c6 1 11 3 15 6" stroke="#fff" stroke-width="2.6"/>
+    </g>
+    <g class="marvin-balance">
+      <path d="M102 168c-8 13-10 34-8 52l56 1c2-20-1-40-11-52" fill="url(#marvinRed)"/>
+      <path d="M104 181c-15 2-24 15-27 28l16 9 9-16" fill="#d63140"/>
+      <g class="marvin-hip-glove">
+        <path d="M79 201c-8-7-16-2-15 6-7 4-5 12 2 15 5 9 15 8 20 2 8-1 10-10 4-14l-1-6Z" fill="#fffdf5"/>
+        <path d="m70 207 8 5m-10 1 7 5m5-9 6 7" stroke-width="1.9"/>
+        <path d="m86 200 11 7-5 10-10-7Z" fill="#5ca84e" stroke-width="2.4"/>
+      </g>
+      <g class="marvin-wave-arm">
+        <path d="M143 179c13 2 22 11 27 20 9-9 10-24 10-34l16 1c1 23-4 43-21 49-17 3-29-12-36-22" fill="#e84345"/>
+        <path d="m177 167 22 1-1 11-22-2Z" fill="#55a44a" stroke-width="2.6"/>
+        <g class="marvin-wave-hand">
+          <path d="M182 166c-9-4-14-11-11-16 3-4 8 1 11 3l-5-23c-1-6 6-8 8-2l5 17-1-23c0-6 8-7 9 0l1 23 5-18c2-6 9-4 8 3l-4 22c8-6 14-4 12 2-4 11-14 18-26 17Z" fill="#fffdf5"/>
+          <path d="M184 153q10-3 18 3m-8-7 1 12" stroke-width="1.9"/>
+        </g>
+      </g>
+      <!-- Roman skirt with distinct pleats and a sturdy red belt. -->
+      <path d="m98 213-20 30 21 5 12-5 12 7 13-7 13 5 23-6-23-29Z" fill="#4da344"/>
+      <path d="m105 219-7 26m18-25-5 23m15-22-3 25m13-27 2 23m6-24 9 26" stroke="#27723b" stroke-width="2.5"/>
+      <path d="m98 211 51 1 1 9-54-1Z" fill="#e44540" stroke-width="2.6"/>
+      <g class="marvin-head">
+        <path d="M73 115c-2-33 20-55 49-55 31 0 54 22 55 53 1 29-17 57-47 61-30 3-54-25-57-59Z" fill="url(#marvinFace)"/>
+        <g class="marvin-eyes">
+          <path d="M91 105c9-8 20-7 26 0 3 15 2 28-5 32-9 3-18-12-21-32Z" fill="#fffdf5" stroke-width="1.8"/>
+          <path d="M126 104c9-7 22-7 28-1-1 20-8 33-17 32-8-2-11-14-11-31Z" fill="#fffdf5" stroke-width="1.8"/>
+          <g class="marvin-pupils" fill="#15151f" stroke="none"><ellipse cx="109" cy="119" rx="3.7" ry="9"/><ellipse cx="137" cy="118" rx="3.7" ry="9"/></g>
+        </g>
+        <path d="m90 103 25 5m13-3 27-7" stroke="#11121c" stroke-width="5"/>
+        <!-- Cheek guards frame the black face without inventing a mouth. -->
+        <path d="M75 98c-7 16-7 40 3 55l14 4-5-45Z" fill="#377e3d"/>
+        <path d="M156 106c3 15 0 33-8 45l16-3c11-13 13-31 9-48Z" fill="#2c713b"/>
+        <path d="M62 104c1-36 22-58 57-58 34 0 57 21 62 55l-20 7-76 4Z" fill="url(#marvinHelmet)"/>
+        <path d="M82 73c12-16 35-20 52-16" stroke="#b9ed87" stroke-width="3"/>
+        <path d="M55 103c28-14 85-14 128-3l4 13c-47-9-92-7-130 4Z" fill="#63b54d"/>
+        <path d="M61 107c30-9 82-11 116-3" stroke="#a0dc71" stroke-width="2.2"/>
+        <g class="marvin-plume">
+          <path d="m113 49 1-20 13-1 4 22Z" fill="#947044"/>
+          <path d="M87 16c20-8 45-6 65 2l-3 22c-19-5-39-5-60 1Z" fill="#e4b942"/>
+          <path d="M87 16c22-8 47-6 65 2" stroke="#ffe585" stroke-width="3"/>
+          <path d="m94 19 1 18m7-20 1 18m7-19 1 18m7-18 1 18m7-17 1 18m7-16 1 17m7-15 1 16" stroke="#b78a2f" stroke-width="1.7"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

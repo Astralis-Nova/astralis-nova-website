@@ -17,6 +17,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/astralis-favicon-static.svg">
   <link rel="stylesheet" href="/our-new-star.css?v=20260903hero">
+  <link rel="stylesheet" href="/marvin-perch.css?v=20261014marvin1">
   <script src="/our-new-star.js?v=20260903hero" defer></script>
   <script src="/our-new-star-elements.js?v=20260903examples" defer></script>
   <link rel="stylesheet" href="/our-new-star-science.css?v=20260903beliefs">
@@ -49,9 +50,14 @@
       <div class="actions"><a class="button primary" href="#cosmos">Explore the cosmos <span aria-hidden="true">↓</span></a><a class="text-link" href="#about">What our name means</a></div>
     </div>
     <figure class="sphere-stage">
+      <div class="nova-perch">
       <picture id="novaVisual"><source id="novaMotion" type="image/webp" srcset="/assets/astralis-sphere/support-sphere-still.webp"><img src="/assets/astralis-sphere/support-sphere-still.webp" width="360" height="360" alt="A silver A/N cutout sphere with blue inner radiance and moving reflections as it turns and tilts." fetchpriority="high" decoding="async"></picture>
+        <button id="novaMarvin" type="button" aria-label="Marvin the Martian balancing on the Nova sphere. Click for his mission report." aria-controls="novaMarvinMessage" disabled><img src="/marvin-perch.svg?v=20261014marvin1" width="240" height="320" alt="" decoding="async"></button>
+        <p class="marvin-message" id="novaMarvinMessage" role="status" hidden></p>
+      </div>
       <figcaption>OUR NEW STAR <span aria-hidden="true">✦</span> AN</figcaption>
-      <button type="button" class="rotation-toggle" id="rotationToggle" aria-controls="novaVisual universeBackdrop supportVisual" hidden>Pause motion</button>
+      <button type="button" class="rotation-toggle" id="rotationToggle" aria-controls="novaVisual universeBackdrop supportVisual novaMarvin" hidden>Pause motion</button>
+      <small class="marvin-credit">Unofficial fan tribute · Marvin the Martian / Looney Tunes © &amp; ™ Warner Bros. Entertainment Inc.</small>
     </figure>
   </section>
 
@@ -531,7 +537,7 @@
       <noscript><p>Enable JavaScript to read and post on the Observation Deck. You can also <a href="/#guestbook">visit the main guestbook</a>.</p></noscript>
       <p class="observation-help">Conversations stay available when visitors leave. Use Refresh messages to check for new notes; Reply starts a public message addressed to that nickname.</p>
     </div><aside class="observation-aside">
-      <div class="support-search" aria-labelledby="support-search-heading"><a href="https://paypal.me/ramonbivens" target="_blank" rel="noopener noreferrer" class="support-star" aria-label="Support Astralis Nova through PayPal (opens a new tab)"><picture id="supportVisual"><source id="supportMotion" type="image/webp" srcset="/assets/astralis-sphere/support-sphere-still.webp"><img src="/assets/astralis-sphere/support-sphere-still.webp" width="360" height="360" alt="A silver A/N cutout sphere with blue inner light and reflective highlights" loading="lazy" decoding="async"></picture></a><button type="button" class="rotation-toggle support-motion-toggle" id="supportMotionToggle" aria-controls="supportVisual novaVisual universeBackdrop" hidden>Pause motion</button><p class="eyebrow">HELP KEEP OUR STAR SHINING</p><h3 id="support-search-heading">Fuel the Search</h3><p>Enjoy exploring with us? An optional contribution supports Astralis Nova’s website, creative work, and the time spent gathering and sharing what we learn.</p><a class="button primary" href="https://paypal.me/ramonbivens" target="_blank" rel="noopener noreferrer">Support with PayPal ↗</a><p class="observation-help">Exploring and joining the conversation are free. Contributions go to Astralis Nova.</p></div>
+      <div class="support-search" aria-labelledby="support-search-heading"><a href="https://paypal.me/ramonbivens" target="_blank" rel="noopener noreferrer" class="support-star" aria-label="Support Astralis Nova through PayPal (opens a new tab)"><picture id="supportVisual"><source id="supportMotion" type="image/webp" srcset="/assets/astralis-sphere/support-sphere-still.webp"><img src="/assets/astralis-sphere/support-sphere-still.webp" width="360" height="360" alt="A silver A/N cutout sphere with blue inner light and reflective highlights" loading="lazy" decoding="async"></picture></a><button type="button" class="rotation-toggle support-motion-toggle" id="supportMotionToggle" aria-controls="supportVisual novaVisual universeBackdrop novaMarvin" hidden>Pause motion</button><p class="eyebrow">HELP KEEP OUR STAR SHINING</p><h3 id="support-search-heading">Fuel the Search</h3><p>Enjoy exploring with us? An optional contribution supports Astralis Nova’s website, creative work, and the time spent gathering and sharing what we learn.</p><a class="button primary" href="https://paypal.me/ramonbivens" target="_blank" rel="noopener noreferrer">Support with PayPal ↗</a><p class="observation-help">Exploring and joining the conversation are free. Contributions go to Astralis Nova.</p></div>
       <div class="observation-guidelines"><h3>How we keep learning</h3><ul><li>Follow factual claims back to their sources.</li><li>Distinguish findings, interpretations, and personal experiences.</li><li>Ask questions and leave room to change your mind.</li><li>Make space for faith, doubt, and curiosity.</li></ul><a href="#findings">Read our research journal ↑</a></div>
     </aside></div>
   </section>
@@ -556,6 +562,7 @@
     <p id="scaleStatus" class="sr-only" role="status" aria-live="polite"></p>
   </div>
 </details>
+  <script src="/marvin-perch.js?v=20261014marvin1" defer></script>
   <script src="/snoopy-patrol-rig.js?v=20261014body5" defer></script>
   <script src="/snoopy-patrol.js?v=20261014body5" defer></script>
 </body>
