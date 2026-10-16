@@ -44,12 +44,18 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 .scene-hint{display:inline-flex;gap:9px;align-items:center;margin-top:18px;border:1px solid #c8f2e35e;border-radius:999px;
  padding:9px 14px;background:#0717288c;text-decoration:none;font-size:.83rem;font-weight:800;color:#defff5}
 .scene-hint:hover{background:#0b3446}
-.region-space{min-height:129vh;min-height:129svh;
- background:
- radial-gradient(ellipse at 58% 29%,#2b235449,transparent 31%),
- radial-gradient(ellipse at 30% 66%,#2c659c36,transparent 43%),
- linear-gradient(180deg,#010511 0%,#060c20 45%,#0d2144 74%,#1b3a60 91%,#274862 100%)}
-.space-sky{position:absolute;z-index:0;inset:0;overflow:hidden}
+.region-space{min-height:129vh;min-height:129svh;background:#030913}
+.space-sky{position:absolute;z-index:0;inset:0;overflow:hidden;background:#030913}
+.orbit-photo{position:absolute;inset:0;z-index:0;transform:scale(1.015);
+ background:url('https://www.nasa.gov/wp-content/uploads/2023/03/iss060e002062.jpg?w=1041') center 49%/cover no-repeat;
+ filter:saturate(.89) contrast(1.12) brightness(.88)}
+.space-photo-shade{position:absolute;z-index:1;inset:0;pointer-events:none;
+ background:linear-gradient(180deg,rgba(2,6,14,.34) 0%,rgba(3,8,15,.12) 36%,rgba(4,9,19,.03) 61%,rgba(7,14,24,.68) 88%,#112234 100%),
+ radial-gradient(ellipse at 27% 21%,rgba(23,38,72,.30),transparent 55%)}
+.orbit-filmgrain{position:absolute;inset:0;z-index:2;opacity:.12;pointer-events:none;
+ background-image:url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="180" height="180"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" seed="7" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="180" height="180" filter="url(%23n)" opacity=".45"/%3E%3C/svg%3E')}
+.orbit-source{display:block;margin-top:12px;font-size:.69rem;line-height:1.5;color:#d3e0e3c9}
+.orbit-source a{text-decoration:underline;text-underline-offset:2px}
 .space-stars{position:absolute;inset:-8%;pointer-events:none;opacity:.73;
  background-image:radial-gradient(circle,#f8fdff 0 1px,transparent 1.75px),
   radial-gradient(circle,#c6eaff 0 1.1px,transparent 1.9px),
@@ -80,8 +86,8 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 .planet-horizon{position:absolute;z-index:2;bottom:-31%;left:-23%;width:146%;height:54%;
  background:radial-gradient(ellipse at 50% 2%,#7fc9fbb3 0,#2d78bfa3 3%,#153b72 18%,#071933 49%,#061124 90%);
  border-radius:50% 50% 0 0;box-shadow:0 -17px 61px #71b7f886,0 -2px 8px #e4f3fb66;opacity:.92}
-.space-atmosphere{position:absolute;z-index:4;inset:auto 0 0;height:27%;
- background:linear-gradient(180deg,transparent 0,#19335480 35%,#182841c9 68%,#102132 100%);pointer-events:none}
+.space-atmosphere{position:absolute;z-index:4;inset:auto 0 0;height:23%;
+ background:linear-gradient(180deg,transparent 0,#10213590 45%,#102132 100%);pointer-events:none}
 .space-copy{min-height:129vh;min-height:129svh;display:flex;flex-direction:column;justify-content:center;padding-top:110px;padding-bottom:21vh}
 .space-copy .scene-note{margin-top:0}
 .space-kicker{position:absolute;bottom:10%;left:calc(50% - 42px);z-index:8;font-size:.77rem;letter-spacing:.12em;
@@ -120,34 +126,34 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 .title-card .subtitle{margin:0 0 13px;font-size:clamp(1.05rem,2.1vw,1.42rem);font-weight:800;color:#c9edf0}
 .title-card .description{max-width:570px;line-height:1.67;color:#e7f2f0;margin:0;font-size:clamp(.93rem,1.6vw,1.07rem)}
 .region-underground{min-height:152vh;min-height:152svh;
- background:linear-gradient(180deg,#433327 0%,#4b382a 19%,#3b2b26 44%,#2e2524 70%,#131d27 100%)}
-.underground-strata{position:absolute;z-index:0;inset:0;overflow:hidden}
-.underground-strata:before{content:"";position:absolute;inset:0;opacity:.37;pointer-events:none;
- background:repeating-linear-gradient(180deg,transparent 0 19px,#bca27b0c 20px 21px,transparent 24px 72px),
- radial-gradient(ellipse at 25% 35%,#bca77a20,transparent 27%),
- radial-gradient(ellipse at 80% 62%,#d49a6e1c,transparent 38%)}
-.underground-art{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
-.underground-topsoil{position:absolute;inset:0 0 auto;height:80px;z-index:3;background:
- radial-gradient(ellipse at 30% -55%,#83715a73,transparent 65%),
- repeating-linear-gradient(0deg,#42332500 0 15px,#bc885b13 17px 19px),
- linear-gradient(180deg,#483629,#554130 35%,transparent);
+ background:#3b2a24}
+.underground-strata{position:absolute;z-index:0;inset:0;overflow:hidden;
+ background-color:#544036}
+.underground-photo{position:absolute;inset:0;z-index:0;transform:scale(1.02);
+ background-image:url('https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/11-JER%20Pasture%2011A-site2.jpg');
+ background-position:12% 92%;background-size:auto 165%;background-repeat:no-repeat;
+ background-color:#523d32;filter:contrast(1.08) saturate(.76)}
+.underground-strata::after{content:"";position:absolute;z-index:1;inset:0;
+ background:linear-gradient(180deg,#433327 0%,rgba(52,37,26,.19) 11%,rgba(13,11,13,.17) 40%,rgba(14,13,14,.49) 72%,#111a21 100%),
+ radial-gradient(ellipse at 70% 37%,rgba(65,35,22,.10),transparent 59%);
  pointer-events:none}
-.underground-dust{position:absolute;inset:0;z-index:3;opacity:.14;pointer-events:none;
- background-image:radial-gradient(circle,#f7e9ba 0 1px,transparent 2px),radial-gradient(circle,#f1c7a0 0 1.2px,transparent 2.2px);
- background-size:181px 171px,287px 333px;animation:dustFloat 22s linear infinite alternate}
-.underground-moisture{position:absolute;z-index:3;bottom:13%;left:9%;width:34%;height:13%;border-radius:50%;
- background:radial-gradient(ellipse at 50% 30%,#79c3c44d,#286d7b32 34%,#09273300 73%);
- filter:blur(13px);animation:moonBreathe 14s ease-in-out infinite alternate}
+.soil-grain{position:absolute;z-index:2;inset:0;pointer-events:none;opacity:.27;
+ background-image:url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="180" height="180"%3E%3Cfilter id="g"%3E%3CfeTurbulence type="fractalNoise" baseFrequency=".54" numOctaves="4" seed="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="180" height="180" filter="url(%23g)" opacity=".48"/%3E%3C/svg%3E');mix-blend-mode:soft-light}
+.underground-source{font-size:.68rem;line-height:1.6;color:#dacec3d6;margin-top:12px;max-width:520px}
+.underground-source a{text-decoration:underline;text-underline-offset:2px}
+.underground-art{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.underground-topsoil{position:absolute;inset:0 0 auto;height:90px;z-index:3;
+ background:linear-gradient(180deg,#453529 0%,#4b382ab5 48%,transparent);pointer-events:none}
+.underground-dust{position:absolute;inset:0;z-index:3;opacity:.085;pointer-events:none;
+ background-image:radial-gradient(circle,#efe3d0 0 .65px,transparent 1.4px);
+ background-size:233px 197px;animation:dustFloat 35s linear infinite alternate}
+.underground-moisture{display:none}
 .underground-copy{min-height:152vh;min-height:152svh;display:flex;flex-direction:column;justify-content:space-between;
  padding-top:clamp(115px,17vh,175px);padding-bottom:11vh}
-.underground-copy .scene-note{background:linear-gradient(130deg,#2e221dcf,#0e1c25aa);border-color:#ddb99560}
-.layer-label{position:absolute;z-index:4;padding:8px 13px;border-radius:100px;
- background:#120f14b8;border:1px solid #ead8ac4f;color:#f8ecd4;
- font-size:clamp(.69rem,1vw,.83rem);letter-spacing:.05em;white-space:nowrap;pointer-events:none}
+.underground-copy .scene-note{background:linear-gradient(130deg,#1b1312e3,#111921d9);border-color:#dbc2af7a}
+.layer-label{display:none}
 .layer-label.sand{top:29%;left:9%}.layer-label.caliche{top:52%;right:14%}.layer-label.deep{top:79%;left:15%}
-.fossil-hint{position:absolute;z-index:3;right:18%;bottom:18%;width:90px;height:90px;opacity:.18;transform:rotate(24deg);
- border:6px solid #e2c7a8;border-radius:50%;box-shadow:inset 0 0 0 5px #94755e}
-.fossil-hint:after{content:"";position:absolute;inset:12px;border:6px dashed #cfb69c;border-radius:50%}
+.fossil-hint{display:none}
 .closing-note{align-self:flex-start;max-width:490px;margin-top:auto;padding:16px 20px;
  border:1px solid #ccb49859;border-radius:18px;background:#171c27b8;backdrop-filter:blur(8px);
  font-size:.84rem;line-height:1.6;color:#e6dccc}
@@ -214,16 +220,15 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 <main class="world" id="toonWorld">
 <section class="region region-space" id="space" aria-labelledby="spaceTitle">
  <div class="space-sky" aria-hidden="true">
-  <div class="space-stars"></div><div class="space-stars back"></div>
-  <div class="galactic-cloud"></div><div class="space-dust"></div>
-  <div class="orbit-track"></div><div class="distant-world"></div>
-  <div class="planet-horizon"></div><div class="space-atmosphere"></div>
+  <div class="orbit-photo"></div><div class="space-photo-shade"></div>
+  <div class="orbit-filmgrain"></div><div class="space-atmosphere"></div>
  </div>
  <div class="region-content space-copy">
   <div class="scene-note">
    <p class="eyebrow">Level 01 • Above Cactus Forest</p>
    <h2 id="spaceTitle">Above the Desert</h2>
-   <p>Beyond the moonlit mountains, our Arizona sky opens into a sea of stars. Drift upward through the atmosphere and imagine Cactus Forest from orbit.</p>
+   <p>From high above Earth, the atmosphere becomes a thin glowing line. A genuine orbital photograph brings us from the quiet desert night into real space.</p>
+   <small class="orbit-source">Nighttime orbital photograph: <a href="https://www.nasa.gov/image-article/starry-nighttime-background-seemingly-glitters-down-earth/" target="_blank" rel="noopener noreferrer">NASA / ISS</a>. The photograph is not an image of Cactus Forest itself.</small>
    <a class="scene-hint" href="#surface">↓ Descend to the desert</a>
   </div>
  </div>
@@ -287,81 +292,19 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  </div>
 </section>
 <section class="region region-underground" id="underground" aria-labelledby="undergroundTitle">
- <div class="underground-strata" aria-hidden="true"></div>
+ <div class="underground-strata" aria-hidden="true"><div class="underground-photo"></div></div>
  <div class="underground-topsoil" aria-hidden="true"></div>
- <svg class="underground-art" viewBox="0 0 1440 1250" preserveAspectRatio="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-   <linearGradient id="soilLayerOne" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8c6c48" stop-opacity=".7"/><stop offset="1" stop-color="#a47e5d" stop-opacity=".12"/></linearGradient>
-   <linearGradient id="soilLayerTwo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ac9271" stop-opacity=".42"/><stop offset="1" stop-color="#473e34" stop-opacity=".10"/></linearGradient>
-   <linearGradient id="rootShade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c7a57a"/><stop offset=".5" stop-color="#a88660"/><stop offset="1" stop-color="#59462f"/></linearGradient>
-   <radialGradient id="waterGlow"><stop offset="0" stop-color="#91f6da" stop-opacity=".61"/><stop offset=".5" stop-color="#46aabf" stop-opacity=".32"/><stop offset="1" stop-color="#2a838d" stop-opacity="0"/></radialGradient>
-  </defs>
-  <!-- Sediment bands as an artistic Sonoran Desert cross-section, not surveyed local geology. -->
-  <path fill="url(#soilLayerOne)" d="M0 18Q150 40 280 23T570 35T835 30T1130 21T1440 27L1440 276Q1190 312 950 276T560 296T0 245Z"/>
-  <path fill="#71553c" opacity=".45" d="M0 240Q225 207 410 262T821 255T1170 239T1440 261V300Q1160 284 950 320T520 312T0 281Z"/>
-  <path fill="url(#soilLayerTwo)" d="M0 312Q160 340 340 315T760 339T1150 290T1440 322V492Q1230 519 1060 488T700 514T300 484T0 506Z"/>
-  <path fill="#b7a186" opacity=".25" d="M0 488Q220 470 365 519T722 489T1090 500T1440 484V521Q1195 516 1040 537T705 536T310 526T0 552Z"/>
-  <path fill="#765646" opacity=".39" d="M0 576Q205 542 397 605T777 574T1117 593T1440 557V815Q1120 789 926 830T511 811T0 852Z"/>
-  <path fill="#b4a08b" opacity=".16" d="M0 838Q205 813 410 846T837 841T1184 808T1440 841V885Q1160 862 922 891T510 871T0 895Z"/>
-  <path fill="#292c31" opacity=".37" d="M0 940Q170 895 391 947T782 909T1215 958T1440 915V1250H0Z"/>
-  <!-- Irregular caliche shelves, fractured stones and pebbles. -->
-  <g fill="#d6c1a1" opacity=".44">
-   <path d="M42 515l88 -13 37 14 -18 15 -113 -2z"/><path d="M367 532l142 -10 52 13 -40 20 -146 -6z"/>
-   <path d="M909 517l140 -7 62 19 -48 17 -160 -7z"/><path d="M1175 537l197 -16 37 20 -71 22 -151 -7z"/>
-   <path d="M175 570l34 -17 42 10 -15 21 -50 7z"/><path d="M750 581l63 -13 31 10 -18 29 -65 -6z"/>
-  </g>
-  <g fill="#8d7b67" stroke="#ac9780" stroke-opacity=".45" stroke-width="3">
-   <path d="M80 345l29 -15 31 17 -14 25 -39 1z"/><path d="M260 427l38 -20 37 12 7 29 -55 17 -30 -11z"/>
-   <path d="M590 346l38 -23 59 15 -11 36 -47 14z"/><path d="M1167 405l40 -19 47 13 13 30 -55 23 -46 -18z"/>
-   <path d="M997 673l73 -27 66 19 6 40 -69 29 -66 -25z"/><path d="M365 740l60 -22 61 33 -19 55 -75 4 -41 -33z"/>
-   <path d="M185 1014l80 -22 60 30 -18 49 -101 5z"/><path d="M1233 1005l95 -36 61 46 -28 56 -114 -15z"/>
-  </g>
-  <g stroke="#edd1af" stroke-opacity=".17" stroke-width="4" fill="none">
-   <path d="M100 354l21 12M281 428l26 21M628 325l-15 39M1196 403l37 29M1002 687l66 28M375 742l45 39M1283 990l35 35"/>
-  </g>
-  <!-- Mesquite-like deep roots reaching down; rootlets suggest branching subsurface networks. -->
-  <g stroke="url(#rootShade)" stroke-linecap="round" stroke-linejoin="round" fill="none">
-   <path d="M336 -35Q328 78 342 153Q325 242 371 332Q394 401 358 498Q347 568 386 646Q414 735 380 864" stroke-width="21"/>
-   <path d="M346 154Q240 203 220 306Q212 387 143 475Q115 528 100 645" stroke-width="12"/>
-   <path d="M361 336Q496 357 557 439Q632 531 632 617Q643 681 729 764" stroke-width="12"/>
-   <path d="M388 648Q505 660 532 744Q565 818 575 939" stroke-width="9"/>
-   <path d="M378 850Q335 971 298 1105" stroke-width="7"/>
-   <path d="M1122 -20Q1118 119 1084 212Q1083 331 1050 411Q1011 503 1035 618Q1060 706 1031 816" stroke-width="17"/>
-   <path d="M1085 211Q1174 249 1218 325Q1281 417 1345 477" stroke-width="10"/>
-   <path d="M1052 412Q934 435 902 525Q872 621 809 689" stroke-width="11"/>
-   <path d="M1035 620Q1110 684 1130 754Q1165 862 1270 929" stroke-width="8"/>
-   <path d="M1031 815Q1007 952 963 1069" stroke-width="7"/>
-  </g>
-  <g stroke="#c6a27b" stroke-opacity=".60" stroke-width="3" fill="none" stroke-linecap="round">
-   <path d="M230 281l-46 40 -27 69M218 317l58 31 26 63M153 468l-59 23 -36 43M112 601l-66 44"/>
-   <path d="M552 439l61 -24 27 -31M614 518l72 33 42 60M639 628l-25 59 -61 38"/>
-   <path d="M511 723l-44 62 -63 26M577 900l40 52 -10 83M374 937l-58 53 -11 68"/>
-   <path d="M1217 326l-28 58 -43 31M1321 464l40 56M908 505l-79 11 -41 61M840 652l-43 47"/>
-   <path d="M1127 749l-62 65 -18 69M1160 852l75 -4 57 52M977 1040l-51 61"/>
-  </g>
-  <ellipse cx="480" cy="999" rx="315" ry="140" fill="url(#waterGlow)" opacity=".6"/>
-  <path d="M230 996Q344 951 450 974T664 973Q725 986 732 1004Q608 1048 496 1021T250 1026Z" fill="#77aeb0" opacity=".19"/>
-  <path d="M243 1004Q329 977 433 998T666 996" fill="none" stroke="#9edfd9" stroke-width="5" stroke-opacity=".21"/>
-  <g fill="#cdbba4" opacity=".17">
-   <circle cx="731" cy="237" r="7"/><circle cx="762" cy="278" r="4"/><circle cx="878" cy="365" r="5"/>
-   <circle cx="189" cy="706" r="6"/><circle cx="553" cy="636" r="4"/><circle cx="1290" cy="701" r="7"/>
-   <circle cx="839" cy="991" r="8"/><circle cx="687" cy="1100" r="5"/><circle cx="1156" cy="1048" r="5"/>
-  </g>
- </svg>
+ <div class="soil-grain" aria-hidden="true"></div>
  <div class="underground-dust" aria-hidden="true"></div>
- <div class="underground-moisture" aria-hidden="true"></div>
- <div class="fossil-hint" aria-hidden="true"></div>
- <div class="layer-label sand" aria-hidden="true">Sandy soil • shallow roots</div>
- <div class="layer-label caliche" aria-hidden="true">Caliche-like hardpan</div>
- <div class="layer-label deep" aria-hidden="true">Deep roots • mineral sediments</div>
  <div class="region-content underground-copy">
   <div class="scene-note">
    <p class="eyebrow">Level 03 • Below Cactus Forest</p>
    <h2 id="undergroundTitle">Beneath the Desert</h2>
-   <p>A cutaway into the hidden world of roots, pebbles, sand, caliche-like layers and moisture tucked beneath the desert. Follow the branching roots as the soil grows darker below.</p>
+   <p>A real dryland soil cross-section shows compacted earth and pale, calcium-rich horizons. In the Sonoran Desert, the ground commonly includes coarse alluvial sediment, mineral grains and hardened caliche.</p>
+   <small class="underground-source">Soil-profile photograph: <a href="https://www.usgs.gov/media/images/soil-profile-arid-rangeland" target="_blank" rel="noopener noreferrer">USGS / Mike Duniway</a>, New Mexico. An illustrative regional example, not a sample from your property.</small>
    <a class="scene-hint" href="#surface">↑ Return to the moonlit surface</a>
   </div>
-  <p class="closing-note">An imagined desert cross-section, inspired by Sonoran geology and plant roots, not a survey of the actual property. No characters yet. They will join us one by one.</p>
+  <p class="closing-note">A photographic journey from orbit to the ground and into real desert soils. Underground conditions can vary across Cactus Forest; this is not a site-specific geologic survey. Characters return one at a time.</p>
  </div>
 </section>
 </main>
