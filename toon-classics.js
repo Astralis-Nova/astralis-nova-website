@@ -231,6 +231,7 @@ cite.textContent='Historical source: '+character.source+'. Only pre-1931 traits;
 preview.innerHTML=wrap(character);
 field.value=source(character);
 copyStatus.textContent='';
+scene.dispatchEvent(new Event("classic-toon-popup-open"));
 if(dialog.showModal)dialog.showModal();else dialog.setAttribute('open','');
 }
 characters.forEach((character,index)=>{
@@ -242,6 +243,133 @@ button.innerHTML=wrap(character)+'<span class="classic-name">'+character.name+'<
 button.addEventListener('click',()=>open(character));
 fleet.appendChild(button);
 });
+function startToonWander(scene,fleet) {
+  // Each classic has a distinct route, speed and gait. The stage is the world:
+  // roaming never covers outside website sections or hijacks phone scrolling.
+  const paths = {
+    felix:{speed:77,bob:4,tilt:2.7,route:[[.03,.49],[.30,.61],[.82,.80],[.39,.43],[.92,.53],[.16,.72]]},
+    oswald:{speed:92,bob:11,tilt:3.3,route:[[.88,.50],[.49,.34],[.12,.86],[.74,.74],[.19,.37],[.92,.88]]},
+    mickey1928:{speed:84,bob:7,tilt:3,route:[[.32,.76],[.91,.42],[.52,.87],[.09,.43],[.74,.55]]},
+    minnie1928:{speed:65,bob:9,tilt:5.3,route:[[.94,.25],[.59,.57],[.26,.25],[.07,.72],[.69,.87]]},
+    popeye1929:{speed:55,bob:3,tilt:1.7,route:[[.06,.71],[.44,.86],[.91,.77],[.67,.30],[.15,.45]]},
+    gertie:{speed:34,bob:2,tilt:1.2,route:[[.71,.21],[.38,.39],[.07,.18],[.33,.69],[.85,.44]]}
+  };
+  const prefersReducedMotion = Boolean(window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const now=()=>window.performance?.now?.() ?? Date.now();
+  const walkers=Array.from(fleet.querySelectorAll(".classic-traveler"),(button,index)=>{
+    return {button,index,profile:paths[button.dataset.toon]||paths.felix,
+      point:0,x:0,y:0,facing:1,phase:index*1.34,holdUntil:0,hover:false,focused:false,initialized:false};
+  });
+  let width=680,height=500,raf=null,lastFrame=0,visible=true,modalOpen=false;
+  function dimensions() {
+    width=Math.max(240,scene.clientWidth||scene.getBoundingClientRect().width||680);
+    height=Math.max(320,scene.clientHeight||scene.getBoundingClientRect().height||500);
+  }
+  function range(walker) {
+    const el=walker.button;
+    const w=Math.max(65,Math.min(el.offsetWidth||parseFloat(el.style.getPropertyValue("--width"))||110,width-10));
+    const h=Math.max(70,Math.min(el.offsetHeight||w*1.15,height-14));
+    const top=Math.max(50,Math.min(height-h-10,height*.29));
+    const bottom=Math.max(top,Math.min(height-h-10,height*.80-h*.1));
+    return {w,h,top,bottom,maxX:Math.max(0,width-w-15)};
+  }
+  function waypoint(walker,idx,area) {
+    const point=walker.profile.route[idx%walker.profile.route.length];
+    return {x:7+area.maxX*point[0],y:area.top+(area.bottom-area.top)*point[1]};
+  }
+  function clampIntoWorld(walker,area) {
+    walker.x=Math.max(5,Math.min(width-area.w-5,walker.x));
+    walker.y=Math.max(area.top,Math.min(area.bottom,walker.y));
+  }
+  function paint(walker,time) {
+    const area=range(walker);
+    if(!walker.initialized) {
+      const first=waypoint(walker,0,area);
+      walker.x=first.x;walker.y=first.y;
+      walker.point=1;walker.initialized=true;
+    }
+    clampIntoWorld(walker,area);
+    const bob=prefersReducedMotion?0:Math.sin(time*.008+walker.phase)*walker.profile.bob;
+    const tilt=prefersReducedMotion?0:Math.sin(time*.003+walker.phase)*walker.profile.tilt;
+    const depth=.91+.15*walker.y/height;
+    walker.button.style.transform="translate3d("+walker.x.toFixed(1)+"px,"+
+      (walker.y+bob).toFixed(1)+"px,0) rotate("+tilt.toFixed(1)+"deg) scale("+depth.toFixed(2)+")";
+    walker.button.style.setProperty("--facing",String(walker.facing));
+    walker.button.style.zIndex=String(6+Math.floor(walker.y/35));
+  }
+  function frame(timestamp) {
+    raf=null;
+    if(document.hidden||!visible||modalOpen)return;
+    const dt=lastFrame?Math.min(.05,Math.max(0,(timestamp-lastFrame)/1000)):0;
+    lastFrame=timestamp;
+    for(const w of walkers) {
+      if(!w.initialized)paint(w,timestamp);
+      const area=range(w);
+      if(!prefersReducedMotion&&!w.hover&&!w.focused&&timestamp>=w.holdUntil) {
+        const goal=waypoint(w,w.point,area);
+        const dx=goal.x-w.x,dy=goal.y-w.y,dist=Math.hypot(dx,dy);
+        if(dist<7) {
+          w.point=(w.point+1)%w.profile.route.length;
+          w.holdUntil=timestamp+((w.index+w.point)%3===0?650:180);
+        } else if(dist>0) {
+          const step=Math.min(dist,w.profile.speed*dt);
+          w.x+=dx/dist*step;
+          w.y+=dy/dist*step;
+          if(Math.abs(dx)>3)w.facing=dx<0?-1:1;
+        }
+      }
+      paint(w,timestamp);
+    }
+    raf=window.requestAnimationFrame(frame);
+  }
+  function stop() {
+    if(raf!==null){window.cancelAnimationFrame(raf);raf=null;}
+    lastFrame=0;
+  }
+  function start() {
+    if(!prefersReducedMotion&&raf===null&&!document.hidden&&visible&&!modalOpen){
+      lastFrame=0;raf=window.requestAnimationFrame(frame);
+    }
+  }
+  dimensions();
+  for(const w of walkers) {
+    w.button.addEventListener("pointerenter",()=>{w.hover=true;});
+    w.button.addEventListener("pointerleave",()=>{w.hover=false;});
+    w.button.addEventListener("focus",()=>{w.focused=true;});
+    w.button.addEventListener("blur",()=>{w.focused=false;});
+    w.button.addEventListener("pointerdown",()=>{w.holdUntil=now()+1700;},{passive:true});
+    paint(w,0);
+  }
+  if(prefersReducedMotion) {
+    walkers.forEach((w,i)=>{
+      const area=range(w);
+      w.x=7+area.maxX*(.03+.18*i);
+      w.y=area.top+(area.bottom-area.top)*(.2+(i%3)*.3);
+      paint(w,0);
+    });
+    return;
+  }
+  if("IntersectionObserver" in window) {
+    const observer=new IntersectionObserver(entries=>{
+      visible=entries.some(entry=>entry.isIntersecting);
+      if(visible)start();else stop();
+    },{rootMargin:"200px 0px",threshold:0});
+    observer.observe(scene);
+  }
+  document.addEventListener("visibilitychange",()=>{
+    if(document.hidden)stop();else start();
+  });
+  scene.addEventListener("classic-toon-popup-open",()=>{
+    modalOpen=true;stop();
+  });
+  dialog.addEventListener("close",()=>{modalOpen=false;start();});
+  window.addEventListener("resize",()=>{
+    dimensions();walkers.forEach(w=>paint(w,now()));start();
+  },{passive:true});
+  start();
+}
+startToonWander(scene,fleet);
 const close=()=>{if(dialog.close)dialog.close();else dialog.removeAttribute('open')};
 dialog.querySelector('#classicCloseButton').addEventListener('click',close);
 dialog.addEventListener('click',event=>{if(event.target===dialog)close()});
