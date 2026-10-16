@@ -523,15 +523,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 
 /* Toon Planet realism pass 04: preserve real imagery; add lightweight environmental movement. */
 /* The already-existing optimized universe image saves mobile bandwidth. */
-@media(max-width:800px){
-  .space-cosmos{
-    background-image:url('/assets/our-new-star/deep-universe-mobile.webp');
-    background-position:center 18%;
-  }
-  .space-planet.moon{opacity:.97;filter:saturate(.82) contrast(1.09) brightness(1.06) drop-shadow(0 0 13px rgba(204,218,235,.19));}
-  .space-planet.distant-gas{opacity:.73;filter:saturate(.88) contrast(1.07) brightness(.96) drop-shadow(0 0 9px rgba(140,168,204,.12));}
-  .space-planet.distant-mars{opacity:.78;filter:saturate(.92) contrast(1.05) brightness(1.01) drop-shadow(0 0 7px rgba(171,131,102,.12));}
-}
 .space-planet.moon{
   filter:saturate(.82) contrast(1.08) brightness(1.04)
    drop-shadow(0 0 15px rgba(198,213,226,.19))
@@ -546,6 +537,15 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 }
 .space-planet.distant-gas{opacity:.66;filter:saturate(.85) contrast(1.06) brightness(.98)}
 .space-planet.distant-mars{opacity:.69;filter:saturate(.92) contrast(1.05) brightness(1.01)}
+@media(max-width:800px){
+  .space-cosmos{
+    background-image:url('/assets/our-new-star/deep-universe-mobile.webp');
+    background-position:center 18%;
+  }
+  .space-planet.moon{opacity:.97;filter:saturate(.82) contrast(1.09) brightness(1.06) drop-shadow(0 0 13px rgba(204,218,235,.19));}
+  .space-planet.distant-gas{opacity:.73;filter:saturate(.88) contrast(1.07) brightness(.96) drop-shadow(0 0 9px rgba(140,168,204,.12));}
+  .space-planet.distant-mars{opacity:.78;filter:saturate(.92) contrast(1.05) brightness(1.01) drop-shadow(0 0 7px rgba(171,131,102,.12));}
+}
 /* Almost-imperceptible camera motion creates depth without separate drawn plants. */
 .surface-cover{
  transform-origin:50% 57%;transform:scale(1.04);
