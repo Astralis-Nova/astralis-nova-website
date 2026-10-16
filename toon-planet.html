@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#100d30">
-<meta name="description" content="Discover Astralis Nova Toon Planet: an original, living cartoon universe. Tap a toon, watch it come alive, and copy its reusable HTML, SVG and CSS for your own site.">
+<meta name="description" content="Astralis Nova Toon Planet: a lively animated landscape featuring original toons and hand-drawn interpretations of public-domain-era classic characters. Tap any character to copy its animated HTML/SVG/CSS.">
 <title>Toon Planet | Astralis Nova</title>
 <style>
 :root{color-scheme:dark;--ink:#fff9ff;--muted:#d2cee9;--purple:#ac8bff;--mint:#65f6d2;--deep:#100d30;--line:rgba(225,216,255,.24)}
@@ -90,31 +90,65 @@ textarea{width:100%;min-height:285px;resize:vertical;background:#090d22;color:#d
 <div class="hero-copy">
 <div class="kicker">Astralis Nova • An animated world you can share</div>
 <h1 id="heroTitle">TOON <strong>PLANET</strong></h1>
-<p>They're alive! Meet an original cast of wandering cosmic cartoons. Tap a character to watch it move, then take its actual HTML, SVG and CSS with you. No downloads, accounts or libraries required.</p>
-<a class="cta" href="#toonResidents">🌈 Meet the residents ↓</a>
+<p>They’re alive! Watch early cartoon classics run, hop, dance and stroll across a living planet. Tap a character to see its own animation and copy the complete code for your website.</p>
+<a class="cta" href="#classicToons">🎬 Watch classic toons in action ↓</a>
 </div>
 <div class="hero-visual" aria-hidden="true">
 <div class="planet"></div><div class="ring"></div>
 <span class="hero-spark a">✨</span><span class="hero-spark b">⭐</span><span class="hero-spark c">🌙</span><span class="hero-orbit">👾</span>
 </div>
 </section>
+
+<section id="classicToons" class="classic-toon-section" aria-labelledby="classicTitle">
+  <div class="section-heading">
+    <div>
+      <div class="kicker">01 / Original animations • Verified early versions</div>
+      <h2 id="classicTitle">🎞️ Vintage Toon Neighborhood</h2>
+      <p>Meet Gertie, Felix, Oswald, early Mickey, early Minnie and early Popeye! They're moving around the planet, each with an animation of their own.</p>
+    </div>
+    <p><strong>Tap a moving toon</strong> to preview and copy its complete HTML, SVG and CSS.</p>
+  </div>
+  <div id="classicToonScene" class="classic-scene" role="group" aria-label="Living cartoon planet with six clickable animated visitors">
+    <div id="classicToonFleet" class="classic-fleet"></div>
+    <noscript>Enable JavaScript to meet the animated classic cartoon characters.</noscript>
+  </div>
+  <p class="classic-notice"><strong>Public-domain era only:</strong> The art and motion here are new Astralis Nova drawings based on character traits from U.S. works published in 1930 or earlier. Modern redesigns, logos, recordings and studio assets are not included. These are independent historical tributes, not affiliated with any studio. Character trademarks and laws outside the U.S. may still apply. <a href="https://www.copyright.gov/what-is-copyright/" target="_blank" rel="noopener noreferrer">U.S. copyright guidance</a> · <a href="https://www.uspto.gov/trademarks/basics/trademark-patent-copyright" target="_blank" rel="noopener noreferrer">Copyright vs. trademarks</a>.</p>
+</section>
+<dialog id="classicToonDialog" class="classic-popup" aria-labelledby="classicToonTitle">
+  <button type="button" class="classic-popup-close" id="classicCloseButton" aria-label="Close cartoon workshop">✕ Close</button>
+  <div class="kicker">Animated character • Tap • Copy • Share</div>
+  <h3 id="classicToonTitle">Vintage Toon Studio</h3>
+  <div class="classic-popup-top">
+    <div class="classic-popup-preview" id="classicToonPreview"></div>
+    <div>
+      <p id="classicToonDescription"></p>
+      <p id="classicToonSource" style="font-size:.84rem"></p>
+      <p style="font-size:.83rem">New SVG artwork and animation code, ready for an HTML embed. No external images or JavaScript required. Original vector/code shared for reuse; public-domain source designs are not exclusively ours.</p>
+    </div>
+  </div>
+  <label for="classicToonCode" style="display:block;margin:14px 0 8px;font-weight:800;color:#a5f6e4">Copyable HTML + SVG + CSS</label>
+  <textarea id="classicToonCode" class="classic-code" readonly spellcheck="false" aria-label="Reusable animated cartoon HTML code"></textarea>
+  <button type="button" id="classicCopyButton" class="classic-copy-btn">📋 Copy This Toon Code</button>
+  <p id="classicCopyStatus" class="classic-copy-status" role="status" aria-live="polite"></p>
+</dialog>
+
 <section id="toonResidents" aria-labelledby="residentsTitle">
 <div class="section-heading">
-<div><div class="kicker">01 / The residents</div><h2 id="residentsTitle">Pick a toon. Bring it to life.</h2></div>
+<div><div class="kicker">02 / Original Astralis characters</div><h2 id="residentsTitle">More cosmic cartoon residents</h2></div>
 <p>Tap any character to open its animation workshop.</p>
 </div>
 <div class="grid" id="toonGallery" aria-label="Original cartoon characters"></div>
 </section>
 <section class="workshop" id="workshop" aria-labelledby="workshopTitle">
 <div class="panel preview-panel">
-<div class="kicker">02 / Live studio</div>
+<div class="kicker">03 / Live studio</div>
 <h3 id="workshopTitle">Character studio</h3>
 <p id="toonDescription">Choose an animated resident above.</p>
 <div class="preview-wrap" id="toonPreview" aria-label="Animated character preview"></div>
 <div class="feature-list"><span class="pill">Original artwork</span><span class="pill">Responsive SVG</span><span class="pill">CSS animation</span></div>
 </div>
 <div class="panel code-panel">
-<div class="kicker">03 / Take it with you</div>
+<div class="kicker">04 / Take it with you</div>
 <h3>Copy this toon for your site</h3>
 <p>Paste the entire snippet into a Custom HTML or Embed block. Everything lives in the copied code: artwork, motion and styling. Works without external image links or JavaScript.</p>
 <label for="toonSource" class="kicker" style="display:block;margin:18px 0 10px">Reusable HTML + CSS + SVG</label>
@@ -195,5 +229,6 @@ status.textContent="✓ Copied "+selected.name+"! Paste it into your site's Cust
 choose(activeId,false);
 })();
 </script>
+<script src="/toon-classics.js?v=20261016vintage1" defer></script>
 </body>
 </html>
