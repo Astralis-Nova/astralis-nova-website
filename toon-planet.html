@@ -46,12 +46,23 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 .scene-hint:hover{background:#0b3446}
 .region-space{min-height:129vh;min-height:129svh;background:#030913}
 .space-sky{position:absolute;z-index:0;inset:0;overflow:hidden;background:#030913}
-.orbit-photo{position:absolute;inset:0;z-index:0;transform:scale(1.015);
+.orbit-photo{position:absolute;inset:0;z-index:0;
+ translate:0 var(--orbit-scroll,0px);transform:scale(1.10);will-change:transform,translate;
  background:url('https://www.nasa.gov/wp-content/uploads/2023/03/iss060e002062.jpg?w=1041') center 49%/cover no-repeat;
- filter:saturate(.89) contrast(1.12) brightness(.88)}
+ filter:saturate(.89) contrast(1.12) brightness(.88);
+ animation:orbitCamera 52s ease-in-out infinite alternate}
 .space-photo-shade{position:absolute;z-index:1;inset:0;pointer-events:none;
  background:linear-gradient(180deg,rgba(2,6,14,.34) 0%,rgba(3,8,15,.12) 36%,rgba(4,9,19,.03) 61%,rgba(7,14,24,.68) 88%,#112234 100%),
  radial-gradient(ellipse at 27% 21%,rgba(23,38,72,.30),transparent 55%)}
+.space-photo-shade::after{content:"";position:absolute;inset:45% 0 0;opacity:.14;pointer-events:none;
+ background:radial-gradient(ellipse 70% 30% at 50% 73%,rgba(129,183,225,.36),transparent 95%);
+ animation:orbitAtmosphere 19s ease-in-out infinite alternate}
+.orbit-twinkle{position:absolute;z-index:2;inset:0;opacity:.16;pointer-events:none;
+ background-image:radial-gradient(circle,#e7f6ff 0 .9px,transparent 1.5px),
+   radial-gradient(circle,#ffffff 0 .75px,transparent 1.4px);
+ background-size:207px 239px,349px 311px;background-position:62px 28px,129px 96px;
+ mask-image:linear-gradient(180deg,#000 0%,#000 30%,transparent 67%);
+ animation:orbitStarBreath 12s ease-in-out infinite alternate}
 .orbit-filmgrain{position:absolute;inset:0;z-index:2;opacity:.12;pointer-events:none;
  background-image:url('/assets/toon-planet-grain.svg')}
 .orbit-source{display:block;margin-top:12px;font-size:.69rem;line-height:1.5;color:#d3e0e3c9}
@@ -129,22 +140,25 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  background:#3b2a24}
 .underground-strata{position:absolute;z-index:0;inset:0;overflow:hidden;
  background-color:#544036}
-.underground-photo{position:absolute;inset:0;z-index:0;transform:scale(1.02);
+.underground-photo{position:absolute;inset:0;z-index:0;
+ translate:0 var(--soil-scroll,0px);transform:scale(1.07);will-change:transform,translate;
  background-image:url('https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/11-JER%20Pasture%2011A-site2.jpg');
  background-position:12% 92%;background-size:auto 165%;background-repeat:no-repeat;
- background-color:#523d32;filter:contrast(1.08) saturate(.76)}
+ background-color:#523d32;filter:contrast(1.08) saturate(.76);
+ animation:soilCamera 70s ease-in-out infinite alternate}
 .underground-strata::after{content:"";position:absolute;z-index:1;inset:0;
  background:linear-gradient(180deg,#433327 0%,rgba(52,37,26,.19) 11%,rgba(13,11,13,.17) 40%,rgba(14,13,14,.49) 72%,#111a21 100%),
  radial-gradient(ellipse at 70% 37%,rgba(65,35,22,.10),transparent 59%);
  pointer-events:none}
-.soil-grain{position:absolute;z-index:2;inset:0;pointer-events:none;opacity:.27;
- background-image:url('/assets/toon-planet-grain.svg');mix-blend-mode:soft-light}
+.soil-grain{position:absolute;z-index:2;inset:0;pointer-events:none;opacity:.22;
+ background-image:url('/assets/toon-planet-grain.svg');mix-blend-mode:soft-light;
+ animation:soilTexture 38s ease-in-out infinite alternate}
 .underground-source{font-size:.68rem;line-height:1.6;color:#dacec3d6;margin-top:12px;max-width:520px}
 .underground-source a{text-decoration:underline;text-underline-offset:2px}
 .underground-art{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 .underground-topsoil{position:absolute;inset:0 0 auto;height:90px;z-index:3;
  background:linear-gradient(180deg,#453529 0%,#4b382ab5 48%,transparent);pointer-events:none}
-.underground-dust{position:absolute;inset:0;z-index:3;opacity:.085;pointer-events:none;
+.underground-dust{position:absolute;inset:-3%;z-index:3;opacity:.085;pointer-events:none;
  background-image:radial-gradient(circle,#efe3d0 0 .65px,transparent 1.4px);
  background-size:233px 197px;animation:dustFloat 35s linear infinite alternate}
 .underground-moisture{display:none}
@@ -159,6 +173,11 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  font-size:.84rem;line-height:1.6;color:#e6dccc}
 .region-underground:after{content:"";position:absolute;z-index:3;inset:auto 0 0;height:20%;
  background:linear-gradient(180deg,transparent,#08101b);pointer-events:none}
+@keyframes orbitCamera{from{transform:scale(1.10) translate3d(-.4%,.3%,0)}to{transform:scale(1.13) translate3d(.45%,-.35%,0)}}
+@keyframes orbitAtmosphere{from{opacity:.10}to{opacity:.23}}
+@keyframes orbitStarBreath{from{opacity:.07}to{opacity:.24}}
+@keyframes soilCamera{from{transform:scale(1.07) translate3d(-.35%,.2%,0)}to{transform:scale(1.085) translate3d(.4%,-.2%,0)}}
+@keyframes soilTexture{from{opacity:.17;transform:translate3d(0,0,0)}to{opacity:.25;transform:translate3d(0,-8px,0)}}
 @keyframes starsWink{from{opacity:.24}to{opacity:.79}}
 @keyframes nebulaBreathe{from{opacity:.46;transform:rotate(-22deg) translate(-1.5%,0)}to{opacity:.82;transform:rotate(-22deg) translate(1.5%,-1%)}}
 @keyframes spaceWorldDrift{to{transform:translateY(-10px) rotate(4deg)}}
@@ -206,7 +225,9 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .space-stars,.galactic-cloud,.distant-world,.space-kicker,.surface-stars,.surface-haze,
  .toon-desert-foreground .saguaro-motion,.toon-desert-foreground .mesquite-motion,
  .toon-desert-foreground .ocotillo-motion,.toon-desert-foreground .desert-grass,
- .underground-dust,.underground-moisture{animation:none!important}
+ .underground-dust,.underground-moisture,.orbit-photo,.space-photo-shade::after,
+ .orbit-twinkle,.underground-photo,.soil-grain{animation:none!important}
+ .orbit-photo,.underground-photo{translate:none!important;transform:scale(1.015)!important}
 }
 </style>
 </head>
@@ -221,7 +242,7 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 <section class="region region-space" id="space" aria-labelledby="spaceTitle">
  <div class="space-sky" aria-hidden="true">
   <div class="orbit-photo"></div><div class="space-photo-shade"></div>
-  <div class="orbit-filmgrain"></div><div class="space-atmosphere"></div>
+  <div class="orbit-twinkle"></div><div class="orbit-filmgrain"></div><div class="space-atmosphere"></div>
  </div>
  <div class="region-content space-copy">
   <div class="scene-note">
@@ -315,6 +336,31 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  const sections=Array.from(document.querySelectorAll(".region"));
  const surface=document.getElementById("surface");
  const motionReduced=window.matchMedia("(prefers-reduced-motion: reduce)");
+ const orbitalPhoto=document.querySelector(".orbit-photo");
+ const soilPhoto=document.querySelector(".underground-photo");
+ const orbitalSection=document.getElementById("space");
+ const undergroundSection=document.getElementById("underground");
+ let sceneFrame=0;
+ function clamp(value,limit){return Math.max(-limit,Math.min(limit,value))}
+ function applySceneParallax(){
+  sceneFrame=0;
+  if(motionReduced.matches)return;
+  const midpoint=window.scrollY+window.innerHeight*.5;
+  const narrow=window.innerWidth<=800;
+  for(const scene of [
+   {section:orbitalSection,photo:orbitalPhoto,property:"--orbit-scroll",range:narrow?12:26},
+   {section:undergroundSection,photo:soilPhoto,property:"--soil-scroll",range:narrow?9:18}
+  ]){
+   if(!scene.section||!scene.photo)continue;
+   const center=scene.section.offsetTop+scene.section.offsetHeight*.5;
+   const relative=(midpoint-center)/Math.max(1,scene.section.offsetHeight);
+   const pixels=clamp(relative*scene.range*1.7,scene.range);
+   scene.photo.style.setProperty(scene.property,pixels.toFixed(1)+"px");
+  }
+ }
+ function requestSceneUpdate(){
+  if(!sceneFrame&&!motionReduced.matches)sceneFrame=window.requestAnimationFrame(applySceneParallax);
+ }
  function updateLevel(){
   const midpoint=window.scrollY+window.innerHeight*.50;
   let active=sections[0].id;
@@ -333,15 +379,22 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
   if(nav&&nav.type!=="navigate")return; // Preserve refresh, Back, and scroll restoration.
   if(window.scrollY>10)return;
   window.scrollTo({top:surface.offsetTop,behavior:"instant"});
-  updateLevel();
+  updateLevel();requestSceneUpdate();
  }
- window.addEventListener("scroll",updateLevel,{passive:true});
- window.addEventListener("resize",updateLevel,{passive:true});
- window.addEventListener("hashchange",updateLevel);
+ window.addEventListener("scroll",()=>{updateLevel();requestSceneUpdate()},{passive:true});
+ window.addEventListener("resize",()=>{updateLevel();requestSceneUpdate()},{passive:true});
+ window.addEventListener("hashchange",()=>{updateLevel();requestSceneUpdate()});
+ if(motionReduced.addEventListener)motionReduced.addEventListener("change",()=>{
+  if(motionReduced.matches){
+   if(sceneFrame){window.cancelAnimationFrame(sceneFrame);sceneFrame=0}
+   orbitalPhoto?.style.removeProperty("--orbit-scroll");
+   soilPhoto?.style.removeProperty("--soil-scroll");
+  }else requestSceneUpdate();
+ });
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",function(){
-  window.requestAnimationFrame(enterAtSurface);updateLevel();
+  window.requestAnimationFrame(enterAtSurface);updateLevel();requestSceneUpdate();
  },{once:true});
- else window.requestAnimationFrame(function(){enterAtSurface();updateLevel()});
+ else window.requestAnimationFrame(function(){enterAtSurface();updateLevel();requestSceneUpdate()});
 })();
 </script>
 </body>
