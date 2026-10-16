@@ -520,6 +520,95 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .orbit-photo{translate:none!important;transform:scale(1.015)!important}
  .space-cosmos,.space-planet{transform:none!important}
 }
+
+/* Toon Planet realism pass 04: preserve real imagery; add lightweight environmental movement. */
+/* The already-existing optimized universe image saves mobile bandwidth. */
+@media(max-width:800px){
+  .space-cosmos{
+    background-image:url('/assets/our-new-star/deep-universe-mobile.webp');
+    background-position:center 18%;
+  }
+  .space-planet.moon{opacity:.97;filter:saturate(.82) contrast(1.09) brightness(1.06) drop-shadow(0 0 13px rgba(204,218,235,.19));}
+  .space-planet.distant-gas{opacity:.73;filter:saturate(.88) contrast(1.07) brightness(.96) drop-shadow(0 0 9px rgba(140,168,204,.12));}
+  .space-planet.distant-mars{opacity:.78;filter:saturate(.92) contrast(1.05) brightness(1.01) drop-shadow(0 0 7px rgba(171,131,102,.12));}
+}
+.space-planet.moon{
+  filter:saturate(.82) contrast(1.08) brightness(1.04)
+   drop-shadow(0 0 15px rgba(198,213,226,.19))
+   drop-shadow(0 0 27px rgba(192,208,225,.08));
+}
+.space-planet.moon::before{
+  content:"";position:absolute;inset:-18%;z-index:-1;pointer-events:none;
+  border-radius:50%;opacity:.30;
+  background:radial-gradient(circle,rgba(203,222,240,.14) 11%,
+   rgba(198,219,238,.075) 38%,transparent 71%);
+  filter:blur(15px);
+}
+.space-planet.distant-gas{opacity:.66;filter:saturate(.85) contrast(1.06) brightness(.98)}
+.space-planet.distant-mars{opacity:.69;filter:saturate(.92) contrast(1.05) brightness(1.01)}
+/* Almost-imperceptible camera motion creates depth without separate drawn plants. */
+.surface-cover{
+ transform-origin:50% 57%;transform:scale(1.04);
+ animation:desertSceneryBreath 84s ease-in-out infinite alternate;
+}
+.surface-wind-trace{
+ position:absolute;inset:48% -16% 1%;z-index:3;pointer-events:none;
+ opacity:.12;mix-blend-mode:screen;filter:blur(20px);
+ background:
+  radial-gradient(ellipse 26% 6% at 19% 67%,rgba(211,194,168,.28),transparent 92%),
+  radial-gradient(ellipse 32% 8% at 64% 76%,rgba(210,200,184,.25),transparent 90%),
+  radial-gradient(ellipse 18% 5% at 84% 53%,rgba(205,197,179,.22),transparent 94%);
+ animation:desertWindTravel 29s ease-in-out infinite alternate;
+}
+.surface-vegetation-shadows{
+ position:absolute;inset:48% -5% 0;z-index:2;pointer-events:none;
+ opacity:.16;mix-blend-mode:multiply;filter:blur(17px);
+ background:
+  radial-gradient(ellipse 15% 8% at 13% 75%,rgba(1,11,12,.59),transparent 88%),
+  radial-gradient(ellipse 12% 7% at 55% 60%,rgba(2,10,10,.43),transparent 88%),
+  radial-gradient(ellipse 20% 8% at 86% 87%,rgba(2,11,12,.54),transparent 91%);
+ animation:desertShadowBreath 32s ease-in-out infinite alternate;
+}
+.underground-light-scatter{
+ position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.13;
+ background:
+  radial-gradient(ellipse 45% 25% at 21% 28%,rgba(204,175,140,.13),transparent 90%),
+  radial-gradient(ellipse 32% 19% at 73% 56%,rgba(180,147,121,.08),transparent 92%),
+  linear-gradient(180deg,transparent 0%,rgba(0,0,0,.02) 46%,rgba(0,0,0,.2) 100%);
+ filter:blur(12px);animation:soilAmbientShift 41s ease-in-out infinite alternate;
+}
+@keyframes desertSceneryBreath{
+ from{transform:scale(1.04) translate3d(-.2%,.16%,0)}
+ to{transform:scale(1.056) translate3d(.24%,-.18%,0)}
+}
+@keyframes desertWindTravel{
+ from{transform:translate3d(-1.5%,.15%,0);opacity:.07}
+ to{transform:translate3d(2%,-.4%,0);opacity:.17}
+}
+@keyframes desertShadowBreath{
+ from{transform:translate3d(-.3%,0,0);opacity:.11}
+ to{transform:translate3d(.5%,-.15%,0);opacity:.19}
+}
+@keyframes soilAmbientShift{
+ from{transform:translate3d(-.4%,.2%,0);opacity:.08}
+ to{transform:translate3d(.5%,-.3%,0);opacity:.16}
+}
+/* Stop rendering distant, offscreen scenes; observers wake them before arrival. */
+.region.scene-asleep *,.region.scene-asleep *::before,.region.scene-asleep *::after{
+ animation-play-state:paused!important;
+}
+@media(max-width:800px){
+ .surface-cover{animation-duration:92s}
+ .surface-wind-trace{opacity:.10;filter:blur(15px)}
+ .surface-vegetation-shadows{opacity:.13;filter:blur(13px)}
+ .underground-light-scatter{opacity:.10}
+}
+@media(prefers-reduced-motion:reduce){
+ .surface-cover,.surface-wind-trace,.surface-vegetation-shadows,.underground-light-scatter{
+   animation:none!important;
+ }
+ .surface-cover{transform:scale(1.04)}
+}
 </style>
 </head>
 <body>
@@ -559,6 +648,8 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  <div class="surface-haze-near" aria-hidden="true"></div>
  <div class="surface-moonwash" aria-hidden="true"></div>
  <div class="surface-dust" aria-hidden="true"></div>
+ <div class="surface-wind-trace" aria-hidden="true"></div>
+ <div class="surface-vegetation-shadows" aria-hidden="true"></div>
  <div class="surface-depth-shadow" aria-hidden="true"></div>
  <div class="meteor-field surface-meteors" id="surfaceMeteors" aria-hidden="true"></div>
 
@@ -570,6 +661,7 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  <div class="underground-topsoil" aria-hidden="true"></div>
  <div class="underground-dust" aria-hidden="true"></div>
  <div class="underground-mineral-shimmer" aria-hidden="true"></div>
+ <div class="underground-light-scatter" aria-hidden="true"></div>
  <div class="underground-shadow-drift" aria-hidden="true"></div>
 </section>
 </main>
@@ -578,6 +670,17 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  "use strict";
  const links=Array.from(document.querySelectorAll(".level-nav a"));
  const sections=Array.from(document.querySelectorAll(".region"));
+ // Sleeping offscreen scenes avoids continuous paint work during long mobile scrolls.
+ if("IntersectionObserver" in window){
+  const sceneObserver=new IntersectionObserver((entries)=>{
+   for(const entry of entries)entry.target.classList.toggle("scene-asleep",!entry.isIntersecting);
+  },{rootMargin:"75% 0px 75% 0px",threshold:0});
+  for(const section of sections){
+   section.classList.add("scene-asleep");
+   sceneObserver.observe(section);
+  }
+ }
+
  const surface=document.getElementById("surface");
  const motionReduced=window.matchMedia("(prefers-reduced-motion: reduce)");
  const orbitalPhoto=document.querySelector(".orbit-photo");
@@ -622,6 +725,14 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
   },6500+Math.random()*14500);
  }
  if(!motionReduced.matches)planMeteor();
+ document.addEventListener("visibilitychange",()=>{
+  if(document.hidden){
+   if(meteorTimer){window.clearTimeout(meteorTimer);meteorTimer=0}
+  }else if(!motionReduced.matches&&!meteorTimer){
+   planMeteor();
+  }
+ });
+
  let sceneFrame=0;
  function clamp(value,limit){return Math.max(-limit,Math.min(limit,value))}
  function applySceneParallax(){
