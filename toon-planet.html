@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#100d30">
+<meta name="description" content="Discover Astralis Nova Toon Planet: an original, living cartoon universe. Tap a toon, watch it come alive, and copy its reusable HTML, SVG and CSS for your own site.">
+<title>Toon Planet | Astralis Nova</title>
+<style>
+:root{color-scheme:dark;--ink:#fff9ff;--muted:#d2cee9;--purple:#ac8bff;--mint:#65f6d2;--deep:#100d30;--line:rgba(225,216,255,.24)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(ellipse at 50% 5%,#3d296a 0,transparent 38%),radial-gradient(ellipse at 95% 45%,#122b57,transparent 35%),#0b0821;min-height:100vh;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.68;background-image:radial-gradient(1.5px 1.5px at 10% 20%,white 95%,transparent),radial-gradient(2px 2px at 82% 10%,#b7eaff 95%,transparent),radial-gradient(2px 2px at 28% 78%,#ffeabc 95%,transparent),radial-gradient(1px 1px at 74% 71%,white 95%,transparent);background-size:290px 260px,340px 310px,390px 370px,240px 200px}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid #72f5dc;outline-offset:4px}
+.shell{width:min(1180px,calc(100% - 36px));margin:auto}
+.top{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:23px 0}
+.brand{font-weight:900;letter-spacing:.13em;font-size:.93rem;text-decoration:none}
+.brand span{color:#a8f3ec}
+.back{border:1px solid var(--line);background:rgba(20,18,49,.78);border-radius:999px;padding:10px 17px;text-decoration:none;font-size:.9rem}
+.back:hover{background:#392963}
+.hero{position:relative;min-height:445px;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:20px;padding:25px 0 42px}
+.kicker{color:#93f9e3;font-size:.79rem;letter-spacing:.19em;font-weight:850;text-transform:uppercase}
+h1{font-size:clamp(3.15rem,9vw,6.8rem);line-height:.95;letter-spacing:-.065em;margin:19px 0 15px;text-wrap:balance}
+h1 strong{display:block;color:#ffbd7e;text-shadow:0 3px 28px rgba(252,144,136,.3)}
+.hero p{max-width:540px;line-height:1.7;color:var(--muted);font-size:clamp(1rem,2vw,1.18rem)}
+.cta{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;background:linear-gradient(100deg,#ffd18f,#ff7cae);color:#261637;padding:14px 22px;font-weight:900;text-decoration:none;box-shadow:0 10px 30px #ff8ab333}
+.hero-visual{position:relative;height:410px;isolation:isolate}
+.planet{position:absolute;inset:39px 12% 28px 12%;border-radius:50%;background:radial-gradient(circle at 32% 24%,#fff6bd 0,#ffcb9d 10%,#ff95b3 31%,#8b62d7 57%,#443897 80%,#25286c 100%);box-shadow:inset -37px -32px 60px #302861a8,inset 17px 16px 50px #fff6d56e,0 0 80px #c992ff80;animation:planet-breathe 8s ease-in-out infinite;overflow:hidden}
+.planet:before{content:"";position:absolute;left:-15%;top:40%;height:33%;width:135%;transform:rotate(-14deg);background:repeating-radial-gradient(ellipse at 47% 110%,transparent 0 21px,#f5d4ff66 23px 29px,transparent 32px 56px);filter:blur(3px)}
+.planet:after{content:"";position:absolute;left:9%;right:8%;top:16%;height:36%;border-radius:50%;background:radial-gradient(ellipse,#fff7d588,transparent 70%);transform:rotate(-18deg)}
+.ring{position:absolute;z-index:2;left:2%;right:2%;top:46%;height:25%;border-radius:50%;border:17px solid #bffeff88;transform:rotate(-22deg);box-shadow:0 0 20px #ffb7e588;pointer-events:none}
+.hero-spark{position:absolute;font-size:2.5rem;filter:drop-shadow(0 4px 8px #190f63);animation:spark-float 5s ease-in-out infinite}
+.hero-spark.a{left:15%;top:12%}.hero-spark.b{right:8%;top:19%;animation-delay:-2s}.hero-spark.c{left:16%;bottom:11%;animation-delay:-3s}
+.hero-orbit{position:absolute;z-index:3;top:26%;left:32%;font-size:5rem;transform:rotate(-8deg);animation:spark-float 4.7s ease-in-out infinite}
+.section-heading{display:flex;align-items:end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:16px 0 20px}
+.section-heading h2{font-size:clamp(1.65rem,4vw,2.5rem);margin:4px 0}
+.section-heading p{color:var(--muted);line-height:1.6;margin:0}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.toon-choice{display:flex;flex-direction:column;align-items:stretch;text-align:left;border:1px solid var(--line);color:var(--ink);background:linear-gradient(145deg,#332454c9,#171938e6);padding:13px;border-radius:23px;min-width:0;transition:transform .2s,border-color .2s,box-shadow .2s}
+.toon-choice:hover{transform:translateY(-5px);border-color:#ffcfa1}
+.toon-choice[aria-pressed="true"]{border-color:#7cfbd8;box-shadow:0 0 0 2px #7cfbd840,0 18px 30px #05031b6b}
+.stage{display:grid;place-items:center;aspect-ratio:1.05;overflow:hidden;border-radius:17px;background:radial-gradient(circle at 50% 60%,var(--glow,#a481ff66),transparent 57%),linear-gradient(160deg,#1a2453,#17112d);position:relative}
+.stage:after{content:"";position:absolute;inset:auto 18% 8%;height:9%;border-radius:50%;background:#0008;filter:blur(13px)}
+.stage svg{width:92%;height:92%;position:relative;z-index:1}
+.toon-name{font-weight:900;font-size:1.13rem;margin:14px 4px 2px}
+.toon-desc{font-size:.86rem;color:#cfc9e6;margin:0 4px 9px;min-height:2.6em;line-height:1.45}
+.tap-hint{color:#7effe1;font-size:.78rem;font-weight:800;margin:4px}
+.workshop{margin:32px 0 42px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:20px;align-items:stretch}
+.panel{border:1px solid var(--line);border-radius:26px;padding:clamp(18px,3vw,30px);background:linear-gradient(150deg,#242049df,#15142edc);box-shadow:0 24px 70px #04021450}
+.preview-wrap{display:grid;place-items:center;min-height:320px;border-radius:20px;background:radial-gradient(circle at 50% 55%,#55438f,#1a1d4a 65%,#131229);overflow:hidden}
+.preview-wrap svg{height:min(310px,60vw);max-width:96%;width:310px}
+.preview-panel h3{font-size:1.8rem;margin:0 0 5px}
+.preview-panel p,.code-panel p{color:var(--muted);line-height:1.6}
+.feature-list{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.pill{font-size:.73rem;border:1px solid #89bdf955;border-radius:30px;padding:6px 10px;color:#d9f5ff}
+.code-panel h3{font-size:1.55rem;margin:0 0 8px}
+textarea{width:100%;min-height:285px;resize:vertical;background:#090d22;color:#d7f7f1;border:1px solid #67739a;border-radius:15px;padding:14px;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;tab-size:2}
+.code-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:15px 0}
+.code-actions button{border:0;background:linear-gradient(110deg,#84f5dc,#b7e4ff);color:#102735;font-weight:900;border-radius:999px;padding:12px 20px}
+.code-actions a{font-weight:700;color:#c5f8ee;text-decoration:underline}
+.status{min-height:1.2rem;color:#97ffd3;font-size:.9rem}
+.foot{padding:30px 0 48px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:.88rem;color:#bfc4e4;line-height:1.5}
+.foot a{color:#9af4df}
+.astralis-toon-embed{display:inline-grid;place-items:center;width:min(100%,320px);aspect-ratio:1;background:transparent}
+.astralis-toon-embed svg{width:100%;height:auto;overflow:visible}
+.astralis-toon-embed .an-body{transform-origin:50% 56%;animation:an-float 3.8s ease-in-out infinite}
+.astralis-toon-embed .an-detail{transform-origin:50% 55%;animation:an-wiggle 2.9s ease-in-out infinite}
+.astralis-toon-embed .an-antenna{transform-origin:50% 69%;animation:an-wiggle 1.9s ease-in-out infinite}
+.astralis-toon-embed .an-spark{animation:an-spark 2.2s ease-in-out infinite}
+@keyframes an-float{0%,100%{transform:translateY(4px) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+@keyframes an-wiggle{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(11deg)}}
+@keyframes an-spark{0%,100%{opacity:.35;transform:scale(.75)}50%{opacity:1;transform:scale(1.12)}}
+@keyframes planet-breathe{50%{filter:hue-rotate(17deg);transform:scale(1.025)}}
+@keyframes spark-float{50%{transform:translateY(-18px) rotate(13deg)}}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workshop{grid-template-columns:1fr}.hero-visual{height:350px}}
+@media(max-width:650px){.hero{grid-template-columns:1fr;gap:0;padding-top:12px}.hero-visual{height:290px;order:-1}.planet{inset:10px 20% 5px}.ring{top:45%;height:27%;left:13%;right:13%;border-width:10px}.hero-orbit{left:40%;top:25%}.grid{gap:10px}.toon-choice{padding:8px;border-radius:16px}.toon-desc{min-height:4em;font-size:.78rem}.toon-name{font-size:.99rem}.preview-wrap{min-height:260px}.hero p{margin-bottom:23px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top shell">
+<a class="brand" href="/">✦ ASTRALIS <span>NOVA</span></a>
+<a class="back" href="/">← Back to the universe</a>
+</header>
+<main class="shell">
+<section class="hero" aria-labelledby="heroTitle">
+<div class="hero-copy">
+<div class="kicker">Astralis Nova • An animated world you can share</div>
+<h1 id="heroTitle">TOON <strong>PLANET</strong></h1>
+<p>They're alive! Meet an original cast of wandering cosmic cartoons. Tap a character to watch it move, then take its actual HTML, SVG and CSS with you. No downloads, accounts or libraries required.</p>
+<a class="cta" href="#toonResidents">🌈 Meet the residents ↓</a>
+</div>
+<div class="hero-visual" aria-hidden="true">
+<div class="planet"></div><div class="ring"></div>
+<span class="hero-spark a">✨</span><span class="hero-spark b">⭐</span><span class="hero-spark c">🌙</span><span class="hero-orbit">👾</span>
+</div>
+</section>
+<section id="toonResidents" aria-labelledby="residentsTitle">
+<div class="section-heading">
+<div><div class="kicker">01 / The residents</div><h2 id="residentsTitle">Pick a toon. Bring it to life.</h2></div>
+<p>Tap any character to open its animation workshop.</p>
+</div>
+<div class="grid" id="toonGallery" aria-label="Original cartoon characters"></div>
+</section>
+<section class="workshop" id="workshop" aria-labelledby="workshopTitle">
+<div class="panel preview-panel">
+<div class="kicker">02 / Live studio</div>
+<h3 id="workshopTitle">Character studio</h3>
+<p id="toonDescription">Choose an animated resident above.</p>
+<div class="preview-wrap" id="toonPreview" aria-label="Animated character preview"></div>
+<div class="feature-list"><span class="pill">Original artwork</span><span class="pill">Responsive SVG</span><span class="pill">CSS animation</span></div>
+</div>
+<div class="panel code-panel">
+<div class="kicker">03 / Take it with you</div>
+<h3>Copy this toon for your site</h3>
+<p>Paste the entire snippet into a Custom HTML or Embed block. Everything lives in the copied code: artwork, motion and styling. Works without external image links or JavaScript.</p>
+<label for="toonSource" class="kicker" style="display:block;margin:18px 0 10px">Reusable HTML + CSS + SVG</label>
+<textarea id="toonSource" readonly spellcheck="false" aria-label="Selected character embed code"></textarea>
+<div class="code-actions"><button type="button" id="copyToon">📋 Copy Toon Code</button><a href="#toonResidents">Choose another toon ↑</a></div>
+<p class="status" id="copyStatus" role="status" aria-live="polite"></p>
+<p style="font-size:.82rem">These are original Astralis Nova character designs shared for copying, modifying and using on personal or commercial websites. They aren't Bugs Bunny or other licensed cartoon characters. Some website builders restrict custom HTML, so use their embed/code feature.</p>
+</div>
+</section>
+</main>
+<footer class="foot shell"><span>© 2026 Astralis Nova • Toon Planet</span><span>Independent cosmic cartoons, created for explorers to share. <a href="/">Return home ✦</a></span></footer>
+<script>
+(function(){
+"use strict";
+const svg=function(label,content){return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="'+label+'">'+content+'</svg>';};
+const residents=[
+{ id:"fizz",name:"Fizz the Nebula Jelly",blurb:"A drifting jellyfish who collects tiny stars.",glow:"#53e9de77",art:svg("Fizz, a smiling turquoise space jellyfish",
+'<g class="an-body"><path d="M61 168C64 77 129 53 163 54c72 2 115 60 104 129-5 20-29 24-52 16-22 17-42 6-53-4-20 19-41 16-55-1-26 9-44-2-46-26Z" fill="#68e8dc" stroke="#184978" stroke-width="7"/><path d="M82 141c12-61 44-70 78-71" fill="none" stroke="#c1fff0" stroke-width="13" stroke-linecap="round" opacity=".7"/><ellipse cx="126" cy="154" rx="9" ry="12" fill="#18395d"/><ellipse cx="196" cy="154" rx="9" ry="12" fill="#18395d"/><path d="M147 173q15 17 31 0" fill="none" stroke="#13466d" stroke-width="6" stroke-linecap="round"/><circle cx="107" cy="172" r="13" fill="#ff90ba" opacity=".65"/><circle cx="216" cy="172" r="13" fill="#ff90ba" opacity=".65"/></g><g class="an-detail" stroke="#69d9df" stroke-width="11" stroke-linecap="round" fill="none"><path d="M103 199q-17 35 6 64"/><path d="M143 204q-12 41 1 70"/><path d="M185 204q5 46-6 68"/><path d="M224 198q28 33 1 65"/></g><g fill="#fff3a6" class="an-spark"><path d="m253 55 7 16 16 7-16 7-7 17-7-17-16-7 16-7Z"/><circle cx="66" cy="78" r="6"/></g>')},
+{ id:"sol",name:"Sol the Stardust Fox",blurb:"A golden fox that paints meteor trails.",glow:"#ffc57577",art:svg("Sol, a cheerful golden fox with a stardust tail",
+'<g class="an-detail"><path d="M206 217C286 179 304 221 287 254c-26 50-98 43-126-6 38 25 84 4 91-23-16 10-31 10-46-8Z" fill="#ffc45f" stroke="#8a3a61" stroke-width="7"/><path d="M271 242q8 19-8 34" fill="none" stroke="#fff2ce" stroke-width="14" stroke-linecap="round"/></g><g class="an-body"><path d="M77 116 83 51 130 92 187 92 231 47 238 128Q268 175 242 227Q217 271 158 271 84 268 67 218 51 172 77 116Z" fill="#f7ac59" stroke="#7a385c" stroke-width="7"/><path d="m86 69 32 36-39 27Z" fill="#fbd7dc"/><path d="m224 68-32 36 41 27Z" fill="#fbd7dc"/><path d="M89 182q26 4 67 35 44-36 82-35 2 61-78 68-72-9-71-68Z" fill="#fff4e1"/><ellipse cx="118" cy="161" rx="10" ry="14" fill="#593859"/><ellipse cx="198" cy="161" rx="10" ry="14" fill="#593859"/><path d="m149 202 9-7 10 7-10 10Z" fill="#70405e"/><path d="M154 212q-15 20-28 6m32-6q10 18 27 5" fill="none" stroke="#70405e" stroke-width="4" stroke-linecap="round"/><circle cx="99" cy="183" r="11" fill="#e77e8b" opacity=".7"/><circle cx="216" cy="183" r="11" fill="#e77e8b" opacity=".7"/><path d="M130 259q-3 34-20 28m73-27q5 36 18 28" fill="none" stroke="#804760" stroke-width="10" stroke-linecap="round"/></g><g class="an-spark" fill="#fff4b7"><path d="m40 93 5 13 13 5-13 5-5 13-5-13-13-5 13-5ZM267 102l5 10 10 5-10 5-5 11-5-11-10-5 10-5Z"/></g>')},
+{ id:"beep",name:"Beep the Moon Mechanic",blurb:"A tiny robot who repairs broken constellations.",glow:"#98afff77",art:svg("Beep, a smiling violet space robot",
+'<g class="an-detail"><path d="M142 78V45" stroke="#8797f7" stroke-width="9" stroke-linecap="round"/><circle cx="142" cy="40" r="16" fill="#ffb9e1" stroke="#6475b4" stroke-width="6"/><path d="M79 217q-34 4-32 41m192-41q35 7 32 40" fill="none" stroke="#b6b7ff" stroke-width="14" stroke-linecap="round"/></g><g class="an-body"><rect x="58" y="79" width="202" height="147" rx="55" fill="#b8baff" stroke="#505894" stroke-width="8"/><rect x="78" y="110" width="163" height="85" rx="37" fill="#303763" stroke="#515998" stroke-width="5"/><rect x="100" y="126" width="36" height="48" rx="17" fill="#8af8da"/><rect x="182" y="126" width="36" height="48" rx="17" fill="#8af8da"/><path d="M148 170q16 18 32 0" stroke="#aafce6" stroke-width="6" stroke-linecap="round" fill="none"/><circle cx="80" cy="203" r="17" fill="#eaa6d4" stroke="#505894" stroke-width="4"/><circle cx="239" cy="203" r="17" fill="#eaa6d4" stroke="#505894" stroke-width="4"/><path d="M96 228q-4 34 11 50h105q16-19 10-50" fill="#777dc9" stroke="#505894" stroke-width="8"/><rect x="137" y="242" width="44" height="22" rx="8" fill="#ffd08b"/><path d="m103 279-15 17m120-17 18 17" stroke="#adb6f5" stroke-width="13" stroke-linecap="round"/></g><g class="an-spark"><path d="m276 79 7 17 17 7-17 7-7 17-7-17-17-7 17-7Z" fill="#ffe9a9"/></g>')},
+{ id:"sprig",name:"Sprig the Star Seed",blurb:"A wandering little plant who grows light.",glow:"#82e89a77",art:svg("Sprig, a smiling green plant sprout under a tiny star",
+'<g class="an-detail"><path d="M158 109Q117 69 82 89q18 45 68 47M166 100q27-62 76-53-1 55-76 73" fill="#a3f08a" stroke="#33866d" stroke-width="7"/><path d="M161 141Q160 95 194 73" fill="none" stroke="#39816b" stroke-width="7"/></g><g class="an-body"><path d="M160 128Q231 127 246 185q19 69-36 97-45 23-100-1Q63 249 79 186q13-57 81-58Z" fill="#86d993" stroke="#246957" stroke-width="8"/><path d="M112 148q47-30 93 0" fill="none" stroke="#c8ffb1" stroke-width="12" opacity=".55" stroke-linecap="round"/><ellipse cx="131" cy="196" rx="10" ry="14" fill="#205558"/><ellipse cx="192" cy="196" rx="10" ry="14" fill="#205558"/><path d="M148 223q12 16 29 0" fill="none" stroke="#245857" stroke-width="5" stroke-linecap="round"/><circle cx="105" cy="215" r="12" fill="#ffb0af" opacity=".7"/><circle cx="216" cy="215" r="12" fill="#ffb0af" opacity=".7"/><path d="M113 276q-23 32-43 11m133-11q23 32 44 12" stroke="#39816b" stroke-width="13" stroke-linecap="round" fill="none"/></g><g class="an-spark"><path d="m251 67 10 21 21 10-21 10-10 21-10-21-21-10 21-10Z" fill="#fff0a0"/><circle cx="67" cy="93" r="7" fill="#fff0a0"/></g>')}
+];
+const sharedCss = '.astralis-toon-embed{display:inline-grid;place-items:center;width:min(100%,320px);aspect-ratio:1;background:transparent}\n'
++'.astralis-toon-embed svg{width:100%;height:auto;overflow:visible}\n'
++'.astralis-toon-embed .an-body{transform-origin:50% 56%;animation:an-float 3.8s ease-in-out infinite}\n'
++'.astralis-toon-embed .an-detail{transform-origin:50% 55%;animation:an-wiggle 2.9s ease-in-out infinite}\n'
++'.astralis-toon-embed .an-antenna{transform-origin:50% 69%;animation:an-wiggle 1.9s ease-in-out infinite}\n'
++'.astralis-toon-embed .an-spark{animation:an-spark 2.2s ease-in-out infinite}\n'
++'@keyframes an-float{0%,100%{transform:translateY(4px) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}\n'
++'@keyframes an-wiggle{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(11deg)}}\n'
++'@keyframes an-spark{0%,100%{opacity:.35;transform:scale(.75)}50%{opacity:1;transform:scale(1.12)}}\n'
++'@media(prefers-reduced-motion:reduce){.astralis-toon-embed *{animation:none!important}}\n';
+const gallery=document.getElementById("toonGallery");
+const preview=document.getElementById("toonPreview");
+const description=document.getElementById("toonDescription");
+const workshopTitle=document.getElementById("workshopTitle");
+const source=document.getElementById("toonSource");
+const status=document.getElementById("copyStatus");
+let activeId=residents[0].id;
+function wrap(r){return '<div class="astralis-toon-embed" data-toon="'+r.id+'">'+r.art+'</div>';}
+function codeFor(r){return '<!-- Astralis Nova Toon Planet: '+r.name+' (original reusable toon) -->\n<style>\n'+sharedCss+'</style>\n'+wrap(r);}
+function choose(id,scroll){
+const resident=residents.find(function(item){return item.id===id;});if(!resident)return;
+activeId=id;
+preview.innerHTML=wrap(resident);
+workshopTitle.textContent=resident.name;
+description.textContent=resident.blurb;
+source.value=codeFor(resident);
+status.textContent="";
+document.querySelectorAll(".toon-choice").forEach(function(button){button.setAttribute("aria-pressed",String(button.dataset.id===id));});
+if(scroll)document.getElementById("workshop").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth",block:"start"});
+}
+residents.forEach(function(item){
+const button=document.createElement("button");
+button.type="button";button.className="toon-choice";button.dataset.id=item.id;
+button.setAttribute("aria-label","Preview and copy "+item.name);
+button.setAttribute("aria-pressed","false");
+button.style.setProperty("--glow",item.glow);
+const stage=document.createElement("span");stage.className="stage";stage.innerHTML=wrap(item);
+const name=document.createElement("span");name.className="toon-name";name.textContent=item.name;
+const desc=document.createElement("span");desc.className="toon-desc";desc.textContent=item.blurb;
+const hint=document.createElement("span");hint.className="tap-hint";hint.textContent="Tap to copy its code →";
+button.append(stage,name,desc,hint);
+button.addEventListener("click",function(){choose(item.id,true);});
+gallery.append(button);
+});
+document.getElementById("copyToon").addEventListener("click",async function(){
+const selected=residents.find(function(item){return item.id===activeId;});
+try{
+if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText(source.value);}
+else{source.focus();source.select();if(!document.execCommand("copy"))throw new Error("Clipboard unavailable");}
+status.textContent="✓ Copied "+selected.name+"! Paste it into your site's Custom HTML or Embed block.";
+}catch(error){source.focus();source.select();status.textContent="Select and copy the highlighted code manually. Your toon is ready.";}
+});
+choose(activeId,false);
+})();
+</script>
+</body>
+</html>
