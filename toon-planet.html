@@ -2,41 +2,105 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#07131b">
-<meta name="description" content="Toon Planet begins with the Cactus Forest Moonlight landscape: original Astralis Nova artwork and gently animated Sonoran Desert scenery.">
-<title>Toon Planet • Cactus Forest Moonlight | Astralis Nova</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#030914">
+<meta name="description" content="Explore Toon Planet from the stars above Cactus Forest Moonlight, through the Arizona desert surface, to the roots and rock layers underground.">
+<title>Toon Planet | Above, Surface, Below | Astralis Nova</title>
 <link rel="preload" as="image" href="/cover-3.jpg">
 <style>
-:root{color-scheme:dark;--text:#f0f6f5;--mint:#b3e9dd}
+:root{color-scheme:dark;--text:#f1f8f7;--aquamarine:#b6fff0;--muted:#d4e5e5}
 *{box-sizing:border-box}
-html{height:100%;scroll-behavior:smooth}
-body{min-height:100vh;min-height:100svh;margin:0;background:#05121c;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+html{scroll-behavior:smooth;scroll-padding-top:18px}
+body{margin:0;min-width:300px;background:#030815;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
 a{color:inherit}
-a:focus-visible{outline:3px solid #9cffea;outline-offset:5px;border-radius:8px}
-.moonlight-scene{position:fixed;inset:0;z-index:0;isolation:isolate;overflow:hidden;pointer-events:none;background:#07111e}
-.original-cover{position:absolute;inset:-2%;background:url('/cover-3.jpg') center center/cover no-repeat;transform:scale(1.025)}
-.moonlight-shade{position:absolute;inset:0;z-index:1;background:
- linear-gradient(180deg,rgba(2,10,20,.2) 0%,rgba(2,9,17,.02) 35%,rgba(0,7,15,.14) 60%,rgba(0,6,13,.7) 100%),
- radial-gradient(ellipse at 50% 24%,transparent 0 18%,rgba(2,10,20,.16) 85%)}
-.night-stars{position:absolute;inset:-4%;z-index:2;opacity:.38;
- background-image:radial-gradient(circle,#fffefa 0 1px,transparent 1.7px),
- radial-gradient(circle,#d5ecff 0 1px,transparent 1.8px),
- radial-gradient(circle,#f9efd1 0 .9px,transparent 1.5px);
- background-size:197px 227px,271px 239px,383px 311px;
- background-position:23px 11px,89px 76px,189px 153px;
- animation:starBreathing 7s ease-in-out infinite alternate}
-.night-stars.far{opacity:.18;animation-duration:10s;animation-delay:-4s;background-position:139px 100px,39px 143px,73px 12px}
-.night-haze{position:absolute;inset:-12%;z-index:2;opacity:.25;
- background:radial-gradient(ellipse at 23% 23%,rgba(127,164,222,.18),transparent 31%),
- radial-gradient(ellipse at 71% 28%,rgba(161,182,223,.16),transparent 32%),
- radial-gradient(ellipse at 44% 69%,rgba(103,146,169,.10),transparent 38%);
- filter:blur(34px);animation:nightMist 35s ease-in-out infinite alternate}
-.soft-moonlight{position:absolute;inset:0;z-index:2;opacity:.45;pointer-events:none;
- background:radial-gradient(ellipse at 57% 20%,rgba(184,224,241,.12),transparent 31%);
- animation:moonBreathing 14s ease-in-out infinite}
-.toon-desert-foreground{position:absolute;bottom:-10px;z-index:4;width:min(31vw,330px);height:min(52vh,440px);
- overflow:visible;opacity:.72;filter:drop-shadow(0 3px 17px rgba(8,23,25,.23))}
+a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.world{position:relative;isolation:isolate}
+.region{position:relative;isolation:isolate;overflow:hidden;min-height:100vh;min-height:100svh}
+.region > .region-content{position:relative;z-index:7;margin-inline:auto;width:min(1280px,calc(100% - 44px));pointer-events:none}
+.region-content a,.region-content button{pointer-events:auto}
+.region-content .scene-note,.region-content .title-card{pointer-events:auto}
+.brand-link{position:fixed;z-index:40;top:18px;left:clamp(14px,3vw,34px);text-decoration:none;
+ font-size:clamp(.77rem,1.7vw,.97rem);letter-spacing:.14em;font-weight:950;
+ text-shadow:0 2px 12px #000;background:rgba(3,16,28,.60);border:1px solid #bce7e03b;
+ padding:11px 14px;border-radius:999px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.brand-link span{color:#9be9da}
+.level-nav{position:fixed;right:clamp(12px,2.7vw,33px);top:50%;transform:translateY(-50%);
+ z-index:40;display:grid;gap:10px;align-items:center;border:1px solid #d2eaf047;border-radius:22px;
+ padding:11px 9px;background:#071626b8;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+ box-shadow:0 10px 35px #0008}
+.level-nav a{display:flex;gap:8px;align-items:center;justify-content:flex-start;min-height:43px;
+ text-decoration:none;border-radius:12px;padding:8px 10px;color:#d4eded;font-size:.77rem;font-weight:850;
+ transition:background .2s,color .2s}
+.level-nav a span{font-size:1.15rem}
+.level-nav a:hover,.level-nav a[aria-current="location"]{background:#c7f2e527;color:#fff}
+.level-nav a[aria-current="location"]{box-shadow:inset 3px 0 #b0f8e6}
+.scene-note{border:1px solid #dce8e356;border-radius:22px;padding:clamp(18px,3vw,31px);
+ background:linear-gradient(140deg,#06152bbd,#0e223d72);box-shadow:0 15px 60px #02081280;
+ backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);width:min(530px,100%)}
+.eyebrow{margin:0 0 10px;text-transform:uppercase;letter-spacing:.19em;color:#baf2e7;font-weight:900;font-size:.75rem}
+.scene-note h2{margin:0 0 12px;font-size:clamp(1.95rem,5vw,3.7rem);letter-spacing:-.045em;line-height:1.05}
+.scene-note p{line-height:1.65;color:#e6eff6;margin:0;font-size:clamp(.91rem,1.65vw,1.04rem)}
+.scene-hint{display:inline-flex;gap:9px;align-items:center;margin-top:18px;border:1px solid #c8f2e35e;border-radius:999px;
+ padding:9px 14px;background:#0717288c;text-decoration:none;font-size:.83rem;font-weight:800;color:#defff5}
+.scene-hint:hover{background:#0b3446}
+.region-space{min-height:129vh;min-height:129svh;
+ background:
+ radial-gradient(ellipse at 58% 29%,#2b235449,transparent 31%),
+ radial-gradient(ellipse at 30% 66%,#2c659c36,transparent 43%),
+ linear-gradient(180deg,#010511 0%,#060c20 45%,#0d2144 74%,#1b3a60 91%,#274862 100%)}
+.space-sky{position:absolute;z-index:0;inset:0;overflow:hidden}
+.space-stars{position:absolute;inset:-8%;pointer-events:none;opacity:.73;
+ background-image:radial-gradient(circle,#f8fdff 0 1px,transparent 1.75px),
+  radial-gradient(circle,#c6eaff 0 1.1px,transparent 1.9px),
+  radial-gradient(circle,#ffe9ce 0 .8px,transparent 1.5px);
+ background-size:177px 187px,283px 317px,383px 401px;
+ background-position:18px 70px,105px 16px,200px 132px;
+ animation:starsWink 9s ease-in-out infinite alternate}
+.space-stars.back{opacity:.39;background-size:247px 219px,359px 307px,451px 439px;
+ background-position:130px 106px,55px 126px,330px 182px;animation-delay:-5s;animation-duration:13s}
+.galactic-cloud{position:absolute;inset:-18%;z-index:1;opacity:.74;transform:rotate(-22deg);
+ background:radial-gradient(ellipse 33% 13% at 31% 28%,#6696d92e,transparent 95%),
+ radial-gradient(ellipse 46% 14% at 52% 38%,#b48bc638,transparent 94%),
+ radial-gradient(ellipse 48% 11% at 61% 42%,#74aee840,transparent 94%),
+ radial-gradient(ellipse 33% 13% at 73% 47%,#f5bdde1d,transparent 96%);
+ filter:blur(21px);animation:nebulaBreathe 24s ease-in-out infinite alternate}
+.distant-world{position:absolute;z-index:2;top:17%;right:18%;width:clamp(68px,11vw,175px);aspect-ratio:1;border-radius:50%;
+ background:radial-gradient(circle at 32% 28%,#c4ecfc 0,#6ea9d2 14%,#39709f 43%,#16274b 76%,#060e27 100%);
+ box-shadow:inset -21px -18px 28px #050b27bc,0 0 42px #79b9ff48,0 0 90px #7297f41c;
+ animation:spaceWorldDrift 18s ease-in-out infinite alternate}
+.distant-world:after{content:"";position:absolute;inset:23% 14%;border-radius:50%;
+ background:radial-gradient(ellipse at 35% 40%,#7bd2be9c,transparent 47%),radial-gradient(ellipse at 77% 58%,#317c9a9a,transparent 39%);
+ opacity:.42;transform:rotate(21deg)}
+.orbit-track{position:absolute;z-index:1;top:12%;right:11%;width:clamp(145px,23vw,335px);height:clamp(70px,11vw,160px);
+ border:1px solid #c8daff25;border-radius:50%;transform:rotate(-25deg);pointer-events:none}
+.space-dust{position:absolute;z-index:1;top:39%;left:17%;width:3px;height:3px;border-radius:50%;background:#fff;
+ box-shadow:8vw 8vh 1px #b6eaff,22vw -11vh 1px #fff,34vw 9vh 2px #b7d7ff,51vw -2vh 1px #fff8,
+ 59vw 19vh 0 #e4ffff,72vw -12vh 2px #ffedee,28vw 20vh 0 #d2ffff}
+.planet-horizon{position:absolute;z-index:2;bottom:-31%;left:-23%;width:146%;height:54%;
+ background:radial-gradient(ellipse at 50% 2%,#7fc9fbb3 0,#2d78bfa3 3%,#153b72 18%,#071933 49%,#061124 90%);
+ border-radius:50% 50% 0 0;box-shadow:0 -17px 61px #71b7f886,0 -2px 8px #e4f3fb66;opacity:.92}
+.space-atmosphere{position:absolute;z-index:4;inset:auto 0 0;height:27%;
+ background:linear-gradient(180deg,transparent 0,#19335480 35%,#182841c9 68%,#102132 100%);pointer-events:none}
+.space-copy{min-height:129vh;min-height:129svh;display:flex;flex-direction:column;justify-content:center;padding-top:110px;padding-bottom:21vh}
+.space-copy .scene-note{margin-top:0}
+.space-kicker{position:absolute;bottom:10%;left:calc(50% - 42px);z-index:8;font-size:.77rem;letter-spacing:.12em;
+ color:#d9eff3d4;text-transform:uppercase;text-align:center;width:100px;animation:hintFloat 4s ease-in-out infinite alternate}
+.region-surface{min-height:116vh;min-height:116svh;background:#061523}
+.surface-cover{position:absolute;inset:0;z-index:0;background:url('/cover-3.jpg') center 50%/cover no-repeat;transform:scale(1.01)}
+.surface-color{position:absolute;inset:0;z-index:1;pointer-events:none;
+ background:linear-gradient(180deg,#102132 0%,rgba(9,21,40,.65) 10%,transparent 29%,transparent 60%,#090e18a1 85%,#1d1b19 100%),
+ radial-gradient(ellipse at 47% 18%,#a5c4e112,transparent 48%)}
+.surface-stars{position:absolute;inset:3% -5% auto;height:62%;z-index:2;opacity:.40;
+ background-image:radial-gradient(circle,#fff 0 1px,transparent 1.7px),
+ radial-gradient(circle,#c9edff 0 1px,transparent 1.6px);
+ background-size:213px 217px,327px 309px;
+ animation:starsWink 10s ease-in-out infinite alternate-reverse}
+.surface-haze{position:absolute;inset:0;z-index:2;opacity:.32;pointer-events:none;
+ background:radial-gradient(ellipse at 59% 20%,rgba(197,222,246,.13),transparent 28%);
+ animation:moonBreathe 13s ease-in-out infinite}
+.toon-desert-foreground{position:absolute;bottom:32px;z-index:4;width:min(31vw,330px);height:min(52vh,440px);
+ overflow:visible;opacity:.8;filter:drop-shadow(0 3px 17px rgba(8,23,25,.23));pointer-events:none}
 .toon-desert-foreground.left{left:-45px}
 .toon-desert-foreground.right{right:-46px}
 .toon-desert-foreground .saguaro-motion{transform-box:view-box;transform-origin:47% 100%;animation:cactusSway 18s ease-in-out infinite alternate}
@@ -44,59 +108,133 @@ a:focus-visible{outline:3px solid #9cffea;outline-offset:5px;border-radius:8px}
 .toon-desert-foreground .ocotillo-motion{transform-box:view-box;transform-origin:56% 98%;animation:ocotilloSway 10s ease-in-out infinite alternate}
 .toon-desert-foreground .desert-grass{transform-box:fill-box;transform-origin:50% 100%;animation:grassSway 5s ease-in-out infinite alternate}
 .toon-desert-foreground .desert-grass.alt{animation-delay:-2.5s;animation-duration:7s}
-@keyframes starBreathing{from{opacity:.16}to{opacity:.56}}
-@keyframes nightMist{from{transform:translate3d(-1.6%,0,0)}to{transform:translate3d(1.8%,-.8%,0)}}
-@keyframes moonBreathing{50%{opacity:.72}}
+.ground-fade{position:absolute;bottom:0;left:0;right:0;height:112px;z-index:5;
+ background:linear-gradient(180deg,transparent 0%,#17192180 34%,#332b21 89%,#433327 100%);
+ clip-path:polygon(0 12%,6% 10%,14% 22%,22% 17%,30% 30%,41% 22%,50% 17%,60% 27%,70% 11%,81% 19%,91% 6%,100% 20%,100% 100%,0 100%)}
+.surface-copy{min-height:116vh;min-height:116svh;display:flex;flex-direction:column;justify-content:flex-end;padding-top:21vh;padding-bottom:clamp(128px,18vh,190px)}
+.title-card{border:1px solid #dbeedc50;border-radius:24px;padding:clamp(21px,3.4vw,40px);
+ background:linear-gradient(120deg,#04121fcf,#071c2a91);box-shadow:0 24px 75px #0007;
+ backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);width:min(700px,100%)}
+.title-card h1{font-size:clamp(3.2rem,8.2vw,7.5rem);letter-spacing:-.078em;line-height:.95;margin:13px 0 14px;text-shadow:0 5px 35px #061424}
+.title-card h1 span{color:#d5ffec}
+.title-card .subtitle{margin:0 0 13px;font-size:clamp(1.05rem,2.1vw,1.42rem);font-weight:800;color:#c9edf0}
+.title-card .description{max-width:570px;line-height:1.67;color:#e7f2f0;margin:0;font-size:clamp(.93rem,1.6vw,1.07rem)}
+.region-underground{min-height:152vh;min-height:152svh;
+ background:linear-gradient(180deg,#433327 0%,#4b382a 19%,#3b2b26 44%,#2e2524 70%,#131d27 100%)}
+.underground-strata{position:absolute;z-index:0;inset:0;overflow:hidden}
+.underground-strata:before{content:"";position:absolute;inset:0;opacity:.37;pointer-events:none;
+ background:repeating-linear-gradient(180deg,transparent 0 19px,#bca27b0c 20px 21px,transparent 24px 72px),
+ radial-gradient(ellipse at 25% 35%,#bca77a20,transparent 27%),
+ radial-gradient(ellipse at 80% 62%,#d49a6e1c,transparent 38%)}
+.underground-art{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.underground-topsoil{position:absolute;inset:0 0 auto;height:80px;z-index:3;background:
+ radial-gradient(ellipse at 30% -55%,#83715a73,transparent 65%),
+ repeating-linear-gradient(0deg,#42332500 0 15px,#bc885b13 17px 19px),
+ linear-gradient(180deg,#483629,#554130 35%,transparent);
+ pointer-events:none}
+.underground-dust{position:absolute;inset:0;z-index:3;opacity:.14;pointer-events:none;
+ background-image:radial-gradient(circle,#f7e9ba 0 1px,transparent 2px),radial-gradient(circle,#f1c7a0 0 1.2px,transparent 2.2px);
+ background-size:181px 171px,287px 333px;animation:dustFloat 22s linear infinite alternate}
+.underground-moisture{position:absolute;z-index:3;bottom:13%;left:9%;width:34%;height:13%;border-radius:50%;
+ background:radial-gradient(ellipse at 50% 30%,#79c3c44d,#286d7b32 34%,#09273300 73%);
+ filter:blur(13px);animation:moonBreathe 14s ease-in-out infinite alternate}
+.underground-copy{min-height:152vh;min-height:152svh;display:flex;flex-direction:column;justify-content:space-between;
+ padding-top:clamp(115px,17vh,175px);padding-bottom:11vh}
+.underground-copy .scene-note{background:linear-gradient(130deg,#2e221dcf,#0e1c25aa);border-color:#ddb99560}
+.layer-label{position:absolute;z-index:4;padding:8px 13px;border-radius:100px;
+ background:#120f14b8;border:1px solid #ead8ac4f;color:#f8ecd4;
+ font-size:clamp(.69rem,1vw,.83rem);letter-spacing:.05em;white-space:nowrap;pointer-events:none}
+.layer-label.sand{top:29%;left:9%}.layer-label.caliche{top:52%;right:14%}.layer-label.deep{top:79%;left:15%}
+.fossil-hint{position:absolute;z-index:3;right:18%;bottom:18%;width:90px;height:90px;opacity:.18;transform:rotate(24deg);
+ border:6px solid #e2c7a8;border-radius:50%;box-shadow:inset 0 0 0 5px #94755e}
+.fossil-hint:after{content:"";position:absolute;inset:12px;border:6px dashed #cfb69c;border-radius:50%}
+.closing-note{align-self:flex-start;max-width:490px;margin-top:auto;padding:16px 20px;
+ border:1px solid #ccb49859;border-radius:18px;background:#171c27b8;backdrop-filter:blur(8px);
+ font-size:.84rem;line-height:1.6;color:#e6dccc}
+.region-underground:after{content:"";position:absolute;z-index:3;inset:auto 0 0;height:20%;
+ background:linear-gradient(180deg,transparent,#08101b);pointer-events:none}
+@keyframes starsWink{from{opacity:.24}to{opacity:.79}}
+@keyframes nebulaBreathe{from{opacity:.46;transform:rotate(-22deg) translate(-1.5%,0)}to{opacity:.82;transform:rotate(-22deg) translate(1.5%,-1%)}}
+@keyframes spaceWorldDrift{to{transform:translateY(-10px) rotate(4deg)}}
+@keyframes moonBreathe{50%{opacity:.65}}
+@keyframes hintFloat{to{transform:translateY(-10px)}}
 @keyframes cactusSway{from{transform:rotate(-.35deg)}to{transform:rotate(.4deg)}}
 @keyframes mesquiteSway{from{transform:rotate(-1.05deg)}to{transform:rotate(1.1deg)}}
 @keyframes ocotilloSway{from{transform:rotate(-2deg)}to{transform:rotate(2.2deg)}}
 @keyframes grassSway{from{transform:rotate(-5deg)}to{transform:rotate(7deg)}}
-.frame{position:relative;z-index:5;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;
- max-width:1500px;margin:auto;padding:clamp(16px,3vw,34px)}
-.topbar{display:flex;gap:12px;align-items:center;justify-content:space-between}
-.brand{font-size:clamp(.83rem,2vw,1rem);font-weight:900;letter-spacing:.17em;text-decoration:none;
- text-shadow:0 2px 12px #01070a}
-.brand em{font-style:normal;color:#a1f1e6}
-.back{padding:10px 16px;border:1px solid #e3eff57d;border-radius:999px;text-decoration:none;
- font-size:.87rem;font-weight:700;background:#0719299e;backdrop-filter:blur(7px)}
-.back:hover{background:#183c43dc}
-.title-area{margin-top:auto;align-self:flex-start;max-width:min(740px,100%);padding:clamp(18px,3vw,32px);
- background:linear-gradient(115deg,rgba(1,12,20,.72),rgba(2,16,26,.30) 88%);
- backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);
- border:1px solid #c0e6e344;border-radius:22px;box-shadow:0 15px 55px #02091277}
-.eyebrow{margin:0;color:#bbefe9;letter-spacing:.19em;text-transform:uppercase;font-size:.74rem;font-weight:900}
-h1{font-size:clamp(2.6rem,8vw,6.6rem);letter-spacing:-.065em;line-height:.98;margin:10px 0 12px;
- text-shadow:0 4px 28px #01101de0}
-.subtitle{font-size:clamp(1rem,2.7vw,1.3rem);font-weight:700;letter-spacing:.04em;color:#caebeb;margin:0 0 13px}
-.description{max-width:550px;color:#e4f0f0;line-height:1.65;margin:0;font-size:clamp(.88rem,1.8vw,1rem)}
-.bottom-note{font-size:.75rem;opacity:.77;margin:16px 4px 0;text-shadow:0 2px 7px #03070a}
-@media(max-width:700px){
- .original-cover{inset:0;background-position:50% 30%;transform:none}
- .toon-desert-foreground{width:min(47vw,210px);height:min(36vh,300px);opacity:.55;bottom:-13px}
- .toon-desert-foreground.left{left:-69px}
- .toon-desert-foreground.right{right:-62px}
- .night-haze{opacity:.14;filter:blur(20px)}
- .frame{padding:16px}
- .title-area{padding:20px 18px 21px;width:100%}
- .back{font-size:.78rem;padding:9px 12px}
- .description{font-size:.88rem}
+@keyframes dustFloat{to{transform:translate3d(0,-17px,0)}}
+@media(max-width:800px){
+ .level-nav{right:50%;top:auto;bottom:12px;transform:translateX(50%);display:flex;
+   gap:4px;padding:6px;border-radius:999px;width:max-content;max-width:calc(100vw - 24px)}
+ .level-nav a{min-height:42px;gap:5px;font-size:.7rem;padding:8px 10px;border-radius:999px}
+ .level-nav a[aria-current="location"]{box-shadow:inset 0 -3px #b0f8e6}
+ .brand-link{top:12px;left:12px}
+ .region > .region-content{width:calc(100% - 30px)}
+ .region-space,.space-copy{min-height:114svh}
+ .space-copy{padding-bottom:16vh}
+ .planet-horizon{width:170%;left:-35%;bottom:-18%;height:40%}
+ .distant-world{right:12%;top:16%}
+ .region-surface,.surface-copy{min-height:108svh}
+ .surface-cover{background-position:50% 45%}
+ .surface-copy{padding-bottom:140px;padding-top:110px}
+ .toon-desert-foreground{width:min(46vw,205px);height:min(36vh,320px);opacity:.66;bottom:30px}
+ .toon-desert-foreground.left{left:-64px}
+ .toon-desert-foreground.right{right:-59px}
+ .region-underground,.underground-copy{min-height:128svh}
+ .underground-copy{padding-top:115px;padding-bottom:95px}
+ .layer-label.sand{left:5%}.layer-label.caliche{right:6%}.layer-label.deep{left:6%}
+ .layer-label{font-size:.65rem;padding:6px 9px}
+ .fossil-hint{right:8%;bottom:15%;width:65px;height:65px}
+}
+@media(max-width:430px){
+ .level-nav a{font-size:.68rem;padding:7px 9px}
+ .level-nav a span{font-size:1rem}
+ .scene-note{padding:19px}
+ .title-card{padding:23px 20px}
+ .title-card h1{font-size:clamp(2.75rem,12vw,4.2rem)}
+ .layer-label.caliche{top:60%}
+ .space-kicker{bottom:6%}
 }
 @media(prefers-reduced-motion:reduce){
- .night-stars,.night-haze,.soft-moonlight,
+ html{scroll-behavior:auto}
+ .space-stars,.galactic-cloud,.distant-world,.space-kicker,.surface-stars,.surface-haze,
  .toon-desert-foreground .saguaro-motion,.toon-desert-foreground .mesquite-motion,
- .toon-desert-foreground .ocotillo-motion,.toon-desert-foreground .desert-grass{animation:none!important}
+ .toon-desert-foreground .ocotillo-motion,.toon-desert-foreground .desert-grass,
+ .underground-dust,.underground-moisture{animation:none!important}
 }
 </style>
 </head>
 <body>
-<div class="moonlight-scene" aria-hidden="true">
-  <div class="original-cover"></div>
-  <div class="moonlight-shade"></div>
-  <div class="soft-moonlight"></div>
-  <div class="night-stars"></div>
-  <div class="night-stars far"></div>
-  <div class="night-haze"></div>
-  <svg class="toon-desert-foreground left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 480" preserveAspectRatio="xMinYMax meet" focusable="false">
+<a class="brand-link" href="/" aria-label="Return to Astralis Nova home">✦ ASTRALIS <span>NOVA</span></a>
+<nav class="level-nav" aria-label="Toon Planet levels">
+ <a href="#space" data-level="space"><span aria-hidden="true">✦</span>Space</a>
+ <a href="#surface" data-level="surface"><span aria-hidden="true">🌵</span>Surface</a>
+ <a href="#underground" data-level="underground"><span aria-hidden="true">⬇</span>Below</a>
+</nav>
+<main class="world" id="toonWorld">
+<section class="region region-space" id="space" aria-labelledby="spaceTitle">
+ <div class="space-sky" aria-hidden="true">
+  <div class="space-stars"></div><div class="space-stars back"></div>
+  <div class="galactic-cloud"></div><div class="space-dust"></div>
+  <div class="orbit-track"></div><div class="distant-world"></div>
+  <div class="planet-horizon"></div><div class="space-atmosphere"></div>
+ </div>
+ <div class="region-content space-copy">
+  <div class="scene-note">
+   <p class="eyebrow">Level 01 • Above Cactus Forest</p>
+   <h2 id="spaceTitle">Above the Desert</h2>
+   <p>Beyond the moonlit mountains, our Arizona sky opens into a sea of stars. Drift upward through the atmosphere and imagine Cactus Forest from orbit.</p>
+   <a class="scene-hint" href="#surface">↓ Descend to the desert</a>
+  </div>
+ </div>
+ <div class="space-kicker" aria-hidden="true">↓ Down to Earth</div>
+</section>
+<section class="region region-surface" id="surface" aria-labelledby="surfaceTitle">
+ <div class="surface-cover" aria-hidden="true"></div>
+ <div class="surface-color" aria-hidden="true"></div>
+ <div class="surface-stars" aria-hidden="true"></div>
+ <div class="surface-haze" aria-hidden="true"></div>
+ <svg class="toon-desert-foreground left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 480" preserveAspectRatio="xMinYMax meet" focusable="false">
     <defs>
       <linearGradient id="desertLeftMoon" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0" stop-color="#05161a"/><stop offset=".48" stop-color="#163d3d"/><stop offset="1" stop-color="#366669"/>
@@ -118,7 +256,7 @@ h1{font-size:clamp(2.6rem,8vw,6.6rem);letter-spacing:-.065em;line-height:.98;mar
     <g class="desert-grass"><path d="M32 469Q18 435 19 409M35 468Q52 433 53 420M31 470Q32 432 36 415" fill="none" stroke="#38645b" stroke-width="4" stroke-linecap="round"/></g>
     <g class="desert-grass alt"><path d="M265 468Q252 431 244 425M269 473Q284 442 294 432M265 471Q271 429 272 409" fill="none" stroke="#325854" stroke-width="5" stroke-linecap="round"/></g>
   </svg>
-  <svg class="toon-desert-foreground right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 480" preserveAspectRatio="xMaxYMax meet" focusable="false">
+ <svg class="toon-desert-foreground right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 480" preserveAspectRatio="xMaxYMax meet" focusable="false">
     <defs>
       <linearGradient id="desertRightMoon" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0" stop-color="#436f6c"/><stop offset=".5" stop-color="#214747"/><stop offset="1" stop-color="#07171e"/>
@@ -137,19 +275,131 @@ h1{font-size:clamp(2.6rem,8vw,6.6rem);letter-spacing:-.065em;line-height:.98;mar
     <g class="desert-grass"><path d="M58 474Q36 437 33 419M56 472Q65 428 78 421M58 472Q54 430 54 404" fill="none" stroke="#3f6c60" stroke-width="5" stroke-linecap="round"/></g>
     <g class="desert-grass alt"><path d="M315 468Q309 431 290 414M311 468Q319 428 334 413M318 470Q324 450 336 440" fill="none" stroke="#305b56" stroke-width="4" stroke-linecap="round"/></g>
   </svg>
-</div>
-<main class="frame">
-  <nav class="topbar" aria-label="Site navigation">
-    <a class="brand" href="/">✦ ASTRALIS <em>NOVA</em></a>
-    <a class="back" href="/">← Return to the universe</a>
-  </nav>
-  <div class="title-area">
-    <p class="eyebrow">Cactus Forest, Arizona</p>
-    <h1>Toon Planet</h1>
-    <p class="subtitle">Cactus Forest Moonlight 🌙</p>
-    <p class="description">Our original song artwork, alive with the quiet desert breeze. Watch the stars gently twinkle while mesquite branches, ocotillo and grasses sway in the moonlight.</p>
+ <div class="ground-fade" aria-hidden="true"></div>
+ <div class="region-content surface-copy">
+  <div class="title-card">
+   <p class="eyebrow">Level 02 • Cactus Forest, Arizona</p>
+   <h1 id="surfaceTitle">Toon <span>Planet</span></h1>
+   <p class="subtitle">Cactus Forest Moonlight 🌙</p>
+   <p class="description">Our original song artwork is the heart of this world. A peaceful Sonoran Desert night, with stars overhead and mesquite, ocotillo, saguaros and grasses stirring in the breeze.</p>
+   <a class="scene-hint" href="#underground">↓ Explore beneath the desert floor</a>
   </div>
-  <p class="bottom-note">Stage one: the landscape. More will come to life here, one character at a time.</p>
+ </div>
+</section>
+<section class="region region-underground" id="underground" aria-labelledby="undergroundTitle">
+ <div class="underground-strata" aria-hidden="true"></div>
+ <div class="underground-topsoil" aria-hidden="true"></div>
+ <svg class="underground-art" viewBox="0 0 1440 1250" preserveAspectRatio="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+   <linearGradient id="soilLayerOne" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8c6c48" stop-opacity=".7"/><stop offset="1" stop-color="#a47e5d" stop-opacity=".12"/></linearGradient>
+   <linearGradient id="soilLayerTwo" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ac9271" stop-opacity=".42"/><stop offset="1" stop-color="#473e34" stop-opacity=".10"/></linearGradient>
+   <linearGradient id="rootShade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#c7a57a"/><stop offset=".5" stop-color="#a88660"/><stop offset="1" stop-color="#59462f"/></linearGradient>
+   <radialGradient id="waterGlow"><stop offset="0" stop-color="#91f6da" stop-opacity=".61"/><stop offset=".5" stop-color="#46aabf" stop-opacity=".32"/><stop offset="1" stop-color="#2a838d" stop-opacity="0"/></radialGradient>
+  </defs>
+  <!-- Sediment bands as an artistic Sonoran Desert cross-section, not surveyed local geology. -->
+  <path fill="url(#soilLayerOne)" d="M0 18Q150 40 280 23T570 35T835 30T1130 21T1440 27L1440 276Q1190 312 950 276T560 296T0 245Z"/>
+  <path fill="#71553c" opacity=".45" d="M0 240Q225 207 410 262T821 255T1170 239T1440 261V300Q1160 284 950 320T520 312T0 281Z"/>
+  <path fill="url(#soilLayerTwo)" d="M0 312Q160 340 340 315T760 339T1150 290T1440 322V492Q1230 519 1060 488T700 514T300 484T0 506Z"/>
+  <path fill="#b7a186" opacity=".25" d="M0 488Q220 470 365 519T722 489T1090 500T1440 484V521Q1195 516 1040 537T705 536T310 526T0 552Z"/>
+  <path fill="#765646" opacity=".39" d="M0 576Q205 542 397 605T777 574T1117 593T1440 557V815Q1120 789 926 830T511 811T0 852Z"/>
+  <path fill="#b4a08b" opacity=".16" d="M0 838Q205 813 410 846T837 841T1184 808T1440 841V885Q1160 862 922 891T510 871T0 895Z"/>
+  <path fill="#292c31" opacity=".37" d="M0 940Q170 895 391 947T782 909T1215 958T1440 915V1250H0Z"/>
+  <!-- Irregular caliche shelves, fractured stones and pebbles. -->
+  <g fill="#d6c1a1" opacity=".44">
+   <path d="M42 515l88 -13 37 14 -18 15 -113 -2z"/><path d="M367 532l142 -10 52 13 -40 20 -146 -6z"/>
+   <path d="M909 517l140 -7 62 19 -48 17 -160 -7z"/><path d="M1175 537l197 -16 37 20 -71 22 -151 -7z"/>
+   <path d="M175 570l34 -17 42 10 -15 21 -50 7z"/><path d="M750 581l63 -13 31 10 -18 29 -65 -6z"/>
+  </g>
+  <g fill="#8d7b67" stroke="#ac9780" stroke-opacity=".45" stroke-width="3">
+   <path d="M80 345l29 -15 31 17 -14 25 -39 1z"/><path d="M260 427l38 -20 37 12 7 29 -55 17 -30 -11z"/>
+   <path d="M590 346l38 -23 59 15 -11 36 -47 14z"/><path d="M1167 405l40 -19 47 13 13 30 -55 23 -46 -18z"/>
+   <path d="M997 673l73 -27 66 19 6 40 -69 29 -66 -25z"/><path d="M365 740l60 -22 61 33 -19 55 -75 4 -41 -33z"/>
+   <path d="M185 1014l80 -22 60 30 -18 49 -101 5z"/><path d="M1233 1005l95 -36 61 46 -28 56 -114 -15z"/>
+  </g>
+  <g stroke="#edd1af" stroke-opacity=".17" stroke-width="4" fill="none">
+   <path d="M100 354l21 12M281 428l26 21M628 325l-15 39M1196 403l37 29M1002 687l66 28M375 742l45 39M1283 990l35 35"/>
+  </g>
+  <!-- Mesquite-like deep roots reaching down; rootlets suggest branching subsurface networks. -->
+  <g stroke="url(#rootShade)" stroke-linecap="round" stroke-linejoin="round" fill="none">
+   <path d="M336 -35Q328 78 342 153Q325 242 371 332Q394 401 358 498Q347 568 386 646Q414 735 380 864" stroke-width="21"/>
+   <path d="M346 154Q240 203 220 306Q212 387 143 475Q115 528 100 645" stroke-width="12"/>
+   <path d="M361 336Q496 357 557 439Q632 531 632 617Q643 681 729 764" stroke-width="12"/>
+   <path d="M388 648Q505 660 532 744Q565 818 575 939" stroke-width="9"/>
+   <path d="M378 850Q335 971 298 1105" stroke-width="7"/>
+   <path d="M1122 -20Q1118 119 1084 212Q1083 331 1050 411Q1011 503 1035 618Q1060 706 1031 816" stroke-width="17"/>
+   <path d="M1085 211Q1174 249 1218 325Q1281 417 1345 477" stroke-width="10"/>
+   <path d="M1052 412Q934 435 902 525Q872 621 809 689" stroke-width="11"/>
+   <path d="M1035 620Q1110 684 1130 754Q1165 862 1270 929" stroke-width="8"/>
+   <path d="M1031 815Q1007 952 963 1069" stroke-width="7"/>
+  </g>
+  <g stroke="#c6a27b" stroke-opacity=".60" stroke-width="3" fill="none" stroke-linecap="round">
+   <path d="M230 281l-46 40 -27 69M218 317l58 31 26 63M153 468l-59 23 -36 43M112 601l-66 44"/>
+   <path d="M552 439l61 -24 27 -31M614 518l72 33 42 60M639 628l-25 59 -61 38"/>
+   <path d="M511 723l-44 62 -63 26M577 900l40 52 -10 83M374 937l-58 53 -11 68"/>
+   <path d="M1217 326l-28 58 -43 31M1321 464l40 56M908 505l-79 11 -41 61M840 652l-43 47"/>
+   <path d="M1127 749l-62 65 -18 69M1160 852l75 -4 57 52M977 1040l-51 61"/>
+  </g>
+  <ellipse cx="480" cy="999" rx="315" ry="140" fill="url(#waterGlow)" opacity=".6"/>
+  <path d="M230 996Q344 951 450 974T664 973Q725 986 732 1004Q608 1048 496 1021T250 1026Z" fill="#77aeb0" opacity=".19"/>
+  <path d="M243 1004Q329 977 433 998T666 996" fill="none" stroke="#9edfd9" stroke-width="5" stroke-opacity=".21"/>
+  <g fill="#cdbba4" opacity=".17">
+   <circle cx="731" cy="237" r="7"/><circle cx="762" cy="278" r="4"/><circle cx="878" cy="365" r="5"/>
+   <circle cx="189" cy="706" r="6"/><circle cx="553" cy="636" r="4"/><circle cx="1290" cy="701" r="7"/>
+   <circle cx="839" cy="991" r="8"/><circle cx="687" cy="1100" r="5"/><circle cx="1156" cy="1048" r="5"/>
+  </g>
+ </svg>
+ <div class="underground-dust" aria-hidden="true"></div>
+ <div class="underground-moisture" aria-hidden="true"></div>
+ <div class="fossil-hint" aria-hidden="true"></div>
+ <div class="layer-label sand" aria-hidden="true">Sandy soil • shallow roots</div>
+ <div class="layer-label caliche" aria-hidden="true">Caliche-like hardpan</div>
+ <div class="layer-label deep" aria-hidden="true">Deep roots • mineral sediments</div>
+ <div class="region-content underground-copy">
+  <div class="scene-note">
+   <p class="eyebrow">Level 03 • Below Cactus Forest</p>
+   <h2 id="undergroundTitle">Beneath the Desert</h2>
+   <p>A cutaway into the hidden world of roots, pebbles, sand, caliche-like layers and moisture tucked beneath the desert. Follow the branching roots as the soil grows darker below.</p>
+   <a class="scene-hint" href="#surface">↑ Return to the moonlit surface</a>
+  </div>
+  <p class="closing-note">An imagined desert cross-section, inspired by Sonoran geology and plant roots, not a survey of the actual property. No characters yet. They will join us one by one.</p>
+ </div>
+</section>
 </main>
+<script>
+(function(){
+ "use strict";
+ const links=Array.from(document.querySelectorAll(".level-nav a"));
+ const sections=Array.from(document.querySelectorAll(".region"));
+ const surface=document.getElementById("surface");
+ const motionReduced=window.matchMedia("(prefers-reduced-motion: reduce)");
+ function updateLevel(){
+  const midpoint=window.scrollY+window.innerHeight*.50;
+  let active=sections[0].id;
+  for(const section of sections){if(section.offsetTop<=midpoint)active=section.id;}
+  for(const link of links){
+   if(link.dataset.level===active)link.setAttribute("aria-current","location");
+   else link.removeAttribute("aria-current");
+  }
+ }
+ // On a fresh visit, arrive at the familiar moonlit surface. Visitors can
+ // scroll upward to space or downward into the underground scene.
+ function enterAtSurface(){
+  if(window.location.hash)return;
+  const nav=window.performance&&window.performance.getEntriesByType&&
+    window.performance.getEntriesByType("navigation")[0];
+  if(nav&&nav.type!=="navigate")return; // Preserve refresh, Back, and scroll restoration.
+  if(window.scrollY>10)return;
+  window.scrollTo({top:surface.offsetTop,behavior:"instant"});
+  updateLevel();
+ }
+ window.addEventListener("scroll",updateLevel,{passive:true});
+ window.addEventListener("resize",updateLevel,{passive:true});
+ window.addEventListener("hashchange",updateLevel);
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",function(){
+  window.requestAnimationFrame(enterAtSurface);updateLevel();
+ },{once:true});
+ else window.requestAnimationFrame(function(){enterAtSurface();updateLevel()});
+})();
+</script>
 </body>
 </html>
