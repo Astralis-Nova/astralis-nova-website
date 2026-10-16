@@ -1694,9 +1694,22 @@
         "M418 422 L429 429", "M410 441 L418 447"
       ], "#529b5d", 3.7);
 
-      ctx.fillStyle = "#64758a";
-      ctx.font = "italic 20px cursive";
-      ctx.fillText("Eh, what's up, Doc?", 20, 485);
+      // Classic Bugs Bunny line, tucked inside a hand-drawn speech bubble.
+      // It's part of the immutable starter doodle, so Reset brings it back too.
+      const bubble = new Path2D(
+        "M18 54 Q15 48 30 47 Q83 36 149 51 Q172 59 171 86 " +
+        "L171 113 Q170 129 156 137 L178 174 L137 144 " +
+        "Q69 150 32 138 Q16 132 15 116 Z"
+      );
+      ctx.fillStyle = "rgba(255,255,255,.96)";
+      ctx.fill(bubble);
+      ctx.strokeStyle = "#354258";
+      ctx.lineWidth = 3.2;
+      ctx.stroke(bubble);
+      ctx.fillStyle = "#27384d";
+      ctx.font = "italic bold 21px cursive";
+      ctx.fillText("Eh, what's", 34, 87);
+      ctx.fillText("up, Doc?", 38, 117);
       ctx.restore();
     }
 
