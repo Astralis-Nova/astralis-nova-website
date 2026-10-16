@@ -9,6 +9,14 @@ export async function onRequest(context) {
   const isHomepage = pathname === "/" || pathname === "/index.html";
   const isBiography = pathname === "/biography.html" || pathname === "/biography";
 
+  // Toon Planet is being built again from the original moonlit scenery.
+  // Keep its standalone HTML fresh so returning mobile visitors see the reset.
+  if (pathname === "/toon-planet.html" || pathname === "/toon-planet") {
+    const updated = new Response(response.body, response);
+    updated.headers.set("Cache-Control", "no-store, max-age=0");
+    return updated;
+  }
+
   // Standalone pages should stay standalone. Only the homepage receives the
   // Astralis-wide visual/runtime stack, while biography receives its own
   // gallery enhancements.
@@ -40,7 +48,7 @@ export async function onRequest(context) {
       })
       .on("body", {
         element(element) {
-          element.append('<script src="/astralis-performance-loader.js?v=20261016toonplanet" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script>', { html: true });
+          element.append('<script src="/astralis-performance-loader.js?v=20261016sceneryreset" defer></script><script src="/astralis-motion-restore.js?v=20260727a" defer></script>', { html: true });
         },
       });
   }
