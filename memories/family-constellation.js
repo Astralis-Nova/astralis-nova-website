@@ -31,11 +31,15 @@
   const importButton = $('importFamilyConstellation');
   const importFile = $('importFamilyFile');
   const eraseButton = $('eraseFamilyConstellation');
+  const savedImport = $('savedFamilyImport');
+  const savedSummary = $('savedFamilySummary');
+  const reviewSaved = $('reviewSavedFamily');
 
   let key = null;
   let dbPromise = null;
   let graph = null;
   let pendingGraph = null;
+  let savedGraph = null;
   let activePersonId = '';
 
   function openDb() {
@@ -499,6 +503,19 @@
     status.textContent = `${graph.stats.people} people · ${relationshipCount(graph)} documented relationships`;
   }
 
+  function renderSavedImport() {
+    savedImport.hidden = !savedGraph || Boolean(savedGraph.sourceSha256 && graph?.sourceSha256 === savedGraph.sourceSha256);
+    if (!savedGraph) return;
+    savedSummary.textContent = `${savedGraph.sourceFile || 'Ancestry export'} is saved in your encrypted archive: ${savedGraph.stats.people} people, ${savedGraph.stats.families} family groups, and ${savedGraph.stats.sources} sources. Review it before saving it on this device. Your current device tree stays in place until you approve.`;
+  }
+
+  function reviewSavedTree() {
+    if (!key || !savedGraph) return;
+    pendingGraph = savedGraph;
+    renderReview();
+    status.textContent = `Review ${pendingGraph.stats.people} people from your saved Ancestry tree`;
+  }
+
   async function saveGraph(value) {
     const encrypted = await encryptGraph(value);
     const db = await openDb();
@@ -555,6 +572,7 @@
     graph = decoded;
     publishEntries();
     renderWorkspace();
+    renderSavedImport();
     status.textContent = `Imported encrypted constellation with ${graph.stats.people} people`;
   }
 
@@ -566,6 +584,7 @@
   }
 
   fileInput.addEventListener('change', () => { inspectButton.disabled = !fileInput.files?.[0]; });
+  reviewSaved.addEventListener('click', reviewSavedTree);
   inspectButton.addEventListener('click', async () => {
     inspectButton.disabled = true;
     review.hidden = true;
@@ -599,6 +618,7 @@
       fileInput.value = '';
       publishEntries();
       renderWorkspace();
+      renderSavedImport();
       workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (error) {
       console.error('Nova family import failed', error);
@@ -614,7 +634,7 @@
   importButton.addEventListener('click', () => importFile.click());
   importFile.addEventListener('change', () => importConstellation(importFile.files?.[0]).catch(error => { console.error(error); status.textContent = error.message; }).finally(() => { importFile.value = ''; }));
   eraseButton.addEventListener('click', async () => {
-    if (!graph || !confirm('Erase the encrypted family constellation from this device? Your Ancestry account and original GEDCOM will not be changed.')) return;
+    if (!graph || !confirm('Erase the encrypted family constellation from this device? Your Ancestry account and original GEDCOM will not be changed. Any tree sealed in the protected archive remains available for review.')) return;
     const db = await openDb();
     const transaction = db.transaction('snapshots', 'readwrite');
     transaction.objectStore('snapshots').delete('active');
@@ -624,19 +644,29 @@
     review.hidden = true;
     workspace.hidden = true;
     publishEntries();
+    renderSavedImport();
     status.textContent = 'Encrypted family constellation erased from this device';
   });
 
   window.addEventListener('resize', () => { if (graph && !workspace.hidden) requestAnimationFrame(() => drawConnections(visibleGenerations(rootSelect.value))); });
-  async function activate(vaultKey) {
+  async function activate(vaultKey, sealedGraph = null) {
     key = vaultKey || null;
     if (!key) return;
-    try { await loadGraph(); }
-    catch (error) { console.error('Nova family constellation could not open', error); status.textContent = 'The encrypted family constellation could not be opened on this device'; }
+    savedGraph = sealedGraph?.format === 'astralis-nova-family-constellation' && Array.isArray(sealedGraph.people) && sealedGraph.stats ? sealedGraph : null;
+    try {
+      await loadGraph();
+      renderSavedImport();
+      if (!graph && savedGraph) reviewSavedTree();
+    }
+    catch (error) {
+      console.error('Nova family constellation could not open', error);
+      renderSavedImport();
+      status.textContent = 'The encrypted family constellation could not be opened on this device';
+    }
   }
 
-  window.addEventListener('nova-vault-opened', event => activate(event.detail?.key));
+  window.addEventListener('nova-vault-opened', event => activate(event.detail?.key, event.detail?.familyConstellation));
   window.NovaFamilyConstellation = { exportBundlePart, importBundlePart };
   const existingKey = window.NovaMemoryCore?.getKey?.();
-  if (existingKey) activate(existingKey);
+  if (existingKey) activate(existingKey, window.NovaMemoryCore?.getFamilyArchive?.());
 })();

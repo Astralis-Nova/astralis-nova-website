@@ -98,6 +98,12 @@ jobs:
           node --test tests/constellation-lock.test.mjs
           node --input-type=module --check < functions/_middleware.js
 
+      - name: Validate encrypted family constellation
+        run: |
+          node --check memories/gedcom-core.js
+          node --check memories/family-constellation.js
+          node --test tests/family-constellation.test.cjs
+
       - name: Validate Our New Star and community
         run: |
           node --check our-new-star-elements.js
