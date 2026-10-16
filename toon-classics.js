@@ -21,7 +21,7 @@ art:svg("Hand-drawn 1920s-style black cat with expressive tail",`
 <g class="classic-head"><path d="M61 85L52 18L107 53Q134 41 156 55L193 24L176 91Q195 138 168 162Q136 190 91 175Q48 154 61 85Z" fill="#17171f" stroke="#090a12" stroke-width="6"/>
 <path d="M80 56L68 36L82 62M164 53L179 38L171 65" stroke="#d5cfd1" stroke-width="3" fill="none"/>
 <ellipse cx="104" cy="113" rx="20" ry="35" fill="#fffdf6"/><ellipse cx="142" cy="113" rx="20" ry="35" fill="#fffdf6"/>
-<ellipse cx="111" cy="119" rx="6.5" ry="13" fill="#11131c"/><ellipse cx="136" cy="121" rx="6.5" ry="13" fill="#11131c"/>
+<ellipse cx="111" cy="119" rx="6.5" ry="13" fill="#11131c"/><ellipse cx="136" cy="121" rx="6.5" ry="13" fill="#11131c"/><circle cx="113" cy="113" r="2.7" fill="#fff"/><circle cx="138" cy="115" r="2.7" fill="#fff"/>
 <ellipse cx="121" cy="158" rx="36" ry="21" fill="#fffdf6"/><path d="M114 145L125 138L132 145L125 153Z" fill="#18181e"/>
 <path d="M97 158Q122 174 145 155" fill="none" stroke="#17171f" stroke-width="4" stroke-linecap="round"/>
 <path d="M91 150L56 145M92 157L52 164M148 150L182 143M149 157L187 163" stroke="#d3d1d6" stroke-width="2.6" fill="none" stroke-linecap="round"/></g>
@@ -43,7 +43,7 @@ art:svg("1927-style black lucky rabbit with long floppy ears",`
 <g class="classic-arm-b"><path d="M158 166Q197 157 209 178Q211 189 196 192L167 196Z" fill="#17171e" stroke="#080d13" stroke-width="5"/></g>
 <g class="classic-head"><path d="M65 112Q68 76 123 73Q177 71 185 115Q191 155 160 177Q125 195 85 171Q60 150 65 112Z" fill="#16161e" stroke="#0d1018" stroke-width="6"/>
 <ellipse cx="105" cy="121" rx="21" ry="30" fill="#fffcf3"/><ellipse cx="146" cy="121" rx="20" ry="30" fill="#fffcf3"/>
-<ellipse cx="113" cy="124" rx="6.5" ry="11" fill="#191820"/><ellipse cx="137" cy="124" rx="6.5" ry="11" fill="#191820"/>
+<ellipse cx="113" cy="124" rx="6.5" ry="11" fill="#191820"/><ellipse cx="137" cy="124" rx="6.5" ry="11" fill="#191820"/><circle cx="115" cy="120" r="2.5" fill="#fff"/><circle cx="139" cy="120" r="2.5" fill="#fff"/>
 <ellipse cx="126" cy="157" rx="41" ry="24" fill="#fffcf3"/><ellipse cx="126" cy="143" rx="12" ry="8" fill="#191820"/>
 <path d="M125 152Q121 174 102 164M126 152Q132 175 148 163" stroke="#191820" stroke-width="3.8" fill="none" stroke-linecap="round"/></g>
 </g>`)
@@ -64,7 +64,7 @@ art:svg("Hand-drawn 1928 black-and-white Mickey without later white gloves",`
 <g class="classic-head"><circle cx="55" cy="73" r="37" fill="#1c1b21" stroke="#11121b" stroke-width="5"/><circle cx="184" cy="70" r="37" fill="#1c1b21" stroke="#11121b" stroke-width="5"/>
 <path d="M68 94Q68 50 120 47Q171 49 175 101Q183 132 150 158Q116 174 86 149Q64 126 68 94Z" fill="#1a1a21" stroke="#11121b" stroke-width="5"/>
 <path d="M88 100Q86 74 102 74Q118 74 117 104Q120 73 138 75Q155 78 149 131Q123 143 101 131Z" fill="#fffdf5"/>
-<ellipse cx="106" cy="109" rx="6" ry="13" fill="#191820"/><ellipse cx="135" cy="109" rx="6" ry="13" fill="#191820"/>
+<ellipse cx="106" cy="109" rx="6" ry="13" fill="#191820"/><ellipse cx="135" cy="109" rx="6" ry="13" fill="#191820"/><circle cx="108" cy="103" r="2.4" fill="#fff"/><circle cx="137" cy="103" r="2.4" fill="#fff"/>
 <path d="M77 124Q104 108 120 128Q141 112 164 127Q173 143 146 153Q121 162 99 156Q80 154 77 124Z" fill="#f8f4e9"/>
 <ellipse cx="120" cy="130" rx="16" ry="11" fill="#1d1b24"/>
 <path d="M101 146Q124 162 148 143" stroke="#302729" stroke-width="4" fill="none" stroke-linecap="round"/></g>
@@ -84,7 +84,7 @@ art:svg("Hand-drawn Minnie 1928 with flower hat, without later polka-dot bow",`
 <g class="classic-head"><circle cx="56" cy="73" r="37" fill="#1b1a20" stroke="#11121b" stroke-width="5"/><circle cx="184" cy="70" r="37" fill="#1b1a20" stroke="#11121b" stroke-width="5"/>
 <path d="M69 94Q74 49 120 47Q174 46 177 104Q181 142 144 159Q112 172 84 150Q63 128 69 94Z" fill="#1b1921" stroke="#11121b" stroke-width="5"/>
 <path d="M87 101Q85 75 102 76Q119 74 118 105Q120 74 140 75Q154 79 150 109L147 131Q120 141 101 131Z" fill="#fffdf2"/>
-<ellipse cx="106" cy="109" rx="6" ry="13" fill="#181820"/><ellipse cx="136" cy="109" rx="6" ry="13" fill="#181820"/>
+<ellipse cx="106" cy="109" rx="6" ry="13" fill="#181820"/><ellipse cx="136" cy="109" rx="6" ry="13" fill="#181820"/><circle cx="108" cy="103" r="2.4" fill="#fff"/><circle cx="138" cy="103" r="2.4" fill="#fff"/>
 <path d="M79 124Q102 112 119 127Q141 113 165 127Q171 144 147 154Q121 162 99 156Q81 153 79 124Z" fill="#f8f4e7"/>
 <ellipse cx="120" cy="131" rx="15" ry="10" fill="#191821"/>
 <path d="M101 146Q125 160 145 145" stroke="#30272d" stroke-width="4" fill="none"/>
@@ -108,7 +108,7 @@ art:svg("Hand-drawn 1929 comic-strip-era sailor Popeye with cap and squint",`
 <path d="M78 51Q71 31 89 24Q112 15 142 33L154 43L143 55Q113 39 78 51Z" fill="#f9f3e7" stroke="#27232a" stroke-width="4.5"/>
 <path d="M77 50L152 44" stroke="#27232a" stroke-width="4"/>
 <path d="M91 81Q99 76 110 83" stroke="#281f21" stroke-width="5" fill="none"/>
-<ellipse cx="124" cy="84" rx="5" ry="9" fill="#25202a"/>
+<ellipse cx="124" cy="84" rx="5" ry="9" fill="#25202a"/><path d="M87 92L93 100M87 99L95 107" stroke="#877463" stroke-width="2.6" stroke-linecap="round"/>
 <path d="M134 93Q157 91 154 103Q143 114 126 110" fill="#e9d4bd" stroke="#25222a" stroke-width="4"/>
 <path d="M105 109q13 10 24 2" stroke="#352a2a" stroke-width="4" fill="none"/>
 <path d="M142 100L174 95L178 90" fill="none" stroke="#55504b" stroke-width="5" stroke-linecap="round"/>
@@ -123,7 +123,7 @@ art:svg("Hand-drawn friendly 1914 Gertie long-neck dinosaur",`
 <g class="classic-leg-a"><path d="M72 204L66 254Q55 262 91 262L114 220Z" fill="#9da99e" stroke="#3d4640" stroke-width="5"/></g>
 <g class="classic-leg-b"><path d="M148 204L150 254Q163 268 190 259L170 210Z" fill="#9aa79b" stroke="#3d4640" stroke-width="5"/></g>
 <ellipse cx="116" cy="190" rx="89" ry="56" fill="#b4bfb0" stroke="#3b4441" stroke-width="5"/>
-<ellipse cx="114" cy="202" rx="64" ry="38" fill="#e2e2d6" opacity=".6"/>
+<ellipse cx="114" cy="202" rx="64" ry="38" fill="#e2e2d6" opacity=".6"/><path d="M53 173Q89 147 124 160M47 187Q69 177 80 179" fill="none" stroke="#e8ede2" opacity=".5" stroke-width="5" stroke-linecap="round"/>
 <g class="classic-head"><path d="M164 177Q160 106 171 73Q183 36 203 44Q220 55 211 80L198 188Z" fill="#acb9ad" stroke="#39443e" stroke-width="5"/>
 <path d="M181 59Q179 19 204 18Q230 21 226 50L231 71Q218 83 194 76Z" fill="#adbcaf" stroke="#39443e" stroke-width="5"/>
 <path d="M192 66Q222 59 237 73Q226 89 205 83" fill="#cdd8c5" stroke="#414844" stroke-width="3.5"/>
@@ -137,7 +137,7 @@ art:svg("Hand-drawn friendly 1914 Gertie long-neck dinosaur",`
 ];
 const animationCss=[
 '.an-vintage-toon{display:inline-grid;place-items:center;width:min(100%,280px);aspect-ratio:1;background:transparent}',
-'.an-vintage-toon svg{width:100%;height:auto;overflow:visible}',
+'.an-vintage-toon svg{width:100%;height:auto;overflow:visible;filter:drop-shadow(0 5px 5px rgba(0,0,0,.22));shape-rendering:geometricPrecision}',
 '.an-vintage-toon .classic-character{animation:vt-bob 1.2s ease-in-out infinite}',
 '.an-vintage-toon .classic-leg-a,.an-vintage-toon .classic-leg-b,.an-vintage-toon .classic-arm-a,.an-vintage-toon .classic-arm-b,.an-vintage-toon .classic-tail,.an-vintage-toon .classic-head,.an-vintage-toon .classic-ears{transform-box:fill-box;transform-origin:50% 5%}',
 '.an-vintage-toon .classic-leg-a,.an-vintage-toon .classic-arm-b{animation:vt-stride .63s ease-in-out infinite alternate}',
@@ -146,6 +146,13 @@ const animationCss=[
 '@keyframes vt-bob{0%,100%{transform:translateY(4px)}50%{transform:translateY(-10px)}}',
 '@keyframes vt-stride{from{transform:rotate(-16deg)}to{transform:rotate(17deg)}}',
 '@keyframes vt-wiggle{from{transform:rotate(-5deg)}to{transform:rotate(6deg)}}',
+'.an-vintage-toon[data-classic="oswald"] .classic-ears{animation-duration:.52s;transform-origin:50% 90%}',
+'.an-vintage-toon[data-classic="gertie"] .classic-character{animation-duration:2.2s}',
+'.an-vintage-toon[data-classic="gertie"] .classic-head{animation-duration:3.6s;transform-origin:50% 80%}',
+'.an-vintage-toon[data-classic="popeye1929"] .classic-arm-b{animation-duration:1.3s}',
+'.an-vintage-toon[data-classic="minnie1928"] .classic-character{animation-duration:.9s}',
+'.an-vintage-toon[data-classic="felix"] .classic-tail{animation-duration:.65s}',
+'.an-vintage-toon[data-classic="mickey1928"] .classic-leg-a,.an-vintage-toon[data-classic="mickey1928"] .classic-leg-b{animation-duration:.5s}',
 '@media(prefers-reduced-motion:reduce){.an-vintage-toon *{animation:none!important}}'
 ].join('\n');
 const wrap=r=>'<div class="an-vintage-toon" data-classic="'+r.id+'">'+r.art+'</div>';
@@ -170,12 +177,15 @@ box-shadow:inset 0 -30px 80px #613b8e88,0 14px 55px #06031c9c}
 .classic-planet-pond{position:absolute;z-index:3;left:39%;bottom:7%;width:27%;height:7%;border-radius:50%;background:radial-gradient(ellipse,#ebfff9,#68bed1 70%);box-shadow:0 0 15px #fff8}
 .classic-planet-prompt{position:absolute;z-index:9;top:16px;left:16px;padding:9px 13px;border:1px solid #f7efefa6;border-radius:12px;background:#171b45c9;font-size:.8rem;font-weight:850;color:#fff}
 .classic-fleet{position:absolute;z-index:7;inset:0;pointer-events:none}
-.classic-traveler{position:absolute;z-index:8;top:var(--lane);left:-165px;width:var(--width);padding:0;border:0;display:grid;place-items:center;
-background:none;color:#fff;font:inherit;cursor:pointer;pointer-events:auto;filter:drop-shadow(0 4px 6px #2a264861);animation:classicTravel var(--speed) linear infinite;animation-delay:var(--delay)}
-.classic-traveler .an-vintage-toon{width:100%;transition:scale .2s}
+.classic-traveler{position:absolute;z-index:8;left:0;top:0;width:var(--width);padding:0;border:0;display:grid;place-items:center;
+background:none;color:#fff;font:inherit;cursor:pointer;pointer-events:auto;will-change:transform;touch-action:manipulation;
+filter:drop-shadow(0 8px 10px #231d485c);transform-origin:center bottom}
+.classic-traveler .an-vintage-toon{width:100%;transform:scaleX(var(--facing,1)) scale(var(--hover-zoom,1));
+transition:transform .18s ease;transform-origin:50% 60%}
 .classic-traveler .classic-name{white-space:nowrap;padding:4px 8px;border-radius:100px;background:#191c42dd;border:1px solid #e6f8fb9c;font-weight:850;font-size:11px}
-.classic-traveler:hover,.classic-traveler:focus-visible{animation-play-state:paused;z-index:11;filter:drop-shadow(0 0 12px #ffffd5)}
-.classic-traveler:hover .an-vintage-toon,.classic-traveler:focus-visible .an-vintage-toon{scale:1.14}
+.classic-traveler:hover,.classic-traveler:focus-visible{--hover-zoom:1.13;z-index:18!important;
+filter:drop-shadow(0 0 13px #fff7c4) drop-shadow(0 10px 10px #1217319e)}
+.classic-traveler:active{--hover-zoom:1.10}
 .classic-traveler:focus-visible{outline:3px solid #7fffe2;outline-offset:3px;border-radius:15px}
 .classic-notice{color:#d6d6ec;line-height:1.7;font-size:.87rem;margin:15px 0}
 .classic-notice a{color:#a9f9ea}
@@ -191,15 +201,14 @@ border:2px solid #cbb0ec;border-radius:23px;background:linear-gradient(145deg,#2
 .classic-code{width:100%;box-sizing:border-box;min-height:150px;border:1px solid #a3abd8;border-radius:13px;padding:12px;resize:vertical;background:#0c1027;color:#cbf8f4;font:12px/1.45 ui-monospace,monospace}
 .classic-copy-btn{border:0;background:#a0f5da;color:#0f2831;border-radius:30px;padding:12px 19px;font-weight:900;margin-top:12px}
 .classic-copy-status{color:#a8ffe6!important;min-height:1.2rem}
-@keyframes classicTravel{from{left:-165px}to{left:calc(100% + 165px)}}
 @keyframes classicCloud{to{translate:40px 0}}
 @keyframes classicTwinkle{to{opacity:.4;scale:.84}}
 @media(max-width:700px){.classic-scene{height:430px;border-radius:16px}.classic-traveler{width:min(var(--width),94px)}
 .classic-traveler[data-toon="gertie"]{width:116px}.classic-planet-tree{font-size:47px}.classic-planet-tree.two{font-size:38px}
 .classic-planet-prompt{max-width:79%;font-size:.73rem}.classic-popup-top{grid-template-columns:1fr}
 .classic-popup-preview{min-height:155px}.classic-popup-preview .an-vintage-toon{width:135px}}
-@media(prefers-reduced-motion:reduce){.classic-cloud,.classic-stars,.classic-traveler{animation:none!important}
-.classic-traveler{left:var(--still-x)!important}}
+@media(prefers-reduced-motion:reduce){.classic-cloud,.classic-stars{animation:none!important}
+.classic-traveler{will-change:auto!important}.classic-traveler .an-vintage-toon *{animation:none!important}}
 `;
 document.head.appendChild(style);
 scene.insertAdjacentHTML('afterbegin',`<div class="classic-cloud" aria-hidden="true"></div><div class="classic-cloud two" aria-hidden="true"></div>
