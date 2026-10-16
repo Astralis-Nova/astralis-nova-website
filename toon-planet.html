@@ -393,6 +393,133 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .space-cosmos{transform:none!important}
  .space-planet{transform:none!important}
 }
+
+/* Cactus Forest Moonlight final stage 03: the Moon, subtle geological motion,
+   and restrained photographic light. All scenery is decorative and text-free. */
+.space-sky{background:#020814}
+.orbit-photo{
+ filter:saturate(.98) contrast(1.08) brightness(1.18);
+ opacity:.82;animation:moonlitOrbitCamera 46s ease-in-out infinite alternate}
+.space-cosmos{
+ opacity:.78;filter:saturate(.88) contrast(1.05) brightness(.92);
+ animation:spaceCosmosDrift 70s ease-in-out infinite alternate}
+.space-photo-shade{
+ background:linear-gradient(180deg,rgba(1,4,12,.10) 0%,rgba(2,7,15,.07) 35%,
+ rgba(4,10,18,.05) 58%,rgba(7,16,28,.18) 82%,rgba(10,22,35,.42) 100%)}
+.space-photo-shade::after{opacity:.24}
+.space-haze{opacity:.34;filter:blur(24px);animation-duration:34s}
+.space-starfield-far{opacity:.82;animation-duration:44s}
+.space-starfield-near{opacity:.96;
+ animation:spaceStarTwinkle 10s ease-in-out infinite alternate,
+ spaceStarDrift 48s ease-in-out infinite alternate}
+.space-bright-stars{opacity:.88;animation-duration:13s}
+.space-planet{mix-blend-mode:screen}
+.space-planet.moon{
+ top:10%;right:4%;width:clamp(190px,30vw,390px);
+ background-image:url('/assets/our-new-star/moon.webp');
+ opacity:.98;filter:drop-shadow(0 0 12px rgba(215,229,239,.22))
+ drop-shadow(0 0 28px rgba(197,209,224,.14));
+ animation:moonNaturalDrift 36s ease-in-out infinite alternate}
+.space-planet.distant-gas{
+ top:43%;left:4%;width:clamp(120px,18vw,230px);
+ opacity:.56;filter:drop-shadow(0 0 12px rgba(135,165,205,.11));
+ animation:planetDistantDrift 52s ease-in-out infinite alternate}
+.space-planet.distant-mars{
+ top:67%;right:20%;width:clamp(72px,10vw,130px);
+ opacity:.56;filter:drop-shadow(0 0 10px rgba(160,120,100,.08));
+ animation:planetDistantDrift 58s ease-in-out infinite alternate-reverse}
+.space-atmosphere{height:27%;
+ background:linear-gradient(180deg,transparent 0%,rgba(7,19,37,.14) 36%,
+ rgba(12,31,50,.68) 87%,#102132 100%)}
+/* The desert stays based on the original song artwork. Haze, suspended
+   dust, and grazing moonlight are intentionally subtle, not cartoon layers. */
+.surface-haze{inset:-10%;opacity:.24;filter:blur(24px);animation-duration:24s}
+.surface-haze-near{inset:36% -14% 0;opacity:.18;filter:blur(26px);animation-duration:30s}
+.surface-moonwash{
+ position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.16;
+ background:radial-gradient(ellipse 44% 20% at 50% 65%,
+ rgba(195,210,215,.25),transparent 72%),
+ radial-gradient(ellipse 24% 10% at 66% 58%,
+ rgba(210,220,225,.12),transparent 78%);
+ filter:blur(18px);
+ animation:moonwashDrift 18s ease-in-out infinite alternate}
+.surface-dust{
+ position:absolute;inset:-4%;z-index:3;pointer-events:none;opacity:.09;
+ background-image:
+ radial-gradient(circle,rgba(240,234,220,.9) 0 .7px,transparent 1.5px),
+ radial-gradient(circle,rgba(220,205,185,.6) 0 .8px,transparent 1.6px);
+ background-size:220px 180px,310px 260px;
+ animation:dustFloatSurface 28s ease-in-out infinite alternate}
+.surface-depth-shadow{
+ position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.20;
+ background:linear-gradient(180deg,rgba(0,0,0,.04) 0%,
+ rgba(0,0,0,.02) 30%,rgba(0,0,0,.10) 72%,rgba(0,0,0,.16) 100%),
+ radial-gradient(ellipse 65% 25% at 55% 88%,rgba(0,0,0,.16),transparent 80%);
+ animation:surfaceShadowShift 22s ease-in-out infinite alternate}
+/* Real USGS dryland soil photo, not imagined mineral deposits or excavations. */
+.underground-dust{opacity:.11;animation:dustFloatUnderground 30s ease-in-out infinite alternate}
+.underground-mineral-shimmer{
+ position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.10;
+ background:radial-gradient(ellipse 12% 5% at 24% 42%,
+ rgba(215,200,170,.20),transparent 80%),
+ radial-gradient(ellipse 10% 4% at 68% 58%,
+ rgba(205,190,160,.18),transparent 80%),
+ radial-gradient(ellipse 8% 4% at 44% 74%,
+ rgba(220,210,185,.15),transparent 82%);
+ filter:blur(10px);animation:mineralShimmer 16s ease-in-out infinite alternate}
+.underground-shadow-drift{
+ position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.18;
+ background:linear-gradient(180deg,rgba(0,0,0,.02) 0%,
+ rgba(0,0,0,.06) 35%,rgba(0,0,0,.12) 68%,rgba(0,0,0,.18) 100%),
+ radial-gradient(ellipse 70% 28% at 48% 86%,rgba(0,0,0,.14),transparent 82%);
+ animation:undergroundShadowShift 24s ease-in-out infinite alternate}
+@keyframes moonlitOrbitCamera{
+ from{transform:scale(1.08) translate3d(-.5%,.2%,0)}
+ to{transform:scale(1.12) translate3d(.5%,-.4%,0)}}
+@keyframes moonNaturalDrift{
+ from{transform:translate3d(0,0,0)}
+ to{transform:translate3d(-7px,8px,0)}}
+@keyframes planetDistantDrift{
+ from{transform:translate3d(0,0,0)}
+ to{transform:translate3d(5px,-6px,0)}}
+@keyframes moonwashDrift{
+ from{transform:translate3d(-1%,0,0);opacity:.10}
+ to{transform:translate3d(1.2%,-.5%,0);opacity:.22}}
+@keyframes dustFloatSurface{
+ from{transform:translate3d(0,0,0)}
+ to{transform:translate3d(0,-12px,0)}}
+@keyframes surfaceShadowShift{
+ from{transform:translate3d(0,0,0);opacity:.16}
+ to{transform:translate3d(1%,0,0);opacity:.24}}
+@keyframes dustFloatUnderground{
+ from{transform:translate3d(0,0,0);opacity:.08}
+ to{transform:translate3d(0,-10px,0);opacity:.13}}
+@keyframes mineralShimmer{
+ from{opacity:.05;transform:translate3d(0,0,0)}
+ to{opacity:.12;transform:translate3d(.6%,-.4%,0)}}
+@keyframes undergroundShadowShift{
+ from{transform:translate3d(0,0,0);opacity:.14}
+ to{transform:translate3d(-1%,0,0);opacity:.22}}
+@media(max-width:800px){
+ .orbit-photo{opacity:.68;filter:saturate(.96) contrast(1.06) brightness(1.28)}
+ .space-cosmos{opacity:.84;background-position:50% 20%}
+ .space-planet.moon{top:9%;right:-4%;width:clamp(170px,50vw,240px)}
+ .space-planet.distant-gas{top:45%;left:-8%;width:clamp(105px,34vw,170px)}
+ .space-planet.distant-mars{top:70%;right:7%;width:clamp(64px,19vw,102px)}
+ .space-haze,.surface-haze,.surface-haze-near{filter:blur(16px)}
+ .surface-moonwash{opacity:.18}
+ .surface-dust{opacity:.07}
+ .underground-mineral-shimmer{opacity:.08}
+ .underground-shadow-drift{opacity:.15}
+}
+@media(prefers-reduced-motion:reduce){
+ .orbit-photo,.space-cosmos,.space-starfield,.space-bright-stars,.space-planet,
+ .surface-haze,.surface-haze-near,.surface-moonwash,.surface-dust,
+ .surface-depth-shadow,.underground-dust,.underground-mineral-shimmer,
+ .underground-shadow-drift{animation:none!important}
+ .orbit-photo{translate:none!important;transform:scale(1.015)!important}
+ .space-cosmos,.space-planet{transform:none!important}
+}
 </style>
 </head>
 <body>
@@ -417,9 +544,9 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
   <div class="space-starfield space-starfield-far"></div>
   <div class="space-starfield space-starfield-near"></div>
   <div class="space-bright-stars"></div>
-  <div class="space-planet earth"></div>
-  <div class="space-planet gas-giant"></div>
-  <div class="space-planet mars"></div>
+  <div class="space-planet moon"></div>
+  <div class="space-planet gas-giant distant-gas"></div>
+  <div class="space-planet mars distant-mars"></div>
   <div class="space-atmosphere"></div>
   <div class="meteor-field" id="spaceMeteors"></div>
  </div>
@@ -428,7 +555,12 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  <div class="surface-cover" aria-hidden="true"></div>
  <div class="surface-color" aria-hidden="true"></div>
  <div class="surface-stars" aria-hidden="true"></div>
- <div class="surface-haze" aria-hidden="true"></div><div class="surface-haze-near" aria-hidden="true"></div><div class="meteor-field surface-meteors" id="surfaceMeteors" aria-hidden="true"></div>
+ <div class="surface-haze" aria-hidden="true"></div>
+ <div class="surface-haze-near" aria-hidden="true"></div>
+ <div class="surface-moonwash" aria-hidden="true"></div>
+ <div class="surface-dust" aria-hidden="true"></div>
+ <div class="surface-depth-shadow" aria-hidden="true"></div>
+ <div class="meteor-field surface-meteors" id="surfaceMeteors" aria-hidden="true"></div>
 
 
  <div class="ground-fade" aria-hidden="true"></div>
@@ -437,6 +569,8 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  <div class="underground-strata" aria-hidden="true"><div class="underground-photo"></div></div>
  <div class="underground-topsoil" aria-hidden="true"></div>
  <div class="underground-dust" aria-hidden="true"></div>
+ <div class="underground-mineral-shimmer" aria-hidden="true"></div>
+ <div class="underground-shadow-drift" aria-hidden="true"></div>
 </section>
 </main>
 <script>
