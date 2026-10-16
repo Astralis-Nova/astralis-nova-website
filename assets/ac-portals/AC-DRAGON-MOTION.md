@@ -131,3 +131,34 @@ loading-failure, reduced-motion and lifecycle checks remain in place. Native
 Canvas eye/foot close-ups and desktop/phone flybys were inspected; browser GPU
 visual review remains unavailable in this workspace. No art assets or camera
 path were changed.
+
+
+## October 15 evening: visible tail and active close wingbeats
+
+The previous forward-tail weight reached its strongest point near y=470,
+below the visible curl. It now bends progressively from y=340 through y=425,
+using the actual tail sweep signal. The root stays attached while the visible
+curl moves through a broad lateral arc, with a smaller delayed vertical curl.
+The profile view also uses the shared tail signal.
+
+Multi-second held glides are replaced by short coasts. The close approach
+retains active wingbeats through those coasts on both the approaching and
+retreating halves of a close pass. Proximity and approach are passed separately
+so approaching/retreating state cannot freeze a nearby dragon. The full
+six-pose stroke runs at
+1.3 cycles per second, with a faster launch. Chest and body lift follow that
+stroke more strongly. Knees, wrists and feet have larger excursions, with
+broader, separately tuned skin falloff to avoid folding at overlapping limbs.
+The existing crimson artwork, Promise camera loop and nose-first takeoff stay.
+
+Validation measures opaque landmarks in the head-aligned forward atlas:
+frame 1 tail curl at (192,433), foreclaws at (246,351) and (300,333).
+Tests interpolate their positions through both actual rendering meshes at
+phone scale while holding the source pose, so changing atlas poses or moving
+the camera cannot make a false movement result. The visible curl must sweep
+more than 35 screen pixels; both foreclaws must move independently. Further
+checks prevent multi-second glide holds and require all six wing poses during
+close flight. Native before/after renders with a held source pose show the
+stronger tail bend and feet; complete desktop/phone flybys were inspected.
+Both skin meshes were checked for positive triangle areas with the larger
+motions. Browser GPU visual inspection remains unavailable in this workspace.

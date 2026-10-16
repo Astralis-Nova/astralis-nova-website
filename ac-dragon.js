@@ -65,8 +65,8 @@
     route.top=top;
   };
   const flightPosition = progress => rig.route(progress, innerWidth, innerHeight, route.top,progress*28);
-  function paintBody(seconds,approach,launching,view=0) {
-    const pose=rig.pose(seconds,approach,launching),weights=rig.weights(pose.phase,pose.glide);
+  function paintBody(seconds,approach,launching,view=0,proximity=0) {
+    const pose=rig.pose(seconds,approach,launching,proximity),weights=rig.weights(pose.phase,pose.glide);
     const sideAnchors=[[441,276],[448,280],[445,274],[441,274],[447,278],[451,278]];
     context.clearRect(0,0,512,512);
     for(const [front,weight] of [[false,1-view],[true,view]]){
@@ -213,7 +213,7 @@
     forwardBlend=forwardReady?forwardBlend*ease((elapsed-forwardLoaded)/700):0;
     const seconds=elapsed/1000;
     if(elapsed-paintClock>=1000/((forwardBlend>.5?forwardGPU:gpu)?40:20) || dt===0) {
-      paintBody(seconds,approach,phase==='launch',forwardBlend);paintClock=elapsed;
+      paintBody(seconds,approach,phase==='launch',forwardBlend,1-rig.smooth(5,9,depth));paintClock=elapsed;
     }
     const headFraction=forwardBlend>.5?314/512:.87;
     const freeSpace=targetFacing>0?innerWidth-(x+size*headFraction):x+size*(1-headFraction);

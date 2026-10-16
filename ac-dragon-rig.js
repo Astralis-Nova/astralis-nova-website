@@ -40,34 +40,36 @@
       facing:dx>=0?1:-1,profile:.82+.18*Math.abs(yaw),
       bank:turn*5*turnBlend,pitch:0,opacity:.52+.46*Math.min(1,scale)};
   }
-  function pose(seconds, approach = 0, launch = false) {
+  function pose(seconds, approach = 0, launch = false, proximity = 0) {
     // A firm downstroke, slower recovery and short glides give the body weight.
-    const glide = launch ? 0 : smooth(.42,.78,Math.sin(seconds*.38-.7));
-    const frequency = launch ? 1.45 : 1.02;
+    // A short coast between active strokes, rather than a multi-second frozen pose.
+    const coast=seconds%6.8;
+    const glide = launch ? 0 : smooth(5.55,5.8,coast)*(1-smooth(6.45,6.8,coast))*(1-clamp(Math.max(approach,proximity))*.8);
+    const frequency = launch ? 1.65 : 1.3;
     const beat = seconds * frequency + Math.sin(seconds*.7)*.035;
     const phase = ((beat % 1)+1)%1, angle = phase*Math.PI*2;
     const stroke = Math.sin(angle), lag = Math.sin(angle - .65), activity = 1-glide*.88;
     const adjustment=Math.max(0,Math.sin(seconds*.62-.4))**8;
     const limbs=[0,.9,2.1,2.9].map((offset,index)=>({
-      knee:-7+adjustment*(index<2?17:14)+Math.sin(seconds*1.12+offset)*8+lag*2*activity,
-      ankle:7-adjustment*13+Math.sin(seconds*1.37+offset-.4)*9,
-      curl:clamp(.47+Math.sin(seconds*1.67+offset)*.39+adjustment*.12+glide*.08),
-      lift:(Math.sin(angle-.85-index*.18)*1.8+Math.sin(seconds*1.3+offset)*.7)*activity
+      knee:-8+adjustment*(index<2?20:17)+Math.sin(seconds*1.12+offset)*13+lag*5*activity,
+      ankle:8-adjustment*15+Math.sin(seconds*1.37+offset-.4)*13,
+      curl:clamp(.45+Math.sin(seconds*1.67+offset)*.44+adjustment*.12+glide*.08),
+      lift:(Math.sin(angle-.85-index*.18)*3.6+Math.sin(seconds*1.3+offset)*1.1)*activity
     }));
     const eyePhase=(seconds+.83)%6.9;
     // Hold the lid shut for 70ms so a 20fps fallback can show a full blink.
     const blinkPulse=(center,half)=>1-smooth(.035,half,Math.abs(eyePhase-center));
     const blink=Math.max(blinkPulse(.18,.18),Math.floor((seconds+.83)/6.9)%3===1?blinkPulse(.52,.14):0);
-    const wingTips=[0,.16].map(delay=>Math.sin(angle-1.1-delay)*(3.2*activity+.8)+Math.sin(seconds*1.9-delay)*2.3*glide);
+    const wingTips=[0,.16].map(delay=>Math.sin(angle-1.1-delay)*(3.2*activity+.8)+Math.sin(seconds*3.1-delay)*3.5*glide);
     return { phase, glide, activity,limbs,blink,wingTips,
       gaze:[Math.sin(seconds*.37)*1.05+Math.sin(seconds*1.21)*.35,Math.sin(seconds*.49-.7)*.55],
-      bob: Math.sin(angle-.9)*3*activity,
-      chest: Math.sin(angle-.6)*4.2*activity,
+      bob: Math.sin(angle-.9)*5*activity,
+      chest: Math.sin(angle-.6)*6.5*activity,
       neck: Math.sin(seconds*1.35-.6)*1.5-lag*1.5*activity,
       legs: -6+Math.sin(seconds*1.15-1.2)*4+lag*2*activity,
       wrist: Math.sin(angle-.9)*2.6*activity,
       head: Math.sin(seconds*1.08-.9)*1.6+Math.sin(angle-.9)*-.25*activity,
-      tail: Math.sin(seconds*2.05-.6)*8+lag*4.5*activity,
+      tail: Math.sin(seconds*1.65-.6)*25+lag*7*activity,
       bank: Math.sin(seconds*.65)*1.3*(1-approach)
     };
   }

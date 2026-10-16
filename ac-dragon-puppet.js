@@ -25,12 +25,15 @@
     let dx=0,dy=0,total=0;
     limbs.forEach(([hip,ankle,toe],i)=>{
       const joint=pose.limbs?.[i];if(!joint)return;
-      const weight=Math.exp(-(((x-ankle[0])/17)**2))*smooth(hip[1],ankle[1],y)*(1-smooth(toe[1]+5,toe[1]+20,y));
+      const width=pose.frontView?21:27;
+      const end=pose.frontView&&i===1?22:36;
+      const weight=Math.exp(-(((x-ankle[0])/width)**2))*smooth(hip[1],ankle[1],y)*(1-smooth(toe[1]+5,toe[1]+end,y));
       if(weight<.0001)return;
       // Mirrored anatomical axes: elbows tuck in; wrists counter-rotate.
       // The palm follows the forearm instead of turning both claws the same way.
       const handed=pose.frontView?(i%2===0?1:-1):1;
-      const knee=joint.knee*handed*Math.PI/180,lower=joint.ankle*handed*Math.PI/180;
+      const strength=pose.frontView?(i<2?.85:.6):.7;
+      const knee=joint.knee*handed*strength*Math.PI/180,lower=joint.ankle*handed*strength*Math.PI/180;
       const lowerWeight=smooth(ankle[1]-6,toe[1],y);
       const claw=smooth(toe[1]-10,toe[1]+3,y)*Math.exp(-(((x-toe[0])/15)**2));
       const localX=x-ankle[0],localY=y-ankle[1];
@@ -56,21 +59,32 @@
     const reach=(1-smooth(125,275,x))*(1-smooth(220,285,y));
     return [pose.wingTips[0]*reach*.25,pose.wingTips[0]*reach];
   }
+  function tailOffset(x,y,seconds,pose){
+    if(pose.frontView){
+      // The visible curl ends near y=420, well above the old y=470 target.
+      // Bend the drawn tail from a fixed root; leave the hips and feet attached.
+      const reach=smooth(340,425,y),mask=1-smooth(225+reach*45,315+reach*45,x);
+      const sweep=(pose.tail+Math.sin(seconds*1.65-reach*1.8)*7*reach)*reach*mask;
+      return [sweep,Math.cos(seconds*1.65-reach)*7*reach*reach*mask];
+    }
+    const mask=(1-smooth(185,270,x))*smooth(285,332,y),reach=clamp((265-x)/245);
+    return [Math.sin(seconds*1.7-reach*2)*3*mask,
+      (pose.tail*reach*reach+Math.sin(seconds*1.65-reach*3.3)*5*reach)*mask];
+  }
   function deform(x,y,seconds,pose) {
-    const limb=limbOffset(x,y,pose),flex=wingOffset(x,y,pose);
+    const limb=limbOffset(x,y,pose),flex=wingOffset(x,y,pose),tail=tailOffset(x,y,seconds,pose);
     if(pose.frontView){
       const middle=Math.exp(-(((x-255)/90)**2));
       const chest=middle*Math.exp(-(((y-305)/65)**2));
       const neck=middle*(1-smooth(240,310,y));
-      const reach=smooth(325,470,y),tail=reach*reach*middle;
       const breath=(x-255)*.015*Math.sin(seconds*1.7)*chest;
       const wing=(1-middle)*(1-smooth(250,330,y));
       const head=smooth(266,291,x)*smooth(160,190,y)*(1-smooth(226,252,y));
       const headAngle=pose.head*Math.PI/180;
       const hx=(-(y-224)*Math.sin(headAngle)+(x-285)*(Math.cos(headAngle)-1))*head;
       const hy=((x-285)*Math.sin(headAngle)+(y-224)*(Math.cos(headAngle)-1))*head;
-      return [x+flex[0]+hx+limb[0]+breath+Math.sin(seconds*2.05-reach*2.5)*(4+reach*12)*tail+pose.neck*neck+pose.wrist*wing*(x<255?-1:1),
-        y+flex[1]+hy+limb[1]+pose.bob*.7+pose.chest*chest-pose.chest*.65*neck+Math.sin(seconds*1.4-reach*2)*3*tail+pose.wrist*.45*wing];
+      return [x+flex[0]+hx+limb[0]+breath+tail[0]+pose.neck*neck+pose.wrist*wing*(x<255?-1:1),
+        y+flex[1]+hy+limb[1]+pose.bob*.7+pose.chest*chest-pose.chest*.65*neck+tail[1]+pose.wrist*.45*wing];
     }
     let dx=limb[0]+flex[0],dy=limb[1]+flex[1]+pose.bob*.7;
     const chest=Math.exp(-(((x-292)/68)**2)-((y-298)/64)**2);
@@ -80,10 +94,7 @@
     const angle=pose.neck*Math.PI/180;
     dx+=(-(y-280)*Math.sin(angle)+(x-315)*(Math.cos(angle)-1))*neck;
     dy+=((x-315)*Math.sin(angle)+(y-280)*(Math.cos(angle)-1)-pose.chest*.7)*neck;
-    const tail=(1-smooth(185,270,x))*smooth(285,332,y);
-    const distance=clamp((265-x)/245);
-    dx+=Math.sin(seconds*1.7-distance*2)*2*tail;
-    dy+=Math.sin(seconds*2.05-distance*3.3)*(4+21*distance*distance)*tail;
+    dx+=tail[0];dy+=tail[1];
     // Wrist flex is small and delayed; the atlas supplies the main power stroke.
     const wing=(1-smooth(230,305,x))*(1-smooth(200,270,y));
     dx+=pose.wrist*wing;dy+=pose.wrist*.45*wing;
@@ -185,5 +196,5 @@
       ctx.drawImage(texture,minX,minY,sw,sh,minX,minY,sw,sh);ctx.restore();
     }
   }
-  root.AstralisDragonPuppet={forwardAnchors,forwardEyes,limbAnchors,limbOffset,wingOffset,face,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
+  root.AstralisDragonPuppet={forwardAnchors,forwardEyes,limbAnchors,limbOffset,wingOffset,tailOffset,face,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
 })(typeof window==='undefined'?globalThis:window);

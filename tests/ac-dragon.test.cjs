@@ -61,6 +61,7 @@ test('close approaches grow visibly, articulate the tail and stop all work on pa
  for(let i=0;i<250;i++){
   s.step(100);sizes.add(Number(s.dragon.dataset.flightSize));tails.add(s.dragon.dataset.tailFlex);views.add(Number(s.dragon.dataset.approach));phases.add(s.dragon.dataset.wingPhase);
   assert(!s.dragon.style.transform.includes('scaleX'), 'the whole body must never flatten to turn');
+  if(Number(s.dragon.dataset.depth)<5)assert(Number(s.dragon.dataset.glide)<.4,'the actual controller must keep flapping through a near retreat too');
  }
  assert(Math.max(...sizes)>Math.min(...sizes)*7,'camera approaches must be unmistakable');
  assert(Math.max(...views)>.95 && Math.min(...views)<.1,'approach and retreat both appear');
@@ -93,7 +94,7 @@ test('pose blending preserves full body opacity across strokes and glides',()=>{
  for(let t=0;t<60;t+=.017){
   const pose=rig.pose(t),weights=rig.weights(pose.phase,pose.glide);
   assert(Math.abs(weights.reduce((sum,[,w])=>sum+w,0)-1)<.00001);
-  assert(Math.abs(pose.tail)<13 && Math.abs(pose.head)<2 && Math.abs(pose.bob)<=3);
+  assert(Math.abs(pose.tail)<33 && Math.abs(pose.head)<2 && Math.abs(pose.bob)<=5);
   weights.forEach(([i,w])=>{assert(i>=0&&i<6&&w>=0&&w<=1);poses.add(i);});
  }
  assert.equal(poses.size,6);
@@ -317,4 +318,52 @@ test('even a 20fps paint clock sees a fully shut lid and reopened eye',()=>{
  const toe=puppet.limbAnchors(true,[[0,1]])[0][2],a=puppet.limbOffset(...toe,neutral),b=puppet.limbOffset(...toe,{...neutral,limbs:neutral.limbs.map(limb=>({...limb,lift:2}))});
  assert(b[1]-a[1]>1,'feet need a localized response to the power stroke');
  assert(Math.hypot(...puppet.limbOffset(260,280,{...neutral,limbs:neutral.limbs.map(limb=>({...limb,lift:2}))}))<.05);
+});
+
+test('the visible tail curl and foreclaws move at phone scale through both real skin meshes',()=>{
+ const rig=rigEnv.window.AstralisDragonRig,puppet=rigEnv.window.AstralisDragonPuppet;
+ // Opaque landmarks measured from the head-aligned forward atlas, frame 1.
+ // Interpolate the actual rendered mesh, rather than measuring a state field
+ // or a point below the artwork. Hold the atlas pose to isolate articulation.
+ const landmarks=[[192,433],[246,351],[300,333]];
+ function skinPoint(mesh,point,t,state){
+  const [x,y]=point;
+  for(let i=0;i<mesh.indices.length;i+=3){
+   const source=mesh.indices.slice(i,i+3).map(n=>mesh.vertices[n]),[a,b,c]=source;
+   const det=(b[0]-a[0])*(c[1]-a[1])-(c[0]-a[0])*(b[1]-a[1]);
+   const v=((x-a[0])*(c[1]-a[1])-(c[0]-a[0])*(y-a[1]))/det;
+   const w=((b[0]-a[0])*(y-a[1])-(x-a[0])*(b[1]-a[1]))/det;
+   const weights=[1-v-w,v,w];if(weights.some(weight=>weight<-.000001))continue;
+   const target=source.map(([sx,sy])=>puppet.deform(sx,sy,t,state));
+   return [0,1].map(axis=>target.reduce((sum,p,j)=>sum+p[axis]*weights[j],0));
+  }
+  assert.fail('landmark must lie inside the rendering mesh');
+ }
+ const scale=rig.route(.46,390,844).size/512;
+ for(const mesh of [puppet,puppet.cpuMesh]){
+  const samples=landmarks.map(()=>[]);
+  for(let t=22;t<26;t+=.05){
+   const state={...rig.pose(t,1),frontView:true,limbAnchors:puppet.limbAnchors(true,[[1,1]])};
+   landmarks.forEach((point,i)=>samples[i].push(skinPoint(mesh,point,t,state)));
+   for(const point of [[255,295],[293,203]])assert(Math.hypot(...puppet.tailOffset(...point,t,state))===0,'tail movement must leave the face and chest anchored');
+  }
+  const ranges=samples.map(points=>[0,1].map(axis=>(Math.max(...points.map(p=>p[axis]))-Math.min(...points.map(p=>p[axis])))*scale));
+  assert(ranges[0][0]>35,'the drawn tail curl must sweep visibly at phone size');
+  assert(ranges[1][0]>7 && ranges[2][0]>12,'both actual foreclaws must articulate visibly at phone size');
+ }
+});
+
+test('close approaches keep flapping; distant glides are brief instead of frozen for seconds',()=>{
+ const rig=rigEnv.window.AstralisDragonRig;
+ let hold=0,longest=0;const closeFrames=new Set();
+ for(let t=0;t<56;t+=.02){
+  const far=rig.pose(t);hold=far.glide>.98?hold+.02:0;longest=Math.max(longest,hold);
+  const route=rig.route((t%28)/28,390,844),pose=rig.pose(t+10.6,route.approach,false,1-rig.smooth(5,9,route.depth));
+  if(route.depth<5){
+   assert(pose.glide<.4 && pose.activity>.65,'the near dragon must keep its wingbeat');
+   rig.weights(pose.phase,pose.glide).forEach(([frame,weight])=>{if(weight>.6)closeFrames.add(frame);});
+  }
+ }
+ assert(longest<.8,'no multi-second held wing pose');assert(longest>.3,'retain a short natural coast');
+ assert.equal(closeFrames.size,6,'the full upstroke/downstroke cycle must appear during approaches');
 });
