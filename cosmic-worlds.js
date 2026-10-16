@@ -41,11 +41,11 @@
     {
       id: "toon-planet",
       href: "/toon-planet.html",
-      ariaLabel: "Enter Toon Planet, meet original animated characters and copy their code",
+      ariaLabel: "Enter Toon Planet to see Cactus Forest Moonlight scenery and its gentle desert animations",
       planetClass: "planet-toon",
       title: "Toon Planet",
-      description: "Meet a living cast of original cartoon characters. Tap a toon to preview its animation and copy the code for your website.",
-      badge: "Animated • Copy & Create"
+      description: "Our original Cactus Forest Moonlight artwork, with a tranquil animated Arizona nightscape. Characters will return one by one.",
+      badge: "Moonlight • Scenery"
     },
     {
       id: "first-orbit",
@@ -190,6 +190,13 @@
         box-shadow:inset -18px -14px 24px rgba(32,18,82,.62),inset 5px 7px 14px rgba(255,255,255,.24),
           0 0 12px rgba(255,222,164,.55),0 0 31px rgba(230,101,246,.45);
         animation:toonWorldFloat 5.5s ease-in-out infinite;}
+      /* Stage-one gallery icon previews the same original song artwork as Toon Planet. */
+      .astralis-planet.planet-toon{
+        background:#071420 url('/cover-3.jpg') center/cover no-repeat;
+        border-color:rgba(152,217,222,.75);
+        box-shadow:inset -11px -18px 24px #010c1aca,0 0 21px #82cdd855;
+      }
+      .planet-toon .toon-world-cloud,.planet-toon .toon-world-land,.planet-toon .toon-world-smile{display:none}
       .planet-toon::after{content:"";position:absolute;z-index:-1;left:-15px;right:-15px;top:35px;height:31px;
         border:5px solid rgba(185,253,251,.88);border-left-color:rgba(245,178,241,.32);border-radius:50%;
         transform:rotate(-22deg);box-shadow:0 0 16px rgba(161,230,255,.35);}
