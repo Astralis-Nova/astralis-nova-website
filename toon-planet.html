@@ -229,33 +229,52 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .orbit-twinkle,.underground-photo,.soil-grain{animation:none!important}
  .orbit-photo,.underground-photo{translate:none!important;transform:scale(1.015)!important}
 }
+
+/* Scenery-only canvas: small iconic controls, absolutely no visible text. */
+.brand-link{display:flex;align-items:center;justify-content:center;width:44px;height:44px;
+ min-width:44px;min-height:44px;padding:0;border-radius:50%;font-size:0}
+.brand-link svg{display:block;width:23px;height:23px;flex:none}
+.level-nav{padding:7px;gap:5px;border-radius:999px}
+.level-nav a{width:42px;height:42px;min-width:42px;min-height:42px;padding:0;justify-content:center;border-radius:50%;font-size:0}
+.level-nav a span{font-size:1.18rem;line-height:1}
+.level-nav a[aria-current="location"]{box-shadow:inset 0 0 0 2px #b0f8e6a1}
+@media(max-width:800px){
+ .level-nav{padding:5px;gap:3px}
+ .level-nav a{width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border-radius:50%}
+ .level-nav a[aria-current="location"]{box-shadow:inset 0 0 0 2px #b0f8e6a1}
+}
+@media(max-width:430px){
+ .level-nav a{padding:0}
+}
+/* Slightly clearer real-photo motion while retaining restrained natural movement. */
+.orbit-photo{animation-duration:38s}
+.underground-photo{animation-duration:48s}
+@keyframes orbitCamera{from{transform:scale(1.10) translate3d(-1.25%,.5%,0)}
+ to{transform:scale(1.14) translate3d(1.25%,-.5%,0)}}
+@keyframes soilCamera{from{transform:scale(1.07) translate3d(-.85%,.3%,0)}
+ to{transform:scale(1.11) translate3d(.85%,-.3%,0)}}
 </style>
 </head>
 <body>
-<a class="brand-link" href="/" aria-label="Return to Astralis Nova home">✦ ASTRALIS <span>NOVA</span></a>
-<nav class="level-nav" aria-label="Toon Planet levels">
- <a href="#space" data-level="space"><span aria-hidden="true">✦</span>Space</a>
- <a href="#surface" data-level="surface"><span aria-hidden="true">🌵</span>Surface</a>
- <a href="#underground" data-level="underground"><span aria-hidden="true">⬇</span>Below</a>
+<!-- Scenery-only phase: no visible headings, explanations, credits or character gallery.
+     Sources: NASA ISS orbital photo and USGS arid rangeland soil photo.
+     The surface is original Astralis Nova Cactus Forest Moonlight artwork. -->
+<a class="brand-link" href="/" aria-label="Return to Astralis Nova home">
+ <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M9.5 20v-7h5v7"/></svg>
+</a>
+<nav class="level-nav" aria-label="Navigate between world levels">
+ <a href="#space" data-level="space" aria-label="Space above Cactus Forest"><span aria-hidden="true">✦</span></a>
+ <a href="#surface" data-level="surface" aria-label="Cactus Forest Moonlight surface"><span aria-hidden="true">🌵</span></a>
+ <a href="#underground" data-level="underground" aria-label="Underground desert soil"><span aria-hidden="true">⬇</span></a>
 </nav>
 <main class="world" id="toonWorld">
-<section class="region region-space" id="space" aria-labelledby="spaceTitle">
+<section class="region region-space" id="space" aria-label="Space above Cactus Forest">
  <div class="space-sky" aria-hidden="true">
   <div class="orbit-photo"></div><div class="space-photo-shade"></div>
   <div class="orbit-twinkle"></div><div class="orbit-filmgrain"></div><div class="space-atmosphere"></div>
  </div>
- <div class="region-content space-copy">
-  <div class="scene-note">
-   <p class="eyebrow">Level 01 • Above Cactus Forest</p>
-   <h2 id="spaceTitle">Above the Desert</h2>
-   <p>From high above Earth, the atmosphere becomes a thin glowing line. A genuine orbital photograph brings us from the quiet desert night into real space.</p>
-   <small class="orbit-source">Nighttime orbital photograph: <a href="https://www.nasa.gov/image-article/starry-nighttime-background-seemingly-glitters-down-earth/" target="_blank" rel="noopener noreferrer">NASA / ISS</a>. The photograph is not an image of Cactus Forest itself.</small>
-   <a class="scene-hint" href="#surface">↓ Descend to the desert</a>
-  </div>
- </div>
- <div class="space-kicker" aria-hidden="true">↓ Down to Earth</div>
 </section>
-<section class="region region-surface" id="surface" aria-labelledby="surfaceTitle">
+<section class="region region-surface" id="surface" aria-label="Cactus Forest Moonlight landscape">
  <div class="surface-cover" aria-hidden="true"></div>
  <div class="surface-color" aria-hidden="true"></div>
  <div class="surface-stars" aria-hidden="true"></div>
@@ -302,31 +321,12 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
     <g class="desert-grass alt"><path d="M315 468Q309 431 290 414M311 468Q319 428 334 413M318 470Q324 450 336 440" fill="none" stroke="#305b56" stroke-width="4" stroke-linecap="round"/></g>
   </svg>
  <div class="ground-fade" aria-hidden="true"></div>
- <div class="region-content surface-copy">
-  <div class="title-card">
-   <p class="eyebrow">Level 02 • Cactus Forest, Arizona</p>
-   <h1 id="surfaceTitle">Toon <span>Planet</span></h1>
-   <p class="subtitle">Cactus Forest Moonlight 🌙</p>
-   <p class="description">Our original song artwork is the heart of this world. A peaceful Sonoran Desert night, with stars overhead and mesquite, ocotillo, saguaros and grasses stirring in the breeze.</p>
-   <a class="scene-hint" href="#underground">↓ Explore beneath the desert floor</a>
-  </div>
- </div>
 </section>
-<section class="region region-underground" id="underground" aria-labelledby="undergroundTitle">
+<section class="region region-underground" id="underground" aria-label="Underground soil and rocks">
  <div class="underground-strata" aria-hidden="true"><div class="underground-photo"></div></div>
  <div class="underground-topsoil" aria-hidden="true"></div>
  <div class="soil-grain" aria-hidden="true"></div>
  <div class="underground-dust" aria-hidden="true"></div>
- <div class="region-content underground-copy">
-  <div class="scene-note">
-   <p class="eyebrow">Level 03 • Below Cactus Forest</p>
-   <h2 id="undergroundTitle">Beneath the Desert</h2>
-   <p>A real dryland soil cross-section shows compacted earth and pale, calcium-rich horizons. In the Sonoran Desert, the ground commonly includes coarse alluvial sediment, mineral grains and hardened caliche.</p>
-   <small class="underground-source">Soil-profile photograph: <a href="https://www.usgs.gov/media/images/soil-profile-arid-rangeland" target="_blank" rel="noopener noreferrer">USGS / Mike Duniway</a>, New Mexico. An illustrative regional example, not a sample from your property.</small>
-   <a class="scene-hint" href="#surface">↑ Return to the moonlit surface</a>
-  </div>
-  <p class="closing-note">A photographic journey from orbit to the ground and into real desert soils. Underground conditions can vary across Cactus Forest; this is not a site-specific geologic survey. Characters return one at a time.</p>
- </div>
 </section>
 </main>
 <script>
