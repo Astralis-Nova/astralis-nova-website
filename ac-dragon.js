@@ -64,7 +64,7 @@
     flightSize=route[0].size;
     route.top=top;
   };
-  const flightPosition = progress => rig.route(progress, innerWidth, innerHeight, route.top,progress*28);
+  const flightPosition = progress => rig.route(progress, innerWidth, innerHeight, route.top,elapsed/1000);
   function paintBody(seconds,approach,launching,view=0,proximity=0) {
     const pose=rig.pose(seconds,approach,launching,proximity),weights=rig.weights(pose.phase,pose.glide);
     const sideAnchors=[[441,276],[448,280],[445,274],[441,274],[447,278],[451,278]];
@@ -100,6 +100,7 @@
       y:290+(head[0]-256)*Math.sin(angle)+(head[1]-290)*Math.cos(angle)};
     dragon.dataset.wingPhase=pose.phase.toFixed(3);dragon.dataset.glide=pose.glide.toFixed(3);
     dragon.dataset.tailFlex=pose.tail.toFixed(3);dragon.dataset.eyeBlink=pose.blink.toFixed(3);
+    dragon.dataset.strokeCycle=pose.cycle.toFixed(3);dragon.dataset.flightLift=pose.heave.toFixed(3);
     dragon.dataset.wingFlex=pose.wingTips.map(tip=>tip.toFixed(2)).join(':');
     dragon.dataset.clawCurl=pose.limbs.map(limb=>limb.curl.toFixed(2)).join(':');dragon.dataset.flightView=view>.5?'toward-viewer':'side';
   }
@@ -167,7 +168,7 @@
       targetFacing=departureFacing;
       glow=Math.sin(progress*Math.PI);blend=ease((progress-.3)/.6);
     }else if(phase==='launch'){
-      const p=ease(progress),start=route[0];
+      const p=ease(progress),start=flightPosition(0);
       targetFacing=departureFacing;
       x=mix(homeRect.x,start.x,p);y=mix(homeRect.y,start.y,p)-Math.sin(progress*Math.PI)*24;
       size=mix(homeRect.width,flightSize,p);glow=(1-progress)*.3;forwardBlend=ease((progress-.75)/.25);
@@ -182,7 +183,7 @@
         if(breath>0&&breath<1)firePower=Math.sin(breath*Math.PI);
       }
     }else if(phase==='return'){
-      const p=ease(progress),start=route[0];
+      const p=ease(progress),start=flightPosition(0);
       targetFacing=-departureFacing;
       x=mix(start.x,homeRect.x,p);y=mix(start.y,homeRect.y,p);
       size=mix(flightSize,homeRect.width,p);forwardBlend=1-ease(progress/.3);

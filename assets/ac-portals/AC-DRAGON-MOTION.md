@@ -162,3 +162,38 @@ close flight. Native before/after renders with a held source pose show the
 stronger tail bend and feet; complete desktop/phone flybys were inspected.
 Both skin meshes were checked for positive triangle areas with the larger
 motions. Browser GPU visual inspection remains unavailable in this workspace.
+
+
+## October 15 evening: motion from the uploaded flight reference
+
+The user supplied a 12.53-second, 1920x1080 screen recording of the linked
+10-second YouTube dragon flight. Frames and a denser early-stroke sequence were
+inspected locally. This is a qualitative movement study, not a motion-capture
+retarget or a copy of that dragon, its rider, or its scenery. No image assets
+were changed.
+
+Observed cues applied to the existing crimson rig: a substantial, slower wing
+push; a longer recovery; chest lift following the push; feet suspended below
+the chest with delayed wrists; a steadier head; and trailing tail response.
+The stroke now runs on one continuous 0.72Hz clock through launch and patrol.
+Two Hermite time segments put the downstroke in 44% of the cycle and recovery
+in 56%, sharing velocity at the join and cycle seam. Limb suspension, wrist
+flex, grip, wingtip flex and tail response follow phase-delayed signals from
+that clock, with restrained slower adjustments.
+
+The normalized Promise orbit, depth growth, opacity and retreat-only banking
+are retained. Its former 2.45Hz raven lift has been replaced by lift from the
+dragon's own wingbeat. The controller passes the same absolute clock to the
+camera and articulated body, including launch/return joins. Neck compensation
+keeps the tracked eye steady while the chest rises. Additional tail rows in
+both skin meshes carry movement through the actual curl instead of softening
+it between distant vertices.
+
+Regression coverage compares the retained orbit against the actual Promise
+renderer after subtracting each creature's own lift. New checks cover monotone,
+continuous stroke timing, phase continuity at takeoff, actual controller/camera
+clock alignment, and head stabilization relative to the chest. Existing opaque
+landmark displacement, pose weights, mesh connectivity, nose-first takeoff,
+reduced-motion, loading-failure and lifecycle checks remain. Native before/after
+held-pose motion and complete phone/desktop flybys were inspected. Browser GPU
+visual inspection remains unavailable in this workspace.

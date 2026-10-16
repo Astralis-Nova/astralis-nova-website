@@ -173,11 +173,11 @@ test('the close flyby travels nose-first across the screen and turns only at dis
  }
 });
 
-test('the dragon follows the actual Promise camera position, growth, opacity and level approach',()=>{
+test('the dragon retains the actual Promise orbit, growth, opacity and level approach with its own wingbeat lift',()=>{
  const source=fs.readFileSync(path.join(__dirname,'../rainbow-promise-cinematic.js'),'utf8');
  const pathSource=source.slice(source.indexOf('  const flightPath ='),source.indexOf('  const flock ='));
  const orbitSource=source.slice(source.indexOf('  const smoothOrbit ='),source.indexOf('  const renderBirds ='));
- const renderSource=source.slice(source.indexOf('  const renderBirds ='),source.indexOf('  const flyBirds ='));
+ const renderSource=source.slice(source.indexOf('  const renderBirds ='),source.indexOf('  const flyBirds =')).replace('const y = (orbitY + bird.vertical)', 'window.referenceLift=lift;const y = (orbitY + bird.vertical)');
  for(const[width,height]of[[1440,900],[390,844]]){
   const top=80,element={style:{},dataset:{}},bird={element,shape:{style:{}},duration:28000,offset:.04,mirror:1,vertical:0};let state;
   const reference={flock:[bird],birdWidth:width,birdHeight:height-top,soundPositionTick:-1,window:{rainbowPromiseRenderPose:(_,s)=>{state=s;return true;}}};
@@ -186,7 +186,7 @@ test('the dragon follows the actual Promise camera position, growth, opacity and
    reference.render(time);const p=rigEnv.window.AstralisDragonRig.route(time/28000,width,height,top,time/1000);
    const m=element.style.transform.match(/translate3d\(([^p]+)px,([^p]+)px,0\).*scale\(([^)]+)\)/);
    assert(Math.abs(p.x+p.size/2-Number(m[1]))<.006);
-   assert(Math.abs(p.y+p.size/2-top-Number(m[2]))<.006);
+   assert(Math.abs(p.y+p.size/2-top-p.lift-(Number(m[2])-reference.window.referenceLift))<.006);
    assert(Math.abs(p.scale-Number(m[3]))<.00006);
    assert(Math.abs(p.opacity-Number(element.style.opacity))<1e-10);
    assert(Math.abs(p.bank-state.bank)<1e-10);
@@ -366,4 +366,35 @@ test('close approaches keep flapping; distant glides are brief instead of frozen
  }
  assert(longest<.8,'no multi-second held wing pose');assert(longest>.3,'retain a short natural coast');
  assert.equal(closeFrames.size,6,'the full upstroke/downstroke cycle must appear during approaches');
+});
+
+test('reference stroke timing is continuous, with a quicker push and longer recovery',()=>{
+ const rig=rigEnv.window.AstralisDragonRig;
+ assert.equal(rig.strokePhase(0),0);assert(Math.abs(rig.strokePhase(.44)-2/3)<1e-12);assert.equal(rig.strokePhase(1),1);
+ let previous=0;
+ for(let i=1;i<=1000;i++){const phase=rig.strokePhase(i/1000);assert(phase>previous && phase<=1);previous=phase;}
+ const step=.00001,derivative=x=>(rig.strokePhase(x+step)-rig.strokePhase(x))/step;
+ assert(Math.abs(derivative(.44-step)-derivative(.44))<.001,'no velocity snap between push and recovery');
+ assert(Math.abs(derivative(0)-derivative(1-step))<.001,'no velocity snap at the wingbeat seam');
+ const before=rig.pose(10.6,0,true),after=rig.pose(10.6,0,false);
+ assert.equal(before.phase,after.phase,'taking off and patrolling must use the same continuous stroke clock');
+});
+
+test('the rendered flight lift shares the body clock while the head stays steadier than the chest',()=>{
+ const rig=rigEnv.window.AstralisDragonRig,puppet=rigEnv.window.AstralisDragonPuppet;
+ for(const [width,height] of [[1440,900],[390,844]]){
+  const s=setup({width,height});let previous=0;
+  for(const elapsed of [15000,20340,23360,25800]){
+   s.step(elapsed-previous);previous=elapsed;s.listeners.resize();
+   const camera=rig.route((elapsed-10600)/28000,width,height,80,elapsed/1000);
+   const pose=rig.pose(elapsed/1000,camera.approach,false,1-rig.smooth(5,9,camera.depth));
+   assert(Math.abs(Number(s.dragon.dataset.flightCenterY)-(camera.y+camera.size/2))<.02,'the real controller must use the same absolute clock');
+   assert(Math.abs(Number(s.dragon.dataset.flightLift)-pose.heave)<.002);
+   assert(Math.abs(camera.lift-pose.heave*Math.min(1.3,camera.scale))<1e-10,'stage lift must follow the wing-driven body response');
+  }
+ }
+ const eye=[],chest=[];
+ for(let t=20;t<22;t+=.025){const state={...rig.pose(t,1),frontView:true};eye.push(puppet.deform(293,203,t,state)[1]);chest.push(puppet.deform(255,295,t,state)[1]);}
+ const range=values=>Math.max(...values)-Math.min(...values);
+ assert(range(eye)<2 && range(chest)>12,'the neck must compensate while the chest carries the wingbeat');
 });

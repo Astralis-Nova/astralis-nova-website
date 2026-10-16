@@ -25,52 +25,60 @@
     const scale=3.5/(Math.max(.85,depth)+1.2);
     const base=Math.min(380,Math.max(220,width*.32),Math.max(150,(height-top)*.65));
     const size=base*scale;
-    // Promise's centred depth growth and light flight lift, with dragon-sized art.
-    const beat=seconds*2.45+.045*Math.sin(seconds*.7),p=((beat%1)+1)%1;
-    const stroke=p<.43?Math.cos(Math.PI*p/.43):-Math.cos(Math.PI*(p-.43)/.57);
-    const cycle=seconds%6.8;
-    const envelope=Math.min(1,Math.max(0,(4.7-cycle)*5)+Math.max(0,(cycle-6.5)*5));
-    const lift=(Math.sin(seconds*1.1)*5-stroke*envelope*6)*Math.min(1.3,scale);
+    const approach=clamp(smooth(-.4,3,-dz/.003)*.82+(1-smooth(1.1,4.5,depth))*.42);
+    // Keep the Promise orbit; let the dragon's own wingbeat supply its lift.
+    const lift=pose(seconds,approach,false,1-smooth(5,9,depth)).heave*Math.min(1.3,scale);
     const x=nx*width-size/2,y=top+ny*(height-top)+lift-size/2;
     const retreating=dz>0;
     const turn=clamp(dx*90,-1,1),turnBlend=retreating?clamp((depth-4.3)/8):0;
     const yaw=Math.tanh(dx*300);
-    const approach=clamp(smooth(-.4,3,-dz/.003)*.82+(1-smooth(1.1,4.5,depth))*.42);
     return {x,y,size,depth,dx,dy,dz,approach,scale,lift,
       facing:dx>=0?1:-1,profile:.82+.18*Math.abs(yaw),
       bank:turn*5*turnBlend,pitch:0,opacity:.52+.46*Math.min(1,scale)};
   }
+  function strokePhase(cycle){
+    // The recording shows a firm push followed by a longer recovery.
+    // Hermite segments share a velocity at the join and cycle seam.
+    const down=cycle<.44,t=down?cycle/.44:(cycle-.44)/.56;
+    const start=down?0:2/3,end=down?2/3:1,span=down?.44:.56;
+    const h=t*t*(3-2*t),tangent=(t*t*t-2*t*t+t)+(t*t*t-t*t);
+    return start+(end-start)*h+tangent*.65*span;
+  }
   function pose(seconds, approach = 0, launch = false, proximity = 0) {
-    // A firm downstroke, slower recovery and short glides give the body weight.
-    // A short coast between active strokes, rather than a multi-second frozen pose.
     const coast=seconds%6.8;
-    const glide = launch ? 0 : smooth(5.55,5.8,coast)*(1-smooth(6.45,6.8,coast))*(1-clamp(Math.max(approach,proximity))*.8);
-    const frequency = launch ? 1.65 : 1.3;
-    const beat = seconds * frequency + Math.sin(seconds*.7)*.035;
-    const phase = ((beat % 1)+1)%1, angle = phase*Math.PI*2;
-    const stroke = Math.sin(angle), lag = Math.sin(angle - .65), activity = 1-glide*.88;
-    const adjustment=Math.max(0,Math.sin(seconds*.62-.4))**8;
-    const limbs=[0,.9,2.1,2.9].map((offset,index)=>({
-      knee:-8+adjustment*(index<2?20:17)+Math.sin(seconds*1.12+offset)*13+lag*5*activity,
-      ankle:8-adjustment*15+Math.sin(seconds*1.37+offset-.4)*13,
-      curl:clamp(.45+Math.sin(seconds*1.67+offset)*.44+adjustment*.12+glide*.08),
-      lift:(Math.sin(angle-.85-index*.18)*3.6+Math.sin(seconds*1.3+offset)*1.1)*activity
-    }));
+    const glide=launch?0:smooth(5.55,5.8,coast)*(1-smooth(6.45,6.8,coast))*(1-clamp(Math.max(approach,proximity))*.8);
+    // Roughly one substantial stroke every 1.4s, as observed in the clip.
+    const beat=seconds*.72;
+    const cycle=((beat%1)+1)%1,phase=strokePhase(cycle),angle=cycle*Math.PI*2;
+    const activity=1-glide*.88;
+    const suspension=Math.sin(angle-1.05),adjustment=Math.max(0,Math.sin(seconds*.62-.4))**8;
+    const limbs=[0,.18,.48,.63].map((delay,index)=>{
+      // The chest moves first; the suspended legs follow and wrists settle last.
+      const swing=Math.sin(angle-1.05-delay),wrist=Math.sin(angle-1.65-delay);
+      return {
+        knee:-9-swing*17*activity+adjustment*(index<2?14:11),
+        ankle:7+wrist*14*activity-adjustment*7,
+        curl:clamp(.5+swing*.27*activity+Math.sin(seconds*.8+index*.9)*.12+glide*.08),
+        lift:(Math.sin(angle-.25-delay)*3.6+Math.sin(seconds*.65+index)*.6)*activity
+      };
+    });
     const eyePhase=(seconds+.83)%6.9;
-    // Hold the lid shut for 70ms so a 20fps fallback can show a full blink.
     const blinkPulse=(center,half)=>1-smooth(.035,half,Math.abs(eyePhase-center));
     const blink=Math.max(blinkPulse(.18,.18),Math.floor((seconds+.83)/6.9)%3===1?blinkPulse(.52,.14):0);
-    const wingTips=[0,.16].map(delay=>Math.sin(angle-1.1-delay)*(3.2*activity+.8)+Math.sin(seconds*3.1-delay)*3.5*glide);
-    return { phase, glide, activity,limbs,blink,wingTips,
+    const wingTips=[0,.16].map(delay=>Math.sin(angle-1.15-delay)*(3.6*activity+.8)+Math.sin(seconds*3.1-delay)*3.5*glide);
+    const heave=-Math.sin(angle-1.05)*4.8*activity;
+    return {phase,cycle,angle,glide,activity,limbs,blink,wingTips,heave,
       gaze:[Math.sin(seconds*.37)*1.05+Math.sin(seconds*1.21)*.35,Math.sin(seconds*.49-.7)*.55],
-      bob: Math.sin(angle-.9)*5*activity,
-      chest: Math.sin(angle-.6)*6.5*activity,
-      neck: Math.sin(seconds*1.35-.6)*1.5-lag*1.5*activity,
-      legs: -6+Math.sin(seconds*1.15-1.2)*4+lag*2*activity,
-      wrist: Math.sin(angle-.9)*2.6*activity,
-      head: Math.sin(seconds*1.08-.9)*1.6+Math.sin(angle-.9)*-.25*activity,
-      tail: Math.sin(seconds*1.65-.6)*25+lag*7*activity,
-      bank: Math.sin(seconds*.65)*1.3*(1-approach)
+      bob:heave,
+      chest:-Math.sin(angle-.95)*6.1*activity,
+      neck:Math.sin(angle-1.25)*1.5*activity+Math.sin(seconds*.6)*.65,
+      legs:-6-suspension*5*activity,
+      wrist:Math.sin(angle-.8)*2.6*activity,
+      // A small independent look, with much less beat-by-beat head nodding.
+      head:Math.sin(seconds*.65-.9)*.85+Math.sin(angle-1.15)*.15*activity,
+      tail:Math.sin(seconds*.85-.6)*20+Math.sin(angle-1.7)*10*activity,
+      tailPhase:angle-1.7,
+      bank:Math.sin(seconds*.65)*1.3*(1-approach)
     };
   }
   function weights(phase, glide) {
@@ -81,6 +89,6 @@
     for(const [index,weight] of [[first,(1-blend)*(1-glide)],[(first+1)%6,blend*(1-glide)],[1,glide]]) map.set(index,(map.get(index)||0)+weight);
     return [...map].filter(([,w])=>w>0);
   }
-  const rig = { clamp, mix, smooth, route, pose, weights };
+  const rig = { clamp, mix, smooth, route, strokePhase, pose, weights };
   root.AstralisDragonRig = rig;
 })(typeof window === 'undefined' ? globalThis : window);

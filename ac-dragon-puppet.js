@@ -64,12 +64,12 @@
       // The visible curl ends near y=420, well above the old y=470 target.
       // Bend the drawn tail from a fixed root; leave the hips and feet attached.
       const reach=smooth(340,425,y),mask=1-smooth(225+reach*45,315+reach*45,x);
-      const sweep=(pose.tail+Math.sin(seconds*1.65-reach*1.8)*7*reach)*reach*mask;
-      return [sweep,Math.cos(seconds*1.65-reach)*7*reach*reach*mask];
+      const sweep=(pose.tail+Math.sin((pose.tailPhase??seconds*1.65)-reach*1.8)*7*reach)*reach*mask;
+      return [sweep,Math.cos((pose.tailPhase??seconds*1.65)-reach)*7*reach*reach*mask];
     }
     const mask=(1-smooth(185,270,x))*smooth(285,332,y),reach=clamp((265-x)/245);
     return [Math.sin(seconds*1.7-reach*2)*3*mask,
-      (pose.tail*reach*reach+Math.sin(seconds*1.65-reach*3.3)*5*reach)*mask];
+      (pose.tail*reach*reach+Math.sin((pose.tailPhase??seconds*1.65)-reach*3.3)*5*reach)*mask];
   }
   function deform(x,y,seconds,pose) {
     const limb=limbOffset(x,y,pose),flex=wingOffset(x,y,pose),tail=tailOffset(x,y,seconds,pose);
@@ -110,9 +110,9 @@
   }
   // Extra vertices around knees, ankles, claws and neck keep their movement local.
   const {vertices,indices}=mesh([0,32,64,96,128,160,190,210,225,240,255,270,285,300,315,330,350,380,420,460,490,512],
-    [0,32,64,96,128,160,185,205,225,245,270,290,305,320,335,350,365,380,405,440,475,512]);
+    [0,32,64,96,128,160,185,205,225,245,270,290,305,320,335,350,365,380,405,425,440,475,512]);
   const cpuMesh=mesh([0,85,170,205,220,232,244,256,268,280,292,304,318,335,355,380,440,512],
-    [0,85,170,205,235,270,290,302,314,326,338,350,362,374,395,450,512]);
+    [0,85,170,205,235,270,290,302,314,326,338,350,362,374,395,425,440,450,512]);
   function positions(seconds,pose) { return vertices.map(([x,y])=>deform(x,y,seconds,pose)); }
   const forwardAnchors=[[320,250],[307,249],[312,250],[306,201],[302,204],[307,204]];
   const forwardEyes=Array.from({length:6},()=>[293,203]);
