@@ -115,7 +115,7 @@ art:svg("Hand-drawn 1929 comic-strip-era sailor Popeye with cap and squint",`
 </g></g>`)
 },
 {
-id:"gertie",name:"Gertie the Dinosaur",era:"1914 animation",source:"Gertie the Dinosaur (1914)",lane:"74%",speed:"41s",delay:"-18s",width:"152px",
+id:"gertie",name:"Gertie the Dinosaur",era:"1914 animation",source:"Gertie the Dinosaur (1914)",lane:"58%",speed:"41s",delay:"-18s",width:"152px",
 action:"Lumbers across the landscape, cheerfully bobbing her neck.",
 art:svg("Hand-drawn friendly 1914 Gertie long-neck dinosaur",`
 <g class="classic-character">
