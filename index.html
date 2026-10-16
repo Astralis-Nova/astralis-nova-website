@@ -506,6 +506,10 @@
     .live-board-status.good{color:#70e0a9}
     .live-board-status.bad{color:#ff9dac}
     .live-board-note{color:#8298b2;font-size:.79rem;line-height:1.5}
+    #liveBoardMobileHint{margin:0 0 12px;color:#b9c9dc}
+    @media (pointer:coarse){
+      #liveCosmicCanvas{touch-action:auto;cursor:default}
+    }
     @media(max-width:700px){
       .live-board-panel{padding:18px}
       .live-brush{width:100%}
@@ -1049,6 +1053,7 @@
         <div class="live-board-tools" aria-label="Live drawing tools">
           <button class="board-tool active" id="liveBoardPen" type="button">✏️ Pen</button>
           <button class="board-tool" id="liveBoardEraser" type="button">🧽 Eraser</button>
+          <button class="board-tool" id="liveBoardDrawToggle" type="button" aria-pressed="false" hidden>✍️ Enable Drawing</button>
           <button class="board-color active" type="button" data-color="#172033" aria-label="Dark ink"></button>
           <button class="board-color" type="button" data-color="#2368ff" aria-label="Blue ink"></button>
           <button class="board-color" type="button" data-color="#df2e94" aria-label="Pink ink"></button>
@@ -1061,6 +1066,7 @@
           <button class="board-tool danger" id="liveBoardClear" type="button">Clear Board</button>
         </div>
 
+        <p class="live-board-note" id="liveBoardMobileHint" hidden>Browse mode: swipe to scroll without leaving marks.</p>
         <div class="live-canvas-wrap">
           <canvas id="liveCosmicCanvas" width="1200" height="600" aria-label="Live shared cosmic doodle board"></canvas>
         </div>
@@ -1517,6 +1523,8 @@
     const ctx = canvas.getContext("2d");
     const pen = document.getElementById("liveBoardPen");
     const eraser = document.getElementById("liveBoardEraser");
+    const drawToggle = document.getElementById("liveBoardDrawToggle");
+    const mobileHint = document.getElementById("liveBoardMobileHint");
     const clearButton = document.getElementById("liveBoardClear");
     const brush = document.getElementById("liveBoardBrush");
     const status = document.getElementById("liveBoardStatus");
@@ -1528,7 +1536,10 @@
     let reconnectTimer;
     let mode = "pen";
     let color = "#172033";
+    const touchBrowsing = window.matchMedia("(pointer: coarse)").matches;
+    let drawingEnabled = !touchBrowsing;
     let drawing = false;
+    let activePointerId = null;
     let activeStroke = null;
     let lastPoint = null;
     const remoteStrokes = new Map();
@@ -1639,6 +1650,28 @@
     pen.addEventListener("click", () => setMode("pen"));
     eraser.addEventListener("click", () => setMode("eraser"));
 
+    function setDrawingEnabled(enabled) {
+      if (drawing) finishStroke();
+      drawingEnabled = enabled;
+      canvas.style.touchAction = enabled ? "none" : "auto";
+      canvas.style.cursor = enabled ? "crosshair" : "default";
+      if (touchBrowsing) {
+        drawToggle.textContent = enabled ? "🖐️ Done Drawing" : "✍️ Enable Drawing";
+        drawToggle.setAttribute("aria-pressed", String(enabled));
+        drawToggle.classList.toggle("active", enabled);
+        mobileHint.textContent = enabled
+          ? "Drawing mode: touch the board to sketch. Tap Done Drawing to scroll again."
+          : "Browse mode: swipe across the board to scroll without leaving marks.";
+      }
+    }
+
+    drawToggle.hidden = !touchBrowsing;
+    mobileHint.hidden = !touchBrowsing;
+    if (touchBrowsing) {
+      drawToggle.addEventListener("click", () => setDrawingEnabled(!drawingEnabled));
+    }
+    setDrawingEnabled(!touchBrowsing);
+
     colors.forEach(button => button.addEventListener("click", () => {
       color = button.dataset.color;
       colors.forEach(item => item.classList.toggle("active", item === button));
@@ -1646,8 +1679,10 @@
     }));
 
     canvas.addEventListener("pointerdown", event => {
+      if (!drawingEnabled || drawing || !event.isPrimary) return;
       event.preventDefault();
       canvas.setPointerCapture(event.pointerId);
+      activePointerId = event.pointerId;
       drawing = true;
       const point = pointFromEvent(event);
       const width = mode === "eraser" ? Math.max(16, Number(brush.value) * 2.2) : Number(brush.value);
@@ -1662,7 +1697,7 @@
     });
 
     canvas.addEventListener("pointermove", event => {
-      if (!drawing || !activeStroke) return;
+      if (!drawing || !activeStroke || event.pointerId !== activePointerId) return;
       event.preventDefault();
       const point = pointFromEvent(event);
       const dx = point.x - lastPoint.x;
@@ -1674,10 +1709,12 @@
       lastPoint = point;
     });
 
-    function finishStroke() {
+    function finishStroke(event) {
+      if (event && event.pointerId !== activePointerId) return;
       if (!drawing || !activeStroke) return;
       drawing = false;
       send({type:"end", stroke:activeStroke});
+      activePointerId = null;
       activeStroke = null;
       lastPoint = null;
     }
