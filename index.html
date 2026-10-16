@@ -203,6 +203,14 @@
     .toon-gateway-caption{font-size:.8rem;font-weight:900;letter-spacing:.12em;color:#ffe6b4;text-shadow:0 0 16px #ff8fffc9;margin-top:4px}
     .toon-gateway-orb-link:hover .toon-gateway-orb,.toon-gateway-orb-link:focus-visible .toon-gateway-orb{animation-play-state:paused;transform:scale(1.05)}
     .toon-gateway-orb-link:focus-visible{outline:3px solid #86fae6;outline-offset:4px;border-radius:14px}
+    /* Stage-one Toon Planet doorway uses the song cover, not the retired candy-colored planet. */
+    .toon-gateway-orb{
+      background:#06131d url('/cover-3.jpg') center/cover no-repeat;
+      box-shadow:inset -14px -22px 30px #01091090,0 0 22px #97b8c86c,0 0 48px #78bed855;
+    }
+    .toon-gateway-land,.toon-gateway-cloud,.toon-gateway-face{display:none}
+    .toon-gateway-caption{color:#bfece7}
+
     .toon-gateway-copy p:not(.eyebrow){color:#d4daee;line-height:1.7;max-width:720px}
     @keyframes toonGatewayFloat{0%,100%{transform:translateY(3px) rotate(-2deg)}50%{transform:translateY(-6px) rotate(3deg)}}
     @media(max-width:700px){
@@ -1069,7 +1077,7 @@
 
   <section class="section-shell shell" id="toon-planet-gateway">
     <div class="panel toon-gateway-panel">
-      <a class="toon-gateway-orb-link" href="/toon-planet.html" aria-label="Tap this animated Toon Planet to enter the Toon Planet character world">
+      <a class="toon-gateway-orb-link" href="/toon-planet.html" aria-label="Open Toon Planet's Cactus Forest Moonlight scenery">
         <span class="toon-gateway-orb" aria-hidden="true">
           <span class="toon-gateway-land toon-gateway-land-a"></span>
           <span class="toon-gateway-land toon-gateway-land-b"></span>
@@ -1080,9 +1088,9 @@
         <span class="toon-gateway-caption">✦ TAP THE PLANET ✦</span>
       </a>
       <div class="toon-gateway-copy">
-        <p class="eyebrow">NEW CARTOON WORLD • COPYABLE ORIGINAL CHARACTERS</p>
+        <p class="eyebrow">A NEW WORLD • CACTUS FOREST MOONLIGHT</p>
         <h2 class="section-title">🌈 TOON PLANET</h2>
-        <p>Explore a colorful cartoon planet with original bouncing characters. Tap a toon, watch it move, and copy its complete code to use on your own website.</p>
+        <p>Explore our original Cactus Forest Moonlight background, with gently swaying desert plants, drifting haze and twinkling stars. We’ll add the characters back one at a time.</p>
         <a href="/toon-planet.html" class="btn" style="margin-top:13px;display:inline-flex;align-items:center;justify-content:center;min-height:48px">🚀 ENTER TOON PLANET</a>
       </div>
     </div>
