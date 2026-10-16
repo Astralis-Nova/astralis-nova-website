@@ -1063,7 +1063,7 @@
           <label class="live-brush">Brush
             <input id="liveBoardBrush" type="range" min="2" max="30" value="5">
           </label>
-          <button class="board-tool danger" id="liveBoardClear" type="button">Clear Board</button>
+          <button class="board-tool danger" id="liveBoardClear" type="button">🐰 Reset to Bugs</button>
         </div>
 
         <p class="live-board-note" id="liveBoardMobileHint" hidden>Browse mode: swipe to scroll without leaving marks.</p>
@@ -1073,7 +1073,7 @@
 
         <div class="live-board-foot">
           <span class="live-board-status" id="liveBoardStatus">Opening a live channel…</span>
-          <span class="live-board-note">Friendly doodles, messages, stars, aliens, and questionable starships welcome.</span>
+          <span class="live-board-note">Draw over the Bugs Bunny scribble. Reset clears visitors’ marks and brings Bugs back.</span>
         </div>
       </div>
     </div>
@@ -1586,8 +1586,123 @@
       }
     }
 
+
+    // The starter sketch is intentionally part of the canvas backdrop, not
+    // a user stroke. Every connected visitor gets the same Bugs Bunny doodle
+    // on initial load, refresh and shared reset; visitor strokes remain live.
+    function renderBugsBunnyDoodle() {
+      const scale = Math.min(canvas.width / 900, canvas.height / 520);
+      ctx.save();
+      ctx.translate((canvas.width - 500 * scale) / 2, (canvas.height - 500 * scale) / 2);
+      ctx.scale(scale, scale);
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+
+      function sketch(paths, ink = "#28374a", width = 3.1) {
+        ctx.strokeStyle = ink;
+        ctx.lineWidth = width;
+        for (const path of paths) ctx.stroke(new Path2D(path));
+      }
+
+      // Tall lopsided rabbit ears, with loose doubled pencil contours.
+      sketch([
+        "M210 180 C193 125 154 13 184 7 C219 -7 247 112 250 168",
+        "M264 163 C271 96 312 -2 343 10 C383 31 326 137 314 184",
+        "M207 169 C186 112 160 29 179 13",
+        "M337 16 C352 22 350 48 341 81"
+      ], "#253547", 3.7);
+      sketch([
+        "M220 144 C207 95 187 34 190 28 C209 32 237 122 235 151",
+        "M286 143 C299 93 324 31 339 28 C347 37 327 111 301 153"
+      ], "#d889a0", 5);
+
+      // His tufty cheeks, forehead, chin and recognizable overbite.
+      sketch([
+        "M208 166 C170 148 145 187 151 230 C156 251 165 264 177 276",
+        "M207 167 C237 149 282 143 320 174",
+        "M320 174 C362 165 381 200 370 246 C368 259 360 271 353 280",
+        "M174 274 C140 283 133 309 155 330 C168 343 180 348 196 352",
+        "M352 278 C394 278 410 307 388 333 C378 345 360 352 347 353",
+        "M195 349 C201 395 238 415 277 417 C323 414 345 390 348 350",
+        "M174 272 C192 278 203 288 213 300",
+        "M352 276 C338 284 333 291 327 301",
+        "M182 344 C170 349 160 358 155 370",
+        "M359 347 C369 356 377 368 380 378"
+      ], "#223449", 3.6);
+
+      // Eyes and expressive brows, intentionally hand-drawn rather than glossy.
+      sketch([
+        "M218 244 C207 212 214 185 233 188 C253 188 260 218 255 247",
+        "M267 244 C267 207 277 185 294 191 C315 197 317 224 301 250",
+        "M216 184 C227 173 242 172 250 180",
+        "M277 180 C289 174 305 178 312 188"
+      ]);
+      sketch([
+        "M243 224 C241 214 246 209 250 216 C255 223 248 231 243 224 Z",
+        "M282 227 C280 215 287 213 292 218 C295 224 289 235 282 227 Z"
+      ], "#253547", 4.5);
+
+      // Pink triangular nose, wide Bugs grin and his two famous front teeth.
+      ctx.fillStyle = "#df9bac";
+      ctx.fill(new Path2D("M248 267 Q267 251 286 265 Q279 276 268 281 Q258 279 248 267 Z"));
+      sketch(["M248 267 Q267 251 286 265 Q279 276 268 281 Q258 279 248 267 Z"], "#344053", 2.8);
+      sketch([
+        "M267 281 C263 297 242 313 221 306",
+        "M267 281 C272 307 290 322 313 314 C327 310 338 300 341 287",
+        "M239 323 C245 349 260 361 278 359 C301 359 321 343 324 322",
+        "M229 312 C243 319 252 321 260 318",
+        "M311 318 C321 319 330 316 339 310"
+      ], "#26374a", 3.2);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill(new Path2D("M258 319 Q269 322 280 318 L281 350 Q267 358 259 347 Z"));
+      ctx.fill(new Path2D("M281 319 Q294 322 305 315 L299 347 Q290 358 281 350 Z"));
+      sketch([
+        "M258 319 Q269 322 280 318 L281 350 Q267 358 259 347 Z",
+        "M281 319 Q294 322 305 315 L299 347 Q290 358 281 350 Z"
+      ], "#334257", 2.4);
+
+      // Whiskers, freckles and a few scribbly fur strokes.
+      sketch([
+        "M210 295 C172 278 129 268 100 269",
+        "M207 308 C171 309 127 313 92 329",
+        "M210 321 C171 332 139 351 118 371",
+        "M325 294 C363 277 406 271 439 275",
+        "M328 307 C370 306 413 318 452 329",
+        "M326 320 C361 333 396 356 421 372"
+      ], "#3b4b60", 2.3);
+      sketch([
+        "M226 292 L229 292", "M226 306 L230 306", "M236 297 L239 297",
+        "M305 292 L308 293", "M310 304 L313 304", "M298 302 L301 303",
+        "M191 201 C185 218 184 227 185 236", "M353 207 L355 225"
+      ], "#516075", 3.2);
+
+      // Little shoulders and a casual paw gripping a bright carrot.
+      sketch([
+        "M210 401 C183 415 169 441 165 471",
+        "M332 398 C361 408 377 434 381 472",
+        "M211 433 C232 454 296 459 334 432",
+        "M353 425 C371 415 390 417 405 429",
+        "M358 444 C374 435 392 441 402 452"
+      ], "#43546c", 3);
+      ctx.fillStyle = "#ef9a42";
+      ctx.fill(new Path2D("M400 397 C415 404 438 409 453 416 Q434 445 410 473 Q400 437 400 397 Z"));
+      sketch(["M400 397 C415 404 438 409 453 416 Q434 445 410 473 Q400 437 400 397 Z"], "#b06d2a", 2.6);
+      sketch([
+        "M410 396 C398 381 398 370 401 356",
+        "M410 398 C413 379 423 368 436 363",
+        "M412 400 C430 386 441 385 452 389",
+        "M418 422 L429 429", "M410 441 L418 447"
+      ], "#529b5d", 3.7);
+
+      ctx.fillStyle = "#64758a";
+      ctx.font = "italic 20px cursive";
+      ctx.fillText("Eh, what's up, Doc?", 20, 485);
+      ctx.restore();
+    }
+
     function renderBoard(strokes) {
       clearCanvas();
+      renderBugsBunnyDoodle();
       for (const stroke of strokes || []) renderStroke(stroke);
     }
 
@@ -1626,8 +1741,8 @@
           remoteStrokes.delete(message.stroke?.id);
         } else if (message.type === "clear") {
           remoteStrokes.clear();
-          clearCanvas();
-          setStatus("The board was cleared. Fresh universe!", "good");
+          renderBoard([]);
+          setStatus("Bugs Bunny is back! Fresh board for everyone.", "good");
         }
       });
 
@@ -1724,10 +1839,11 @@
     canvas.addEventListener("lostpointercapture", finishStroke);
 
     clearButton.addEventListener("click", () => {
-      if (!confirm("Clear the shared board for everyone?")) return;
+      if (!confirm("Reset everyone's drawings back to Bugs Bunny?")) return;
       send({type:"clear"});
     });
 
+    renderBoard([]);
     connect();
   })();
   </script>
