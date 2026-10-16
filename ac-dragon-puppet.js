@@ -64,15 +64,16 @@
       // The visible curl ends near y=420, well above the old y=470 target.
       // Bend the drawn tail from a fixed root; leave the hips and feet attached.
       const reach=smooth(340,425,y),mask=1-smooth(225+reach*45,315+reach*45,x);
-      const sweep=(pose.tail+Math.sin((pose.tailPhase??seconds*1.65)-reach*1.8)*7*reach)*reach*mask;
-      return [sweep,Math.cos((pose.tailPhase??seconds*1.65)-reach)*7*reach*reach*mask];
+      const strength=pose.jointCycle?.55:1;
+      const sweep=strength*(pose.tail+Math.sin((pose.tailPhase??seconds*1.65)-reach*1.8)*7*reach)*reach*mask;
+      return [sweep,strength*Math.cos((pose.tailPhase??seconds*1.65)-reach)*7*reach*reach*mask];
     }
     const mask=(1-smooth(185,270,x))*smooth(285,332,y),reach=clamp((265-x)/245);
     return [Math.sin(seconds*1.7-reach*2)*3*mask,
       (pose.tail*reach*reach+Math.sin((pose.tailPhase??seconds*1.65)-reach*3.3)*5*reach)*mask];
   }
   function deform(x,y,seconds,pose) {
-    const limb=limbOffset(x,y,pose),flex=wingOffset(x,y,pose),tail=tailOffset(x,y,seconds,pose);
+    const limb=pose.jointCycle?[0,0]:limbOffset(x,y,pose),flex=wingOffset(x,y,pose),tail=tailOffset(x,y,seconds,pose);
     if(pose.frontView){
       const middle=Math.exp(-(((x-255)/90)**2));
       const chest=middle*Math.exp(-(((y-305)/65)**2));
@@ -116,6 +117,41 @@
   function positions(seconds,pose) { return vertices.map(([x,y])=>deform(x,y,seconds,pose)); }
   const forwardAnchors=[[320,250],[307,249],[312,250],[306,201],[302,204],[307,204]];
   const forwardEyes=Array.from({length:6},()=>[293,203]);
+  // Only lower-body pixels from this atlas are used. The original head,
+  // neck and wings remain in the rendered texture, including their anchors.
+  const jointParts=[
+    {hip:[294,320],target:[268,300],tail:[[250,330],[250,400],[225,465],[160,490],[95,480],[75,440],[90,398],[135,397],[140,430],[180,445],[205,410],[215,345]]},
+    {hip:[293,314],target:[270,300],tail:[[250,325],[250,420],[220,480],[130,500],[65,470],[65,410],[120,395],[130,435],[185,445],[210,395],[215,340]]},
+    {hip:[259,320],target:[270,300],tail:[[225,335],[245,375],[235,410],[285,430],[295,500],[235,515],[185,495],[190,450],[205,415],[195,365]]},
+    {hip:[290,275],target:[278,301],tail:[[235,300],[250,350],[230,390],[255,410],[360,420],[470,410],[512,455],[512,510],[470,510],[465,465],[415,450],[300,455],[230,440],[190,415],[175,375],[190,330]]},
+    {hip:[266,255],target:[282,301],tail:[[235,285],[260,325],[290,370],[270,420],[210,440],[165,410],[160,360],[200,345],[215,380],[240,390],[245,360],[210,320]]},
+    {hip:[282,254],target:[272,299],tail:[[245,280],[250,345],[230,410],[160,450],[90,440],[70,395],[115,370],[135,405],[175,410],[210,375],[210,310]]}
+  ];
+  function composeJointAtlas(original,joints,makeCanvas){
+    const make=()=>{const c=makeCanvas();c.width=c.height=512;return c;};
+    const atlas=makeCanvas();atlas.width=1536;atlas.height=1024;
+    const output=atlas.getContext('2d'),cell=make(),part=make();
+    const base=cell.getContext('2d'),detail=part.getContext('2d');
+    const path=(ctx,points,start=true)=>{if(start)ctx.beginPath();ctx.moveTo(...points[0]);for(const point of points.slice(1))ctx.lineTo(...point);ctx.closePath();};
+    const erase=[[218,300],[312,300],[328,336],[322,362],[282,380],[288,460],[240,476],[142,454],[142,400],[175,380],[205,380],[207,332]];
+    for(let frame=0;frame<6;frame++){
+      const sx=frame%3*512,sy=Math.floor(frame/3)*512,[ax,ay]=forwardAnchors[frame];
+      base.clearRect(0,0,512,512);base.drawImage(original,sx,sy,512,512,314-ax,240-ay,512,512);
+      base.save();path(base,erase);base.clip();base.globalCompositeOperation='destination-out';
+      const remove=base.createLinearGradient(0,300,0,318);remove.addColorStop(0,'rgba(0,0,0,0)');remove.addColorStop(1,'rgba(0,0,0,1)');
+      base.fillStyle=remove;base.fillRect(0,0,512,512);base.restore();
+      const {hip,target,tail}=jointParts[frame],scale=.8;
+      const project=([x,y])=>[target[0]+(x-hip[0])*scale,target[1]+(y-hip[1])*scale];
+      const leg=[[-45,-35],[35,-35],[50,15],[100,65],[115,125],[70,145],[-110,145],[-100,70],[-90,10]].map(([x,y])=>[x+hip[0],y+hip[1]]);
+      detail.clearRect(0,0,512,512);detail.save();path(detail,leg.map(project));path(detail,tail.map(project),false);detail.clip();
+      detail.drawImage(joints,sx,sy,512,512,target[0]-hip[0]*scale,target[1]-hip[1]*scale,512*scale,512*scale);detail.restore();
+      detail.save();detail.globalCompositeOperation='destination-in';
+      const join=detail.createLinearGradient(0,286,0,309);join.addColorStop(0,'rgba(0,0,0,0)');join.addColorStop(1,'rgba(0,0,0,1)');
+      detail.fillStyle=join;detail.fillRect(0,0,512,512);detail.restore();base.drawImage(part,0,0);
+      output.drawImage(cell,sx+ax-314,sy+ay-240);
+    }
+    return atlas;
+  }
   function face(ctx,seconds,pose,weights){
     if(!pose.frontView)return null;
     const center=weights.reduce((v,[frame,weight])=>[v[0]+forwardEyes[frame][0]*weight,v[1]+forwardEyes[frame][1]*weight],[0,0]);
@@ -196,5 +232,5 @@
       ctx.drawImage(texture,minX,minY,sw,sh,minX,minY,sw,sh);ctx.restore();
     }
   }
-  root.AstralisDragonPuppet={forwardAnchors,forwardEyes,limbAnchors,limbOffset,wingOffset,tailOffset,face,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
+  root.AstralisDragonPuppet={forwardAnchors,forwardEyes,jointParts,composeJointAtlas,limbAnchors,limbOffset,wingOffset,tailOffset,face,deform,positions,vertices,indices,cpuMesh,createGPU,drawCPU};
 })(typeof window==='undefined'?globalThis:window);

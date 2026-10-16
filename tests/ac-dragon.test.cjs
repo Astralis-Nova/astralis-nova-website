@@ -6,7 +6,7 @@ const path = require('node:path');
 const rigEnv={window:{}}; vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../ac-dragon-rig.js'),'utf8'),rigEnv);
 vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../ac-dragon-puppet.js'),'utf8'),rigEnv);
 const source = fs.readFileSync(path.join(__dirname,'../ac-dragon.js'),'utf8');
-function setup({width=1440,height=900,reduced=false,failed=false,forwardFailed=false}={}) {
+function setup({width=1440,height=900,reduced=false,failed=false,forwardFailed=false,jointFailed=false,lateJoint=false}={}) {
   let clock=0,id=0,frames=new Map(),images=[];
   const listeners={};
   const context=()=>new Proxy({arcs:0,draws:[],clearRect(){this.arcs=0;this.draws=[];},drawImage(...args){this.draws.push({args,alpha:this.globalAlpha,blend:this.globalCompositeOperation});},createRadialGradient(){return{addColorStop(){}};},createLinearGradient(){return{addColorStop(){}};},beginPath(){},arc(x,y,r){assert.ok([x,y,r].every(Number.isFinite));this.arcs++;},fill(){}},{get:(o,k)=>o[k]??(()=>{})});
@@ -18,7 +18,7 @@ function setup({width=1440,height=900,reduced=false,failed=false,forwardFailed=f
   const document={body,hidden:false,querySelector(q){return q==='.ac-dragon-emblem'?dragon:q==='.topbar'?{getBoundingClientRect:()=>({bottom:68})}:null;},getElementById(q){return {acDragonCanvas:canvas,acDragonStill:still,acDragonToggle:toggle}[q];},createElement:element,addEventListener(k,v){listeners[k]=v;},removeEventListener(k){delete listeners[k];}};
   const window={AstralisDragonRig:rigEnv.window.AstralisDragonRig,AstralisDragonPuppet:rigEnv.window.AstralisDragonPuppet,matchMedia:()=>preference,addEventListener(k,v){listeners[k]=v;},removeEventListener(k){delete listeners[k];}};
   vm.runInNewContext(source,{document,window,innerWidth:width,innerHeight:height,Image:class{constructor(){images.push(this);this.naturalWidth=1536;this.naturalHeight=1024;}},requestAnimationFrame(fn){frames.set(++id,fn);return id;},cancelAnimationFrame(id){frames.delete(id);},Math});
-  if(failed)images[0].onerror();else{images[0].onload();if(forwardFailed)images[1].onerror();else images[1].onload();}
+  if(failed)images[0].onerror();else{images[0].onload();if(forwardFailed)images[1].onerror();else images[1].onload();if(!lateJoint){if(jointFailed)images[2].onerror();else images[2].onload();}}
   function step(ms){const target=clock+ms;while(clock<target){clock=Math.min(target,clock+20);const pending=[...frames.values()];frames.clear();pending.forEach(fn=>fn(clock));}}
   step(20);
   return{dragon,art,canvas,still,toggle,body,home,document,preference,step,listeners,images,frames:()=>frames.size,fire:()=>art.children.find(c=>c.className==='ac-dragon-fire')};
@@ -56,7 +56,7 @@ test('sprite loading failure leaves the original emblem available',()=>{
 });
 
 test('close approaches grow visibly, articulate the tail and stop all work on page exit',()=>{
- const s=setup();assert.equal(s.images.length,2,'retain the original and add a matching forward view');assert.equal(s.images[0].src,'/assets/ac-portals/ac-dragon-flight-sheet.webp');s.step(10700);
+ const s=setup();assert.equal(s.images.length,3,'retain both original views and add lower-body motion poses');assert.equal(s.images[0].src,'/assets/ac-portals/ac-dragon-flight-sheet.webp');s.step(10700);
  const sizes=new Set(),tails=new Set(),views=new Set(),phases=new Set();
  for(let i=0;i<250;i++){
   s.step(100);sizes.add(Number(s.dragon.dataset.flightSize));tails.add(s.dragon.dataset.tailFlex);views.add(Number(s.dragon.dataset.approach));phases.add(s.dragon.dataset.wingPhase);
@@ -397,4 +397,34 @@ test('the rendered flight lift shares the body clock while the head stays steadi
  for(let t=20;t<22;t+=.025){const state={...rig.pose(t,1),frontView:true};eye.push(puppet.deform(293,203,t,state)[1]);chest.push(puppet.deform(255,295,t,state)[1]);}
  const range=values=>Math.max(...values)-Math.min(...values);
  assert(range(eye)<2 && range(chest)>12,'the neck must compensate while the chest carries the wingbeat');
+});
+
+
+test('distinct lower-body poses reach the actual renderer, with independent failure and late-load fallback',()=>{
+ const s=setup();s.step(23000);
+ assert.equal(s.images[2].src,'/assets/ac-portals/ac-dragon-joints-cycle.webp');
+ assert.equal(s.dragon.dataset.jointMotion,'pose-cycle','the flying renderer must use the composed joint atlas');
+ const failed=setup({jointFailed:true});failed.step(23000);
+ assert.equal(failed.dragon.dataset.jointMotion,'skin');assert.equal(failed.dragon.dataset.flightView,'toward-viewer');assert.equal(failed.canvas.hidden,false);
+ const late=setup({lateJoint:true});late.step(22000);assert.equal(late.dragon.dataset.jointMotion,'skin');
+ late.images[2].onload();late.step(100);assert.equal(late.dragon.dataset.jointMotion,'pose-cycle');
+ const forwardFailed=setup({forwardFailed:true});forwardFailed.step(22000);assert.equal(forwardFailed.dragon.dataset.flightView,'side');
+ s.listeners.pagehide();assert(s.images.every(image=>image.onload===null && image.onerror===null));
+});
+
+test('lower-body composition keeps original head anchors and has connected joint-cycle skin',()=>{
+ const puppet=rigEnv.window.AstralisDragonPuppet,rig=rigEnv.window.AstralisDragonRig;
+ const recorded=[],gradient={addColorStop(){}};
+ const make=()=>{const canvas={width:0,height:0};const ctx=new Proxy({drawImage:(...args)=>recorded.push(args),createLinearGradient:()=>gradient},{get:(o,k)=>o[k]??(()=>{})});canvas.getContext=()=>ctx;return canvas;};
+ const original={kind:'original'},joints={kind:'joints'},atlas=puppet.composeJointAtlas(original,joints,make);
+ assert.equal(atlas.width,1536);assert.equal(atlas.height,1024);
+ assert.equal(recorded.filter(call=>call[0]===original).length,6);assert.equal(recorded.filter(call=>call[0]===joints).length,6);
+ assert.equal(puppet.jointParts.length,6);
+ for(let t=0;t<12;t+=.16){
+  const pose=rig.pose(t,1),state={...pose,frontView:true,jointCycle:true};
+  for(const mesh of [puppet,puppet.cpuMesh]){
+   const points=mesh.vertices.map(([x,y])=>puppet.deform(x,y,t,state));
+   for(let i=0;i<mesh.indices.length;i+=3){const[a,b,c]=mesh.indices.slice(i,i+3).map(n=>points[n]);assert((b[0]-a[0])*(c[1]-a[1])-(c[0]-a[0])*(b[1]-a[1])>20);}
+  }
+ }
 });

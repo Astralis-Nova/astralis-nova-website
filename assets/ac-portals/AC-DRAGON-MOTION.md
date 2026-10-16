@@ -197,3 +197,76 @@ landmark displacement, pose weights, mesh connectivity, nose-first takeoff,
 reduced-motion, loading-failure and lifecycle checks remain. Native before/after
 held-pose motion and complete phone/desktop flybys were inspected. Browser GPU
 visual inspection remains unavailable in this workspace.
+
+
+## October 15 late evening: distinct joint poses instead of static fists
+
+The user confirmed that the dragon was flying, but its body still looked
+stiff. Live HTML and all three versioned animation scripts were fetched and
+matched the current repository byte-for-byte. This was not a missed deployment.
+The original forward atlas kept almost the same clenched claws in every pose;
+local skin bends could not provide an actual finger-opening silhouette.
+
+`ac-dragon-joints-cycle.webp` is a new sibling asset generated with the built-in
+image tool using the existing forward atlas and original emblem as references.
+It supplies six distinct lower-body poses: extended legs with separated talons,
+bending knees, curled grips, power-stroke follow-through, wrist flex and recovery.
+The tail also changes between loose C and S curves. The original image assets
+remain unchanged.
+
+At load time `composeJointAtlas` uses only clipped lower-body pixels from the
+new asset, aligned at the hips and joined with a short alpha fade. The actual
+rendered head, neck and wing poses still come from the original forward atlas.
+Native pixel comparison across all six head-aligned cells found zero changed
+channels above y=285. The composed atlas is uploaded to the same GPU renderer
+or used by the Canvas fallback. Source-pose movement replaces the old overlapping
+limb skin bends in this view; tail skin follow-through is restrained to supplement
+the new silhouettes. Side takeoff, nose-first facing, the approved orbit, eye
+tracking and reduced-motion behavior remain.
+
+The new asset preloads with the page. Its load can complete before or after the
+forward atlas; either order rebuilds the forward texture once it is available.
+A missing, malformed, or failed composition retains the original articulated
+forward view. Late loads refresh the texture without restarting the flight.
+All three image handlers and GPU resources are released on page exit.
+
+Validation: 25 tests passed, including actual renderer selection, late-loading
+joints, independent asset failures, composition dimensions, original anchor use,
+both skin meshes and cleanup. A native render of the full controller was
+inspected on desktop and phone. A short fixed-camera close-up video was rendered
+from that controller to make the new leg, claw and tail silhouettes reviewable.
+Browser GPU visual inspection remains unavailable in this workspace.
+
+Built-in image-generation prompt (edit target: existing forward atlas;
+supporting identity reference: original crimson emblem):
+
+> Use case: precise-object-edit / identity-preserve. Edit target: FIRST image,
+> the existing six-frame crimson dragon flight atlas. Supporting identity
+> reference: SECOND image original Asheron's Call crimson dragon emblem. This
+> is animation artwork for the SAME existing slender crimson dragon, not a new
+> dragon design. Preserve the first atlas's exact 3-column by 2-row layout,
+> equal 512x512 cells in a 1536x1024 transparent atlas, same head and shoulder
+> positions and six wing poses, exact long narrow curved neck, small angular
+> snout, red horns, fine crimson scales, thin whip tail, Gothic bat wings,
+> lighting and scarlet/black style. CHANGE ONLY THE FOUR LEGS/CLAWS BELOW THE
+> HIPS AND THE TAIL BELOW THE HIPS so their animation silhouettes genuinely
+> change instead of static fists and a fixed C curl. Keep face, neck, upper
+> chest, wing shape, wing pose and body proportions unchanged. Six successive
+> lower-body motion phases, reading left-to-right then next row: 0 forelegs
+> gently extended down with clearly separated long red talons and rear feet
+> trailing, tail loosely S-curved; 1 elbows bending, claws half curling, tail
+> bends to the left; 2 legs tucked nearer belly, claws flexed loosely, tail tip
+> crossing center; 3 power-stroke follow-through with feet hanging lower and
+> fingers open, tail flowing behind to the right; 4 wrists/ankles flexing back
+> and fingers beginning to close, tail curve easing back; 5 recovery with legs
+> partly tucked and claws loosely flexing, tail returning toward the first S
+> curve. Forelimbs and rear limbs must have distinct readable knees, ankles,
+> wrists, and separated talons rather than human hands or clenched fists.
+> Enough change in knee angle, leg extension, finger curl and tail curvature
+> to be obvious when animated at small screen size, but anatomically plausible,
+> connected limbs and consistent limb lengths. All six are the exact same
+> character and scale. Keep every full wing and tail inside its own cell, with
+> transparent padding. TRUE ALPHA outside dragon, no black or colored
+> background, no glow, no rectangles, no grid, no labels, no rider, no armor,
+> no cyan, no extra characters, no text. Do not imitate the video dragon.
+> Preserve our referenced crimson dragon.

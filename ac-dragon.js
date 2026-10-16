@@ -32,7 +32,8 @@
   art.append(fire);
   const flame = fire.getContext('2d');
   const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const sheet = new Image(),forwardSheet=new Image();
+  const sheet = new Image(),forwardSheet=new Image(),jointSheet=new Image();
+  let forwardAtlas=forwardSheet,jointReady=false;
   const posePlate = document.createElement('canvas'), bodyPlate = document.createElement('canvas');
   posePlate.width = posePlate.height = bodyPlate.width = bodyPlate.height = 512;
   const poseContext = posePlate.getContext('2d'), bodyContext = bodyPlate.getContext('2d');
@@ -71,8 +72,8 @@
     context.clearRect(0,0,512,512);
     for(const [front,weight] of [[false,1-view],[true,view]]){
       if(weight<.0001)continue;
-      const image=front?forwardSheet:sheet,anchors=front?puppet.forwardAnchors:sideAnchors;
-      const target=front?[314,240]:[441,276],state={...pose,frontView:front,limbAnchors:puppet.limbAnchors(front,weights)};
+      const image=front?forwardAtlas:sheet,anchors=front?puppet.forwardAnchors:sideAnchors;
+      const target=front?[314,240]:[441,276],state={...pose,frontView:front,jointCycle:front&&jointReady,limbAnchors:puppet.limbAnchors(front,weights)};
       poseContext.clearRect(0,0,512,512);poseContext.globalCompositeOperation='lighter';
       for(const [frame,alpha] of weights){
         poseContext.globalAlpha=alpha;
@@ -86,6 +87,7 @@
       if(accelerated)bodyContext.drawImage(surface,0,0);else puppet.drawCPU(bodyContext,posePlate,seconds,state);
       puppet.face(bodyContext,seconds,state,weights);
       dragon.dataset.renderer=accelerated?'gpu':'canvas';
+      if(front)dragon.dataset.jointMotion=jointReady?'pose-cycle':'skin';
       context.save();context.globalCompositeOperation='lighter';context.globalAlpha=weight;
       context.translate(256,290);if(facing<0)context.scale(-1,1);
       context.rotate(pose.bank*Math.PI/180);context.drawImage(bodyPlate,-256,-290,512,512);context.restore();
@@ -249,16 +251,29 @@
     ready=true;measureRoute();dock();sync();
   };
   sheet.onerror=()=>{park();toggle.hidden=true;};
+  const rebuildForward=()=>{
+    if(!forwardReady)return;
+    let next=forwardSheet;
+    if(jointReady){try{next=puppet.composeJointAtlas(forwardSheet,jointSheet,()=>document.createElement('canvas'));}catch(_){jointReady=false;}}
+    forwardGPU?.destroy();forwardAtlas=next;
+    forwardGPU=puppet.createGPU(forwardGpuCanvas,forwardAtlas,true);paintClock=-Infinity;
+  };
+  jointSheet.onload=()=>{
+    if(disposed||jointSheet.naturalWidth!==1536||jointSheet.naturalHeight!==1024)return;
+    jointReady=true;rebuildForward();
+  };
+  jointSheet.onerror=()=>{};
   forwardSheet.onload=()=>{
     if(disposed||forwardSheet.naturalWidth!==1536||forwardSheet.naturalHeight!==1024)return;
-    forwardReady=true;forwardLoaded=elapsed;forwardGPU=puppet.createGPU(forwardGpuCanvas,forwardSheet,true);
+    forwardReady=true;forwardLoaded=elapsed;rebuildForward();
   };
   forwardSheet.onerror=()=>{forwardReady=false;};
+  jointSheet.src='/assets/ac-portals/ac-dragon-joints-cycle.webp';
   forwardSheet.src='/assets/ac-portals/ac-dragon-toward-cycle.webp';
   sheet.src='/assets/ac-portals/ac-dragon-flight-sheet.webp';
   window.addEventListener('pagehide',()=>{
     disposed=true;cancelAnimationFrame(request);request=0;clearFire();gpu?.destroy();forwardGPU?.destroy();gpu=null;forwardGPU=null;
-    sheet.onload=sheet.onerror=forwardSheet.onload=forwardSheet.onerror=null;
+    sheet.onload=sheet.onerror=forwardSheet.onload=forwardSheet.onerror=jointSheet.onload=jointSheet.onerror=null;
     document.removeEventListener('visibilitychange',sync);
     window.removeEventListener('resize',onResize);
     preference.removeEventListener('change',onPreference);
