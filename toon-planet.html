@@ -78,9 +78,154 @@ textarea{width:100%;min-height:285px;resize:vertical;background:#090d22;color:#d
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workshop{grid-template-columns:1fr}.hero-visual{height:350px}}
 @media(max-width:650px){.hero{grid-template-columns:1fr;gap:0;padding-top:12px}.hero-visual{height:290px;order:-1}.planet{inset:10px 20% 5px}.ring{top:45%;height:27%;left:13%;right:13%;border-width:10px}.hero-orbit{left:40%;top:25%}.grid{gap:10px}.toon-choice{padding:8px;border-radius:16px}.toon-desc{min-height:4em;font-size:.78rem}.toon-name{font-size:.99rem}.preview-wrap{min-height:260px}.hero p{margin-bottom:23px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* Cactus Forest Moonlight: scenery-first reset. Original Astralis Nova cover art. */
+body{background:#060a15;isolation:isolate}
+body::before{content:none}
+body > header,body > main,body > footer{position:relative;z-index:2}
+.cactus-moonlight-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;isolation:isolate;
+  background:#050d1c url('/cover-3.jpg') center 44%/cover no-repeat}
+.cactus-moonlight-bg::before{content:"";position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(3,6,19,.18),rgba(3,9,19,.23) 40%,rgba(0,5,12,.64) 100%),
+  radial-gradient(ellipse at 49% 19%,rgba(150,194,235,.15),transparent 36%);z-index:1}
+.cactus-moonlight-bg::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+  box-shadow:inset 0 -45px 105px #030911b5,inset 0 0 45px #03091133}
+.toon-night-stars{position:absolute;z-index:2;inset:0;opacity:.44;animation:toonNightTwinkle 7s ease-in-out infinite alternate;
+  background-image:radial-gradient(circle,#fffefa 0 1px,transparent 1.6px),
+    radial-gradient(circle,#c8eaff 0 1.1px,transparent 1.8px),
+    radial-gradient(circle,#fff4c7 0 .8px,transparent 1.5px);
+  background-size:193px 211px,277px 239px,337px 311px;
+  background-position:23px 19px,84px 51px,159px 89px}
+.toon-night-stars.far{opacity:.23;animation-delay:-3.6s;animation-duration:10s;
+  background-size:283px 261px,361px 347px,431px 359px;background-position:40px 106px,223px 112px,193px 199px}
+.toon-night-haze{position:absolute;z-index:2;inset:-10%;opacity:.25;
+  background:radial-gradient(ellipse at 22% 19%,rgba(130,168,248,.17),transparent 26%),
+    radial-gradient(ellipse at 77% 17%,rgba(223,231,253,.11),transparent 22%),
+    radial-gradient(ellipse at 50% 55%,rgba(116,129,219,.12),transparent 35%);
+  filter:blur(28px);animation:toonNightHaze 32s ease-in-out infinite alternate}
+.toon-night-glow{position:absolute;z-index:2;inset:0;opacity:.57;
+  background:radial-gradient(circle at 65% 22%,rgba(188,217,250,.14),transparent 22%);
+  animation:toonMoonlightPulse 12s ease-in-out infinite}
+.toon-desert-foreground{position:absolute;bottom:-12px;z-index:4;
+  width:min(37vw,410px);height:min(63vh,530px);overflow:visible;
+  opacity:.93;filter:drop-shadow(0 0 15px #7dbcc41b)}
+.toon-desert-foreground.left{left:-38px}
+.toon-desert-foreground.right{right:-45px}
+.toon-desert-foreground .saguaro-motion{transform-box:view-box;transform-origin:47% 100%;animation:toonSaguaroSway 15s ease-in-out infinite alternate}
+.toon-desert-foreground .ocotillo-motion{transform-box:view-box;transform-origin:56% 98%;animation:toonOcotilloSway 9s ease-in-out infinite alternate}
+.toon-desert-foreground .mesquite-motion{transform-box:view-box;transform-origin:38% 100%;animation:toonMesquiteSway 12s ease-in-out infinite alternate}
+.toon-desert-foreground .desert-grass{transform-box:fill-box;transform-origin:50% 100%;animation:toonGrassSway 4.9s ease-in-out infinite alternate}
+.toon-desert-foreground .desert-grass.alt{animation-delay:-2.7s;animation-duration:7s}
+.toon-desert-foreground .ocotillo-motion{animation-delay:-4s}
+@keyframes toonSaguaroSway{0%{transform:rotate(-.42deg)}100%{transform:rotate(.47deg)}}
+@keyframes toonOcotilloSway{0%{transform:rotate(-1.9deg)}100%{transform:rotate(2deg)}}
+@keyframes toonMesquiteSway{0%{transform:rotate(-1deg)}100%{transform:rotate(1.3deg)}}
+@keyframes toonGrassSway{from{transform:rotate(-5deg)}to{transform:rotate(7deg)}}
+@keyframes toonNightTwinkle{0%{opacity:.18}50%{opacity:.47}100%{opacity:.65}}
+@keyframes toonNightHaze{from{transform:translate3d(-2%,0,0)}to{transform:translate3d(2%,-1.1%,0)}}
+@keyframes toonMoonlightPulse{0%,100%{opacity:.45}50%{opacity:.67}}
+.top{background:linear-gradient(90deg,rgba(4,9,18,.45),transparent);border-radius:18px}
+.brand{text-shadow:0 2px 9px #07131d}
+.hero{min-height:min(90svh,850px);grid-template-columns:1fr minmax(0,.78fr);gap:clamp(16px,4vw,50px);padding:35px 0 74px}
+.hero-copy{padding:clamp(18px,2.7vw,34px);border:1px solid rgba(188,221,232,.28);
+  background:linear-gradient(130deg,rgba(5,17,29,.79),rgba(5,12,27,.49));
+  backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);border-radius:23px;
+  box-shadow:0 16px 55px #03071166}
+.hero h1 strong{color:#c8fcf6;text-shadow:0 0 26px #8fceea5a}
+.hero .kicker{color:#aaf4e8}
+.hero .cta{background:linear-gradient(110deg,#9be8e5,#d7f5dd);color:#0c2632}
+.hero-visual{height:clamp(260px,36vw,470px);display:grid;place-items:center}
+.toon-moon-window{width:100%;height:100%;border-radius:26px;overflow:hidden;position:relative;
+  border:1px solid rgba(217,240,235,.56);
+  background:#071427 url('/cover-3.jpg') center center/cover no-repeat;
+  box-shadow:0 20px 75px rgba(0,0,0,.55),0 0 45px rgba(96,180,211,.2),inset 0 0 45px #06152188;
+  animation:toonMoonWindowFloat 16s ease-in-out infinite alternate}
+.toon-moon-window::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 40%,rgba(2,12,18,.25) 100%)}
+.toon-moon-window::after{content:"";position:absolute;inset:6px;border:1px solid #c9edec55;border-radius:20px;pointer-events:none}
+.toon-moon-caption{position:absolute;bottom:16px;left:14px;right:14px;text-align:center;
+  font-size:.8rem;letter-spacing:.13em;font-weight:800;text-transform:uppercase;
+  text-shadow:0 2px 7px #000;background:#0314219c;padding:9px 10px;border-radius:100px}
+@keyframes toonMoonWindowFloat{from{transform:translateY(4px)}to{transform:translateY(-6px)}}
+.toon-scenery-details{max-width:900px;margin:0 auto 7vh;background:rgba(4,16,28,.68);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  padding:clamp(20px,4vw,38px);border:1px solid #9bd6cf66;border-radius:22px;text-align:center}
+.toon-scenery-details h2{margin:0 0 10px;font-size:clamp(1.4rem,3vw,2.1rem)}
+.toon-scenery-details p{color:#deebeb;line-height:1.75;margin:0 auto;max-width:630px}
+.toon-scenery-first #classicToons,
+.toon-scenery-first #toonResidents,
+.toon-scenery-first #workshop,
+.toon-scenery-first #classicToonDialog{display:none}
+.toon-scenery-first .foot{border-color:#9dd8ce3d;background:rgba(5,15,27,.53);border-radius:15px;padding:20px;margin-bottom:20px}
+@media(max-width:700px){
+ .cactus-moonlight-bg{background-position:center 35%}
+ .toon-desert-foreground{width:min(41vw,200px);height:min(42vh,320px);bottom:-10px;opacity:.85}
+ .toon-desert-foreground.left{left:-46px}
+ .toon-desert-foreground.right{right:-48px}
+ .toon-night-haze{filter:blur(18px);opacity:.16}
+ .hero{grid-template-columns:1fr;min-height:auto;padding:6px 0 52px;gap:20px}
+ .hero-visual{height:clamp(250px,75vw,370px);order:-1}
+ .hero-copy{padding:22px}
+ .toon-moon-window{background-size:cover}
+ .toon-scenery-details{margin-bottom:45px}
+}
+@media(prefers-reduced-motion:reduce){
+ .toon-night-stars,.toon-night-haze,.toon-night-glow,
+ .toon-desert-foreground *, .toon-moon-window{animation:none!important}
+}
+
 </style>
 </head>
-<body>
+<body class="toon-scenery-first">
+
+<div class="cactus-moonlight-bg" aria-hidden="true">
+  <div class="toon-night-glow"></div>
+  <div class="toon-night-stars"></div>
+  <div class="toon-night-stars far"></div>
+  <div class="toon-night-haze"></div>
+  <!-- Layered, hand-authored Sonoran Desert silhouettes. No wildlife or coyotes. -->
+  <svg class="toon-desert-foreground left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 480" preserveAspectRatio="xMinYMax meet" focusable="false">
+    <defs>
+      <linearGradient id="desertLeftMoon" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#05161a"/><stop offset=".48" stop-color="#163d3d"/><stop offset="1" stop-color="#366669"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 450 Q95 413 185 442 T340 441V480H0Z" fill="#081c23"/>
+    <g class="mesquite-motion" opacity=".65">
+      <path d="M45 472Q70 371 76 318Q90 284 140 278M73 345Q42 299 8 281M83 318Q117 304 156 316" stroke="#122c32" fill="none" stroke-width="10" stroke-linecap="round"/>
+      <path d="M140 277Q164 269 188 274M14 281Q-1 254 2 240M153 315Q183 303 199 312" stroke="#163b3e" fill="none" stroke-width="5" stroke-linecap="round"/>
+      <g fill="#25504c"><ellipse cx="114" cy="281" rx="42" ry="13" transform="rotate(-10 114 281)"/><ellipse cx="163" cy="276" rx="37" ry="11" transform="rotate(9 163 276)"/><ellipse cx="14" cy="286" rx="30" ry="11"/><ellipse cx="173" cy="309" rx="32" ry="9"/></g>
+    </g>
+    <g class="saguaro-motion">
+      <path d="M159 460Q157 387 159 323Q161 246 165 169" fill="none" stroke="#05181d" stroke-width="45" stroke-linecap="round"/>
+      <path d="M158 329Q106 337 99 298Q95 278 94 245" fill="none" stroke="#05181d" stroke-width="30" stroke-linecap="round"/>
+      <path d="M161 275Q213 295 228 260Q232 246 231 227" fill="none" stroke="#05181d" stroke-width="28" stroke-linecap="round"/>
+      <path d="M164 455Q162 320 166 174M158 326Q107 336 100 299Q96 273 96 250M168 274Q214 290 227 258Q233 240 230 231" fill="none" stroke="url(#desertLeftMoon)" stroke-width="35" stroke-linecap="round"/>
+      <path d="M175 453Q173 316 178 173M111 300Q106 271 106 250M218 260Q222 247 221 237" fill="none" stroke="#7fa8a048" stroke-width="3.3" stroke-linecap="round"/>
+    </g>
+    <g class="desert-grass"><path d="M32 469Q18 435 19 409M35 468Q52 433 53 420M31 470Q32 432 36 415" fill="none" stroke="#38645b" stroke-width="4" stroke-linecap="round"/></g>
+    <g class="desert-grass alt"><path d="M265 468Q252 431 244 425M269 473Q284 442 294 432M265 471Q271 429 272 409" fill="none" stroke="#325854" stroke-width="5" stroke-linecap="round"/></g>
+  </svg>
+  <svg class="toon-desert-foreground right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 480" preserveAspectRatio="xMaxYMax meet" focusable="false">
+    <defs>
+      <linearGradient id="desertRightMoon" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#436f6c"/><stop offset=".5" stop-color="#214747"/><stop offset="1" stop-color="#07171e"/>
+      </linearGradient>
+    </defs>
+    <path d="M0 454Q92 430 165 442Q251 405 340 443V480H0Z" fill="#071b22"/>
+    <g class="ocotillo-motion">
+      <path d="M160 470Q129 355 69 226M162 470Q153 332 151 158M162 470Q181 328 238 194M162 470Q197 355 293 281M164 468Q109 346 110 296M163 468Q225 360 223 286" fill="none" stroke="#102d32" stroke-width="6" stroke-linecap="round"/>
+      <path d="M160 470Q130 353 69 229M162 470Q153 329 151 160M162 470Q182 327 238 197M162 470Q198 352 291 282" fill="none" stroke="#56807b77" stroke-width="1.8"/>
+      <g fill="#ac695d" opacity=".75"><circle cx="69" cy="225" r="5"/><circle cx="151" cy="157" r="5"/><circle cx="238" cy="193" r="5"/><circle cx="293" cy="280" r="5"/></g>
+    </g>
+    <g class="mesquite-motion" opacity=".75">
+      <path d="M293 469Q285 392 277 364Q265 336 239 320M281 373Q299 331 325 319M270 354Q233 342 212 346" fill="none" stroke="#123333" stroke-width="11" stroke-linecap="round"/>
+      <g fill="#315651"><ellipse cx="240" cy="322" rx="32" ry="12" transform="rotate(20 240 322)"/><ellipse cx="321" cy="317" rx="35" ry="11" transform="rotate(-15 321 317)"/><ellipse cx="215" cy="344" rx="25" ry="9"/></g>
+    </g>
+    <g class="desert-grass"><path d="M58 474Q36 437 33 419M56 472Q65 428 78 421M58 472Q54 430 54 404" fill="none" stroke="#3f6c60" stroke-width="5" stroke-linecap="round"/></g>
+    <g class="desert-grass alt"><path d="M315 468Q309 431 290 414M311 468Q319 428 334 413M318 470Q324 450 336 440" fill="none" stroke="#305b56" stroke-width="4" stroke-linecap="round"/></g>
+  </svg>
+</div>
 <header class="top shell">
 <a class="brand" href="/">✦ ASTRALIS <span>NOVA</span></a>
 <a class="back" href="/">← Back to the universe</a>
@@ -88,15 +233,19 @@ textarea{width:100%;min-height:285px;resize:vertical;background:#090d22;color:#d
 <main class="shell">
 <section class="hero" aria-labelledby="heroTitle">
 <div class="hero-copy">
-<div class="kicker">Astralis Nova • An animated world you can share</div>
+<div class="kicker">Cactus Forest, Arizona • Original song artwork</div>
 <h1 id="heroTitle">TOON <strong>PLANET</strong></h1>
-<p>They’re alive! Watch early cartoon classics run, hop, dance and stroll across a living planet. Tap a character to see its own animation and copy the complete code for your website.</p>
-<a class="cta" href="#classicToons">🎬 Watch classic toons in action ↓</a>
+<p>Our new Toon Planet begins under the same Arizona sky as <strong>Cactus Forest Moonlight</strong>. The original song artwork is our foundation, with moonlit saguaros, swaying ocotillo, mesquite branches, drifting night haze and softly twinkling stars. For now, only the scenery.</p>
+<a class="cta" href="#landscapeDetails">🌵 Explore the nightscape ↓</a>
 </div>
-<div class="hero-visual" aria-hidden="true">
-<div class="planet"></div><div class="ring"></div>
-<span class="hero-spark a">✨</span><span class="hero-spark b">⭐</span><span class="hero-spark c">🌙</span><span class="hero-orbit">👾</span>
+<div class="hero-visual" aria-label="The original Cactus Forest Moonlight song cover used as the scenic foundation">
+<div class="toon-moon-window"><div class="toon-moon-caption">Cactus Forest Moonlight • Original Artwork</div></div>
 </div>
+</section>
+<section id="landscapeDetails" class="toon-scenery-details" aria-labelledby="landscapeHeading">
+  <div class="kicker">Stage 01 • The scenery</div>
+  <h2 id="landscapeHeading">A Quiet Desert Under the Stars</h2>
+  <p>Watch the edges of the landscape. Desert grass bends in the breeze, ocotillo branches drift, mesquite leaves shift, and the night sky gently glimmers. This is the original Cactus Forest atmosphere, ready for its future inhabitants.</p>
 </section>
 
 <section id="classicToons" class="classic-toon-section" aria-labelledby="classicTitle">
