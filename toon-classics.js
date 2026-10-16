@@ -155,11 +155,21 @@ const animationCss=[
 '.an-vintage-toon[data-classic="mickey1928"] .classic-leg-a,.an-vintage-toon[data-classic="mickey1928"] .classic-leg-b{animation-duration:.5s}',
 '@media(prefers-reduced-motion:reduce){.an-vintage-toon *{animation:none!important}}'
 ].join('\n');
+
+const portableRoamCSS=[
+'.an-vintage-playground{position:relative;isolation:isolate;width:min(100%,390px);height:240px;overflow:hidden;border-radius:18px;background:linear-gradient(180deg,#a9d7fa,#f7c3d6 70%,#f1d3ad)}',
+'.an-vintage-playground:before{content:"";position:absolute;left:-10%;right:-10%;bottom:-53%;height:79%;background:radial-gradient(ellipse at 50% 0%,#d9f9b4,#71c997 75%,#4a9786);border-radius:50% 50% 0 0;pointer-events:none}',
+'.an-vintage-playground .an-vintage-toon{position:absolute;z-index:2;left:4%;top:48px;width:120px;max-width:none;animation:vt-mini-travel 12s ease-in-out infinite}',
+'.an-vintage-playground .an-vintage-toon svg{width:100%;height:auto}',
+'@keyframes vt-mini-travel{0%{left:4%;transform:scaleX(1)}44%{left:calc(100% - 132px);transform:scaleX(1)}50%{left:calc(100% - 132px);transform:scaleX(-1)}94%{left:4%;transform:scaleX(-1)}100%{left:4%;transform:scaleX(1)}}',
+'@media(prefers-reduced-motion:reduce){.an-vintage-playground .an-vintage-toon{animation:none!important;left:15px!important}}'
+].join('\n');
 const wrap=r=>'<div class="an-vintage-toon" data-classic="'+r.id+'">'+r.art+'</div>';
 function source(r){
 return '<!-- Astralis Nova original SVG animation based on '+r.source+'. US public-domain-era interpretation. Independent, not studio-endorsed. -->\n'+
 '<!-- This original vector drawing and code are dedicated to CC0 1.0. Character trademarks and modern designs are not licensed. -->\n'+
-'<style>\n'+animationCss+'\n</style>\n'+wrap(r);
+'<style>\n'+animationCss+'\n'+portableRoamCSS+'\n</style>\n'+
+'<div class="an-vintage-playground">'+wrap(r)+'</div>';
 }
 const style=document.createElement('style');
 style.id='classicToonsCSS';
