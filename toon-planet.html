@@ -63,8 +63,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  background-size:207px 239px,349px 311px;background-position:62px 28px,129px 96px;
  mask-image:linear-gradient(180deg,#000 0%,#000 30%,transparent 67%);
  animation:orbitStarBreath 12s ease-in-out infinite alternate}
-.orbit-filmgrain{position:absolute;inset:0;z-index:2;opacity:.12;pointer-events:none;
- background-image:url('/assets/toon-planet-grain.svg')}
 .orbit-source{display:block;margin-top:12px;font-size:.69rem;line-height:1.5;color:#d3e0e3c9}
 .orbit-source a{text-decoration:underline;text-underline-offset:2px}
 .space-stars{position:absolute;inset:-8%;pointer-events:none;opacity:.73;
@@ -116,15 +114,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 .surface-haze{position:absolute;inset:0;z-index:2;opacity:.32;pointer-events:none;
  background:radial-gradient(ellipse at 59% 20%,rgba(197,222,246,.13),transparent 28%);
  animation:moonBreathe 13s ease-in-out infinite}
-.toon-desert-foreground{position:absolute;bottom:32px;z-index:4;width:min(31vw,330px);height:min(52vh,440px);
- overflow:visible;opacity:.8;filter:drop-shadow(0 3px 17px rgba(8,23,25,.23));pointer-events:none}
-.toon-desert-foreground.left{left:-45px}
-.toon-desert-foreground.right{right:-46px}
-.toon-desert-foreground .saguaro-motion{transform-box:view-box;transform-origin:47% 100%;animation:cactusSway 18s ease-in-out infinite alternate}
-.toon-desert-foreground .mesquite-motion{transform-box:view-box;transform-origin:38% 100%;animation:mesquiteSway 11s ease-in-out infinite alternate}
-.toon-desert-foreground .ocotillo-motion{transform-box:view-box;transform-origin:56% 98%;animation:ocotilloSway 10s ease-in-out infinite alternate}
-.toon-desert-foreground .desert-grass{transform-box:fill-box;transform-origin:50% 100%;animation:grassSway 5s ease-in-out infinite alternate}
-.toon-desert-foreground .desert-grass.alt{animation-delay:-2.5s;animation-duration:7s}
 .ground-fade{position:absolute;bottom:0;left:0;right:0;height:112px;z-index:5;
  background:linear-gradient(180deg,transparent 0%,#17192180 34%,#332b21 89%,#433327 100%);
  clip-path:polygon(0 12%,6% 10%,14% 22%,22% 17%,30% 30%,41% 22%,50% 17%,60% 27%,70% 11%,81% 19%,91% 6%,100% 20%,100% 100%,0 100%)}
@@ -150,9 +139,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  background:linear-gradient(180deg,#433327 0%,rgba(52,37,26,.19) 11%,rgba(13,11,13,.17) 40%,rgba(14,13,14,.49) 72%,#111a21 100%),
  radial-gradient(ellipse at 70% 37%,rgba(65,35,22,.10),transparent 59%);
  pointer-events:none}
-.soil-grain{position:absolute;z-index:2;inset:0;pointer-events:none;opacity:.22;
- background-image:url('/assets/toon-planet-grain.svg');mix-blend-mode:soft-light;
- animation:soilTexture 38s ease-in-out infinite alternate}
 .underground-source{font-size:.68rem;line-height:1.6;color:#dacec3d6;margin-top:12px;max-width:520px}
 .underground-source a{text-decoration:underline;text-underline-offset:2px}
 .underground-art{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
@@ -253,6 +239,69 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  to{transform:scale(1.14) translate3d(1.25%,-.5%,0)}}
 @keyframes soilCamera{from{transform:scale(1.07) translate3d(-.85%,.3%,0)}
  to{transform:scale(1.11) translate3d(.85%,-.3%,0)}}
+
+/* Realistic photo layers: remove the polygon cutout and feather actual soil texture across the boundary. */
+.ground-fade{
+ bottom:-1px;height:clamp(175px,26svh,310px);pointer-events:none;clip-path:none;
+ background:linear-gradient(180deg,transparent 0%,rgba(29,24,22,.11) 19%,
+ rgba(47,36,30,.47) 52%,rgba(66,49,39,.84) 81%,#45352c 100%);
+}
+.region-underground,.underground-strata{background-color:#45352c}
+.underground-photo{
+ -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.33) 7%,#000 22%);
+ mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.33) 7%,#000 22%);
+ filter:contrast(1.08) saturate(.79);
+}
+.underground-strata::after{
+ background:linear-gradient(180deg,rgba(69,53,44,.8) 0%,rgba(55,39,30,.2) 16%,
+ rgba(16,13,12,.13) 44%,rgba(14,13,14,.43) 74%,#111a21 100%);
+}
+.underground-topsoil{
+ height:clamp(150px,23svh,290px);
+ background:linear-gradient(to bottom,#45352c 0%,rgba(69,53,44,.80) 25%,rgba(69,53,44,.27) 62%,transparent 100%);
+}
+.underground-dust{opacity:.12;animation-duration:32s}
+/* Transparent cinematic haze, no illustrated clouds or artificially glowing rocks. */
+.space-haze{position:absolute;z-index:2;inset:-13%;pointer-events:none;opacity:.28;
+ background:radial-gradient(ellipse 35% 19% at 20% 30%,rgba(134,169,196,.17),transparent 95%),
+ radial-gradient(ellipse 42% 15% at 62% 47%,rgba(164,179,192,.14),transparent 98%),
+ radial-gradient(ellipse 48% 20% at 80% 74%,rgba(117,160,177,.17),transparent 97%);
+ filter:blur(25px);animation:orbitHazeDrift 29s ease-in-out infinite alternate}
+.surface-haze{inset:-10%;opacity:.28;
+ background:radial-gradient(ellipse 39% 22% at 27% 23%,rgba(192,218,228,.26),transparent 98%),
+ radial-gradient(ellipse 49% 20% at 70% 35%,rgba(171,196,210,.20),transparent 98%),
+ radial-gradient(ellipse 44% 13% at 48% 61%,rgba(143,157,156,.14),transparent 97%);
+ filter:blur(25px);animation:desertHazeDrift 25s ease-in-out infinite alternate}
+.surface-haze-near{position:absolute;z-index:2;inset:39% -16% 0;opacity:.2;pointer-events:none;
+ background:radial-gradient(ellipse 54% 18% at 44% 74%,rgba(186,196,188,.23),transparent 98%),
+ radial-gradient(ellipse 38% 19% at 81% 44%,rgba(171,187,183,.17),transparent 99%);
+ filter:blur(28px);animation:nearHazeDrift 31s ease-in-out infinite alternate-reverse}
+.space-photo-shade::after{filter:blur(19px);animation-duration:24s}
+.space-atmosphere{height:29%;background:linear-gradient(180deg,transparent 0,#1021354d 30%,#102132 100%)}
+@keyframes orbitHazeDrift{from{transform:translate3d(-2%,.3%,0) scale(1);opacity:.2}
+ to{transform:translate3d(2.4%,-1%,0) scale(1.055);opacity:.42}}
+@keyframes desertHazeDrift{from{transform:translate3d(-2%,.2%,0);opacity:.2}
+ to{transform:translate3d(2.3%,-.8%,0);opacity:.42}}
+@keyframes nearHazeDrift{from{transform:translate3d(-2.6%,0,0) scale(1);opacity:.14}
+ to{transform:translate3d(2.7%,-.7%,0) scale(1.05);opacity:.3}}
+/* Shooting stars spawn only sometimes when their sky is visible. */
+.meteor-field{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden;contain:layout style paint}
+.surface-meteors{z-index:4}
+.meteor{position:absolute;left:var(--mx,40%);top:var(--my,18%);opacity:0;
+ width:var(--ml,100px);height:2px;border-radius:99px;pointer-events:none;
+ background:linear-gradient(to right,transparent,rgba(190,213,224,.2) 30%,rgba(239,248,255,.78) 85%,white);
+ box-shadow:0 0 6px rgba(197,224,239,.46);transform-origin:100% 50%;
+ animation:meteorFlight var(--md,850ms) ease-out 1 both;will-change:transform,opacity}
+.meteor::after{content:"";position:absolute;right:0;top:50%;width:3px;height:3px;border-radius:50%;
+ transform:translateY(-50%);background:#fff;box-shadow:0 0 5px #fff,0 0 11px #b1ddeb}
+@keyframes meteorFlight{
+ 0%{opacity:0;transform:translate3d(0,0,0) rotate(var(--ma,28deg))}
+ 12%{opacity:.9}65%{opacity:.95}
+ 100%{opacity:0;transform:translate3d(var(--dx,175px),var(--dy,100px),0) rotate(var(--ma,28deg))}
+}
+@media(max-width:800px){.space-haze,.surface-haze,.surface-haze-near{filter:blur(17px)}.meteor{height:1.6px}}
+@media(prefers-reduced-motion:reduce){.space-haze,.surface-haze,.surface-haze-near,.meteor{animation:none!important}
+ .meteor{display:none}}
 </style>
 </head>
 <body>
@@ -271,61 +320,21 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 <section class="region region-space" id="space" aria-label="Space above Cactus Forest">
  <div class="space-sky" aria-hidden="true">
   <div class="orbit-photo"></div><div class="space-photo-shade"></div>
-  <div class="orbit-twinkle"></div><div class="orbit-filmgrain"></div><div class="space-atmosphere"></div>
+  <div class="orbit-twinkle"></div><div class="space-haze"></div><div class="space-atmosphere"></div><div class="meteor-field" id="spaceMeteors"></div>
  </div>
 </section>
 <section class="region region-surface" id="surface" aria-label="Cactus Forest Moonlight landscape">
  <div class="surface-cover" aria-hidden="true"></div>
  <div class="surface-color" aria-hidden="true"></div>
  <div class="surface-stars" aria-hidden="true"></div>
- <div class="surface-haze" aria-hidden="true"></div>
- <svg class="toon-desert-foreground left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 480" preserveAspectRatio="xMinYMax meet" focusable="false">
-    <defs>
-      <linearGradient id="desertLeftMoon" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#05161a"/><stop offset=".48" stop-color="#163d3d"/><stop offset="1" stop-color="#366669"/>
-      </linearGradient>
-    </defs>
-    <path d="M0 450 Q95 413 185 442 T340 441V480H0Z" fill="#081c23"/>
-    <g class="mesquite-motion" opacity=".65">
-      <path d="M45 472Q70 371 76 318Q90 284 140 278M73 345Q42 299 8 281M83 318Q117 304 156 316" stroke="#122c32" fill="none" stroke-width="10" stroke-linecap="round"/>
-      <path d="M140 277Q164 269 188 274M14 281Q-1 254 2 240M153 315Q183 303 199 312" stroke="#163b3e" fill="none" stroke-width="5" stroke-linecap="round"/>
-      <g fill="#25504c"><ellipse cx="114" cy="281" rx="42" ry="13" transform="rotate(-10 114 281)"/><ellipse cx="163" cy="276" rx="37" ry="11" transform="rotate(9 163 276)"/><ellipse cx="14" cy="286" rx="30" ry="11"/><ellipse cx="173" cy="309" rx="32" ry="9"/></g>
-    </g>
-    <g class="saguaro-motion">
-      <path d="M159 460Q157 387 159 323Q161 246 165 169" fill="none" stroke="#05181d" stroke-width="45" stroke-linecap="round"/>
-      <path d="M158 329Q106 337 99 298Q95 278 94 245" fill="none" stroke="#05181d" stroke-width="30" stroke-linecap="round"/>
-      <path d="M161 275Q213 295 228 260Q232 246 231 227" fill="none" stroke="#05181d" stroke-width="28" stroke-linecap="round"/>
-      <path d="M164 455Q162 320 166 174M158 326Q107 336 100 299Q96 273 96 250M168 274Q214 290 227 258Q233 240 230 231" fill="none" stroke="url(#desertLeftMoon)" stroke-width="35" stroke-linecap="round"/>
-      <path d="M175 453Q173 316 178 173M111 300Q106 271 106 250M218 260Q222 247 221 237" fill="none" stroke="#7fa8a048" stroke-width="3.3" stroke-linecap="round"/>
-    </g>
-    <g class="desert-grass"><path d="M32 469Q18 435 19 409M35 468Q52 433 53 420M31 470Q32 432 36 415" fill="none" stroke="#38645b" stroke-width="4" stroke-linecap="round"/></g>
-    <g class="desert-grass alt"><path d="M265 468Q252 431 244 425M269 473Q284 442 294 432M265 471Q271 429 272 409" fill="none" stroke="#325854" stroke-width="5" stroke-linecap="round"/></g>
-  </svg>
- <svg class="toon-desert-foreground right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 480" preserveAspectRatio="xMaxYMax meet" focusable="false">
-    <defs>
-      <linearGradient id="desertRightMoon" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color="#436f6c"/><stop offset=".5" stop-color="#214747"/><stop offset="1" stop-color="#07171e"/>
-      </linearGradient>
-    </defs>
-    <path d="M0 454Q92 430 165 442Q251 405 340 443V480H0Z" fill="#071b22"/>
-    <g class="ocotillo-motion">
-      <path d="M160 470Q129 355 69 226M162 470Q153 332 151 158M162 470Q181 328 238 194M162 470Q197 355 293 281M164 468Q109 346 110 296M163 468Q225 360 223 286" fill="none" stroke="#102d32" stroke-width="6" stroke-linecap="round"/>
-      <path d="M160 470Q130 353 69 229M162 470Q153 329 151 160M162 470Q182 327 238 197M162 470Q198 352 291 282" fill="none" stroke="#56807b77" stroke-width="1.8"/>
-      <g fill="#ac695d" opacity=".75"><circle cx="69" cy="225" r="5"/><circle cx="151" cy="157" r="5"/><circle cx="238" cy="193" r="5"/><circle cx="293" cy="280" r="5"/></g>
-    </g>
-    <g class="mesquite-motion" opacity=".75">
-      <path d="M293 469Q285 392 277 364Q265 336 239 320M281 373Q299 331 325 319M270 354Q233 342 212 346" fill="none" stroke="#123333" stroke-width="11" stroke-linecap="round"/>
-      <g fill="#315651"><ellipse cx="240" cy="322" rx="32" ry="12" transform="rotate(20 240 322)"/><ellipse cx="321" cy="317" rx="35" ry="11" transform="rotate(-15 321 317)"/><ellipse cx="215" cy="344" rx="25" ry="9"/></g>
-    </g>
-    <g class="desert-grass"><path d="M58 474Q36 437 33 419M56 472Q65 428 78 421M58 472Q54 430 54 404" fill="none" stroke="#3f6c60" stroke-width="5" stroke-linecap="round"/></g>
-    <g class="desert-grass alt"><path d="M315 468Q309 431 290 414M311 468Q319 428 334 413M318 470Q324 450 336 440" fill="none" stroke="#305b56" stroke-width="4" stroke-linecap="round"/></g>
-  </svg>
+ <div class="surface-haze" aria-hidden="true"></div><div class="surface-haze-near" aria-hidden="true"></div><div class="meteor-field surface-meteors" id="surfaceMeteors" aria-hidden="true"></div>
+
+
  <div class="ground-fade" aria-hidden="true"></div>
 </section>
 <section class="region region-underground" id="underground" aria-label="Underground soil and rocks">
  <div class="underground-strata" aria-hidden="true"><div class="underground-photo"></div></div>
  <div class="underground-topsoil" aria-hidden="true"></div>
- <div class="soil-grain" aria-hidden="true"></div>
  <div class="underground-dust" aria-hidden="true"></div>
 </section>
 </main>
@@ -340,6 +349,44 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  const soilPhoto=document.querySelector(".underground-photo");
  const orbitalSection=document.getElementById("space");
  const undergroundSection=document.getElementById("underground");
+ const skies=[
+  {section:orbitalSection,layer:document.getElementById("spaceMeteors")},
+  {section:surface,layer:document.getElementById("surfaceMeteors")}
+ ];
+ let meteorTimer=0;
+ function planMeteor(){
+  meteorTimer=window.setTimeout(()=>{
+   if(!motionReduced.matches&&!document.hidden){
+    const visible=skies.filter(({section,layer})=>{
+     if(!section||!layer)return false;
+     const r=section.getBoundingClientRect();
+     return r.bottom>window.innerHeight*.1&&r.top<window.innerHeight*.9;
+    });
+    if(visible.length){
+     const {section,layer}=visible[Math.floor(Math.random()*visible.length)];
+     const narrow=window.innerWidth<=800;
+     const meteor=document.createElement("span");
+     meteor.className="meteor";
+     meteor.setAttribute("aria-hidden","true");
+     const props={
+      "--mx":(8+Math.random()*58).toFixed(1)+"%",
+      "--my":(section===orbitalSection?8+Math.random()*36:3+Math.random()*15).toFixed(1)+"%",
+      "--ml":(narrow?65+Math.random()*40:90+Math.random()*60).toFixed(0)+"px",
+      "--dx":(narrow?115+Math.random()*65:200+Math.random()*110).toFixed(0)+"px",
+      "--dy":(narrow?50+Math.random()*38:85+Math.random()*60).toFixed(0)+"px",
+      "--ma":(20+Math.random()*13).toFixed(0)+"deg",
+      "--md":(710+Math.random()*390).toFixed(0)+"ms"
+     };
+     for(const [key,val] of Object.entries(props))meteor.style.setProperty(key,val);
+     meteor.addEventListener("animationend",()=>meteor.remove(),{once:true});
+     layer.appendChild(meteor);
+     window.setTimeout(()=>meteor.remove(),1800);
+    }
+   }
+   planMeteor();
+  },6500+Math.random()*14500);
+ }
+ if(!motionReduced.matches)planMeteor();
  let sceneFrame=0;
  function clamp(value,limit){return Math.max(-limit,Math.min(limit,value))}
  function applySceneParallax(){
@@ -387,9 +434,14 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  if(motionReduced.addEventListener)motionReduced.addEventListener("change",()=>{
   if(motionReduced.matches){
    if(sceneFrame){window.cancelAnimationFrame(sceneFrame);sceneFrame=0}
+   if(meteorTimer){window.clearTimeout(meteorTimer);meteorTimer=0}
+   document.querySelectorAll(".meteor").forEach(node=>node.remove());
    orbitalPhoto?.style.removeProperty("--orbit-scroll");
    soilPhoto?.style.removeProperty("--soil-scroll");
-  }else requestSceneUpdate();
+  }else{
+   requestSceneUpdate();
+   if(!meteorTimer)planMeteor();
+  }
  });
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",function(){
   window.requestAnimationFrame(enterAtSurface);updateLevel();requestSceneUpdate();
