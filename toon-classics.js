@@ -350,7 +350,7 @@ function startToonWander(scene,fleet) {
     });
     return;
   }
-  if("IntersectionObserver" in window) {
+  if(typeof window.IntersectionObserver === "function") {
     const observer=new IntersectionObserver(entries=>{
       visible=entries.some(entry=>entry.isIntersecting);
       if(visible)start();else stop();
