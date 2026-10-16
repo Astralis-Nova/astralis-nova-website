@@ -1601,125 +1601,98 @@
     // a user stroke. Every connected visitor gets the same Bugs Bunny doodle
     // on initial load, refresh and shared reset; visitor strokes remain live.
     function renderBugsBunnyDoodle() {
-      const scale = Math.min(canvas.width / 900, canvas.height / 520);
+      // Full-body, hand-illustrated gray-and-white Bugs Bunny tribute.
+      // Render synchronously on the *clean* canvas, without remote image loads.
       ctx.save();
-      ctx.translate((canvas.width - 500 * scale) / 2, (canvas.height - 500 * scale) / 2);
-      ctx.scale(scale, scale);
-      ctx.lineJoin = "round";
+      ctx.scale(canvas.width / 1200, canvas.height / 600);
       ctx.lineCap = "round";
+      ctx.lineJoin = "round";
 
-      function sketch(paths, ink = "#28374a", width = 3.1) {
-        ctx.strokeStyle = ink;
-        ctx.lineWidth = width;
+      function paint(path, fill, stroke = "#27303d", width = 3.6) {
+        const shape = new Path2D(path);
+        if (fill) { ctx.fillStyle = fill; ctx.fill(shape); }
+        if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = width; ctx.stroke(shape); }
+      }
+      function ink(paths, color = "#27303d", width = 3) {
+        ctx.strokeStyle = color; ctx.lineWidth = width;
         for (const path of paths) ctx.stroke(new Path2D(path));
       }
 
-      // Tall lopsided rabbit ears, with loose doubled pencil contours.
-      sketch([
-        "M210 180 C193 125 154 13 184 7 C219 -7 247 112 250 168",
-        "M264 163 C271 96 312 -2 343 10 C383 31 326 137 314 184",
-        "M207 169 C186 112 160 29 179 13",
-        "M337 16 C352 22 350 48 341 81"
-      ], "#253547", 3.7);
-      sketch([
-        "M220 144 C207 95 187 34 190 28 C209 32 237 122 235 151",
-        "M286 143 C299 93 324 31 339 28 C347 37 327 111 301 153"
-      ], "#d889a0", 5);
+      // The catchphrase is separate from the rabbit and won't hide his ears.
+      paint("M156 145 Q151 111 189 100 Q274 73 363 102 Q405 114 409 150 Q420 199 381 218 L404 262 L347 225 Q263 247 189 223 Q145 213 150 171 Z",
+        "#fff", "#60758d", 4);
+      ctx.fillStyle = "#34435b";
+      ctx.font = "italic bold 31px Georgia,serif";
+      ctx.fillText("Eh, what's", 195, 157);
+      ctx.fillText("up, Doc?", 216, 197);
 
-      // His tufty cheeks, forehead, chin and recognizable overbite.
-      sketch([
-        "M208 166 C170 148 145 187 151 230 C156 251 165 264 177 276",
-        "M207 167 C237 149 282 143 320 174",
-        "M320 174 C362 165 381 200 370 246 C368 259 360 271 353 280",
-        "M174 274 C140 283 133 309 155 330 C168 343 180 348 196 352",
-        "M352 278 C394 278 410 307 388 333 C378 345 360 352 347 353",
-        "M195 349 C201 395 238 415 277 417 C323 414 345 390 348 350",
-        "M174 272 C192 278 203 288 213 300",
-        "M352 276 C338 284 333 291 327 301",
-        "M182 344 C170 349 160 358 155 370",
-        "M359 347 C369 356 377 368 380 378"
-      ], "#223449", 3.6);
+      ctx.translate(393, 21);
+      ctx.scale(.81, .81);
 
-      // Eyes and expressive brows, intentionally hand-drawn rather than glossy.
-      sketch([
-        "M218 244 C207 212 214 185 233 188 C253 188 260 218 255 247",
-        "M267 244 C267 207 277 185 294 191 C315 197 317 224 301 250",
-        "M216 184 C227 173 242 172 250 180",
-        "M277 180 C289 174 305 178 312 188"
-      ]);
-      sketch([
-        "M243 224 C241 214 246 209 250 216 C255 223 248 231 243 224 Z",
-        "M282 227 C280 215 287 213 292 218 C295 224 289 235 282 227 Z"
-      ], "#253547", 4.5);
+      // Two tall expressive ears, with pink centers.
+      paint("M194 228 C161 172 105 54 139 15 C173 -12 210 126 226 203 L229 234 Z", "#9498a0");
+      paint("M253 216 C265 145 324 -5 354 21 C380 49 319 169 289 233Z", "#9298a0");
+      paint("M199 188 C171 134 135 55 146 29 C165 35 200 142 208 194Z", "#f3c5cb", "#8b6678", 2.5);
+      paint("M269 189 C287 123 328 40 348 32 C355 52 315 142 279 202Z", "#f3c5cb", "#8b6678", 2.5);
 
-      // Pink triangular nose, wide Bugs grin and his two famous front teeth.
-      ctx.fillStyle = "#df9bac";
-      ctx.fill(new Path2D("M248 267 Q267 251 286 265 Q279 276 268 281 Q258 279 248 267 Z"));
-      sketch(["M248 267 Q267 251 286 265 Q279 276 268 281 Q258 279 248 267 Z"], "#344053", 2.8);
-      sketch([
-        "M267 281 C263 297 242 313 221 306",
-        "M267 281 C272 307 290 322 313 314 C327 310 338 300 341 287",
-        "M239 323 C245 349 260 361 278 359 C301 359 321 343 324 322",
-        "M229 312 C243 319 252 321 260 318",
-        "M311 318 C321 319 330 316 339 310"
-      ], "#26374a", 3.2);
-      ctx.fillStyle = "#ffffff";
-      ctx.fill(new Path2D("M258 319 Q269 322 280 318 L281 350 Q267 358 259 347 Z"));
-      ctx.fill(new Path2D("M281 319 Q294 322 305 315 L299 347 Q290 358 281 350 Z"));
-      sketch([
-        "M258 319 Q269 322 280 318 L281 350 Q267 358 259 347 Z",
-        "M281 319 Q294 322 305 315 L299 347 Q290 358 281 350 Z"
-      ], "#334257", 2.4);
+      // Tail and back legs, with cartoonishly large white feet.
+      paint("M199 488 Q166 465 144 483 Q118 478 116 500 Q104 515 125 533 Q133 555 154 552 Q178 561 196 540Z", "#f7f7f8");
+      paint("M219 488 Q255 493 265 523 Q281 562 264 631 L236 652 Q202 636 205 605 L200 539Z", "#8f949e");
+      paint("M282 494 Q325 482 343 526 Q348 567 335 588 L370 613 Q378 638 342 646 L281 643 Q266 630 267 600 L274 548 Z", "#9599a2");
+      paint("M317 614 Q367 604 400 621 Q438 636 422 663 Q411 683 379 682 L297 676 Q268 659 284 639 Q294 625 317 614 Z", "#fdfdfb");
+      ink(["M358 622 Q346 639 352 655", "M389 628 Q376 641 383 659"], "#858993", 2.3);
+      paint("M192 626 Q223 607 249 629 Q269 656 245 675 Q204 694 132 687 Q94 683 91 660 Q89 623 128 613 Q159 605 192 626 Z", "#fdfdfb");
+      ink(["M140 625 Q128 642 136 671", "M170 621 Q162 642 169 670"], "#858993", 2.5);
 
-      // Whiskers, freckles and a few scribbly fur strokes.
-      sketch([
-        "M210 295 C172 278 129 268 100 269",
-        "M207 308 C171 309 127 313 92 329",
-        "M210 321 C171 332 139 351 118 371",
-        "M325 294 C363 277 406 271 439 275",
-        "M328 307 C370 306 413 318 452 329",
-        "M326 320 C361 333 396 356 421 372"
-      ], "#3b4b60", 2.3);
-      sketch([
-        "M226 292 L229 292", "M226 306 L230 306", "M236 297 L239 297",
-        "M305 292 L308 293", "M310 304 L313 304", "M298 302 L301 303",
-        "M191 201 C185 218 184 227 185 236", "M353 207 L355 225"
-      ], "#516075", 3.2);
+      // Bent arm, hip and raised arm holding his snack.
+      paint("M215 352 Q183 337 167 356 L109 415 Q101 438 123 449 L169 487 Q189 493 200 477 L222 440 L249 402 Z", "#969aa3");
+      ink(["M155 394 Q140 413 131 421 L170 451"], "#7b8291", 2);
+      paint("M287 350 Q311 338 328 357 Q346 373 360 391 L415 350 Q432 336 443 354 Q460 372 445 390 Q399 455 362 459 Q338 454 313 431 L287 403 Z", "#9297a0");
+      paint("M215 331 Q252 323 297 347 Q330 375 324 429 Q340 484 304 532 Q275 552 219 542 Q189 518 196 471 Q188 434 195 395 Q190 359 215 331 Z", "#9297a0");
+      paint("M231 356 Q259 346 275 366 Q305 389 301 428 Q306 465 302 494 Q296 523 274 538 Q251 545 229 532 Q224 506 219 470 Q218 424 211 399 Q208 368 231 356 Z", "#fcfdfb", "#565d66", 2.5);
+      ink(["M233 387 Q222 418 236 443"], "#9ba2a8", 2);
 
-      // Little shoulders and a casual paw gripping a bright carrot.
-      sketch([
-        "M210 401 C183 415 169 441 165 471",
-        "M332 398 C361 408 377 434 381 472",
-        "M211 433 C232 454 296 459 334 432",
-        "M353 425 C371 415 390 417 405 429",
-        "M358 444 C374 435 392 441 402 452"
-      ], "#43546c", 3);
-      ctx.fillStyle = "#ef9a42";
-      ctx.fill(new Path2D("M400 397 C415 404 438 409 453 416 Q434 445 410 473 Q400 437 400 397 Z"));
-      sketch(["M400 397 C415 404 438 409 453 416 Q434 445 410 473 Q400 437 400 397 Z"], "#b06d2a", 2.6);
-      sketch([
-        "M410 396 C398 381 398 370 401 356",
-        "M410 398 C413 379 423 368 436 363",
-        "M412 400 C430 386 441 385 452 389",
-        "M418 422 L429 429", "M410 441 L418 447"
-      ], "#529b5d", 3.7);
+      // Carrot: warm orange with a sprig of green foliage.
+      paint("M498 327 Q524 300 536 301 Q536 320 520 332 Q550 321 564 329 Q554 344 529 345 Q552 356 543 368 Q520 364 501 343Z", "#75aa52", "#38723b", 2.6);
+      paint("M414 327 Q452 316 504 328 L506 347 Q450 353 421 346Z", "#f7a13d", "#a76325", 2.7);
+      ink(["M437 324 L449 333", "M460 337 L472 327", "M478 343 L489 335"], "#ca7330", 2.6);
 
-      // Classic Bugs Bunny line, tucked inside a hand-drawn speech bubble.
-      // It's part of the immutable starter doodle, so Reset brings it back too.
-      const bubble = new Path2D(
-        "M18 54 Q15 48 30 47 Q83 36 149 51 Q172 59 171 86 " +
-        "L171 113 Q170 129 156 137 L178 174 L137 144 " +
-        "Q69 150 32 138 Q16 132 15 116 Z"
-      );
-      ctx.fillStyle = "rgba(255,255,255,.96)";
-      ctx.fill(bubble);
-      ctx.strokeStyle = "#354258";
-      ctx.lineWidth = 3.2;
-      ctx.stroke(bubble);
-      ctx.fillStyle = "#27384d";
-      ctx.font = "italic bold 21px cursive";
-      ctx.fillText("Eh, what's", 34, 87);
-      ctx.fillText("up, Doc?", 38, 117);
+      // Five-fingered white cartoon glove wraps over the carrot.
+      paint("M399 367 Q394 350 408 343 Q413 333 428 336 Q433 321 448 322 Q460 323 460 334 L460 344 Q476 340 482 329 Q490 320 497 327 Q500 344 481 355 Q471 361 461 364 L463 378 Q459 402 439 409 Q417 404 410 387Z", "#fff");
+      ink(["M412 358 Q419 371 436 370 Q450 369 460 352", "M425 339 Q435 347 442 356"], "#838893", 2.4);
+
+      // The other white glove poses proudly at his hip.
+      paint("M154 464 Q146 451 128 448 Q113 447 109 433 Q100 417 91 428 Q86 438 102 456 Q84 446 78 455 Q73 466 99 476 Q82 471 80 482 Q81 494 104 501 Q104 522 126 529 Q149 532 165 515 Q188 501 184 485 Q178 472 166 474 Q167 451 154 464 Z", "#fff");
+      ink(["M104 473 Q125 478 130 488", "M106 501 Q130 503 134 515", "M155 483 Q145 481 138 486"], "#9296a0", 2.2);
+
+      // Neck and fur-tufted Bugs Bunny face.
+      paint("M222 323 L215 365 Q252 388 293 357 L289 314Z", "#eeeef0");
+      paint("M161 218 Q162 187 183 184 L180 165 L197 172 L202 158 L221 175 Q277 164 311 195 Q335 223 327 272 Q325 306 294 327 Q253 346 215 331 Q182 326 164 302 Q137 285 148 251 Q138 231 161 218Z", "#9297a0");
+
+      // High-set eyes and brows establish his recognizable expression.
+      paint("M207 216 Q202 186 218 188 Q238 190 245 229 L237 256 Q212 257 207 216Z", "#fff", "#27303d", 2.8);
+      paint("M252 224 Q250 190 270 193 Q292 202 282 257 L249 259Z", "#fff", "#27303d", 2.8);
+      paint("M232 238 Q234 222 241 224 Q249 229 244 247 Q239 253 233 246Z", "#24272e", "#24272e", 1);
+      paint("M266 241 Q265 222 273 223 Q280 231 275 249 Q270 251 267 247Z", "#24272e", "#24272e", 1);
+      ink(["M203 190 Q214 180 232 191", "M255 194 Q267 181 287 199"], "#27303d", 3.1);
+
+      // White cheek puffs, big grin, pink nose and iconic buck teeth.
+      paint("M230 270 Q210 248 177 256 Q161 252 140 258 L153 268 L130 279 L148 284 L135 298 Q153 319 187 321 Q229 327 248 304 Z", "#fff");
+      paint("M264 274 Q286 252 310 257 Q331 261 339 284 L348 275 Q346 302 335 320 Q322 336 288 333 Q265 331 247 310 Z", "#fff");
+      paint("M216 299 Q247 309 281 299 Q284 345 252 353 Q220 346 216 299Z", "#fafafa");
+      ink(["M214 300 Q246 320 282 298"], "#27303d", 3.7);
+      paint("M237 310 L257 312 L254 335 Q240 341 237 326Z", "#fff", "#27303d", 2.4);
+      paint("M256 311 L273 309 L271 326 Q264 338 254 335Z", "#fff", "#27303d", 2.4);
+      ink(["M173 291 Q187 297 193 297", "M312 294 Q323 296 334 289"], "#27303d", 2.2);
+      paint("M235 268 Q250 257 268 265 Q267 281 251 285 Q240 281 235 268Z", "#e5a0a3", "#27303d", 2.6);
+      ink(["M250 285 Q248 296 244 299"], "#27303d", 2.4);
+      ink(["M214 276 Q162 270 107 269", "M214 289 Q172 289 108 307",
+           "M216 301 Q168 318 125 346", "M286 275 Q334 262 385 253",
+           "M286 287 Q342 284 391 294", "M283 300 Q326 308 380 337"], "#3b454e", 2.6);
+      ctx.fillStyle = "#62666f";
+      for (const [x, y, r] of [[204,285,2.9],[189,299,2.6],[211,303,2.5],[295,281,2.7],[307,299,2.5]]) {
+        ctx.beginPath(); ctx.arc(x,y,r,0,2*Math.PI); ctx.fill();
+      }
       ctx.restore();
     }
 
