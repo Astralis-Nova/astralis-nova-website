@@ -1543,6 +1543,16 @@
     let activeStroke = null;
     let lastPoint = null;
     const remoteStrokes = new Map();
+    // A tiny invisible stroke stays in the shared room as proof the old
+    // drawing history was wiped. This avoids clearing new art on later visits.
+    const CLEAN_BOARD_MARKER_ID = "aa6fc752-8f7c-4365-9ef2-b0b2d8f2a016";
+    let cleanResetPending = false;
+    const cleanBoardMarker = {
+      id: CLEAN_BOARD_MARKER_ID,
+      color: "#f8fbff",
+      width: 1,
+      points: [{x:0,y:0}, {x:0.00001,y:0.00001}]
+    };
 
     function setStatus(message, kind = "") {
       status.textContent = message;
@@ -1575,7 +1585,7 @@
     }
 
     function renderStroke(stroke) {
-      if (!stroke?.points?.length) return;
+      if (!stroke?.points?.length || stroke.id === CLEAN_BOARD_MARKER_ID) return;
       if (stroke.points.length === 1) {
         const p = stroke.points[0];
         renderSegment(p, {x:p.x + .0001, y:p.y + .0001}, stroke.color, stroke.width);
@@ -1723,6 +1733,18 @@
       if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(payload));
     }
 
+    function requestCleanReset() {
+      // First empty the visible canvas; once the server confirms the reset,
+      // add the Bugs Bunny starter on blank pixels and seed the shared room.
+      if (cleanResetPending || socket?.readyState !== WebSocket.OPEN) return;
+      cleanResetPending = true;
+      remoteStrokes.clear();
+      clearCanvas();
+      renderBugsBunnyDoodle();
+      setStatus("Cleaning old scribbles and restoring Bugs Bunny…");
+      send({type:"clear"});
+    }
+
     function connect() {
       clearTimeout(reconnectTimer);
       const protocol = location.protocol === "https:" ? "wss:" : "ws:";
@@ -1738,13 +1760,24 @@
         try { message = JSON.parse(event.data); } catch { return; }
 
         if (message.type === "state") {
-          renderBoard(message.strokes);
+          const strokes = Array.isArray(message.strokes) ? message.strokes : [];
+          if (strokes.some(stroke => stroke.id === CLEAN_BOARD_MARKER_ID)) {
+            // Only replay strokes after the clean shared baseline was saved.
+            cleanResetPending = false;
+            renderBoard(strokes);
+          } else if (!cleanResetPending) {
+            // The original shared room still contains unmarked legacy strokes.
+            // Clear them once and permanently record the fresh baseline.
+            requestCleanReset();
+          }
           count.textContent = `${message.online || 1} traveler${message.online === 1 ? "" : "s"} online`;
         } else if (message.type === "presence") {
           count.textContent = `${message.online || 0} traveler${message.online === 1 ? "" : "s"} online`;
         } else if (message.type === "start") {
+          if (cleanResetPending || message.stroke?.id === CLEAN_BOARD_MARKER_ID) return;
           remoteStrokes.set(message.stroke.id, message.stroke);
         } else if (message.type === "point") {
+          if (cleanResetPending || message.id === CLEAN_BOARD_MARKER_ID) return;
           const stroke = remoteStrokes.get(message.id);
           if (!stroke) return;
           const previous = stroke.points[stroke.points.length - 1];
@@ -1754,12 +1787,22 @@
           remoteStrokes.delete(message.stroke?.id);
         } else if (message.type === "clear") {
           remoteStrokes.clear();
-          renderBoard([]);
-          setStatus("Bugs Bunny is back! Fresh board for everyone.", "good");
+          // Reset order: wipe the actual pixels, then lay down only Bugs Bunny.
+          clearCanvas();
+          renderBugsBunnyDoodle();
+          if (cleanResetPending) {
+            // Persist the invisible baseline marker so later visitors retain
+            // new shared doodles without triggering another automatic clear.
+            send({type:"start", stroke:cleanBoardMarker});
+            send({type:"end", stroke:cleanBoardMarker});
+            cleanResetPending = false;
+          }
+          setStatus("Clean board restored. Bugs Bunny is back!", "good");
         }
       });
 
       socket.addEventListener("close", () => {
+        cleanResetPending = false;
         presence.classList.remove("online");
         count.textContent = "Reconnecting…";
         setStatus("Signal interrupted. Reconnecting…", "bad");
@@ -1852,8 +1895,8 @@
     canvas.addEventListener("lostpointercapture", finishStroke);
 
     clearButton.addEventListener("click", () => {
-      if (!confirm("Reset everyone's drawings back to Bugs Bunny?")) return;
-      send({type:"clear"});
+      if (!confirm("Erase every shared scribble and restore a clean Bugs Bunny board?")) return;
+      requestCleanReset();
     });
 
     renderBoard([]);
