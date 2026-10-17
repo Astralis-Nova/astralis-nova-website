@@ -1,3 +1,4 @@
+import { readLimitedJson } from '../lib/memory-security.js';
 const JSON_HEADERS={"content-type":"application/json; charset=utf-8","cache-control":"no-store"};
 function json(data,status=200){return new Response(JSON.stringify(data),{status,headers:JSON_HEADERS});}
 function clean(v,n){return String(v??"").replace(/\u0000/g,"").trim().slice(0,n);}
@@ -23,23 +24,25 @@ async function notifyOwner(env,requestRow,baseUrl){
   body.append("name","Astralis Nova Memories");
   body.append("email",requestRow.email);
   body.append("_subject",`Memories access request: ${requestRow.name}`);
-  body.append("message",`New Cherished Memories access request\n\nName: ${requestRow.name}\nEmail: ${requestRow.email}\nRelationship: ${requestRow.relationship||"Not provided"}\nNote: ${requestRow.note||"Not provided"}\n\nAPPROVE:\n${approve}\n\nDENY:\n${deny}\n\nThese links are private approval links. Do not forward this message.`);
+  body.append("message",`New Cherished Memories access request\n\nName: ${requestRow.name}\nEmail: ${requestRow.email}\nRelationship: ${requestRow.relationship||"Not provided"}\nNote: ${requestRow.note||"Not provided"}\n\nAPPROVE:\n${approve}\n\nDENY:\n${deny}\n\nThese private links open a review page and expire after 48 hours. A confirmed POST is required. Do not forward this message.`);
   try{const r=await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(destination)}`,{method:"POST",body,headers:{Accept:"application/json"}});return r.ok;}catch(e){console.error("Memories owner notification failed",e);return false;}
 }
 export async function onRequestPost({request,env}){
   if(!env.DB) return json({error:"The Memories database is not connected."},503);
   const len=Number(request.headers.get("content-length")||0);if(len>12000)return json({error:"Submission is too large."},413);
-  let body;try{body=await request.json();}catch{return json({error:"Invalid submission."},400);}
+  let body;try{body=await readLimitedJson(request,12000);}catch{return json({error:"Invalid submission."},400);}
   if(clean(body.website,120))return json({ok:true,message:"Your request has been received."});
   const name=clean(body.name,80),email=clean(body.email,160).toLowerCase(),relationship=clean(body.relationship,120),note=clean(body.note,600);
   if(!name)return json({error:"Please enter your name."},400);if(!validEmail(email))return json({error:"Please enter a valid email address."},400);
   const now=new Date().toISOString();const ipHash=await hashVisitor(request,env.GUESTBOOK_SALT||"astralis-nova-memories");
   try{
     await ensureSchema(env.DB);
+    const recentCount=await env.DB.prepare('SELECT COUNT(*) AS count FROM memory_access_requests WHERE ip_hash=? AND created_at>?').bind(ipHash,new Date(Date.now()-3600000).toISOString()).first();
+    if(Number(recentCount?.count)>=4)return json({error:'Please wait before submitting another access request.'},429);
     const member=await env.DB.prepare(`SELECT id,status FROM memory_people WHERE email=? COLLATE NOCASE LIMIT 1`).bind(email).first();
-    if(member?.status==="approved")return json({ok:true,alreadyApproved:true,message:"This email is already approved for the Memories archive."});
+    if(member?.status==="approved")return json({ok:true,message:"Your request has been received. Ramon can review your access privately."});
     const recent=await env.DB.prepare(`SELECT id,status,created_at FROM memory_access_requests WHERE email=? COLLATE NOCASE ORDER BY created_at DESC LIMIT 1`).bind(email).first();
-    if(recent?.status==="pending")return json({ok:true,alreadyPending:true,message:"An access request for this email is already waiting for approval."});
+    if(recent?.status==="pending"&&Date.now()-Date.parse(recent.created_at)<48*60*60*1000)return json({ok:true,message:"Your request has been received. Ramon can review your access privately."});
     const row={id:crypto.randomUUID(),name,email,relationship,note,approval_token:crypto.randomUUID().replaceAll("-","")+crypto.randomUUID().replaceAll("-","")};
     await env.DB.prepare(`INSERT INTO memory_access_requests (id,name,email,relationship,note,status,approval_token,created_at,updated_at,ip_hash) VALUES (?,?,?,?,?,'pending',?,?,?,?)`).bind(row.id,row.name,row.email,row.relationship,row.note,row.approval_token,now,now,ipHash).run();
     const url=new URL(request.url);const notified=await notifyOwner(env,row,`${url.protocol}//${url.host}`);

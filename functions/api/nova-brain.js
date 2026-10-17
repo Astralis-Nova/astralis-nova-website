@@ -1,3 +1,4 @@
+import { authorizeMemoryAI, readLimitedJson } from '../lib/memory-security.js';
 const HEADERS={
   'Content-Type':'application/json; charset=utf-8',
   'Cache-Control':'no-store, max-age=0',
@@ -21,8 +22,10 @@ const RESPONSE_SCHEMA={
 export async function onRequest({request,env}){
   if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{...HEADERS,Allow:'POST, OPTIONS'}});
   if(request.method!=='POST')return json({error:'Use POST to give the Nova Brain a question.'},405);
+  const rejected=await authorizeMemoryAI(request,env);
+  if(rejected)return rejected;
   try{
-    const body=await request.json();
+    const body=await readLimitedJson(request);
     const query=clean(body?.query).slice(0,900);
     const mode=MODES.has(body?.mode)?body.mode:'think';
     const memories=normalizeMemories(body?.memories).slice(0,8);

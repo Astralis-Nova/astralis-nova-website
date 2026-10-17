@@ -56,6 +56,12 @@ async function setup({ saved = tree(), local = null, eventActivation = false } =
   });
   if (eventActivation) handlers['nova-vault-opened']({ detail: { key, familyConstellation: saved } });
   await settle();
+  // WebCrypto finishes on a worker thread; event-loop ticks alone are not a
+  // readiness signal when the full test suite is running concurrently.
+  const deadline = Date.now() + 2000;
+  while ((!ids.familyStatus?.textContent || (local && !window.NovaFamilyEntries?.length)) && Date.now() < deadline) {
+    await new Promise(resolve => setTimeout(resolve, 5));
+  }
   return { ids, window, key, initialRecord, record: () => record, writes: () => writes };
 }
 

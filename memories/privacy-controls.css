@@ -1,0 +1,8 @@
+.memory-consent{width:min(720px,calc(100% - 24px));max-height:85dvh;overflow:auto;color:#eef6ff;background:#0d1425;border:1px solid #82ebff;border-radius:18px;padding:24px}
+.memory-consent::backdrop{background:#020615e8}
+.memory-consent pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:35dvh;overflow:auto;background:#030818;padding:14px;border:1px solid #334965;border-radius:10px}
+.memory-consent input[type=password]{display:block;width:100%;padding:12px;margin:8px 0;color:#fff;background:#030818;border:1px solid #82ebff}
+.memory-consent .memory-permission{display:flex;gap:12px;margin:20px 0;align-items:flex-start}
+.memory-consent input[type=checkbox]{width:22px;height:22px;flex:none}
+.memory-consent form>div{display:flex;gap:12px;flex-wrap:wrap}
+.memory-consent :focus-visible{outline:3px solid #f6d58a;outline-offset:3px}

@@ -1,3 +1,4 @@
+import { authorizeMemoryAI, readLimitedJson } from '../lib/memory-security.js';
 const HEADERS={
   'Content-Type':'application/json; charset=utf-8',
   'Cache-Control':'no-store, max-age=0',
@@ -9,8 +10,10 @@ const VISION_MODEL='@cf/meta/llama-3.2-11b-vision-instruct';
 export async function onRequest({request,env}){
   if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{...HEADERS,Allow:'POST, OPTIONS'}});
   if(request.method!=='POST')return json({error:'Use POST to share an experience with Nova.'},405);
+  const rejected=await authorizeMemoryAI(request,env);
+  if(rejected)return rejected;
   try{
-    const body=await request.json();
+    const body=await readLimitedJson(request, 5600000);
     const input=normalizeInput(body);
     if(!input.story)return json({error:'Tell Nova what happened first.'},400);
     let proposal=null;

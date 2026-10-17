@@ -217,38 +217,6 @@
     };
   }
 
-  function fileAsDataUrl(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(reader.error || new Error('The photo could not be read.'));
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function studyExperience(input) {
-    const imageFile = pendingFiles.find(file => file.type.startsWith('image/') && file.size <= 3.5 * 1024 * 1024);
-    const textFile = pendingFiles.find(file => (file.type === 'text/plain' || /\.txt$/i.test(file.name)) && file.size <= 1024 * 1024);
-    let image = null;
-    let documentText = '';
-    if (imageFile) {
-      status.textContent = 'Reading the selected photo';
-      try { image = await fileAsDataUrl(imageFile); } catch {}
-    }
-    if (textFile) {
-      status.textContent = 'Reading the attached text';
-      try { documentText = (await textFile.text()).slice(0, 12000); } catch {}
-    }
-    const response = await fetch('/api/nova-experience', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ ...input, image, documentText, fileNames: pendingFiles.map(file => file.name) })
-    });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data?.error || 'Nova could not study that experience.');
-    return data;
-  }
-
   function setReview(proposal) {
     pending = proposal;
     $('reviewTitle').value = proposal.title || '';
@@ -423,9 +391,7 @@
     submit.disabled = true;
     status.textContent = 'Nova is studying the experience';
     try {
-      let proposal;
-      try { proposal = await studyExperience(input); }
-      catch (error) { console.warn('Nova experience AI fallback', error); proposal = localProposal(input); }
+      const proposal = localProposal(input);
       setReview(proposal);
       status.textContent = proposal.mode === 'ai-extraction' ? 'AI study complete—waiting for your approval' : 'Local study complete—waiting for your approval';
     } finally {
