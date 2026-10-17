@@ -39,15 +39,6 @@
       badge: "Story World"
     },
     {
-      id: "toon-planet",
-      href: "/toon-planet.html",
-      ariaLabel: "Enter Toon Planet to see Cactus Forest Moonlight scenery and its gentle desert animations",
-      planetClass: "planet-toon",
-      title: "Toon Planet",
-      description: "Our original Cactus Forest Moonlight artwork, with a tranquil animated Arizona nightscape. Characters will return one by one.",
-      badge: "Moonlight • Scenery"
-    },
-    {
       id: "first-orbit",
       href: "/first-orbit.html",
       ariaLabel: "Enter the First Orbit archive planet",
@@ -98,18 +89,6 @@
     <img src="/assets/faith/faith-stories-moon.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
     <span class="faith-moon-orbit"></span>`;
 
-  // CSS-drawn playful world: recognizable as a full planet even on mobile.
-  // No external images needed, and it stays clickable as a single world card.
-  const toonVisual = `
-    <span class="toon-world-cloud cloud-one"></span>
-    <span class="toon-world-cloud cloud-two"></span>
-    <span class="toon-world-land land-one"></span>
-    <span class="toon-world-land land-two"></span>
-    <span class="toon-world-land land-three"></span>
-    <span class="toon-world-smile">◡</span>
-    <span class="toon-world-spark spark-one">✦</span>
-    <span class="toon-world-spark spark-two">✧</span>`;
-
   function renderWorldCard(world) {
     const externalAttributes = world.external ? ' target="_blank" rel="noopener noreferrer"' : "";
     const tag = world.placeholder ? "div" : "a";
@@ -118,8 +97,6 @@
       ? '<picture><source media="(prefers-reduced-motion: no-preference)" srcset="/assets/ac-portals/portal-space-motion.webp"><img src="/assets/ac-portals/portal-space-still.webp" alt="" width="320" height="180" loading="lazy" decoding="async"></picture>'
       : world.id === "reserved-world"
       ? '<picture><source type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" alt="" width="360" height="360" loading="lazy" decoding="async"></picture>'
-      : world.id === "toon-planet"
-      ? toonVisual
       : world.id === "scripture-nexus"
       ? scriptureVisual
       : world.id === "faith-stories"
@@ -157,6 +134,9 @@
       .astralis-worlds-head{max-width:760px;margin-bottom:22px}
       .astralis-worlds-head h2{margin:0 0 8px;font-size:clamp(1.75rem,3.5vw,2.6rem)}
       .astralis-worlds-head p{margin:0;color:#bac8dc;line-height:1.65}
+      .astralis-toon-wayfinder{margin:0 0 22px;color:#b8f2e6;font-size:.9rem;line-height:1.6}
+      .astralis-toon-wayfinder a{text-underline-offset:4px}
+      .astralis-toon-wayfinder a:focus-visible{outline:2px solid #86fae6;outline-offset:5px}
       .astralis-system{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
       .astralis-sun-card{grid-column:span 3;display:flex;align-items:center;justify-content:center;gap:20px;min-height:150px;padding:20px;border:1px solid rgba(255,192,87,.34);border-radius:18px;background:radial-gradient(circle at 50% 50%,rgba(255,173,61,.18),transparent 48%),rgba(4,10,20,.58)}
       .astralis-sun{position:relative;flex:0 0 92px;width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 38% 34%,#fff6c7 0 7%,#ffd66e 17%,#ff8b39 48%,#c52c67 74%,#471353 100%);box-shadow:0 0 18px rgba(255,221,113,.9),0 0 45px rgba(255,109,59,.58),0 0 80px rgba(219,38,142,.28);animation:astralisSunPulse 4s ease-in-out infinite}
@@ -182,50 +162,6 @@
       .planet-nova-sphere img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 9px rgba(50,151,255,.5))}
       .astralis-planet-link:hover .planet-nova-sphere{transform:scale(1.05)}
 
-      /* New bright illustrated Toon Planet in the actual Choose a Planet system. */
-      .astralis-planet.planet-toon{flex:0 0 106px;width:106px;height:106px;overflow:visible;isolation:isolate;
-        background:radial-gradient(circle at 28% 21%,rgba(255,255,248,.97) 0 3%,rgba(255,255,248,.15) 4%,transparent 29%),
-          radial-gradient(circle at 34% 28%,#ffedb4 0,#ffc377 18%,#ff91b6 42%,#a668f4 69%,#433182 91%,#292258 100%);
-        border:2px solid rgba(253,217,255,.66);
-        box-shadow:inset -18px -14px 24px rgba(32,18,82,.62),inset 5px 7px 14px rgba(255,255,255,.24),
-          0 0 12px rgba(255,222,164,.55),0 0 31px rgba(230,101,246,.45);
-        animation:toonWorldFloat 5.5s ease-in-out infinite;}
-      /* Stage-one gallery icon previews the same original song artwork as Toon Planet. */
-      .astralis-planet.planet-toon{
-        background:#071420 url('/cover-3.jpg') center/cover no-repeat;
-        border-color:rgba(152,217,222,.75);
-        box-shadow:inset -11px -18px 24px #010c1aca,0 0 21px #82cdd855;
-      }
-      .planet-toon .toon-world-cloud,.planet-toon .toon-world-land,.planet-toon .toon-world-smile{display:none}
-      .planet-toon::after{content:"";position:absolute;z-index:-1;left:-15px;right:-15px;top:35px;height:31px;
-        border:5px solid rgba(185,253,251,.88);border-left-color:rgba(245,178,241,.32);border-radius:50%;
-        transform:rotate(-22deg);box-shadow:0 0 16px rgba(161,230,255,.35);}
-      .toon-world-land{position:absolute;z-index:1;background:#9df0a2;border:1px solid rgba(37,118,101,.35);
-        filter:drop-shadow(0 2px 2px rgba(72,31,111,.12));}
-      .toon-world-land.land-one{width:43px;height:37px;left:12px;top:27px;border-radius:65% 40% 56% 45%;
-        transform:rotate(-29deg)}
-      .toon-world-land.land-two{width:32px;height:38px;right:14px;top:45px;border-radius:40% 70% 57% 62%;
-        transform:rotate(21deg);background:#c8f2a4}
-      .toon-world-land.land-three{width:19px;height:13px;left:34px;bottom:13px;border-radius:55% 30% 65% 50%;
-        transform:rotate(15deg);background:#bde6a3}
-      .toon-world-cloud{position:absolute;z-index:2;width:29px;height:10px;border-radius:100%;background:#fff9f9da;
-        box-shadow:0 -5px 0 -1px #fff9f9c8,9px -3px 0 -1px #fff9f9bd;animation:toonCloudDrift 5s ease-in-out infinite}
-      .toon-world-cloud.cloud-one{left:17px;top:17px}
-      .toon-world-cloud.cloud-two{right:14px;bottom:20px;transform:scale(.75);animation-delay:-2s}
-      .toon-world-smile{position:absolute;z-index:3;left:44%;top:53%;font-size:31px;font-weight:bold;color:#3c275c;
-        transform:rotate(-12deg);line-height:.7;text-shadow:0 1px 0 #fff7}
-      .toon-world-spark{position:absolute;z-index:4;font-size:24px;color:#fff2a0;text-shadow:0 0 9px #f99cfc}
-      .toon-world-spark.spark-one{right:-15px;top:2px;animation:toonSparkBlink 3s ease-in-out infinite}
-      .toon-world-spark.spark-two{left:-17px;bottom:4px;font-size:18px;animation:toonSparkBlink 4s ease-in-out infinite reverse}
-      .astralis-planet-link[data-world="toon-planet"]{border-color:rgba(249,171,215,.7);
-        background:radial-gradient(circle at 18% 44%,rgba(176,103,224,.25),transparent 60%),linear-gradient(145deg,#30244b,#111729)}
-      .astralis-planet-link[data-world="toon-planet"] .astralis-world-badge{color:#ffe1ad!important;
-        border-color:rgba(255,209,160,.5)}
-      .astralis-planet-link:hover .planet-toon,.astralis-planet-link:focus-visible .planet-toon{animation-play-state:paused;transform:scale(1.08)}
-      @keyframes toonWorldFloat{0%,100%{transform:translateY(3px) rotate(-3deg)}50%{transform:translateY(-6px) rotate(3deg)}}
-      @keyframes toonCloudDrift{0%,100%{translate:0 0}50%{translate:4px -1px}}
-      @keyframes toonSparkBlink{0%,100%{opacity:.4}50%{opacity:1}}
-      
       .planet-board{background:radial-gradient(circle at 35% 30%,#d9fff1 0 5%,#32d899 16%,#147b72 47%,#16375c 76%,#07101e 100%)}
       .planet-biography{background:radial-gradient(circle at 35% 28%,#ffe4fa 0 5%,#e75ebd 17%,#7843c8 47%,#25205f 76%,#09091b 100%)}
       .planet-orbit{background:radial-gradient(circle at 37% 28%,#fff2c6 0 4%,#f1a85f 17%,#8c4d45 46%,#3b274a 75%,#0b0912 100%)}
@@ -259,8 +195,8 @@
       .astralis-world-badge{display:inline-flex!important;width:max-content;margin-top:8px!important;padding:4px 8px;border:1px solid rgba(124,190,255,.35);border-radius:999px;color:#9dd6ff!important;font-size:.68rem!important;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
 
       @media(max-width:980px){.astralis-system{grid-template-columns:repeat(2,minmax(0,1fr))}.astralis-sun-card{grid-column:span 2}}
-      @media(max-width:640px){.astralis-worlds{padding:20px}.astralis-system{grid-template-columns:1fr}.astralis-sun-card{grid-column:span 1;align-items:flex-start;justify-content:flex-start}.astralis-planet-link{min-height:118px}.astralis-worlds::before{display:none}.astralis-planet.ac-worlds-portal{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-nova-sphere{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-scripture{flex-basis:102px;width:102px;height:94px}.astralis-planet.planet-faith-stories{flex-basis:94px;width:94px;height:94px}.astralis-planet.planet-toon{flex-basis:100px;width:100px;height:100px}.planet-faith-stories img{width:86px;height:86px}}
-      @media(prefers-reduced-motion:reduce){.astralis-bio-comet,.astralis-sun,.scripture-planet-core img,.scripture-atmosphere,.scripture-moon,.faith-moon-halo,.planet-toon,.toon-world-cloud,.toon-world-spark{animation:none!important}.scripture-moon-a{offset-distance:18%}.scripture-moon-b{offset-distance:68%}.astralis-planet.ac-worlds-portal,.astralis-planet.planet-nova-sphere{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal,.astralis-planet-link:hover .planet-nova-sphere{transform:none}}
+      @media(max-width:640px){.astralis-worlds{padding:20px}.astralis-system{grid-template-columns:1fr}.astralis-sun-card{grid-column:span 1;align-items:flex-start;justify-content:flex-start}.astralis-planet-link{min-height:118px}.astralis-worlds::before{display:none}.astralis-planet.ac-worlds-portal{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-nova-sphere{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-scripture{flex-basis:102px;width:102px;height:94px}.astralis-planet.planet-faith-stories{flex-basis:94px;width:94px;height:94px}.planet-faith-stories img{width:86px;height:86px}}
+      @media(prefers-reduced-motion:reduce){.astralis-bio-comet,.astralis-sun,.scripture-planet-core img,.scripture-atmosphere,.scripture-moon,.faith-moon-halo{animation:none!important}.scripture-moon-a{offset-distance:18%}.scripture-moon-b{offset-distance:68%}.astralis-planet.ac-worlds-portal,.astralis-planet.planet-nova-sphere{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal,.astralis-planet-link:hover .planet-nova-sphere{transform:none}}
     `;
     document.head.appendChild(style);
   }
@@ -297,6 +233,7 @@
           <h2>Choose a Planet</h2>
           <p>A small solar system of the music, memories, games, communities, and creative places orbiting Astralis Nova.</p>
         </div>
+        <p class="astralis-toon-wayfinder"><a href="#toon-planet-gateway">Looking for the toons? Visit Toon Planet <span aria-hidden="true">↓</span></a></p>
         <div class="astralis-system">
           <div class="astralis-sun-card" data-world="astralis-nova">
             <span class="astralis-sun" aria-hidden="true"></span>

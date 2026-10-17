@@ -21,7 +21,7 @@
   }, { rootMargin:'100px' }) : null;
   const observed = new WeakSet();
   function observeScenes() {
-    for (const scene of document.querySelectorAll('.astralis-music-orbit,.region,.rainbow-wrap,.ac-dragon-stage')) {
+    for (const scene of document.querySelectorAll('.astralis-music-orbit,.region,.rainbow-wrap,.ac-dragon-stage,#toon-planet-gateway')) {
       if (!observed.has(scene)) { observed.add(scene); observer?.observe(scene); }
     }
     // Only decorative muted autoplay video is controlled; music and user video stay independent.
