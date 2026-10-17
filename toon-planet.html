@@ -609,6 +609,17 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  }
  .surface-cover{transform:scale(1.04)}
 }
+
+/* Stable moonlight and restrained depth retain the original wordless artwork. */
+.space-planet::after{content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(2,7,18,.18) 65%,rgba(2,7,18,.6));}
+.space-planet.moon{animation-duration:95s}
+.space-planet.distant-gas,.space-planet.distant-mars{animation-duration:140s}
+.surface-moonwash{animation:none;opacity:.14;transform:none}
+.surface-vegetation-shadows,.surface-depth-shadow,.underground-mineral-shimmer,.underground-light-scatter,.underground-shadow-drift{animation:none}
+.surface-wind-trace{animation-duration:47s}
+@keyframes desertSceneryBreath{from{transform:scale(1.04) translate3d(-.16%,.1%,0)}to{transform:scale(1.04) translate3d(.16%,-.1%,0)}}
+@keyframes spaceStarTwinkle{from{opacity:.76}to{opacity:.92}}
+html.toon-background-paused *,html.toon-background-paused *::before,html.toon-background-paused *::after{animation-play-state:paused!important}
 </style>
 </head>
 <body>
@@ -726,6 +737,7 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  }
  if(!motionReduced.matches)planMeteor();
  document.addEventListener("visibilitychange",()=>{
+  document.documentElement.classList.toggle("toon-background-paused",document.hidden);
   if(document.hidden){
    if(meteorTimer){window.clearTimeout(meteorTimer);meteorTimer=0}
   }else if(!motionReduced.matches&&!meteorTimer){
@@ -737,7 +749,7 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  function clamp(value,limit){return Math.max(-limit,Math.min(limit,value))}
  function applySceneParallax(){
   sceneFrame=0;
-  if(motionReduced.matches)return;
+  if(motionReduced.matches||document.hidden)return;
   const midpoint=window.scrollY+window.innerHeight*.5;
   const narrow=window.innerWidth<=800;
   for(const scene of [
@@ -752,7 +764,7 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
   }
  }
  function requestSceneUpdate(){
-  if(!sceneFrame&&!motionReduced.matches)sceneFrame=window.requestAnimationFrame(applySceneParallax);
+  if(!sceneFrame&&!motionReduced.matches&&!document.hidden)sceneFrame=window.requestAnimationFrame(applySceneParallax);
  }
  function updateLevel(){
   const midpoint=window.scrollY+window.innerHeight*.50;

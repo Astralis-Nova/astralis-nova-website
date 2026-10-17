@@ -34,6 +34,19 @@ jobs:
           python scripts/check-site-resources.py
           node --test tests/site-audit.test.mjs tests/ac-jukebox.test.cjs
 
+      - name: Validate memory privacy and player recovery
+        run: |
+          node --test tests/memory-privacy.test.mjs tests/player-reliability.test.mjs
+          node --check homepage-usability.js
+          node --check scene-motion.js
+          node --check player/settings.js
+          node --check player/sw.js
+          node --check memories/privacy-controls.js
+          node --check functions/lib/memory-security.js
+          node --check functions/api/memories-approve.js
+          node --check functions/api/nova-brain.js
+          node --check functions/api/nova-experience.js
+
       - name: Validate Voices mobile background fallback
         run: |
           node --check voices-rain.js

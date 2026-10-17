@@ -242,7 +242,7 @@
   };
   const loadQuoteAudit=()=>loadScript('/quote-attribution-audit.js?v=20260805a','quoteAudit');
   const loadNovaGuide=()=>loadScript('/nova-guide.js?v=20260805g','novaGuide');
-  const loadTipJar=()=>loadScript('/feeling-tipsy.js?v=20260805c','feelingTipsy');
+  const loadTipJar=()=>loadScript('/feeling-tipsy.js?v=20261017layout','feelingTipsy');
   const loadFloatingLayout=()=>loadScript('/floating-controls-layout.js?v=20260830b','floatingControlsLayout');
 
   const finish=()=>{upgradeRiver();installMusicPlanet();loadQuoteAudit();loadNovaGuide();loadTipJar();loadFloatingLayout()};

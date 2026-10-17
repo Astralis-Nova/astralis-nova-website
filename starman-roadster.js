@@ -5,7 +5,7 @@
   const greeting = document.getElementById('starman-greeting');
   let greetingTimer;
   const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
-  let elapsed = 0, lastFrame;
+  let elapsed = 0, lastFrame, frame = 0, sceneVisible = true;
   let travelWidth = 0, travelHeight = 0, floatPadding = 0;
   // Independent waves give the weightless drift and tumble different rhythms.
   function floatPose(milliseconds, width, height) {
@@ -28,14 +28,14 @@
     car.dataset.floatRotation = String(pose.rotation);
   }
   function floatFrame(now) {
-    const paused = document.hidden || motionPreference.matches ||
+    const paused = document.hidden || !sceneVisible || motionPreference.matches ||
       car.matches(':hover, :focus-visible') || car.classList.contains('starman-greeting-open');
     if (!paused) {
       if (lastFrame !== undefined) elapsed += Math.min(now - lastFrame, 100);
       positionCar();
     }
     lastFrame = now;
-    requestAnimationFrame(floatFrame);
+    if (!document.hidden && sceneVisible && !motionPreference.matches) frame = requestAnimationFrame(floatFrame);
   }
   function positionGreeting() {
     if (!greeting || !greeting.classList.contains('show')) return;
@@ -75,9 +75,9 @@
     const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 78;
     // Reserve room around the car so its rotating corners stay inside the view.
     floatPadding = Math.ceil((Math.hypot(width, height) - Math.min(width, height)) / 2) + 12;
-    const top = Math.min(Math.max(100, headerBottom + floatPadding), Math.max(12, innerHeight - height - 140));
-    travelWidth = Math.max(0, innerWidth - width - 24 - floatPadding * 2);
-    travelHeight = Math.max(0, innerHeight - top - height - 140 - floatPadding);
+    const top = 12;
+    travelWidth = Math.max(0, (car.parentElement.clientWidth * .48) - width - 24 - floatPadding * 2);
+    travelHeight = Math.max(0, car.parentElement.clientHeight - height - 40 - floatPadding);
     car.style.setProperty('--roadster-top', top + 'px');
     car.style.setProperty('--roadster-x', Math.max(0, innerWidth - width - 24) + 'px');
     car.style.setProperty('--roadster-y', Math.max(0, innerHeight - top - height - 140) + 'px');
@@ -93,13 +93,14 @@
       a.bottom > b.top - 20 && a.top < b.bottom + 20);
   }
   sizeRoute();
-  requestAnimationFrame(floatFrame);
+  frame = requestAnimationFrame(floatFrame);
   window.addEventListener('resize', sizeRoute, { passive: true });
-  motionPreference.addEventListener('change', sizeRoute);
+  motionPreference.addEventListener('change', () => { sizeRoute(); syncMotion(); });
   window.addEventListener('scroll', keepBrainClear, { passive: true });
-  document.addEventListener('visibilitychange', () => {
-    lastFrame = undefined;
-    keepBrainClear();
-  });
-  setInterval(keepBrainClear, 200);
+  function syncMotion() {
+    cancelAnimationFrame(frame); frame=0; lastFrame=undefined;
+    if (!document.hidden && sceneVisible && !motionPreference.matches) frame=requestAnimationFrame(floatFrame);
+  }
+  document.addEventListener('visibilitychange', syncMotion);
+  if ('IntersectionObserver' in window) new IntersectionObserver(([entry])=>{sceneVisible=entry.isIntersecting;syncMotion()}).observe(car.parentElement);
 })();

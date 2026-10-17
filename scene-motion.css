@@ -1,0 +1,5 @@
+html.astralis-page-hidden *,html.astralis-page-hidden *::before,html.astralis-page-hidden *::after,
+html body .astralis-scene-resting *,html body .astralis-scene-resting *::before,html body .astralis-scene-resting *::after,
+html body .astralis-perf-paused *,html body .astralis-perf-paused *::before,html body .astralis-perf-paused *::after{animation-play-state:paused!important}
+html.astralis-page-hidden .astralis-scene-resting,html body .astralis-scene-resting,html body .astralis-perf-paused{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){html body *,html body *::before,html body *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

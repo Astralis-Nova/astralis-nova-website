@@ -46,7 +46,7 @@
   function draw(angle, now = 0) {
     if (!ctx) return;
     const pulse = .5 + .5 * Math.sin(now / 520);
-    const beaconLit = reducedMotion || morseLampOn(now - start);
+    const beaconLit = reducedMotion || morseLampOn(now);
     root.dataset.morseLight = beaconLit ? 'on' : 'off';
     const cos = Math.cos(angle), sin = Math.sin(angle);
     const rotate = ([x, y, z]) => ({ x: x * cos + z * sin, y, z: -x * sin + z * cos });
@@ -239,16 +239,22 @@
   window.addEventListener('resize', sizeRoamingRoute, { passive: true });
   window.addEventListener('scroll', () => keepBrainClear(performance.now() + 121), { passive: true });
 
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let visible = true;
-  let start = performance.now();
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reducedMotion = motionPreference.matches, visible = true, frame = 0, lastTime = 0, elapsed = 0;
   function animate(now) {
+    frame=0;
+    if(document.hidden||!visible)return;
+    if(lastTime)elapsed+=Math.min(now-lastTime,100);
+    lastTime=now;
     keepBrainClear(now);
-    if (visible && document.visibilityState === 'visible') draw(reducedMotion ? .55 : .55 + (now - start) / 25000 * Math.PI * 2, now);
-    if (!reducedMotion) requestAnimationFrame(animate);
+    draw(reducedMotion ? .55 : .55 + elapsed / 25000 * Math.PI * 2, reducedMotion ? 0 : elapsed);
+    if(!reducedMotion)frame=requestAnimationFrame(animate);
   }
-  new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(root);
-  requestAnimationFrame(animate);
+  function syncMotion(){cancelAnimationFrame(frame);frame=0;lastTime=0;reducedMotion=motionPreference.matches;if(visible&&!document.hidden)frame=requestAnimationFrame(animate);}
+  if('IntersectionObserver'in window)new IntersectionObserver(([entry])=>{visible=entry.isIntersecting;syncMotion()}).observe(root);
+  document.addEventListener('visibilitychange',syncMotion);
+  motionPreference.addEventListener('change',syncMotion);
+  syncMotion();
 
   function showDetail(message) {
     detail.textContent = message;
