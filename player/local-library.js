@@ -200,11 +200,11 @@
     }
     visible.forEach((track,index)=>{
       const absoluteIndex=localTracks.findIndex(t=>t.id===track.id);
-      const row=document.createElement('button');
-      row.type='button';
+      const row=document.createElement('div');
+      row.setAttribute('role','group');row.tabIndex=-1;
+      row.setAttribute('aria-label',`Play ${track.title}`);
       row.className='track-row local-track'+(absoluteIndex===localCurrent?' active':'');
-      row.setAttribute('role','listitem');
-      row.innerHTML=`<span class="track-index">${absoluteIndex===localCurrent&&!audio.paused?'▶':String(index+1).padStart(2,'0')}</span><span class="track-name">${escapeHtml(track.title)}<small>◉ Stored on this device</small></span><span class="track-artist">${escapeHtml(track.artist)}</span><span class="track-duration">${track.duration||'—:—'}</span><span class="local-remove" role="button" tabindex="0" aria-label="Remove ${escapeHtml(track.title)}">✕</span>`;
+      row.innerHTML=`<button type="button" class="local-play" aria-label="Play ${escapeHtml(track.title)}"><span class="track-index">${absoluteIndex===localCurrent&&!audio.paused?'▶':String(index+1).padStart(2,'0')}</span><span class="track-name">${escapeHtml(track.title)}<small>◉ Stored on this device</small></span><span class="track-artist">${escapeHtml(track.artist)}</span><span class="track-duration">${track.duration||'—:—'}</span></button><button type="button" class="local-remove" aria-label="Remove ${escapeHtml(track.title)}">✕</button>`;
       row.addEventListener('click',event=>{if(event.target.closest('.local-remove'))return;playLocalTrack(absoluteIndex,true);});
       const remove=row.querySelector('.local-remove');
       const removeHandler=async event=>{
@@ -217,7 +217,7 @@
         renderLocalTracks();refreshStatus('Removed song');
       };
       remove.addEventListener('click',removeHandler);
-      remove.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){removeHandler(event);}});
+
       trackList.appendChild(row);
     });
   }

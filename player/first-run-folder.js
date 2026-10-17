@@ -61,8 +61,8 @@
   }
 
   function offerSetup(force=false){
-    if(!force&&localStorage.getItem(SETUP_KEY)==='1')return;
-    localStorage.setItem(SETUP_KEY,'1');
+    if(!force&&window.NovaPlayerSettings.storage.getItem(SETUP_KEY)==='1')return;
+    window.NovaPlayerSettings.storage.setItem(SETUP_KEY,'1');
     if(!('showDirectoryPicker'in window))return;
     const dialog=ensureDialog(),button=dialog.querySelector('#createNovaFolderBtn');
     const handler=async event=>{event.preventDefault();button.disabled=true;button.textContent='Creating…';const ok=await createFolder();button.disabled=false;button.textContent='Choose location';if(ok)dialog.close('created');};

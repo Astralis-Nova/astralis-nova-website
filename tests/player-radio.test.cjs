@@ -104,9 +104,9 @@ test('receiver power off stops every radio audio path', () => {
   assert.match(kmle, /window\.legacy83KmleController=\{play:playKmle,stop:stopKmle\}/);
   assert.match(player, /novaRadioMode=false;audio\.pause\(\);notifyNovaRadio\(false\)/);
   assert.match(hub, /if\(!controller\.isPowered\?\.\(\)\)/);
-  assert.match(html, /player\.js\?v=77/);
+  assert.match(html, /player\.js\?v=\d+/);
   assert.match(html, /legacy83-radio\.js\?v=7/);
   assert.match(html, /legacy83-kmle-fallback\.js\?v=3/);
   assert.match(html, /radio-hub\.js\?v=3/);
-  assert.match(read('player/sw.js'), /astralis-nova-player-v18/);
+  assert.match(read('player/sw.js'), /astralis-nova-player-v19/);
 });

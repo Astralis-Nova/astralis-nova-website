@@ -8,9 +8,9 @@
   ];
 
   const readImported=()=>{
-    try{const rows=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');return Array.isArray(rows)?window.AstralisRadioPlaylist.dedupe(rows).slice(0,250):[];}catch{return [];}
+    try{const rows=JSON.parse(window.NovaPlayerSettings.storage.getItem(STORAGE_KEY)||'[]');return Array.isArray(rows)?window.AstralisRadioPlaylist.dedupe(rows).slice(0,250):[];}catch{return [];}
   };
-  const saveImported=rows=>localStorage.setItem(STORAGE_KEY,JSON.stringify(window.AstralisRadioPlaylist.dedupe(rows).slice(0,250)));
+  const saveImported=rows=>window.NovaPlayerSettings.storage.setItem(STORAGE_KEY,JSON.stringify(window.AstralisRadioPlaylist.dedupe(rows).slice(0,250)));
 
   async function loadVerified(){
     try{
@@ -154,7 +154,7 @@
       saveImported(rows);input.value='';showPlaylists('Added one secure stream. Select it below to test playback.');
     });
 
-    importer.querySelector('.radio-import-clear').addEventListener('click',()=>{localStorage.removeItem(STORAGE_KEY);showPlaylists('Imported channels cleared from this device.');});
+    importer.querySelector('.radio-import-clear').addEventListener('click',()=>{window.NovaPlayerSettings.storage.removeItem(STORAGE_KEY);showPlaylists('Imported channels cleared from this device.');});
 
     window.addEventListener('legacy83-radio-state',event=>{
       if(activeBank!=='astralis'||event.detail?.station?._source!=='astralis')return;

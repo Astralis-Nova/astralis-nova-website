@@ -256,6 +256,9 @@
     };
     window.dispatchEvent(new CustomEvent('legacy83-radio-ready'));
 
+    status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+    searchInput.setAttribute('aria-label','Search radio stations');
+    const retryRadio=document.createElement('button');retryRadio.type='button';retryRadio.className='chip';retryRadio.textContent='Retry radio';retryRadio.addEventListener('click',()=>{if(activeStation)playStation(activeStation)});status.parentElement.after(retryRadio);
     module.querySelectorAll('[data-step]').forEach(b=>b.addEventListener('click',()=>step(Number(b.dataset.step),true)));
     module.querySelectorAll('[data-scan]').forEach(b=>b.addEventListener('click',()=>step(b.dataset.scan==='up'?1:-1,true)));
     slider.addEventListener('input',()=>tuneDial(Number(slider.value)));slider.addEventListener('change',()=>tuneDial(Number(slider.value),{play:true}));

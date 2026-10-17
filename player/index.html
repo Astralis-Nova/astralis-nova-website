@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="./player.css?v=80">
   <link rel="stylesheet" href="./legacy83-components.css?v=83">
   <title>Astralis Nova Player</title>
+  <link rel="stylesheet" href="./reliability.css?v=1">
+  <script src="./settings.js?v=1"></script>
 </head>
 <body data-skin="nova">
   <div class="stars" aria-hidden="true"></div>
@@ -46,6 +48,7 @@
           <div class="seek-row"><input id="seek" type="range" min="0" max="1000" value="0" aria-label="Song position"></div>
           <div class="controls"><button id="shuffleBtn" class="icon-btn small" aria-label="Shuffle" aria-pressed="false">⇄</button><button id="prevBtn" class="icon-btn" aria-label="Previous track">◀◀</button><button id="playBtn" class="play-btn" aria-label="Play">▶</button><button id="nextBtn" class="icon-btn" aria-label="Next track">▶▶</button><button id="repeatBtn" class="icon-btn small" aria-label="Repeat" aria-pressed="false">↻</button></div>
           <div class="utility-row"><label class="volume">🔊 <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volume"></label><button id="eqToggle" class="chip" aria-expanded="true" aria-controls="equalizer">EQ</button><button id="downloadTrackBtn" class="chip" type="button">⇩ Save song</button><button id="downloadAllBtn" class="chip" type="button">⇩ Save all</button></div>
+          <div class="playback-feedback"><p id="playbackStatus" role="status" aria-live="polite">Ready to play</p><button id="retryPlayback" class="chip" type="button" hidden>Retry playback</button></div>
           <div id="offlineStatus" class="footer-note" aria-live="polite">Offline music: checking saved songs…</div>
         </div>
       </div>
@@ -69,11 +72,11 @@
 
     <section id="equalizer" class="equalizer panel"><div class="window-title"><span>10-BAND EQUALIZER</span><span class="tagline">60 Hz — 16 kHz</span></div><div class="eq-toolbar"><button id="eqPower" class="chip" type="button" aria-pressed="true">EQ ON</button><label>Preset <select id="eqPreset"><option value="flat">Flat</option><option value="bass">Bass</option><option value="treble">Treble</option><option value="vocal">Vocal</option><option value="rock">Rock</option><option value="pop">Pop</option><option value="classical">Classical</option><option value="hiphop">Hip-Hop</option><option value="electronic">Electronic</option><option value="podcast">Podcast</option><option value="night">Night</option></select></label><button id="eqReset" class="chip" type="button">Reset</button></div><div id="eqBands" class="eq-bands"></div></section>
 
-    <section class="library panel"><div class="library-toolbar"><div class="tabs"><button class="tab active" data-filter="all">All</button><button class="tab" data-filter="favorites">Favorites</button><span id="trackCount"></span></div><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search library…" autocomplete="off"></label></div><div class="track-list-head"><span>#</span><span>Title</span><span>Artist</span><span>Time</span></div><div id="trackList" class="track-list" role="list"></div></section>
+    <section class="library panel"><div class="library-toolbar"><div class="tabs"><button class="tab active" data-filter="all">All</button><button class="tab" data-filter="favorites">Favorites</button><span id="trackCount"></span></div><label class="search"><span>⌕</span><input id="search" aria-label="Search music library" type="search" placeholder="Search library…" autocomplete="off"></label></div><div class="track-list-head"><span>#</span><span>Title</span><span>Artist</span><span>Time</span></div><div id="trackList" class="track-list" role="group" aria-label="Music tracks"></div></section>
 
     <footer class="footer-note"><span>Desktop + mobile</span><span>•</span><span>Skins saved on this device</span><span>•</span><span id="pwaStatus">Web app ready</span></footer>
   </main>
-  <script src="./player.js?v=77" defer></script>
+  <script src="./player.js?v=78" defer></script>
   <script src="./folder-library.js?v=2" defer></script>
   <script src="./local-library.js?v=1" defer></script>
   <script src="./legacy83-enhancements.js?v=3" defer></script>

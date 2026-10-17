@@ -1,6 +1,7 @@
 (() => {
   'use strict';
 
+  const settings=window.NovaPlayerSettings,storage=settings.storage;
   const OFFLINE_CACHE = 'astralis-nova-offline-audio-v1';
   const tracks = [
     ['Back When She Was Little Growing Up','Audio/mp3/Back When She Was Little Growing Up.mp3','cover-15.jpg'],
@@ -42,9 +43,9 @@
   const vuMeters=[...document.querySelectorAll('.vu-meter')],vuNeedles=[...document.querySelectorAll('.vu-needle')];
   const turntableModule=document.querySelector('.turntable-module'),turntableStatus=$('turntableStatus'),turntableButtons=[...document.querySelectorAll('[data-turntable-action]')],turntablePowerButton=document.querySelector('[data-turntable-action="power"]'),turntableStartButton=document.querySelector('[data-turntable-action="start"]'),turntableSpeed33Button=document.querySelector('[data-turntable-action="speed33"]'),turntableSpeed45Button=document.querySelector('[data-turntable-action="speed45"]'),turntableCueButton=document.querySelector('[data-turntable-action="cue"]'),turntablePitch=$('turntablePitch'),turntablePitchValue=$('turntablePitchValue');
 
-  let current=Number(localStorage.getItem('nova.current')||2); if(!Number.isInteger(current)||!tracks[current]) current=0;
-  let shuffle=localStorage.getItem('nova.shuffle')==='1',repeat=localStorage.getItem('nova.repeat')==='1',novaRadioMode=false;
-  let favorites=new Set(JSON.parse(localStorage.getItem('nova.favorites')||'[]')),offlineIds=new Set(),filter='all',userSeeking=false,deferredInstallPrompt=null;
+  let current=Number(storage.getItem('nova.current')||2); if(!Number.isInteger(current)||!tracks[current]) current=0;
+  let shuffle=storage.getItem('nova.shuffle')==='1',repeat=storage.getItem('nova.repeat')==='1',novaRadioMode=false;
+  let favorites=new Set(settings.json('nova.favorites',[],Array.isArray).filter(id=>Number.isInteger(id)&&!!tracks[id])),offlineIds=new Set(),filter='all',userSeeking=false,deferredInstallPrompt=null;
   const frequencies=[60,170,310,600,1000,3000,6000,12000,14000,16000];
   const eqPresets={
     flat:[0,0,0,0,0,0,0,0,0,0],
@@ -75,11 +76,14 @@
   const reverbRingOpacity=[1,.86,.72,.58,.45];
   let reverbState={preset:'off',...reverbPresets.off};
   try{
-    const savedReverb=JSON.parse(localStorage.getItem('nova.reverb')||'null');
-    if(savedReverb&&reverbPresets[savedReverb.preset])reverbState={...reverbPresets[savedReverb.preset],...savedReverb};
-  }catch{localStorage.removeItem('nova.reverb');}
+    const savedReverb=JSON.parse(storage.getItem('nova.reverb')||'null');
+    if(savedReverb&&reverbPresets[savedReverb.preset]){
+      reverbState={preset:savedReverb.preset,...reverbPresets[savedReverb.preset]};
+      for(const [name,min,max] of [['mix',0,100],['depth',0,100],['decay',.4,5],['preDelay',0,300]]){const value=savedReverb[name];if(typeof value==='number'&&Number.isFinite(value))reverbState[name]=Math.max(min,Math.min(max,value));}
+    }
+  }catch{}
   let reelRecordArmed=false,cassetteRecordArmed=false,cassetteEjected=false;
-  let turntablePowered=true,turntableCued=false,turntableSpeed=localStorage.getItem('nova.turntableSpeed')==='45'?45:33,turntablePitchAmount=Number(localStorage.getItem('nova.turntablePitch')||0);
+  let turntablePowered=true,turntableCued=false,turntableSpeed=storage.getItem('nova.turntableSpeed')==='45'?45:33,turntablePitchAmount=Number(storage.getItem('nova.turntablePitch')||0);
   if(!Number.isFinite(turntablePitchAmount)||turntablePitchAmount < -8||turntablePitchAmount > 8)turntablePitchAmount=0;
 
   const fmt=s=>{if(!Number.isFinite(s))return'0:00';const m=Math.floor(s/60),sec=Math.floor(s%60).toString().padStart(2,'0');return `${m}:${sec}`};
@@ -179,7 +183,7 @@
   }
   function setTurntableSpeed(speed){
     turntableSpeed=speed===45?45:33;
-    localStorage.setItem('nova.turntableSpeed',String(turntableSpeed));
+    storage.setItem('nova.turntableSpeed',String(turntableSpeed));
     updateTurntableMotion();
   }
   function handleTurntableControl(event){
@@ -198,14 +202,14 @@
     turntablePitchAmount=Number(turntablePitch.value);
     audio.playbackRate=1+turntablePitchAmount/100;
     turntablePitchValue.textContent=`${turntablePitchAmount>0?'+':''}${turntablePitchAmount}%`;
-    localStorage.setItem('nova.turntablePitch',String(turntablePitchAmount));
+    storage.setItem('nova.turntablePitch',String(turntablePitchAmount));
   }
 
 
 
   async function refreshOfflineState(){
     if(!('caches' in window)) return;
-    const cache=await caches.open(OFFLINE_CACHE); offlineIds.clear();
+    let cache;try{cache=await caches.open(OFFLINE_CACHE)}catch{offlineStatus.textContent='Offline storage is unavailable in this browser. Streaming still works.';return} offlineIds.clear();
     for(const t of tracks){ if(await cache.match(absoluteSrc(t))) offlineIds.add(t.id); }
     const count=offlineIds.size;
     offlineStatus.textContent=`Offline music: ${count} of ${tracks.length} songs saved${navigator.onLine?'':' • currently offline'}`;
@@ -228,7 +232,7 @@
     downloadTrackBtn.disabled=true; downloadTrackBtn.textContent='Saving…';
     try{await saveTrackOffline(track);offlineStatus.textContent=`Saved “${track.title}” for offline playback.`;}
     catch(err){offlineStatus.textContent=`Could not save this song. ${err.message}`;}
-    finally{downloadTrackBtn.disabled=false;await refreshOfflineState();}
+    finally{downloadTrackBtn.disabled=false;downloadTrackBtn.textContent=offlineIds.has(track.id)?'✓ Saved offline':'⇩ Save song';}
   }
 
   async function saveAllTracks(){
@@ -250,10 +254,10 @@
     navigator.mediaSession.metadata=new MediaMetadata({title:track.title,artist:track.artist,album:'Astralis Nova',artwork:[{src:new URL(track.cover,location.href).href,sizes:'512x512',type:'image/jpeg'}]});
   }
   function updateFavoriteUI(){const active=favorites.has(tracks[current].id);favoriteBtn.setAttribute('aria-pressed',String(active));favoriteBtn.textContent=active?'★':'☆';favoriteBtn.setAttribute('aria-label',active?'Remove current track from favorites':'Add current track to favorites');}
-  function loadTrack(index,autoplay=false){current=(index+tracks.length)%tracks.length;localStorage.setItem('nova.current',String(current));const track=tracks[current];audio.src=track.src;cover.src=track.cover;cover.alt=`${track.title} artwork`;title.textContent=track.title;artist.textContent=track.artist;seek.value='0';timeReadout.textContent='0:00 / 0:00';setMediaSession(track);updateFavoriteUI();downloadTrackBtn.textContent=offlineIds.has(track.id)?'✓ Saved offline':'⇩ Save song';renderTracks();if(autoplay)playAudio();}
+  function loadTrack(index,autoplay=false){current=(index+tracks.length)%tracks.length;storage.setItem('nova.current',String(current));const track=tracks[current];audio.src=track.src;cover.src=track.cover;cover.alt=`${track.title} artwork`;title.textContent=track.title;artist.textContent=track.artist;seek.value='0';timeReadout.textContent='0:00 / 0:00';setMediaSession(track);updateFavoriteUI();downloadTrackBtn.textContent=offlineIds.has(track.id)?'✓ Saved offline':'⇩ Save song';renderTracks();if(autoplay)playAudio();}
 
   const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
-  function saveReverbState(){localStorage.setItem('nova.reverb',JSON.stringify(reverbState));}
+  function saveReverbState(){storage.setItem('nova.reverb',JSON.stringify(reverbState));}
   function syncReverbUI(){
     reverbPreset.value=reverbState.preset;
     reverbMix.value=String(reverbState.mix);reverbDepth.value=String(reverbState.depth);reverbDecay.value=String(reverbState.decay);reverbPreDelay.value=String(reverbState.preDelay);
@@ -323,7 +327,22 @@
     analyser.connect(audioContext.destination);
     applyEqValues();rebuildReverbImpulse();updateReverbGraph();drawVisualizer();
   }
-  async function playAudio(){try{await ensureAudioGraph();await audio.play();}catch(err){console.warn('Playback did not start',err);if(!navigator.onLine&&!offlineIds.has(current))offlineStatus.textContent='This song is not saved offline. Reconnect and tap Save song.';}}
+  const playbackStatus=$('playbackStatus'),retryPlayback=$('retryPlayback');
+  function feedback(message,error=false){playbackStatus.textContent=message;retryPlayback.hidden=!error;}
+  let bufferingTimer=0;
+  async function playAudio(){
+    feedback('Starting playback…');
+    try{await ensureAudioGraph();await audio.play();}
+    catch(err){feedback(!navigator.onLine&&!offlineIds.has(current)?'This song is not saved offline. Reconnect to play or save it.':'Playback could not start. Tap Retry playback or choose another track.',true);}
+  }
+  retryPlayback.addEventListener('click',()=>{const position=Number.isFinite(audio.currentTime)?audio.currentTime:0;audio.load();audio.addEventListener('loadedmetadata',()=>{if(position&&Number.isFinite(audio.duration))audio.currentTime=Math.min(position,audio.duration)},{once:true});playAudio()});
+  audio.addEventListener('playing',()=>{clearTimeout(bufferingTimer);feedback('Playing');syncVisualizer()});
+  audio.addEventListener('pause',()=>{clearTimeout(bufferingTimer);feedback('Paused');syncVisualizer()});
+  audio.addEventListener('loadedmetadata',()=>{if(audio.paused)feedback('Ready to play')});
+  for(const type of ['waiting','stalled'])audio.addEventListener(type,()=>{feedback('Buffering…');clearTimeout(bufferingTimer);bufferingTimer=setTimeout(()=>feedback('Playback is taking longer than expected. Retry or choose another track.',true),12000)});
+  audio.addEventListener('error',()=>{clearTimeout(bufferingTimer);feedback('This audio could not be loaded. Retry or choose another track.',true);syncVisualizer()});
+  audio.addEventListener('loadstart',()=>{clearTimeout(bufferingTimer);feedback('Loading track…')});
+
   const togglePlayback=()=>audio.paused?playAudio():audio.pause();
   function nextTrack(){if(novaRadioMode||shuffle){let next=current;while(tracks.length>1&&next===current)next=Math.floor(Math.random()*tracks.length);loadTrack(next,true);}else loadTrack(current+1,true);}
   const prevTrack=()=>loadTrack(current-1,true);
@@ -341,33 +360,33 @@
   function stopNovaRadio(){if(!novaRadioMode)return;novaRadioMode=false;audio.pause();notifyNovaRadio(false);}
   window.AstralisNovaPlayer={playRadio:playNovaRadio,stopRadio:stopNovaRadio,isRadioMode:()=>novaRadioMode,station:novaRadioStation};
   function visibleTracks(){const q=search.value.trim().toLowerCase();return tracks.filter(t=>(!q||t.title.toLowerCase().includes(q))&&(filter!=='favorites'||favorites.has(t.id))&&(filter!=='offline'||offlineIds.has(t.id)));}
-  function renderTracks(){const visible=visibleTracks();trackCount.textContent=`${visible.length} TRACK${visible.length===1?'':'S'}`;trackList.textContent='';visible.forEach(track=>{const button=document.createElement('button');button.className='track-row'+(track.id===current?' active':'');button.type='button';button.setAttribute('role','listitem');const badges=[favorites.has(track.id)?'★ Favorite':'',offlineIds.has(track.id)?'✓ Offline':''].filter(Boolean).join(' • ');button.innerHTML=`<span class="track-index">${track.id===current&&!audio.paused?'▶':String(track.id+1).padStart(2,'0')}</span><span class="track-name">${escapeHtml(track.title)}<small>${badges||'Astralis Nova'}</small></span><span class="track-artist">Astralis Nova</span><span class="track-duration">${track.duration||'—:—'}</span>`;button.addEventListener('click',()=>loadTrack(track.id,true));trackList.appendChild(button);});}
+  function renderTracks(){const visible=visibleTracks();trackCount.textContent=`${visible.length} TRACK${visible.length===1?'':'S'}`;const focused=document.activeElement?.dataset.trackId;trackList.textContent='';visible.forEach(track=>{const button=document.createElement('button');button.className='track-row'+(track.id===current?' active':'');button.type='button';button.dataset.trackId=String(track.id);button.setAttribute('aria-pressed',String(track.id===current));const badges=[favorites.has(track.id)?'★ Favorite':'',offlineIds.has(track.id)?'✓ Offline':''].filter(Boolean).join(' • ');button.innerHTML=`<span class="track-index">${track.id===current&&!audio.paused?'▶':String(track.id+1).padStart(2,'0')}</span><span class="track-name">${escapeHtml(track.title)}<small>${badges||'Astralis Nova'}</small></span><span class="track-artist">Astralis Nova</span><span class="track-duration">${track.duration||'—:—'}</span>`;button.addEventListener('click',()=>loadTrack(track.id,true));trackList.appendChild(button);});if(focused)trackList.querySelector(`[data-track-id="${focused}"]`)?.focus({preventScroll:true});}
 
   function applyPreset(name){
-    if(name==='custom'){localStorage.setItem('nova.eqPreset','custom');return;}
+    if(name==='custom'){storage.setItem('nova.eqPreset','custom');return;}
     const values=eqPresets[name]||eqPresets.flat;
     document.querySelectorAll('#eqBands input').forEach((slider,i)=>{slider.value=String(values[i]||0);slider.dispatchEvent(new Event('input'));});
-    localStorage.setItem('nova.eqPreset',name);
+    storage.setItem('nova.eqPreset',name);
     eqPreset.value=name;
   }
 
   function buildEq(){
-    const saved=JSON.parse(localStorage.getItem('nova.eq')||'[]'),host=$('eqBands');
+    const saved=settings.json('nova.eq',[],Array.isArray),host=$('eqBands');
     if(!host)return;
     frequencies.forEach((freq,i)=>{
       const wrap=document.createElement('label');wrap.className='eq-channel';
       const output=document.createElement('output'),slider=document.createElement('input');
-      slider.type='range';slider.min='-12';slider.max='12';slider.step='1';slider.value=Number.isFinite(saved[i])?saved[i]:0;slider.dataset.index=String(i);slider.setAttribute('aria-label',`${freq} hertz equalizer`);output.textContent=`${slider.value} dB`;
+      slider.type='range';slider.min='-12';slider.max='12';slider.step='1';slider.value=Number.isFinite(saved[i])?Math.max(-12,Math.min(12,saved[i])):0;slider.dataset.index=String(i);slider.setAttribute('aria-label',`${freq} hertz equalizer`);output.textContent=`${slider.value} dB`;
       slider.addEventListener('input',()=>{
         output.textContent=`${slider.value} dB`;
         const values=[...host.querySelectorAll('input')].map(el=>Number(el.value));
-        localStorage.setItem('nova.eq',JSON.stringify(values));
+        storage.setItem('nova.eq',JSON.stringify(values));
         if(filters[i]&&eqEnabled)filters[i].gain.value=Number(slider.value);
-        if(document.activeElement===slider){eqPreset.value='custom';localStorage.setItem('nova.eqPreset','custom');}
+        if(document.activeElement===slider){eqPreset.value='custom';storage.setItem('nova.eqPreset','custom');}
       });
       const label=document.createElement('span');label.textContent=freq>=1000?`${freq/1000}K`:String(freq);wrap.append(output,slider,label);host.appendChild(wrap);
     });
-    const savedPreset=localStorage.getItem('nova.eqPreset')||'flat';
+    const savedPreset=storage.getItem('nova.eqPreset')||'flat';
     eqPreset.value=savedPreset;
     if(savedPreset!=='custom') applyPreset(savedPreset);
   }
@@ -414,7 +433,28 @@
       ring.style.setProperty('--ring-glow',`${(12+motion*(10+wave*30)).toFixed(1)}px`);
     });
   }
-  function drawVisualizer(){if(!analyser)return;const data=new Uint8Array(analyser.frequencyBinCount);const render=()=>{requestAnimationFrame(render);const w=canvas.width,h=canvas.height;analyser.getByteFrequencyData(data);updateVuMeters();updateReverbMotion(data);ctx.clearRect(0,0,w,h);const barW=w/data.length,accent=getComputedStyle(document.body).getPropertyValue('--accent').trim()||'#49dfff',accent2=getComputedStyle(document.body).getPropertyValue('--accent-2').trim()||'#9d66ff',gradient=ctx.createLinearGradient(0,h,0,0);gradient.addColorStop(0,accent);gradient.addColorStop(1,accent2);ctx.fillStyle=gradient;for(let i=0;i<data.length;i++){const barH=Math.max(2,(data[i]/255)*h*.92);ctx.fillRect(i*barW,h-barH,Math.max(1,barW-2),barH);}};render();}
+  const reducedVisuals=matchMedia('(prefers-reduced-motion: reduce)');
+  let visualFrame=0,visualData,visualGradient,visualVisible=true,visualLast=0;
+  function refreshVisualStyle(){if(!ctx)return;const style=getComputedStyle(document.body);visualGradient=ctx.createLinearGradient(0,canvas.height,0,0);visualGradient.addColorStop(0,style.getPropertyValue('--accent').trim()||'#49dfff');visualGradient.addColorStop(1,style.getPropertyValue('--accent-2').trim()||'#9d66ff');}
+  function syncVisualizer(){
+    cancelAnimationFrame(visualFrame);visualFrame=0;
+    if(!analyser||!ctx||audio.paused||audio.ended||document.hidden||!visualVisible||reducedVisuals.matches)return;
+    if(!visualData)visualData=new Uint8Array(analyser.frequencyBinCount);
+    if(!visualGradient)refreshVisualStyle();
+    visualFrame=requestAnimationFrame(renderVisualizer);
+  }
+  function renderVisualizer(now){
+    visualFrame=0;
+    if(audio.paused||document.hidden||!visualVisible||reducedVisuals.matches)return;
+    if(now-visualLast>=33){visualLast=now;analyser.getByteFrequencyData(visualData);updateVuMeters();updateReverbMotion(visualData);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle=visualGradient;const barW=canvas.width/visualData.length;for(let i=0;i<visualData.length;i++){const h=Math.max(2,visualData[i]/255*canvas.height*.92);ctx.fillRect(i*barW,canvas.height-h,Math.max(1,barW-2),h);}}
+    visualFrame=requestAnimationFrame(renderVisualizer);
+  }
+  function drawVisualizer(){refreshVisualStyle();syncVisualizer();}
+  document.addEventListener('visibilitychange',()=>{document.body.classList.toggle('player-background-paused',document.hidden);syncVisualizer()});
+  reducedVisuals.addEventListener('change',syncVisualizer);
+  if('IntersectionObserver'in window)new IntersectionObserver(([entry])=>{visualVisible=entry.isIntersecting;syncVisualizer()}).observe(canvas);
+  skinSelect.addEventListener('change',refreshVisualStyle);
+
 
   audio.addEventListener('play',()=>{playBtn.textContent='❚❚';playBtn.setAttribute('aria-label','Pause');updateReelDeckMotion();renderTracks();if(novaRadioMode)notifyNovaRadio(true);});
   audio.addEventListener('playing',updateReelDeckMotion);
@@ -432,14 +472,14 @@
   cassetteButtons.forEach(button=>button.addEventListener('click',handleCassetteTransport));
   turntableButtons.forEach(button=>button.addEventListener('click',handleTurntableControl));
   turntablePitch.addEventListener('input',updateTurntablePitch);
-  shuffleBtn.addEventListener('click',()=>{shuffle=!shuffle;localStorage.setItem('nova.shuffle',shuffle?'1':'0');shuffleBtn.setAttribute('aria-pressed',String(shuffle));});
-  repeatBtn.addEventListener('click',()=>{repeat=!repeat;localStorage.setItem('nova.repeat',repeat?'1':'0');repeatBtn.setAttribute('aria-pressed',String(repeat));});
-  favoriteBtn.addEventListener('click',()=>{const id=tracks[current].id;favorites.has(id)?favorites.delete(id):favorites.add(id);localStorage.setItem('nova.favorites',JSON.stringify([...favorites]));updateFavoriteUI();renderTracks();});
+  shuffleBtn.addEventListener('click',()=>{shuffle=!shuffle;storage.setItem('nova.shuffle',shuffle?'1':'0');shuffleBtn.setAttribute('aria-pressed',String(shuffle));});
+  repeatBtn.addEventListener('click',()=>{repeat=!repeat;storage.setItem('nova.repeat',repeat?'1':'0');repeatBtn.setAttribute('aria-pressed',String(repeat));});
+  favoriteBtn.addEventListener('click',()=>{const id=tracks[current].id;favorites.has(id)?favorites.delete(id):favorites.add(id);storage.setItem('nova.favorites',JSON.stringify([...favorites]));updateFavoriteUI();renderTracks();});
   downloadTrackBtn.addEventListener('click',saveCurrentTrack);downloadAllBtn.addEventListener('click',saveAllTracks);
   seek.addEventListener('pointerdown',()=>userSeeking=true);seek.addEventListener('pointerup',()=>userSeeking=false);seek.addEventListener('change',()=>{if(Number.isFinite(audio.duration))audio.currentTime=(Number(seek.value)/1000)*audio.duration;userSeeking=false;});
-  volume.addEventListener('input',()=>{audio.volume=Number(volume.value);localStorage.setItem('nova.volume',volume.value);});search.addEventListener('input',renderTracks);
+  volume.addEventListener('input',()=>{audio.volume=Number(volume.value);storage.setItem('nova.volume',volume.value);});search.addEventListener('input',renderTracks);
   document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t===tab);t.setAttribute('aria-selected',String(t===tab));});filter=tab.dataset.filter;renderTracks();}));
-  skinSelect.addEventListener('change',()=>{document.body.dataset.skin=skinSelect.value;localStorage.setItem('nova.skin',skinSelect.value);});
+  skinSelect.addEventListener('change',()=>{document.body.dataset.skin=skinSelect.value;storage.setItem('nova.skin',skinSelect.value);});
   eqToggle.addEventListener('click',()=>{const collapsed=eqWindow.classList.toggle('collapsed');eqToggle.setAttribute('aria-expanded',String(!collapsed));});
   eqPower.addEventListener('click',()=>{eqEnabled=!eqEnabled;eqPower.classList.toggle('active',eqEnabled);eqPower.setAttribute('aria-pressed',String(eqEnabled));eqPower.textContent=eqEnabled?'EQ ON':'EQ OFF';applyEqValues();});
   eqPreset.addEventListener('change',()=>applyPreset(eqPreset.value));
@@ -452,7 +492,7 @@
   window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;$('installBtn').hidden=false;});
   $('installBtn').addEventListener('click',async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;$('installBtn').hidden=true;});
   window.addEventListener('appinstalled',()=>{$('pwaStatus').textContent='Installed';$('installBtn').hidden=true;});
-  if('serviceWorker'in navigator)window.addEventListener('load',async()=>{try{await navigator.serviceWorker.register('./sw.js');await navigator.serviceWorker.ready;refreshOfflineState();}catch(err){console.warn(err);}});
+  if('serviceWorker'in navigator)window.addEventListener('load',async()=>{try{await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});await navigator.serviceWorker.ready;refreshOfflineState();}catch(err){console.warn(err);}});
 
-  const savedSkin=localStorage.getItem('nova.skin')||'nova';document.body.dataset.skin=savedSkin;skinSelect.value=savedSkin;audio.volume=Number(localStorage.getItem('nova.volume')||0.85);volume.value=String(audio.volume);shuffleBtn.setAttribute('aria-pressed',String(shuffle));repeatBtn.setAttribute('aria-pressed',String(repeat));if(matchMedia('(max-width:760px)').matches){eqWindow.classList.add('collapsed');eqToggle.setAttribute('aria-expanded','false');}buildEq();syncReverbUI();turntablePitch.value=String(turntablePitchAmount);updateTurntablePitch();updateTurntableMotion();loadTrack(current,false);refreshOfflineState();
+  const storedSkin=storage.getItem('nova.skin'),savedSkin=['nova','desert','classic','legacy83'].includes(storedSkin)?storedSkin:'nova';document.body.dataset.skin=savedSkin;skinSelect.value=savedSkin;audio.volume=settings.number('nova.volume',.85,0,1);volume.value=String(audio.volume);shuffleBtn.setAttribute('aria-pressed',String(shuffle));repeatBtn.setAttribute('aria-pressed',String(repeat));if(matchMedia('(max-width:760px)').matches){eqWindow.classList.add('collapsed');eqToggle.setAttribute('aria-expanded','false');}buildEq();syncReverbUI();turntablePitch.value=String(turntablePitchAmount);updateTurntablePitch();updateTurntableMotion();loadTrack(current,false);refreshOfflineState();
 })();
