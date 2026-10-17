@@ -51,7 +51,7 @@ export async function onRequest(context) {
       })
       .on("head", {
         element(element) {
-          element.append('<link rel="icon" type="image/svg+xml" href="/astralis-favicon.svg?v=20260722s"><link rel="alternate icon" type="image/svg+xml" href="/astralis-favicon-static.svg?v=20260722s"><link rel="apple-touch-icon" href="/astralis-favicon-static.svg?v=20260722s"><meta name="theme-color" content="#070c31"><link rel="stylesheet" href="/astralis-celestial-drift.css?v=20260722m"><style>#astralisVulcanBlessing{z-index:99999!important;right:16px!important;bottom:92px!important;width:270px!important;display:block!important;visibility:visible!important;opacity:1!important}@media(max-width:700px){#astralisVulcanBlessing{right:8px!important;bottom:78px!important;width:178px!important}}</style>', { html: true });
+          element.append('<link rel="icon" type="image/svg+xml" href="/astralis-favicon.svg?v=20260722s"><link rel="alternate icon" type="image/svg+xml" href="/astralis-favicon-static.svg?v=20260722s"><link rel="apple-touch-icon" href="/astralis-favicon-static.svg?v=20260722s"><meta name="theme-color" content="#070c31"><link rel="stylesheet" href="/astralis-celestial-drift.css?v=20261017realism"><style>#astralisVulcanBlessing{z-index:99999!important;right:16px!important;bottom:92px!important;width:270px!important;display:block!important;visibility:visible!important;opacity:1!important}@media(max-width:700px){#astralisVulcanBlessing{right:8px!important;bottom:78px!important;width:178px!important}}</style>', { html: true });
         },
       })
       .on("body", {

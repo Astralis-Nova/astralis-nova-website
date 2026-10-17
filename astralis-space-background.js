@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const ID = "astralisSpaceBackground";
-  const VERSION = "20261007space";
+  const VERSION = "20261017realism";
 
   function seededRandom(seed) {
     let n = seed >>> 0;
@@ -11,6 +11,63 @@
       t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
+  }
+
+  function renderRingedWorld(texture) {
+    const art = document.createElement("canvas");
+    art.width = 600;art.height = 380;
+    const paint = art.getContext("2d");
+    if (!paint) return null;
+    const random = seededRandom(71026);
+    const bands = [];
+    for (let radius = 180; radius < 281; radius += .9) {
+      // Broad and fine gaps break up the ring into dusty, uneven bands.
+      if (Math.abs(radius - 242) < 3.3 || Math.abs(radius - 267) < 1.1) continue;
+      const density = .25 + random() * .34 + .12 * Math.sin(radius * .42);
+      bands.push({ radius, alpha: density, warm: random() });
+    }
+    function rings(front) {
+      paint.save();paint.translate(300, 190);paint.rotate(-.16);paint.scale(1, .31);
+      const lighting = paint.createLinearGradient(-280, -60, 280, 100);
+      lighting.addColorStop(0, '#dad5c7');lighting.addColorStop(.44, '#abaeb0');
+      lighting.addColorStop(.7, '#788392');lighting.addColorStop(1, '#454f61');
+      paint.strokeStyle = lighting;
+      for (const band of bands) {
+        paint.globalAlpha = band.alpha * (front ? .94 : .67);
+        paint.lineWidth = .75 + band.warm * .75;
+        paint.beginPath();paint.arc(0, 0, band.radius, front ? 0 : Math.PI, front ? Math.PI : Math.PI * 2);paint.stroke();
+      }
+      paint.restore();
+    }
+    rings(false);
+    // Real cloud texture supplies the spherical body, with its own fixed day/night shading.
+    paint.save();paint.filter = 'saturate(.65) contrast(1.08)';
+    paint.drawImage(texture, 140, 30, 320, 320);paint.restore();
+    rings(true);
+    return art;
+  }
+  window.AstralisSpaceArt = { renderRingedWorld };
+
+  function upgradeRingedWorld() {
+    const upgrade = () => {
+      const target = document.querySelector('#astralis-celestial-drift .ringed');
+      if (!target) return false;
+      const texture = new Image();
+      texture.decoding = 'async';
+      texture.onload = () => {
+        const art = renderRingedWorld(texture);
+        if (!art) return;
+        target.src = art.toDataURL('image/png');
+        target.dataset.realismVersion = VERSION;
+      };
+      texture.src = '/astralis-gas-giant.png';
+      return true;
+    };
+    if (upgrade() || !('MutationObserver' in window)) return;
+    // The shared homepage layer arrives after the deferred performance loader.
+    const observer = new MutationObserver(() => { if (upgrade()) observer.disconnect(); });
+    observer.observe(document.body, { childList: true });
+    window.setTimeout(() => observer.disconnect(), 20000);
   }
 
   function addAsteroids(stage) {
@@ -55,10 +112,26 @@
     stage.append(canvas);
     addAsteroids(stage);
     document.body.prepend(stage);
+    upgradeRingedWorld();
     const ctx = canvas.getContext("2d", {alpha:true});
     if (!ctx) return; // The CSS background and asteroid layer still work.
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const coarse = window.matchMedia("(pointer: coarse)");
+    // Cache soft stellar halos once. The animation loop only composites these sprites.
+    const starColors = ["231,239,255", "185,211,255", "255,229,198"];
+    const halos = starColors.map(color => {
+      const sprite = document.createElement("canvas");
+      sprite.width = sprite.height = 32;
+      const light = sprite.getContext("2d");
+      if (!light) return null;
+      const halo = light.createRadialGradient(16, 16, 0, 16, 16, 16);
+      halo.addColorStop(0, `rgba(${color},.68)`);
+      halo.addColorStop(.13, `rgba(${color},.27)`);
+      halo.addColorStop(.38, `rgba(${color},.055)`);
+      halo.addColorStop(1, `rgba(${color},0)`);
+      light.fillStyle = halo;light.fillRect(0, 0, 32, 32);
+      return sprite;
+    });
     let width = 1, height = 1, scale = 1, stars = [], frame = 0;
     let lastFrame = 0, elapsed = 0, lastClock = 0;
     let pointerX = 0, pointerY = 0, parallaxX = 0, parallaxY = 0;
@@ -71,18 +144,19 @@
       canvas.width = Math.round(width * scale);
       canvas.height = Math.round(height * scale);
       const random = seededRandom(8301983);
-      const count = Math.min(880, Math.max(170, Math.round(width * height / 1750)));
+      const count = Math.min(920, Math.max(190, Math.round(width * height / 1450)));
       stars = Array.from({length:count}, () => {
         const depth = .12 + random() * .88;
-        const bright = random() < .045;
+        const bright = random() < .027;
+        const colorIndex = random() < .16 ? 1 : random() < .14 ? 2 : 0;
         return {
           x:random() * (width + 80) - 40,
           y:random() * (height + 80) - 40,
-          depth, radius:bright ? 1 + random() * .65 : .24 + random() * .72,
-          alpha:bright ? .66 + random() * .28 : .14 + random() * .50,
-          phase:random() * Math.PI * 2, period:5 + random() * 14,
-          flicker:random() < .32, bright,
-          color:random() < .17 ? "178,205,255" : random() < .14 ? "255,225,187" : "231,239,255"
+          depth, radius:bright ? .90 + random() * .50 : .20 + Math.pow(random(), 2) * .75,
+          alpha:bright ? .72 + random() * .26 : .16 + random() * .53,
+          phase:random() * Math.PI * 2, period:9 + random() * 18,
+          flicker:random() < .23, bright, colorIndex,
+          color:starColors[colorIndex]
         };
       });
       draw(elapsed);
@@ -95,32 +169,32 @@
       parallaxY += (pointerY - parallaxY) * .055;
       const motion = reduced.matches ? 0 : seconds;
       for (const star of stars) {
-        const drift = motion * (.45 + star.depth * 1.1);
+        const drift = motion * (.055 + star.depth * .19);
         const x = ((star.x - drift + width + 80) % (width + 80) + width + 80) % (width + 80) - 40 + parallaxX * star.depth;
         const y = ((star.y + drift * .17) % (height + 80) + height + 80) % (height + 80) - 40 + parallaxY * star.depth;
         const shimmer = !reduced.matches && star.flicker
-          ? .70 + .30 * Math.sin(motion * Math.PI * 2 / star.period + star.phase)
+          ? .91 + .09 * Math.sin(motion * Math.PI * 2 / star.period + star.phase)
           : 1;
         const alpha = star.alpha * shimmer;
         ctx.fillStyle = `rgba(${star.color},${alpha})`;
         ctx.beginPath();ctx.arc(x, y, star.radius, 0, Math.PI * 2);ctx.fill();
-        if (star.bright) {
-          const glow = ctx.createRadialGradient(x, y, 0, x, y, 6);
-          glow.addColorStop(0, `rgba(${star.color},${alpha * .27})`);
-          glow.addColorStop(1, `rgba(${star.color},0)`);
-          ctx.fillStyle = glow;ctx.fillRect(x - 6, y - 6, 12, 12);
-          ctx.strokeStyle = `rgba(${star.color},${alpha * .24})`;
-          ctx.lineWidth = .55;
-          ctx.beginPath();ctx.moveTo(x - 3.8, y);ctx.lineTo(x + 3.8, y);
-          ctx.moveTo(x, y - 3.8);ctx.lineTo(x, y + 3.8);ctx.stroke();
+        if (star.bright && halos[star.colorIndex]) {
+          const size = 7 + star.radius * 4;
+          ctx.globalAlpha = alpha * .65;
+          ctx.drawImage(halos[star.colorIndex], x - size / 2, y - size / 2, size, size);
+          ctx.globalAlpha = 1;
         }
       }
-      // A distant comet crosses for three seconds, then leaves a quiet sky.
-      const phase = (seconds + 13) % 43;
-      if (!reduced.matches && phase < 3.2) {
-        const t = phase / 3.2;
-        const x = width * (1.15 - t * 1.38), y = height * (.12 + t * .45);
-        const opacity = Math.sin(t * Math.PI) * .65;
+      // Infrequent streaks have varied routes instead of repeating one identical pass.
+      const cycle = Math.floor((seconds + 17) / 67);
+      const phase = (seconds + 17) % 67;
+      const route = seededRandom(9301 + cycle);
+      const duration = 1.6 + route() * .65;
+      if (!reduced.matches && phase < duration) {
+        const t = phase / duration;
+        const startY = .08 + route() * .34;
+        const x = width * (1.12 - t * 1.38), y = height * (startY + t * .34);
+        const opacity = Math.sin(t * Math.PI) * .55;
         const tail = ctx.createLinearGradient(x, y, x + 94, y - 33);
         tail.addColorStop(0, `rgba(206,228,255,${opacity})`);
         tail.addColorStop(1, "rgba(140,182,235,0)");

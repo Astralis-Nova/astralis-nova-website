@@ -13,11 +13,26 @@ body::after{
   pointer-events:none;user-select:none;contain:strict;
   background:radial-gradient(ellipse at 72% 20%,#080e1a 0,transparent 58%),#02040a;
 }
-#astralisSpaceBackground canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#astralisSpaceBackground::before{
+  content:"";position:absolute;inset:-4%;z-index:0;
+  background:url('/assets/our-new-star/deep-universe.webp') center 28%/cover no-repeat;
+  filter:saturate(.62) contrast(1.08) brightness(.82);opacity:.53;
+  transform-origin:64% 40%;animation:astralisDeepSkyDrift 130s ease-in-out infinite alternate;
+}
+#astralisSpaceBackground::after{
+  content:"";position:absolute;inset:0;z-index:0;
+  background:radial-gradient(ellipse at 60% 32%,transparent 24%,rgba(1,3,9,.46) 100%),
+    linear-gradient(90deg,rgba(1,3,9,.17),transparent 40%,rgba(1,3,9,.10));
+}
+#astralisSpaceBackground canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1}
 .astralis-space-asteroid{
-  position:absolute;left:0;top:0;width:var(--rock-size);aspect-ratio:2/3;
+  position:absolute;left:0;top:0;z-index:2;width:var(--rock-size);aspect-ratio:2/3;
   animation:astralisAsteroidPass var(--travel-time) linear infinite;
   animation-delay:var(--travel-delay);will-change:transform;
+}
+@keyframes astralisDeepSkyDrift{
+  from{transform:scale(1.025) translate3d(-.25%,.2%,0)}
+  to{transform:scale(1.055) translate3d(.3%,-.3%,0)}
 }
 .astralis-space-asteroid > span{
   display:block;width:100%;height:100%;background-image:url('/assets/deep-space/asteroids.webp');
@@ -33,12 +48,15 @@ body::after{
 }
 @keyframes astralisAsteroidTumble{from{transform:rotate(var(--rock-angle))}to{transform:rotate(calc(var(--rock-angle) + 360deg))}}
 html.astralis-page-hidden #astralisSpaceBackground *,
-#astralisSpaceBackground.space-motion-paused *{animation-play-state:paused!important}
+html.astralis-page-hidden #astralisSpaceBackground::before,
+#astralisSpaceBackground.space-motion-paused *,
+#astralisSpaceBackground.space-motion-paused::before{animation-play-state:paused!important}
 @media(max-width:700px){
+  #astralisSpaceBackground::before{background-image:url('/assets/our-new-star/deep-universe-mobile.webp');background-position:50% 24%;opacity:.57}
   .astralis-space-asteroid:nth-of-type(n+9){display:none}
   .astralis-space-asteroid{width:calc(var(--rock-size) * .7)}
 }
 @media(prefers-reduced-motion:reduce){
-  #astralisSpaceBackground *{animation:none!important}
+  #astralisSpaceBackground *,#astralisSpaceBackground::before{animation:none!important}
   .astralis-space-asteroid{left:var(--rest-x);top:var(--rest-y);transform:none;opacity:.55}
 }
