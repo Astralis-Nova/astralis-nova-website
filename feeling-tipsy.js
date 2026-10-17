@@ -109,7 +109,7 @@
       <span class="tipsy-text">Fuel the Next Orbit</span>
     </span>`;
 
-  const panel=document.createElement('div');
+  const panel=document.createElement('dialog');
   panel.id='feelingTipsyPanel';
   panel.setAttribute('role','dialog');
   panel.setAttribute('aria-modal','true');
@@ -145,13 +145,14 @@
     button.classList.add('tipping');
     setTimeout(()=>{
       button.classList.remove('tipping');
-      panel.classList.add('open');
+      panel.showModal();panel.classList.add('open');
       document.body.style.overflow='hidden';
       document.getElementById('feelingTipsyClose')?.focus();
       opening=false;
     },420);
   };
-  const close=()=>{panel.classList.remove('open');document.body.style.overflow='';button.focus()};
+  const close=()=>{panel.close();panel.classList.remove('open');document.body.style.overflow='';button.focus()};
+  panel.addEventListener('cancel',event=>{event.preventDefault();close()});
   button.addEventListener('click',open);
   document.getElementById('feelingTipsyClose')?.addEventListener('click',close);
   document.getElementById('feelingTipsyLater')?.addEventListener('click',close);
