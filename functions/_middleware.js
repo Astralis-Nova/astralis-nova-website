@@ -8,7 +8,7 @@ export async function onRequest(context) {
   const pathname = url.pathname;
   if (!pathname.startsWith('/memories/')) {
     response = new HTMLRewriter().on('head', { element(e) { e.append('<link rel="stylesheet" href="/scene-motion.css?v=1">', {html:true}); } })
-      .on('body', { element(e) { e.append('<script src="/scene-motion.js?v=1" defer></script>', {html:true}); } }).transform(response);
+      .on('body', { element(e) { e.append('<script src="/scene-motion.js?v=20261017freeroam" defer></script>', {html:true}); } }).transform(response);
   } else {
     response = new Response(response.body, response);
     response.headers.set('Cache-Control', 'private, no-store');
@@ -56,7 +56,7 @@ export async function onRequest(context) {
       })
       .on("body", {
         element(element) {
-          element.append('<script src="/astralis-performance-loader.js?v=20261017privacy" defer></script><script src="/astralis-motion-restore.js?v=20261017privacy" defer></script>', { html: true });
+          element.append('<script src="/astralis-performance-loader.js?v=20261017freeroam" defer></script><script src="/astralis-motion-restore.js?v=20261017privacy" defer></script>', { html: true });
         },
       });
   }

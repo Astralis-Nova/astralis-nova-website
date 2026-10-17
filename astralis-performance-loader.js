@@ -95,7 +95,6 @@
       ".live-board-panel",
       ".first-orbit",
       ".culture-grid",
-      "#homepage-scenery",
       ".astralis-music-orbit"
     ].join(",");
 

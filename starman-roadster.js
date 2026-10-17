@@ -7,6 +7,7 @@
   const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
   let elapsed = 0, lastFrame, frame = 0, sceneVisible = true;
   let travelWidth = 0, travelHeight = 0, floatPadding = 0;
+  let lastCollisionCheck = 0;
   // Independent waves give the weightless drift and tumble different rhythms.
   function floatPose(milliseconds, width, height) {
     const seconds = milliseconds / 1000;
@@ -33,6 +34,10 @@
     if (!paused) {
       if (lastFrame !== undefined) elapsed += Math.min(now - lastFrame, 100);
       positionCar();
+      if (now - lastCollisionCheck >= 160) {
+        keepBrainClear();
+        lastCollisionCheck = now;
+      }
     }
     lastFrame = now;
     if (!document.hidden && sceneVisible && !motionPreference.matches) frame = requestAnimationFrame(floatFrame);
@@ -75,9 +80,9 @@
     const headerBottom = document.querySelector('.topbar')?.getBoundingClientRect().bottom || 78;
     // Reserve room around the car so its rotating corners stay inside the view.
     floatPadding = Math.ceil((Math.hypot(width, height) - Math.min(width, height)) / 2) + 12;
-    const top = 12;
-    travelWidth = Math.max(0, (car.parentElement.clientWidth * .48) - width - 24 - floatPadding * 2);
-    travelHeight = Math.max(0, car.parentElement.clientHeight - height - 40 - floatPadding);
+    const top = Math.min(Math.max(100, headerBottom + floatPadding), Math.max(12, innerHeight - height - 140));
+    travelWidth = Math.max(0, innerWidth - width - 24 - floatPadding * 2);
+    travelHeight = Math.max(0, innerHeight - top - height - 140 - floatPadding);
     car.style.setProperty('--roadster-top', top + 'px');
     car.style.setProperty('--roadster-x', Math.max(0, innerWidth - width - 24) + 'px');
     car.style.setProperty('--roadster-y', Math.max(0, innerHeight - top - height - 140) + 'px');
@@ -102,5 +107,5 @@
     if (!document.hidden && sceneVisible && !motionPreference.matches) frame=requestAnimationFrame(floatFrame);
   }
   document.addEventListener('visibilitychange', syncMotion);
-  if ('IntersectionObserver' in window) new IntersectionObserver(([entry])=>{sceneVisible=entry.isIntersecting;syncMotion()}).observe(car.parentElement);
+  if ('IntersectionObserver' in window) new IntersectionObserver(([entry])=>{sceneVisible=entry.isIntersecting;syncMotion()}).observe(car);
 })();
