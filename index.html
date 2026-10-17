@@ -183,42 +183,6 @@
     .latest{display:grid;grid-template-columns:90px 1fr;gap:12px}
     .latest img{width:90px;height:90px;border-radius:8px}
 
-    /* One dedicated Toon Planet entrance, with a miniature world of its own. */
-    .toon-gateway-panel{padding:clamp(22px,4vw,44px);display:grid;grid-template-columns:minmax(260px,.9fr) minmax(0,1.1fr);gap:clamp(22px,4vw,54px);align-items:center;
-      background:radial-gradient(ellipse at 23% 45%,#278f9230,transparent 47%),radial-gradient(ellipse at 90% 80%,#8260c625,transparent 60%),linear-gradient(135deg,#081d2a,#12162f);
-      border:1px solid #70d7cd70;border-radius:24px;overflow:hidden}
-    .toon-gateway-orb-link{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;min-width:0;text-decoration:none;padding:8px 0 2px}
-    .toon-gateway-stage{position:relative;display:block;width:min(100%,350px);aspect-ratio:1;isolation:isolate}
-    .toon-gateway-stage::before{content:"";position:absolute;inset:5%;border-radius:50%;background:radial-gradient(circle,#49dccc21,transparent 72%);box-shadow:0 0 65px #62cbd51a}
-    .toon-gateway-world{position:absolute;inset:3%;animation:toonGatewayFloat 8s ease-in-out infinite;transform-origin:50% 60%;transition:filter .25s ease}
-    .toon-gateway-world img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 16px 20px #01091690)}
-    .toon-gateway-cloud{position:absolute;width:24%;height:auto;pointer-events:none;filter:drop-shadow(0 3px 3px #144a6838);animation:toonGatewayCloud 17s ease-in-out infinite}
-    .toon-gateway-cloud-a{left:16%;top:23%;opacity:.8}
-    .toon-gateway-cloud-b{right:9%;top:62%;width:19%;opacity:.66;animation-delay:-9s;animation-duration:22s}
-    .toon-gateway-flight{position:absolute;inset:0;pointer-events:none;animation:toonGatewayOrbit 28s linear infinite;z-index:3}
-    .toon-gateway-rocket{position:absolute;width:34px;height:28px;left:calc(50% - 17px);top:-8px;filter:drop-shadow(0 0 5px #7defff88)}
-    .toon-gateway-rocket .rocket-flame{transform-origin:12px 14px;animation:toonGatewayFlame .65s ease-in-out infinite alternate}
-    .toon-gateway-caption{font-size:.72rem;font-weight:800;letter-spacing:.17em;color:#b8f2e6;margin-top:16px;line-height:1.5;text-align:center}
-    .toon-gateway-orb-link:hover .toon-gateway-world,.toon-gateway-orb-link:focus-visible .toon-gateway-world{filter:brightness(1.1)}
-    .toon-gateway-orb-link:focus-visible{outline:3px solid #86fae6;outline-offset:5px;border-radius:14px}
-    .toon-gateway-copy .eyebrow{color:#a6ebd8;letter-spacing:.15em;font-size:.75rem;line-height:1.6}
-    .toon-gateway-copy .section-title{font-size:clamp(2.1rem,4.1vw,3.6rem);letter-spacing:.035em;line-height:1.1;margin:10px 0 18px}
-    .toon-gateway-copy p:not(.eyebrow){color:#c7d9df;line-height:1.8;max-width:580px}
-    .toon-gateway-enter{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;margin-top:16px;padding:13px 22px;border:1px solid #9cf5d8!important;background:linear-gradient(120deg,#96f2c9,#7cd9f4)!important;color:#082630!important;font-weight:900;box-shadow:0 8px 24px #69d9c21a}
-    .toon-gateway-enter:hover{filter:brightness(1.08)}
-    @keyframes toonGatewayFloat{0%,100%{transform:translateY(3px) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}
-    @keyframes toonGatewayCloud{0%,100%{transform:translateX(-6px)}50%{transform:translateX(8px)}}
-    @keyframes toonGatewayOrbit{from{transform:rotate(-30deg)}to{transform:rotate(330deg)}}
-    @keyframes toonGatewayFlame{from{transform:scaleX(.7);opacity:.7}to{transform:scaleX(1.15);opacity:1}}
-    @media(max-width:700px){
-      .toon-gateway-panel{grid-template-columns:1fr;text-align:center;gap:22px;padding:24px 20px 30px}
-      .toon-gateway-stage{width:min(100%,290px)}
-      .toon-gateway-copy p{margin:12px auto}
-      .toon-gateway-copy .section-title{font-size:clamp(1.8rem,7vw,2.6rem)}
-      .toon-gateway-caption{font-size:.66rem;letter-spacing:.12em}
-    }
-    @media(prefers-reduced-motion:reduce){.toon-gateway-world,.toon-gateway-cloud,.toon-gateway-flight,.toon-gateway-rocket .rocket-flame{animation:none!important}.toon-gateway-flight{transform:rotate(-30deg)}}
-
     .section-shell{padding:0 0 36px}
     .section-title{margin:0 0 8px;font-size:clamp(1.6rem,3vw,2.25rem)}
     .section-lead{margin:0;color:#b8c5d8;line-height:1.6;max-width:760px}
@@ -1076,30 +1040,6 @@
     </div>
   </section>
 
-
-  <section class="section-shell shell" id="toon-planet-gateway" aria-labelledby="toon-gateway-title">
-    <div class="panel toon-gateway-panel">
-      <a class="toon-gateway-orb-link" href="/toon-planet.html" aria-label="Enter Toon Planet and explore Cactus Forest Moonlight">
-        <span class="toon-gateway-stage" aria-hidden="true">
-          <span class="toon-gateway-world">
-            <img src="/assets/toon-planet/toon-world-v1.webp" alt="" width="960" height="960" loading="lazy" decoding="async">
-            <svg class="toon-gateway-cloud toon-gateway-cloud-a" viewBox="0 0 100 44" fill="none"><path d="M19 37C1 37 3 17 18 17C19 2 43 0 50 15C60 5 79 11 80 24C100 21 104 40 84 40H23Z" fill="#f4fcff"/><path d="M15 34C30 39 60 34 88 35" stroke="#bedfe9" stroke-width="4" stroke-linecap="round" opacity=".5"/></svg>
-            <svg class="toon-gateway-cloud toon-gateway-cloud-b" viewBox="0 0 100 44" fill="none"><path d="M19 37C1 37 3 17 18 17C19 2 43 0 50 15C60 5 79 11 80 24C100 21 104 40 84 40H23Z" fill="#f4fcff"/><path d="M15 34C30 39 60 34 88 35" stroke="#bedfe9" stroke-width="4" stroke-linecap="round" opacity=".5"/></svg>
-          </span>
-          <span class="toon-gateway-flight">
-            <svg class="toon-gateway-rocket" viewBox="0 0 48 36" fill="none"><path class="rocket-flame" d="M15 14L1 18L15 22L11 18Z" fill="#ffd277"/><path d="M20 12L14 5L27 10M20 24L14 31L27 26" fill="#fc7b73" stroke="#8e343b" stroke-width="1.5"/><path d="M13 13C25 6 39 9 46 18C39 27 25 30 13 23Z" fill="#e2f9fb" stroke="#437d97" stroke-width="1.5"/><path d="M38 11L46 18L38 25" fill="#ff8378"/><circle cx="29" cy="18" r="5" fill="#39bbd0" stroke="#fff3bf" stroke-width="2"/><path d="M14 14V22" stroke="#6c94a2" stroke-width="3"/></svg>
-          </span>
-        </span>
-        <span class="toon-gateway-caption">TOUCH DOWN · LET YOUR IMAGINATION ROAM</span>
-      </a>
-      <div class="toon-gateway-copy">
-        <p class="eyebrow">A LITTLE WORLD • BIG IMAGINATION</p>
-        <h2 class="section-title" id="toon-gateway-title">TOON PLANET</h2>
-        <p>A whole little world for big cartoon adventures. Touch down in Cactus Forest Moonlight—our first stop as we bring the toons home, one character at a time.</p>
-        <a href="/toon-planet.html" class="btn toon-gateway-enter">ENTER TOON PLANET <span aria-hidden="true">↗</span></a>
-      </div>
-    </div>
-  </section>
 
   <section class="section-shell shell" id="live-board">
     <div class="panel live-board-panel">

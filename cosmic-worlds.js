@@ -39,6 +39,15 @@
       badge: "Story World"
     },
     {
+      id: "toon-planet",
+      href: "/toon-planet.html",
+      ariaLabel: "Enter Toon Planet and explore Cactus Forest Moonlight",
+      planetClass: "planet-toon",
+      title: "Toon Planet",
+      description: "An imaginative world for our toons, beginning with the moonlit Cactus Forest.",
+      badge: "Toon World"
+    },
+    {
       id: "first-orbit",
       href: "/first-orbit.html",
       ariaLabel: "Enter the First Orbit archive planet",
@@ -97,6 +106,8 @@
       ? '<picture><source media="(prefers-reduced-motion: no-preference)" srcset="/assets/ac-portals/portal-space-motion.webp"><img src="/assets/ac-portals/portal-space-still.webp" alt="" width="320" height="180" loading="lazy" decoding="async"></picture>'
       : world.id === "reserved-world"
       ? '<picture><source type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" alt="" width="360" height="360" loading="lazy" decoding="async"></picture>'
+      : world.id === "toon-planet"
+      ? '<img src="/assets/toon-planet/toon-world-realistic-v2.webp" alt="" width="512" height="512" loading="lazy" decoding="async">'
       : world.id === "scripture-nexus"
       ? scriptureVisual
       : world.id === "faith-stories"
@@ -134,9 +145,6 @@
       .astralis-worlds-head{max-width:760px;margin-bottom:22px}
       .astralis-worlds-head h2{margin:0 0 8px;font-size:clamp(1.75rem,3.5vw,2.6rem)}
       .astralis-worlds-head p{margin:0;color:#bac8dc;line-height:1.65}
-      .astralis-toon-wayfinder{margin:0 0 22px;color:#b8f2e6;font-size:.9rem;line-height:1.6}
-      .astralis-toon-wayfinder a{text-underline-offset:4px}
-      .astralis-toon-wayfinder a:focus-visible{outline:2px solid #86fae6;outline-offset:5px}
       .astralis-system{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
       .astralis-sun-card{grid-column:span 3;display:flex;align-items:center;justify-content:center;gap:20px;min-height:150px;padding:20px;border:1px solid rgba(255,192,87,.34);border-radius:18px;background:radial-gradient(circle at 50% 50%,rgba(255,173,61,.18),transparent 48%),rgba(4,10,20,.58)}
       .astralis-sun{position:relative;flex:0 0 92px;width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 38% 34%,#fff6c7 0 7%,#ffd66e 17%,#ff8b39 48%,#c52c67 74%,#471353 100%);box-shadow:0 0 18px rgba(255,221,113,.9),0 0 45px rgba(255,109,59,.58),0 0 80px rgba(219,38,142,.28);animation:astralisSunPulse 4s ease-in-out infinite}
@@ -161,6 +169,11 @@
       .planet-nova-sphere picture{display:block;width:100%;height:100%;pointer-events:none}
       .planet-nova-sphere img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 9px rgba(50,151,255,.5))}
       .astralis-planet-link:hover .planet-nova-sphere{transform:scale(1.05)}
+
+      .astralis-planet.planet-toon{flex:0 0 104px;width:104px;height:104px;border-radius:0;background:none;box-shadow:none;overflow:visible;animation:toonPlanetDrift 14s ease-in-out infinite}
+      .planet-toon img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 3px 5px #01071280)}
+      .astralis-planet-link:hover .planet-toon,.astralis-planet-link:focus-visible .planet-toon{transform:scale(1.05)}
+      @keyframes toonPlanetDrift{0%,100%{translate:0 1px}50%{translate:0 -2px}}
 
       .planet-board{background:radial-gradient(circle at 35% 30%,#d9fff1 0 5%,#32d899 16%,#147b72 47%,#16375c 76%,#07101e 100%)}
       .planet-biography{background:radial-gradient(circle at 35% 28%,#ffe4fa 0 5%,#e75ebd 17%,#7843c8 47%,#25205f 76%,#09091b 100%)}
@@ -196,7 +209,7 @@
 
       @media(max-width:980px){.astralis-system{grid-template-columns:repeat(2,minmax(0,1fr))}.astralis-sun-card{grid-column:span 2}}
       @media(max-width:640px){.astralis-worlds{padding:20px}.astralis-system{grid-template-columns:1fr}.astralis-sun-card{grid-column:span 1;align-items:flex-start;justify-content:flex-start}.astralis-planet-link{min-height:118px}.astralis-worlds::before{display:none}.astralis-planet.ac-worlds-portal{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-nova-sphere{flex-basis:84px;width:84px;height:84px}.astralis-planet.planet-scripture{flex-basis:102px;width:102px;height:94px}.astralis-planet.planet-faith-stories{flex-basis:94px;width:94px;height:94px}.planet-faith-stories img{width:86px;height:86px}}
-      @media(prefers-reduced-motion:reduce){.astralis-bio-comet,.astralis-sun,.scripture-planet-core img,.scripture-atmosphere,.scripture-moon,.faith-moon-halo{animation:none!important}.scripture-moon-a{offset-distance:18%}.scripture-moon-b{offset-distance:68%}.astralis-planet.ac-worlds-portal,.astralis-planet.planet-nova-sphere{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal,.astralis-planet-link:hover .planet-nova-sphere{transform:none}}
+      @media(prefers-reduced-motion:reduce){.astralis-bio-comet,.astralis-sun,.scripture-planet-core img,.scripture-atmosphere,.scripture-moon,.faith-moon-halo,.planet-toon{animation:none!important}.scripture-moon-a{offset-distance:18%}.scripture-moon-b{offset-distance:68%}.astralis-planet.ac-worlds-portal,.astralis-planet.planet-nova-sphere{transition:none}.astralis-planet-link:hover .ac-worlds-portal,.astralis-planet-link:focus-visible .ac-worlds-portal,.astralis-planet-link:hover .planet-nova-sphere{transform:none}}
     `;
     document.head.appendChild(style);
   }
@@ -233,7 +246,6 @@
           <h2>Choose a Planet</h2>
           <p>A small solar system of the music, memories, games, communities, and creative places orbiting Astralis Nova.</p>
         </div>
-        <p class="astralis-toon-wayfinder"><a href="#toon-planet-gateway">Looking for the toons? Visit Toon Planet <span aria-hidden="true">↓</span></a></p>
         <div class="astralis-system">
           <div class="astralis-sun-card" data-world="astralis-nova">
             <span class="astralis-sun" aria-hidden="true"></span>
