@@ -1,0 +1,13 @@
+# Homepage asteroid artwork
+
+- Asset: `asteroids-realistic-v2.webp`.
+- Built-in image-generation tool, October 17, 2026. Photorealistic generated artwork; these are decorative illustrations, not spacecraft mission photographs.
+- Layout: 1536 × 1024 pixels, three columns × two rows, six square 512 × 512 cells. CSS uses a square aspect ratio to preserve the natural silhouettes.
+- Delivery: original transparent PNG converted to WebP at quality 88, with alpha preserved. The previous atlas remains available for rollback.
+- Surface brief: broad fractured planes, fine cracks and shallow scars rather than rounded protruding boulders. Existing drift, tumble, mobile density and reduced-motion behavior are retained.
+- QA: checked all six transparent tiles over the current starfield at close-up and website sizes. Full-page browser QA was unavailable in the managed environment.
+
+## Generation prompt
+
+Use case: photorealistic-natural. Asset type: transparent asteroid sprite atlas for a realistic space website. Create ONE 1536 by 1024 landscape image divided into exactly THREE equal columns and TWO equal rows, SIX equal square 512 by 512 cells. In the center of each cell place one separate photorealistic natural asteroid, completely isolated on genuine alpha transparency, with generous clear margins on all four sides. No touching or overlap between objects. Six different silhouettes: an elongated fractured wedge, an asymmetric weathered rocky body, a flattened chipped stone, a compact irregular polyhedron, an angular elongated fragment, and a softly rounded but asymmetric asteroid. Make these look like spacecraft close-up photographs of real airless asteroids, charcoal gray and muted brown, dusty regolith, broad fractured planes, fine cracks, small shallow impact scars, subtle mineral variation. Solid monolithic-looking rock surfaces with low relief, NOT piles of round boulders and NOT protruding nodules. Hard distant sunlight consistently from upper left, deep natural shadows on the lower-right sides, subdued rim detail; no studio floor, no cast shadow outside the object. All six sharply detailed and clearly readable at small sizes. Keep the six objects similar in apparent size, occupying about 70 to 78 percent of their own cell. Avoid pimples, boils, warts, rounded bumps stuck on, cauliflower, acne-like spheres, spongy pumice, Swiss-cheese holes, exaggerated giant craters, smooth plastic, polished minerals, lava, crystals, fantasy colors, glow, lens flare, cartoon rendering, text, letters, grid lines, labels, borders, stars, planets, nebula, scenery. Only the six natural asteroid cutouts, and transparent empty space.
+
