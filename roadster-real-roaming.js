@@ -8,7 +8,7 @@
   const stage=document.createElement('div');
   stage.id='astralis-real-roadster';
   stage.setAttribute('aria-label','Real 2026 Tesla Roadster thruster demonstration video');
-  stage.innerHTML='<div class="roadster-real-media"><img src="https://i.ytimg.com/vi/'+videoId+'/hqdefault.jpg" alt="" decoding="async"></div>'+
+  stage.innerHTML='<div class="roadster-real-media"><img src="https://i.ytimg.com/vi/'+videoId+'/'+'hqdefault.jpg" alt="" decoding="async"></div>'+
     '<a class="roadster-real-hit" href="'+official+'" target="_blank" rel="noopener noreferrer" aria-label="Watch the official Tesla Roadster 2026 kickflip video">'+
     '<span class="roadster-real-label">▶ REAL ROADSTER · TESLA FOOTAGE</span></a>'+
     '<button class="roadster-real-close" aria-label="Hide the roaming real Roadster video" title="Hide video">×</button>';
@@ -19,7 +19,7 @@
   const pos={x:20,y:128};
   const bound=(v,min,max)=>Math.min(max,Math.max(min,v));
   const videoUrl='https://www.youtube-nocookie.com/embed/'+videoId+
-    '?autoplay=1&mute=1&loop=1&playlist='+videoId+'&controls=0&playsinline=1&rel=0&disablekb=1';
+    '?autoplay=1&mute=1&loop=1&playlist='+videoId+'&controls=0&playsinline=1&rel=0&disablekb=1&start=8&end=29';
   function size(){
     const r=stage.getBoundingClientRect();width=r.width;height=r.height;
   }
