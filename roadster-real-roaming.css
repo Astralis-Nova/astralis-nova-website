@@ -18,6 +18,7 @@
 #astralis-real-roadster svg.roadster-photo-art,
 #astralis-real-roadster .roadster-photo-fallback svg{display:block;width:100%;height:auto;overflow:visible}
 #astralis-real-roadster .roadster-photo-fallback[hidden]{display:none}
+#astralis-real-roadster svg.roadster-photo-art[hidden]{display:none}
 #astralis-real-roadster .roadster-photo-fallback{width:86%;margin:0 auto}
 #astralis-real-roadster .roadster-real-photo{image-rendering:auto}
 #astralis-real-roadster .thruster-plume{transform-box:fill-box;transform-origin:0 50%;animation:roadsterPhotoPulse .42s ease-in-out infinite alternate;opacity:.89}
