@@ -6,12 +6,13 @@
  will-change:transform;contain:layout style;
 }
 #astralis-real-roadster .roadster-real-link{
- display:block;width:100%;pointer-events:auto;text-decoration:none;color:inherit;
+ display:block;width:100%;pointer-events:auto;text-decoration:none;color:inherit;perspective:820px;
  border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
 }
 #astralis-real-roadster .roadster-real-core{
  position:relative;width:100%;perspective:560px;
- transform:scaleX(var(--roadster-facing,1)) rotate(var(--roadster-bank,0deg)) rotateX(var(--roadster-flip,0deg));
+ transform:scaleX(var(--roadster-facing,1)) rotate(var(--roadster-bank,0deg)) rotateY(var(--roadster-nose,0deg)) rotateX(var(--roadster-flip,0deg)) scale(var(--roadster-depth,1));
+ transform-style:preserve-3d;backface-visibility:visible;
  transform-origin:50% 54%;
  filter:drop-shadow(0 8px 16px rgba(0,0,0,.34)) drop-shadow(0 0 11px rgba(129,211,255,.13));
 }
@@ -46,4 +47,25 @@
  #astralis-real-roadster .thruster-lift,
  #astralis-real-roadster .roadster-glow-ring{animation:none}
  #astralis-real-roadster .roadster-real-label{transition:none}
+}
+
+/* Flight particle layer does not intercept site clicks or navigation. */
+#astralis-roadster-flight-trail{
+ position:fixed;inset:0;width:100%;height:100%;z-index:32;
+ pointer-events:none;user-select:none;contain:strict;
+}
+#astralis-real-roadster .roadster-real-core[data-thrust="forward"] .thruster-plume{
+ opacity:1;filter:drop-shadow(0 0 7px rgba(135,221,255,.8));
+ animation-duration:.22s;
+}
+#astralis-real-roadster .roadster-real-core[data-thrust="lift"] .thruster-plume{
+ opacity:.83;filter:drop-shadow(0 0 9px rgba(119,204,255,.65));
+ animation-duration:.19s;
+}
+#astralis-real-roadster .roadster-real-core[data-thrust="coast"] .thruster-lift{
+ opacity:.16;animation-duration:1.1s;
+}
+@media(prefers-reduced-motion:reduce){
+ #astralis-roadster-flight-trail{display:none}
+ #astralis-real-roadster .roadster-real-core{transform:scaleX(1)}
 }
