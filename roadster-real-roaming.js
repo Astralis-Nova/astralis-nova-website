@@ -15,15 +15,64 @@
  // The previous SVG stays hidden as a final graceful fallback.
  const photo=craft.querySelector('#roadster-real-photo-source');
  const artwork=craft.querySelector('.roadster-photo-art');
+
  const fallback=craft.querySelector('.roadster-photo-fallback');
+ // Physical roll illusion: original photograph on the near side, a rear photo
+ // skin on the far side, and separate top / underside geometry at true depth.
+ const model=document.createElement('div');
+ model.className='roadster-solid-model';
+ body.insertBefore(model,artwork);
+ model.appendChild(artwork);
+ model.appendChild(fallback);
+ artwork.classList.add('roadster-model-front');
+ function duplicateFace(source,extraClass){
+  const clone=source.cloneNode(true);
+  clone.classList.add(extraClass);
+  clone.setAttribute('aria-hidden','true');
+  // Prefix cloned gradient/mask/element IDs, avoiding collisions.
+  const ids=[...clone.querySelectorAll('[id]')];
+  for(const node of ids){
+   const old=node.id;
+   const updated=old+'-back';
+   const elements=[clone,...clone.querySelectorAll('*')];
+   for(const element of elements){
+    for(const attr of [...element.attributes]){
+     if(attr.value.includes('url(#'+old+')'))
+      element.setAttribute(attr.name,attr.value.replaceAll('url(#'+old+')','url(#'+updated+')'));
+     if(attr.value==='#'+old)element.setAttribute(attr.name,'#'+updated);
+    }
+   }
+   node.id=updated;
+  }
+  return clone;
+ }
+ const farSide=duplicateFace(artwork,'roadster-model-rear');
+ const farFallback=duplicateFace(fallback,'roadster-model-fallback-rear');
+ model.appendChild(farSide);
+ model.appendChild(farFallback);
+ const farPhoto=farSide.querySelector('.roadster-real-photo');
+ const surfaces=[
+   {name:'roadster-model-underbody',markup:"\n<defs><linearGradient id=\"rb-metal\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop stop-color=\"#eff5f7\"/><stop offset=\".17\" stop-color=\"#70808e\"/><stop offset=\".58\" stop-color=\"#26323d\"/><stop offset=\"1\" stop-color=\"#b8c5d2\"/></linearGradient><linearGradient id=\"rb-tire\"><stop stop-color=\"#070c12\"/><stop offset=\".5\" stop-color=\"#27353f\"/><stop offset=\"1\" stop-color=\"#090f17\"/></linearGradient><radialGradient id=\"rb-thruster\"><stop stop-color=\"#f1ffff\"/><stop offset=\".35\" stop-color=\"#8fdcff\"/><stop offset=\"1\" stop-color=\"#397ea0\" stop-opacity=\".1\"/></radialGradient></defs>\n<path d=\"M115 36 Q145 12 177 37 L199 63 L199 222 L175 259 Q139 271 111 249Z\" fill=\"url(#rb-tire)\"/><path d=\"M585 33 Q619 10 651 35 L674 61 L674 220 L649 255 Q616 273 586 250Z\" fill=\"url(#rb-tire)\"/>\n<path d=\"M63 143 L132 67 Q205 28 298 35 L627 48 Q748 69 796 144 Q731 221 630 239 L298 255 Q204 254 129 217Z\" fill=\"url(#rb-metal)\" stroke=\"#cbd9e6\" stroke-width=\"5\"/>\n<path d=\"M91 143 L179 79 L630 89 Q729 112 754 143 L629 203 L181 206Z\" fill=\"#121d27\" stroke=\"#8b9fae\" stroke-width=\"3\"/>\n<path d=\"M205 98 L565 96 L565 189 L203 193Z\" fill=\"#3b4c58\" stroke=\"#b2c4d1\" stroke-width=\"3\"/>\n<g stroke=\"#9cb0be\" stroke-width=\"3\" opacity=\".76\"><path d=\"M236 104V190 M281 103V190 M325 103V188 M369 103V188 M413 103V188 M457 103V188 M501 103V188 M543 103V188\"/><path d=\"M164 89 L239 208 M174 202 L240 90 M572 93 L649 204 M581 205 L657 95\"/></g>\n<rect x=\"209\" y=\"121\" width=\"384\" height=\"47\" rx=\"12\" fill=\"#081522\" stroke=\"#82939f\" stroke-width=\"4\"/>\n<g stroke=\"#9cb6c7\" stroke-width=\"2\" opacity=\".62\"><path d=\"M244 131V158 M286 131V158 M328 131V158 M370 131V158 M412 131V158 M454 131V158 M496 131V158 M538 131V158\"/></g>\n<g fill=\"#121d29\" stroke=\"#90a6b5\" stroke-width=\"5\"><ellipse cx=\"129\" cy=\"96\" rx=\"31\" ry=\"28\"/><ellipse cx=\"129\" cy=\"194\" rx=\"31\" ry=\"28\"/><ellipse cx=\"625\" cy=\"89\" rx=\"33\" ry=\"29\"/><ellipse cx=\"625\" cy=\"199\" rx=\"33\" ry=\"29\"/></g>\n<ellipse cx=\"119\" cy=\"144\" rx=\"25\" ry=\"28\" fill=\"url(#rb-thruster)\"/><path d=\"M143 112 L84 92 M143 174 L84 196\" stroke=\"#bce6f3\" stroke-width=\"5\" opacity=\".75\"/>\n<path d=\"M705 92 L779 123 M705 193 L779 166\" stroke=\"#fff\" stroke-width=\"5\" opacity=\".72\"/>"},
+   {name:'roadster-model-topside',markup:"\n<defs><linearGradient id=\"rt-paint\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop stop-color=\"#fcfeff\"/><stop offset=\".42\" stop-color=\"#d5e3ef\"/><stop offset=\".71\" stop-color=\"#f9fcff\"/><stop offset=\"1\" stop-color=\"#8ca2b3\"/></linearGradient><linearGradient id=\"rt-glass\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop stop-color=\"#071420\"/><stop offset=\".5\" stop-color=\"#294a62\"/><stop offset=\"1\" stop-color=\"#06111c\"/></linearGradient></defs>\n<path d=\"M42 144 Q75 76 174 49 Q283 25 506 31 L663 44 Q752 63 806 143 Q750 223 655 246 L504 254 Q266 269 173 230 Q79 210 42 144Z\" fill=\"url(#rt-paint)\" stroke=\"#f2f8ff\" stroke-width=\"6\"/>\n<path d=\"M207 66 Q286 42 412 49 Q489 51 540 78 Q566 108 562 143 Q565 181 540 207 Q485 239 410 239 Q283 241 207 218 Q249 178 251 143 Q248 105 207 66Z\" fill=\"url(#rt-glass)\" stroke=\"#8ebacb\" stroke-width=\"5\"/>\n<path d=\"M378 53 Q401 143 375 236\" stroke=\"#cff5ff\" stroke-width=\"6\" opacity=\".65\" fill=\"none\"/><path d=\"M539 78 Q585 144 541 206\" stroke=\"#fff\" stroke-width=\"8\" opacity=\".85\" fill=\"none\"/>\n<path d=\"M591 80 Q699 89 765 141 Q701 188 591 207\" stroke=\"#a1b3c1\" stroke-width=\"4\" fill=\"none\"/><path d=\"M99 142L177 105 M99 142L178 181\" stroke=\"#b8cad9\" stroke-width=\"5\"/>\n<path d=\"M773 114 L790 129 M773 172 L790 155\" stroke=\"#d0f7ff\" stroke-width=\"10\" stroke-linecap=\"round\"/><path d=\"M58 108L71 105 M58 179L71 182\" stroke=\"#ff6076\" stroke-width=\"8\" stroke-linecap=\"round\"/>"}
+ ];
+ for(const surface of surfaces){
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox','0 0 825 290');
+  svg.setAttribute('aria-hidden','true');
+  svg.classList.add('roadster-model-surface',surface.name);
+  svg.innerHTML=surface.markup;
+  model.appendChild(svg);
+ }
  let photoAttempt=0;
  photo.addEventListener('error',()=>{
   if(photoAttempt===0){
    photoAttempt=1;
    photo.setAttribute('transform','translate(-314 -259) scale(1.6)');
    photo.setAttribute('href',SECONDARY_IMAGE_URL);
+   farPhoto.setAttribute('transform','translate(-314 -259) scale(1.6)');
+   farPhoto.setAttribute('href',SECONDARY_IMAGE_URL);
   }else if(photoAttempt===1){
-   photoAttempt=2;artwork.hidden=true;fallback.hidden=false;
+   photoAttempt=2;artwork.hidden=true;farSide.hidden=true;fallback.hidden=false;farFallback.hidden=false;
   }
  });
 
@@ -59,6 +108,7 @@
  }
  function measure(){
   width=craft.offsetWidth;height=craft.offsetHeight;
+  craft.style.setProperty('--roadster-half-thickness',(width*.14).toFixed(2)+'px');
   const limits=range();
   if(!ready){
    posX=clamp(window.innerWidth*.24,limits.left,limits.right);
@@ -134,8 +184,9 @@
   facing=vx<0?-1:1;
   // Barrel roll around the car's own long axis, eased in and out.
   const progress=clamp((phase-.20)/2.20,0,1);
-  const eased=progress*progress*(3-2*progress);
+  const eased=(1-Math.cos(Math.PI*progress))*.5;
   const flip=rolling?360*eased:0;
+  model.dataset.roll=rolling?'active':'idle';
   const bank=clamp(Math.atan2(vy,Math.abs(vx))*180/Math.PI,-23,23)
     +2.2*Math.sin(elapsed*.80);
   const nose=5*Math.sin(elapsed*.41)+(rolling?12*Math.sin(Math.PI*progress):0);
@@ -174,6 +225,7 @@
    craft.style.setProperty('--roadster-facing','1');
    craft.style.setProperty('--roadster-bank','0deg');
    craft.style.setProperty('--roadster-flip','0deg');
+   model.dataset.roll='idle';
    craft.style.setProperty('--roadster-nose','0deg');
    craft.style.setProperty('--roadster-depth','1');
    craft.style.setProperty('--roadster-boost','0');
