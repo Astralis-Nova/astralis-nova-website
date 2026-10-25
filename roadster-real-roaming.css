@@ -111,11 +111,13 @@
 }
 #astralis-real-roadster .roadster-model-front,
 #astralis-real-roadster .roadster-photo-fallback:not(.roadster-model-fallback-rear){
- transform:translateZ(var(--roadster-half-thickness,40px));
+ transform:translateZ(var(--roadster-half-thickness,30px));
 }
 #astralis-real-roadster .roadster-model-rear,
 #astralis-real-roadster .roadster-model-fallback-rear{
- transform:rotateX(180deg) translateZ(var(--roadster-half-thickness,40px));
+ /* Keep the far skin upright in MODEL space, so it is upside down halfway
+    through a roll. rotateX(180deg) made the second photo turn upright again. */
+ transform:translateZ(calc(-1 * var(--roadster-half-thickness,30px))) rotateY(180deg) scaleX(-1);
 }
 #astralis-real-roadster .roadster-model-fallback-rear,
 #astralis-real-roadster .roadster-photo-fallback:not(.roadster-model-fallback-rear){
@@ -125,9 +127,11 @@
 }
 #astralis-real-roadster .roadster-model-surface{
  position:absolute;
- left:11%;
- width:78%;
- height:calc(2 * var(--roadster-half-thickness,40px));
+ /* Match the cutout's x=187..811 within its 145..970 photographic viewBox.
+    The old surfaces extended beyond the photographed tail. */
+ left:5%;
+ width:76.5%;
+ height:calc(2 * var(--roadster-half-thickness,30px));
  transform-origin:50% 50%;
  backface-visibility:hidden;
  -webkit-backface-visibility:hidden;
@@ -136,12 +140,16 @@
  filter:drop-shadow(0 5px 7px rgba(0,0,0,.28));
 }
 #astralis-real-roadster .roadster-model-underbody{
- top:calc(75% - var(--roadster-half-thickness,40px));
+ top:calc(73% - var(--roadster-half-thickness,30px));
  transform:rotateX(-90deg);
 }
 #astralis-real-roadster .roadster-model-topside{
- top:calc(31% - var(--roadster-half-thickness,40px));
+ top:calc(33% - var(--roadster-half-thickness,30px));
  transform:rotateX(90deg);
+}
+/* Existing engine state drives a small outlet highlight without extra timers. */
+#astralis-real-roadster .roadster-surface-outlet{
+ opacity:calc(.12 + .48 * var(--roadster-boost,0));
 }
 @media (prefers-reduced-motion:reduce){
  #astralis-real-roadster .roadster-solid-model{
@@ -152,3 +160,4 @@
    transform:scaleX(1);
  }
 }
+
