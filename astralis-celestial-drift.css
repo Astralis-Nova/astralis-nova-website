@@ -27,8 +27,8 @@
   left:-16vw;
   top:58vh;
   filter:saturate(.78) contrast(1.10) drop-shadow(0 0 5px rgba(132,187,224,.17));
-  animation:astralisEarthDrift 390s linear infinite;
-  animation-delay:-162s;
+  animation:astralisEarthDrift 210s linear infinite;
+  animation-delay:-92s;
 }
 
 #astralis-celestial-drift .mars{
@@ -36,8 +36,8 @@
   left:104vw;
   top:24vh;
   filter:saturate(.56) contrast(1.10) brightness(.88);
-  animation:astralisMarsDrift 430s linear infinite;
-  animation-delay:-117s;
+  animation:astralisMarsDrift 240s linear infinite;
+  animation-delay:-82s;
 }
 
 #astralis-celestial-drift .gas{
@@ -45,8 +45,8 @@
   left:76vw;
   top:72vh;
   filter:saturate(.48) contrast(1.12) brightness(.80) drop-shadow(0 0 5px rgba(115,150,199,.10));
-  animation:astralisGasDrift 290s ease-in-out infinite alternate;
-  animation-delay:-145s;
+  animation:astralisGasDrift 190s ease-in-out infinite alternate;
+  animation-delay:-95s;
 }
 
 #astralis-celestial-drift .ringed{
@@ -56,8 +56,8 @@
   top:10vh;
   filter:saturate(.51) contrast(1.10) brightness(.90) drop-shadow(0 0 5px rgba(150,188,225,.10));
   transform-origin:50% 50%;
-  animation:astralisRingedDrift 470s linear infinite;
-  animation-delay:-201s;
+  animation:astralisRingedDrift 260s linear infinite;
+  animation-delay:-108s;
 }
 
 #astralis-celestial-drift .comet{
@@ -112,4 +112,56 @@
   #astralis-celestial-drift .gas{left:8vw;top:76vh}
   #astralis-celestial-drift .ringed{left:auto;right:12vw;top:15vh}
   #astralis-celestial-drift .comet{display:none}
+}
+
+
+/* Restored archive worlds: separate lanes keep the sky populated at every phase. */
+#astralis-celestial-drift .world{
+  left:0;top:var(--world-y);width:clamp(64px,var(--world-size),165px);
+  opacity:var(--world-opacity,.8);filter:saturate(.85) contrast(1.06);
+  animation:astralisArchiveWorldDrift var(--world-time) linear infinite;
+  animation-delay:var(--world-delay);
+}
+#astralis-celestial-drift .ocean{--world-y:39vh;--world-size:12vw;--world-time:224s;--world-delay:-48s;--rest-x:7vw}
+#astralis-celestial-drift .lunar{--world-y:8vh;--world-size:8vw;--world-time:174s;--world-delay:-104s;--rest-x:48vw}
+#astralis-celestial-drift .ice{--world-y:69vh;--world-size:10vw;--world-time:248s;--world-delay:-176s;--rest-x:80vw;animation-direction:reverse}
+#astralis-celestial-drift .amethyst{--world-y:18vh;--world-size:9vw;--world-time:276s;--world-delay:-112s;--rest-x:30vw}
+#astralis-celestial-drift .diamond{--world-y:86vh;--world-size:7vw;--world-time:198s;--world-delay:-62s;--rest-x:66vw;--world-opacity:.65}
+#astralis-celestial-drift .aurora{--world-y:49vh;--world-size:8vw;--world-time:308s;--world-delay:-66s;--rest-x:85vw;animation-direction:reverse}
+#astralis-celestial-drift .volcanic{--world-y:81vh;--world-size:11vw;--world-time:264s;--world-delay:-168s;--rest-x:31vw}
+@keyframes astralisArchiveWorldDrift{
+  from{transform:translate3d(-25vw,0,0) rotate(-6deg)}
+  to{transform:translate3d(120vw,-9vh,0) rotate(12deg)}
+}
+/* Tails trail the direction of travel; staggered passes begin within seconds. */
+#astralis-celestial-drift .comet{
+  left:0;top:0;width:clamp(120px,21vw,300px);opacity:0;
+  --comet-start-x:-40vw;--comet-end-x:120vw;--comet-start-y:12vh;--comet-end-y:47vh;--comet-angle:12deg;
+  animation:astralisRestoredCometPass 43s linear infinite;animation-delay:-7s;
+}
+#astralis-celestial-drift .comet-blue{
+  width:clamp(145px,27vw,380px);--comet-start-x:115vw;--comet-end-x:-45vw;
+  --comet-start-y:62vh;--comet-end-y:18vh;--comet-angle:192deg;
+  animation-duration:61s;animation-delay:-32s;
+}
+#astralis-celestial-drift .comet-distant{
+  width:clamp(80px,13vw,180px);--comet-start-y:82vh;--comet-end-y:57vh;--comet-angle:-9deg;
+  animation-duration:79s;animation-delay:-48s;filter:saturate(.65);
+}
+@keyframes astralisRestoredCometPass{
+  0%{transform:translate3d(var(--comet-start-x),var(--comet-start-y),0) rotate(var(--comet-angle));opacity:0}
+  8%{opacity:.72}48%{opacity:.88}
+  64%,100%{transform:translate3d(var(--comet-end-x),var(--comet-end-y),0) rotate(var(--comet-angle));opacity:0}
+}
+html.astralis-page-hidden #astralis-celestial-drift .celestial,
+#astralis-celestial-drift.sky-motion-paused .celestial{animation-play-state:paused!important}
+@media(max-width:700px){
+  #astralis-celestial-drift .world{width:clamp(52px,19vw,96px);opacity:.72}
+  #astralis-celestial-drift .diamond,#astralis-celestial-drift .amethyst{display:none}
+  #astralis-celestial-drift .comet{width:clamp(100px,35vw,190px)}
+  #astralis-celestial-drift .comet-distant{width:90px}
+}
+@media(prefers-reduced-motion:reduce){
+  #astralis-celestial-drift .world{animation:none;left:var(--rest-x);top:var(--world-y);transform:none}
+  #astralis-celestial-drift .comet{display:none;animation:none}
 }

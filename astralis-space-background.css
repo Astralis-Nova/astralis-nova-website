@@ -60,3 +60,20 @@ html.astralis-page-hidden #astralisSpaceBackground::before,
   #astralisSpaceBackground *,#astralisSpaceBackground::before{animation:none!important}
   .astralis-space-asteroid{left:var(--rest-x);top:var(--rest-y);transform:none;opacity:.55}
 }
+
+
+.astralis-space-satellite{
+  position:absolute;left:0;top:0;z-index:2;width:clamp(65px,8vw,115px);
+  opacity:.8;animation:astralisSatellitePass 112s linear infinite;
+  animation-delay:-38s;will-change:transform;
+}
+.astralis-space-satellite svg{display:block;width:100%;height:auto;filter:drop-shadow(0 0 3px #91bbda55)}
+@keyframes astralisSatellitePass{
+  0%{transform:translate3d(112vw,30vh,0) rotate(-18deg);opacity:0}
+  8%,90%{opacity:.8}
+  100%{transform:translate3d(-18vw,70vh,0) rotate(25deg);opacity:0}
+}
+@media(max-width:700px){.astralis-space-satellite{width:62px}}
+@media(prefers-reduced-motion:reduce){
+  .astralis-space-satellite{animation:none;left:68vw;top:38vh;transform:rotate(-12deg);opacity:.6}
+}

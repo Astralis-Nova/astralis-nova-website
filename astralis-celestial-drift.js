@@ -246,5 +246,5 @@
   const loadFloatingLayout=()=>loadScript('/floating-controls-layout.js?v=20260830b','floatingControlsLayout');
 
   const finish=()=>{upgradeRiver();installMusicPlanet();loadQuoteAudit();loadNovaGuide();loadTipJar();loadFloatingLayout()};
-  const core=document.createElement('script');core.src='/astralis-celestial-drift-core.js?v=20261005';core.async=false;core.onload=finish;core.onerror=finish;document.head.appendChild(core);
+  const core=document.createElement('script');core.src='/astralis-celestial-drift-core.js?v=20261101restoredsky';core.async=false;core.onload=finish;core.onerror=finish;document.head.appendChild(core);
 })();

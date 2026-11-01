@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const ID = "astralisSpaceBackground";
-  const VERSION = "20261017realism";
+  const VERSION = "20261101restoredsky";
 
   function seededRandom(seed) {
     let n = seed >>> 0;
@@ -113,6 +113,11 @@
     addAsteroids(stage);
     document.body.prepend(stage);
     upgradeRingedWorld();
+    // A quiet explorer satellite crosses behind all navigation and roaming craft.
+    const satellite = document.createElement('div');
+    satellite.className = 'astralis-space-satellite';
+    satellite.innerHTML = '<svg viewBox="0 0 160 70" aria-hidden="true"><defs><linearGradient id="satMetal"><stop stop-color="#e5ebef"/><stop offset=".5" stop-color="#7e8fa3"/><stop offset="1" stop-color="#283c51"/></linearGradient></defs><path d="M18 23h38v27H18zM104 23h38v27h-38z" fill="#173e72" stroke="#7aafd5" stroke-width="1.5"/><path d="M31 23v27m13-27v27m73-27v27m13-27v27M18 36h38m48 0h38" stroke="#6394bd" stroke-width=".8"/><path d="M56 36h48" stroke="#ccd9e5" stroke-width="4"/><path d="M67 19l20-4 10 15-6 24-23-3-6-17z" fill="url(#satMetal)" stroke="#b8ccdc"/><path d="M80 20V8m-5 0h10m6 21l14-15" stroke="#c3dce8" stroke-width="2"/><ellipse cx="104" cy="13" rx="9" ry="4" transform="rotate(-36 104 13)" fill="#a7bccd"/><circle cx="72" cy="42" r="2" fill="#6fffc7"/></svg>';
+    stage.append(satellite);
     const ctx = canvas.getContext("2d", {alpha:true});
     if (!ctx) return; // The CSS background and asteroid layer still work.
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -185,23 +190,39 @@
           ctx.globalAlpha = 1;
         }
       }
-      // Infrequent streaks have varied routes instead of repeating one identical pass.
-      const cycle = Math.floor((seconds + 17) / 67);
-      const phase = (seconds + 17) % 67;
-      const route = seededRandom(9301 + cycle);
-      const duration = 1.6 + route() * .65;
-      if (!reduced.matches && phase < duration) {
-        const t = phase / duration;
-        const startY = .08 + route() * .34;
-        const x = width * (1.12 - t * 1.38), y = height * (startY + t * .34);
-        const opacity = Math.sin(t * Math.PI) * .55;
-        const tail = ctx.createLinearGradient(x, y, x + 94, y - 33);
-        tail.addColorStop(0, `rgba(206,228,255,${opacity})`);
-        tail.addColorStop(1, "rgba(140,182,235,0)");
-        ctx.strokeStyle = tail;ctx.lineWidth = 1.5;
-        ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x + 94,y - 33);ctx.stroke();
-        ctx.fillStyle = `rgba(244,249,255,${opacity})`;
-        ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill();
+      // Two staggered meteor lanes: varied directions and tails every few seconds.
+      if (!reduced.matches) {
+        const lanes = coarse.matches ? 1 : 2;
+        for (let lane = 0; lane < lanes; lane += 1) {
+          const interval = lane ? 13 : 8.5;
+          const clock = seconds + (lane ? 5.2 : 7.8);
+          const cycle = Math.floor(clock / interval);
+          const phase = clock % interval;
+          const route = seededRandom(9301 + cycle * 17 + lane * 491);
+          const duration = 1.05 + route() * .75;
+          if (phase >= duration) continue;
+          const t = phase / duration;
+          const rightward = route() > .5;
+          const startX = rightward ? -.12 : 1.12;
+          const endX = rightward ? 1.12 : -.12;
+          const startY = .03 + route() * .47;
+          const drop = .18 + route() * .27;
+          const x = width * (startX + t * (endX - startX));
+          const y = height * (startY + t * drop);
+          const opacity = Math.sin(t * Math.PI) * .88;
+          const dx = width * (endX - startX), dy = height * drop;
+          const length = Math.hypot(dx, dy);
+          const tailLength = 76 + route() * 74;
+          const tx = x - dx / length * tailLength, ty = y - dy / length * tailLength;
+          const tail = ctx.createLinearGradient(x, y, tx, ty);
+          tail.addColorStop(0, `rgba(220,240,255,${opacity})`);
+          tail.addColorStop(.25, `rgba(138,200,255,${opacity * .55})`);
+          tail.addColorStop(1, 'rgba(120,174,235,0)');
+          ctx.strokeStyle = tail;ctx.lineWidth = lane ? 1.2 : 1.7;
+          ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(tx,ty);ctx.stroke();
+          ctx.fillStyle = `rgba(248,252,255,${opacity})`;
+          ctx.beginPath();ctx.arc(x,y,lane ? 1.1 : 1.7,0,Math.PI*2);ctx.fill();
+        }
       }
     }
 
@@ -222,6 +243,7 @@
       pointerX = pointerY = parallaxX = parallaxY = 0;
       const paused = document.hidden || reduced.matches;
       stage.classList.toggle("space-motion-paused", paused);
+      document.getElementById('astralis-celestial-drift')?.classList.toggle('sky-motion-paused', document.hidden);
       if (paused) draw(elapsed);
       else frame = window.requestAnimationFrame(tick);
     }
