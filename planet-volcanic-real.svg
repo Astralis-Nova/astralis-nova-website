@@ -1,1 +1,54 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs><radialGradient id="p" cx="34%" cy="28%" r="76%"><stop stop-color="#ffe2b0"/><stop offset=".16" stop-color="#e97935"/><stop offset=".43" stop-color="#8e2e24"/><stop offset=".72" stop-color="#3d1822"/><stop offset="1" stop-color="#120b18"/></radialGradient><filter id="tex"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="4" seed="19" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="8"/><feBlend in="SourceGraphic" in2="n" mode="multiply"/></filter><filter id="g" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="13" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="256" cy="256" r="207" fill="#ff6b3d" opacity=".18" filter="url(#g)"/><circle cx="256" cy="256" r="190" fill="url(#p)" filter="url(#tex)"/><g fill="none" stroke="#ffd071" stroke-linecap="round" filter="url(#g)"><path d="M126 316l43-36 37 14 34-58 31 19 39-68 61 39" stroke-width="8"/><path d="M159 182l34 28 32-17 35 39 44-26 38 35" stroke-width="5"/><path d="M218 357l31-44 26 18 41-49" stroke-width="6"/></g><ellipse cx="199" cy="166" rx="54" ry="27" fill="#fff" opacity=".13" transform="rotate(-25 199 166)"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <clipPath id="globe"><circle cx="256" cy="256" r="190"/></clipPath>
+    <radialGradient id="rock" cx="28%" cy="24%" r="88%">
+      <stop stop-color="#bc7651"/><stop offset=".28" stop-color="#814330"/>
+      <stop offset=".56" stop-color="#49272a"/><stop offset="1" stop-color="#100f1b"/>
+    </radialGradient>
+    <radialGradient id="haze">
+      <stop offset=".72" stop-color="#ff763e" stop-opacity="0"/>
+      <stop offset=".78" stop-color="#ff9960" stop-opacity=".19"/>
+      <stop offset=".86" stop-color="#e9532a" stop-opacity=".055"/>
+      <stop offset="1" stop-color="#e9532a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="night" cx="25%" cy="22%" r="85%">
+      <stop offset=".18" stop-color="#030612" stop-opacity="0"/>
+      <stop offset=".55" stop-color="#030612" stop-opacity=".18"/>
+      <stop offset=".82" stop-color="#030612" stop-opacity=".73"/>
+      <stop offset="1" stop-color="#030612" stop-opacity=".97"/>
+    </radialGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#ffce96" stop-opacity=".66"/>
+      <stop offset=".45" stop-color="#e88658" stop-opacity=".16"/>
+      <stop offset=".72" stop-color="#7e4b46" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="crust" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".028" numOctaves="5" seed="19" result="noise"/>
+      <feColorMatrix in="noise" type="saturate" values="0" result="grain"/>
+      <feBlend in="SourceGraphic" in2="grain" mode="multiply" result="surface"/>
+      <!-- Restore circular alpha after the noise operation fills the filter rectangle. -->
+      <feComposite in="surface" in2="SourceAlpha" operator="in"/>
+    </filter>
+    <filter id="fissures" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="3" seed="32" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="10" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="heat" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4"/></filter>
+    <g id="seams" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M94 281q24-17 40-9t28-18l18-8 16-28q12-9 25-2l17-15 13-29 23-8 13-29 26-11M178 248l9 24-7 19 17 23-4 24M237 201l28 9 12 19 22-3 14 18 25 8 12 23M278 229l-4 26 11 15-3 23 14 21M204 378l14-24 19-6 9-21 22-9 14-25M107 185l21 5 15 17 25-3 28 14M287 135l20 11 5 20 27 7 11 21 23 8M316 365l9-21 22-10 7-20 22-12" stroke-width="2.7"/>
+      <path d="M134 272l-8-22 9-14M187 272l24 7 9 17M221 216l-8-21 7-18M251 172l-13-17 4-16M299 226l11-16-3-15M246 327l-16-13-8 1M347 334l-15-16 2-17M350 194l-8 18 7 12" stroke-width="1.2"/>
+    </g>
+  </defs>
+  <!-- Transparent space outside a soft, circular atmosphere. -->
+  <circle cx="256" cy="256" r="242" fill="url(#haze)"/>
+  <g clip-path="url(#globe)">
+    <circle cx="256" cy="256" r="190" fill="url(#rock)" filter="url(#crust)"/>
+    <g filter="url(#fissures)">
+      <use href="#seams" stroke="#ff501b" opacity=".85" filter="url(#heat)"/>
+      <use href="#seams" stroke="#ff8e32"/>
+      <use href="#seams" stroke="#ffe2a0" transform="translate(0 -.3)" opacity=".75"/>
+    </g>
+    <circle cx="256" cy="256" r="190" fill="url(#night)"/>
+    <circle cx="256" cy="256" r="189" fill="none" stroke="url(#rim)" stroke-width="2"/>
+  </g>
+</svg>

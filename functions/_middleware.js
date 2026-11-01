@@ -56,7 +56,7 @@ export async function onRequest(context) {
       })
       .on("body", {
         element(element) {
-          element.append('<script src="/astralis-performance-loader.js?v=20261101restoredsky" defer></script><script src="/astralis-motion-restore.js?v=20261017privacy" defer></script>', { html: true });
+          element.append('<script src="/astralis-performance-loader.js?v=20261101volcanic" defer></script><script src="/astralis-motion-restore.js?v=20261017privacy" defer></script>', { html: true });
         },
       });
   }
