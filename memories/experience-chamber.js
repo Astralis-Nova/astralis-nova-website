@@ -35,6 +35,7 @@
   let experiences = [];
   let pending = null;
   let pendingFiles = [];
+  let pendingCollectionId = null;
   let recognition = null;
 
   function toBase64(data) {
@@ -265,6 +266,7 @@
         created: new Date().toISOString(),
         source: 'owner-approved'
       };
+      if (pendingCollectionId) item.collectionId = pendingCollectionId;
       const encryptedItem = await encryptJson(item);
       const db = await openDb();
       const transaction = db.transaction(['experiences', 'attachments'], 'readwrite');
@@ -278,6 +280,7 @@
       date.value = today();
       pending = null;
       pendingFiles = [];
+      pendingCollectionId = null;
       review.hidden = true;
     } catch (error) {
       console.error('Nova experience save failed', error);
@@ -387,6 +390,7 @@
     };
     if (!input.story) return;
     pendingFiles = [...files.files];
+    pendingCollectionId = null;
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = true;
     status.textContent = 'Nova is studying the experience';
@@ -423,7 +427,7 @@
     try { recognition.start(); } catch { recognition = null; }
   });
   approve.addEventListener('click', saveApprovedExperience);
-  discard.addEventListener('click', () => { pending = null; pendingFiles = []; review.hidden = true; status.textContent = 'Proposal discarded—nothing was remembered'; });
+  discard.addEventListener('click', () => { pending = null; pendingFiles = []; pendingCollectionId = null; review.hidden = true; status.textContent = 'Proposal discarded—nothing was remembered'; });
   document.addEventListener('click', event => {
     const attachment = event.target.closest?.('[data-nova-attachment]');
     if (attachment) downloadAttachment(attachment.dataset.novaAttachment).catch(error => { status.textContent = error.message; });
@@ -436,9 +440,37 @@
     importEncryptedBrain(importFile.files?.[0]).catch(error => { console.error(error); status.textContent = `Import failed: ${error.message}`; }).finally(() => { importFile.value = ''; });
   });
 
+  const collectionButton = $('importMemoryCollection');
+  const collectionFile = $('memoryCollectionFile');
+  collectionButton?.addEventListener('click', () => {
+    if (key) collectionFile?.click();
+  });
+  collectionFile?.addEventListener('change', async () => {
+    if (!key || !collectionFile.files?.[0]) return;
+    collectionButton.disabled = true;
+    status.textContent = 'Checking the collection locally; nothing has been saved yet';
+    try {
+      const collection = await window.NovaMemoryCollection.read(collectionFile.files[0]);
+      if (experiences.some(item => item.collectionId === collection.id)) {
+        status.textContent = 'This collection is already remembered on this device.';
+        return;
+      }
+      pendingFiles = collection.files;
+      pendingCollectionId = collection.id;
+      setReview(collection.proposal);
+      status.textContent = `${collection.photos} photos and ${collection.videos} videos ready for your approval`;
+    } catch (error) {
+      status.textContent = `Collection not imported: ${error.message}`;
+    } finally {
+      collectionFile.value = '';
+      collectionButton.disabled = !key;
+    }
+  });
+
   async function start(nextKey) {
     if (!nextKey || key) return;
     key = nextKey;
+    if (collectionButton) collectionButton.disabled = false;
     date.value ||= today();
     try { await loadExperiences(); }
     catch (error) { console.error(error); status.textContent = 'Private experience storage is unavailable on this device'; }

@@ -70,7 +70,8 @@
         <div class="experience-review-actions"><button class="approve-memory" id="approveExperience" type="button">Approve and remember</button><button class="discard-memory" id="discardExperience" type="button">Discard proposal</button></div>
       </section>
       <div class="captured-strip" id="capturedStrip" aria-label="Recently captured experiences"></div>
-      <div class="brain-transfer"><button id="exportExperienceBrain" type="button">Export encrypted brain</button><button id="importExperienceBrain" type="button">Import encrypted brain</button><input id="importExperienceFile" type="file" accept="application/json,.json"></div>
+      <div class="brain-transfer"><button id="importMemoryCollection" type="button" disabled>Import photo &amp; video collection</button><input id="memoryCollectionFile" type="file" accept="application/json,.json" hidden><button id="exportExperienceBrain" type="button">Export encrypted brain</button><button id="importExperienceBrain" type="button">Import encrypted brain</button><input id="importExperienceFile" type="file" accept="application/json,.json"></div>
+      <p class="privacy-note">Prepared collections open for review here. Approve the collection to encrypt its photos and videos on this device.</p>
     </section>
     <section class="family-constellation" id="familyConstellation" aria-labelledby="familyTitle">
       <div class="family-head"><div><div class="eyebrow">Nova family constellation</div><h3 id="familyTitle">Turn ancestry records into living memory</h3><p class="muted">Import your Ancestry GEDCOM or ZIP export. Nova maps people, relationships, dates, places, sources, and life events locally, shows you conflicts first, and encrypts only what you approve.</p></div><span class="family-status" id="familyStatus">Waiting for a family export</span></div>
@@ -123,7 +124,8 @@
 <link rel="stylesheet" href="./privacy-controls.css?v=1">
 <script src="./privacy-controls.js?v=1"></script>
 <script src="./gedcom-core.js?v=20260925a" defer></script>
-<script src="./experience-chamber.js?v=20260925a" defer></script>
+<script src="./memory-collection.js?v=20261101a" defer></script>
+<script src="./experience-chamber.js?v=20261101collection" defer></script>
 <script src="./family-constellation.js?v=20261016ancestry1" defer></script>
 <script>
 const $=id=>document.getElementById(id);let ARCHIVE=null,VAULT_KEY=null,LEGACY_VAULT_KEY=null,LEARNED=[],ACTIVE='All',CURRENT_RESULT=null,BRAIN_BUSY=false;

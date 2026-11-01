@@ -36,7 +36,9 @@ jobs:
 
       - name: Validate memory privacy and player recovery
         run: |
-          node --test tests/memory-privacy.test.mjs tests/player-reliability.test.mjs
+          node --test tests/memory-privacy.test.mjs tests/memory-collection.test.cjs tests/player-reliability.test.mjs
+          node --check memories/memory-collection.js
+          node --check memories/experience-chamber.js
           node --check homepage-usability.js
           node --check scene-motion.js
           node --check player/settings.js

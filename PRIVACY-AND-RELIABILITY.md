@@ -11,6 +11,19 @@ phrase. Inactivity locking reloads the document after 15 minutes without input;
 it discards plaintext and keys, without clearing storage. Unsaved form drafts must
 be saved before leaving the device unattended.
 
+## Prepared photo and video collections
+
+The unlocked Experience Chamber can now read a local `.nova.json` collection.
+It validates every media type, declared size, filename and SHA-256 digest before
+staging the complete collection for owner review. It accepts JPEG, PNG, WebP and
+MP4, up to 25 MB per file and 60 MB per collection. No upload or online analysis
+occurs. Selecting the file does not save it; the existing Approve and remember
+action encrypts the approved record and all attachments in one local transaction.
+The stable collection ID prevents accidental re-imports on the same device.
+Existing wake phrases, vault data, IndexedDB layout and encrypted backup format
+remain unchanged. Prepared collection files themselves contain the selected
+media and must be kept private until imported; exported brain backups are encrypted.
+
 ## Online analysis
 
 Default cognitive analysis and Experience Chamber extraction now run on the device.
