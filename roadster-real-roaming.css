@@ -1,163 +1,23 @@
-/* Real 2026 Tesla Roadster press-photo cutout: no YouTube rectangle.
-   Photograph: Courtesy of Tesla, Inc.  Flight/plume effects: Astralis Nova. */
-#astralis-real-roadster{
- position:fixed;left:0;top:0;z-index:34;width:clamp(230px,26vw,390px);
- pointer-events:none;transform:translate3d(var(--roadster-real-x,68vw),var(--roadster-real-y,24vh),0);
- will-change:transform;contain:layout style;
-}
-#astralis-real-roadster .roadster-real-link{
- display:block;width:100%;pointer-events:auto;text-decoration:none;color:inherit;perspective:820px;
- border:0;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
-}
-#astralis-real-roadster .roadster-real-core{
- position:relative;width:100%;perspective:560px;
- transform:scaleX(var(--roadster-facing,1)) rotate(var(--roadster-bank,0deg)) rotateY(var(--roadster-nose,0deg)) rotateX(var(--roadster-flip,0deg)) scale(var(--roadster-depth,1));
- transform-style:preserve-3d;backface-visibility:visible;
- transform-origin:50% 54%;
- filter:drop-shadow(0 8px 16px rgba(0,0,0,.34)) drop-shadow(0 0 11px rgba(129,211,255,.13));
-}
-#astralis-real-roadster svg.roadster-photo-art,
-#astralis-real-roadster .roadster-photo-fallback svg{display:block;width:100%;height:auto;overflow:visible}
-#astralis-real-roadster .roadster-photo-fallback[hidden]{display:none}
-#astralis-real-roadster svg.roadster-photo-art[hidden]{display:none}
-#astralis-real-roadster .roadster-photo-fallback{width:86%;margin:0 auto}
-#astralis-real-roadster .roadster-real-photo{image-rendering:auto}
-#astralis-real-roadster .thruster-plume{transform-box:fill-box;transform-origin:0 50%;animation:roadsterPhotoPulse .42s ease-in-out infinite alternate;opacity:.89}
-#astralis-real-roadster .thruster-plume-soft{animation-duration:.58s;opacity:.66}
-#astralis-real-roadster .thruster-lift{transform-box:fill-box;transform-origin:50% 0%;animation:roadsterLiftPulse .44s ease-in-out infinite alternate;opacity:.82}
-#astralis-real-roadster .roadster-glow-ring{transform-box:fill-box;transform-origin:center;animation:roadsterGlowPulse 1.18s ease-in-out infinite alternate;opacity:.54}
-#astralis-real-roadster .roadster-real-core[data-thrust="coast"] .thruster-plume{opacity:.18;animation-duration:1.25s}
-#astralis-real-roadster .roadster-real-core[data-thrust="lift"] .thruster-lift{opacity:1;animation-duration:.24s}
-#astralis-real-roadster .roadster-real-label{
- position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);
- background:rgba(4,14,28,.83);border:1px solid rgba(143,226,255,.5);
- border-radius:999px;padding:4px 11px;color:#ecfaff;font:700 10px/1.2 system-ui,sans-serif;
- letter-spacing:.04em;white-space:nowrap;opacity:0;transition:opacity .2s;pointer-events:none;
-}
-#astralis-real-roadster:hover .roadster-real-label,
-#astralis-real-roadster:focus-within .roadster-real-label{opacity:1}
-#astralis-real-roadster .roadster-real-link:focus-visible{outline:3px solid #8ee6ff;outline-offset:5px;border-radius:20px}
-@keyframes roadsterPhotoPulse{0%{transform:scaleX(.6) scaleY(.8);opacity:.39}100%{transform:scaleX(1.15) scaleY(1.12);opacity:.95}}
-@keyframes roadsterLiftPulse{0%{transform:scaleY(.55);opacity:.42}100%{transform:scaleY(1.23);opacity:1}}
-@keyframes roadsterGlowPulse{0%{transform:scale(.92);opacity:.24}100%{transform:scale(1.07);opacity:.6}}
-@media(max-width:680px){#astralis-real-roadster{width:clamp(190px,53vw,265px);z-index:29}#astralis-real-roadster .roadster-real-label{font-size:9px}}
-@media(prefers-reduced-motion:reduce){
- #astralis-real-roadster{will-change:auto}
- #astralis-real-roadster .thruster-plume,
- #astralis-real-roadster .thruster-lift,
- #astralis-real-roadster .roadster-glow-ring{animation:none}
- #astralis-real-roadster .roadster-real-label{transition:none}
-}
+/* Complete white Roadster cutout; no clipped photo or disconnected 3D panels. */
+#astralis-real-roadster{position:fixed;left:0;top:0;z-index:34;width:clamp(230px,26vw,390px);pointer-events:none;transform:translate3d(var(--roadster-real-x,68vw),var(--roadster-real-y,24vh),0);will-change:transform}
+#astralis-real-roadster .roadster-real-link{display:block;width:100%;pointer-events:auto;text-decoration:none;color:inherit}
+#astralis-real-roadster .roadster-real-core{position:relative;width:100%;transform:scaleX(var(--roadster-facing,1)) rotate(var(--roadster-bank,0deg)) scale(var(--roadster-depth,1))}
+#astralis-real-roadster .roadster-solid-model{position:relative;width:100%;transform:scaleY(var(--roadster-roll-height,1));transform-origin:50% 50%;will-change:transform}
+#astralis-real-roadster .roadster-complete-car{position:relative;display:block;width:100%;height:auto;filter:drop-shadow(0 6px 9px #0008);z-index:1;opacity:var(--roadster-top-opacity,1)}
+#astralis-real-roadster .roadster-rear-jet{position:absolute;left:83%;top:58%;width:38%;height:12%;background:linear-gradient(90deg,#f4ffffe6,#9ce6ff99 30%,#86d9ff00);clip-path:polygon(0 32%,100% 0,89% 68%,0 75%);filter:blur(1px);transform-origin:left center;animation:roadsterJetPulse .25s ease-in-out infinite alternate}
+#astralis-real-roadster .jet-lower{top:66%;width:32%;height:9%}
+#astralis-real-roadster .roadster-lift-jet{position:absolute;top:72%;width:9%;height:32%;background:linear-gradient(#f4ffffd9,#9ce6ff66,#86d9ff00);clip-path:polygon(35% 0,65% 0,100% 100%,0 100%);opacity:.6}
+#astralis-real-roadster .lift-front{left:29%}#astralis-real-roadster .lift-rear{left:77%}
+#astralis-real-roadster [data-thrust="coast"] .roadster-rear-jet{opacity:.16}#astralis-real-roadster [data-thrust="coast"] .roadster-lift-jet{opacity:.12}
+#astralis-real-roadster [data-thrust="lift"] .roadster-lift-jet{opacity:1}
+#astralis-real-roadster .roadster-real-label{position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);padding:4px 9px;border-radius:20px;background:#040e1ce6;color:#ecfaff;font:700 9px system-ui;white-space:nowrap;opacity:0;pointer-events:none}
+#astralis-real-roadster:hover .roadster-real-label,#astralis-real-roadster:focus-within .roadster-real-label{opacity:1}
+#astralis-real-roadster a:focus-visible{outline:3px solid #8ee6ff;border-radius:20px}
+#astralis-roadster-flight-trail{position:fixed;inset:0;width:100%;height:100%;z-index:32;pointer-events:none;contain:strict}
+@keyframes roadsterJetPulse{from{transform:scaleX(.65);opacity:.55}to{transform:scaleX(1.12);opacity:1}}
+@media(max-width:680px){#astralis-real-roadster{width:clamp(190px,53vw,265px);z-index:29}}
+@media(prefers-reduced-motion:reduce){#astralis-roadster-flight-trail{display:none}#astralis-real-roadster,#astralis-real-roadster .roadster-solid-model{will-change:auto}#astralis-real-roadster .roadster-solid-model{transform:none}#astralis-real-roadster .roadster-rear-jet{animation:none}}
 
-/* Flight particle layer does not intercept site clicks or navigation. */
-#astralis-roadster-flight-trail{
- position:fixed;inset:0;width:100%;height:100%;z-index:32;
- pointer-events:none;user-select:none;contain:strict;
-}
-#astralis-real-roadster .roadster-real-core[data-thrust="forward"] .thruster-plume{
- opacity:1;filter:drop-shadow(0 0 7px rgba(135,221,255,.8));
- animation-duration:.22s;
-}
-#astralis-real-roadster .roadster-real-core[data-thrust="lift"] .thruster-plume{
- opacity:.83;filter:drop-shadow(0 0 9px rgba(119,204,255,.65));
- animation-duration:.19s;
-}
-#astralis-real-roadster .roadster-real-core[data-thrust="coast"] .thruster-lift{
- opacity:.16;animation-duration:1.1s;
-}
-@media(prefers-reduced-motion:reduce){
- #astralis-roadster-flight-trail{display:none}
- #astralis-real-roadster .roadster-real-core{transform:scaleX(1)}
-}
-
-
-/* Real depth model: two photographic sides bridged by a roof and underside.
-   The X-axis roll is now applied to the *entire* car assembly, not one SVG. */
-#astralis-real-roadster .roadster-real-core{
- perspective:none;
- transform:scaleX(var(--roadster-facing,1))
-           rotate(var(--roadster-bank,0deg))
-           rotateY(var(--roadster-nose,0deg))
-           scale(var(--roadster-depth,1));
- transform-style:preserve-3d;
- filter:none; /* A filter on the parent flattens 3D descendants! */
-}
-#astralis-real-roadster .roadster-solid-model{
- position:relative;
- display:block;
- width:100%;
- aspect-ratio:825 / 282;
- transform-style:preserve-3d;
- transform-origin:50% 54%;
- transform:rotateX(var(--roadster-flip,0deg));
- will-change:transform;
-}
-/* Keep each photographic skin as a cutout, never a rectangular panel. */
-#astralis-real-roadster .roadster-solid-model > .roadster-photo-art,
-#astralis-real-roadster .roadster-solid-model > .roadster-photo-fallback{
- position:absolute;
- top:0;
- left:0;
- display:block;
- backface-visibility:hidden;
- -webkit-backface-visibility:hidden;
- transform-style:preserve-3d;
- filter:drop-shadow(0 8px 9px rgba(0,0,0,.34))
-        drop-shadow(0 0 8px rgba(138,224,255,.13));
-}
-#astralis-real-roadster .roadster-solid-model > .roadster-photo-art[hidden],
-#astralis-real-roadster .roadster-solid-model > .roadster-photo-fallback[hidden]{
- display:none;
-}
-#astralis-real-roadster .roadster-model-front,
-#astralis-real-roadster .roadster-photo-fallback:not(.roadster-model-fallback-rear){
- transform:translateZ(var(--roadster-half-thickness,30px));
-}
-#astralis-real-roadster .roadster-model-rear,
-#astralis-real-roadster .roadster-model-fallback-rear{
- /* Keep the far skin upright in MODEL space, so it is upside down halfway
-    through a roll. rotateX(180deg) made the second photo turn upright again. */
- transform:translateZ(calc(-1 * var(--roadster-half-thickness,30px))) rotateY(180deg) scaleX(-1);
-}
-#astralis-real-roadster .roadster-model-fallback-rear,
-#astralis-real-roadster .roadster-photo-fallback:not(.roadster-model-fallback-rear){
- width:86%;
- left:7%;
- margin:0;
-}
-#astralis-real-roadster .roadster-model-surface{
- position:absolute;
- /* Match the cutout's x=187..811 within its 145..970 photographic viewBox.
-    The old surfaces extended beyond the photographed tail. */
- left:5%;
- width:76.5%;
- height:calc(2 * var(--roadster-half-thickness,30px));
- transform-origin:50% 50%;
- backface-visibility:hidden;
- -webkit-backface-visibility:hidden;
- pointer-events:none;
- overflow:visible;
- filter:drop-shadow(0 5px 7px rgba(0,0,0,.28));
-}
-#astralis-real-roadster .roadster-model-underbody{
- top:calc(73% - var(--roadster-half-thickness,30px));
- transform:rotateX(-90deg);
-}
-#astralis-real-roadster .roadster-model-topside{
- top:calc(33% - var(--roadster-half-thickness,30px));
- transform:rotateX(90deg);
-}
-/* Existing engine state drives a small outlet highlight without extra timers. */
-#astralis-real-roadster .roadster-surface-outlet{
- opacity:calc(.12 + .48 * var(--roadster-boost,0));
-}
-@media (prefers-reduced-motion:reduce){
- #astralis-real-roadster .roadster-solid-model{
-   transform:none;
-   will-change:auto;
- }
- #astralis-real-roadster .roadster-real-core{
-   transform:scaleX(1);
- }
-}
-
+/* Both faces are complete cutouts: the underside includes all four tires,
+   sealed floor, sills, bumpers and diffuser. Illustrated, not verified engineering. */
+#astralis-real-roadster .roadster-complete-underbody{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2;opacity:var(--roadster-under-opacity,0);filter:drop-shadow(0 6px 9px #0008);pointer-events:none}
