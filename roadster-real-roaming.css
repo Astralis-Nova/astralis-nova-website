@@ -1,5 +1,5 @@
 /* Complete white Roadster cutout; no clipped photo or disconnected 3D panels. */
-#astralis-real-roadster{position:fixed;left:0;top:0;z-index:34;width:clamp(184px,20.8vw,312px);pointer-events:none;transform:translate3d(var(--roadster-real-x,68vw),var(--roadster-real-y,24vh),0);will-change:transform}
+#astralis-real-roadster{position:fixed;left:0;top:0;z-index:34;width:clamp(147.2px,16.64vw,249.6px);pointer-events:none;transform:translate3d(var(--roadster-real-x,68vw),var(--roadster-real-y,24vh),0);will-change:transform}
 #astralis-real-roadster .roadster-real-link{display:block;width:100%;pointer-events:auto;text-decoration:none;color:inherit}
 #astralis-real-roadster .roadster-real-core{position:relative;width:100%;transform:scaleX(var(--roadster-facing,1)) rotate(var(--roadster-bank,0deg)) scale(var(--roadster-depth,1))}
 #astralis-real-roadster .roadster-solid-model{position:relative;width:100%;transform:scaleY(var(--roadster-roll-height,1));transform-origin:50% 50%;will-change:transform}
@@ -15,7 +15,7 @@
 #astralis-real-roadster a:focus-visible{outline:3px solid #8ee6ff;border-radius:20px}
 #astralis-roadster-flight-trail{position:fixed;inset:0;width:100%;height:100%;z-index:32;pointer-events:none;contain:strict}
 @keyframes roadsterJetPulse{from{transform:scaleX(.65);opacity:.55}to{transform:scaleX(1.12);opacity:1}}
-@media(max-width:680px){#astralis-real-roadster{width:clamp(152px,42.4vw,212px);z-index:29}}
+@media(max-width:680px){#astralis-real-roadster{width:clamp(121.6px,33.92vw,169.6px);z-index:29}}
 @media(prefers-reduced-motion:reduce){#astralis-roadster-flight-trail{display:none}#astralis-real-roadster,#astralis-real-roadster .roadster-solid-model{will-change:auto}#astralis-real-roadster .roadster-solid-model{transform:none}#astralis-real-roadster .roadster-rear-jet{animation:none}}
 
 /* Both faces are complete cutouts: the underside includes all four tires,
