@@ -20,4 +20,4 @@
 
 /* Both faces are complete cutouts: the underside includes all four tires,
    sealed floor, sills, bumpers and diffuser. Illustrated, not verified engineering. */
-#astralis-real-roadster .roadster-complete-underbody{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:2;opacity:var(--roadster-under-opacity,0);filter:drop-shadow(0 6px 9px #0008);pointer-events:none}
+#astralis-real-roadster .roadster-complete-underbody{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transform:scaleY(-1);z-index:2;opacity:var(--roadster-under-opacity,0);filter:drop-shadow(0 6px 9px #0008);pointer-events:none}
