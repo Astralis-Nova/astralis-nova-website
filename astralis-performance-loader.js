@@ -147,7 +147,7 @@
     `/site-fixes.js?v=20261005audit`,
     `/cosmic-worlds.js?v=20261017toondirectory`,
     `/realistic-orbit.js?v=20260721b`,
-    `/astralis-celestial-drift.js?v=20261102roundglobe`,
+    `/astralis-celestial-drift.js?v=20261103warmrim`,
     `/astralis-ai-upgrades.js?v=20260722q`,
     `/astralis-stragglers.js?v=20260722q`,
     `/astralis-brand-orbit.js?v=20260722s`,

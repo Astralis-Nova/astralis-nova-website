@@ -245,6 +245,6 @@
   const loadTipJar=()=>loadScript('/feeling-tipsy.js?v=20261017layout','feelingTipsy');
   const loadFloatingLayout=()=>loadScript('/floating-controls-layout.js?v=20260830b','floatingControlsLayout');
 
-  const finish=()=>{upgradeRiver();installMusicPlanet();loadQuoteAudit();loadNovaGuide();loadTipJar();loadFloatingLayout();loadScript('/eye-world.js?v=20261102roundglobe','eyeWorld')};
+  const finish=()=>{upgradeRiver();installMusicPlanet();loadQuoteAudit();loadNovaGuide();loadTipJar();loadFloatingLayout();loadScript('/eye-world.js?v=20261103warmrim','eyeWorld')};
   const core=document.createElement('script');core.src='/astralis-celestial-drift-core.js?v=20261102eyeworld';core.async=false;core.onload=finish;core.onerror=finish;document.head.appendChild(core);
 })();

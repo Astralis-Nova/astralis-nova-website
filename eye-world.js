@@ -63,7 +63,7 @@
             if (baseZ+zz*z>0) z=-z;
             const shellLight=Math.max(0,-.32*x+.48*y+.82*z);
             const limb=Math.max(0,Math.min(1,(r2-.91)*12));
-            red=37+92*shellLight+27*limb;green=61+96*shellLight+38*limb;blue=125+109*shellLight+66*limb;
+            red=34+92*shellLight-18*limb;green=17+52*shellLight-8*limb;blue=12+26*shellLight-5*limb;
             depth=z;alpha=255;
             if(r2<inner*inner){
               z=Math.sqrt(inner*inner-r2);
@@ -79,7 +79,7 @@
             z=-baseZ/zz;
             if(z>depth&&r2+z*z<=1&&r2+z*z>=inner*inner){
               const light=Math.max(0,-.32*zx+.48*zy+.82*zz);
-              red=55+55*light;green=91+58*light;blue=176+59*light;depth=z;alpha=255;
+              red=79+79*light;green=38+53*light;blue=19+31*light;depth=z;alpha=255;
             }
           }
           const irisZ=(irisX-baseX)/xz;
@@ -108,8 +108,8 @@
                 const sheen=.045+.14*square(1-Math.max(0,viewNormal));
                 const shine=.44*Math.exp(-140*(square(x-.58)+square(y-.18)));
                 const amount=sheen+shine;
-                if(alpha){red+=(181-red)*amount;green+=(220-green)*amount;blue+=(241-blue)*amount;}
-                else {red=181;green=220;blue=241;alpha=255*amount;}
+                if(alpha){red+=(245-red)*amount;green+=(222-green)*amount;blue+=(194-blue)*amount;}
+                else {red=245;green=222;blue=194;alpha=255*amount;}
               }
             }
           }
