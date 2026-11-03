@@ -74,7 +74,7 @@ test('homepage feature is removed; old Megamix share links redirect', () => {
   assert(main.includes('Audio/mp3/Darktide.mp3'));
   assert(main.includes('Audio/mp3/Logged Back In.mp3'));
   // Homepage middleware removes this exact tag; the deferred loader owns it.
-  assert(main.includes('<script src="astralis-celestial-drift.js"></script>'));
+  assert.match(main, /<script src="astralis-celestial-drift\.js(?:\?[^"\s]+)?"><\/script>/);
   assert(fs.readFileSync(path.join(root, 'astralis-performance-loader.js'), 'utf8').includes('/astralis-celestial-drift.js?v=20261101restoredsky'));
   assert.match(fs.readFileSync(path.join(root, 'functions/_middleware.js'), 'utf8'), /\/astralis-performance-loader\.js\?v=[^"']+/);
 });

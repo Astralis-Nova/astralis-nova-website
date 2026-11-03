@@ -123,6 +123,8 @@
   animation-delay:var(--world-delay);
 }
 #astralis-celestial-drift .ocean{--world-y:39vh;--world-size:12vw;--world-time:224s;--world-delay:-48s;--rest-x:7vw}
+#astralis-celestial-drift .eye-world{aspect-ratio:1;filter:drop-shadow(0 0 5px rgba(110,142,218,.19))}
+#astralis-celestial-drift .eye-world canvas{display:block;width:100%;height:100%}
 #astralis-celestial-drift .lunar{--world-y:8vh;--world-size:8vw;--world-time:174s;--world-delay:-104s;--rest-x:48vw}
 #astralis-celestial-drift .ice{--world-y:69vh;--world-size:10vw;--world-time:248s;--world-delay:-176s;--rest-x:80vw;animation-direction:reverse}
 #astralis-celestial-drift .amethyst{--world-y:18vh;--world-size:9vw;--world-time:276s;--world-delay:-112s;--rest-x:30vw}
