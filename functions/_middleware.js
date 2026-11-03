@@ -39,24 +39,24 @@ export async function onRequest(context) {
           element.remove();
         },
       })
-      .on('link[href="astralis-celestial-drift.css"]', {
+      .on('link[href^="astralis-celestial-drift.css"]', {
         element(element) {
           element.remove();
         },
       })
-      .on('script[src="astralis-celestial-drift.js"]', {
+      .on('script[src^="astralis-celestial-drift.js"]', {
         element(element) {
           element.remove();
         },
       })
       .on("head", {
         element(element) {
-          element.append('<link rel="icon" type="image/svg+xml" href="/astralis-favicon.svg?v=20260722s"><link rel="alternate icon" type="image/svg+xml" href="/astralis-favicon-static.svg?v=20260722s"><link rel="apple-touch-icon" href="/astralis-favicon-static.svg?v=20260722s"><meta name="theme-color" content="#070c31"><link rel="stylesheet" href="/astralis-celestial-drift.css?v=20261101restoredsky"><style>#astralisVulcanBlessing{z-index:99999!important;right:16px!important;bottom:92px!important;width:270px!important;display:block!important;visibility:visible!important;opacity:1!important}@media(max-width:700px){#astralisVulcanBlessing{right:8px!important;bottom:78px!important;width:178px!important}}</style>', { html: true });
+          element.append('<link rel="icon" type="image/svg+xml" href="/astralis-favicon.svg?v=20260722s"><link rel="alternate icon" type="image/svg+xml" href="/astralis-favicon-static.svg?v=20260722s"><link rel="apple-touch-icon" href="/astralis-favicon-static.svg?v=20260722s"><meta name="theme-color" content="#070c31"><link rel="stylesheet" href="/astralis-celestial-drift.css?v=20261102roundglobe"><style>#astralisVulcanBlessing{z-index:99999!important;right:16px!important;bottom:92px!important;width:270px!important;display:block!important;visibility:visible!important;opacity:1!important}@media(max-width:700px){#astralisVulcanBlessing{right:8px!important;bottom:78px!important;width:178px!important}}</style>', { html: true });
         },
       })
       .on("body", {
         element(element) {
-          element.append('<script src="/astralis-performance-loader.js?v=20261101volcanic" defer></script><script src="/astralis-motion-restore.js?v=20261017privacy" defer></script>', { html: true });
+          element.append('<script src="/astralis-performance-loader.js?v=20261102roundglobe" defer></script><script src="/astralis-motion-restore.js?v=20261017privacy" defer></script>', { html: true });
         },
       });
   }
