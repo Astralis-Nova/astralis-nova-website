@@ -616,13 +616,38 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 .space-planet.distant-gas,.space-planet.distant-mars{animation-duration:140s}
 .surface-moonwash{animation:none;opacity:.14;transform:none}
 .surface-vegetation-shadows,.surface-depth-shadow,.underground-mineral-shimmer,.underground-light-scatter,.underground-shadow-drift{animation:none}
-.surface-wind-trace{animation-duration:47s}
+/* Gusts move above the trail while the brush follows the surface photo. */
+.surface-brush-motion{display:block;width:100%;height:100%;pointer-events:none}
+.surface-wind-trace{
+ inset:0;overflow:hidden;opacity:1;filter:none;background:none;animation:none;
+}
+.surface-wind-trace::before,.surface-wind-trace::after{
+ content:"";position:absolute;top:66%;left:0;width:clamp(290px,62vw,1000px);height:clamp(40px,9vw,110px);
+ background:
+  radial-gradient(ellipse 47% 16% at 47% 56%,#ddd7c68c,transparent 99%),
+  radial-gradient(ellipse 37% 15% at 52% 43%,#c8d6df78,transparent 99%),
+  radial-gradient(ellipse 32% 13% at 74% 64%,#d4c8af6e,transparent 98%),
+  radial-gradient(ellipse 48% 31% at 50% 54%,#b3aba54d,transparent 99%);
+ filter:blur(4px);opacity:0;
+ animation:toonGroundGust 14s linear infinite;
+}
+.surface-wind-trace::after{top:79%;width:clamp(260px,51vw,880px);animation-delay:1.15s;filter:blur(6px)}
+@keyframes toonGroundGust{
+ 0%{opacity:0;transform:translate3d(-78%,0,0) skewX(-12deg)}
+ 12%{opacity:.76}
+ 26%{opacity:.67}
+ 44%,100%{opacity:0;transform:translate3d(103vw,-14px,0) skewX(-5deg)}
+}
+@media(prefers-reduced-motion:reduce){
+ .surface-wind-trace::before,.surface-wind-trace::after{animation:none}
+}
 @keyframes desertSceneryBreath{from{transform:scale(1.04) translate3d(-.16%,.1%,0)}to{transform:scale(1.04) translate3d(.16%,-.1%,0)}}
 @keyframes spaceStarTwinkle{from{opacity:.76}to{opacity:.92}}
 html.toon-background-paused *,html.toon-background-paused *::before,html.toon-background-paused *::after{animation-play-state:paused!important}
 </style>
 <link rel="stylesheet" href="/toon-planet-orbit.css?v=20261104orbit">
 <script src="/astralis-space-background.js?v=20261104toonorbit" defer></script>
+<script src="/toon-planet-wind.js?v=20261104wind" defer></script>
 </head>
 <body>
 <!-- Scenery-only phase: no visible headings, explanations, credits or character gallery.
@@ -655,7 +680,7 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
  </div>
 </section>
 <section class="region region-surface" id="surface" aria-label="Cactus Forest Moonlight landscape">
- <div class="surface-cover" aria-hidden="true"></div>
+ <div class="surface-cover" aria-hidden="true"><canvas class="surface-brush-motion"></canvas></div>
  <div class="surface-color" aria-hidden="true"></div>
  <div class="surface-stars" aria-hidden="true"></div>
  <div class="surface-haze" aria-hidden="true"></div>
