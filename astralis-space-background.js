@@ -264,10 +264,11 @@
     document.addEventListener("visibilitychange", syncMotion);
     reduced.addEventListener?.("change", syncMotion);
     if (host && 'IntersectionObserver' in window) {
+      const visibleThreshold = .025;
       const observer = new IntersectionObserver(([entry]) => {
-        inView = entry.isIntersecting;
+        inView = entry.intersectionRatio >= visibleThreshold;
         syncMotion();
-      });
+      }, { threshold: visibleThreshold });
       observer.observe(host);
     }
     resize();syncMotion();
