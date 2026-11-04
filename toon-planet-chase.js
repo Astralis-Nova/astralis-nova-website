@@ -33,6 +33,14 @@
     paint.fill(outline);
   }
 
+  function inked(color, outline, ink = "#272332") {
+    shape(color, outline);
+    paint.strokeStyle = ink;
+    paint.lineWidth = 1.5;
+    paint.lineJoin = "round";
+    paint.stroke(outline);
+  }
+
   function shade(top, bottom, light, shadow) {
     const gradient = paint.createLinearGradient(0, top, 0, bottom);
     gradient.addColorStop(0, light);
@@ -58,21 +66,21 @@
     paint.fill();
   }
 
-  // Redrawn for moonlight using the long silhouettes and poses in Chuck Jones's character notes.
+  // Compare the in-motion silhouettes with the Chuck Jones Center character sheets.
   const bird = {
-    tail: new Path2D("M-16 -24Q-42 -40 -61 -79Q-44 -71 -35 -55Q-47 -74 -50 -95Q-35 -84 -25 -57Q-32 -79 -29 -88Q-15 -71 -13 -47Q-10 -35 -3 -27Z"),
-    body: new Path2D("M-23 -31Q-15 -40 -5 -36Q8 -32 10 -44Q12 -53 13 -67L19 -65Q23 -55 20 -43Q19 -31 12 -24Q3 -17 -11 -20Q-20 -23 -23 -31Z"),
-    wing: new Path2D("M-22 -32Q-11 -39 3 -34Q7 -31 4 -28Q-6 -23 -19 -26L-15 -29Z"),
-    head: new Path2D("M10 -65Q8 -70 9 -77Q5 -85 -6 -85Q1 -90 12 -84Q8 -93 0 -95Q16 -97 23 -86Q29 -88 35 -84Q41 -80 38 -73Q34 -65 23 -65L18 -61Z"),
-    beak: new Path2D("M32 -77Q46 -82 53 -78Q58 -73 51 -70Q41 -65 33 -68Q28 -70 32 -77Z")
+    tail: new Path2D("M-10 -40C-29 -44 -40 -67 -82 -81C-66 -84 -55 -76 -47 -72C-58 -86 -69 -95 -87 -98C-69 -104 -51 -95 -39 -84C-48 -99 -60 -110 -79 -117C-58 -118 -36 -103 -22 -83C-15 -73 -14 -58 -4 -50Z"),
+    body: new Path2D("M-27 -48C-18 -52 -10 -45 0 -43C10 -43 15 -52 15 -65C15 -75 10 -84 14 -91L26 -90C25 -79 29 -71 28 -63C28 -49 19 -34 7 -29C-7 -24 -20 -32 -27 -48Z"),
+    wing: new Path2D("M-23 -44C-18 -51 -7 -49 2 -44Q10 -38 3 -34Q-7 -29 -18 -34L-11 -36Q-19 -36 -23 -44Z"),
+    head: new Path2D("M11 -88C8 -91 5 -97 9 -104C5 -109 -2 -111 -11 -109C-6 -116 5 -117 14 -111C10 -119 2 -122 -5 -122C4 -128 16 -124 24 -116C26 -125 23 -129 20 -131C32 -130 40 -121 38 -113Q48 -108 46 -98Q42 -88 30 -87Q25 -82 19 -84Z"),
+    beak: new Path2D("M41 -100Q51 -103 65 -101Q71 -100 69 -96Q64 -91 51 -88Q44 -84 39 -89Q35 -93 41 -100Z")
   };
   const coyote = {
-    tail: new Path2D("M-10 -48Q-28 -42 -47 -49Q-68 -59 -88 -48Q-78 -48 -75 -45L-88 -41Q-79 -41 -74 -38L-80 -34Q-67 -36 -63 -38Q-45 -28 -16 -36Z"),
-    torso: new Path2D("M-12 -38Q-20 -50 -11 -62Q-4 -71 -9 -83Q-4 -89 10 -88Q18 -84 15 -72Q10 -62 17 -54Q25 -42 13 -34Q1 -27 -12 -38Z"),
-    chest: new Path2D("M7 -84L13 -85Q20 -78 13 -66L16 -63L13 -61Q18 -56 19 -49Q21 -41 12 -37Q4 -37 2 -46Q-3 -55 4 -65Q10 -77 7 -84Z"),
-    head: new Path2D("M-6 -83Q-16 -90 -13 -100Q-10 -108 -4 -109Q-14 -119 -19 -135L-20 -146L-12 -139L-2 -131L8 -115L11 -116Q8 -132 15 -145L21 -151L20 -139L24 -141Q23 -127 22 -118L21 -110Q29 -108 32 -102L39 -99L36 -90Q26 -86 18 -88Q9 -82 -6 -83Z"),
-    cheek: new Path2D("M-7 -102Q4 -105 11 -96Q17 -94 23 -97Q33 -101 48 -101L52 -96Q42 -91 31 -91L35 -88L25 -89L28 -85L16 -87Q12 -83 3 -85L7 -80L-5 -84Q-12 -87 -13 -93Z"),
-    ear: new Path2D("M-11 -133Q-6 -129 2 -114L-3 -113Q-9 -121 -11 -133ZM15 -137Q19 -129 17 -117L14 -117Z")
+    tail: new Path2D("M-8 -47C-27 -42 -38 -47 -49 -57Q-62 -71 -84 -64L-73 -60L-96 -56L-78 -53L-94 -48L-77 -48L-86 -41Q-70 -45 -62 -42L-67 -36Q-54 -41 -49 -38Q-33 -24 -10 -36Z"),
+    torso: new Path2D("M-13 -39Q-22 -52 -13 -63Q-6 -73 -11 -88Q-9 -95 3 -96Q13 -95 17 -86Q11 -74 12 -64Q15 -59 21 -49Q25 -39 14 -33Q-3 -30 -13 -39Z"),
+    chest: new Path2D("M4 -91L15 -93Q21 -81 13 -70L17 -68L14 -63Q23 -55 22 -46Q21 -36 12 -34Q2 -34 -1 -43Q-4 -53 1 -63Q8 -76 4 -91Z"),
+    head: new Path2D("M-12 -83Q-25 -87 -19 -101L-15 -107Q-25 -114 -33 -136L-36 -148L-27 -144Q-20 -138 -15 -133L-17 -140L-10 -133L2 -117L7 -119Q0 -135 4 -145L3 -154L11 -150L17 -139L16 -144L23 -137Q28 -125 26 -116Q37 -112 42 -104L54 -101L48 -90Q35 -88 23 -89Q4 -79 -12 -83Z"),
+    cheek: new Path2D("M-12 -107Q-1 -107 7 -101Q15 -95 21 -99Q37 -106 58 -108L66 -104L64 -99Q49 -98 38 -94L45 -92L35 -90L38 -87L24 -89L28 -85L15 -87L17 -82L4 -87L3 -82L-8 -87Q-22 -90 -21 -97Q-21 -103 -12 -107Z"),
+    ear: new Path2D("M-30 -141Q-20 -137 -6 -117L-12 -116Q-23 -125 -30 -141ZM8 -146Q17 -139 21 -119L15 -119Q11 -127 8 -146Z")
   };
 
   function drawBird(x, y, size, direction, time, running, jump, sprint) {
@@ -91,33 +99,35 @@
 
     for (let leg = 0; leg < 2; leg += 1) {
       const angle = stride + leg * Math.PI;
-      const reach = running ? Math.sin(angle) * 23 : leg ? -5 : 4;
+      const reach = running ? Math.sin(angle) * 25 : leg ? -5 : 4;
       const lift = running ? Math.max(0, Math.cos(angle)) * 13 : 0;
-      const ink = leg ? "#d78a48" : "#925c40";
-      line(ink, 3, [[-4, -25], [-8 + reach * .38, -14], [reach, -2 - lift], [reach + 8, -1 - lift]]);
+      const ink = leg ? "#cf773d" : "#804b35";
+      line(ink, 3, [[-4, -36], [-8 + reach * .38, -17], [reach, -2 - lift], [reach + 8, -1 - lift]]);
       line(ink, 1.6, [[reach + 3, -2 - lift], [reach + 9, -4 - lift]]);
     }
 
     paint.save();
-    paint.translate(-17, -30);
+    paint.translate(-15, -45);
     paint.rotate(Math.sin(time * (running ? 17 : 4)) * (running ? .14 : .045));
-    paint.translate(17, 30);
-    shape(shade(-94, -25, "#425b95", "#232b58"), bird.tail);
-    line("#62759b", 1.5, [[-51, -73], [-35, -50], [-19, -37]]);
+    paint.translate(15, 45);
+    inked(shade(-117, -39, "#4c70b1", "#253a76"), bird.tail, "#19284e");
+    line("#83a1c8", 1.15, [[-68, -111], [-47, -96], [-31, -77]]);
+    line("#354982", 1.25, [[-69, -96], [-51, -85], [-39, -73]]);
     paint.restore();
 
-    shape(shade(-69, -20, "#7098bc", "#425f91"), bird.body);
-    shape(shade(-40, -24, "#526998", "#29375f"), bird.wing);
-    line("#91a7c0", 1.3, [[12, -60], [11, -51], [9, -44], [4, -36]]);
+    inked(shade(-90, -28, "#77a8d0", "#3c659d"), bird.body, "#20365b");
+    inked(shade(-49, -30, "#4d6da5", "#2d487b"), bird.wing, "#23365a");
+    line("#91b6d3", 1.25, [[17, -78], [19, -66], [17, -57], [14, -51]]);
     paint.save();
-    paint.translate(18, -65);
-    paint.rotate(sprint * .21 - look * .19);
-    paint.translate(-18, 65);
-    shape(shade(-95, -61, "#354671", "#202d50"), bird.head);
-    ellipse("#e8e5c8", 32, -76, 5.6, mix(7, 1.05, blink), .3);
-    ellipse("#20243b", 34.5 - look * 2, -75, 2.15, mix(3, .45, blink));
-    shape(shade(-80, -66, "#f2cb60", "#c9933f"), bird.beak);
-    line("#795332", 1.25, [[35, -71], [45, -72], [52, -74]]);
+    paint.translate(21, -88);
+    paint.rotate(sprint * .19 - look * .16);
+    paint.translate(-21, 88);
+    inked(shade(-128, -84, "#304a85", "#1d2959"), bird.head, "#172440");
+    ellipse("#bdc8cc", 36.5, -102, 5.25, mix(9, 1.05, blink), .19);
+    ellipse("#f2edcf", 42.5, -101, 6.2, mix(9.8, 1.12, blink), .25);
+    ellipse("#242438", 44.5 - look * 2.6, -100, 2.3, mix(3.65, .48, blink));
+    inked(shade(-103, -88, "#f7d361", "#d3963c"), bird.beak, "#77542d");
+    line("#845e38", 1.15, [[42, -92], [54, -94], [65, -97]]);
     paint.restore();
     paint.restore();
   }
@@ -148,9 +158,9 @@
     };
 
     const arm = (offset, near) => {
-      const reach = running ? Math.sin(stride + offset) * 25 : (near ? 26 : -15) * skid + 9 * flinch;
+      const reach = running ? Math.sin(stride + offset) * 25 : (near ? 11 : -8) + (near ? 26 : -15) * skid + 9 * flinch;
       const elbow = [reach * .51 - 6, -61 - Math.abs(reach) * .2];
-      const hand = [reach + 8, -53 - Math.max(0, reach) * .67 - 14 * skid];
+      const hand = [reach + 8, -51 - (running ? Math.max(0, reach) * .67 : 0) - 20 * skid];
       line(near ? "#9f6a50" : "#634434", 6, [[4, -78], elbow, hand]);
       ellipse(near ? "#bc8565" : "#805b48", hand[0], hand[1], 4.5, 5.5, -.5);
     };
@@ -161,10 +171,11 @@
     paint.translate(-12, -43);
     paint.rotate(Math.sin(time * (running ? 14 : 5)) * .15 - skid * .28);
     paint.translate(12, 43);
-    shape(shade(-57, -29, "#9f6a51", "#674436"), coyote.tail);
+    inked(shade(-65, -30, "#9c664a", "#603d32"), coyote.tail, "#432c28");
+    line("#bc8a6b", 1.2, [[-76, -60], [-63, -58], [-54, -53]]);
     paint.restore();
-    shape(shade(-88, -29, "#a87356", "#81513c"), coyote.torso);
-    shape(shade(-86, -36, "#ce9d7c", "#a87656"), coyote.chest);
+    inked(shade(-95, -33, "#ab754c", "#794932"), coyote.torso, "#492e29");
+    shape(shade(-92, -34, "#e0aa85", "#bd815d"), coyote.chest);
     leg(0, true);
     arm(Math.PI, true);
 
@@ -172,18 +183,20 @@
     paint.translate(4, -85);
     paint.rotate(-lookingUp * .25 + skid * .095 + doubleTake * .24);
     paint.translate(-4, 85);
-    shape(shade(-148, -84, "#ad7658", "#8a5845"), coyote.head);
-    shape("#c99879", coyote.ear);
-    shape(shade(-106, -80, "#d4a588", "#bd896d"), coyote.cheek);
-    ellipse("#eee1aa", 20, -103, 6.6 + flinch, mix(9.4 + flinch, 1.1, blink), -.28);
-    ellipse("#342833", 23 - doubleTake * 2.5, -102 + lookingUp * 1.8, 2.65, mix(4.45, .6, blink), -.16);
-    line("#694339", 3.2, [[12, -110 - 5 * flinch], [20, -113 - 5 * flinch], [27, -111 - 4 * flinch]]);
-    ellipse("#26232e", 51, -99, 5.8, 4.2, -.18);
-    ellipse("#83737a", 52, -100.5, 1.8, .9, -.2);
-    line("#805346", 1.3, [[27, -90], [34, -91], [40, -92]]);
-    line("#edbf9e88", 1.15, [[-7, -92], [-4, -95], [3, -94]]);
-    ellipse("#996c57", 37, -97, .95, .85);
-    ellipse("#996c57", 41, -97.5, .85, .75);
+    inked(shade(-152, -83, "#b37851", "#885238"), coyote.head, "#462f2a");
+    shape("#e0a488", coyote.ear);
+    const eyeHeight = mix(11 + flinch, 1.1, blink);
+    ellipse("#c3a162", 22, -108, 6.3, eyeHeight, -.39);
+    ellipse("#f6df91", 30.5, -108.5, 7.3 + flinch, eyeHeight, -.36);
+    ellipse("#39292d", 33.3 - doubleTake * 2.5, -107 + lookingUp * 1.8, 2.65, mix(4.7, .6, blink), -.17);
+    line("#5a352a", 3.2, [[16, -116 - 4 * flinch], [24, -120 - 5 * flinch], [34, -116 - 4 * flinch]]);
+    inked(shade(-108, -82, "#e5b090", "#c98c6f"), coyote.cheek, "#654238");
+    ellipse("#292332", 64.5, -105, 7.6, 4.6, -.13);
+    ellipse("#8e7b83", 66, -106.5, 2.5, 1.05, -.2);
+    line("#865442", 1.35, [[23, -92], [34, -95], [47, -98]]);
+    line("#f1c5a0", 1.2, [[-15, -96], [-11, -100], [-4, -99]]);
+    ellipse("#9c6754", 43, -101, .95, .85);
+    ellipse("#9c6754", 48, -101.8, .85, .75);
     paint.restore();
     paint.restore();
   }
@@ -241,7 +254,7 @@
         drawDust(screenX(birdX - 16 * unit), ground(birdX), .22 + sprint % .66, unit * .68, direction);
       }
       const sprint = Math.max(pulse(time, .12, 1.64), pulse(time, 5.54, 6.77));
-      drawBird(screenX(birdX), ground(birdX) - 2 * unit, unit * .86,
+      drawBird(screenX(birdX), ground(birdX) - 2 * unit, unit * .92,
         (birdRunning || time < 2.77 ? 1 : -1) * direction, time, birdRunning, leap * 25 * unit, sprint);
     }
     if (route.behindCactus) {
