@@ -125,45 +125,21 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 .title-card h1 span{color:#d5ffec}
 .title-card .subtitle{margin:0 0 13px;font-size:clamp(1.05rem,2.1vw,1.42rem);font-weight:800;color:#c9edf0}
 .title-card .description{max-width:570px;line-height:1.67;color:#e7f2f0;margin:0;font-size:clamp(.93rem,1.6vw,1.07rem)}
-.region-underground{min-height:152vh;min-height:152svh;
- background:#3b2a24}
-.underground-strata{position:absolute;z-index:0;inset:0;overflow:hidden;
- background-color:#544036}
-.underground-photo{position:absolute;inset:0;z-index:0;
- translate:0 var(--soil-scroll,0px);transform:scale(1.07);will-change:transform,translate;
- background-image:url('https://d9-wret.s3.us-west-2.amazonaws.com/assets/palladium/production/s3fs-public/thumbnails/image/11-JER%20Pasture%2011A-site2.jpg');
- background-position:12% 92%;background-size:auto 165%;background-repeat:no-repeat;
- background-color:#523d32;filter:contrast(1.08) saturate(.76);
- animation:soilCamera 70s ease-in-out infinite alternate}
-.underground-strata::after{content:"";position:absolute;z-index:1;inset:0;
- background:linear-gradient(180deg,#433327 0%,rgba(52,37,26,.19) 11%,rgba(13,11,13,.17) 40%,rgba(14,13,14,.49) 72%,#111a21 100%),
- radial-gradient(ellipse at 70% 37%,rgba(65,35,22,.10),transparent 59%);
- pointer-events:none}
-.underground-source{font-size:.68rem;line-height:1.6;color:#dacec3d6;margin-top:12px;max-width:520px}
-.underground-source a{text-decoration:underline;text-underline-offset:2px}
-.underground-art{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
-.underground-topsoil{position:absolute;inset:0 0 auto;height:90px;z-index:3;
- background:linear-gradient(180deg,#453529 0%,#4b382ab5 48%,transparent);pointer-events:none}
-.underground-dust{position:absolute;inset:-3%;z-index:3;opacity:.085;pointer-events:none;
- background-image:radial-gradient(circle,#efe3d0 0 .65px,transparent 1.4px);
- background-size:233px 197px;animation:dustFloat 35s linear infinite alternate}
-.underground-moisture{display:none}
-.underground-copy{min-height:152vh;min-height:152svh;display:flex;flex-direction:column;justify-content:space-between;
- padding-top:clamp(115px,17vh,175px);padding-bottom:11vh}
-.underground-copy .scene-note{background:linear-gradient(130deg,#1b1312e3,#111921d9);border-color:#dbc2af7a}
-.layer-label{display:none}
-.layer-label.sand{top:29%;left:9%}.layer-label.caliche{top:52%;right:14%}.layer-label.deep{top:79%;left:15%}
-.fossil-hint{display:none}
-.closing-note{align-self:flex-start;max-width:490px;margin-top:auto;padding:16px 20px;
- border:1px solid #ccb49859;border-radius:18px;background:#171c27b8;backdrop-filter:blur(8px);
- font-size:.84rem;line-height:1.6;color:#e6dccc}
-.region-underground:after{content:"";position:absolute;z-index:3;inset:auto 0 0;height:20%;
- background:linear-gradient(180deg,transparent,#08101b);pointer-events:none}
+.region-underground{
+ min-height:max(100vh,63vw);min-height:max(100svh,63vw);
+ background:#45352c
+}
+.underground-photo{
+ position:absolute;inset:-20px 0;width:100%;height:calc(100% + 40px);
+ object-fit:cover;object-position:center;translate:0 var(--soil-scroll,0px);
+}
+.region-underground::after{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background:linear-gradient(to bottom,#45352c,transparent 9%,transparent 88%,#08101b 100%)
+}
 @keyframes orbitCamera{from{transform:scale(1.10) translate3d(-.4%,.3%,0)}to{transform:scale(1.13) translate3d(.45%,-.35%,0)}}
 @keyframes orbitAtmosphere{from{opacity:.10}to{opacity:.23}}
 @keyframes orbitStarBreath{from{opacity:.07}to{opacity:.24}}
-@keyframes soilCamera{from{transform:scale(1.07) translate3d(-.35%,.2%,0)}to{transform:scale(1.085) translate3d(.4%,-.2%,0)}}
-@keyframes soilTexture{from{opacity:.17;transform:translate3d(0,0,0)}to{opacity:.25;transform:translate3d(0,-8px,0)}}
 @keyframes starsWink{from{opacity:.24}to{opacity:.79}}
 @keyframes nebulaBreathe{from{opacity:.46;transform:rotate(-22deg) translate(-1.5%,0)}to{opacity:.82;transform:rotate(-22deg) translate(1.5%,-1%)}}
 @keyframes spaceWorldDrift{to{transform:translateY(-10px) rotate(4deg)}}
@@ -173,7 +149,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 @keyframes mesquiteSway{from{transform:rotate(-1.05deg)}to{transform:rotate(1.1deg)}}
 @keyframes ocotilloSway{from{transform:rotate(-2deg)}to{transform:rotate(2.2deg)}}
 @keyframes grassSway{from{transform:rotate(-5deg)}to{transform:rotate(7deg)}}
-@keyframes dustFloat{to{transform:translate3d(0,-17px,0)}}
 @media(max-width:800px){
  .level-nav{right:50%;top:auto;bottom:12px;transform:translateX(50%);display:flex;
    gap:4px;padding:6px;border-radius:999px;width:max-content;max-width:calc(100vw - 24px)}
@@ -191,11 +166,8 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .toon-desert-foreground{width:min(46vw,205px);height:min(36vh,320px);opacity:.66;bottom:30px}
  .toon-desert-foreground.left{left:-64px}
  .toon-desert-foreground.right{right:-59px}
- .region-underground,.underground-copy{min-height:128svh}
- .underground-copy{padding-top:115px;padding-bottom:95px}
- .layer-label.sand{left:5%}.layer-label.caliche{right:6%}.layer-label.deep{left:6%}
- .layer-label{font-size:.65rem;padding:6px 9px}
- .fossil-hint{right:8%;bottom:15%;width:65px;height:65px}
+ .region-underground{min-height:max(55svh,132vw)}
+ .underground-photo{inset:-10px 0;height:calc(100% + 20px)}
 }
 @media(max-width:430px){
  .level-nav a{font-size:.68rem;padding:7px 9px}
@@ -203,7 +175,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .scene-note{padding:19px}
  .title-card{padding:23px 20px}
  .title-card h1{font-size:clamp(2.75rem,12vw,4.2rem)}
- .layer-label.caliche{top:60%}
  .space-kicker{bottom:6%}
 }
 @media(prefers-reduced-motion:reduce){
@@ -211,9 +182,9 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .space-stars,.galactic-cloud,.distant-world,.space-kicker,.surface-stars,.surface-haze,
  .toon-desert-foreground .saguaro-motion,.toon-desert-foreground .mesquite-motion,
  .toon-desert-foreground .ocotillo-motion,.toon-desert-foreground .desert-grass,
- .underground-dust,.underground-moisture,.orbit-photo,.space-photo-shade::after,
- .orbit-twinkle,.underground-photo,.soil-grain{animation:none!important}
- .orbit-photo,.underground-photo{translate:none!important;transform:scale(1.015)!important}
+ .orbit-photo,.space-photo-shade::after,.orbit-twinkle{animation:none!important}
+ .orbit-photo{translate:none!important;transform:scale(1.015)!important}
+ .underground-photo{translate:none}
 }
 
 /* Scenery-only canvas: small iconic controls, absolutely no visible text. */
@@ -234,11 +205,8 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 }
 /* Slightly clearer real-photo motion while retaining restrained natural movement. */
 .orbit-photo{animation-duration:38s}
-.underground-photo{animation-duration:48s}
 @keyframes orbitCamera{from{transform:scale(1.10) translate3d(-1.25%,.5%,0)}
  to{transform:scale(1.14) translate3d(1.25%,-.5%,0)}}
-@keyframes soilCamera{from{transform:scale(1.07) translate3d(-.85%,.3%,0)}
- to{transform:scale(1.11) translate3d(.85%,-.3%,0)}}
 
 /* Realistic photo layers: remove the polygon cutout and feather actual soil texture across the boundary. */
 .ground-fade{
@@ -246,21 +214,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  background:linear-gradient(180deg,transparent 0%,rgba(29,24,22,.11) 19%,
  rgba(47,36,30,.47) 52%,rgba(66,49,39,.84) 81%,#45352c 100%);
 }
-.region-underground,.underground-strata{background-color:#45352c}
-.underground-photo{
- -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.33) 7%,#000 22%);
- mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.33) 7%,#000 22%);
- filter:contrast(1.08) saturate(.79);
-}
-.underground-strata::after{
- background:linear-gradient(180deg,rgba(69,53,44,.8) 0%,rgba(55,39,30,.2) 16%,
- rgba(16,13,12,.13) 44%,rgba(14,13,14,.43) 74%,#111a21 100%);
-}
-.underground-topsoil{
- height:clamp(150px,23svh,290px);
- background:linear-gradient(to bottom,#45352c 0%,rgba(69,53,44,.80) 25%,rgba(69,53,44,.27) 62%,transparent 100%);
-}
-.underground-dust{opacity:.12;animation-duration:32s}
 /* Transparent cinematic haze, no illustrated clouds or artificially glowing rocks. */
 .space-haze{position:absolute;z-index:2;inset:-13%;pointer-events:none;opacity:.28;
  background:radial-gradient(ellipse 35% 19% at 20% 30%,rgba(134,169,196,.17),transparent 95%),
@@ -456,23 +409,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  rgba(0,0,0,.02) 30%,rgba(0,0,0,.10) 72%,rgba(0,0,0,.16) 100%),
  radial-gradient(ellipse 65% 25% at 55% 88%,rgba(0,0,0,.16),transparent 80%);
  animation:surfaceShadowShift 22s ease-in-out infinite alternate}
-/* Real USGS dryland soil photo, not imagined mineral deposits or excavations. */
-.underground-dust{opacity:.11;animation:dustFloatUnderground 30s ease-in-out infinite alternate}
-.underground-mineral-shimmer{
- position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.10;
- background:radial-gradient(ellipse 12% 5% at 24% 42%,
- rgba(215,200,170,.20),transparent 80%),
- radial-gradient(ellipse 10% 4% at 68% 58%,
- rgba(205,190,160,.18),transparent 80%),
- radial-gradient(ellipse 8% 4% at 44% 74%,
- rgba(220,210,185,.15),transparent 82%);
- filter:blur(10px);animation:mineralShimmer 16s ease-in-out infinite alternate}
-.underground-shadow-drift{
- position:absolute;inset:0;z-index:2;pointer-events:none;opacity:.18;
- background:linear-gradient(180deg,rgba(0,0,0,.02) 0%,
- rgba(0,0,0,.06) 35%,rgba(0,0,0,.12) 68%,rgba(0,0,0,.18) 100%),
- radial-gradient(ellipse 70% 28% at 48% 86%,rgba(0,0,0,.14),transparent 82%);
- animation:undergroundShadowShift 24s ease-in-out infinite alternate}
 @keyframes moonlitOrbitCamera{
  from{transform:scale(1.08) translate3d(-.5%,.2%,0)}
  to{transform:scale(1.12) translate3d(.5%,-.4%,0)}}
@@ -491,15 +427,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 @keyframes surfaceShadowShift{
  from{transform:translate3d(0,0,0);opacity:.16}
  to{transform:translate3d(1%,0,0);opacity:.24}}
-@keyframes dustFloatUnderground{
- from{transform:translate3d(0,0,0);opacity:.08}
- to{transform:translate3d(0,-10px,0);opacity:.13}}
-@keyframes mineralShimmer{
- from{opacity:.05;transform:translate3d(0,0,0)}
- to{opacity:.12;transform:translate3d(.6%,-.4%,0)}}
-@keyframes undergroundShadowShift{
- from{transform:translate3d(0,0,0);opacity:.14}
- to{transform:translate3d(-1%,0,0);opacity:.22}}
 @media(max-width:800px){
  .orbit-photo{opacity:.68;filter:saturate(.96) contrast(1.06) brightness(1.28)}
  .space-cosmos{opacity:.84;background-position:50% 20%}
@@ -509,14 +436,11 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .space-haze,.surface-haze,.surface-haze-near{filter:blur(16px)}
  .surface-moonwash{opacity:.18}
  .surface-dust{opacity:.07}
- .underground-mineral-shimmer{opacity:.08}
- .underground-shadow-drift{opacity:.15}
 }
 @media(prefers-reduced-motion:reduce){
  .orbit-photo,.space-cosmos,.space-starfield,.space-bright-stars,.space-planet,
  .surface-haze,.surface-haze-near,.surface-moonwash,.surface-dust,
- .surface-depth-shadow,.underground-dust,.underground-mineral-shimmer,
- .underground-shadow-drift{animation:none!important}
+ .surface-depth-shadow{animation:none!important}
  .orbit-photo{translate:none!important;transform:scale(1.015)!important}
  .space-cosmos,.space-planet{transform:none!important}
 }
@@ -569,14 +493,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
   radial-gradient(ellipse 20% 8% at 86% 87%,rgba(2,11,12,.54),transparent 91%);
  animation:desertShadowBreath 32s ease-in-out infinite alternate;
 }
-.underground-light-scatter{
- position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.13;
- background:
-  radial-gradient(ellipse 45% 25% at 21% 28%,rgba(204,175,140,.13),transparent 90%),
-  radial-gradient(ellipse 32% 19% at 73% 56%,rgba(180,147,121,.08),transparent 92%),
-  linear-gradient(180deg,transparent 0%,rgba(0,0,0,.02) 46%,rgba(0,0,0,.2) 100%);
- filter:blur(12px);animation:soilAmbientShift 41s ease-in-out infinite alternate;
-}
 @keyframes desertSceneryBreath{
  from{transform:scale(1.04) translate3d(-.2%,.16%,0)}
  to{transform:scale(1.056) translate3d(.24%,-.18%,0)}
@@ -589,10 +505,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  from{transform:translate3d(-.3%,0,0);opacity:.11}
  to{transform:translate3d(.5%,-.15%,0);opacity:.19}
 }
-@keyframes soilAmbientShift{
- from{transform:translate3d(-.4%,.2%,0);opacity:.08}
- to{transform:translate3d(.5%,-.3%,0);opacity:.16}
-}
 /* Stop rendering distant, offscreen scenes; observers wake them before arrival. */
 .region.scene-asleep *,.region.scene-asleep *::before,.region.scene-asleep *::after{
  animation-play-state:paused!important;
@@ -601,10 +513,9 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .surface-cover{animation-duration:92s}
  .surface-wind-trace{opacity:.10;filter:blur(15px)}
  .surface-vegetation-shadows{opacity:.13;filter:blur(13px)}
- .underground-light-scatter{opacity:.10}
 }
 @media(prefers-reduced-motion:reduce){
- .surface-cover,.surface-wind-trace,.surface-vegetation-shadows,.underground-light-scatter{
+ .surface-cover,.surface-wind-trace,.surface-vegetation-shadows{
    animation:none!important;
  }
  .surface-cover{transform:scale(1.04)}
@@ -615,7 +526,7 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 .space-planet.moon{animation-duration:95s}
 .space-planet.distant-gas,.space-planet.distant-mars{animation-duration:140s}
 .surface-moonwash{animation:none;opacity:.14;transform:none}
-.surface-vegetation-shadows,.surface-depth-shadow,.underground-mineral-shimmer,.underground-light-scatter,.underground-shadow-drift{animation:none}
+.surface-vegetation-shadows,.surface-depth-shadow{animation:none}
 /* Gusts move above the trail while the brush follows the surface photo. */
 .surface-brush-motion{display:block;width:100%;height:100%;pointer-events:none}
 .surface-desert-chase{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -645,25 +556,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 @keyframes desertSceneryBreath{from{transform:scale(1.04) translate3d(-.16%,.1%,0)}to{transform:scale(1.04) translate3d(.16%,-.1%,0)}}
 @keyframes spaceStarTwinkle{from{opacity:.76}to{opacity:.92}}
 html.toon-background-paused *,html.toon-background-paused *::before,html.toon-background-paused *::after{animation-play-state:paused!important}
-.underground-burrow{
- position:absolute;z-index:4;top:clamp(88px,15svh,140px);left:50%;width:min(94%,850px);
- height:auto;transform:translateX(-50%);pointer-events:none;overflow:visible
-}
-@media(prefers-reduced-motion:no-preference){
- .burrow-squirrel-head,.burrow-rat-ear{transform-box:fill-box;transform-origin:50% 85%}
- .burrow-squirrel-head{animation:burrowSniff 8s ease-in-out infinite}
- .burrow-rat-ear{animation:burrowEar 6s ease-in-out infinite}
-}
-@keyframes burrowSniff{
- 0%,22%,43%,100%{transform:none}
- 28%,37%{transform:translate(3px,-3px) rotate(-8deg)}
- 33%{transform:translate(2px,0) rotate(3deg)}
-}
-@keyframes burrowEar{
- 0%,56%,69%,100%{transform:none}
- 60%,66%{transform:rotate(16deg)}
- 63%{transform:rotate(-9deg)}
-}
 </style>
 <link rel="stylesheet" href="/toon-planet-orbit.css?v=20261104orbit">
 <script src="/astralis-space-background.js?v=20261104toonorbit" defer></script>
@@ -672,8 +564,8 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
 </head>
 <body>
 <!-- Scenery-only phase: no visible headings, explanations, credits or character gallery.
-     Sources: NASA ISS orbital photo and USGS arid rangeland soil photo.
-     The surface is original Astralis Nova Cactus Forest Moonlight artwork. -->
+     Source: NASA ISS orbital photo. The surface is original Astralis Nova artwork.
+     The underground scene is a photorealistic illustration of a desert burrow. -->
 <a class="brand-link" href="/" aria-label="Return to Astralis Nova home">
  <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M9.5 20v-7h5v7"/></svg>
 </a>
@@ -716,78 +608,13 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
 
  <div class="ground-fade" aria-hidden="true"></div>
 </section>
-<section class="region region-underground" id="underground" aria-label="Underground soil and rocks">
- <div class="underground-strata" aria-hidden="true"><div class="underground-photo"></div></div>
- <div class="underground-topsoil" aria-hidden="true"></div>
- <div class="underground-dust" aria-hidden="true"></div>
- <div class="underground-mineral-shimmer" aria-hidden="true"></div>
- <div class="underground-light-scatter" aria-hidden="true"></div>
- <div class="underground-shadow-drift" aria-hidden="true"></div>
- <svg class="underground-burrow" viewBox="0 0 720 405" role="img" aria-labelledby="burrow-title burrow-desc">
-  <title id="burrow-title">Life beneath Cactus Forest</title>
-  <desc id="burrow-desc">A ground squirrel peers down its tunnel while a kangaroo rat shelters beside a small cache of seeds.</desc>
-  <defs>
-   <linearGradient id="burrow-rim" x2=".15" y2="1">
-    <stop stop-color="#684c39"/>
-    <stop offset=".55" stop-color="#a97e58"/>
-    <stop offset="1" stop-color="#624735"/>
-   </linearGradient>
-   <radialGradient id="burrow-earth" cx=".40" cy=".41" r=".65">
-    <stop stop-color="#6d4d39"/>
-    <stop offset=".54" stop-color="#473027"/>
-    <stop offset="1" stop-color="#211718"/>
-   </radialGradient>
-   <pattern id="burrow-grit" width="42" height="29" patternUnits="userSpaceOnUse">
-    <path d="m4 8 3-1m15 9 4 1m12 7 2-2M10 23l2 1m17-21 2 1" fill="none" stroke="#d4aa80" stroke-width="1.2" opacity=".27"/>
-   </pattern>
-   <path id="burrow-shape" d="M104 5Q132 21 142 63Q158 98 200 110C229 118 241 105 266 96C310 79 371 94 399 132Q418 157 410 184Q405 204 435 216Q469 231 500 224C549 210 602 219 629 252Q657 286 630 324C611 357 535 371 481 353Q449 343 445 315Q442 282 414 265Q376 244 363 219C342 204 319 222 280 220C222 222 186 198 179 163Q176 149 160 141C116 121 102 95 91 61Q80 34 71 17Z"/>
-  </defs>
-  <g fill="none" stroke-linecap="round">
-   <path d="M533 11Q510 52 522 88T485 155L463 190M520 81Q550 89 566 117M507 133Q487 120 481 102M155 205Q143 228 151 257L136 298" stroke="#2e211d" stroke-width="6" opacity=".68"/>
-   <path d="M533 11Q510 52 522 88T485 155L463 190M520 81Q550 89 566 117M507 133Q487 120 481 102M155 205Q143 228 151 257L136 298" stroke="#b18b65" stroke-width="2.5" opacity=".65"/>
-  </g>
-  <use href="#burrow-shape" fill="none" stroke="#2a1c1a" stroke-width="23" stroke-linejoin="round" opacity=".72"/>
-  <use href="#burrow-shape" fill="url(#burrow-earth)" stroke="url(#burrow-rim)" stroke-width="10" stroke-linejoin="round"/>
-  <use href="#burrow-shape" fill="url(#burrow-grit)"/>
-  <path d="M196 175Q226 208 284 208Q321 207 343 199M464 308Q481 341 541 344Q587 343 618 321" fill="none" stroke="#ba8b64" stroke-width="3" stroke-linecap="round" opacity=".52"/>
-  <g transform="translate(278 197)">
-   <ellipse cx="-1" cy="5" rx="61" ry="9" fill="#20151a" opacity=".72"/>
-   <g>
-    <path d="M-27-19Q-53-10-66-22Q-77-39-94-32" fill="none" stroke="#b89370" stroke-width="9" stroke-linecap="round"/>
-    <path d="M-86-33q-5-1-9 1" fill="none" stroke="#574338" stroke-width="8" stroke-linecap="round"/>
-    <ellipse cx="-14" cy="-24" rx="37" ry="21" transform="rotate(-12 -14 -24)" fill="#b5906d"/>
-    <path d="M-40-18Q-8-10 8-37Q22-37 29-21Q10 0-17 1Q-32-1-40-18" fill="#e1bc93"/>
-    <ellipse cx="-20" cy="0" rx="16" ry="5" fill="#a9805e"/>
-    <ellipse cx="28" cy="-1" rx="12" ry="4" fill="#d1a57e"/>
-    <g class="burrow-squirrel-head">
-     <ellipse cx="15" cy="-52" rx="7" ry="8" fill="#a47760"/>
-     <ellipse cx="24" cy="-42" rx="21" ry="15" fill="#cba47d"/>
-     <ellipse cx="36" cy="-36" rx="14" ry="8" fill="#ead0af"/>
-     <circle cx="30" cy="-46" r="4.3" fill="#231c21"/>
-     <circle cx="31" cy="-47.4" r="1.4" fill="#fff0d5"/>
-     <ellipse cx="48" cy="-39" rx="4" ry="3" fill="#4b322c"/>
-    </g>
-   </g>
-  </g>
-  <g transform="translate(544 333)">
-   <ellipse cx="4" cy="4" rx="51" ry="7" fill="#1f1517" opacity=".76"/>
-   <path d="M11-14Q38-6 54-21Q66-31 77-28" fill="none" stroke="#b48766" stroke-width="5" stroke-linecap="round"/>
-   <path d="m70-28 8 1" fill="none" stroke="#624738" stroke-width="6" stroke-linecap="round"/>
-   <ellipse cx="7" cy="-24" rx="23" ry="20" transform="rotate(21 7 -24)" fill="#bc906a"/>
-   <path d="M-5-39Q-28-31-13-12Q-7 1 9-6Q15-24-5-39" fill="#efd2a8"/>
-   <g class="burrow-rat-ear">
-    <ellipse cx="-7" cy="-55" rx="9" ry="12" transform="rotate(21 -7 -55)" fill="#c49b7e"/>
-    <ellipse cx="-8" cy="-55" rx="4.5" ry="7" transform="rotate(21 -8 -55)" fill="#aa7970"/>
-   </g>
-   <ellipse cx="-17" cy="-42" rx="17" ry="14" fill="#cda57d"/>
-   <ellipse cx="-29" cy="-36" rx="11" ry="7" fill="#f2dcb8"/>
-   <circle cx="-22" cy="-45" r="5.2" fill="#261c20"/>
-   <circle cx="-23.3" cy="-46.7" r="1.5" fill="#fff1d8"/>
-   <ellipse cx="-39" cy="-40" rx="3.5" ry="3" fill="#4d302d"/>
-   <ellipse cx="-8" cy="-1" rx="16" ry="4.5" fill="#d5ab84"/>
-   <path d="m-51-7 3-2m-7 5 3 1m-10-2 2-1m13 5 3-1" fill="none" stroke="#e1ba76" stroke-width="2.4" stroke-linecap="round"/>
-  </g>
- </svg>
+<section class="region region-underground" id="underground" aria-label="Life beneath Cactus Forest">
+ <picture>
+  <source media="(max-width: 800px)" srcset="/assets/toon-planet/cactus-forest-burrow-mobile.webp">
+  <img class="underground-photo" src="/assets/toon-planet/cactus-forest-burrow.webp"
+       width="1536" height="1024" loading="lazy" decoding="async"
+       alt="Desert soil cutaway with fine roots, pebbles, and a pale caliche seam. A ground squirrel shelters in an upper chamber, and a kangaroo rat sits by a seed cache below.">
+ </picture>
 </section>
 </main>
 <script>
