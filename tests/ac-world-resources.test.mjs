@@ -36,7 +36,13 @@ test('directory API adds resources without losing population or legacy URL field
     const response = await onRequestGet();
     assert.equal(response.status, 200);
     const data = await response.json();
-    assert.equal(data.total, 3);
+    assert.equal(data.total, 4);
+    const hollowtide = data.worlds.find(w => w.name === 'Hollowtide');
+    assert.equal(hollowtide.website, 'https://hollowtide.org/');
+    assert.equal(hollowtide.ruleset, 'PvP');
+    assert.equal(hollowtide.emulator, 'ACE');
+    assert.equal(hollowtide.status, 'Unknown');
+    assert.equal(hollowtide.characters, null);
     assert(!data.worlds.some(isTestWorld));
     assert(data.worlds.every(w => w.discord === '' && w.resources.every(r => r.kind === 'website')));
     const dragon = data.worlds.find(w => w.name === 'DragonMoon');

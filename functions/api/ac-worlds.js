@@ -84,6 +84,16 @@ export async function onRequestGet(){
     return json({error:"The community server directory is temporarily unavailable.",sources},503);
   }
 
+  // Hollowtide has a public launch page and is outside the TreeStats server list.
+  if(!servers.some(server=>key(server.name)==='hollowtide')){
+    servers=[...servers,{
+      name:'Hollowtide',
+      description:'End-of-retail Dereth with custom quests, world bosses and a PvP ladder. Play free in your browser or use the desktop client with built-in VTank-style tools.',
+      software:'ACE',
+      type:'PvP'
+    }];
+  }
+
   const countMap=new Map();
   for(const row of Array.isArray(counts)?counts:[]){
     if(!row?.server)continue;
@@ -124,7 +134,7 @@ export async function onRequestGet(){
       website:resources.find(link=>link.kind==='website')?.url||'',
       discord:'',
       resources,
-      details:`https://treestats.net/${encodeURIComponent(name)}`
+      details:key(name)==='hollowtide'?'https://hollowtide.org/about/':`https://treestats.net/${encodeURIComponent(name)}`
     };
   }).filter(world=>world.name).sort((a,b)=>(b.characters??-1)-(a.characters??-1)||a.name.localeCompare(b.name));
 
