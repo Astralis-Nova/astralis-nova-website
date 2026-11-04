@@ -618,6 +618,7 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 .surface-vegetation-shadows,.surface-depth-shadow,.underground-mineral-shimmer,.underground-light-scatter,.underground-shadow-drift{animation:none}
 /* Gusts move above the trail while the brush follows the surface photo. */
 .surface-brush-motion{display:block;width:100%;height:100%;pointer-events:none}
+.surface-desert-chase{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .surface-wind-trace{
  inset:0;overflow:hidden;opacity:1;filter:none;background:none;animation:none;
 }
@@ -648,6 +649,7 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
 <link rel="stylesheet" href="/toon-planet-orbit.css?v=20261104orbit">
 <script src="/astralis-space-background.js?v=20261104toonorbit" defer></script>
 <script src="/toon-planet-wind.js?v=20261104wind" defer></script>
+<script src="/toon-planet-chase.js?v=20261104moonlit" defer></script>
 </head>
 <body>
 <!-- Scenery-only phase: no visible headings, explanations, credits or character gallery.
@@ -680,7 +682,7 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
  </div>
 </section>
 <section class="region region-surface" id="surface" aria-label="Cactus Forest Moonlight landscape">
- <div class="surface-cover" aria-hidden="true"><canvas class="surface-brush-motion"></canvas></div>
+ <div class="surface-cover" aria-hidden="true"><canvas class="surface-brush-motion"></canvas><canvas class="surface-desert-chase" hidden></canvas></div>
  <div class="surface-color" aria-hidden="true"></div>
  <div class="surface-stars" aria-hidden="true"></div>
  <div class="surface-haze" aria-hidden="true"></div>
