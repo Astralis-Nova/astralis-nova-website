@@ -10,7 +10,15 @@
   const narrow = matchMedia("(max-width: 800px)");
   const tau = Math.PI * 2;
   const duration = 8.5;
-  const passes = ["chase", "devil", "chase", "chase", "devil"];
+  const passes = [
+    { draw: wildlifeScene, wait: 1500 },
+    { draw: scene, wait: 1000 },
+    { draw: devilScene, wait: 5100 },
+    { draw: scene, wait: 9500 },
+    { draw: wildlifeScene, wait: 1000 },
+    { draw: scene, wait: 1000 },
+    { draw: devilScene, wait: 5100 }
+  ];
   // Each pass takes a different side of the wash and follows a curve in depth.
   const routes = [
     { direction: 1, level: .745, curve: -.050, depth: 1, crossing: .61 },
@@ -390,6 +398,104 @@
     drawVortex(x, y, unit, time, spin, true);
   }
 
+  function drawSquirrel(time, unit) {
+    const x = width * .27;
+    const y = height * .745;
+    const peek = easeOut(phase(time, .15, .76)) * (1 - phase(time, 3.15, 3.58));
+    const dash = pulse(time, 1.12, 3.12);
+    const stride = Math.sin(time * tau * 5) * pulse(time, 1.12, 3.12);
+
+    paint.save();
+    paint.globalAlpha = phase(time, 0, .22) * (1 - phase(time, 3.56, 3.85));
+    ellipse("#594337", x, y, 15 * unit, 4 * unit, -.05);
+    ellipse("#251f27", x, y - unit, 10 * unit, 2.8 * unit);
+
+    // Keep the squirrel below the lip of the burrow while it peeks out.
+    paint.beginPath();
+    paint.rect(0, 0, width, y + 2 * unit);
+    paint.clip();
+    paint.translate(x + dash * 42 * unit, y + (1 - peek) * 38 * unit);
+    paint.scale(unit, unit);
+    ellipse("#241d22", 0, -1, 15, 3);
+    line("#b29374", 4.7, [[-9, -9], [-22, -7], [-35, -13 + stride * 3], [-42, -19 + stride * 3]]);
+    line("#544238", 4, [[-37, -15 + stride * 3], [-42, -19 + stride * 3]]);
+    ellipse("#b59373", -3, -12, 17, 10, -.20);
+    ellipse("#e1c29a", 4, -10, 12, 6, -.28);
+    ellipse("#a07c64", 12, -28, 3.8, 4.3);
+    ellipse("#c6a17f", 15, -22, 9.5, 7.5, -.15);
+    ellipse("#e8cbab", 20, -19, 6.8, 4);
+    ellipse("#2a252b", 18, -24, 2.1, 2.1);
+    ellipse("#f8e9c6", 18.5, -24.6, .6, .6);
+    ellipse("#3b2c2c", 25, -21, 1.7, 1.4);
+    ellipse("#9d7a62", -7 + stride * 6, -3, 7, 2.6);
+    ellipse("#c9a17d", 11 - stride * 5, -3, 5.6, 2.1);
+    paint.restore();
+  }
+
+  function drawRabbit(time, unit) {
+    const arrival = phase(time, 1.55, 3.50);
+    const exit = phase(time, 4.30, 5.93);
+    const progress = .54 * arrival + .46 * exit;
+    const hop = Math.abs(Math.sin(Math.PI * 4 * (arrival + exit)));
+    const x = mix(width + 47 * unit, -47 * unit, progress);
+    const y = height * (.79 + .014 * Math.sin(progress * Math.PI));
+    const twitch = .28 * pulse(time, 3.57, 3.79) - .20 * pulse(time, 3.86, 4.13);
+
+    ellipse(`rgba(22,17,22,${.40 - .20 * hop})`, x, y, 21 * unit, 3.5 * unit);
+    paint.save();
+    paint.translate(x, y - 13 * unit * hop);
+    paint.scale(-unit, unit);
+    ellipse("#eadbcb", -20, -14, 7.5, 6.5);
+    ellipse("#947967", -6, -17, 21, 14, -.20);
+    ellipse("#bda08a", -8, -20, 17, 10, -.22);
+    ellipse("#d2b8a0", 4, -13, 14, 9, -.35);
+    ellipse("#a68771", 8, -40, 4.1, 13, -.42 - .45 * hop - twitch);
+    ellipse("#c5a58e", 16, -42, 4.8, 14, -.20 - .50 * hop + twitch);
+    ellipse("#a97673", 16, -45, 2.3, 9, -.20 - .50 * hop + twitch);
+    ellipse("#b19178", 15, -25, 12, 10, -.30);
+    ellipse("#e7cfb9", 23, -21, 6.8, 4.2);
+    ellipse("#29232a", 19, -28, 2.5, 2.7);
+    ellipse("#faedd0", 19.6, -28.8, .8, .8);
+    ellipse("#61454b", 29, -22, 1.7, 1.4);
+    ellipse("#a88a76", -7 - hop * 10, -3, 10, 3, -.16 + hop * .46);
+    ellipse("#cfb097", 13 + hop * 6, -3 - hop * 5, 6.6, 2.5, hop * .6);
+    paint.restore();
+  }
+
+  function drawKangarooRat(time, unit) {
+    const progress = phase(time, 5.35, 8.32);
+    const hop = Math.abs(Math.sin(Math.PI * progress * 8));
+    const x = mix(-42 * unit, width + 73 * unit, progress);
+    const y = height * (.72 + progress * .036);
+    ellipse(`rgba(22,17,22,${.35 - .20 * hop})`, x, y, 12 * unit, 2.5 * unit);
+    paint.save();
+    paint.translate(x, y - hop * 24 * unit);
+    paint.scale(unit, unit);
+    line("#ac896d", 2.8, [[-8, -12], [-20, -8], [-32, -10 + 7 * hop], [-44, -18 + 9 * hop]]);
+    ellipse("#6c534b", -45, -18 + 9 * hop, 5.5, 2.4, .55);
+    ellipse("#be9473", -2, -14, 12, 10, -.62);
+    ellipse("#f0d8b6", 3, -13, 8, 7, -.52);
+    ellipse("#bf9b83", 3, -30, 4.4, 6.1, -.44);
+    ellipse("#9d6f6d", 3, -31, 2.3, 3.5, -.44);
+    ellipse("#caa281", 10, -24, 9, 7);
+    ellipse("#f1dab9", 15, -21, 5.8, 3.6);
+    ellipse("#2a2228", 13, -26, 2.9, 3);
+    ellipse("#fff1d0", 13.7, -27, .8, .8);
+    ellipse("#37272b", 20, -22, 1.4, 1.5);
+    line("#a77c62", 2.7, [[-1, -10], [-7, -6 - 4 * hop], [8 - 13 * hop, -2]]);
+    ellipse("#d1a788", 9 - 13 * hop, -2, 6.6, 2.1, hop * .42);
+    ellipse("#b38970", 9, -13, 3.4, 1.6, -.3);
+    paint.restore();
+  }
+
+  function wildlifeScene(time) {
+    paint.clearRect(0, 0, width, height);
+    const unit = clamp(width / 940, .71, 1.19);
+    if (time >= 5.35 && time < 8.32) drawKangarooRat(time, unit * .94);
+    if (time < 3.85) drawSquirrel(time, unit);
+    if (time >= 1.55 && time < 5.93) drawRabbit(time, unit * 1.04);
+  }
+
   function resize() {
     width = canvas.parentElement.clientWidth || 1;
     height = canvas.parentElement.clientHeight || 1;
@@ -401,18 +507,17 @@
 
   function tick(now) {
     const time = (now - start) / 1000;
-    const isDevil = passes[passIndex] === "devil";
+    const { draw } = passes[passIndex];
     if (time >= duration) {
       frame = 0;
       canvas.hidden = true;
-      if (!isDevil) chases += 1;
+      if (draw === scene) chases += 1;
       passIndex = (passIndex + 1) % passes.length;
-      schedule(passes[passIndex] === "devil" ? 5100 : 9500);
+      schedule(passes[passIndex].wait);
       return;
     }
     if (now - lastPaint >= 1000 / 30) {
-      if (isDevil) devilScene(time);
-      else scene(time);
+      draw(time);
       lastPaint = now;
     }
     frame = requestAnimationFrame(tick);
@@ -433,7 +538,7 @@
 
   function sync() {
     if (visible && !document.hidden && !reduced.matches) {
-      schedule(chases ? 6500 : 3800);
+      schedule(passes[passIndex].wait);
       return;
     }
     window.clearTimeout(timer);
