@@ -7,12 +7,13 @@
 
   const surface = canvas.closest(".region-surface");
   const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  const narrow = matchMedia("(max-width: 800px)");
   const tau = Math.PI * 2;
   const duration = 8.5;
   // Each pass takes a different side of the wash and follows a curve in depth.
   const routes = [
     { direction: 1, level: .745, curve: -.050, depth: 1, crossing: .61 },
-    { direction: -1, level: .672, curve: -.034, depth: .81, crossing: .48 },
+    { direction: -1, level: .672, curve: -.034, depth: .81, crossing: .48, behindCactus: true },
     { direction: 1, level: .786, curve: .028, depth: 1.10, crossing: .62 }
   ];
   let width = 1, height = 1, density = 1;
@@ -22,6 +23,10 @@
   const mix = (from, to, amount) => from + (to - from) * amount;
   const phase = (time, from, to) => clamp((time - from) / (to - from), 0, 1);
   const easeOut = amount => 1 - (1 - amount) ** 2;
+  const pulse = (time, from, to) => Math.sin(Math.PI * phase(time, from, to));
+
+  // Coordinates trace the center saguaro in the 1200px Cactus Forest cover.
+  const saguaro = new Path2D("M523 752L525 676Q515 676 509 661Q502 644 504 612Q507 602 511 611Q511 650 526 664L529 521Q529 511 534 510Q538 510 538 522L540 665Q553 665 555 614Q560 608 562 617Q562 671 548 678L543 679L544 747Z");
 
   function shape(color, outline) {
     paint.fillStyle = color;
@@ -65,18 +70,24 @@
     tail: new Path2D("M-10 -48Q-28 -42 -47 -49Q-68 -59 -88 -48Q-78 -48 -75 -45L-88 -41Q-79 -41 -74 -38L-80 -34Q-67 -36 -63 -38Q-45 -28 -16 -36Z"),
     torso: new Path2D("M-12 -38Q-20 -50 -11 -62Q-4 -71 -9 -83Q-4 -89 10 -88Q18 -84 15 -72Q10 -62 17 -54Q25 -42 13 -34Q1 -27 -12 -38Z"),
     chest: new Path2D("M7 -84L13 -85Q20 -78 13 -66L16 -63L13 -61Q18 -56 19 -49Q21 -41 12 -37Q4 -37 2 -46Q-3 -55 4 -65Q10 -77 7 -84Z"),
-    head: new Path2D("M-6 -83Q-16 -90 -13 -100Q-10 -108 -4 -109Q-14 -119 -19 -135Q-21 -144 -17 -145Q-11 -144 -2 -133L8 -115L11 -116Q8 -132 13 -146Q17 -150 20 -144Q23 -135 22 -118L21 -110Q29 -108 32 -102L39 -99L36 -90Q26 -86 18 -88Q9 -82 -6 -83Z"),
+    head: new Path2D("M-6 -83Q-16 -90 -13 -100Q-10 -108 -4 -109Q-14 -119 -19 -135L-20 -146L-12 -139L-2 -131L8 -115L11 -116Q8 -132 15 -145L21 -151L20 -139L24 -141Q23 -127 22 -118L21 -110Q29 -108 32 -102L39 -99L36 -90Q26 -86 18 -88Q9 -82 -6 -83Z"),
     cheek: new Path2D("M-7 -102Q4 -105 11 -96Q17 -94 23 -97Q33 -101 48 -101L52 -96Q42 -91 31 -91L35 -88L25 -89L28 -85L16 -87Q12 -83 3 -85L7 -80L-5 -84Q-12 -87 -13 -93Z"),
     ear: new Path2D("M-11 -133Q-6 -129 2 -114L-3 -113Q-9 -121 -11 -133ZM15 -137Q19 -129 17 -117L14 -117Z")
   };
 
-  function drawBird(x, y, size, direction, time, running, jump) {
+  function drawBird(x, y, size, direction, time, running, jump, sprint) {
     ellipse("rgba(5,6,8,.32)", x, y + 1, size * (24 + jump * .08), size * 3.5);
     paint.save();
     paint.translate(x, y - jump);
     paint.scale(size * direction, size);
-    const stride = time * tau * 6.4;
+    const stride = time * tau * 7.4;
+    const look = pulse(time, 2.77, 3.54);
+    const blink = pulse(time, 4.74, 4.90);
     paint.translate(0, running ? Math.sin(stride * 2) * 1.7 : Math.sin(time * 5) * .7);
+    if (sprint > 0) {
+      line(`rgba(152,169,205,${sprint * .27})`, 2.1, [[-89, -35], [-57, -34]]);
+      line(`rgba(208,187,153,${sprint * .22})`, 1.4, [[-72, -12], [-33, -11]]);
+    }
 
     for (let leg = 0; leg < 2; leg += 1) {
       const angle = stride + leg * Math.PI;
@@ -97,11 +108,17 @@
 
     shape(shade(-69, -20, "#7098bc", "#425f91"), bird.body);
     shape(shade(-40, -24, "#526998", "#29375f"), bird.wing);
-    shape("#253458", bird.head);
-    ellipse("#e8e5c8", 32, -76, 5.6, 7, .3);
-    ellipse("#20243b", 34.5, -75, 2.15, 3);
+    line("#91a7c0", 1.3, [[12, -60], [11, -51], [9, -44], [4, -36]]);
+    paint.save();
+    paint.translate(18, -65);
+    paint.rotate(sprint * .21 - look * .19);
+    paint.translate(-18, 65);
+    shape(shade(-95, -61, "#354671", "#202d50"), bird.head);
+    ellipse("#e8e5c8", 32, -76, 5.6, mix(7, 1.05, blink), .3);
+    ellipse("#20243b", 34.5 - look * 2, -75, 2.15, mix(3, .45, blink));
     shape(shade(-80, -66, "#f2cb60", "#c9933f"), bird.beak);
     line("#795332", 1.25, [[35, -71], [45, -72], [52, -74]]);
+    paint.restore();
     paint.restore();
   }
 
@@ -111,8 +128,11 @@
     paint.translate(x, y);
     paint.scale(size * direction, size);
     const stride = time * tau * 3.9;
-    paint.translate(0, running ? Math.sin(stride * 2) * 3.2 : skid * 5);
-    paint.rotate(running ? .19 + Math.sin(stride) * .045 : -.15 * skid);
+    const flinch = pulse(time, 3.79, 4.17);
+    const doubleTake = pulse(time, 5.54, 6.30) * Math.sin((time - 5.54) * 22);
+    const blink = pulse(time, 4.43, 4.62);
+    paint.translate(0, running ? Math.sin(stride * 2) * 3.2 : skid * 8 + flinch * 4);
+    paint.rotate(running ? .23 + Math.sin(stride) * .06 : -.24 * skid + flinch * .11);
 
     const leg = (offset, near) => {
       const reach = running ? Math.sin(stride + offset) * 34 : skid * (near ? 32 : 19);
@@ -128,9 +148,9 @@
     };
 
     const arm = (offset, near) => {
-      const reach = running ? Math.sin(stride + offset) * 21 : 19 * skid;
+      const reach = running ? Math.sin(stride + offset) * 25 : (near ? 26 : -15) * skid + 9 * flinch;
       const elbow = [reach * .51 - 6, -61 - Math.abs(reach) * .2];
-      const hand = [reach + 8, -53 - Math.max(0, reach) * .67];
+      const hand = [reach + 8, -53 - Math.max(0, reach) * .67 - 14 * skid];
       line(near ? "#9f6a50" : "#634434", 6, [[4, -78], elbow, hand]);
       ellipse(near ? "#bc8565" : "#805b48", hand[0], hand[1], 4.5, 5.5, -.5);
     };
@@ -150,17 +170,20 @@
 
     paint.save();
     paint.translate(4, -85);
-    paint.rotate(-lookingUp * .23 + skid * .095);
+    paint.rotate(-lookingUp * .25 + skid * .095 + doubleTake * .24);
     paint.translate(-4, 85);
     shape(shade(-148, -84, "#ad7658", "#8a5845"), coyote.head);
     shape("#c99879", coyote.ear);
     shape(shade(-106, -80, "#d4a588", "#bd896d"), coyote.cheek);
-    ellipse("#eee1aa", 20, -103, 6.6, 9.4, -.28);
-    ellipse("#342833", 23, -102, 2.65, 4.45, -.16);
-    line("#694339", 3, [[12, -110], [20, -113], [27, -111]]);
+    ellipse("#eee1aa", 20, -103, 6.6 + flinch, mix(9.4 + flinch, 1.1, blink), -.28);
+    ellipse("#342833", 23 - doubleTake * 2.5, -102 + lookingUp * 1.8, 2.65, mix(4.45, .6, blink), -.16);
+    line("#694339", 3.2, [[12, -110 - 5 * flinch], [20, -113 - 5 * flinch], [27, -111 - 4 * flinch]]);
     ellipse("#26232e", 51, -99, 5.8, 4.2, -.18);
     ellipse("#83737a", 52, -100.5, 1.8, .9, -.2);
     line("#805346", 1.3, [[27, -90], [34, -91], [40, -92]]);
+    line("#edbf9e88", 1.15, [[-7, -92], [-4, -95], [3, -94]]);
+    ellipse("#996c57", 37, -97, .95, .85);
+    ellipse("#996c57", 41, -97.5, .85, .75);
     paint.restore();
     paint.restore();
   }
@@ -208,8 +231,8 @@
 
     const crossing = phase(time, 0, 2.51);
     const exit = phase(time, 5.53, 6.76);
-    const birdX = exit ? mix(birdPerch, width + 90 * unit, exit)
-      : mix(-61 * unit, birdPerch, easeOut(crossing));
+    const birdX = exit ? mix(birdPerch, width + 100 * unit, exit ** 1.45)
+      : mix(-61 * unit, birdPerch, easeOut(crossing ** 1.24));
     const leap = Math.sin(Math.PI * phase(birdX, wash - width * .048, wash + width * .09));
     const birdRunning = crossing < 1 || exit > 0;
     if (exit < 1) {
@@ -217,8 +240,18 @@
         const sprint = exit ? (time - 5.53) : time;
         drawDust(screenX(birdX - 16 * unit), ground(birdX), .22 + sprint % .66, unit * .68, direction);
       }
+      const sprint = Math.max(pulse(time, .12, 1.64), pulse(time, 5.54, 6.77));
       drawBird(screenX(birdX), ground(birdX) - 2 * unit, unit * .86,
-        (birdRunning || time < 2.77 ? 1 : -1) * direction, time, birdRunning, leap * 25 * unit);
+        (birdRunning || time < 2.77 ? 1 : -1) * direction, time, birdRunning, leap * 25 * unit, sprint);
+    }
+    if (route.behindCactus) {
+      const coverSize = Math.max(width, height);
+      paint.save();
+      paint.globalCompositeOperation = "destination-out";
+      paint.translate((width - coverSize) / 2, (height - coverSize) * (narrow.matches ? .45 : .5));
+      paint.scale(coverSize / 1200, coverSize / 1200);
+      shape("#000", saguaro);
+      paint.restore();
     }
   }
 
