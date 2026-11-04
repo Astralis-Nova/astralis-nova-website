@@ -621,6 +621,8 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 @keyframes spaceStarTwinkle{from{opacity:.76}to{opacity:.92}}
 html.toon-background-paused *,html.toon-background-paused *::before,html.toon-background-paused *::after{animation-play-state:paused!important}
 </style>
+<link rel="stylesheet" href="/toon-planet-orbit.css?v=20261104orbit">
+<script src="/astralis-space-background.js?v=20261104toonorbit" defer></script>
 </head>
 <body>
 <!-- Scenery-only phase: no visible headings, explanations, credits or character gallery.
@@ -636,7 +638,7 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
 </nav>
 <main class="world" id="toonWorld">
 <section class="region region-space" id="space" aria-label="Space above Cactus Forest">
- <div class="space-sky" aria-hidden="true">
+ <div class="space-sky" data-astralis-space="toonOrbitStage" aria-hidden="true">
   <div class="orbit-photo"></div>
   <div class="space-cosmos"></div>
   <div class="space-photo-shade"></div>
@@ -644,11 +646,12 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
   <div class="space-starfield space-starfield-far"></div>
   <div class="space-starfield space-starfield-near"></div>
   <div class="space-bright-stars"></div>
+  <div class="toon-orbit-sun"></div>
   <div class="space-planet moon"></div>
-  <div class="space-planet gas-giant distant-gas"></div>
+  <img class="toon-orbit-ringed" data-ringed-world src="/astralis-gas-giant.png" width="600" height="380" alt="" decoding="async">
   <div class="space-planet mars distant-mars"></div>
+  <div class="toon-orbit-comet"></div>
   <div class="space-atmosphere"></div>
-  <div class="meteor-field" id="spaceMeteors"></div>
  </div>
 </section>
 <section class="region region-surface" id="surface" aria-label="Cactus Forest Moonlight landscape">
@@ -698,28 +701,20 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
  const soilPhoto=document.querySelector(".underground-photo");
  const orbitalSection=document.getElementById("space");
  const undergroundSection=document.getElementById("underground");
- const skies=[
-  {section:orbitalSection,layer:document.getElementById("spaceMeteors")},
-  {section:surface,layer:document.getElementById("surfaceMeteors")}
- ];
+ const surfaceMeteors=document.getElementById("surfaceMeteors");
  let meteorTimer=0;
  function planMeteor(){
   meteorTimer=window.setTimeout(()=>{
    if(!motionReduced.matches&&!document.hidden){
-    const visible=skies.filter(({section,layer})=>{
-     if(!section||!layer)return false;
-     const r=section.getBoundingClientRect();
-     return r.bottom>window.innerHeight*.1&&r.top<window.innerHeight*.9;
-    });
-    if(visible.length){
-     const {section,layer}=visible[Math.floor(Math.random()*visible.length)];
+    const bounds=surface.getBoundingClientRect();
+    if(bounds.bottom>window.innerHeight*.1&&bounds.top<window.innerHeight*.9){
      const narrow=window.innerWidth<=800;
      const meteor=document.createElement("span");
      meteor.className="meteor";
      meteor.setAttribute("aria-hidden","true");
      const props={
       "--mx":(8+Math.random()*58).toFixed(1)+"%",
-      "--my":(section===orbitalSection?8+Math.random()*36:3+Math.random()*15).toFixed(1)+"%",
+      "--my":(3+Math.random()*15).toFixed(1)+"%",
       "--ml":(narrow?65+Math.random()*40:90+Math.random()*60).toFixed(0)+"px",
       "--dx":(narrow?115+Math.random()*65:200+Math.random()*110).toFixed(0)+"px",
       "--dy":(narrow?50+Math.random()*38:85+Math.random()*60).toFixed(0)+"px",
@@ -728,7 +723,7 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
      };
      for(const [key,val] of Object.entries(props))meteor.style.setProperty(key,val);
      meteor.addEventListener("animationend",()=>meteor.remove(),{once:true});
-     layer.appendChild(meteor);
+     surfaceMeteors.appendChild(meteor);
      window.setTimeout(()=>meteor.remove(),1800);
     }
    }

@@ -1,0 +1,176 @@
+/* Deep space sits above the orbital photograph and behind the solar system. */
+.region-space .space-cosmos {
+  background-position: center 35%;
+  opacity: .86;
+  filter: saturate(.9) contrast(1.06) brightness(.99);
+}
+.region-space .space-starfield,
+.region-space .space-bright-stars { opacity: .35; }
+.region-space:has(#toonOrbitStage canvas) .space-starfield,
+.region-space:has(#toonOrbitStage canvas) .space-bright-stars { animation: none; }
+#toonOrbitStage {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+  mask-image: linear-gradient(#000 0 70%, transparent 96%);
+}
+#toonOrbitStage canvas { display: block; width: 100%; height: 100%; }
+#toonOrbitStage.space-motion-paused * { animation-play-state: paused; }
+#toonOrbitStage .astralis-space-asteroid,
+#toonOrbitStage .astralis-space-satellite {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#toonOrbitStage .astralis-space-asteroid {
+  width: calc(var(--rock-size) * .76);
+  aspect-ratio: 1;
+  animation: toonAsteroidPass var(--travel-time) linear var(--travel-delay) infinite;
+}
+#toonOrbitStage .astralis-space-asteroid > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: url('/assets/deep-space/asteroids-realistic-v2.webp') var(--atlas-x) var(--atlas-y) / 300% 200% no-repeat;
+  opacity: var(--rock-opacity);
+  animation: toonAsteroidSpin var(--spin-time) linear infinite;
+}
+#toonOrbitStage .astralis-space-satellite {
+  width: clamp(38px, 6vw, 84px);
+  animation: toonSatellitePass 96s linear -33s infinite;
+}
+#toonOrbitStage .astralis-space-satellite svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.toon-orbit-sun {
+  position: absolute;
+  z-index: 5;
+  top: 10%;
+  left: 12%;
+  width: clamp(106px, 16vw, 226px);
+  aspect-ratio: 1;
+  background: url('/assets/our-new-star/sun.webp') center / contain no-repeat;
+  mix-blend-mode: screen;
+  animation: toonSunDrift 46s ease-in-out infinite alternate;
+}
+.toon-orbit-sun::before {
+  position: absolute;
+  inset: -45%;
+  z-index: -1;
+  content: "";
+  background: radial-gradient(circle, #ffe2a24d 18%, #ffb85b34 35%, #ee773c13 54%, transparent 70%);
+  animation: toonCoronaPulse 16s ease-in-out infinite alternate;
+}
+.toon-orbit-ringed {
+  position: absolute;
+  z-index: 5;
+  left: 5%;
+  top: 40%;
+  width: clamp(230px, 33vw, 465px);
+  height: auto;
+  aspect-ratio: 600 / 380;
+  object-fit: contain;
+  opacity: .91;
+  filter: drop-shadow(0 0 15px #a8acff32);
+  animation: toonRingedDrift 43s ease-in-out -9s infinite alternate;
+}
+.region-space .space-planet.moon {
+  top: 8%;
+  right: 10%;
+  width: clamp(150px, 23vw, 310px);
+  opacity: 1;
+  mix-blend-mode: normal;
+  mask-image: radial-gradient(circle closest-side, #000 95.4%, transparent 96.7%);
+  animation: moonNaturalDrift 44s ease-in-out infinite alternate;
+}
+.region-space .space-planet.distant-mars {
+  top: 51%;
+  right: 17%;
+  opacity: .89;
+  width: clamp(70px, 11vw, 158px);
+  animation: toonRingedDrift 36s ease-in-out -12s infinite alternate-reverse;
+}
+.toon-orbit-comet {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  width: clamp(125px, 25vw, 320px);
+  height: 34px;
+  opacity: 0;
+  transform-origin: right center;
+  animation: toonCometPass 34s linear -6s infinite;
+}
+.toon-orbit-comet::before {
+  content: "";
+  position: absolute;
+  inset: 0 4px 0 0;
+  background: linear-gradient(90deg, transparent, #658fc224 38%, #a8dfff99 89%, #f4fcff);
+  clip-path: polygon(0 4%, 98% 43%, 100% 50%, 98% 57%, 0 98%, 30% 52%);
+  filter: blur(2px);
+}
+.toon-orbit-comet::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: calc(50% - 4px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f4fbff;
+  box-shadow: 0 0 9px 4px #a9ddffb3, 0 0 23px 5px #87b8ff60;
+}
+@keyframes toonAsteroidPass {
+  0% { transform: translate3d(var(--start-x), var(--start-y), 0) scale(.81); opacity: 0; }
+  8%, 92% { opacity: 1; }
+  100% { transform: translate3d(var(--end-x), var(--end-y), 0) scale(1.12); opacity: 0; }
+}
+@keyframes toonAsteroidSpin {
+  from { transform: rotate(var(--rock-angle)); }
+  to { transform: rotate(calc(var(--rock-angle) + 360deg)); }
+}
+@keyframes toonSatellitePass {
+  0% { transform: translate3d(104vw, 47vh, 0) rotate(-14deg); opacity: 0; }
+  9%, 88% { opacity: .62; }
+  100% { transform: translate3d(-14vw, 83vh, 0) rotate(12deg); opacity: 0; }
+}
+@keyframes toonSunDrift {
+  to { transform: translate3d(3vw, 2vh, 0) rotate(7deg); }
+}
+@keyframes toonCoronaPulse {
+  to { opacity: .62; transform: scale(1.14); }
+}
+@keyframes toonRingedDrift {
+  from { transform: translate3d(-.5vw, 1vh, 0) rotate(-5deg); }
+  to { transform: translate3d(3vw, -2vh, 0) rotate(5deg); }
+}
+@keyframes toonCometPass {
+  0% { transform: translate3d(-30vw, 14vh, 0) rotate(16deg); opacity: 0; }
+  12%, 35% { opacity: .85; }
+  49%, 100% { transform: translate3d(105vw, 53vh, 0) rotate(16deg); opacity: 0; }
+}
+@media (max-width: 800px) {
+  .region-space .space-cosmos { background-position: 50% 22%; }
+  .toon-orbit-sun { left: 7%; top: 12%; }
+  .region-space .space-planet.moon { right: 3%; top: 7%; }
+  .toon-orbit-ringed { left: 0; top: 41%; }
+  .region-space .space-planet.distant-mars { right: 12%; top: 37%; }
+  #toonOrbitStage .astralis-space-asteroid { width: calc(var(--rock-size) * .48); }
+  #toonOrbitStage .astralis-space-asteroid:nth-of-type(n + 7) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #toonOrbitStage *,
+  .toon-orbit-sun,
+  .toon-orbit-sun::before,
+  .toon-orbit-ringed,
+  .toon-orbit-comet { animation: none; }
+  #toonOrbitStage .astralis-space-asteroid {
+    left: var(--rest-x);
+    top: var(--rest-y);
+  }
+  #toonOrbitStage .astralis-space-satellite { left: 64%; top: 51%; opacity: .58; }
+}

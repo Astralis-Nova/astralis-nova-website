@@ -48,9 +48,9 @@
   }
   window.AstralisSpaceArt = { renderRingedWorld };
 
-  function upgradeRingedWorld() {
+  function upgradeRingedWorld(host) {
     const upgrade = () => {
-      const target = document.querySelector('#astralis-celestial-drift .ringed');
+      const target = host ? host.querySelector('[data-ringed-world]') : document.querySelector('#astralis-celestial-drift .ringed');
       if (!target) return false;
       const texture = new Image();
       texture.decoding = 'async';
@@ -63,16 +63,16 @@
       texture.src = '/astralis-gas-giant.png';
       return true;
     };
-    if (upgrade() || !('MutationObserver' in window)) return;
+    if (upgrade() || host || !('MutationObserver' in window)) return;
     // The shared homepage layer arrives after the deferred performance loader.
     const observer = new MutationObserver(() => { if (upgrade()) observer.disconnect(); });
     observer.observe(document.body, { childList: true });
     window.setTimeout(() => observer.disconnect(), 20000);
   }
 
-  function addAsteroids(stage) {
+  function addAsteroids(stage, count) {
     const random = seededRandom(20261007);
-    for (let i = 0; i < 18; i += 1) {
+    for (let i = 0; i < count; i += 1) {
       const rock = document.createElement("div");
       rock.className = "astralis-space-asteroid";
       const texture = document.createElement("span");
@@ -103,16 +103,18 @@
   }
 
   function boot() {
-    if (document.getElementById(ID)) return;
+    const host = document.querySelector('[data-astralis-space]');
+    const stageId = host?.dataset.astralisSpace || ID;
+    if (document.getElementById(stageId)) return;
     const stage = document.createElement("div");
-    stage.id = ID;
+    stage.id = stageId;
     stage.dataset.spaceVersion = VERSION;
     stage.setAttribute("aria-hidden", "true");
     const canvas = document.createElement("canvas");
     stage.append(canvas);
-    addAsteroids(stage);
-    document.body.prepend(stage);
-    upgradeRingedWorld();
+    addAsteroids(stage, host ? 10 : 18);
+    (host || document.body).prepend(stage);
+    upgradeRingedWorld(host);
     // A quiet explorer satellite crosses behind all navigation and roaming craft.
     const satellite = document.createElement('div');
     satellite.className = 'astralis-space-satellite';
@@ -139,12 +141,13 @@
     });
     let width = 1, height = 1, scale = 1, stars = [], frame = 0;
     let lastFrame = 0, elapsed = 0, lastClock = 0;
+    let inView = true;
     let pointerX = 0, pointerY = 0, parallaxX = 0, parallaxY = 0;
     const FRAME_INTERVAL = 1000 / 24;
 
     function resize() {
-      width = Math.max(1, window.innerWidth);
-      height = Math.max(1, window.innerHeight);
+      width = Math.max(1, host?.clientWidth || window.innerWidth);
+      height = Math.max(1, host?.clientHeight || window.innerHeight);
       scale = Math.min(window.devicePixelRatio || 1, 1.5, 2560 / width, 1800 / height);
       canvas.width = Math.round(width * scale);
       canvas.height = Math.round(height * scale);
@@ -228,7 +231,7 @@
 
     function tick(now) {
       frame = 0;
-      if (document.hidden || reduced.matches) return;
+      if (document.hidden || reduced.matches || !inView) return;
       if (now - lastFrame >= FRAME_INTERVAL) {
         // Cap each time step; resuming a hidden tab never jumps across the sky.
         elapsed += lastClock ? Math.min((now - lastClock) / 1000, .1) : 0;
@@ -241,7 +244,7 @@
     function syncMotion() {
       window.cancelAnimationFrame(frame);frame = 0;lastClock = 0;
       pointerX = pointerY = parallaxX = parallaxY = 0;
-      const paused = document.hidden || reduced.matches;
+      const paused = document.hidden || reduced.matches || !inView;
       stage.classList.toggle("space-motion-paused", paused);
       document.getElementById('astralis-celestial-drift')?.classList.toggle('sky-motion-paused', document.hidden);
       if (paused) draw(elapsed);
@@ -254,11 +257,19 @@
     }, {passive:true});
     window.addEventListener("pointermove", event => {
       if (reduced.matches || coarse.matches) return;
-      pointerX = (event.clientX / width - .5) * 9;
-      pointerY = (event.clientY / height - .5) * 7;
+      const rect = host?.getBoundingClientRect();
+      pointerX = ((event.clientX - (rect?.left || 0)) / width - .5) * 9;
+      pointerY = ((event.clientY - (rect?.top || 0)) / height - .5) * 7;
     }, {passive:true});
     document.addEventListener("visibilitychange", syncMotion);
     reduced.addEventListener?.("change", syncMotion);
+    if (host && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(([entry]) => {
+        inView = entry.isIntersecting;
+        syncMotion();
+      });
+      observer.observe(host);
+    }
     resize();syncMotion();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, {once:true});
