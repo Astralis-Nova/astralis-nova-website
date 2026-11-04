@@ -10,6 +10,7 @@
   const narrow = matchMedia("(max-width: 800px)");
   const tau = Math.PI * 2;
   const duration = 8.5;
+  const passes = ["chase", "devil", "chase", "chase", "devil"];
   // Each pass takes a different side of the wash and follows a curve in depth.
   const routes = [
     { direction: 1, level: .745, curve: -.050, depth: 1, crossing: .61 },
@@ -17,7 +18,7 @@
     { direction: 1, level: .786, curve: .028, depth: 1.10, crossing: .62 }
   ];
   let width = 1, height = 1, density = 1;
-  let visible = false, frame = 0, timer = 0, start = 0, lastPaint = 0, sightings = 0;
+  let visible = false, frame = 0, timer = 0, start = 0, lastPaint = 0, chases = 0, passIndex = 0;
 
   const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
   const mix = (from, to, amount) => from + (to - from) * amount;
@@ -217,7 +218,7 @@
 
   function scene(time) {
     paint.clearRect(0, 0, width, height);
-    const route = routes[(sightings - 1) % routes.length];
+    const route = routes[chases % routes.length];
     const direction = route.direction;
     const unit = clamp(width / 1120, .58, 1.22) * route.depth;
     const wash = width * route.crossing;
@@ -268,6 +269,127 @@
     }
   }
 
+  // Squat, shaggy silhouette and a wide jaw from the studio model sheets.
+  const devil = {
+    body: new Path2D("M-54 -93L-58 -101L-47 -99L-47 -108L-37 -106Q-27 -123 -10 -123L-4 -132L0 -124L10 -135L14 -125L23 -130L25 -122Q43 -119 51 -105L61 -107L58 -98L67 -96L61 -87Q65 -67 53 -49Q47 -33 31 -23Q14 -11 0 -14Q-18 -12 -34 -26Q-59 -48 -58 -70Z"),
+    bib: new Path2D("M-33 -68Q-19 -78 0 -75Q23 -78 37 -66Q43 -50 24 -31Q3 -18 -18 -30Q-40 -44 -33 -68Z"),
+    muzzle: new Path2D("M-47 -92L-54 -86L-45 -85L-49 -78L-38 -79Q-44 -59 -20 -52Q-4 -47 20 -52Q46 -56 45 -76L54 -77L49 -82L56 -86L47 -91Q28 -98 0 -95Q-26 -98 -47 -92Z"),
+    mouth: new Path2D("M-38 -80Q-21 -88 1 -84Q25 -89 39 -78Q44 -66 27 -58Q0 -49 -26 -60Q-40 -66 -38 -80Z"),
+    teeth: new Path2D("M-35 -81Q-22 -86 1 -83Q23 -87 36 -80L28 -69L24 -78L15 -73L10 -81L1 -75L-6 -81L-13 -74L-20 -81L-24 -70Z"),
+    fangs: new Path2D("M-30 -62L-25 -73L-18 -59ZM22 -59L27 -73L34 -64Z")
+  };
+  const dustStamp = document.createElement("canvas");
+  dustStamp.width = dustStamp.height = 48;
+  const stamp = dustStamp.getContext("2d");
+  const dustGlow = stamp.createRadialGradient(24, 24, 0, 24, 24, 24);
+  dustGlow.addColorStop(0, "#d0ad84");
+  dustGlow.addColorStop(.42, "#c2a48266");
+  dustGlow.addColorStop(1, "#9d826400");
+  stamp.fillStyle = dustGlow;
+  stamp.fillRect(0, 0, 48, 48);
+
+  function drawDevil(x, y, unit, turn, spin, time) {
+    const facing = Math.cos(turn);
+    paint.save();
+    paint.translate(x, y);
+    paint.scale(unit * mix(1, .62 + .38 * Math.abs(facing), spin), unit);
+    paint.rotate(Math.sin(turn) * spin * .19 + Math.sin(time * 8) * (1 - spin) * .04);
+    paint.translate(0, -Math.sin(turn * 2) * spin * 4);
+    const sweep = Math.sin(turn) * spin * 15;
+    line("#85533b", 15, [[-32, -76], [-52, -64 + sweep], [-67, -46 + sweep]]);
+    line("#ac7652", 16, [[30, -76], [51, -62 - sweep], [69, -46 - sweep]]);
+    ellipse("#b07c59", -68, -46 + sweep, 9, 10, -.3);
+    ellipse("#b98158", 69, -46 - sweep, 9, 10, .32);
+    ellipse("#a57553", -20, -10, 19, 8, -.14);
+    ellipse("#ba8963", 22, -10, 19, 8, .14);
+    for (const toe of [-26, -18, 18, 26]) {
+      line("#694638", 1.6, [[toe, -8], [toe + 1, -4]]);
+    }
+    ellipse("#79523e", -49, -108, 10, 13, -.45);
+    ellipse("#a17053", 49, -107, 10, 13, .45);
+    ellipse("#d5a37d", 51, -108, 5, 7, .43);
+    inked(shade(-129, -18, "#b57c4d", "#784831"), devil.body, "#513528");
+
+    // The face narrows on quarter turns and disappears when his back comes around.
+    const face = mix(1, clamp((facing + .10) * 2.8, 0, 1), spin);
+    paint.globalAlpha = face;
+    paint.translate(Math.sin(turn) * spin * 15, 0);
+    shape(shade(-78, -23, "#d4a276", "#b17b54"), devil.bib);
+    ellipse("#f2dfab", -13, -99, 10, 12, .36);
+    ellipse("#f2dfab", 13, -99, 10, 12, -.36);
+    ellipse("#34232a", -8, -99, 3, 5);
+    ellipse("#34232a", 8, -99, 3, 5);
+    line("#674031", 4, [[-24, -108], [-14, -108], [-4, -102]]);
+    line("#674031", 4, [[4, -102], [14, -108], [24, -108]]);
+    inked(shade(-96, -51, "#e4b790", "#ca936f"), devil.muzzle, "#714934");
+    shape("#482831", devil.mouth);
+    ellipse("#bd6862", 6, -61.5, 15, 5.2, -.12);
+    shape("#f3dfb9", devil.teeth);
+    shape("#f3dfb9", devil.fangs);
+    ellipse("#3d2c30", 0, -91, 13, 6);
+    ellipse("#a38372", 3, -93, 5, 1.5);
+    for (const side of [-1, 1]) {
+      line("#694835", 1.4, [[side * 39, -83], [side * 56, -88]]);
+      line("#694835", 1.4, [[side * 41, -79], [side * 58, -79]]);
+    }
+    paint.restore();
+  }
+
+  function drawVortex(x, y, unit, time, strength, front) {
+    if (strength <= .01) return;
+    paint.save();
+    paint.translate(x, y);
+    paint.scale(unit, unit);
+    // Reuse a soft stamp for the rising dust and split the helix around the character.
+    for (let i = 0; i < 96; i += 1) {
+      const rise = (i / 96 + time * (.31 + (i % 5) * .019)) % 1;
+      const angle = i * 2.39996 + time * (16 - rise * 3) - rise * 9;
+      const near = Math.sin(angle);
+      if ((near >= 0) !== front) continue;
+      const radius = (20 + rise * 53) * (.61 + (i % 7) * .071);
+      const px = Math.cos(angle) * radius + Math.sin(time * 4 + rise * 4) * rise * 9;
+      const py = -rise * 161 + near * radius * .22;
+      const size = 9 + (i % 9) * 2 + rise * 9;
+      const fade = Math.min(1, rise * 9) * (1 - rise) ** .56;
+      paint.globalAlpha = strength * fade * (front ? .53 : .34);
+      paint.drawImage(dustStamp, px - size, py - size * .66, size * 2, size * 1.32);
+      if (i % 4 === 0) {
+        ellipse("#e0be8a", px, py, 1.3 + (i % 3) * .35, 1);
+      }
+    }
+    paint.globalAlpha = 1;
+    // Curved streaks make the turning motion readable through the dust.
+    for (let i = 0; i < 6; i += 1) {
+      const angle = time * 18 + i * .91;
+      const near = Math.sin(angle);
+      if ((near >= 0) !== front) continue;
+      const radius = 22 + i * 8;
+      paint.beginPath();
+      paint.ellipse(0, -12 - i * 24, radius, radius * .22, -.10, angle, angle + 1.03);
+      paint.strokeStyle = `rgba(222,195,157,${strength * (.42 - i * .035)})`;
+      paint.lineWidth = 3.1 - i * .30;
+      paint.stroke();
+    }
+    paint.restore();
+  }
+
+  function devilScene(time) {
+    paint.clearRect(0, 0, width, height);
+    const arrival = easeOut(phase(time, 0, 2.55));
+    const circle = phase(time, 2.55, 4.75) * tau;
+    const departure = phase(time, 6.05, 8.25) ** 1.2;
+    const x = width * (mix(-.23, .49, arrival) + Math.sin(circle) * .137 + departure * .76);
+    const y = height * (.74 + (1 - Math.cos(circle)) * .032 + departure * .068);
+    const unit = clamp(width / 1020, .64, 1.20);
+    const spin = (1 - phase(time, 4.48, 5.12)) + phase(time, 5.86, 6.15);
+    const turn = time * 25;
+    ellipse("rgba(4,5,7,.32)", x, y - unit * 2, 39 * unit, 5 * unit);
+    if (spin > .01) drawDust(x - unit * 13, y + unit * 3, .30 + time % .78, unit * spin, 1);
+    drawVortex(x, y, unit, time, spin, false);
+    drawDevil(x, y, unit, turn, spin, time);
+    drawVortex(x, y, unit, time, spin, true);
+  }
+
   function resize() {
     width = canvas.parentElement.clientWidth || 1;
     height = canvas.parentElement.clientHeight || 1;
@@ -279,14 +401,18 @@
 
   function tick(now) {
     const time = (now - start) / 1000;
+    const isDevil = passes[passIndex] === "devil";
     if (time >= duration) {
       frame = 0;
       canvas.hidden = true;
-      schedule(11500);
+      if (!isDevil) chases += 1;
+      passIndex = (passIndex + 1) % passes.length;
+      schedule(passes[passIndex] === "devil" ? 5100 : 9500);
       return;
     }
     if (now - lastPaint >= 1000 / 30) {
-      scene(time);
+      if (isDevil) devilScene(time);
+      else scene(time);
       lastPaint = now;
     }
     frame = requestAnimationFrame(tick);
@@ -301,14 +427,13 @@
       canvas.hidden = false;
       start = performance.now();
       lastPaint = 0;
-      sightings += 1;
       frame = requestAnimationFrame(tick);
     }, delay);
   }
 
   function sync() {
     if (visible && !document.hidden && !reduced.matches) {
-      schedule(sightings ? 6500 : 3800);
+      schedule(chases ? 6500 : 3800);
       return;
     }
     window.clearTimeout(timer);
