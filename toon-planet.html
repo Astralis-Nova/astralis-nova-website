@@ -645,6 +645,25 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 @keyframes desertSceneryBreath{from{transform:scale(1.04) translate3d(-.16%,.1%,0)}to{transform:scale(1.04) translate3d(.16%,-.1%,0)}}
 @keyframes spaceStarTwinkle{from{opacity:.76}to{opacity:.92}}
 html.toon-background-paused *,html.toon-background-paused *::before,html.toon-background-paused *::after{animation-play-state:paused!important}
+.underground-burrow{
+ position:absolute;z-index:4;top:clamp(88px,15svh,140px);left:50%;width:min(94%,850px);
+ height:auto;transform:translateX(-50%);pointer-events:none;overflow:visible
+}
+@media(prefers-reduced-motion:no-preference){
+ .burrow-squirrel-head,.burrow-rat-ear{transform-box:fill-box;transform-origin:50% 85%}
+ .burrow-squirrel-head{animation:burrowSniff 8s ease-in-out infinite}
+ .burrow-rat-ear{animation:burrowEar 6s ease-in-out infinite}
+}
+@keyframes burrowSniff{
+ 0%,22%,43%,100%{transform:none}
+ 28%,37%{transform:translate(3px,-3px) rotate(-8deg)}
+ 33%{transform:translate(2px,0) rotate(3deg)}
+}
+@keyframes burrowEar{
+ 0%,56%,69%,100%{transform:none}
+ 60%,66%{transform:rotate(16deg)}
+ 63%{transform:rotate(-9deg)}
+}
 </style>
 <link rel="stylesheet" href="/toon-planet-orbit.css?v=20261104orbit">
 <script src="/astralis-space-background.js?v=20261104toonorbit" defer></script>
@@ -704,6 +723,71 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
  <div class="underground-mineral-shimmer" aria-hidden="true"></div>
  <div class="underground-light-scatter" aria-hidden="true"></div>
  <div class="underground-shadow-drift" aria-hidden="true"></div>
+ <svg class="underground-burrow" viewBox="0 0 720 405" role="img" aria-labelledby="burrow-title burrow-desc">
+  <title id="burrow-title">Life beneath Cactus Forest</title>
+  <desc id="burrow-desc">A ground squirrel peers down its tunnel while a kangaroo rat shelters beside a small cache of seeds.</desc>
+  <defs>
+   <linearGradient id="burrow-rim" x2=".15" y2="1">
+    <stop stop-color="#684c39"/>
+    <stop offset=".55" stop-color="#a97e58"/>
+    <stop offset="1" stop-color="#624735"/>
+   </linearGradient>
+   <radialGradient id="burrow-earth" cx=".40" cy=".41" r=".65">
+    <stop stop-color="#6d4d39"/>
+    <stop offset=".54" stop-color="#473027"/>
+    <stop offset="1" stop-color="#211718"/>
+   </radialGradient>
+   <pattern id="burrow-grit" width="42" height="29" patternUnits="userSpaceOnUse">
+    <path d="m4 8 3-1m15 9 4 1m12 7 2-2M10 23l2 1m17-21 2 1" fill="none" stroke="#d4aa80" stroke-width="1.2" opacity=".27"/>
+   </pattern>
+   <path id="burrow-shape" d="M104 5Q132 21 142 63Q158 98 200 110C229 118 241 105 266 96C310 79 371 94 399 132Q418 157 410 184Q405 204 435 216Q469 231 500 224C549 210 602 219 629 252Q657 286 630 324C611 357 535 371 481 353Q449 343 445 315Q442 282 414 265Q376 244 363 219C342 204 319 222 280 220C222 222 186 198 179 163Q176 149 160 141C116 121 102 95 91 61Q80 34 71 17Z"/>
+  </defs>
+  <g fill="none" stroke-linecap="round">
+   <path d="M533 11Q510 52 522 88T485 155L463 190M520 81Q550 89 566 117M507 133Q487 120 481 102M155 205Q143 228 151 257L136 298" stroke="#2e211d" stroke-width="6" opacity=".68"/>
+   <path d="M533 11Q510 52 522 88T485 155L463 190M520 81Q550 89 566 117M507 133Q487 120 481 102M155 205Q143 228 151 257L136 298" stroke="#b18b65" stroke-width="2.5" opacity=".65"/>
+  </g>
+  <use href="#burrow-shape" fill="none" stroke="#2a1c1a" stroke-width="23" stroke-linejoin="round" opacity=".72"/>
+  <use href="#burrow-shape" fill="url(#burrow-earth)" stroke="url(#burrow-rim)" stroke-width="10" stroke-linejoin="round"/>
+  <use href="#burrow-shape" fill="url(#burrow-grit)"/>
+  <path d="M196 175Q226 208 284 208Q321 207 343 199M464 308Q481 341 541 344Q587 343 618 321" fill="none" stroke="#ba8b64" stroke-width="3" stroke-linecap="round" opacity=".52"/>
+  <g transform="translate(278 197)">
+   <ellipse cx="-1" cy="5" rx="61" ry="9" fill="#20151a" opacity=".72"/>
+   <g>
+    <path d="M-27-19Q-53-10-66-22Q-77-39-94-32" fill="none" stroke="#b89370" stroke-width="9" stroke-linecap="round"/>
+    <path d="M-86-33q-5-1-9 1" fill="none" stroke="#574338" stroke-width="8" stroke-linecap="round"/>
+    <ellipse cx="-14" cy="-24" rx="37" ry="21" transform="rotate(-12 -14 -24)" fill="#b5906d"/>
+    <path d="M-40-18Q-8-10 8-37Q22-37 29-21Q10 0-17 1Q-32-1-40-18" fill="#e1bc93"/>
+    <ellipse cx="-20" cy="0" rx="16" ry="5" fill="#a9805e"/>
+    <ellipse cx="28" cy="-1" rx="12" ry="4" fill="#d1a57e"/>
+    <g class="burrow-squirrel-head">
+     <ellipse cx="15" cy="-52" rx="7" ry="8" fill="#a47760"/>
+     <ellipse cx="24" cy="-42" rx="21" ry="15" fill="#cba47d"/>
+     <ellipse cx="36" cy="-36" rx="14" ry="8" fill="#ead0af"/>
+     <circle cx="30" cy="-46" r="4.3" fill="#231c21"/>
+     <circle cx="31" cy="-47.4" r="1.4" fill="#fff0d5"/>
+     <ellipse cx="48" cy="-39" rx="4" ry="3" fill="#4b322c"/>
+    </g>
+   </g>
+  </g>
+  <g transform="translate(544 333)">
+   <ellipse cx="4" cy="4" rx="51" ry="7" fill="#1f1517" opacity=".76"/>
+   <path d="M11-14Q38-6 54-21Q66-31 77-28" fill="none" stroke="#b48766" stroke-width="5" stroke-linecap="round"/>
+   <path d="m70-28 8 1" fill="none" stroke="#624738" stroke-width="6" stroke-linecap="round"/>
+   <ellipse cx="7" cy="-24" rx="23" ry="20" transform="rotate(21 7 -24)" fill="#bc906a"/>
+   <path d="M-5-39Q-28-31-13-12Q-7 1 9-6Q15-24-5-39" fill="#efd2a8"/>
+   <g class="burrow-rat-ear">
+    <ellipse cx="-7" cy="-55" rx="9" ry="12" transform="rotate(21 -7 -55)" fill="#c49b7e"/>
+    <ellipse cx="-8" cy="-55" rx="4.5" ry="7" transform="rotate(21 -8 -55)" fill="#aa7970"/>
+   </g>
+   <ellipse cx="-17" cy="-42" rx="17" ry="14" fill="#cda57d"/>
+   <ellipse cx="-29" cy="-36" rx="11" ry="7" fill="#f2dcb8"/>
+   <circle cx="-22" cy="-45" r="5.2" fill="#261c20"/>
+   <circle cx="-23.3" cy="-46.7" r="1.5" fill="#fff1d8"/>
+   <ellipse cx="-39" cy="-40" rx="3.5" ry="3" fill="#4d302d"/>
+   <ellipse cx="-8" cy="-1" rx="16" ry="4.5" fill="#d5ab84"/>
+   <path d="m-51-7 3-2m-7 5 3 1m-10-2 2-1m13 5 3-1" fill="none" stroke="#e1ba76" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+ </svg>
 </section>
 </main>
 <script>
