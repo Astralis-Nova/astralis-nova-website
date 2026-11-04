@@ -94,6 +94,13 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 #ac-media .ac-media-note{font-size:.875rem;color:#aebdd0}
 @media(max-width:980px){.ac-media-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.ac-media-grid{grid-template-columns:1fr}#ac-media{scroll-margin-top:90px}#ac-media .source-grid{grid-template-columns:1fr}}
+.hollowtide-gallery{margin-bottom:20px}
+.hollowtide-gallery h3{margin:0 0 10px;color:var(--gold);font-family:Georgia,serif}
+.hollowtide-gallery figure{margin:0;min-width:0}
+.hollowtide-gallery figure a{display:block;border:1px solid var(--line);border-radius:7px}
+.hollowtide-gallery figure a:hover{border-color:var(--gold)}
+.hollowtide-gallery img{display:block;width:100%;height:auto;border-radius:6px}
+.hollowtide-gallery figcaption{margin-top:6px;color:var(--muted);font-size:.875rem}
 </style>
 <link rel="stylesheet" href="/ac-dragon.css?v=20261016jointposes10">
 <link rel="preload" as="image" href="/assets/ac-portals/ac-dragon-joints-cycle.webp">
@@ -136,6 +143,15 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 </div>
 <a class="guide-link" href="https://hollowtide.org/" target="_blank" rel="noopener noreferrer">Play in your browser ↗</a>
 </div>
+<section class="hollowtide-gallery" aria-labelledby="hollowtide-gallery-title">
+<h3 id="hollowtide-gallery-title">Screenshots from Hollowtide</h3>
+<div class="steps">
+<figure><a href="/assets/ac-worlds/hollowtide-field-combat.webp" target="_blank" rel="noopener" aria-label="Open Hollowtide screenshot: Field combat"><img src="/assets/ac-worlds/hollowtide-field-combat.webp" width="794" height="446" alt="A burst of orange spell fire during a fight in a grassy field" loading="lazy" decoding="async"></a><figcaption>Field combat</figcaption></figure>
+<figure><a href="/assets/ac-worlds/hollowtide-dungeon.webp" target="_blank" rel="noopener" aria-label="Open Hollowtide screenshot: Dungeon encounter"><img src="/assets/ac-worlds/hollowtide-dungeon.webp" width="794" height="446" alt="A gold-colored enemy and bright spell effects inside a stone dungeon" loading="lazy" decoding="async"></a><figcaption>Dungeon encounter</figcaption></figure>
+<figure><a href="/assets/ac-worlds/hollowtide-town.webp" target="_blank" rel="noopener" aria-label="Open Hollowtide screenshot: Around town"><img src="/assets/ac-worlds/hollowtide-town.webp" width="794" height="446" alt="An armored character standing outside a timber-roofed building in town" loading="lazy" decoding="async"></a><figcaption>Around town</figcaption></figure>
+</div>
+<p class="source-note">Screenshots by <a href="https://lumpybutt33.itch.io/hollowtide" target="_blank" rel="noopener noreferrer">Hollowtide developer LumpyButt33 ↗</a>. Select a screenshot to view it at full size.</p>
+</section>
 <div class="steps">
 <article class="step"><h3>Questing &amp; world bosses</h3><p>Face the Forge-Warden of Ispar in the Empyrean Vault or the Unbound Queen beneath the Sunken Lyceum. Bael’Zharon appears on the world map every seven hours, with rewards for players who land a hit.</p></article>
 <article class="step"><h3>Player combat</h3><p>Hollowtide features an arena and a seasonal player-killer ladder with titles. The developer’s October browser update introduced protection from other players until level 5.</p></article>
@@ -462,7 +478,7 @@ var render=function(){
 };
 var load=function(){
  status.textContent='Scanning community portals…';document.getElementById('refresh').disabled=true;
- fetch('/api/ac-worlds?v=20261103hollowtide',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
+ fetch('/api/ac-worlds?v=20261104hollowtideart',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
   state.worlds=Array.isArray(data.worlds)?data.worlds:[];
   document.getElementById('totalWorlds').textContent=state.worlds.length;
   document.getElementById('onlineWorlds').textContent=state.worlds.filter(function(w){return w.status==='Online'}).length;

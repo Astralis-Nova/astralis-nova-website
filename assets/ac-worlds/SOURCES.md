@@ -8,6 +8,16 @@ Original files copied without modification on 2026-09-01. Card presentation uses
 | asheron4fun.jpg | https://web.asheron4fun.com/ | https://img1.wsimg.com/isteam/ip/c0baa434-cb69-4ac3-acba-5d97f740348b/Banner%20A4F%20Web.png/:/ |
 | drunkenfell.png | https://www.drunkenfell.com/ | https://www.drunkenfell.com/img_auth.php/c/cd/DnF_logo.png |
 
+## Hollowtide gameplay screenshots
+
+Developer-published screenshots, encoded as WebP for the spotlight and directory.
+
+| File | Community source | Downloaded asset |
+| --- | --- | --- |
+| hollowtide-field-combat.webp | https://lumpybutt33.itch.io/hollowtide | https://img.itch.zone/aW1hZ2UvNTA4NjEyMi8zMDQ0Njg2MS5wbmc=/794x1000/RiFQ6A.png |
+| hollowtide-dungeon.webp | https://lumpybutt33.itch.io/hollowtide | https://img.itch.zone/aW1hZ2UvNTA4NjEyMi8zMDQ0Njg1Ny5wbmc=/794x1000/eAzh9q.png |
+| hollowtide-town.webp | https://lumpybutt33.itch.io/hollowtide | https://img.itch.zone/aW1hZ2UvNTA4NjEyMi8zMDQ0Njg1OS5wbmc=/794x1000/imlM3I.png |
+
 ## Distinct archival images assigned September 1, 2026
 
 Each listed world has a fixed, unique image. These are illustrative Asheron's Call archive scenes, not verified screenshots of the named custom servers. Supplied wiki thumbnails are used where available; downloaded image bytes are unchanged. Unknown new worlds do not reuse existing images.

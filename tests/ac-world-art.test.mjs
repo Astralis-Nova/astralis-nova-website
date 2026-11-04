@@ -5,10 +5,10 @@ import { createHash } from 'node:crypto';
 import { worldArtwork } from '../lib/ac-world-art.js';
 const root = new URL('../', import.meta.url);
 
-// Directory snapshot checked on 2026-09-01, independent of the artwork registry.
-const listedWorlds = ["ACPrime", "AChard", "Asheron4Fun.com", "Buadren AC", "CABA", "Coldeve", "Conquest", "Dekarutide", "Derptide", "Doctide", "DragonMoon", "DreamWeave", "Drunkenfell", "Ebontide", "Eversong", "Frostcull", "FrostfACE", "FunkyTown 2.0", "FunkyTown PK", "Harvestagain", "Harvestbud", "Infinite Frosthaven", "InfiniteLeaftide", "Jellocull", "LeafDawn", "Leafdawning", "Levistras", "Mistwood", "Modclaim", "Morgentau", "MorningStorm", "Newfoundland", "Nexus", "NoESCapeGames", "PortalStorm", "Reefcull", "Seedsow", "Shadowgain", "Shadowland", "Snowreap", "Soulclaim", "Sundering", "The Tower", "Thistlecrown", "Unfamiliar Shores"];
+// September 2026 directory snapshot plus the Hollowtide addition.
+const listedWorlds = ["ACPrime", "AChard", "Asheron4Fun.com", "Buadren AC", "CABA", "Coldeve", "Conquest", "Dekarutide", "Derptide", "Doctide", "DragonMoon", "DreamWeave", "Drunkenfell", "Ebontide", "Eversong", "Frostcull", "FrostfACE", "FunkyTown 2.0", "FunkyTown PK", "Harvestagain", "Harvestbud", "Hollowtide", "Infinite Frosthaven", "InfiniteLeaftide", "Jellocull", "LeafDawn", "Leafdawning", "Levistras", "Mistwood", "Modclaim", "Morgentau", "MorningStorm", "Newfoundland", "Nexus", "NoESCapeGames", "PortalStorm", "Reefcull", "Seedsow", "Shadowgain", "Shadowland", "Snowreap", "Soulclaim", "Sundering", "The Tower", "Thistlecrown", "Unfamiliar Shores"];
 
-test('all 45 listed worlds have distinct image files and stable assignments', () => {
+test('all listed worlds have distinct image files and stable assignments', () => {
   const paths = new Set();
   const hashes = new Set();
   const assignments = listedWorlds.map(name => [name, worldArtwork(name)]);
