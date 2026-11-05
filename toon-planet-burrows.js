@@ -1,6 +1,8 @@
 /* Small desert animals with articulated fur, planted feet and facial animation. */
-import { RIGS, behavior, prepareRig, deformPoint, createFurRenderer } from './toon-burrow-rig.js?v=20261105roundturns';
+import { RIGS, motionPose, prepareRig, deformPoint, createFurRenderer } from './toon-burrow-rig.js?v=20261105freelife';
 import { createTurnRenderer } from './toon-burrow-turns.js';
+import { createAnimalMind } from './toon-burrow-mind.js';
+import { createPostureRenderer, drawClimbingRoots } from './toon-burrow-postures.js';
 
 const section = document.getElementById('underground');
 const stage = section?.querySelector('.underground-stage');
@@ -10,6 +12,11 @@ if (ctx && stage) {
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const atlas = new Image();
   const turns = createTurnRenderer();
+  const postures = createPostureRenderer();
+  const seeds = new Uint32Array(2);
+  if (globalThis.crypto?.getRandomValues) crypto.getRandomValues(seeds);
+  else { seeds[0] = Math.random() * 0xffffffff; seeds[1] = Math.random() * 0xffffffff; }
+  const minds = [createAnimalMind({ seed: seeds[0] }), createAnimalMind({ rat: true, seed: seeds[1] })];
   let renderer, ready = false, visible = false, frame = 0, elapsed = .2, last = 0, painted = 0;
   function fit() {
     stage.style.width = `${Math.max(section.clientWidth, (section.clientHeight + 40) * 1.5)}px`;
@@ -71,17 +78,20 @@ if (ctx && stage) {
     ctx.restore();
   }
   function animal(time, rat) {
-    const rig = RIGS[rat ? 1 : 0], pose = prepareRig(rig, behavior(time, rat));
+    const rig = RIGS[rat ? 1 : 0], pose = prepareRig(rig, motionPose(time, rat, minds[rat ? 1 : 0].sample(time)));
     ctx.save(); ctx.clip(chambers[rat ? 1 : 0]);
     ctx.globalAlpha = .29;
-    ellipse(pose.x + Math.cos(pose.yaw) * 20, rig.floor + 1, rig.width * .35, 3, '#130c07');
+    ellipse(pose.x + Math.cos(pose.yaw) * 20, pose.floor + 1, rig.width * (.19 + Math.abs(Math.cos(pose.yaw)) * .16), 3, '#130c07');
     ctx.globalAlpha = 1;
-    ctx.translate(pose.x, rig.floor);
-    if (pose.action !== 'turn' || !turns.draw(ctx, rig, pose, profile)) profile(ctx, rig, pose, pose.facing);
+    ctx.translate(pose.x, pose.floor);
+    if (pose.action === 'turn') {
+      if (!turns.draw(ctx, rig, pose, profile)) profile(ctx, rig, pose, pose.facing);
+    } else if (!postures.draw(ctx, rig, pose, profile)) profile(ctx, rig, pose, pose.facing);
     ctx.restore();
   }
   function draw(time) {
     ctx.clearRect(0, 0, 1536, 1024);
+    drawClimbingRoots(ctx);
     animal(time, false); animal(time, true);
   }
   function tick(now) {
@@ -95,7 +105,7 @@ if (ctx && stage) {
     if (frame) cancelAnimationFrame(frame);
     frame = 0;
     if (!ready) return;
-    draw(reduced.matches ? 2.8 : elapsed);
+    draw(elapsed);
     if (visible && !document.hidden && !reduced.matches) {
       last = performance.now(); painted = 0; frame = requestAnimationFrame(tick);
     }
