@@ -11,6 +11,8 @@
     'One small step for a dog. One giant leap for property values.',
     'The navigation system said “turn left at the Moon.” I may have missed it.'
   ];
+  const life = window.NovaCreatureLife;
+  const vary = (a,b) => life ? life.range(a,b) : (a+b)/2;
   let flight, timer, bubbleTimer, pass = 0, joke = 0, paused = false, dismissed = false;
   let visitor, controls, pauseButton, message, greetingTimer, goggleRig;
   function tellJoke() {
@@ -38,7 +40,9 @@
     if (reduced.matches || typeof visitor.animate !== 'function') { park(); return; }
     flight?.cancel();
     const w = visitor.offsetWidth, h = visitor.offsetHeight;
-    const right = pass++ % 2 === 0;
+    const right = life ? Math.random() < .5 : pass % 2 === 0;
+    pass += 1;
+    const amplitude = vary(.17,.34), arc = vary(-.045,.045), heightBias = vary(.35,.60), pace = vary(-.045,.045);
     const dir = right ? 1 : -1;
     visitor.dataset.heading = right ? 'right' : 'left';
     const start = right ? -w - 25 : innerWidth + 25;
@@ -47,16 +51,17 @@
     const span = Math.max(0, innerHeight - h - top - 100);
     const frames = Array.from({ length: 49 }, (_, i) => {
       const t = i / 48;
-      const y = top + span * (.46 + .3 * Math.sin(t * Math.PI * 2 + pass));
+      const travel = life ? t + pace * Math.sin(t * Math.PI * 2) : t;
+      const y = top + span * (life ? heightBias + amplitude * Math.sin(t * Math.PI * 2 + pass) + arc * Math.sin(t * Math.PI * 3) : .46 + .3 * Math.sin(t * Math.PI * 2 + pass));
       const size = .65 + .47 * Math.sin(t * Math.PI);
       const bank = 11 * Math.cos(t * Math.PI * 2 + pass) + 3 * Math.sin(t * Math.PI * 6);
-      return { transform: `translate(${start + (end-start)*t}px,${y}px) scale(${dir*size},${size}) rotate(${bank}deg)` };
+      return { transform: `translate(${start + (end-start)*travel}px,${y}px) scale(${dir*size},${size}) rotate(${bank}deg)` };
     });
     visitor.style.visibility = 'visible';
-    flight = visitor.animate(frames, { duration: 29000 + (pass % 3) * 3000, easing: 'linear', fill: 'forwards' });
+    flight = visitor.animate(frames, { duration: life ? vary(24000,42000) : 29000 + (pass % 3) * 3000, easing: 'linear', fill: 'forwards' });
     flight.onfinish = () => {
       visitor.style.visibility = 'hidden';
-      timer = setTimeout(fly, 11000);
+      timer = setTimeout(fly, life ? vary(4500,17000) : 11000);
     };
   }
   function sync() {

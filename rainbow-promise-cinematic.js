@@ -251,6 +251,7 @@
     // Each pair shares its photographed wing geometry and a level shoulder line.
     shoulders: index === 0 ? [[630, 510], [906, 510]] : [[750, 510], [1040, 510]],
     duration: [28000, 34000, 39000][index], offset: [0.04, 0.40, 0.73][index],
+    life: window.NovaCreatureLife?.flight({kind:index===0?'raven':'dove'}),
     mirror: index === 1 ? -1 : 1, vertical: [0, .045, -.045][index]
   }));
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -273,9 +274,11 @@
   const renderBirds = (elapsed, still = false) => {
     const soundTick = Math.floor(elapsed / 120);
     flock.forEach((bird, index) => {
-      const phase = still ? [.10, .26, .86][index] : elapsed / bird.duration + bird.offset;
-      const [orbitX, orbitY, depth] = smoothOrbit(phase);
-      const [nextX, nextY, nextDepth] = smoothOrbit(phase + .003);
+      const life = still ? null : bird.life?.sample(elapsed/1000);
+      const phase = still ? [.10, .26, .86][index] : (life ? life.travel * 1000 : elapsed) / bird.duration + bird.offset;
+      const base = smoothOrbit(phase), next = smoothOrbit(phase + .003);
+      const orbitX = base[0] + (life?.dx || 0), orbitY = base[1] + (life?.dy || 0), depth = base[2];
+      const nextX = next[0] + (life?.dx || 0), nextY = next[1] + (life?.dy || 0), nextDepth = next[2];
       const size = 3.5 / (Math.max(.85, depth) + 1.2);
       const x = (.5 + (orbitX - .5) * bird.mirror) * birdWidth;
       const seconds = elapsed / 1000;
@@ -285,7 +288,7 @@
       // Video references: a broad power stroke, narrower recovery and delayed
       // primary feathers. Doves flap in short bursts; the raven glides longer.
       const beatRate = (raven ? 2.45 : 4.15 + index * .18);
-      const beat = seconds * beatRate + index * .37 + .045 * Math.sin(seconds * .7 + index);
+      const beat = (life ? life.wingTime : seconds) * beatRate + index * .37 + .045 * Math.sin(seconds * .7 + index);
       const beatPhase = ((beat % 1) + 1) % 1;
       const power = .43;
       const stroke = beatPhase < power
@@ -294,13 +297,13 @@
       const cycle = (seconds + index * 1.75) % (raven ? 6.8 : 4.7);
       const glideStart = raven ? 4.7 : 3.95;
       const glideEnd = raven ? 6.5 : 4.45;
-      const envelope = still ? 0 : Math.min(1, Math.max(0, (glideStart - cycle) * 5) + Math.max(0, (cycle - glideEnd) * 5));
+      const envelope = still ? 0 : life ? 1 - life.glide * .9 : Math.min(1, Math.max(0, (glideStart - cycle) * 5) + Math.max(0, (cycle - glideEnd) * 5));
       const flap = stroke * envelope;
       const lift = still ? 0 : (Math.sin(seconds * 1.1 + index * 2) * 5 - flap * 6) * Math.min(1.3, size);
       const y = (orbitY + bird.vertical) * birdHeight + lift;
       const turn = Math.max(-1, Math.min(1, dx * 90));
       const turnBlend = retreating ? Math.min(1, Math.max(0, (depth - 4.3) / 8)) : 0;
-      const bank = turn * 5 * turnBlend;
+      const bank = turn * 5 * turnBlend + (life?.bank || 0);
       // The raven's beak points right in its photo; the dove's points left.
       // Smoothly pass through an edge-on turn instead of sliding tail-first.
       const yaw = still ? 1 : Math.tanh(dx * 300);
@@ -312,7 +315,7 @@
       // volumetric through a turn rather than squeezing it to a zero-width line.
       const profile = (facing < 0 ? -1 : 1) * (.72 + .28 * Math.abs(facing));
       bird.shape.style.transform = `rotate(${(still ? 0 : bank).toFixed(2)}deg) scaleX(${profile.toFixed(4)})`;
-      const fullPose = window.rainbowPromiseRenderPose?.(index, { seconds, still, beatPhase, envelope, bank, dx });
+      const fullPose = window.rainbowPromiseRenderPose?.(index, { seconds, still, beatPhase, envelope, bank, dx, blink:life?.blink });
       if (!fullPose) {
         const recovery = Math.max(0, Math.sin(Math.PI * Math.max(0, (beatPhase - power) / (1 - power)))) * envelope;
         const fold = still ? 1 : 1 - recovery * (raven ? .08 : .10);
@@ -370,7 +373,7 @@
         const neck = raven ? [745, 602] : [805, 353];
         bird.head?.setAttribute('transform', `rotate(${glance.toFixed(2)} ${neck[0]} ${neck[1]})`);
         const blinkPhase = (seconds + index * 2.37) % (raven ? 6.7 : 5.3);
-        const blink = still ? 0 : Math.max(0, 1 - Math.abs(blinkPhase - .14) / .095);
+        const blink = still ? 0 : life ? life.blink : Math.max(0, 1 - Math.abs(blinkPhase - .14) / .095);
         const [eyeX, eyeY] = raven ? [781, 634] : [785, 252];
         bird.eyelid?.setAttribute('transform', `translate(${eyeX} ${eyeY}) scale(1 ${blink.toFixed(3)}) translate(${-eyeX} ${-eyeY})`);
         bird.eyelid?.setAttribute('opacity', blink > .01 ? '1' : '0');
@@ -389,6 +392,7 @@
           bird.tail.setAttribute('transform', `translate(1070 680) rotate(${rudder.toFixed(2)}) scale(${fan.toFixed(3)} 1) translate(-1070 -680)`);
         }
       }
+      if (life) bird.element.dataset.creatureActivity=life.action;
       if (soundTick !== soundPositionTick || still) {
         bird.element.dataset.flightSize = size.toFixed(3);
         bird.element.dataset.flightDirection = dx < 0 ? 'left' : 'right';

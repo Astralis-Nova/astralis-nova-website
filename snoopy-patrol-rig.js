@@ -119,12 +119,16 @@
       paw: visitor.querySelector(`[data-ace-paw="${side}"]`)
     }));
     if (!goggles || sides.some(s => !s.paw || !s.outline)) return;
+    const life = window.NovaCreatureLife?.gestureClock(18000);
     let frame = 0, last, painted = -Infinity, elapsed = 0, greetingStart = 0, wasGreeting = false;
     function draw() {
       const greeting = Boolean(visitor.classList?.contains('ace-greeting'));
       if (greeting && !wasGreeting) greetingStart = elapsed;
       wasGreeting = greeting;
-      const p = pose(elapsed, greeting, elapsed - greetingStart);
+      const activity = life?.sample(elapsed);
+      const p = pose(activity ? activity.clock : elapsed, greeting, elapsed - greetingStart);
+      if (activity?.resting && !greeting) p.headAngle += Math.sin(elapsed * .00065) * 2.4;
+      visitor.dataset.creatureActivity = activity?.resting ? 'watching' : p.contact ? 'adjusting-goggles' : p.lookout ? 'looking-around' : 'coasting';
       if (head) head.setAttribute('transform', headTransform(p));
       if (scarfLong) scarfLong.setAttribute('d', scarfPath(elapsed));
       if (scarfShort) scarfShort.setAttribute('d', scarfPath(elapsed, true));

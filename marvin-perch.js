@@ -14,12 +14,16 @@
     'Mission report: the laser works. The planet continues to ignore my instructions.'
   ];
   let line = 0, visible = true, timer, frame = 0, last = null, clock = 0, parts;
+  const activity = window.NovaCreatureLife?.gestureClock(12000);
   function paused() {
     return document.hidden || !visible || reduced.matches || document.documentElement.classList.contains('space-motion-paused');
   }
   function draw() {
     if (!parts) return;
-    const p = rig.pose(clock);
+    const action = activity?.sample(clock);
+    const p = rig.pose(action ? action.clock : clock);
+    if (action?.resting) { p.head += Math.sin(clock * .00075) * 3; p.gaze += Math.sin(clock * .0011) * 1.4; }
+    button.dataset.creatureActivity = action?.resting ? 'watching' : p.aim > .1 ? 'aiming' : p.gesture > .1 ? 'gesturing' : 'looking-around';
     parts.balance.setAttribute('transform', `translate(${p.shift} ${p.bob}) rotate(${p.balance} 124 236)`);
     for (const side of ['left', 'right']) {
       const d = rig.limbPath(p.hips[side], p.knees[side], p.ankles[side]);
@@ -65,7 +69,7 @@
     dismiss();
     message.textContent = lines[line++ % lines.length];
     message.hidden = false;
-    if (!paused()) { clock = 3000; last = null; draw(); sync(); }
+    if (!paused()) { clock = 3000; activity?.reset(clock,3000); last = null; draw(); sync(); }
     timer = setTimeout(dismiss, 5500);
   });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') dismiss(); });

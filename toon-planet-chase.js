@@ -92,14 +92,14 @@
     ear: new Path2D("M-30 -141Q-20 -137 -6 -117L-12 -116Q-23 -125 -30 -141ZM8 -146Q17 -139 21 -119L15 -119Q11 -127 8 -146Z")
   };
 
-  function drawBird(x, y, size, direction, time, running, jump, sprint) {
+  function drawBird(x, y, size, direction, time, running, jump, sprint, life = null) {
     ellipse("rgba(5,6,8,.32)", x, y + 1, size * (24 + jump * .08), size * 3.5);
     paint.save();
     paint.translate(x, y - jump);
-    paint.scale(size * direction, size);
+    paint.scale(size * direction, size * (life ? 1 - life.crouch * .18 - life.lie * .25 : 1));
     const stride = time * tau * 7.4;
-    const look = pulse(time, 2.77, 3.54);
-    const blink = pulse(time, 4.74, 4.90);
+    const look = life ? life.look * .45 : pulse(time, 2.77, 3.54);
+    const blink = life ? life.blink : pulse(time, 4.74, 4.90);
     paint.translate(0, running ? Math.sin(stride * 2) * 1.7 : Math.sin(time * 5) * .7);
     if (sprint > 0) {
       line(`rgba(152,169,205,${sprint * .27})`, 2.1, [[-89, -35], [-57, -34]]);
@@ -108,7 +108,7 @@
 
     for (let leg = 0; leg < 2; leg += 1) {
       const angle = stride + leg * Math.PI;
-      const reach = running ? Math.sin(angle) * 25 : leg ? -5 : 4;
+      const reach = running ? Math.sin(angle) * 25 * (life ? Math.max(.35, life.speed) : 1) : leg ? -5 : 4;
       const lift = running ? Math.max(0, Math.cos(angle)) * 13 : 0;
       const ink = leg ? "#cf773d" : "#804b35";
       line(ink, 3, [[-4, -36], [-8 + reach * .38, -17], [reach, -2 - lift], [reach + 8, -1 - lift]]);
@@ -129,7 +129,7 @@
     line("#91b6d3", 1.25, [[17, -78], [19, -66], [17, -57], [14, -51]]);
     paint.save();
     paint.translate(21, -88);
-    paint.rotate(sprint * .19 - look * .16);
+    paint.rotate(sprint * .19 - look * .16 + (life ? life.preen * .62 - life.stretch * .17 : 0));
     paint.translate(-21, 88);
     inked(shade(-128, -84, "#304a85", "#1d2959"), bird.head, "#172440");
     ellipse("#bdc8cc", 36.5, -102, 5.25, mix(9, 1.05, blink), .19);
@@ -141,7 +141,7 @@
     paint.restore();
   }
 
-  function drawCoyote(x, y, size, direction, time, running, skid, lookingUp) {
+  function drawCoyote(x, y, size, direction, time, running, skid, lookingUp, life = null) {
     ellipse("rgba(4,5,7,.34)", x, y + 2, size * 41, size * 5);
     paint.save();
     paint.translate(x, y);
@@ -149,12 +149,12 @@
     const stride = time * tau * 3.9;
     const flinch = pulse(time, 3.79, 4.17);
     const doubleTake = pulse(time, 5.54, 6.30) * Math.sin((time - 5.54) * 22);
-    const blink = pulse(time, 4.43, 4.62);
+    const blink = life ? life.blink : pulse(time, 4.43, 4.62);
     paint.translate(0, running ? Math.sin(stride * 2) * 3.2 : skid * 8 + flinch * 4);
     paint.rotate(running ? .23 + Math.sin(stride) * .06 : -.24 * skid + flinch * .11);
 
     const leg = (offset, near) => {
-      const reach = running ? Math.sin(stride + offset) * 34 : skid * (near ? 32 : 19);
+      const reach = running ? Math.sin(stride + offset) * 34 * (life ? Math.max(.3, life.speed) : 1) : skid * (near ? 32 : 19);
       const lift = running ? Math.max(0, Math.cos(stride + offset)) * 19 : 0;
       const hip = near ? 1 : -7;
       const knee = [hip - 10 + reach * .51, -18 - lift * .42 - (near ? 2 : 0)];
@@ -296,20 +296,21 @@
   stamp.fillStyle = dustGlow;
   stamp.fillRect(0, 0, 48, 48);
 
-  function drawDevil(x, y, unit, turn, spin, time) {
+  function drawDevil(x, y, unit, turn, spin, time, life = null) {
     const facing = Math.cos(turn);
     paint.save();
     paint.translate(x, y);
     paint.scale(unit * mix(1, .62 + .38 * Math.abs(facing), spin), unit);
     paint.rotate(Math.sin(turn) * spin * .19 + Math.sin(time * 8) * (1 - spin) * .04);
     paint.translate(0, -Math.sin(turn * 2) * spin * 4);
-    const sweep = Math.sin(turn) * spin * 15;
+    const sweep = Math.sin(turn) * spin * 15 + (life ? Math.sin(time * 2) * 2 + life.stretch * 14 : 0);
+    const step = life ? Math.sin(time * 15) * life.speed * (1 - spin) : 0;
     line("#85533b", 15, [[-32, -76], [-52, -64 + sweep], [-67, -46 + sweep]]);
     line("#ac7652", 16, [[30, -76], [51, -62 - sweep], [69, -46 - sweep]]);
     ellipse("#b07c59", -68, -46 + sweep, 9, 10, -.3);
     ellipse("#b98158", 69, -46 - sweep, 9, 10, .32);
-    ellipse("#a57553", -20, -10, 19, 8, -.14);
-    ellipse("#ba8963", 22, -10, 19, 8, .14);
+    ellipse("#a57553", -20 + step * 9, -10 - Math.max(0, step) * 5, 19, 8, -.14);
+    ellipse("#ba8963", 22 - step * 9, -10 - Math.max(0, -step) * 5, 19, 8, .14);
     for (const toe of [-26, -18, 18, 26]) {
       line("#694638", 1.6, [[toe, -8], [toe + 1, -4]]);
     }
@@ -323,8 +324,8 @@
     paint.globalAlpha = face;
     paint.translate(Math.sin(turn) * spin * 15, 0);
     shape(shade(-78, -23, "#d4a276", "#b17b54"), devil.bib);
-    ellipse("#f2dfab", -13, -99, 10, 12, .36);
-    ellipse("#f2dfab", 13, -99, 10, 12, -.36);
+    ellipse("#f2dfab", -13, -99, 10, 12 * (1 - (life ? life.blink * .9 : 0)), .36);
+    ellipse("#f2dfab", 13, -99, 10, 12 * (1 - (life ? life.blink * .9 : 0)), -.36);
     ellipse("#34232a", -8, -99, 3, 5);
     ellipse("#34232a", 8, -99, 3, 5);
     line("#674031", 4, [[-24, -108], [-14, -108], [-4, -102]]);
@@ -398,53 +399,55 @@
     drawVortex(x, y, unit, time, spin, true);
   }
 
-  function drawSquirrel(time, unit) {
-    const x = width * .27;
-    const y = height * .745;
-    const peek = easeOut(phase(time, .15, .76)) * (1 - phase(time, 3.15, 3.58));
-    const dash = pulse(time, 1.12, 3.12);
-    const stride = Math.sin(time * tau * 5) * pulse(time, 1.12, 3.12);
+  function drawSquirrel(time, unit, life = null) {
+    const x = width * (life ? life.x : .27);
+    const y = height * (life ? life.y : .745);
+    const peek = life ? 1 : easeOut(phase(time, .15, .76)) * (1 - phase(time, 3.15, 3.58));
+    const dash = life ? 0 : pulse(time, 1.12, 3.12);
+    const stride = Math.sin(time * tau * 5) * (life ? life.speed : pulse(time, 1.12, 3.12));
 
     paint.save();
-    paint.globalAlpha = phase(time, 0, .22) * (1 - phase(time, 3.56, 3.85));
-    ellipse("#594337", x, y, 15 * unit, 4 * unit, -.05);
-    ellipse("#251f27", x, y - unit, 10 * unit, 2.8 * unit);
+    paint.globalAlpha = life ? 1 : phase(time, 0, .22) * (1 - phase(time, 3.56, 3.85));
+    if (!life) {
+      ellipse("#594337", x, y, 15 * unit, 4 * unit, -.05);
+      ellipse("#251f27", x, y - unit, 10 * unit, 2.8 * unit);
+    }
 
     // Keep the squirrel below the lip of the burrow while it peeks out.
     paint.beginPath();
     paint.rect(0, 0, width, y + 2 * unit);
     paint.clip();
     paint.translate(x + dash * 42 * unit, y + (1 - peek) * 38 * unit);
-    paint.scale(unit, unit);
+    paint.scale(unit * (life ? life.facing * (1 + life.stretch * .13) : 1), unit * (life ? 1 - life.lie * .32 - life.crouch * .23 + life.sit * .25 - life.stretch * .1 : 1));
     ellipse("#241d22", 0, -1, 15, 3);
-    line("#b29374", 4.7, [[-9, -9], [-22, -7], [-35, -13 + stride * 3], [-42, -19 + stride * 3]]);
+    line("#b29374", 4.7, [[-9, -9], [-22, -7], [-35, -13 + stride * 3 + (life ? life.tail * 20 : 0)], [-42, -19 + stride * 3 + (life ? life.tail * 30 : 0)]]);
     line("#544238", 4, [[-37, -15 + stride * 3], [-42, -19 + stride * 3]]);
     ellipse("#b59373", -3, -12, 17, 10, -.20);
     ellipse("#e1c29a", 4, -10, 12, 6, -.28);
     ellipse("#a07c64", 12, -28, 3.8, 4.3);
     ellipse("#c6a17f", 15, -22, 9.5, 7.5, -.15);
     ellipse("#e8cbab", 20, -19, 6.8, 4);
-    ellipse("#2a252b", 18, -24, 2.1, 2.1);
+    ellipse("#2a252b", 18, -24, 2.1, 2.1 * (1 - (life ? life.blink * .9 : 0)));
     ellipse("#f8e9c6", 18.5, -24.6, .6, .6);
     ellipse("#3b2c2c", 25, -21, 1.7, 1.4);
     ellipse("#9d7a62", -7 + stride * 6, -3, 7, 2.6);
-    ellipse("#c9a17d", 11 - stride * 5, -3, 5.6, 2.1);
+    ellipse("#c9a17d", 11 - stride * 5, -3 - (life ? life.preen * (9 + Math.sin(time * 10) * 2) : 0), 5.6, 2.1);
     paint.restore();
   }
 
-  function drawRabbit(time, unit) {
+  function drawRabbit(time, unit, life = null) {
     const arrival = phase(time, 1.55, 3.50);
     const exit = phase(time, 4.30, 5.93);
     const progress = .54 * arrival + .46 * exit;
-    const hop = Math.abs(Math.sin(Math.PI * 4 * (arrival + exit)));
-    const x = mix(width + 47 * unit, -47 * unit, progress);
-    const y = height * (.79 + .014 * Math.sin(progress * Math.PI));
-    const twitch = .28 * pulse(time, 3.57, 3.79) - .20 * pulse(time, 3.86, 4.13);
+    const hop = life ? life.hop : Math.abs(Math.sin(Math.PI * 4 * (arrival + exit)));
+    const x = life ? width * life.x : mix(width + 47 * unit, -47 * unit, progress);
+    const y = height * (life ? life.y : .79 + .014 * Math.sin(progress * Math.PI));
+    const twitch = life ? Math.sin(time * 3.1) * .07 + life.preen * Math.sin(time * 11) * .15 : .28 * pulse(time, 3.57, 3.79) - .20 * pulse(time, 3.86, 4.13);
 
     ellipse(`rgba(22,17,22,${.40 - .20 * hop})`, x, y, 21 * unit, 3.5 * unit);
     paint.save();
     paint.translate(x, y - 13 * unit * hop);
-    paint.scale(-unit, unit);
+    paint.scale(unit * (life ? life.facing * (1 + life.stretch * .12) : -1), unit * (life ? 1 - life.lie * .34 - life.crouch * .17 + life.sit * .10 - life.stretch * .12 : 1));
     ellipse("#eadbcb", -20, -14, 7.5, 6.5);
     ellipse("#947967", -6, -17, 21, 14, -.20);
     ellipse("#bda08a", -8, -20, 17, 10, -.22);
@@ -454,7 +457,7 @@
     ellipse("#a97673", 16, -45, 2.3, 9, -.20 - .50 * hop + twitch);
     ellipse("#b19178", 15, -25, 12, 10, -.30);
     ellipse("#e7cfb9", 23, -21, 6.8, 4.2);
-    ellipse("#29232a", 19, -28, 2.5, 2.7);
+    ellipse("#29232a", 19, -28, 2.5, 2.7 * (1 - (life ? life.blink * .9 : 0)));
     ellipse("#faedd0", 19.6, -28.8, .8, .8);
     ellipse("#61454b", 29, -22, 1.7, 1.4);
     ellipse("#a88a76", -7 - hop * 10, -3, 10, 3, -.16 + hop * .46);
@@ -462,15 +465,15 @@
     paint.restore();
   }
 
-  function drawKangarooRat(time, unit) {
+  function drawKangarooRat(time, unit, life = null) {
     const progress = phase(time, 5.35, 8.32);
-    const hop = Math.abs(Math.sin(Math.PI * progress * 8));
-    const x = mix(-42 * unit, width + 73 * unit, progress);
-    const y = height * (.72 + progress * .036);
+    const hop = life ? life.hop : Math.abs(Math.sin(Math.PI * progress * 8));
+    const x = life ? width * life.x : mix(-42 * unit, width + 73 * unit, progress);
+    const y = height * (life ? life.y : .72 + progress * .036);
     ellipse(`rgba(22,17,22,${.35 - .20 * hop})`, x, y, 12 * unit, 2.5 * unit);
     paint.save();
     paint.translate(x, y - hop * 24 * unit);
-    paint.scale(unit, unit);
+    paint.scale(unit * (life ? life.facing : 1), unit * (life ? 1 - life.lie * .25 - life.crouch * .12 + life.sit * .2 : 1));
     line("#ac896d", 2.8, [[-8, -12], [-20, -8], [-32, -10 + 7 * hop], [-44, -18 + 9 * hop]]);
     ellipse("#6c534b", -45, -18 + 9 * hop, 5.5, 2.4, .55);
     ellipse("#be9473", -2, -14, 12, 10, -.62);
@@ -479,12 +482,12 @@
     ellipse("#9d6f6d", 3, -31, 2.3, 3.5, -.44);
     ellipse("#caa281", 10, -24, 9, 7);
     ellipse("#f1dab9", 15, -21, 5.8, 3.6);
-    ellipse("#2a2228", 13, -26, 2.9, 3);
+    ellipse("#2a2228", 13, -26, 2.9, 3 * (1 - (life ? life.blink * .9 : 0)));
     ellipse("#fff1d0", 13.7, -27, .8, .8);
     ellipse("#37272b", 20, -22, 1.4, 1.5);
     line("#a77c62", 2.7, [[-1, -10], [-7, -6 - 4 * hop], [8 - 13 * hop, -2]]);
     ellipse("#d1a788", 9 - 13 * hop, -2, 6.6, 2.1, hop * .42);
-    ellipse("#b38970", 9, -13, 3.4, 1.6, -.3);
+    ellipse("#b38970", 9 + (life ? life.preen * 2 : 0), -13 - (life ? (life.action === "nibble" ? life.weight : life.preen) * (5 + Math.sin(time * 9) * 2) : 0), 3.4, 1.6, -.3);
     paint.restore();
   }
 
@@ -494,6 +497,62 @@
     if (time >= 5.35 && time < 8.32) drawKangarooRat(time, unit * .94);
     if (time < 3.85) drawSquirrel(time, unit);
     if (time >= 1.55 && time < 5.93) drawRabbit(time, unit * 1.04);
+  }
+
+
+  const lifeSystem = window.NovaCreatureLife;
+  const residents = lifeSystem ? [
+    {kind:'roadrunner', level:.748, bounds:[.12,.90], size:.92},
+    {kind:'coyote', level:.688, bounds:[.12,.86], size:.91},
+    {kind:'taz', level:.815, bounds:[.13,.88], size:.77},
+    {kind:'squirrel', level:.735, bounds:[.13,.43], size:.86},
+    {kind:'rabbit', level:.788, bounds:[.42,.87], size:.95},
+    {kind:'rat', level:.769, bounds:[.10,.71], size:.85}
+  ].map(resident=>({...resident,mind:lifeSystem.create(resident)})) : null;
+  let livingTime=0,livingLast=null;
+  function restingCoyote(x,y,size,direction,time,p){
+    ellipse('rgba(4,5,7,.3)',x,y+2,size*48,size*4);
+    paint.save();paint.translate(x,y);paint.scale(size*direction,size);
+    const lying=p.lie>.3;
+    paint.save();paint.translate(lying?-24:-7,lying?25:7);
+    paint.rotate(Math.sin(time*2)*.035);inked('#85573e',coyote.tail,'#432c28');paint.restore();
+    ellipse(shade(-73,0,'#ae7954','#71452f'),lying?-8:-4,lying?-22:-37,lying?44:25,lying?17:34);
+    ellipse('#d7a180',lying?16:9,lying?-19:-39,lying?24:13,lying?12:27);
+    ellipse('#8b5b42',-22,-13,21,13);
+    line('#aa7455',7,[[12,-30],[lying?35:15,-12],[lying?54:21,-3]]);
+    ellipse('#bd8966',lying?56:23,-3,11,4);
+    ellipse('#a57656',-12,-2,15,4);
+    paint.save();paint.translate(lying?20:0,lying?67:17);
+    paint.rotate(p.preen*Math.sin(time*9)*.045);
+    inked(shade(-152,-83,'#b37851','#885238'),coyote.head,'#462f2a');shape('#e0a488',coyote.ear);
+    const eyelid=1-p.blink*.9;
+    ellipse('#c3a162',22,-108,6.3,11*eyelid,-.39);ellipse('#f6df91',30.5,-108.5,7.3,11*eyelid,-.36);
+    ellipse('#39292d',33.3+p.look,-107,2.65,4.7*eyelid);
+    inked(shade(-108,-82,'#e5b090','#c98c6f'),coyote.cheek,'#654238');
+    ellipse('#292332',64.5,-105,7.6,4.6,-.13);
+    line('#865442',1.35,[[23,-92],[34,-95],[47,-98]]);
+    paint.restore();paint.restore();
+  }
+  function livingScene(seconds){
+    paint.clearRect(0,0,width,height);
+    const unit=clamp(width/1120,.58,1.16);
+    const actors=residents.map(r=>({...r,p:r.mind.sample(seconds)})).sort((a,b)=>a.p.y-b.p.y);
+    for(const {kind,size,p}of actors){
+      const x=width*p.x,y=height*p.y,u=unit*size,t=p.time;
+      if(kind==='roadrunner')drawBird(x,y,u,p.facing,t,p.speed>.1,p.hop*24*u,p.speed*.55,p);
+      else if(kind==='coyote'){
+        if(p.lie>.3||p.sit>.3||p.preen>.3)restingCoyote(x,y,u,p.facing,t,p);
+        else drawCoyote(x,y,u,p.facing,t,p.speed>.12,0,p.look*.2,p);
+      }else if(kind==='taz'){
+        const spin=p.spin,turn=t*(spin?24:1.7);
+        ellipse('rgba(4,5,7,.3)',x,y,u*39,u*5);
+        paint.save();paint.translate(x,y);paint.scale(1,1-p.crouch*.2-p.lie*.2);paint.translate(-x,-y);
+        drawVortex(x,y,u,t,spin,false);drawDevil(x,y,u,turn,spin,t,p);drawVortex(x,y,u,t,spin,true);paint.restore();
+      }else if(kind==='squirrel')drawSquirrel(t,u,p);
+      else if(kind==='rabbit')drawRabbit(t,u,p);
+      else drawKangarooRat(t,u,p);
+    }
+    canvas.dataset.creatureActivity=actors.map(a=>a.kind+':'+a.p.action).join(',');
   }
 
   function resize() {
@@ -506,6 +565,14 @@
   }
 
   function tick(now) {
+    if(residents){
+      frame=0;
+      if(!visible||document.hidden||reduced.matches){livingLast=null;return;}
+      if(livingLast!==null)livingTime+=Math.min(.08,Math.max(0,(now-livingLast)/1000));
+      livingLast=now;canvas.hidden=false;
+      if(now-lastPaint>=1000/30){livingScene(livingTime);lastPaint=now;}
+      frame=requestAnimationFrame(tick);return;
+    }
     const time = (now - start) / 1000;
     const { draw } = passes[passIndex];
     if (time >= duration) {
@@ -537,6 +604,12 @@
   }
 
   function sync() {
+    if(residents){
+      if(visible&&!document.hidden&&!reduced.matches){
+        canvas.hidden=false;if(!frame){livingLast=null;frame=requestAnimationFrame(tick);}
+      }else{cancelAnimationFrame(frame);window.clearTimeout(timer);frame=timer=0;livingLast=null;canvas.hidden=true;}
+      return;
+    }
     if (visible && !document.hidden && !reduced.matches) {
       schedule(passes[passIndex].wait);
       return;

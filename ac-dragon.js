@@ -46,6 +46,8 @@
   let route=[], flightSize=180;
   // Rest, awaken, take off, patrol, return, and become the original emblem.
   const timing = {rest:5000,awaken:2800,launch:2800,flight:28000,return:3600,restore:2800};
+  const life = window.NovaCreatureLife;
+  let lifeCycle=null,cycleStart=0;
   const end = {};
   let duration=0;
   for (const [phase,length] of Object.entries(timing)) end[phase]=duration+=length;
@@ -65,7 +67,24 @@
     flightSize=route[0].size;
     route.top=top;
   };
-  const flightPosition = progress => rig.route(progress, innerWidth, innerHeight, route.top,elapsed/1000);
+  const flightPosition = progress => {
+    const warp=lifeCycle?lifeCycle.warp*Math.sin(progress*Math.PI*2):0;
+    const p=rig.route(progress+warp,innerWidth,innerHeight,route.top,elapsed/1000);
+    if(!lifeCycle)return p;
+    const edge=Math.sin(progress*Math.PI)**2;
+    return {...p,x:p.x+innerWidth*lifeCycle.dx*edge,y:p.y+innerHeight*lifeCycle.dy*edge,size:p.size*(1+lifeCycle.scale*edge)};
+  };
+  function chooseFlight(){
+    if(!life)return;
+    timing.rest=life.range(3500,11500);timing.awaken=life.range(2400,3400);
+    timing.launch=life.range(2600,3400);timing.flight=life.range(24000,41000);
+    timing.return=life.range(3300,4600);timing.restore=life.range(2400,3400);
+    duration=0;for(const [name,length]of Object.entries(timing))end[name]=duration+=length;
+    lifeCycle={dx:life.range(-.055,.055),dy:life.range(-.025,.025),scale:life.range(-.06,.06),warp:life.range(-.035,.035),clock:life.range(.91,1.1),breaths:[]};
+    for(let i=0,n=Math.floor(life.range(1,4));i<n;i++)lifeCycle.breaths.push(life.range(3500,timing.flight-3500));
+    lifeCycle.breaths.sort((a,b)=>a-b);
+  }
+  chooseFlight();
   function paintBody(seconds,approach,launching,view=0,proximity=0) {
     const pose=rig.pose(seconds,approach,launching,proximity),weights=rig.weights(pose.phase,pose.glide);
     const sideAnchors=[[441,276],[448,280],[445,274],[441,274],[447,278],[451,278]];
@@ -151,7 +170,8 @@
     clearFire();
   };
   const render = dt => {
-    const cycle=elapsed%duration;
+    let cycle=elapsed%duration;
+    if(lifeCycle){while(elapsed-cycleStart>=duration){cycleStart+=duration;chooseFlight();measureRoute();}cycle=elapsed-cycleStart;}
     let phase='rest',offset=0;
     for(const name of Object.keys(timing)){
       if(cycle<end[name]){phase=name;break;}
@@ -180,7 +200,7 @@
       forwardBlend=1;approach=p.approach;depth=p.depth;profile=p.profile;atmosphere=p.opacity;glow=.10+approach*.12;
       // Three brief breaths during each circuit.
       const flightTime=progress*timing.flight;
-      for(const start of [3500,12000,20000]){
+      for(const start of (lifeCycle?lifeCycle.breaths:[3500,12000,20000])){
         const breath=(flightTime-start)/1500;
         if(breath>0&&breath<1)firePower=Math.sin(breath*Math.PI);
       }
@@ -214,7 +234,8 @@
     canvas.style.opacity=String(blend*atmosphere);still.style.opacity=String(1-blend);
     art.style.setProperty('--dragon-aura',glow.toFixed(3));
     forwardBlend=forwardReady?forwardBlend*ease((elapsed-forwardLoaded)/700):0;
-    const seconds=elapsed/1000;
+    const seconds=elapsed/1000*(lifeCycle?lifeCycle.clock:1);
+    dragon.dataset.creatureActivity=phase==='flight'?(firePower>.1?'breathing-fire':'exploring'):phase;
     if(elapsed-paintClock>=1000/((forwardBlend>.5?forwardGPU:gpu)?40:20) || dt===0) {
       paintBody(seconds,approach,phase==='launch',forwardBlend,1-rig.smooth(5,9,depth));paintClock=elapsed;
     }
@@ -234,7 +255,7 @@
     request=0;previousTime=null;updateButton();
     if(!disposed&&playing&&ready&&!document.hidden)request=requestAnimationFrame(draw);
   };
-  const park = () => {playing=false;elapsed=0;paintClock=-Infinity;dock();sync();};
+  const park = () => {playing=false;elapsed=0;cycleStart=0;chooseFlight();paintClock=-Infinity;dock();sync();};
   document.body.append(toggle);toggle.hidden=false;
   const onToggle=()=>{playing=!playing;sync();};
   toggle.addEventListener('click',onToggle);

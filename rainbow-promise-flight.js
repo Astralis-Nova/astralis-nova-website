@@ -49,7 +49,7 @@
     }
     ctx.globalCompositeOperation = 'source-over';
     const blinkPhase = (seconds + index * 2.37) % (species === 0 ? 6.7 : 5.3);
-    const blink = state.still ? 0 : Math.max(0, 1 - Math.abs(blinkPhase - .14) / .085);
+    const blink = state.still ? 0 : state.blink ?? Math.max(0, 1 - Math.abs(blinkPhase - .14) / .085);
     if (blink > .01) {
       ctx.globalAlpha = blink;
       ctx.fillStyle = species === 0 ? '#29333c' : '#dce0e4';
