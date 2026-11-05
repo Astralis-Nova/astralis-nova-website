@@ -1,7 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { RIGS, behavior, prepareRig, deformPoint, solveLimb } from '../toon-burrow-rig.js';
+import { rotationViews } from '../toon-burrow-turns.js';
 const length = (a,b) => Math.hypot(a[0]-b[0],a[1]-b[1]);
+test('turns present front and rear body views without flattening the animal',()=>{
+ assert.equal(rotationViews(Math.PI/2).from.frame,1);
+ assert.equal(rotationViews(Math.PI*1.5).from.frame,4);
+ assert.equal(rotationViews(0).from.side,1);
+ assert.equal(rotationViews(Math.PI).from.side,-1);
+ for(const rat of [false,true]){
+  const p=behavior(5.65-(rat?1.1:0),rat);
+  assert.equal(p.action,'turn');
+  assert.ok(Math.abs(p.yaw-Math.PI/2)<1e-6);
+  assert.equal(p.turnScale,undefined);
+  const period=rat?12.9:14.4;
+  const rear=behavior(period-.8-(rat?1.1:0),rat);
+  assert.ok(Math.abs(rear.yaw-Math.PI*1.5)<1e-6);
+ }
+});
 test('two-joint limbs preserve bone lengths even when a foot target is unreachable',()=>{
  for(const target of [[30,70],[500,400],[.001,0]]){
   const [hip,knee,foot]=solveLimb([0,0],target,60,45,1);

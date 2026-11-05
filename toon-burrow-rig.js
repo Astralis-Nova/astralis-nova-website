@@ -31,31 +31,32 @@ export const RIGS = [
 ];
 
 export function behavior(time, rat = false) {
-  const period = rat ? 10.9 : 12.4;
+  const period = rat ? 12.9 : 14.4;
   const t = (time + (rat ? 1.1 : 0)) % period;
   const start = rat ? 817 : 546, end = rat ? 936 : 688;
-  const runTime = 2.15, backStart = 5.55, backEnd = backStart + runTime;
-  let x = start, facing = 1, speed = 0, action = 'sniff', turn = 0;
+  const runTime = 2.15, turnDuration = 1.6, backStart = 4.85 + turnDuration, backEnd = backStart + runTime;
+  let x = start, facing = 1, speed = 0, action = 'sniff', turn = 0, yaw = 0;
+  // Hold a rounded front/rear view briefly instead of rushing through it.
+  const turnEase = u => u < .38 ? smooth(u / .38) * .5 : u < .62 ? .5 : .5 + smooth((u - .62) / .38) * .5;
   if (t < runTime) {
     const u = t / runTime;
     x = mix(start, end, smooth(u)); speed = Math.sin(Math.PI * u); action = 'run';
   } else if (t < 3.35) { x = end; }
   else if (t < 4.85) { x = end; action = 'dig'; }
   else if (t < backStart) {
-    x = end; turn = smooth((t - 4.85) / (backStart - 4.85)); facing = turn < .5 ? 1 : -1; action = 'turn';
+    x = end; turn = turnEase((t - 4.85) / turnDuration); facing = turn < .5 ? 1 : -1; yaw = turn * Math.PI; action = 'turn';
   } else if (t < backEnd) {
     const u = (t - backStart) / runTime;
-    x = mix(end, start, smooth(u)); speed = Math.sin(Math.PI * u); facing = -1; action = 'run';
-  } else if (t < period - .7) { facing = -1; action = rat ? 'nibble' : 'groom'; }
-  else { turn = smooth((t - period + .7) / .7); facing = turn < .5 ? -1 : 1; action = 'turn'; }
+    x = mix(end, start, smooth(u)); speed = Math.sin(Math.PI * u); facing = -1; yaw = Math.PI; action = 'run';
+  } else if (t < period - turnDuration) { facing = -1; yaw = Math.PI; action = rat ? 'nibble' : 'groom'; }
+  else { turn = turnEase((t - period + turnDuration) / turnDuration); facing = turn < .5 ? -1 : 1; yaw = Math.PI + turn * Math.PI; action = 'turn'; }
   const blinkTime = (time + (rat ? 2.3 : .6)) % (rat ? 4.7 : 5.3);
   const blink = blinkTime < .19 ? Math.sin(blinkTime / .19 * Math.PI) ** 2 : 0;
   const dig = action === 'dig' ? smooth((t - 3.35) / .25) * smooth((4.85 - t) / .25) : 0;
   const gait = time * (rat ? 2.65 : 2.35);
   const bounce = speed * (rat ? (1 - Math.cos(gait * TAU)) * 14 : (1 - Math.cos(gait * TAU * 2)) * 4.3);
   return {
-    time, rat, x, facing, speed, action, dig, gait, blink, bounce,
-    turnScale: action === 'turn' ? Math.max(.2, Math.abs(Math.cos(turn * Math.PI))) : 1,
+    time, rat, x, facing, speed, action, dig, gait, blink, bounce, yaw,
     breathe: Math.sin(time * (rat ? 4.7 : 3.8)) * 1.6,
     headAngle: -.07 + Math.sin(time * 1.65 + (rat ? 2 : 0)) * .085 + dig * Math.sin(time * 17) * .11,
     earAngle: smooth((Math.sin(time * 2.1) - .7) / .3) * Math.sin(time * 28) * .22
