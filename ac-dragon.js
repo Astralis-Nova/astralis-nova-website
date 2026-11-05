@@ -69,7 +69,7 @@
   };
   const flightPosition = progress => {
     const warp=lifeCycle?lifeCycle.warp*Math.sin(progress*Math.PI*2):0;
-    const p=rig.route(progress+warp,innerWidth,innerHeight,route.top,elapsed/1000);
+    const p=rig.route(progress+warp,innerWidth,innerHeight,route.top,elapsed/1000*(lifeCycle?lifeCycle.clock:1));
     if(!lifeCycle)return p;
     const edge=Math.sin(progress*Math.PI)**2;
     return {...p,x:p.x+innerWidth*lifeCycle.dx*edge,y:p.y+innerHeight*lifeCycle.dy*edge,size:p.size*(1+lifeCycle.scale*edge)};
