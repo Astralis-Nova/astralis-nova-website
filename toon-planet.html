@@ -129,10 +129,12 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  min-height:max(100vh,63vw);min-height:max(100svh,63vw);
  background:#45352c
 }
-.underground-photo{
- position:absolute;inset:-20px 0;width:100%;height:calc(100% + 40px);
- object-fit:cover;object-position:center;translate:0 var(--soil-scroll,0px);
+.underground-stage{
+ position:absolute;left:50%;top:50%;width:100%;aspect-ratio:3/2;
+ transform:translate(-50%,-50%);translate:0 var(--soil-scroll,0px);
 }
+.underground-photo,.burrow-wildlife{position:absolute;inset:0;width:100%;height:100%}
+.burrow-wildlife{pointer-events:none}
 .region-underground::after{
  content:"";position:absolute;inset:0;pointer-events:none;
  background:linear-gradient(to bottom,#45352c,transparent 9%,transparent 88%,#08101b 100%)
@@ -167,7 +169,6 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .toon-desert-foreground.left{left:-64px}
  .toon-desert-foreground.right{right:-59px}
  .region-underground{min-height:max(55svh,132vw)}
- .underground-photo{inset:-10px 0;height:calc(100% + 20px)}
 }
 @media(max-width:430px){
  .level-nav a{font-size:.68rem;padding:7px 9px}
@@ -184,7 +185,7 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
  .toon-desert-foreground .ocotillo-motion,.toon-desert-foreground .desert-grass,
  .orbit-photo,.space-photo-shade::after,.orbit-twinkle{animation:none!important}
  .orbit-photo{translate:none!important;transform:scale(1.015)!important}
- .underground-photo{translate:none}
+ .underground-stage{translate:none}
 }
 
 /* Scenery-only canvas: small iconic controls, absolutely no visible text. */
@@ -561,6 +562,7 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
 <script src="/astralis-space-background.js?v=20261104toonorbit" defer></script>
 <script src="/toon-planet-wind.js?v=20261104wind" defer></script>
 <script src="/toon-planet-chase.js?v=20261104wildlife" defer></script>
+<script src="/toon-planet-burrows.js?v=20261104livingburrows" defer></script>
 </head>
 <body>
 <!-- Scenery-only phase: no visible headings, explanations, credits or character gallery.
@@ -609,12 +611,12 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
  <div class="ground-fade" aria-hidden="true"></div>
 </section>
 <section class="region region-underground" id="underground" aria-label="Life beneath Cactus Forest">
- <picture>
-  <source media="(max-width: 800px)" srcset="/assets/toon-planet/cactus-forest-burrow-mobile.webp">
-  <img class="underground-photo" src="/assets/toon-planet/cactus-forest-burrow.webp"
+ <div class="underground-stage">
+  <img class="underground-photo" src="/assets/toon-planet/cactus-forest-burrow-empty.webp"
        width="1536" height="1024" loading="lazy" decoding="async"
-       alt="Desert soil cutaway with fine roots, pebbles, and a pale caliche seam. A ground squirrel shelters in an upper chamber, and a kangaroo rat sits by a seed cache below.">
- </picture>
+       alt="Realistic desert burrows among fine roots, pebbles, and a pale caliche seam. A small ground squirrel scurries, sniffs, and digs in the upper chamber; a kangaroo rat hops and gathers seeds below.">
+  <canvas class="burrow-wildlife" width="1536" height="1024" aria-hidden="true"></canvas>
+ </div>
 </section>
 </main>
 <script>
@@ -636,7 +638,7 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
  const surface=document.getElementById("surface");
  const motionReduced=window.matchMedia("(prefers-reduced-motion: reduce)");
  const orbitalPhoto=document.querySelector(".orbit-photo");
- const soilPhoto=document.querySelector(".underground-photo");
+ const soilPhoto=document.querySelector(".underground-stage");
  const orbitalSection=document.getElementById("space");
  const undergroundSection=document.getElementById("underground");
  const surfaceMeteors=document.getElementById("surfaceMeteors");
