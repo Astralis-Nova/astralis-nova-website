@@ -510,6 +510,45 @@
     {kind:'rat', level:.769, bounds:[.10,.71], size:.85}
   ].map(resident=>({...resident,mind:lifeSystem.create(resident)})) : null;
   let livingTime=0,livingLast=null;
+  // Both toons share one trail. Sampling it a little earlier keeps Wile E.
+  // behind the bird through bends, rather than sending him on his own patrol.
+  const chaseSeed = Math.random() * 1000;
+  const chaseWaypoints = [[.19,.70],[.48,.672],[.80,.71],[.81,.80],[.51,.836],[.20,.81]];
+  function chaseTrail(progress) {
+    const segment = Math.floor(progress), u = progress - segment;
+    const point = index => {
+      const base = chaseWaypoints[((index % 6) + 6) % 6];
+      const noise = salt => {
+        const value = Math.sin(index * 127.1 + chaseSeed + salt) * 43758.5453;
+        return value - Math.floor(value) - .5;
+      };
+      return [base[0] + noise(7) * .035, base[1] + noise(29) * .018];
+    };
+    const points = [-1,0,1,2].map(offset => point(segment + offset));
+    // Catmull-Rom joins have matching tangents, including between laps.
+    const coordinate = axis => {
+      const [a,b,c,d] = points.map(p => p[axis]);
+      return .5 * (2*b + (-a+c)*u + (2*a-5*b+4*c-d)*u*u + (-a+3*b-3*c+d)*u*u*u);
+    };
+    return {x:coordinate(0),y:coordinate(1)};
+  }
+  function chasingPair(seconds) {
+    const progress = seconds / 2.5 + .055 * Math.sin(seconds * .78);
+    return ['roadrunner','coyote'].map((kind,index) => {
+      const trailTime = progress - (index ? (narrow.matches ? .66 : .46) : 0);
+      const p = chaseTrail(trailTime), ahead = chaseTrail(trailTime + .018);
+      const dx = ahead.x-p.x, dy = ahead.y-p.y;
+      const facing = dx >= 0 ? 1 : -1;
+      const turn = 1-clamp(Math.abs(dx) / .003,0,1);
+      const time = seconds + index * .23;
+      return {kind,size:index ? .91 : .92,p:{...p,time,facing,
+        action:index ? 'chase' : 'escape',speed:index ? .92 : 1,
+        blink:pulse(time % 4.7,4.48,4.65),look:index ? 0 : pulse(time % 6.2,3.3,3.9),
+        hop:0,crouch:0,lie:0,sit:0,preen:0,stretch:0,turn,
+        // Foreshortening and leaning soften a running turn without a flat flip.
+        turnScale:.80 + .20*(1-turn),lean:clamp(dy / .0015,-1,1)*.045}};
+    });
+  }
   function restingCoyote(x,y,size,direction,time,p){
     ellipse('rgba(4,5,7,.3)',x,y+2,size*48,size*4);
     paint.save();paint.translate(x,y);paint.scale(size*direction,size);
@@ -536,9 +575,15 @@
   function livingScene(seconds){
     paint.clearRect(0,0,width,height);
     const unit=clamp(width/1120,.58,1.16);
-    const actors=residents.map(r=>({...r,p:r.mind.sample(seconds)})).sort((a,b)=>a.p.y-b.p.y);
+    const actors=[...residents.filter(r=>r.kind!=='roadrunner'&&r.kind!=='coyote')
+      .map(r=>({...r,p:r.mind.sample(seconds)})),...chasingPair(seconds)].sort((a,b)=>a.p.y-b.p.y);
     for(const {kind,size,p}of actors){
-      const x=width*p.x,y=height*p.y,u=unit*size,t=p.time;
+      const x=width*p.x,y=height*p.y,u=unit*size*(kind==='roadrunner'||kind==='coyote' ? .88+(p.y-.67)*1.3 : 1),t=p.time;
+      const chasing=kind==='roadrunner'||kind==='coyote';
+      if(chasing){
+        drawDust(x-p.facing*16*u,y,.25+(t*.9)%1.1,u*.55,p.facing);
+        paint.save();paint.translate(x,y);paint.scale(p.turnScale,1);paint.rotate(p.lean*p.facing);paint.translate(-x,-y);
+      }
       if(kind==='roadrunner')drawBird(x,y,u,p.facing,t,p.speed>.1,p.hop*24*u,p.speed*.55,p);
       else if(kind==='coyote'){
         if(p.lie>.3||p.sit>.3||p.preen>.3)restingCoyote(x,y,u,p.facing,t,p);
@@ -551,6 +596,7 @@
       }else if(kind==='squirrel')drawSquirrel(t,u,p);
       else if(kind==='rabbit')drawRabbit(t,u,p);
       else drawKangarooRat(t,u,p);
+      if(chasing)paint.restore();
     }
     canvas.dataset.creatureActivity=actors.map(a=>a.kind+':'+a.p.action).join(',');
   }
@@ -634,3 +680,4 @@
     sync();
   }
 })();
+
