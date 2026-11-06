@@ -1,0 +1,8 @@
+/* A fourth scenery layer, connected to the dark rock below the burrows. */
+.region-ocean{min-height:110vh;min-height:110svh;background:
+ radial-gradient(ellipse at 48% 14%,#42c7c58c,transparent 53%),
+ linear-gradient(#08101b 0%,#133738 6%,#146b7e 17%,#06455f 45%,#022639 76%,#02131f 100%)}
+.ocean-water{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.region-ocean::after{content:"";position:absolute;inset:0;pointer-events:none;
+ box-shadow:inset 0 28px 45px -30px #08101b,inset 0 -35px 55px -25px #010c14}
+@media(max-width:800px){.region-ocean{min-height:105svh}}

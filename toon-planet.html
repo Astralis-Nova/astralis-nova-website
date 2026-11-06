@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#030914">
-<meta name="description" content="Explore Toon Planet from the stars above Cactus Forest Moonlight, through the Arizona desert surface, to the roots and rock layers underground.">
-<title>Toon Planet | Above, Surface, Below | Astralis Nova</title>
+<meta name="description" content="Explore Toon Planet from the stars above Cactus Forest Moonlight, through the desert and its burrows, to a living hidden ocean beneath the ground.">
+<title>Toon Planet | Space, Desert, Burrows & Ocean | Astralis Nova</title>
 <link rel="preload" as="image" href="/cover-3.jpg">
 <style>
 :root{color-scheme:dark;--text:#f1f8f7;--aquamarine:#b6fff0;--muted:#d4e5e5}
@@ -559,6 +559,8 @@ a:focus-visible{outline:3px solid #a7ffe6;outline-offset:5px;border-radius:9px}
 html.toon-background-paused *,html.toon-background-paused *::before,html.toon-background-paused *::after{animation-play-state:paused!important}
 </style>
 <link rel="stylesheet" href="/toon-planet-orbit.css?v=20261104orbit">
+<link rel="stylesheet" href="/toon-planet-ocean.css?v=20261106ocean">
+<script src="/toon-planet-ocean.js?v=20261106ocean" defer></script>
 <script src="/astralis-space-background.js?v=20261104toonorbit" defer></script>
 <script src="/toon-planet-wind.js?v=20261104wind" defer></script>
 <script src="/creature-behavior.js?v=20261105allcreatures"></script>
@@ -576,6 +578,7 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
  <a href="#space" data-level="space" aria-label="Space above Cactus Forest"><span aria-hidden="true">✦</span></a>
  <a href="#surface" data-level="surface" aria-label="Cactus Forest Moonlight surface"><span aria-hidden="true">🌵</span></a>
  <a href="#underground" data-level="underground" aria-label="Underground desert soil"><span aria-hidden="true">⬇</span></a>
+ <a href="#ocean" data-level="ocean" aria-label="Hidden ocean beneath the ground"><span aria-hidden="true">🌊</span></a>
 </nav>
 <main class="world" id="toonWorld">
 <section class="region region-space" id="space" aria-label="Space above Cactus Forest">
@@ -618,6 +621,9 @@ html.toon-background-paused *,html.toon-background-paused *::before,html.toon-ba
        alt="Realistic desert burrows among roots, pebbles, and a pale caliche seam. A small ground squirrel and kangaroo rat independently explore, crouch, sit, rest, groom, and climb roots beside a seed cache.">
   <canvas class="burrow-wildlife" width="1536" height="1024" aria-hidden="true"></canvas>
  </div>
+</section>
+<section class="region region-ocean" id="ocean" aria-label="A hidden ocean beneath the desert: rippling turquoise water, drifting light rays, swimming fish, jellyfish, and swaying kelp">
+ <canvas class="ocean-water" aria-hidden="true"></canvas>
 </section>
 </main>
 <script>
