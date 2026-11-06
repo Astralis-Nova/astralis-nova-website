@@ -1,5 +1,7 @@
-/* Hidden ocean cutaway: bounded canvas work, sleeping offscreen and a still
-   composition for reduced motion. All sea life is drawn locally, no downloads. */
+/* A photographic underwater setting with a living dimensional village.
+   Background composition is cached; animation sleeps offscreen and honors
+   reduced motion. No per-frame filters or pixel readbacks. */
+import { createBikiniVillage } from './toon-bikini-bottom.js?v=20261106bikinibottom';
 (() => {
   'use strict';
   const section = document.getElementById('ocean');
@@ -11,101 +13,106 @@
   let w = 1, h = 1, frame = 0, visible = false, time = 9, last = 0, painted = 0;
   let seed = 1977;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
-  const plants = Array.from({ length: 26 }, (_, i) => ({
-    x: random(), height: .08 + random() * .24, phase: random() * TAU,
-    depth: i % 3, lean: (random() - .5) * 30
-  }));
-  const fish = Array.from({ length: 23 }, (_, i) => ({
-    x: random(), y: .25 + random() * .46, speed: .009 + random() * .018,
+  const fish = Array.from({ length: 15 }, (_, i) => ({
+    x: random(), y: .21 + random() * .30, speed: .009 + random() * .018,
     size: 9 + random() * 14, phase: random() * TAU, direction: i % 3 ? 1 : -1,
-    color: i % 4, far: i > 15
+    color: i % 4, far: i > 8
   }));
   const bubbles = Array.from({ length: 30 }, () => ({
     x: random(), y: random(), size: .7 + random() * 2.5, speed: .012 + random() * .017
   }));
-  const pebbles = Array.from({ length: 65 }, () => ({x: random(), y: random(), r: 1 + random() * 7}));
   const jellyfish = [{x:.23,y:.40,phase:1,size:22},{x:.76,y:.57,phase:4,size:15}];
   function ellipse(x, y, rx, ry, fill) {
     ctx.fillStyle = fill; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, TAU); ctx.fill();
   }
-  function floor(x) { return h * (.88 + .027 * Math.sin(x / w * 8) + .012 * Math.sin(x / w * 19)); }
-  function water(t) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, h);
-    gradient.addColorStop(0, '#08101b'); gradient.addColorStop(.07, '#153e40');
-    gradient.addColorStop(.16, '#267f8e'); gradient.addColorStop(.35, '#115b76');
-    gradient.addColorStop(.7, '#063347'); gradient.addColorStop(1, '#031c2c');
-    ctx.fillStyle = gradient; ctx.fillRect(0, 0, w, h);
-    const glow = ctx.createRadialGradient(w * .48, h * .14, 0, w * .48, h * .2, w * .8);
-    glow.addColorStop(0, '#91f6da38'); glow.addColorStop(1, '#99ffdd00');
-    ctx.fillStyle = glow; ctx.fillRect(0, 0, w, h);
-    // Soft shafts reaching from the illuminated waterline into blue depth.
-    ctx.save(); ctx.globalCompositeOperation = 'screen';
-    for (let i = 0; i < 9; i++) {
-      const x = w * (i / 8) + Math.sin(t * .16 + i) * 25;
-      const ray = ctx.createLinearGradient(x, h * .1, x + w * .2, h * .9);
-      ray.addColorStop(0, '#b1ffe516'); ray.addColorStop(.5, '#a2efe508'); ray.addColorStop(1, '#8cffe000');
-      ctx.fillStyle = ray; ctx.beginPath(); ctx.moveTo(x, h * .08);
-      ctx.lineTo(x + w * .035, h * .08); ctx.lineTo(x + w * .35, h * .94);
-      ctx.lineTo(x + w * .10, h * .94); ctx.closePath(); ctx.fill();
+  const environment = new Image(), background = document.createElement('canvas');
+  const village = createBikiniVillage(sync);
+  let sceneY = 0, sceneH = 1, requested = false;
+  environment.onload = () => { compose(); sync(); };
+  function compose() {
+    background.width = Math.max(1,Math.round(w));background.height = Math.max(1,Math.round(h));
+    const bg = background.getContext('2d');
+    const gradient=bg.createLinearGradient(0,0,0,h);
+    gradient.addColorStop(0,'#087a92');gradient.addColorStop(.65,'#116c8b');gradient.addColorStop(1,'#3b7779');
+    bg.fillStyle=gradient;bg.fillRect(0,0,w,h);
+    const bottomPad=w<600?90:20;
+    sceneH=Math.min(h-bottomPad,w*2/3);sceneY=h-sceneH-bottomPad;
+    if(!environment.complete||!environment.naturalWidth)return;
+    // Preserve house proportions and show the complete village on narrow phones.
+    // Only the open water above it is extended to fill a tall viewport.
+    bg.globalAlpha=.18;
+    bg.drawImage(environment,0,0,environment.width,environment.height*.31,0,0,w,h);
+    bg.globalAlpha=1;
+    const layer=document.createElement('canvas');layer.width=Math.round(w);layer.height=Math.ceil(sceneH);
+    const lc=layer.getContext('2d');lc.drawImage(environment,0,0,w,sceneH);
+    if(sceneY>2){
+      lc.globalCompositeOperation='destination-in';
+      const fade=lc.createLinearGradient(0,0,0,sceneH*.23);
+      fade.addColorStop(0,'#0000');fade.addColorStop(1,'#000');lc.fillStyle=fade;lc.fillRect(0,0,w,sceneH);
     }
-    ctx.restore();
-    // Multiple continuous ripples make a visible, liquid surface under the rock.
-    for (let layer = 0; layer < 9; layer++) {
-      ctx.beginPath();
-      for (let x = -10; x <= w + 10; x += 8) {
-        const y = h * (.095 + layer * .009) + Math.sin(x / 75 + t * .65 + layer) * (3 + layer * .55)
-          + Math.sin(x / 29 - t * .42 + layer * .6) * 1.6;
-        if (x === -10) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-      }
-      ctx.lineWidth = layer < 3 ? 1.8 : .8;
-      ctx.strokeStyle = `rgba(169,244,227,${.32 - layer * .029})`; ctx.stroke();
-    }
-    // Uneven ceiling connects naturally to the soil cross-section above.
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w, 0);
-    for (let x = w; x >= -12; x -= 12) ctx.lineTo(x, h * (.046 + .012 * Math.sin(x * .019) + .008 * Math.cos(x * .049)));
-    ctx.closePath(); ctx.fillStyle = '#111d23'; ctx.fill();
+    bg.drawImage(layer,0,sceneY);
+    const sample=bg.getImageData(Math.floor(w*.5),Math.max(0,Math.floor(sceneY+sceneH-2)),1,1).data;
+    const sandTail=bg.createLinearGradient(0,sceneY+sceneH-12,0,h);
+    sandTail.addColorStop(0,`rgba(${sample[0]},${sample[1]},${sample[2]},0)`);
+    sandTail.addColorStop(.18,`rgb(${sample[0]},${sample[1]},${sample[2]})`);
+    sandTail.addColorStop(1,'#285966');bg.fillStyle=sandTail;
+    bg.fillRect(0,sceneY+sceneH-12,w,bottomPad+12);
   }
-  function seabed(t) {
-    ctx.beginPath(); ctx.moveTo(0, h);
-    for (let x = 0; x <= w + 8; x += 8) ctx.lineTo(x, floor(x));
-    ctx.lineTo(w, h); ctx.closePath();
-    const sand = ctx.createLinearGradient(0, h * .84, 0, h);
-    sand.addColorStop(0, '#527778'); sand.addColorStop(.4, '#214950'); sand.addColorStop(1, '#082631');
-    ctx.fillStyle = sand; ctx.fill();
-    for (const stone of pebbles) {
-      const x = stone.x * w, y = floor(x) + stone.y * h * .12;
-      ellipse(x, y, stone.r * 1.5, stone.r * .5, '#0a303b88');
-      ellipse(x, y - 1, stone.r, stone.r * .45, '#64929144');
+  function water(t) {
+    ctx.drawImage(background,0,0,w,h);
+    // Moving, irregular refracted light. Overlapping soft ellipses avoid the
+    // previous hard triangular beams and keep the photographic detail clear.
+    ctx.save();ctx.globalCompositeOperation='screen';
+    for(let i=0;i<5;i++){
+      const x=w*(.12+i*.19)+Math.sin(t*.18+i*2)*w*.035;
+      const y=h*(.14+i*.11),r=Math.max(w,h)*(.22+i*.012);
+      const glow=ctx.createRadialGradient(x,y,0,x,y,r);
+      glow.addColorStop(0,`rgba(162,241,222,${.026+Math.sin(t*.47+i)*.009})`);glow.addColorStop(1,'#9fffe000');
+      ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
     }
-    // Slowly shifting caustic highlights on the sand, without pixel filtering.
-    ctx.save(); ctx.strokeStyle = '#b1e9d02a'; ctx.lineWidth = 1;
-    for (let row = 0; row < 5; row++) {
-      ctx.beginPath();
-      for (let x = 0; x <= w + 10; x += 6) {
-        const y = floor(x) + row * h * .024 + Math.sin(x / 37 + t * .48 + row * 2) * 5;
-        if (!x) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    // Broken, moving caustic nets over the actual textured sandy foreground.
+    ctx.lineWidth=.9;
+    for(let row=0;row<4;row++){
+      ctx.strokeStyle=`rgba(205,255,229,${.06+Math.sin(t*.5+row)*.02})`;ctx.beginPath();
+      for(let x=0;x<=w+6;x+=6){
+        const y=sceneY+sceneH*(.80+row*.05)+Math.sin(x/43+t*.45+row*1.9)*sceneH*.006+Math.cos(x/19-t*.34)*2;
+        if(!x)ctx.moveTo(x,y);else ctx.lineTo(x,y);
       }
       ctx.stroke();
     }
     ctx.restore();
+    // Dark, feathered rock-to-water transition beneath the burrow layer.
+    const edge=ctx.createLinearGradient(0,0,0,Math.min(115,h*.13));
+    edge.addColorStop(0,'#08101b');edge.addColorStop(.3,'#08101b99');edge.addColorStop(1,'#08101b00');
+    ctx.fillStyle=edge;ctx.fillRect(0,0,w,Math.min(115,h*.13));
   }
-  function kelp(t, foreground) {
-    for (const plant of plants) {
-      if ((plant.depth === 0) !== foreground) continue;
-      const x = plant.x * w, base = floor(x) + (foreground ? h * .06 : -h * .025);
-      const height = plant.height * h * (foreground ? 1 : .68);
-      const sway = Math.sin(t * .65 + plant.phase) * height * .075 + plant.lean;
-      ctx.strokeStyle = foreground ? '#378c7b' : '#1c656b'; ctx.lineWidth = foreground ? 2.3 : 1.4;
-      ctx.beginPath(); ctx.moveTo(x, base); ctx.bezierCurveTo(x-10,base-height*.4,x+sway,base-height*.65,x+sway,base-height); ctx.stroke();
-      for (let i = 1; i < 9; i++) {
-        const p = i / 9, px = x + sway * p * p, py = base - height * p;
-        const side = i % 2 ? 1 : -1, len = height * .14 * (1 - p * .5);
-        ctx.fillStyle = foreground ? (i % 2 ? '#3a9c83' : '#226e68') : '#1b6065';
-        ctx.beginPath(); ctx.moveTo(px,py+6);
-        ctx.quadraticCurveTo(px+side*len,py+3+Math.sin(t+plant.phase+p)*4,px+side*len*.8,py-len*.7);
-        ctx.quadraticCurveTo(px+side*len*.2,py-len*.7,px,py+6); ctx.fill();
-      }
+  function seaGrass(t) {
+    for(let side=0;side<2;side++)for(let i=0;i<11;i++){
+      const x=side?w-i*w*.009:i*w*.009;
+      const y=sceneY+sceneH*(.97+Math.sin(i)*.015),height=sceneH*(.06+(i%4)*.018);
+      const sway=Math.sin(t*.7+i*.5+side)*height*.12;
+      ctx.lineWidth=1.5+(i%3)*.5;ctx.strokeStyle=i%2?'#40846acc':'#19584dcc';
+      ctx.beginPath();ctx.moveTo(x,y);ctx.bezierCurveTo(x+3,y-height*.4,x+sway,y-height*.8,x+sway+5,y-height);ctx.stroke();
     }
+  }
+  function crab(t,index) {
+    const x=w*(.13+index*.71)+Math.sin(t*.25+index)*w*.035,y=sceneY+sceneH*(.93+index*.035);
+    const size=Math.max(5,Math.min(13,w*.009));
+    ctx.save();ctx.translate(x,y);ctx.lineCap='round';
+    ellipse(0,3,size*1.7,size*.27,'#173d4370');
+    for(let side=-1;side<=1;side+=2)for(let leg=0;leg<3;leg++){
+      const step=Math.sin(t*5+leg*2+side)*size*.14;ctx.strokeStyle='#853c29';ctx.lineWidth=1.4;
+      ctx.beginPath();ctx.moveTo(side*size*.5,0);ctx.lineTo(side*size*(1.1+leg*.12),-size*.2+step);
+      ctx.lineTo(side*size*(1.5+leg*.12),size*.35);ctx.stroke();
+    }
+    const shell=ctx.createLinearGradient(0,-size,0,size*.3);shell.addColorStop(0,'#dd9762');shell.addColorStop(.5,'#ad552f');shell.addColorStop(1,'#632a23');
+    ellipse(0,-size*.18,size,size*.53,shell);
+    for(const side of [-1,1]){
+      ctx.strokeStyle='#9e492e';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(side*size*.5,-size*.25);ctx.lineTo(side*size*1.18,-size*.85);ctx.stroke();
+      ellipse(side*size*1.22,-size*.97,size*.27,size*.35,'#bf713f');
+      ellipse(side*size*.35,-size*.67,size*.11,size*.16,'#122e32');
+    }
+    ctx.restore();
   }
   function swimmer(f, t) {
     const margin = 80, travel = ((f.x + t * f.speed) % 1) * (w + 2 * margin) - margin;
@@ -146,11 +153,12 @@
     ctx.quadraticCurveTo(0,size*.2,-size,0);ctx.fill();ctx.strokeStyle='#bcfff36b';ctx.lineWidth=1;ctx.stroke();ctx.restore();
   }
   function draw(t) {
-    water(t); seabed(t); kelp(t,false);
+    water(t);
     for(const f of fish) if(f.far) swimmer(f,t);
     for(const j of jellyfish) jelly(j,t);
     for(const f of fish) if(!f.far) swimmer(f,t);
-    kelp(t,true);
+    village.draw(ctx,t,{w,sceneY,sceneH});
+    crab(t,0);crab(t,1);seaGrass(t);
     for(const b of bubbles) {
       const p=(b.y+t*b.speed)%1, y=h*(.96-p*.82);
       const x=w*b.x+Math.sin(t*.7+b.y*17)*8;
@@ -166,6 +174,7 @@
   function sync() {
     if(frame)cancelAnimationFrame(frame);frame=0;
     if(!visible||document.hidden)return;
+    if(!requested){requested=true;environment.src='/assets/toon-planet/bikini-bottom-ocean.webp';village.load();}
     draw(time);
     if(!reduced.matches){last=performance.now();painted=last;frame=requestAnimationFrame(tick);}
   }
@@ -173,7 +182,7 @@
     w=section.clientWidth;h=section.clientHeight;
     const dpr=Math.min(devicePixelRatio||1,1.5);
     canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0);sync();
+    ctx.setTransform(dpr,0,0,dpr,0,0);compose();sync();
   }
   new ResizeObserver(resize).observe(section);
   new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;sync();},{rootMargin:'100px'}).observe(section);
