@@ -1,7 +1,7 @@
 /* A photographic underwater setting with a living dimensional village.
    Background composition is cached; animation sleeps offscreen and honors
    reduced motion. No per-frame filters or pixel readbacks. */
-import { createBikiniVillage } from './toon-bikini-bottom.js?v=20261106bikinibottom';
+import { createBikiniVillage } from './toon-bikini-bottom.js?v=20261106oceanlife';
 (() => {
   'use strict';
   const section = document.getElementById('ocean');
@@ -10,7 +10,7 @@ import { createBikiniVillage } from './toon-bikini-bottom.js?v=20261106bikinibot
   if (!ctx) return;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const TAU = Math.PI * 2;
-  let w = 1, h = 1, frame = 0, visible = false, time = 9, last = 0, painted = 0;
+  let w = 1, h = 1, frame = 0, visible = false, time = 3, last = 0, painted = 0;
   let seed = 1977;
   const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
   const fish = Array.from({ length: 15 }, (_, i) => ({
