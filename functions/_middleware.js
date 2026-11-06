@@ -22,6 +22,7 @@ export async function onRequest(context) {
   if (pathname === "/toon-planet.html" || pathname === "/toon-planet") {
     const updated = new Response(response.body, response);
     updated.headers.set("Cache-Control", "no-store, max-age=0");
+    updated.headers.set("X-Toon-Scene", "20261106bikinibottom");
     return updated;
   }
 
