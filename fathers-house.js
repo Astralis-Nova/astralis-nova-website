@@ -377,11 +377,11 @@ function paintLivingTextures(ctx, time) {
     ctx.lineTo(fall.x,fall.y + fall.h);
     ctx.closePath();
     ctx.clip();
-    const travel = (time * 68) % fall.h;
+    // Displace local water detail without wrapping a cliff edge into the cascade.
     for (let row = 0; row < fall.h; row += 3) {
-      const sourceRow = (row - travel + fall.h) % fall.h;
+      const sourceRow = Math.max(0, Math.min(fall.h - 4, row - Math.sin(time * 4.5 - row * .085) * 7));
       const wobble = Math.sin(row * .09 + time * 3.1) * 2.5;
-      ctx.globalAlpha = Math.min(1,row / 12,(fall.h - row) / 18) * .82;
+      ctx.globalAlpha = Math.max(0, Math.min(1,row / 20,(fall.h - row) / 22)) * .62;
       ctx.drawImage(landscapeTexture, fall.x, fall.y + sourceRow, fall.w, 3,
         fall.x + wobble, fall.y + row, fall.w, 3);
     }
