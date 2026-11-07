@@ -1,3 +1,9 @@
+// Use the same rasterized stellar clouds and dust lanes as the main site.
+let realGalaxyTexture = null;
+if (window.AstralisRealisticGalaxy) {
+  const galaxyCanvas = document.createElement('canvas');
+  if (window.AstralisRealisticGalaxy.draw(galaxyCanvas)) realGalaxyTexture = galaxyCanvas;
+}
 const passages={home:{ref:'John 14:2–3',quote:'“In my Father’s house are many mansions … I go to prepare a place for you.”',text:'Jesus offers his disciples reassurance as they face separation. We imagine those many dwelling places as a welcome, held in the hope of being with him.'},tears:{ref:'John 11:33–36',quote:'“Jesus wept.”',text:'Before raising Lazarus, Jesus shares in the sorrow around him. This reflection holds grief and hope together. Love gives us room to mourn.'},hope:{ref:'Revelation 21:4–5',quote:'“And God shall wipe away all tears from their eyes … Behold, I make all things new.”',text:'Revelation describes a vision of renewed creation and the end of death and sorrow. The river and light of this imagined world give shape to that hope.'}};const buttons=document.querySelectorAll('[data-passage]');function showPassage(key){const p=passages[key];document.getElementById('reference').textContent=p.ref+' · King James Version';document.getElementById('quote').textContent=p.quote;document.getElementById('reflection').textContent=p.text;buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.passage===key)));}buttons.forEach(b=>b.addEventListener('click',()=>showPassage(b.dataset.passage)));showPassage('home');const sky=document.querySelector('.particles');for(let i=0;i<28;i++){const star=document.createElement('i');star.style.left=(i*37%100)+'%';star.style.top=(i*53%100)+'%';star.style.animationDelay=-(i%8)+'s';sky.append(star);}
 const lazarusScene = document.getElementById('lazarusScene');
 const replayLazarus = document.getElementById('replayLazarus');
@@ -66,25 +72,17 @@ function drawLivingSky() {
     livingContext.fill();
   }
   livingContext.globalAlpha = 1;
-  // Soft, irregular stellar clouds follow the main-page galaxy treatment.
-  for (let galaxy = 0; galaxy < 2; galaxy++) {
-    livingContext.save();
-    livingContext.translate(skyWidth * (galaxy ? .84 : .13),skyHeight * (galaxy ? .27 : .6));
-    livingContext.scale(1,.52);
-    livingContext.rotate(skyTime * .045 * (galaxy ? -1 : 1));
-    for (let point = 0; point < 70; point++) {
-      const radius = Math.sqrt((point * .6180339) % 1) * 67;
-      const arm = point % 2 * Math.PI;
-      const angle = radius * .057 + arm + Math.sin(point * 19.3) * .45;
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * radius;
-      const glow = livingContext.createRadialGradient(x,y,0,x,y,6 + point % 5);
-      glow.addColorStop(0,point % 3 ? '#d4bdff30' : '#fff0c840');
-      glow.addColorStop(1,'#c6b6ff00');
-      livingContext.fillStyle = glow;
-      livingContext.fillRect(x - 11,y - 11,22,22);
+  if (realGalaxyTexture) {
+    for (let galaxy = 0; galaxy < 2; galaxy++) {
+      livingContext.save();
+      livingContext.translate(skyWidth * (galaxy ? .87 : .10),skyHeight * (galaxy ? .23 : .66));
+      livingContext.scale(1,.56);
+      livingContext.rotate(skyTime * .07 * (galaxy ? -1 : 1));
+      livingContext.globalAlpha = .78;
+      const diameter = Math.min(skyWidth * .24,260);
+      livingContext.drawImage(realGalaxyTexture,-diameter / 2,-diameter / 2,diameter,diameter);
+      livingContext.restore();
     }
-    livingContext.restore();
   }
   livingContext.globalAlpha = 1;
 }
@@ -128,11 +126,10 @@ syncLivingMotion();
 
 
 // Local, perspective-scaled movement follows the river and waterfalls in the artwork.
-const gardenTextures = [];
 let waterSurface = null;
 let galaxyTexture = null;
 const landscapeTexture = new Image();
-landscapeTexture.src = 'fathers-house-radiance.jpg';
+landscapeTexture.src = 'fathers-house-realistic.jpg';
 const orbCanvas = document.getElementById('orbLife');
 const orbContext = orbCanvas.getContext('2d');
 const visibleWorlds = new Map();
@@ -306,19 +303,12 @@ function paintLivingTextures(ctx, time) {
     ctx.translate(1510,78);
     ctx.scale(1,.59);
     ctx.rotate(time * .08);
-    ctx.drawImage(galaxyTexture,-79,-79);
+    ctx.globalAlpha = .8;
+    ctx.drawImage(galaxyTexture,-105,-105,210,210);
     ctx.restore();
   }
 
-  // Feathered image patches keep the flowering shrubs attached to their surroundings.
-  for (let index = 0; index < gardenTextures.length; index++) {
-    const garden = gardenTextures[index];
-    ctx.save();
-    ctx.translate(garden.x + garden.width / 2, garden.y + garden.height);
-    ctx.rotate(Math.sin(time * 1.3 + index * 2) * .022);
-    ctx.drawImage(garden.canvas,-garden.width / 2,-garden.height);
-    ctx.restore();
-  }
+
 }
 
 function paintLivingOrb() {
@@ -336,43 +326,7 @@ function paintLivingOrb() {
 
 landscapeTexture.addEventListener('load', () => {
   waterSurface = window.FathersHouseWater ? window.FathersHouseWater.create(landscapeTexture) : null;
-  galaxyTexture = document.createElement('canvas');
-  galaxyTexture.width = galaxyTexture.height = 158;
-  const galaxyContext = galaxyTexture.getContext('2d');
-  if (galaxyContext) {
-    galaxyContext.drawImage(landscapeTexture,1431,31,158,94,0,0,158,158);
-    galaxyContext.globalCompositeOperation = 'destination-in';
-    const galaxyMask = galaxyContext.createRadialGradient(79,79,15,79,79,79);
-    galaxyMask.addColorStop(0,'#000');
-    galaxyMask.addColorStop(.65,'#000e');
-    galaxyMask.addColorStop(1,'transparent');
-    galaxyContext.fillStyle = galaxyMask;
-    galaxyContext.fillRect(0,0,158,158);
-  } else {
-    galaxyTexture = null;
-  }
-  const gardens = [
-    {x:200,y:371,width:202,height:202},
-    {x:40,y:463,width:165,height:220},
-    {x:1405,y:530,width:235,height:220}
-  ];
-  for (const garden of gardens) {
-    const canvas = document.createElement('canvas');
-    canvas.width = garden.width;
-    canvas.height = garden.height;
-    const context = canvas.getContext('2d');
-    if (!context) continue;
-    context.drawImage(landscapeTexture,garden.x,garden.y,garden.width,garden.height,0,0,garden.width,garden.height);
-    context.globalCompositeOperation = 'destination-in';
-    const mask = context.createRadialGradient(garden.width / 2,garden.height / 2,0,
-      garden.width / 2,garden.height / 2,Math.max(garden.width,garden.height) * .5);
-    mask.addColorStop(0,'#000');
-    mask.addColorStop(.55,'#000');
-    mask.addColorStop(1,'transparent');
-    context.fillStyle = mask;
-    context.fillRect(0,0,garden.width,garden.height);
-    gardenTextures.push({...garden,canvas});
-  }
+  galaxyTexture = realGalaxyTexture;
   paintLandscape();
   paintLivingOrb();
 });

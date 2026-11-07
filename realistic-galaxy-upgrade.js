@@ -248,6 +248,10 @@
     return true;
   }
 
+  // Other Astralis worlds can use the same photographic galaxy renderer.
+  window.AstralisRealisticGalaxy = { draw: drawGalaxy };
+  if (document.currentScript?.hasAttribute('data-renderer-only')) return;
+
   function boot() {
     if (applyGalaxy()) return;
     const observer = new MutationObserver(() => {

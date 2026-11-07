@@ -1,0 +1,22 @@
+/* A passage doorway using the home page's established panel and button styles. */
+.fathers-house-home {
+  display:grid;
+  grid-template-columns:minmax(200px,.8fr) minmax(0,1.2fr);
+  overflow:hidden;
+  padding:0;
+  border-color:rgba(231,205,155,.4);
+}
+.fathers-house-home-art {
+  min-height:360px;
+  background:linear-gradient(90deg,transparent 65%,rgba(5,15,29,.5)),url('fathers-house-realistic.jpg') 55% center/cover;
+}
+.fathers-house-home-copy { padding:clamp(24px,4vw,44px); }
+.fathers-house-home-kicker { color:#e8cf9f; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; }
+.fathers-house-home h2 { margin:10px 0 20px; font:clamp(28px,3vw,42px)/1.2 Georgia,serif; color:#fff0ce; }
+.fathers-house-home blockquote { margin:0; color:#e2dce9; font:clamp(17px,1.6vw,20px)/1.7 Georgia,serif; }
+.fathers-house-home blockquote p { color:inherit; }
+.fathers-house-home-source { color:#b7b2c8; font-size:.75rem; margin:18px 0 24px; }
+@media(max-width:700px) {
+  .fathers-house-home { grid-template-columns:1fr; }
+  .fathers-house-home-art { min-height:210px; background-position:center; }
+}
