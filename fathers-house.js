@@ -124,6 +124,12 @@ syncLivingMotion();
 
 
 // Local, perspective-scaled movement follows the river and waterfalls in the artwork.
+const gardenTextures = [];
+const landscapeTexture = new Image();
+landscapeTexture.src = 'fathers-house-radiance.jpg';
+const orbCanvas = document.getElementById('orbLife');
+const orbContext = orbCanvas.getContext('2d');
+const visibleWorlds = new Map();
 const landscapeCanvas = document.getElementById('landscapeLife');
 const landscapeContext = landscapeCanvas.getContext('2d');
 let landscapeFrame = 0;
@@ -140,7 +146,11 @@ function sizeLandscape() {
   landscapeHeight = bounds.height;
   landscapeCanvas.width = Math.round(bounds.width * density);
   landscapeCanvas.height = Math.round(bounds.height * density);
+  const orbBounds = orbCanvas.getBoundingClientRect();
+  orbCanvas.width = Math.round(orbBounds.width * density);
+  orbCanvas.height = Math.round(orbBounds.height * density);
   paintLandscape();
+  paintLivingOrb();
 }
 
 function lightDot(x, y, radius, color) {
@@ -161,6 +171,7 @@ function paintLandscape() {
   ctx.translate((landscapeWidth - 1672 * scale) / 2, (landscapeHeight - 941 * scale) / 2);
   ctx.scale(scale, scale);
   const time = landscapeTime;
+  paintLivingTextures(ctx, time);
 
   // Currents widen and accelerate toward the viewer.
   ctx.save();
@@ -316,6 +327,7 @@ function animateLandscape(timestamp) {
   if (landscapeLastTime) landscapeTime += Math.min((timestamp - landscapeLastTime) / 1000, .05);
   landscapeLastTime = timestamp;
   paintLandscape();
+  paintLivingOrb();
   landscapeFrame = requestAnimationFrame(animateLandscape);
 }
 
@@ -334,10 +346,126 @@ document.addEventListener('visibilitychange', syncLandscape);
 window.addEventListener('resize', sizeLandscape);
 if ('IntersectionObserver' in window) {
   const landscapeObserver = new IntersectionObserver(entries => {
-    landscapeVisible = entries[0].isIntersecting;
+    for (const entry of entries) visibleWorlds.set(entry.target, entry.isIntersecting);
+    landscapeVisible = Array.from(visibleWorlds.values()).some(Boolean);
     syncLandscape();
   }, {rootMargin: '120px'});
   landscapeObserver.observe(landscapeCanvas);
+  landscapeObserver.observe(orbCanvas);
 }
 if (landscapeContext) sizeLandscape();
 syncLandscape();
+
+
+// Move the photograph's actual textures instead of only drawing highlights.
+function paintLivingTextures(ctx, time) {
+  if (!landscapeTexture.complete || !landscapeTexture.naturalWidth) return;
+  const falls = [
+    {x:440,y:444,w:105,h:165},
+    {x:369,y:466,w:49,h:108},
+    {x:1017,y:387,w:155,h:100},
+    {x:1205,y:391,w:93,h:86},
+    {x:1380,y:607,w:77,h:76},
+    {x:838,y:571,w:95,h:48}
+  ];
+  for (const fall of falls) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(fall.x + 4,fall.y);
+    ctx.lineTo(fall.x + fall.w - 8,fall.y + 4);
+    ctx.lineTo(fall.x + fall.w,fall.y + fall.h);
+    ctx.lineTo(fall.x,fall.y + fall.h);
+    ctx.closePath();
+    ctx.clip();
+    const travel = (time * 68) % fall.h;
+    for (let row = 0; row < fall.h; row += 3) {
+      const sourceRow = (row - travel + fall.h) % fall.h;
+      const wobble = Math.sin(row * .09 + time * 3.1) * 2.5;
+      ctx.globalAlpha = Math.min(1,row / 12,(fall.h - row) / 18) * .82;
+      ctx.drawImage(landscapeTexture, fall.x, fall.y + sourceRow, fall.w, 3,
+        fall.x + wobble, fall.y + row, fall.w, 3);
+    }
+    ctx.restore();
+  }
+
+  // Water reflections undulate in widening bands down the river.
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(1000,480);
+  ctx.bezierCurveTo(1130,510,860,565,1120,640);
+  ctx.bezierCurveTo(1200,720,1530,740,1475,941);
+  ctx.lineTo(660,941);
+  ctx.bezierCurveTo(805,820,640,780,746,710);
+  ctx.bezierCurveTo(825,650,690,620,930,552);
+  ctx.closePath();
+  ctx.clip();
+  for (let row = 480; row < 941; row += 3) {
+    const depth = (row - 480) / 461;
+    const offset = Math.sin(row * .075 - time * 3.3) * (2 + depth * 9);
+    const sourceY = Math.max(480,Math.min(937,row + Math.sin(time * 2.4 + row * .04) * 3));
+    ctx.globalAlpha = .85;
+    ctx.drawImage(landscapeTexture,500,sourceY,1100,3,500 + offset,row,1100,3);
+  }
+  ctx.restore();
+
+  // Rotate the visible galaxy inside a soft-edged patch of its own sky.
+  ctx.save();
+  ctx.translate(1510,78);
+  ctx.rotate(time * .16);
+  ctx.globalAlpha = .92;
+  ctx.beginPath();
+  ctx.ellipse(0,0,79,47,0,0,Math.PI * 2);
+  ctx.clip();
+  ctx.drawImage(landscapeTexture,1431,31,158,94,-79,-47,158,94);
+  ctx.restore();
+
+  // Feathered image patches keep the flowering shrubs attached to their surroundings.
+  for (let index = 0; index < gardenTextures.length; index++) {
+    const garden = gardenTextures[index];
+    ctx.save();
+    ctx.translate(garden.x + garden.width / 2, garden.y + garden.height);
+    ctx.rotate(Math.sin(time * 1.3 + index * 2) * .022);
+    ctx.drawImage(garden.canvas,-garden.width / 2,-garden.height);
+    ctx.restore();
+  }
+}
+
+function paintLivingOrb() {
+  if (!orbContext || !orbCanvas.width || !landscapeCanvas.width) return;
+  const width = orbCanvas.width;
+  const height = orbCanvas.height;
+  const sourceWidth = landscapeCanvas.width;
+  const sourceHeight = landscapeCanvas.height;
+  const scale = Math.max(width / sourceWidth,height / sourceHeight);
+  orbContext.setTransform(1,0,0,1,0,0);
+  orbContext.clearRect(0,0,width,height);
+  orbContext.drawImage(landscapeCanvas,(width - sourceWidth * scale) / 2,
+    (height - sourceHeight * scale) / 2,sourceWidth * scale,sourceHeight * scale);
+}
+
+landscapeTexture.addEventListener('load', () => {
+  const gardens = [
+    {x:200,y:371,width:202,height:202},
+    {x:40,y:463,width:165,height:220},
+    {x:1405,y:530,width:235,height:220}
+  ];
+  for (const garden of gardens) {
+    const canvas = document.createElement('canvas');
+    canvas.width = garden.width;
+    canvas.height = garden.height;
+    const context = canvas.getContext('2d');
+    if (!context) continue;
+    context.drawImage(landscapeTexture,garden.x,garden.y,garden.width,garden.height,0,0,garden.width,garden.height);
+    context.globalCompositeOperation = 'destination-in';
+    const mask = context.createRadialGradient(garden.width / 2,garden.height / 2,0,
+      garden.width / 2,garden.height / 2,Math.max(garden.width,garden.height) * .5);
+    mask.addColorStop(0,'#000');
+    mask.addColorStop(.55,'#000');
+    mask.addColorStop(1,'transparent');
+    context.fillStyle = mask;
+    context.fillRect(0,0,garden.width,garden.height);
+    gardenTextures.push({...garden,canvas});
+  }
+  paintLandscape();
+  paintLivingOrb();
+});
