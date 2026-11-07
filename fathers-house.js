@@ -4,7 +4,14 @@ if (window.AstralisRealisticGalaxy) {
   const galaxyCanvas = document.createElement('canvas');
   if (window.AstralisRealisticGalaxy.draw(galaxyCanvas)) realGalaxyTexture = galaxyCanvas;
 }
-const passages={home:{ref:'John 14:2–3',quote:'“In my Father’s house are many mansions … I go to prepare a place for you.”',text:'Jesus offers his disciples reassurance as they face separation. We imagine those many dwelling places as a welcome, held in the hope of being with him.'},tears:{ref:'John 11:33–36',quote:'“Jesus wept.”',text:'Before raising Lazarus, Jesus shares in the sorrow around him. This reflection holds grief and hope together. Love gives us room to mourn.'},hope:{ref:'Revelation 21:4–5',quote:'“And God shall wipe away all tears from their eyes … Behold, I make all things new.”',text:'Revelation describes a vision of renewed creation and the end of death and sorrow. The river and light of this imagined world give shape to that hope.'}};const buttons=document.querySelectorAll('[data-passage]');function showPassage(key){const p=passages[key];document.getElementById('reference').textContent=p.ref+' · King James Version';document.getElementById('quote').textContent=p.quote;document.getElementById('reflection').textContent=p.text;buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.passage===key)));}buttons.forEach(b=>b.addEventListener('click',()=>showPassage(b.dataset.passage)));showPassage('home');const sky=document.querySelector('.particles');for(let i=0;i<28;i++){const star=document.createElement('i');star.style.left=(i*37%100)+'%';star.style.top=(i*53%100)+'%';star.style.animationDelay=-(i%8)+'s';sky.append(star);}
+// Reuse the main page's complete spiral texture and its fixed-inclination projection.
+for (const canvas of document.querySelectorAll('.house-galaxy-canvas')) {
+  if (!realGalaxyTexture) { canvas.parentElement.parentElement.hidden = true; continue; }
+  canvas.width = canvas.height = 1024;
+  const context = canvas.getContext('2d');
+  if (context) context.drawImage(realGalaxyTexture,0,0,1024,1024);
+}
+const passages={home:{ref:'John 14:2–3',quote:'“In my Father’s house are many mansions … I go to prepare a place for you.”',text:'Jesus offers his disciples reassurance as they face separation. We imagine those many dwelling places as a welcome, held in the hope of being with him.'},tears:{ref:'John 11:33–36',quote:'“Jesus wept.”',text:'Before raising Lazarus, Jesus shares in the sorrow around him. This reflection holds grief and hope together. Love gives us room to mourn.'},hope:{ref:'Revelation 21:4–5',quote:'“And God shall wipe away all tears from their eyes … Behold, I make all things new.”',text:'Revelation describes a vision of renewed creation and the end of death and sorrow. The river and light of this imagined world give shape to that hope.'}};const buttons=document.querySelectorAll('[data-passage]');function showPassage(key){const p=passages[key];document.getElementById('reference').textContent=p.ref+' · King James Version';document.getElementById('quote').textContent=p.quote;document.getElementById('reflection').textContent=p.text;buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.passage===key)));}buttons.forEach(b=>b.addEventListener('click',()=>showPassage(b.dataset.passage)));showPassage('home');
 const lazarusScene = document.getElementById('lazarusScene');
 const replayLazarus = document.getElementById('replayLazarus');
 const lazarusCaption = document.getElementById('lazarusCaption');
@@ -113,18 +120,6 @@ function drawLivingSky() {
     livingContext.fill();
   }
   livingContext.globalAlpha = 1;
-  if (realGalaxyTexture) {
-    for (let galaxy = 0; galaxy < 2; galaxy++) {
-      livingContext.save();
-      livingContext.translate(skyWidth * (galaxy ? .87 : .10),skyHeight * (galaxy ? .23 : .66));
-      livingContext.scale(1,.56);
-      livingContext.rotate(skyTime * .07 * (galaxy ? -1 : 1));
-      livingContext.globalAlpha = .78;
-      const diameter = Math.min(skyWidth * .24,260);
-      livingContext.drawImage(realGalaxyTexture,-diameter / 2,-diameter / 2,diameter,diameter);
-      livingContext.restore();
-    }
-  }
   livingContext.globalAlpha = 1;
 }
 
@@ -142,6 +137,7 @@ function animateLivingSky(timestamp) {
 
 function syncLivingMotion() {
   document.body.classList.toggle('motion-paused', motionPaused);
+  document.body.classList.toggle('page-hidden', document.hidden);
   motionButton.setAttribute('aria-pressed', String(motionPaused));
   motionButton.textContent = motionPaused ? 'Enable movement' : 'Pause movement';
   cancelAnimationFrame(skyFrame);
@@ -171,12 +167,11 @@ let waterSurface = null;
 let galaxyTexture = null;
 const landscapeTexture = new Image();
 
-const orbCanvas = document.getElementById('orbLife');
-const orbContext = orbCanvas.getContext('2d');
-const visibleWorlds = new Map();
+const gardenViewport = document.getElementById('gardenViewport');
+let gardenPositioned = false;
 const landscapeCanvas = document.getElementById('landscapeLife');
 const landscapeContext = landscapeCanvas.getContext('2d');
-// Render the complete panorama once, then crop each view independently.
+// Render one enlarged panorama, with native sideways exploration on smaller screens.
 const panorama = document.createElement('canvas');
 panorama.width = 1672; panorama.height = 941;
 const panoramaContext = panorama.getContext('2d');
@@ -199,12 +194,12 @@ function sizeLandscape() {
   landscapeHeight = bounds.height;
   landscapeCanvas.width = Math.round(bounds.width * density);
   landscapeCanvas.height = Math.round(bounds.height * density);
-  const orbBounds = orbCanvas.getBoundingClientRect();
-  orbCanvas.width = Math.round(orbBounds.width * density);
-  orbCanvas.height = Math.round(orbBounds.height * density);
+  if (!gardenPositioned && gardenViewport.clientWidth) {
+    gardenViewport.scrollLeft = Math.max(0,gardenViewport.scrollWidth-gardenViewport.clientWidth)*.56;
+    gardenPositioned = true;
+  }
   paintLandscape();
   paintLandscapeView();
-  paintLivingOrb();
 }
 
 function lightDot(x, y, radius, color) {
@@ -312,8 +307,7 @@ function animateLandscape(timestamp) {
     if (landscapeVisible) {
       paintLandscape();
       paintLandscapeView();
-      paintLivingOrb();
-    }
+        }
     if (bethanyVisible) paintBethanyAtmosphere();
   }
   landscapeFrame = requestAnimationFrame(animateLandscape);
@@ -336,13 +330,11 @@ if ('IntersectionObserver' in window) {
   const landscapeObserver = new IntersectionObserver(entries => {
     for (const entry of entries) {
       if (entry.target === bethanyCanvas) bethanyVisible = entry.isIntersecting;
-      else visibleWorlds.set(entry.target,entry.isIntersecting);
+      else if (entry.target === landscapeCanvas) landscapeVisible = entry.isIntersecting;
     }
-    landscapeVisible = Array.from(visibleWorlds.values()).some(Boolean);
     syncLandscape();
   }, {rootMargin: '120px'});
   landscapeObserver.observe(landscapeCanvas);
-  landscapeObserver.observe(orbCanvas);
   landscapeObserver.observe(bethanyCanvas);
 }
 if (landscapeContext) sizeLandscape();
@@ -368,30 +360,16 @@ function paintLivingTextures(ctx, time) {
 
 }
 
-function paintLivingOrb() {
-  if (!orbContext || !orbCanvas.width || !landscapeCanvas.width) return;
-  const width = orbCanvas.width;
-  const height = orbCanvas.height;
-  const sourceWidth = panorama.width;
-  const sourceHeight = panorama.height;
-  const scale = Math.max(width / sourceWidth,height / sourceHeight);
-  orbContext.setTransform(1,0,0,1,0,0);
-  orbContext.clearRect(0,0,width,height);
-  orbContext.drawImage(panorama,(width - sourceWidth * scale) / 2,
-    (height - sourceHeight * scale) / 2,sourceWidth * scale,sourceHeight * scale);
-}
-
 landscapeTexture.addEventListener('load', () => {
   waterSurface = window.FathersHouseWater ? window.FathersHouseWater.create(landscapeTexture) : null;
   landscapeCanvas.dataset.renderer = waterSurface ? waterSurface.backend : 'still';
   galaxyTexture = realGalaxyTexture;
   paintLandscape();
   paintLandscapeView();
-  paintLivingOrb();
 });
 
 
-// Each screen uses the same uncropped frame, preserving alignment on small displays.
+// The complete artwork remains aligned as the viewport is resized or scrolled.
 function paintLandscapeView() {
   if (!landscapeWidth || !landscapeHeight) return;
   const density = Math.min(window.devicePixelRatio || 1,1.5);

@@ -225,3 +225,35 @@ body.motion-paused .lazarus-figure,body.motion-paused .tomb-stone,body.motion-pa
 
 /* Keep the sphere's volume above the moving photographic surface. */
 .orb:after { content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none; z-index:4; background:radial-gradient(circle at 35% 28%,#fff6c512,transparent 55%),radial-gradient(circle at 40% 32%,transparent 42%,#10133040 76%,#04091e8c 100%); box-shadow:inset -30px -24px 52px #03082077,inset 12px 9px 30px #fff4c922; }
+
+/* One landscape, enlarged for exploration. */
+.welcome { padding-top:30px; padding-bottom:12px; text-shadow:0 2px 22px #080d22; }
+.garden-viewport { width:calc(100% - 24px); max-width:1920px; margin:28px auto 60px; overflow-x:auto; overflow-y:hidden; border-radius:28px; scrollbar-width:thin; scrollbar-color:#d7bc85 #13192d; box-shadow:0 20px 90px #0005,0 0 65px #c4b5fa25; overscroll-behavior-x:contain; }
+.garden-viewport:focus-visible { outline:3px solid #fff2b8; outline-offset:4px; }
+.garden-viewport .vista { width:max(100%,calc(clamp(740px,90svh,1120px) * 1.776834)); height:clamp(740px,90svh,1120px); margin:0; border-radius:0; box-shadow:none; }
+.garden-help { margin:-44px 16px 22px; text-align:center; color:#d1c8e3; font:12px/1.6 system-ui; }
+.garden-caption { max-width:800px; margin:0 auto 76px; padding:0 20px; text-align:center; }
+.garden-caption h2 { margin:10px 0; font-size:clamp(30px,4vw,48px); font-weight:400; }
+.garden-caption>p:last-child { color:#d9d0e3; font-size:17px; line-height:1.6; }
+/* The same stellar clouds, dust lanes and projected rotation used on Home. */
+.living-galaxies { position:fixed; inset:0; z-index:-1; pointer-events:none; overflow:hidden; }
+.house-galaxy { position:absolute; width:min(1060px,85vw); aspect-ratio:1; mix-blend-mode:screen; opacity:.8; }
+.galaxy-one { top:-35%; right:-15%; }
+.galaxy-two { width:min(820px,70vw); left:-22%; bottom:-30%; opacity:.6; }
+.house-galaxy-disk { position:absolute; inset:0; transform:rotate(-14deg) scaleY(.56); }
+.house-galaxy-canvas { display:block; width:100%; height:100%; animation:house-galaxy-spin 68s linear infinite; }
+.galaxy-two .house-galaxy-disk { transform:rotate(24deg) scaleY(.65); }
+.galaxy-two .house-galaxy-canvas { animation-duration:105s; animation-direction:reverse; }
+.house-galaxy-core { position:absolute; inset:34%; border-radius:50%; background:radial-gradient(ellipse,#fff1d22e,#ffca9f0f 38%,transparent 72%); animation:house-galaxy-glow 13s ease-in-out infinite; }
+body.page-hidden .house-galaxy * { animation-play-state:paused!important; }
+@keyframes house-galaxy-spin { to { transform:rotate(360deg); } }
+@keyframes house-galaxy-glow { 0%,100% { opacity:.5; } 50% { opacity:.8; } }
+@media(max-width:600px) {
+ .welcome { padding-top:20px; }
+ .garden-viewport { width:calc(100% - 16px); margin-top:22px; border-radius:20px; }
+ .garden-viewport .vista { width:calc(clamp(580px,80svh,780px) * 1.776834); min-width:100%; height:clamp(580px,80svh,780px); }
+ .garden-caption { margin-bottom:55px; }
+ .galaxy-one { width:720px; top:-18%; right:-105%; opacity:.66; }
+ .galaxy-two { width:600px; bottom:-14%; left:-110%; opacity:.45; }
+}
+@media(prefers-reduced-motion:reduce) { .house-galaxy-canvas,.house-galaxy-core { animation:none; } }
