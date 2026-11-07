@@ -121,3 +121,223 @@ document.addEventListener('visibilitychange', syncLivingMotion);
 window.addEventListener('resize', resizeLivingSky);
 if (livingContext) resizeLivingSky();
 syncLivingMotion();
+
+
+// Local, perspective-scaled movement follows the river and waterfalls in the artwork.
+const landscapeCanvas = document.getElementById('landscapeLife');
+const landscapeContext = landscapeCanvas.getContext('2d');
+let landscapeFrame = 0;
+let landscapeTime = 0;
+let landscapeLastTime = 0;
+let landscapeVisible = true;
+let landscapeWidth = 0;
+let landscapeHeight = 0;
+
+function sizeLandscape() {
+  const bounds = landscapeCanvas.getBoundingClientRect();
+  const density = Math.min(window.devicePixelRatio || 1, 1.5);
+  landscapeWidth = bounds.width;
+  landscapeHeight = bounds.height;
+  landscapeCanvas.width = Math.round(bounds.width * density);
+  landscapeCanvas.height = Math.round(bounds.height * density);
+  paintLandscape();
+}
+
+function lightDot(x, y, radius, color) {
+  landscapeContext.fillStyle = color;
+  landscapeContext.beginPath();
+  landscapeContext.arc(x, y, radius, 0, Math.PI * 2);
+  landscapeContext.fill();
+}
+
+function paintLandscape() {
+  if (!landscapeContext || !landscapeWidth || !landscapeHeight) return;
+  const ctx = landscapeContext;
+  const density = Math.min(window.devicePixelRatio || 1, 1.5);
+  ctx.setTransform(density, 0, 0, density, 0, 0);
+  ctx.clearRect(0, 0, landscapeWidth, landscapeHeight);
+  // Match the artwork's cover crop, including narrower phone viewports.
+  const scale = Math.max(landscapeWidth / 1672, landscapeHeight / 941);
+  ctx.translate((landscapeWidth - 1672 * scale) / 2, (landscapeHeight - 941 * scale) / 2);
+  ctx.scale(scale, scale);
+  const time = landscapeTime;
+
+  // Currents widen and accelerate toward the viewer.
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  for (let index = 0; index < 105; index++) {
+    const progress = ((index / 105) + time * .055) % 1;
+    const y = 490 + progress * 450;
+    const center = 1000 - Math.sin(progress * 4.1) * 105;
+    const spread = 18 + progress * 285;
+    const x = center + Math.sin(index * 9.73) * spread;
+    const length = 3 + progress * 20;
+    ctx.globalAlpha = .12 + progress * .38;
+    ctx.strokeStyle = index % 3 ? '#b9f4ff' : '#fff4c0';
+    ctx.lineWidth = .7 + progress * 1.3;
+    ctx.beginPath();
+    ctx.ellipse(x, y, length, 1 + progress * 2, Math.sin(time + index) * .12, 0, Math.PI);
+    ctx.stroke();
+  }
+
+  // Narrow ribbons of water stream down each painted cascade.
+  const falls = [
+    {x: 495, y: 455, width: 78, height: 130},
+    {x: 405, y: 475, width: 38, height: 98},
+    {x: 1082, y: 390, width: 105, height: 92},
+    {x: 1235, y: 392, width: 83, height: 72},
+    {x: 1395, y: 610, width: 42, height: 60}
+  ];
+  for (const fall of falls) {
+    for (let index = 0; index < 22; index++) {
+      const progress = (index * .143 + time * .9) % 1;
+      const x = fall.x + ((index * 37) % 101) / 101 * fall.width;
+      const y = fall.y + progress * fall.height;
+      ctx.globalAlpha = Math.sin(progress * Math.PI) * .52;
+      ctx.strokeStyle = '#ecfaff';
+      ctx.lineWidth = 1 + index % 3;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(x + 2, y + 10, x + 4, y + 23);
+      ctx.stroke();
+    }
+    for (let index = 0; index < 9; index++) {
+      const phase = time * .8 + index;
+      const x = fall.x + fall.width * .5 + Math.sin(phase) * fall.width;
+      const y = fall.y + fall.height + Math.cos(phase * .7) * 8;
+      ctx.globalAlpha = .07;
+      lightDot(x, y, 6 + index % 4 * 3, '#e5f8ff');
+    }
+  }
+  ctx.restore();
+
+  // The horizon radiates slowly, with light traveling toward the water.
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  const glow = ctx.createRadialGradient(1005, 330, 3, 1005, 330, 245);
+  glow.addColorStop(0, '#fff8cb66');
+  glow.addColorStop(.4, '#ffe1ac22');
+  glow.addColorStop(1, '#fff4bd00');
+  ctx.globalAlpha = .5 + Math.sin(time * .7) * .25;
+  ctx.fillStyle = glow;
+  ctx.fillRect(750, 65, 510, 540);
+  for (let index = 0; index < 14; index++) {
+    const angle = -.95 + index * .14 + Math.sin(time * .2) * .08;
+    ctx.globalAlpha = .025 + .02 * Math.sin(time * .9 + index);
+    ctx.fillStyle = '#fff4c8';
+    ctx.beginPath();
+    ctx.moveTo(1005, 330);
+    ctx.lineTo(1005 + Math.sin(angle) * 760, 330 - Math.cos(angle) * 760);
+    ctx.lineTo(1005 + Math.sin(angle + .025) * 760, 330 - Math.cos(angle + .025) * 760);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  // Stars drift across the upper sky, and a galaxy visibly turns.
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  for (let index = 0; index < 65; index++) {
+    const x = (index * 197.3 + time * 3) % 1672;
+    const y = 14 + (index * 61.7) % 205;
+    ctx.globalAlpha = .25 + .6 * (.5 + .5 * Math.sin(time * 1.3 + index));
+    lightDot(x, y, index % 7 ? 1 : 2, '#fff5dd');
+  }
+  ctx.translate(1500, 77);
+  ctx.scale(1, .45);
+  ctx.rotate(time * .12);
+  for (let index = 0; index < 180; index++) {
+    const radius = index * .36;
+    const angle = index * .19;
+    ctx.globalAlpha = .28 * (1 - index / 200);
+    lightDot(Math.cos(angle) * radius, Math.sin(angle) * radius, 1.4, '#e9ceff');
+  }
+  ctx.restore();
+
+  // A small flock crosses the valley, with articulated wings.
+  ctx.save();
+  ctx.strokeStyle = '#f8edcf';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  for (let bird = 0; bird < 5; bird++) {
+    const progress = (time * .026 + bird * .025) % 1;
+    const x = 240 + progress * 1270;
+    const y = 305 + Math.sin(progress * 6 + bird * .2) * 42 + bird * 12;
+    const flap = Math.sin(time * 5 + bird) * 8;
+    ctx.globalAlpha = .8;
+    ctx.beginPath();
+    ctx.moveTo(x - 11, y - flap);
+    ctx.quadraticCurveTo(x - 5, y - 5, x, y);
+    ctx.quadraticCurveTo(x + 5, y - 5, x + 11, y - flap);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  // Butterflies weave through the garden, changing wing width every beat.
+  for (let butterfly = 0; butterfly < 6; butterfly++) {
+    const x = 180 + (butterfly * 213 + time * (9 + butterfly)) % 1280;
+    const y = 730 + Math.sin(time * .9 + butterfly * 2) * 65 + Math.sin(time * 2) * 12;
+    const wing = 2 + Math.abs(Math.sin(time * 7 + butterfly)) * 10;
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(Math.sin(time + butterfly) * .3);
+    ctx.globalAlpha = .8;
+    ctx.fillStyle = butterfly % 2 ? '#f2b6eb' : '#ffe5a9';
+    ctx.beginPath();
+    ctx.ellipse(-wing * .55, -3, wing, 7, -.4, 0, Math.PI * 2);
+    ctx.ellipse(wing * .55, -3, wing, 7, .4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#80607c';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, -8);
+    ctx.lineTo(0, 9);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Warm fireflies and drifting pollen lift from the flowering banks.
+  ctx.save();
+  ctx.globalCompositeOperation = 'screen';
+  for (let index = 0; index < 40; index++) {
+    const x = 80 + (index * 107.1 + Math.sin(time + index) * 18) % 1500;
+    const y = 900 - (index * 37 + time * (9 + index % 6)) % 350;
+    ctx.globalAlpha = .15 + .65 * (.5 + .5 * Math.sin(time * 2 + index));
+    lightDot(x, y, index % 3 ? 1.5 : 3, '#ffefab');
+  }
+  ctx.restore();
+}
+
+function animateLandscape(timestamp) {
+  landscapeFrame = 0;
+  if (motionPaused || document.hidden || !landscapeVisible || !landscapeContext) {
+    landscapeLastTime = 0;
+    return;
+  }
+  if (landscapeLastTime) landscapeTime += Math.min((timestamp - landscapeLastTime) / 1000, .05);
+  landscapeLastTime = timestamp;
+  paintLandscape();
+  landscapeFrame = requestAnimationFrame(animateLandscape);
+}
+
+function syncLandscape() {
+  cancelAnimationFrame(landscapeFrame);
+  landscapeFrame = 0;
+  landscapeLastTime = 0;
+  if (!motionPaused && !document.hidden && landscapeVisible && landscapeContext) {
+    landscapeFrame = requestAnimationFrame(animateLandscape);
+  }
+}
+
+motionButton.addEventListener('click', syncLandscape);
+motionPreference.addEventListener('change', syncLandscape);
+document.addEventListener('visibilitychange', syncLandscape);
+window.addEventListener('resize', sizeLandscape);
+if ('IntersectionObserver' in window) {
+  const landscapeObserver = new IntersectionObserver(entries => {
+    landscapeVisible = entries[0].isIntersecting;
+    syncLandscape();
+  }, {rootMargin: '120px'});
+  landscapeObserver.observe(landscapeCanvas);
+}
+if (landscapeContext) sizeLandscape();
+syncLandscape();

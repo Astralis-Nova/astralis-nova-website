@@ -129,3 +129,28 @@ body.motion-paused .lazarus-figure,body.motion-paused .tomb-stone,body.motion-pa
 @media(prefers-reduced-motion:reduce) {
   .river-flow,.waterfall,.water-mist,.city-radiance,.halo-radiance,.living-flower,.flower-head,.petal,.halo { animation: none; }
 }
+
+/* The landscape has its own moving ecosystem above the painted scenery. */
+.orb { position: relative; overflow: hidden; background-size: auto 110%; animation: world-turn 36s ease-in-out infinite alternate, breathe 10s ease-in-out infinite; }
+.orb-atmosphere { position: absolute; inset: -10%; background: conic-gradient(from 10deg at 55% 40%,transparent 0deg,#fff7b744 30deg,transparent 60deg,#d7bcff33 110deg,transparent 145deg,#fff6bd33 200deg,transparent 250deg); mix-blend-mode: screen; animation: atmosphere-turn 40s linear infinite; pointer-events: none; }
+.orb-clouds { position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(ellipse at 20% 70%,#eef4ff33,transparent 26%),radial-gradient(ellipse at 70% 40%,#fff6d52e,transparent 30%); animation: cloud-wander 13s ease-in-out infinite alternate; }
+.landscape-life { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.vista-label { z-index: 4; pointer-events: none; }
+.vista-label h2 { font-size: clamp(32px,5vw,64px); }
+.vista-label p { margin: 8px 0; }
+.vista:after { background: linear-gradient(transparent 72%,#080d22cc); z-index: 3; }
+.garden-breeze { position: absolute; inset: 0; z-index: 1; background: url('fathers-house-radiance.jpg') center/cover; pointer-events: none; transform-origin: bottom left; }
+.garden-left { mask-image: radial-gradient(ellipse at 0% 73%,#000 0 15%,transparent 35%); animation: garden-wind 7s ease-in-out infinite alternate; }
+.garden-right { mask-image: radial-gradient(ellipse at 100% 80%,#000 0 10%,transparent 30%); transform-origin: bottom right; animation: garden-wind 8s -3s ease-in-out infinite alternate-reverse; }
+.living-flower { display: none; }
+.river-flow { opacity: .23; }
+.waterfall { opacity: .18; }
+.city-radiance { animation: radiant-heart 5s ease-in-out infinite; }
+.vista-rays { opacity: .9; animation-duration: 18s; }
+@keyframes world-turn { from { background-position: 40% center; } to { background-position: 60% center; } }
+@keyframes atmosphere-turn { to { transform: rotate(360deg); } }
+@keyframes cloud-wander { to { transform: translate(4%,-3%) scale(1.08); opacity: .45; } }
+@keyframes garden-wind { from { transform: rotate(-.45deg) scale(1.012); } to { transform: rotate(.6deg) scale(1.02); } }
+@media(prefers-reduced-motion:reduce) {
+  .orb,.orb-atmosphere,.orb-clouds,.garden-breeze { animation: none; }
+}
