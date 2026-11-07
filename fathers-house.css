@@ -222,3 +222,6 @@ body.motion-paused .lazarus-figure,body.motion-paused .tomb-stone,body.motion-pa
  .vista-label { max-width:55%; bottom:14px; }
  .vista-label .eyebrow { font-size:9px; }
 }
+
+/* Keep the sphere's volume above the moving photographic surface. */
+.orb:after { content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none; z-index:4; background:radial-gradient(circle at 35% 28%,#fff6c512,transparent 55%),radial-gradient(circle at 40% 32%,transparent 42%,#10133040 76%,#04091e8c 100%); box-shadow:inset -30px -24px 52px #03082077,inset 12px 9px 30px #fff4c922; }
