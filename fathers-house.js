@@ -66,19 +66,23 @@ function drawLivingSky() {
     livingContext.fill();
   }
   livingContext.globalAlpha = 1;
+  // Soft, irregular stellar clouds follow the main-page galaxy treatment.
   for (let galaxy = 0; galaxy < 2; galaxy++) {
     livingContext.save();
-    livingContext.translate(skyWidth * (galaxy ? .84 : .13), skyHeight * (galaxy ? .27 : .6));
-    livingContext.scale(1, .48);
-    livingContext.rotate(skyTime * .035 * (galaxy ? -1 : 1));
-    for (let point = 0; point < 180; point++) {
-      const angle = point * .16;
-      const radius = 2 + point * .37;
-      livingContext.globalAlpha = .12 + (1 - point / 180) * .4;
-      livingContext.fillStyle = point % 2 ? '#c2afff' : '#f9dca8';
-      livingContext.beginPath();
-      livingContext.arc(Math.cos(angle) * radius, Math.sin(angle) * radius, 1.1, 0, Math.PI * 2);
-      livingContext.fill();
+    livingContext.translate(skyWidth * (galaxy ? .84 : .13),skyHeight * (galaxy ? .27 : .6));
+    livingContext.scale(1,.52);
+    livingContext.rotate(skyTime * .045 * (galaxy ? -1 : 1));
+    for (let point = 0; point < 70; point++) {
+      const radius = Math.sqrt((point * .6180339) % 1) * 67;
+      const arm = point % 2 * Math.PI;
+      const angle = radius * .057 + arm + Math.sin(point * 19.3) * .45;
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+      const glow = livingContext.createRadialGradient(x,y,0,x,y,6 + point % 5);
+      glow.addColorStop(0,point % 3 ? '#d4bdff30' : '#fff0c840');
+      glow.addColorStop(1,'#c6b6ff00');
+      livingContext.fillStyle = glow;
+      livingContext.fillRect(x - 11,y - 11,22,22);
     }
     livingContext.restore();
   }
@@ -125,6 +129,8 @@ syncLivingMotion();
 
 // Local, perspective-scaled movement follows the river and waterfalls in the artwork.
 const gardenTextures = [];
+let waterSurface = null;
+let galaxyTexture = null;
 const landscapeTexture = new Image();
 landscapeTexture.src = 'fathers-house-radiance.jpg';
 const orbCanvas = document.getElementById('orbLife');
@@ -173,55 +179,6 @@ function paintLandscape() {
   const time = landscapeTime;
   paintLivingTextures(ctx, time);
 
-  // Currents widen and accelerate toward the viewer.
-  ctx.save();
-  ctx.globalCompositeOperation = 'screen';
-  for (let index = 0; index < 105; index++) {
-    const progress = ((index / 105) + time * .055) % 1;
-    const y = 490 + progress * 450;
-    const center = 1000 - Math.sin(progress * 4.1) * 105;
-    const spread = 18 + progress * 285;
-    const x = center + Math.sin(index * 9.73) * spread;
-    const length = 3 + progress * 20;
-    ctx.globalAlpha = .12 + progress * .38;
-    ctx.strokeStyle = index % 3 ? '#b9f4ff' : '#fff4c0';
-    ctx.lineWidth = .7 + progress * 1.3;
-    ctx.beginPath();
-    ctx.ellipse(x, y, length, 1 + progress * 2, Math.sin(time + index) * .12, 0, Math.PI);
-    ctx.stroke();
-  }
-
-  // Narrow ribbons of water stream down each painted cascade.
-  const falls = [
-    {x: 495, y: 455, width: 78, height: 130},
-    {x: 405, y: 475, width: 38, height: 98},
-    {x: 1082, y: 390, width: 105, height: 92},
-    {x: 1235, y: 392, width: 83, height: 72},
-    {x: 1395, y: 610, width: 42, height: 60}
-  ];
-  for (const fall of falls) {
-    for (let index = 0; index < 22; index++) {
-      const progress = (index * .143 + time * .9) % 1;
-      const x = fall.x + ((index * 37) % 101) / 101 * fall.width;
-      const y = fall.y + progress * fall.height;
-      ctx.globalAlpha = Math.sin(progress * Math.PI) * .52;
-      ctx.strokeStyle = '#ecfaff';
-      ctx.lineWidth = 1 + index % 3;
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.quadraticCurveTo(x + 2, y + 10, x + 4, y + 23);
-      ctx.stroke();
-    }
-    for (let index = 0; index < 9; index++) {
-      const phase = time * .8 + index;
-      const x = fall.x + fall.width * .5 + Math.sin(phase) * fall.width;
-      const y = fall.y + fall.height + Math.cos(phase * .7) * 8;
-      ctx.globalAlpha = .07;
-      lightDot(x, y, 6 + index % 4 * 3, '#e5f8ff');
-    }
-  }
-  ctx.restore();
-
   // The horizon radiates slowly, with light traveling toward the water.
   ctx.save();
   ctx.globalCompositeOperation = 'screen';
@@ -232,16 +189,6 @@ function paintLandscape() {
   ctx.globalAlpha = .5 + Math.sin(time * .7) * .25;
   ctx.fillStyle = glow;
   ctx.fillRect(750, 65, 510, 540);
-  for (let index = 0; index < 14; index++) {
-    const angle = -.95 + index * .14 + Math.sin(time * .2) * .08;
-    ctx.globalAlpha = .025 + .02 * Math.sin(time * .9 + index);
-    ctx.fillStyle = '#fff4c8';
-    ctx.beginPath();
-    ctx.moveTo(1005, 330);
-    ctx.lineTo(1005 + Math.sin(angle) * 760, 330 - Math.cos(angle) * 760);
-    ctx.lineTo(1005 + Math.sin(angle + .025) * 760, 330 - Math.cos(angle + .025) * 760);
-    ctx.fill();
-  }
   ctx.restore();
 
   // Stars drift across the upper sky, and a galaxy visibly turns.
@@ -252,15 +199,6 @@ function paintLandscape() {
     const y = 14 + (index * 61.7) % 205;
     ctx.globalAlpha = .25 + .6 * (.5 + .5 * Math.sin(time * 1.3 + index));
     lightDot(x, y, index % 7 ? 1 : 2, '#fff5dd');
-  }
-  ctx.translate(1500, 77);
-  ctx.scale(1, .45);
-  ctx.rotate(time * .12);
-  for (let index = 0; index < 180; index++) {
-    const radius = index * .36;
-    const angle = index * .19;
-    ctx.globalAlpha = .28 * (1 - index / 200);
-    lightDot(Math.cos(angle) * radius, Math.sin(angle) * radius, 1.4, '#e9ceff');
   }
   ctx.restore();
 
@@ -360,64 +298,17 @@ syncLandscape();
 // Move the photograph's actual textures instead of only drawing highlights.
 function paintLivingTextures(ctx, time) {
   if (!landscapeTexture.complete || !landscapeTexture.naturalWidth) return;
-  const falls = [
-    {x:440,y:444,w:105,h:165},
-    {x:369,y:466,w:49,h:108},
-    {x:1017,y:387,w:155,h:100},
-    {x:1205,y:391,w:93,h:86},
-    {x:1380,y:607,w:77,h:76},
-    {x:838,y:571,w:95,h:48}
-  ];
-  for (const fall of falls) {
+  const water = waterSurface && waterSurface.draw(time);
+  if (water) ctx.drawImage(water,0,0,1672,941);
+
+  if (galaxyTexture) {
     ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(fall.x + 4,fall.y);
-    ctx.lineTo(fall.x + fall.w - 8,fall.y + 4);
-    ctx.lineTo(fall.x + fall.w,fall.y + fall.h);
-    ctx.lineTo(fall.x,fall.y + fall.h);
-    ctx.closePath();
-    ctx.clip();
-    // Displace local water detail without wrapping a cliff edge into the cascade.
-    for (let row = 0; row < fall.h; row += 3) {
-      const sourceRow = Math.max(0, Math.min(fall.h - 4, row - Math.sin(time * 4.5 - row * .085) * 7));
-      const wobble = Math.sin(row * .09 + time * 3.1) * 2.5;
-      ctx.globalAlpha = Math.max(0, Math.min(1,row / 20,(fall.h - row) / 22)) * .62;
-      ctx.drawImage(landscapeTexture, fall.x, fall.y + sourceRow, fall.w, 3,
-        fall.x + wobble, fall.y + row, fall.w, 3);
-    }
+    ctx.translate(1510,78);
+    ctx.scale(1,.59);
+    ctx.rotate(time * .08);
+    ctx.drawImage(galaxyTexture,-79,-79);
     ctx.restore();
   }
-
-  // Water reflections undulate in widening bands down the river.
-  ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(1000,480);
-  ctx.bezierCurveTo(1130,510,860,565,1120,640);
-  ctx.bezierCurveTo(1200,720,1530,740,1475,941);
-  ctx.lineTo(660,941);
-  ctx.bezierCurveTo(805,820,640,780,746,710);
-  ctx.bezierCurveTo(825,650,690,620,930,552);
-  ctx.closePath();
-  ctx.clip();
-  for (let row = 480; row < 941; row += 3) {
-    const depth = (row - 480) / 461;
-    const offset = Math.sin(row * .075 - time * 3.3) * (2 + depth * 9);
-    const sourceY = Math.max(480,Math.min(937,row + Math.sin(time * 2.4 + row * .04) * 3));
-    ctx.globalAlpha = .85;
-    ctx.drawImage(landscapeTexture,500,sourceY,1100,3,500 + offset,row,1100,3);
-  }
-  ctx.restore();
-
-  // Rotate the visible galaxy inside a soft-edged patch of its own sky.
-  ctx.save();
-  ctx.translate(1510,78);
-  ctx.rotate(time * .16);
-  ctx.globalAlpha = .92;
-  ctx.beginPath();
-  ctx.ellipse(0,0,79,47,0,0,Math.PI * 2);
-  ctx.clip();
-  ctx.drawImage(landscapeTexture,1431,31,158,94,-79,-47,158,94);
-  ctx.restore();
 
   // Feathered image patches keep the flowering shrubs attached to their surroundings.
   for (let index = 0; index < gardenTextures.length; index++) {
@@ -444,6 +335,22 @@ function paintLivingOrb() {
 }
 
 landscapeTexture.addEventListener('load', () => {
+  waterSurface = window.FathersHouseWater ? window.FathersHouseWater.create(landscapeTexture) : null;
+  galaxyTexture = document.createElement('canvas');
+  galaxyTexture.width = galaxyTexture.height = 158;
+  const galaxyContext = galaxyTexture.getContext('2d');
+  if (galaxyContext) {
+    galaxyContext.drawImage(landscapeTexture,1431,31,158,94,0,0,158,158);
+    galaxyContext.globalCompositeOperation = 'destination-in';
+    const galaxyMask = galaxyContext.createRadialGradient(79,79,15,79,79,79);
+    galaxyMask.addColorStop(0,'#000');
+    galaxyMask.addColorStop(.65,'#000e');
+    galaxyMask.addColorStop(1,'transparent');
+    galaxyContext.fillStyle = galaxyMask;
+    galaxyContext.fillRect(0,0,158,158);
+  } else {
+    galaxyTexture = null;
+  }
   const gardens = [
     {x:200,y:371,width:202,height:202},
     {x:40,y:463,width:165,height:220},

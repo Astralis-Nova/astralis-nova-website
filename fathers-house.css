@@ -164,3 +164,8 @@ body.motion-paused .lazarus-figure,body.motion-paused .tomb-stone,body.motion-pa
 .orb { background-size:cover; background-position:center; animation:breathe 10s ease-in-out infinite; }
 .orb-atmosphere,.orb-clouds { z-index:2; }
 .garden-breeze,.waterfall,.river-flow,.halo-radiance { display:none; }
+
+/* Match Rainbow Promise's feathered photographic lighting. */
+.vista-rays,.river-flow,.waterfall,.halo-radiance { display:none; }
+.orb-atmosphere { background:radial-gradient(ellipse at 62% 35%,#fff1bd22,transparent 52%),radial-gradient(ellipse at 23% 45%,#c9b8ff16,transparent 48%); }
+.halo { border-width:1px; opacity:.65; }
