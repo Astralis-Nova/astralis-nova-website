@@ -26,3 +26,106 @@ body{overflow-x:hidden}
 @keyframes sky-light{to{transform:rotate(18deg)}}
 @media(max-width:600px){.vista{border-radius:20px;margin-bottom:55px}.world{aspect-ratio:1.05}.lazarus-section{padding:0 12px}.vista-label{bottom:15px}.vista-label>p:last-child{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.lazarus-figure,.tomb-stone,.resurrection-light{transition:none}}
+
+/* Living sky and landscape. Layers stay inside their landscape bounds. */
+#livingSky {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+body { isolation: isolate; }
+.motion-toggle {
+  position: fixed;
+  right: 16px;
+  top: 16px;
+  z-index: 30;
+  color: #fff0d2;
+  background: #11182de8;
+  border: 1px solid #d7c5a277;
+  padding: 10px 14px;
+  border-radius: 24px;
+  cursor: pointer;
+  font: 12px system-ui;
+}
+.back { max-width: calc(100% - 180px); }
+.living-landscape { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.vista-label { z-index: 3; }
+.vista:after { z-index: 1; pointer-events: none; }
+.vista-rays { z-index: 0; pointer-events: none; }
+.river-flow {
+  position: absolute;
+  inset: 48% 5% -10% 25%;
+  clip-path: polygon(50% 0,65% 7%,60% 23%,86% 48%,100% 100%,0 100%,15% 60%,44% 29%);
+  background: repeating-radial-gradient(ellipse at 50% 0,transparent 0 12px,#fff2b96b 14px,transparent 17px 32px);
+  mix-blend-mode: soft-light;
+  opacity: .75;
+  animation: river-current 4s linear infinite;
+}
+.waterfall {
+  position: absolute;
+  width: 16%;
+  height: 21%;
+  background: repeating-linear-gradient(92deg,transparent 0 5px,#e6f9ff99 6px,transparent 9px 15px);
+  mask-image: linear-gradient(transparent,#000 20%,#000 70%,transparent);
+  mix-blend-mode: screen;
+  animation: falling-water 1.5s linear infinite;
+  opacity: .55;
+}
+.waterfall-one { left: 25%; top: 44%; clip-path: polygon(0 0,92% 0,96% 100%,12% 100%); }
+.waterfall-two { left: 62%; top: 35%; width: 19%; height: 19%; animation-delay: -.7s; }
+.water-mist {
+  position: absolute;
+  inset: 39% 7% 20% 13%;
+  background: radial-gradient(ellipse at 34% 65%,#e6e5fa77,transparent 35%),radial-gradient(ellipse at 74% 40%,#faf2db66,transparent 27%);
+  filter: blur(12px);
+  animation: mist-breath 13s ease-in-out infinite alternate;
+}
+.city-radiance {
+  position: absolute;
+  left: 40%; top: 2%; width: 39%; height: 65%;
+  background: radial-gradient(ellipse,#fff9bf88,transparent 67%);
+  mix-blend-mode: screen;
+  animation: radiant-heart 7s ease-in-out infinite;
+}
+.halo-radiance {
+  position: absolute;
+  left: 22%; top: 4%; width: 67%; height: 28%;
+  border-top: 3px solid #fff4c6;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 12px #ffdd93);
+  opacity: .65;
+  animation: halo-shimmer 9s ease-in-out infinite;
+}
+.flower-garden { position: absolute; inset: 0; }
+.living-flower {
+  position: absolute; left: var(--x); bottom: -2%; width: var(--size); height: auto;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 0 7px #e9c8ff44);
+  animation: flower-sway 6s var(--delay) ease-in-out infinite alternate;
+}
+.flower-head { fill: var(--petal); transform-origin: 25px 29px; animation: flower-open 10s var(--delay) ease-in-out infinite alternate; }
+.petal {
+  position: absolute; width: 8px; height: 13px; border-radius: 80% 10% 70% 30%;
+  background: #f4c8ed; left: 10%; top: 52%; opacity: 0;
+  animation: floating-petal 18s linear infinite;
+}
+.petal-two { left: 15%; top: 70%; animation-delay: -7s; background: #e4d0ff; }
+.petal-three { left: 75%; top: 55%; animation-delay: -13s; }
+.halo { animation: orbit-halo 24s ease-in-out infinite alternate; }
+@keyframes river-current { to { background-position: 0 64px; } }
+@keyframes falling-water { from { background-position: 0 -24px; transform: translateY(-2%); } to { background-position: 3px 24px; transform: translateY(5%); } }
+@keyframes mist-breath { to { transform: translate(3%, -2%) scale(1.08); opacity: .45; } }
+@keyframes radiant-heart { 50% { transform: scale(1.2); opacity: .45; } }
+@keyframes halo-shimmer { 50% { opacity: .3; filter: drop-shadow(0 0 24px #ffdd93); } }
+@keyframes flower-sway { from { transform: rotate(-7deg); } to { transform: rotate(8deg); } }
+@keyframes flower-open { from { transform: scale(.87); } to { transform: scale(1.04); } }
+@keyframes floating-petal { 10% { opacity: .8; } 85% { opacity: .7; } to { transform: translate(180px,-160px) rotate(400deg); opacity: 0; } }
+@keyframes orbit-halo { to { transform: rotate(-12deg) scaleX(.95); } }
+body.motion-paused *, body.motion-paused *:before, body.motion-paused *:after { animation-play-state: paused !important; }
+body.motion-paused .lazarus-figure,body.motion-paused .tomb-stone,body.motion-paused .resurrection-light { transition: none; }
+@media(prefers-reduced-motion:reduce) {
+  .river-flow,.waterfall,.water-mist,.city-radiance,.halo-radiance,.living-flower,.flower-head,.petal,.halo { animation: none; }
+}
