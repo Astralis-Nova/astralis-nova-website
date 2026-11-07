@@ -31,6 +31,7 @@ function prepareLazarus() {
   sceneImages.forEach(image => { image.loading = 'eager'; });
   Promise.all(sceneImages.map(image => image.decode().catch(() => {}))).then(() => {
     sceneReady = true;
+    prepareBethanyAtmosphere();
     replayLazarus.disabled = false;
     if (sceneSeen) scheduleLazarus();
   });
@@ -169,12 +170,21 @@ syncLivingMotion();
 let waterSurface = null;
 let galaxyTexture = null;
 const landscapeTexture = new Image();
-landscapeTexture.src = 'fathers-house-realistic.jpg';
+
 const orbCanvas = document.getElementById('orbLife');
 const orbContext = orbCanvas.getContext('2d');
 const visibleWorlds = new Map();
 const landscapeCanvas = document.getElementById('landscapeLife');
 const landscapeContext = landscapeCanvas.getContext('2d');
+// Render the complete panorama once, then crop each view independently.
+const panorama = document.createElement('canvas');
+panorama.width = 1672; panorama.height = 941;
+const panoramaContext = panorama.getContext('2d');
+const bethanyCanvas = document.getElementById('bethanyLife');
+const bethanyContext = bethanyCanvas.getContext('2d');
+bethanyCanvas.width = 1280; bethanyCanvas.height = 720;
+let bethanySurface = null;
+let bethanyVisible = false;
 let landscapeFrame = 0;
 let landscapeTime = 0;
 let landscapeLastTime = 0;
@@ -193,26 +203,23 @@ function sizeLandscape() {
   orbCanvas.width = Math.round(orbBounds.width * density);
   orbCanvas.height = Math.round(orbBounds.height * density);
   paintLandscape();
+  paintLandscapeView();
   paintLivingOrb();
 }
 
 function lightDot(x, y, radius, color) {
-  landscapeContext.fillStyle = color;
-  landscapeContext.beginPath();
-  landscapeContext.arc(x, y, radius, 0, Math.PI * 2);
-  landscapeContext.fill();
+  panoramaContext.fillStyle = color;
+  panoramaContext.beginPath();
+  panoramaContext.arc(x, y, radius, 0, Math.PI * 2);
+  panoramaContext.fill();
 }
 
 function paintLandscape() {
   if (!landscapeContext || !landscapeWidth || !landscapeHeight) return;
-  const ctx = landscapeContext;
-  const density = Math.min(window.devicePixelRatio || 1, 1.5);
-  ctx.setTransform(density, 0, 0, density, 0, 0);
-  ctx.clearRect(0, 0, landscapeWidth, landscapeHeight);
-  // Match the artwork's cover crop, including narrower phone viewports.
-  const scale = Math.max(landscapeWidth / 1672, landscapeHeight / 941);
-  ctx.translate((landscapeWidth - 1672 * scale) / 2, (landscapeHeight - 941 * scale) / 2);
-  ctx.scale(scale, scale);
+  const ctx = panoramaContext;
+  if (!ctx) return;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.clearRect(0,0,1672,941);
   const time = landscapeTime;
   paintLivingTextures(ctx, time);
 
@@ -258,26 +265,25 @@ function paintLandscape() {
   }
   ctx.restore();
 
-  // Butterflies weave through the garden, changing wing width every beat.
-  for (let butterfly = 0; butterfly < 6; butterfly++) {
-    const x = 180 + (butterfly * 213 + time * (9 + butterfly)) % 1280;
-    const y = 730 + Math.sin(time * .9 + butterfly * 2) * 65 + Math.sin(time * 2) * 12;
-    const wing = 2 + Math.abs(Math.sin(time * 7 + butterfly)) * 10;
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(Math.sin(time + butterfly) * .3);
-    ctx.globalAlpha = .8;
-    ctx.fillStyle = butterfly % 2 ? '#f2b6eb' : '#ffe5a9';
+  // Small, shaded wings follow curved paths through the flowers.
+  for (let butterfly=0;butterfly<4;butterfly++) {
+    const phase=time*.13+butterfly*2.3;
+    const x=butterfly%2 ? 1370+Math.sin(phase)*100 : 480+Math.sin(phase)*145;
+    const y=690+Math.sin(phase*1.7+butterfly)*65+butterfly*22;
+    const wing=1.1+Math.abs(Math.sin(time*9+butterfly))*5.3;
+    ctx.save();ctx.translate(x,y);ctx.rotate(Math.sin(phase*2)*.45);
+    ctx.globalAlpha=.82;
+    const shade=ctx.createLinearGradient(-wing,0,wing,0);
+    shade.addColorStop(0,butterfly%2?'#b98d64':'#d6b8a5');
+    shade.addColorStop(.5,'#594839');shade.addColorStop(1,'#f6e3b6');
+    ctx.fillStyle=shade;ctx.strokeStyle='#544330';ctx.lineWidth=.5;
     ctx.beginPath();
-    ctx.ellipse(-wing * .55, -3, wing, 7, -.4, 0, Math.PI * 2);
-    ctx.ellipse(wing * .55, -3, wing, 7, .4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#80607c';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, -8);
-    ctx.lineTo(0, 9);
-    ctx.stroke();
+    ctx.ellipse(-wing*.6,-2,wing,5,-.4,0,Math.PI*2);
+    ctx.ellipse(wing*.6,-2,wing,5,.4,0,Math.PI*2);
+    ctx.ellipse(-wing*.5,3,wing*.7,3.5,.4,0,Math.PI*2);
+    ctx.ellipse(wing*.5,3,wing*.7,3.5,-.4,0,Math.PI*2);
+    ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#413329';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,-5);ctx.lineTo(0,7);ctx.stroke();
     ctx.restore();
   }
 
@@ -295,14 +301,21 @@ function paintLandscape() {
 
 function animateLandscape(timestamp) {
   landscapeFrame = 0;
-  if (motionPaused || document.hidden || !landscapeVisible || !landscapeContext) {
+  if (motionPaused || document.hidden || (!landscapeVisible && !bethanyVisible) || !landscapeContext) {
     landscapeLastTime = 0;
     return;
   }
-  if (landscapeLastTime) landscapeTime += Math.min((timestamp - landscapeLastTime) / 1000, .05);
-  landscapeLastTime = timestamp;
-  paintLandscape();
-  paintLivingOrb();
+  // Bound GPU and canvas work to 30 frames per second, including on phones.
+  if (!landscapeLastTime || timestamp - landscapeLastTime >= 32) {
+    if (landscapeLastTime) landscapeTime += Math.min((timestamp - landscapeLastTime) / 1000,.1);
+    landscapeLastTime = timestamp;
+    if (landscapeVisible) {
+      paintLandscape();
+      paintLandscapeView();
+      paintLivingOrb();
+    }
+    if (bethanyVisible) paintBethanyAtmosphere();
+  }
   landscapeFrame = requestAnimationFrame(animateLandscape);
 }
 
@@ -310,7 +323,7 @@ function syncLandscape() {
   cancelAnimationFrame(landscapeFrame);
   landscapeFrame = 0;
   landscapeLastTime = 0;
-  if (!motionPaused && !document.hidden && landscapeVisible && landscapeContext) {
+  if (!motionPaused && !document.hidden && (landscapeVisible || bethanyVisible) && landscapeContext) {
     landscapeFrame = requestAnimationFrame(animateLandscape);
   }
 }
@@ -321,12 +334,16 @@ document.addEventListener('visibilitychange', syncLandscape);
 window.addEventListener('resize', sizeLandscape);
 if ('IntersectionObserver' in window) {
   const landscapeObserver = new IntersectionObserver(entries => {
-    for (const entry of entries) visibleWorlds.set(entry.target, entry.isIntersecting);
+    for (const entry of entries) {
+      if (entry.target === bethanyCanvas) bethanyVisible = entry.isIntersecting;
+      else visibleWorlds.set(entry.target,entry.isIntersecting);
+    }
     landscapeVisible = Array.from(visibleWorlds.values()).some(Boolean);
     syncLandscape();
   }, {rootMargin: '120px'});
   landscapeObserver.observe(landscapeCanvas);
   landscapeObserver.observe(orbCanvas);
+  landscapeObserver.observe(bethanyCanvas);
 }
 if (landscapeContext) sizeLandscape();
 syncLandscape();
@@ -336,7 +353,7 @@ syncLandscape();
 function paintLivingTextures(ctx, time) {
   if (!landscapeTexture.complete || !landscapeTexture.naturalWidth) return;
   const water = waterSurface && waterSurface.draw(time);
-  if (water) ctx.drawImage(water,0,0,1672,941);
+  ctx.drawImage(water || landscapeTexture,0,0,1672,941);
 
   if (galaxyTexture) {
     ctx.save();
@@ -355,19 +372,46 @@ function paintLivingOrb() {
   if (!orbContext || !orbCanvas.width || !landscapeCanvas.width) return;
   const width = orbCanvas.width;
   const height = orbCanvas.height;
-  const sourceWidth = landscapeCanvas.width;
-  const sourceHeight = landscapeCanvas.height;
+  const sourceWidth = panorama.width;
+  const sourceHeight = panorama.height;
   const scale = Math.max(width / sourceWidth,height / sourceHeight);
   orbContext.setTransform(1,0,0,1,0,0);
   orbContext.clearRect(0,0,width,height);
-  orbContext.drawImage(landscapeCanvas,(width - sourceWidth * scale) / 2,
+  orbContext.drawImage(panorama,(width - sourceWidth * scale) / 2,
     (height - sourceHeight * scale) / 2,sourceWidth * scale,sourceHeight * scale);
 }
 
 landscapeTexture.addEventListener('load', () => {
   waterSurface = window.FathersHouseWater ? window.FathersHouseWater.create(landscapeTexture) : null;
+  landscapeCanvas.dataset.renderer = waterSurface ? waterSurface.backend : 'still';
   galaxyTexture = realGalaxyTexture;
   paintLandscape();
+  paintLandscapeView();
   paintLivingOrb();
 });
 
+
+// Each screen uses the same uncropped frame, preserving alignment on small displays.
+function paintLandscapeView() {
+  if (!landscapeWidth || !landscapeHeight) return;
+  const density = Math.min(window.devicePixelRatio || 1,1.5);
+  const scale = Math.max(landscapeWidth / 1672,landscapeHeight / 941);
+  landscapeContext.setTransform(density,0,0,density,0,0);
+  landscapeContext.clearRect(0,0,landscapeWidth,landscapeHeight);
+  landscapeContext.drawImage(panorama,(landscapeWidth-1672*scale)/2,(landscapeHeight-941*scale)/2,1672*scale,941*scale);
+}
+function prepareBethanyAtmosphere() {
+  const image = lazarusScene.querySelector('.bethany-backdrop');
+  if (!image.naturalWidth || !window.FathersHouseWater) return;
+  bethanySurface = window.FathersHouseWater.create(image,{scene:'bethany'});
+  paintBethanyAtmosphere();
+  syncLandscape();
+}
+function paintBethanyAtmosphere() {
+  if (!bethanySurface || !bethanyContext) return;
+  const frame = bethanySurface.draw(landscapeTime);
+  if (frame) bethanyContext.drawImage(frame,0,0,bethanyCanvas.width,bethanyCanvas.height);
+}
+// ResizeObserver also catches layout changes without a window resize.
+if ('ResizeObserver' in window) new ResizeObserver(sizeLandscape).observe(landscapeCanvas);
+landscapeTexture.src = 'fathers-house-realistic.jpg';

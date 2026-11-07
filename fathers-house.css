@@ -206,3 +206,19 @@ body.motion-paused .lazarus-figure,body.motion-paused .tomb-stone,body.motion-pa
  .lazarus-scene.is-awake .bethany-light { opacity:.4; animation:none; }
  .bethany-dust { display:none; }
 }
+
+/* Photographic movement stays within each scene. */
+.bethany-life { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+#livingGarden { scroll-margin-top:65px; }
+#lazarus-title { scroll-margin-top:70px; }
+/* Let the photographic sky carry the glow instead of stacking animated blobs. */
+.water-mist,.city-radiance { display:none; }
+
+/* Leave the moving river open to view. */
+.vista-label { text-align:left; left:4%; right:auto; max-width:40%; bottom:24px; }
+.vista-label h2 { font-size:clamp(24px,3.5vw,44px); margin:8px 0; }
+.vista-label>p:last-child { font-size:clamp(12px,1.4vw,17px); line-height:1.4; }
+@media(max-width:600px) {
+ .vista-label { max-width:55%; bottom:14px; }
+ .vista-label .eyebrow { font-size:9px; }
+}
