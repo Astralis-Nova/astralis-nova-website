@@ -8,29 +8,69 @@ const passages={home:{ref:'John 14:2–3',quote:'“In my Father’s house are m
 const lazarusScene = document.getElementById('lazarusScene');
 const replayLazarus = document.getElementById('replayLazarus');
 const lazarusCaption = document.getElementById('lazarusCaption');
-let sceneFrame;
+let sceneFrame = 0;
+let sceneSeen = false;
+let sceneReady = false;
 function awakenLazarus() {
+  sceneFrame = 0;
+  if (!sceneReady) return;
   lazarusScene.classList.add('is-awake');
+  lazarusCaption.textContent = '“Lazarus, come forth.” — John 11:43 (KJV)';
+}
+function scheduleLazarus() {
+  cancelAnimationFrame(sceneFrame);
+  sceneFrame = requestAnimationFrame(() => {
+    sceneFrame = requestAnimationFrame(awakenLazarus);
+  });
+}
+// Wait for both photographic layers so the figure never appears before the tomb.
+const sceneImages = Array.from(lazarusScene.querySelectorAll('img'));
+function prepareLazarus() {
+  if (sceneReady) return;
+  // Lazy images load when this lower-page scene approaches the viewport.
+  sceneImages.forEach(image => { image.loading = 'eager'; });
+  Promise.all(sceneImages.map(image => image.decode().catch(() => {}))).then(() => {
+    sceneReady = true;
+    replayLazarus.disabled = false;
+    if (sceneSeen) scheduleLazarus();
+  });
 }
 if ('IntersectionObserver' in window) {
   const sceneObserver = new IntersectionObserver(entries => {
     if (entries.some(entry => entry.isIntersecting)) {
-      awakenLazarus();
+      sceneSeen = true;
+      prepareLazarus();
       sceneObserver.disconnect();
     }
   }, {threshold: 0.3});
   sceneObserver.observe(lazarusScene);
 } else {
-  awakenLazarus();
+  sceneSeen = true;
+  prepareLazarus();
 }
 replayLazarus.addEventListener('click', () => {
-  cancelAnimationFrame(sceneFrame);
   lazarusScene.classList.remove('is-awake');
-  lazarusCaption.textContent = '“Lazarus, come forth.” — John 11:43 (KJV)';
-  void lazarusScene.getBoundingClientRect();
-  sceneFrame = requestAnimationFrame(() => requestAnimationFrame(awakenLazarus));
+  lazarusCaption.textContent = 'The tomb stands open. Jesus calls Lazarus by name.';
+  scheduleLazarus();
 });
-
+lazarusScene.querySelector('.lazarus-emergence').addEventListener('animationend', event => {
+  if (event.animationName === 'lazarus-into-daylight') {
+    lazarusCaption.textContent = 'Lazarus comes out, still wrapped in burial cloth. “Loose him, and let him go.” — John 11:44 (KJV)';
+  }
+});
+for (let index = 0; index < 18; index++) {
+  const mote = document.createElement('i');
+  mote.style.setProperty('--dust-x', (15 + index * 41 % 70) + '%');
+  mote.style.setProperty('--dust-y', (20 + index * 29 % 65) + '%');
+  mote.style.setProperty('--dust-delay', (-index * 1.3) + 's');
+  mote.style.setProperty('--dust-time', (9 + index % 5) + 's');
+  lazarusScene.querySelector('.bethany-dust').append(mote);
+}
+function syncBethanyVisibility() {
+  lazarusScene.classList.toggle('scene-hidden', document.hidden);
+}
+document.addEventListener('visibilitychange', syncBethanyVisibility);
+syncBethanyVisibility();
 
 // A bounded sky animation, paused when the page is hidden or motion is disabled.
 const livingCanvas = document.getElementById('livingSky');
@@ -330,3 +370,4 @@ landscapeTexture.addEventListener('load', () => {
   paintLandscape();
   paintLivingOrb();
 });
+

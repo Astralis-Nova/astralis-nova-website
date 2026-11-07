@@ -13,14 +13,6 @@ body{overflow-x:hidden}
 .lazarus-section{max-width:1080px;margin:0 auto 80px;padding:0 20px;text-align:center}
 .lazarus-section h2{font-size:clamp(32px,5vw,58px);font-weight:400;margin:14px 0}
 .scene-intro,.scene-caption{color:#e4d6bc;font-size:18px;line-height:1.7}
-.lazarus-scene{overflow:hidden;border-radius:25px;border:1px solid #e5d1a655;background:#242f58;margin:30px 0}
-.lazarus-scene svg{display:block;width:100%;height:auto}
-.lazarus-figure{opacity:0;transform:translate(-14px,7px);transition:transform 3.5s ease,opacity 2s ease;transform-box:fill-box;transform-origin:center bottom}
-.tomb-stone{transition:transform 2s ease;transform-box:fill-box;transform-origin:center}
-.resurrection-light{opacity:.15;transition:opacity 3s ease}
-.lazarus-scene.is-awake .lazarus-figure{opacity:1;transform:translate(50px,0)}
-.lazarus-scene.is-awake .tomb-stone{transform:translateX(100px) rotate(45deg)}
-.lazarus-scene.is-awake .resurrection-light{opacity:.9}
 .replay-scene{border:1px solid #e8cf92;background:linear-gradient(140deg,#756342,#342745);color:#fff7df;border-radius:30px;padding:15px 25px;font:16px Georgia;cursor:pointer}
 .scene-context{max-width:740px;margin:20px auto;color:#bbb8cf;font:14px/1.8 system-ui}
 @keyframes sky-light{to{transform:rotate(18deg)}}
@@ -169,3 +161,48 @@ body.motion-paused .lazarus-figure,body.motion-paused .tomb-stone,body.motion-pa
 .vista-rays,.river-flow,.waterfall,.halo-radiance { display:none; }
 .orb-atmosphere { background:radial-gradient(ellipse at 62% 35%,#fff1bd22,transparent 52%),radial-gradient(ellipse at 23% 45%,#c9b8ff16,transparent 48%); }
 .halo { border-width:1px; opacity:.65; }
+
+
+/* Bethany: photographic scenery and an independently lit Lazarus. */
+.lazarus-scene { position:relative; isolation:isolate; aspect-ratio:1672/941; overflow:hidden; border-radius:24px; border:1px solid #d9bd8370; margin:30px 0 24px; background:#211e18; box-shadow:0 24px 80px #0006,0 0 45px #d7b26d12; }
+.bethany-backdrop { display:block; width:100%; height:100%; object-fit:cover; }
+.bethany-light { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse at 38% 62%,#ffedbd44,transparent 33%),linear-gradient(120deg,transparent 32%,#ffe3a91c 54%,transparent 75%); mix-blend-mode:screen; opacity:.1; }
+.lazarus-emergence { position:absolute; height:64%; aspect-ratio:2/3; left:20.2%; bottom:11.5%; opacity:0; transform-origin:50% 100%; }
+.lazarus-portrait { display:block; width:100%; height:100%; object-fit:contain; transform-origin:50% 95%; }
+.lazarus-ground-shadow { position:absolute; left:25%; bottom:10.3%; width:17%; height:3%; border-radius:50%; background:radial-gradient(ellipse,#20170c88,transparent 70%); filter:blur(3px); opacity:0; transform-origin:left center; }
+.bethany-dust { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+.bethany-dust i { position:absolute; left:var(--dust-x); top:var(--dust-y); width:2px; height:2px; background:#ffe8ad; border-radius:50%; box-shadow:0 0 5px #ffedc0; opacity:0; }
+.bethany-caption { position:absolute; inset:auto 0 0; padding:28px 18px 12px; background:linear-gradient(transparent,#17130dd1); text-align:left; pointer-events:none; display:flex; align-items:baseline; justify-content:space-between; gap:10px; color:#fff0cd; }
+.bethany-caption span { font:10px system-ui; letter-spacing:.24em; text-transform:uppercase; }
+.bethany-caption em { font-size:clamp(12px,1.8vw,18px); text-shadow:0 1px 6px #000; }
+.lazarus-scene.is-awake .lazarus-emergence { opacity:1; transform:translate(18%,0); animation:lazarus-into-daylight 8s both; }
+.lazarus-scene.is-awake .lazarus-portrait { animation:lazarus-living-breath 5.5s 8s ease-in-out infinite; }
+.lazarus-scene.is-awake .lazarus-ground-shadow { animation:lazarus-shadow 8s both; }
+.lazarus-scene.is-awake .bethany-light { animation:bethany-dawn 9s both; }
+.lazarus-scene.is-awake .bethany-dust i { animation:bethany-mote var(--dust-time) var(--dust-delay) linear infinite; }
+.replay-scene:disabled { cursor:wait; opacity:.6; }
+@keyframes lazarus-into-daylight {
+  0%,14% { opacity:0; transform:translate(-3%,-5%) scale(.86); filter:brightness(.28) saturate(.65); }
+  30% { opacity:.72; transform:translate(1%,-4%) scale(.9); filter:brightness(.5) saturate(.8); }
+  51% { opacity:1; transform:translate(7%,-1.8%) scale(.95) rotate(-.5deg); filter:brightness(.77); }
+  73% { transform:translate(13%,-.8%) scale(.98) rotate(.4deg); filter:brightness(.93); }
+  100% { opacity:1; transform:translate(18%,0) scale(1); filter:brightness(1); }
+}
+@keyframes lazarus-living-breath { 0%,100% { transform:scale(1) rotate(0); } 50% { transform:scale(1.006,1.008) rotate(-.16deg); } }
+@keyframes lazarus-shadow { 0%,14% { opacity:0; transform:scaleX(.6); } 100% { opacity:.7; transform:scaleX(1); } }
+@keyframes bethany-dawn { 0%,15% { opacity:.1; } 70% { opacity:.7; } 100% { opacity:.4; } }
+@keyframes bethany-mote { 0% { opacity:0; transform:translate(0,14px); } 25%,65% { opacity:.45; } 100% { opacity:0; transform:translate(-25px,-35px); } }
+.lazarus-scene.scene-hidden *, .lazarus-scene.scene-hidden *:before { animation-play-state:paused!important; }
+@media(max-width:600px) {
+ .lazarus-section { padding:0 10px; }
+ .lazarus-scene { border-radius:14px; margin-top:22px; }
+ .bethany-caption { padding:18px 10px 8px; }
+ .bethany-caption span { font-size:8px; }
+ .scene-caption { font-size:16px; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .lazarus-scene.is-awake .lazarus-emergence { opacity:1; transform:translate(18%,0); filter:none; animation:none; }
+ .lazarus-scene.is-awake .lazarus-ground-shadow { opacity:.7; animation:none; }
+ .lazarus-scene.is-awake .bethany-light { opacity:.4; animation:none; }
+ .bethany-dust { display:none; }
+}
