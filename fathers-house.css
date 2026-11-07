@@ -257,3 +257,6 @@ body.page-hidden .house-galaxy * { animation-play-state:paused!important; }
  .galaxy-two { width:600px; bottom:-14%; left:-110%; opacity:.45; }
 }
 @media(prefers-reduced-motion:reduce) { .house-galaxy-canvas,.house-galaxy-core { animation:none; } }
+
+/* All garden motion now comes from independently rendered objects and surfaces. */
+.living-landscape,.garden-breeze,.vista-rays { display:none; }

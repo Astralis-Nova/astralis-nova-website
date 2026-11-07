@@ -163,9 +163,10 @@ syncLivingMotion();
 
 
 // Local, perspective-scaled movement follows the river and waterfalls in the artwork.
-let waterSurface = null;
+let gardenSimulation = null;
 let galaxyTexture = null;
 const landscapeTexture = new Image();
+const botanicalTexture = new Image();
 
 const gardenViewport = document.getElementById('gardenViewport');
 let gardenPositioned = false;
@@ -307,7 +308,7 @@ function animateLandscape(timestamp) {
     if (landscapeVisible) {
       paintLandscape();
       paintLandscapeView();
-        }
+    }
     if (bethanyVisible) paintBethanyAtmosphere();
   }
   landscapeFrame = requestAnimationFrame(animateLandscape);
@@ -341,11 +342,11 @@ if (landscapeContext) sizeLandscape();
 syncLandscape();
 
 
-// Move the photograph's actual textures instead of only drawing highlights.
+// Composite independent simulated layers above immovable scenery.
 function paintLivingTextures(ctx, time) {
   if (!landscapeTexture.complete || !landscapeTexture.naturalWidth) return;
-  const water = waterSurface && waterSurface.draw(time);
-  ctx.drawImage(water || landscapeTexture,0,0,1672,941);
+  const scene = gardenSimulation && gardenSimulation.draw(time);
+  ctx.drawImage(scene || landscapeTexture,0,0,1672,941);
 
   if (galaxyTexture) {
     ctx.save();
@@ -360,13 +361,17 @@ function paintLivingTextures(ctx, time) {
 
 }
 
-landscapeTexture.addEventListener('load', () => {
-  waterSurface = window.FathersHouseWater ? window.FathersHouseWater.create(landscapeTexture) : null;
-  landscapeCanvas.dataset.renderer = waterSurface ? waterSurface.backend : 'still';
+function prepareGardenSimulation() {
+  if (gardenSimulation) return;
+  if (!landscapeTexture.naturalWidth || !botanicalTexture.naturalWidth) return;
+  gardenSimulation = window.FathersHouseSimulation ? window.FathersHouseSimulation.create(landscapeTexture,botanicalTexture) : null;
+  landscapeCanvas.dataset.renderer = gardenSimulation ? gardenSimulation.backend : 'still';
   galaxyTexture = realGalaxyTexture;
   paintLandscape();
   paintLandscapeView();
-});
+}
+landscapeTexture.addEventListener('load',prepareGardenSimulation);
+botanicalTexture.addEventListener('load',prepareGardenSimulation);
 
 
 // The complete artwork remains aligned as the viewport is resized or scrolled.
@@ -380,16 +385,20 @@ function paintLandscapeView() {
 }
 function prepareBethanyAtmosphere() {
   const image = lazarusScene.querySelector('.bethany-backdrop');
-  if (!image.naturalWidth || !window.FathersHouseWater) return;
-  bethanySurface = window.FathersHouseWater.create(image,{scene:'bethany'});
+  if (!image.naturalWidth || !window.FathersHouseSimulation) return;
+  bethanySurface = window.FathersHouseSimulation.createBethany();
   paintBethanyAtmosphere();
   syncLandscape();
 }
 function paintBethanyAtmosphere() {
   if (!bethanySurface || !bethanyContext) return;
   const frame = bethanySurface.draw(landscapeTime);
-  if (frame) bethanyContext.drawImage(frame,0,0,bethanyCanvas.width,bethanyCanvas.height);
+  if (frame) {
+    bethanyContext.clearRect(0,0,bethanyCanvas.width,bethanyCanvas.height);
+    bethanyContext.drawImage(frame,0,0,bethanyCanvas.width,bethanyCanvas.height);
+  }
 }
 // ResizeObserver also catches layout changes without a window resize.
 if ('ResizeObserver' in window) new ResizeObserver(sizeLandscape).observe(landscapeCanvas);
-landscapeTexture.src = 'fathers-house-realistic.jpg';
+botanicalTexture.src = 'assets/garden-botanical-parts-v5.webp';
+landscapeTexture.src = 'assets/fathers-garden-clean-v5.webp';
