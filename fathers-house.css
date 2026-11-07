@@ -154,3 +154,7 @@ body.motion-paused .lazarus-figure,body.motion-paused .tomb-stone,body.motion-pa
 @media(prefers-reduced-motion:reduce) {
   .orb,.orb-atmosphere,.orb-clouds,.garden-breeze { animation: none; }
 }
+
+/* Reserve enough vertical space for the spherical world. */
+.world { aspect-ratio: 1.1; margin-top: 42px; }
+@media(max-width:600px) { .world { aspect-ratio: 1.05; margin-top: 28px; } }
