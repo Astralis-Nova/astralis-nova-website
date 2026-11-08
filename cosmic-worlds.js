@@ -218,7 +218,7 @@
       .emerald-planet-atmosphere{position:absolute;inset:-4px;border:1px solid #b7ef9666;border-radius:50%;box-shadow:0 0 12px #7ee9a04d;z-index:1}
       .emerald-planet-ring{position:absolute;left:-13%;top:36%;width:126%;height:28%;border:1px solid #dbc98577;border-radius:50%;transform:rotate(-22deg);z-index:3;border-top-color:transparent}
       .astralis-planet-link[data-world="emerald-wisdom"]{border-color:#6eaa7766;background:linear-gradient(145deg,#142a20e6,#08150fe6)}
-      .astralis-planet-link[data-world="emerald-wisdom"] .astralis-world-badge{border-color:#8bbf774d;color:#c2df9d!important}
+      .astralis-planet-link[data-world="emerald-wisdom"] .astralis-world-badge{border-color:#8bbf774d;color:#c2df9d!important;max-width:100%;width:auto!important}
       @keyframes emeraldPlanetFloat{0%,100%{translate:0 2px}50%{translate:0 -3px}}
       @media(max-width:640px){.astralis-planet.planet-emerald-wisdom{flex-basis:88px;width:88px;height:88px}}
       @media(prefers-reduced-motion:reduce){.astralis-planet.planet-emerald-wisdom{animation:none!important}}
