@@ -215,6 +215,8 @@
 
       .astralis-planet.planet-emerald-wisdom{flex:0 0 102px;width:102px;height:102px;isolation:isolate;background:#123d24;box-shadow:0 0 18px #8fd99c55,0 0 35px #347e6b33;overflow:visible;animation:emeraldPlanetFloat 9s ease-in-out infinite}
       .emerald-planet-surface{position:absolute;inset:0;border-radius:50%;background:url('/assets/emerald-wisdom/emerald-world-v1.webp') 88% 50% / auto 115%;box-shadow:inset -13px -9px 22px #0009,inset 2px 2px 8px #cfffb83b;z-index:2}
+      .emerald-planet-surface{overflow:hidden}
+      .emerald-portal-weather{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;pointer-events:none}
       .emerald-planet-atmosphere{position:absolute;inset:-4px;border:1px solid #b7ef9666;border-radius:50%;box-shadow:0 0 12px #7ee9a04d;z-index:1}
       .emerald-planet-ring{position:absolute;left:-13%;top:36%;width:126%;height:28%;border:1px solid #dbc98577;border-radius:50%;transform:rotate(-22deg);z-index:3;border-top-color:transparent}
       .astralis-planet-link[data-world="emerald-wisdom"]{border-color:#6eaa7766;background:linear-gradient(145deg,#142a20e6,#08150fe6)}
@@ -283,6 +285,12 @@
     installStyles();
     upgradeBiographyComet();
     addConnectedWorlds();
+    if (!document.querySelector('script[data-emerald-weather]')) {
+      const weather = document.createElement('script');
+      weather.src = '/emerald-world-weather.js?v=20261108wind1';
+      weather.dataset.emeraldWeather = 'true';
+      document.head.appendChild(weather);
+    }
   }
 
   if (document.readyState === "loading") {

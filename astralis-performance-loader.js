@@ -145,7 +145,7 @@
 
   const critical = [
     `/site-fixes.js?v=20261005audit`,
-    `/cosmic-worlds.js?v=20261108emerald`,
+    `/cosmic-worlds.js?v=20261108wind1`,
     `/realistic-orbit.js?v=20260721b`,
     `/astralis-celestial-drift.js?v=20261103warmrim`,
     `/astralis-ai-upgrades.js?v=20260722q`,
