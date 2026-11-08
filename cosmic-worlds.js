@@ -76,6 +76,15 @@
     }
 ,
     {
+      id: "emerald-wisdom",
+      href: "/emerald-wisdom.html",
+      ariaLabel: "Enter Emerald Wisdom, a green planet of Hindu and Buddhist stories, teachings, and ancient research",
+      planetClass: "planet-emerald-wisdom",
+      title: "Emerald Wisdom",
+      description: "Hindu and Buddhist stories, consciousness, compassion, ancient teachings, and manuscripts you can research.",
+      badge: "Hindu & Buddhist Explorer"
+    },
+    {
       id: "faith-stories",
       href: "/faith-stories.html",
       ariaLabel: "Enter the Astralis Nova Faith Stories world",
@@ -110,6 +119,8 @@
       ? '<img src="/assets/toon-planet/toon-world-realistic-v2.webp" alt="" width="512" height="512" loading="lazy" decoding="async">'
       : world.id === "scripture-nexus"
       ? scriptureVisual
+      : world.id === "emerald-wisdom"
+      ? '<span class="emerald-planet-atmosphere"></span><span class="emerald-planet-surface"></span><span class="emerald-planet-ring"></span>'
       : world.id === "faith-stories"
       ? faithStoriesVisual
       : "";
@@ -201,6 +212,16 @@
       @keyframes scriptureAtmosphere{0%,100%{opacity:.72;transform:scale(1)}50%{opacity:1;transform:scale(1.022)}}
       @keyframes scriptureMoonA{0%{offset-distance:0%;transform:scale(.78);filter:brightness(.68)}24%{transform:scale(1);filter:brightness(.96)}50%{offset-distance:50%;transform:scale(1.26);filter:brightness(1.3)}76%{transform:scale(1);filter:brightness(.95)}100%{offset-distance:100%;transform:scale(.78);filter:brightness(.68)}}
       @keyframes scriptureMoonB{0%{offset-distance:0%;transform:scale(.84);filter:brightness(.74)}50%{offset-distance:50%;transform:scale(1.18);filter:brightness(1.22)}100%{offset-distance:100%;transform:scale(.84);filter:brightness(.74)}}
+
+      .astralis-planet.planet-emerald-wisdom{flex:0 0 102px;width:102px;height:102px;isolation:isolate;background:#123d24;box-shadow:0 0 18px #8fd99c55,0 0 35px #347e6b33;overflow:visible;animation:emeraldPlanetFloat 9s ease-in-out infinite}
+      .emerald-planet-surface{position:absolute;inset:0;border-radius:50%;background:url('/assets/emerald-wisdom/emerald-world-v1.webp') 88% 50% / auto 115%;box-shadow:inset -13px -9px 22px #0009,inset 2px 2px 8px #cfffb83b;z-index:2}
+      .emerald-planet-atmosphere{position:absolute;inset:-4px;border:1px solid #b7ef9666;border-radius:50%;box-shadow:0 0 12px #7ee9a04d;z-index:1}
+      .emerald-planet-ring{position:absolute;left:-13%;top:36%;width:126%;height:28%;border:1px solid #dbc98577;border-radius:50%;transform:rotate(-22deg);z-index:3;border-top-color:transparent}
+      .astralis-planet-link[data-world="emerald-wisdom"]{border-color:#6eaa7766;background:linear-gradient(145deg,#142a20e6,#08150fe6)}
+      .astralis-planet-link[data-world="emerald-wisdom"] .astralis-world-badge{border-color:#8bbf774d;color:#c2df9d!important}
+      @keyframes emeraldPlanetFloat{0%,100%{translate:0 2px}50%{translate:0 -3px}}
+      @media(max-width:640px){.astralis-planet.planet-emerald-wisdom{flex-basis:88px;width:88px;height:88px}}
+      @media(prefers-reduced-motion:reduce){.astralis-planet.planet-emerald-wisdom{animation:none!important}}
 
       .astralis-planet-copy{position:relative;z-index:1;min-width:0}
       .astralis-planet-copy strong{display:block;font-size:1rem;color:#fff}
