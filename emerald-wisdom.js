@@ -99,6 +99,14 @@
   const weather = window.EmeraldWeather?.create(document.getElementById('planetWeather'), {
     image: document.querySelector('img.hero-art'), airCanvas: document.getElementById('planetAir'), wind: .65
   });
+  const grove = window.EmeraldGrove?.create();
+  const groveMotion = document.getElementById('groveMotion');
+  document.querySelectorAll('[data-animal]').forEach(button => button.addEventListener('click', () => {
+    const kind = button.dataset.animal;
+    document.querySelectorAll('[data-animal]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+    document.querySelectorAll('[data-animal-panel]').forEach(panel => { panel.hidden = panel.dataset.animalPanel !== kind; });
+    grove?.lookAt(kind);
+  }));
   const windControl = document.getElementById('windToggle');
   const winds = [{name:'gentle',value:.65},{name:'breezy',value:1.4},{name:'calm',value:0}];
   let windIndex = 0;
@@ -109,6 +117,7 @@
       windIndex = (windIndex + 1) % winds.length;
       const wind = winds[windIndex];
       weather.setWind(wind.value);
+      grove?.setWind(wind.value);
       windControl.textContent = 'Wind: ' + wind.name;
       windControl.setAttribute('aria-label', 'Change wind. Current: ' + wind.name + '.');
     });
@@ -145,11 +154,16 @@
     motion.textContent = paused ? 'Resume world motion' : 'Pause world motion';
     motion.setAttribute('aria-pressed', String(paused));
     weather?.pause(paused || document.hidden);
+    grove?.pause(paused || document.hidden);
+    groveMotion.textContent = paused ? 'Resume motion' : 'Pause motion';
+    groveMotion.setAttribute('aria-pressed', String(paused));
     if (frame !== null) cancelAnimationFrame(frame);
     frame = null; last=0;
     if (!paused && !document.hidden) frame=requestAnimationFrame(tick);
   }
   motion.hidden = false;
+  groveMotion.hidden = false;
+  groveMotion.addEventListener('click', () => { paused=!paused; syncMotion(); });
   motion.addEventListener('click', () => { paused=!paused; syncMotion(); });
   reduced.addEventListener('change', event => { paused=event.matches; syncMotion(); });
   document.addEventListener('visibilitychange', syncMotion);
