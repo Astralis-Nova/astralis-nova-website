@@ -43,9 +43,12 @@
   }
   function reveal(id) {
     const card = document.getElementById(id);
-    if (!card || !validIds.has(id)) return;
+    if (!card || !document.getElementById('libraryDialog').contains(card)) return;
+    if (!document.getElementById('libraryDialog').open) openLibrary();
+    if (!validIds.has(id)) { requestAnimationFrame(() => card.scrollIntoView({block:'start'})); return; }
     if (card.hidden) { selected = 'all'; search.value = ''; applyFilters(); }
     card.querySelector('details').open = true;
+    requestAnimationFrame(() => card.scrollIntoView({block:'start'}));
   }
   filters.forEach(button => button.addEventListener('click', () => { selected = button.dataset.filter; applyFilters(); }));
   search.addEventListener('input', applyFilters);
@@ -62,7 +65,7 @@
     saveStatus.textContent = storageWorks ? 'Your reading list is saved in this browser.' : 'Your reading list works for this visit; browser storage is unavailable.';
     if (selected === 'saved' && !saved.has(id)) document.querySelector('[data-filter="saved"]').focus();
   }));
-  document.querySelectorAll('a[href^="#"]').forEach(link => link.addEventListener('click', () => reveal(link.hash.slice(1))));
+  document.addEventListener('click', event => { const link=event.target.closest('a[href^="#"]'); if(link) { const id=link.hash.slice(1); if(document.getElementById('libraryDialog').contains(document.getElementById(id))) {event.preventDefault(); history.pushState(null,'','#'+id); reveal(id);} } });
   window.addEventListener('hashchange', () => reveal(location.hash.slice(1)));
   const surprise = document.getElementById('surpriseMe');
   surprise.hidden = false;
@@ -91,82 +94,48 @@
     const link = document.getElementById('discoveryLink'); link.href = '#' + item.id; link.textContent = item.link;
   });
   document.getElementById('explorerTools').hidden = false;
-  syncSaved(); applyFilters(); reveal(location.hash.slice(1));
+  syncSaved(); applyFilters();
 
-  const canvas = document.getElementById('wisdomSky');
-  const ctx = canvas.getContext('2d');
-  const motion = document.getElementById('motionToggle');
-  const weather = window.EmeraldWeather?.create(document.getElementById('planetWeather'), {
-    image: document.querySelector('img.hero-art'), airCanvas: document.getElementById('planetAir'), wind: .65
-  });
-  const grove = window.EmeraldGrove?.create();
-  const groveMotion = document.getElementById('groveMotion');
-  document.querySelectorAll('[data-animal]').forEach(button => button.addEventListener('click', () => {
-    const kind = button.dataset.animal;
-    document.querySelectorAll('[data-animal]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
-    document.querySelectorAll('[data-animal-panel]').forEach(panel => { panel.hidden = panel.dataset.animalPanel !== kind; });
-    grove?.lookAt(kind);
-  }));
-  const windControl = document.getElementById('windToggle');
-  const winds = [{name:'gentle',value:.65},{name:'breezy',value:1.4},{name:'calm',value:0}];
-  let windIndex = 0;
-  if (weather) {
-    windControl.hidden = false;
-    windControl.setAttribute('aria-label', 'Change wind. Current: gentle.');
-    windControl.addEventListener('click', () => {
-      windIndex = (windIndex + 1) % winds.length;
-      const wind = winds[windIndex];
-      weather.setWind(wind.value);
-      grove?.setWind(wind.value);
-      windControl.textContent = 'Wind: ' + wind.name;
-      windControl.setAttribute('aria-label', 'Change wind. Current: ' + wind.name + '.');
-    });
+  const creatureDialog=document.getElementById('creatureDialog'),library=document.getElementById('libraryDialog');
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  let paused=reduced.matches;
+  const motion=document.getElementById('motionToggle');
+  let grove;
+  function syncMotion(){
+    grove?.pause(paused||creatureDialog.open||library.open);
+    motion.textContent=paused?'Resume life':'Pause life';motion.setAttribute('aria-pressed',String(paused));
   }
-  if (!ctx) return;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  let paused = reduced.matches, frame = null, width = 0, height = 0, last = 0, time = 0;
-  let seed = 8917;
-  const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-  const stars = Array.from({length:75}, () => ({x:rand(),y:rand(),size:.4+rand()*1.1,speed:.15+rand()*.5,phase:rand()*6.28}));
-  function resize() {
-    width = innerWidth; height = innerHeight;
-    const dpr = Math.min(devicePixelRatio || 1, 1.5);
-    canvas.width = Math.round(width*dpr); canvas.height = Math.round(height*dpr);
-    ctx.setTransform(dpr,0,0,dpr,0,0); draw();
-  }
-  function draw() {
-    ctx.clearRect(0,0,width,height);
-    for (const star of stars) {
-      const y = ((star.y + time*star.speed*.0007) % 1)*height;
-      ctx.globalAlpha = .17 + .3*(.5+.5*Math.sin(time*.3+star.phase));
-      ctx.fillStyle = '#d9efbc'; ctx.beginPath(); ctx.arc(star.x*width,y,star.size,0,Math.PI*2); ctx.fill();
+  function closeDialog(dialog){if(dialog.open)dialog.close();}
+  function openLibrary(){closeDialog(creatureDialog);if(!library.open)library.showModal();syncMotion();}
+  function showCreature(kind){
+    const item=window.EmeraldCreatures.find(c=>c.id===kind);if(!item)return;
+    closeDialog(library);
+    const content=document.getElementById('creatureContent');content.replaceChildren();
+    const el=(tag,text,cls)=>{const n=document.createElement(tag);n.textContent=text;if(cls)n.className=cls;return n;};
+    const title=el('h2',item.name);title.id='creatureTitle';content.append(title,el('p',item.subtitle,'creature-subtitle'));
+    for(const story of item.stories){
+      const section=el('section','','creature-story');section.append(el('span',story.tradition,'tradition-tag'),el('h3',story.title),el('p',story.text));
+      const link=el('a',story.source+' ↗');link.href=story.url;link.target='_blank';link.rel='noopener noreferrer';section.append(link);content.append(section);
     }
-    ctx.globalAlpha = 1;
+    if(item.note)content.append(el('p',item.note,'creature-note'));
+    if(item.reading){const link=el('a','Explore the longer teaching →','related-reading');link.href='#'+item.reading;content.append(link);}
+    if(!creatureDialog.open)creatureDialog.showModal();creatureDialog.scrollTop=0;syncMotion();
   }
-  function tick(now) {
-    frame = null;
-    if (paused || document.hidden) return;
-    if (!last || now-last >= 65) { if (last) time += Math.min((now-last)/1000,.2); last=now; draw(); }
-    frame = requestAnimationFrame(tick);
-  }
-  function syncMotion() {
-    document.body.classList.toggle('sky-paused', paused || document.hidden);
-    motion.textContent = paused ? 'Resume world motion' : 'Pause world motion';
-    motion.setAttribute('aria-pressed', String(paused));
-    weather?.pause(paused || document.hidden);
-    grove?.pause(paused || document.hidden);
-    groveMotion.textContent = paused ? 'Resume motion' : 'Pause motion';
-    groveMotion.setAttribute('aria-pressed', String(paused));
-    if (frame !== null) cancelAnimationFrame(frame);
-    frame = null; last=0;
-    if (!paused && !document.hidden) frame=requestAnimationFrame(tick);
-  }
-  motion.hidden = false;
-  groveMotion.hidden = false;
-  groveMotion.addEventListener('click', () => { paused=!paused; syncMotion(); });
-  motion.addEventListener('click', () => { paused=!paused; syncMotion(); });
-  reduced.addEventListener('change', event => { paused=event.matches; syncMotion(); });
-  document.addEventListener('visibilitychange', syncMotion);
-  addEventListener('resize', resize, {passive:true});
-  resize(); syncMotion();
+  grove=window.EmeraldGrove?.create({onSelect:showCreature});
+  const finder=document.getElementById('creatureFinder');
+  for(const c of window.EmeraldCreatures){const option=document.createElement('option');option.value=c.id;option.textContent=c.name;finder.append(option);}
+  finder.addEventListener('change',()=>{const kind=finder.value;if(kind){grove?.focusKind(kind);showCreature(kind);}finder.value='';});
+  document.getElementById('openLibrary').addEventListener('click',openLibrary);
+  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeDialog(document.getElementById(b.dataset.close))));
+  for(const dialog of [creatureDialog,library])dialog.addEventListener('close',()=>{
+    if(dialog===library&&document.getElementById(location.hash.slice(1))&&library.contains(document.getElementById(location.hash.slice(1))))history.replaceState(null,'','#livingGrove');syncMotion();
+  });
+  document.getElementById('panLeft').addEventListener('click',()=>grove?.pan(-1));
+  document.getElementById('panRight').addEventListener('click',()=>grove?.pan(1));
+  motion.addEventListener('click',()=>{paused=!paused;syncMotion();});
+  reduced.addEventListener('change',e=>{paused=e.matches;syncMotion();});
+  const names=document.getElementById('namesToggle');names.addEventListener('click',()=>{const hidden=document.getElementById('creatureHotspots').classList.toggle('names-hidden');names.textContent=hidden?'Names off':'Names on';names.setAttribute('aria-pressed',String(!hidden));});
+  const winds=[{name:'gentle',value:.65},{name:'breezy',value:1.4},{name:'calm',value:0}];let windIndex=0;
+  document.getElementById('windToggle').addEventListener('click',event=>{windIndex=(windIndex+1)%winds.length;grove?.setWind(winds[windIndex].value);event.currentTarget.textContent='Wind: '+winds[windIndex].name;});
+  syncMotion();reveal(location.hash.slice(1));
 })();

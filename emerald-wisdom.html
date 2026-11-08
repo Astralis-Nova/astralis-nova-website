@@ -5,54 +5,47 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#061610">
   <title>Emerald Wisdom — Hindu & Buddhist Teachings | Astralis Nova</title>
-  <meta name="description" content="An emerald world of Hindu and Buddhist stories, ancient questions about consciousness and death, original-text translations, and digitized manuscripts to research.">
+  <meta name="description" content="Explore a living forest of animals from Hindu and Buddhist stories. Tap monkeys, elephants, deer, and more to discover ancient teachings and original sources.">
   <link rel="canonical" href="https://astralis-nova-website.pages.dev/emerald-wisdom">
   <meta property="og:title" content="Emerald Wisdom — Old Questions. Living Wisdom.">
   <meta property="og:description" content="Explore Hindu and Buddhist traditions through stories, teachings, and the surviving documents behind them.">
   <meta property="og:image" content="https://astralis-nova-website.pages.dev/assets/emerald-wisdom/emerald-world-v1.webp">
-  <link rel="stylesheet" href="/emerald-wisdom.css?v=20261108grove1">
-  <script src="/emerald-world-weather.js?v=20261108wind1" defer></script>
-  <script src="/emerald-grove.js?v=20261108grove1" defer></script>
-  <script src="/emerald-wisdom.js?v=20261108grove1" defer></script>
+  <link rel="stylesheet" href="/emerald-wisdom.css?v=20261108world2">
+  <script src="/emerald-creatures.js?v=20261108world2" defer></script>
+  <script src="/emerald-grove.js?v=20261108world2" defer></script>
+  <script src="/emerald-wisdom.js?v=20261108world2" defer></script>
 </head>
-<body>
-<a class="skip-link" href="#explore">Skip to teachings</a>
-<canvas id="wisdomSky" aria-hidden="true"></canvas>
-<header class="topbar"><div class="shell topbar-inner"><a class="brand" href="/">✦ ASTRALIS NOVA<span>CONNECTED WORLDS /  EMERALD WISDOM</span></a><a class="home-link" href="/#connected-worlds">← Return to the planets</a></div></header>
-<main>
-  <section class="hero" aria-labelledby="worldTitle">
-    <img class="hero-art" src="/assets/emerald-wisdom/emerald-world-v1.webp" width="1536" height="1024" fetchpriority="high" alt="Imagined emerald planet with forests, rivers, and a golden sunrise against a deep green starfield.">
-    <canvas id="planetWeather" class="hero-art hero-weather" aria-hidden="true"></canvas>
-    <div class="hero-shade"></div>
-    <canvas id="planetAir" class="hero-air" aria-hidden="true"></canvas>
-    <div class="shell hero-inner">
-      <p class="eyebrow"><span class="signal"></span> EMERALD WISDOM</p>
-      <h1 id="worldTitle">Old questions.<br><em>Living wisdom.</em></h1>
-      <p class="hero-lead">What are we? What survives change? How should we care for the life around us?</p>
-      <p class="hero-note">A green world for exploring Hindu and Buddhist traditions—through ancient stories, thoughtful questions, and texts you can research for yourself.</p>
-      <div class="hero-actions"><a class="button primary" href="#explore">Explore the teachings <span aria-hidden="true">↗</span></a><a class="text-link" href="#research">Open the ancient archive →</a></div>
-      <div class="hero-meta"><span>HINDU TRADITIONS</span><i aria-hidden="true">✦</i><span>BUDDHIST TRADITIONS</span></div>
+<body class="world-page">
+<a class="skip-link" href="#explore">Open the teachings</a>
+<main id="livingGrove" class="habitat" aria-label="Emerald Wisdom living forest">
+  <div id="worldViewport" class="world-viewport" tabindex="0" aria-label="Forest panorama. Swipe sideways, or use the creature finder to explore.">
+    <div id="groveScene" class="world-scene">
+      <img src="/assets/emerald-wisdom/grove-v1.webp" width="1672" height="941" fetchpriority="high" alt="Sunlight falls through an ancient banyan forest beside a quiet pond. Animals live across the clearing.">
+      <canvas id="groveLife" aria-hidden="true"></canvas>
+      <div id="creatureHotspots" class="creature-hotspots" aria-label="Meet the creatures"></div>
     </div>
-    <div class="shell hero-bottom"><span>ONE PLANET · TWO DISTINCT TRADITIONS</span><div class="world-motion-controls"><button id="windToggle" type="button" hidden>Wind: gentle</button><button id="motionToggle" type="button" aria-pressed="false" hidden>Pause world motion</button></div></div>
-  </section>
-
-  <nav class="section-nav shell" aria-label="Explore Emerald Wisdom"><a href="#livingGrove">Animal lives</a><a href="#explore">Stories & teachings</a><a href="#two-paths">Where they differ</a><a href="#research">Ancient archive</a><a href="#reading-route">A first reading journey</a></nav>
-
-
-  <section class="shell section living-grove" id="livingGrove" aria-labelledby="groveTitle">
-    <div class="section-heading"><div><p class="eyebrow">LIFE IN THE EMERALD WORLD</p><h2 id="groveTitle">Every creature has a story.</h2></div><a class="text-link" href="#animal-vision">Explore the animal teachings →</a></div>
-    <p class="section-intro">A deer browses, an elephant wanders, a dog pauses to sniff. These lives also appear in ancient questions about compassion, loyalty, and what connects living beings.</p>
-    <figure class="grove-figure"><div class="grove-scene" id="groveScene"><img src="/assets/emerald-wisdom/grove-v1.webp" width="1672" height="941" alt="A sunlit banyan grove with a grassy clearing and small lotus pond." loading="lazy" decoding="async"><canvas id="groveLife" aria-hidden="true"></canvas><div class="grove-overlay"><span>THE LIVING GROVE</span><button id="groveMotion" type="button" aria-pressed="false" hidden>Pause motion</button></div></div><figcaption id="groveStatus">Deer, elephant, and dog · choose an animal below to explore its teaching.</figcaption></figure>
-    <div class="animal-selector" role="group" aria-label="Choose an animal teaching"><button type="button" data-animal="deer" aria-pressed="true" aria-controls="animalDeer">Deer <span>Compassion</span></button><button type="button" data-animal="elephant" aria-pressed="false" aria-controls="animalElephant">Elephant <span>Equal vision</span></button><button type="button" data-animal="dog" aria-pressed="false" aria-controls="animalDog">Dog <span>Loyalty</span></button></div>
-    <div class="animal-meaning" aria-live="polite">
-      <article id="animalDeer" data-animal-panel="deer"><p class="eyebrow">BUDDHIST · JATAKA STORY</p><h3>Compassion can speak through a deer.</h3><p>A deer king offers to take a pregnant doe’s place when she faces death, then asks for wider protection. This Jataka presents the animal as the Buddha in a previous life, teaching compassion through his actions.</p><a class="source-link" href="#banyan-deer">Read the Banyan Deer story →</a></article>
-      <article id="animalElephant" data-animal-panel="elephant" hidden><p class="eyebrow">HINDU · BHAGAVAD GITA</p><h3>Look beyond the kind of body.</h3><p>Bhagavad Gita 5.18 includes a cow, an elephant, and a dog in a teaching about equal spiritual vision. In Swami Mukundananda’s interpretation, their different bodies do not erase their spiritual nature.</p><a class="source-link" href="#animal-vision">Explore equal vision →</a></article>
-      <article id="animalDog" data-animal-panel="dog" hidden><p class="eyebrow">HINDU · MAHABHARATA</p><h3>Loyalty matters, even at heaven’s door.</h3><p>Yudhishthira refuses to abandon a devoted dog for the reward of heaven. In the story, the companion is later revealed as Dharma in disguise. His refusal makes care for a vulnerable companion a test of integrity.</p><a class="source-link" href="#faithful-dog">Read about the faithful dog →</a></article>
-    </div>
-    <div class="animal-questions"><article><h3>Do animals have a spiritual life?</h3><p>Many Hindu traditions understand animals as embodied living selves within the cycle of rebirth. The Gita’s vision of the divine in living beings offers one way of understanding their spiritual significance.</p><a class="source-link" href="https://www.holy-bhagavad-gita.org/chapter/6/verse/29/" target="_blank" rel="noopener noreferrer">Bhagavad Gita 6.29 · text & commentary ↗</a><a class="source-link" href="https://www.holy-bhagavad-gita.org/chapter/14/verse/14-15/en/" target="_blank" rel="noopener noreferrer">Explore animal rebirth in Gita 14.14–15 ↗</a></article><article><h3>How does Buddhism explain them?</h3><p>Early Buddhist texts include animal rebirth within samsara, while the not-self teaching does not posit an eternal, unchanging soul passing between bodies. Compassion turns attention toward the suffering and well-being of living beings.</p><a class="source-link" href="https://www.accesstoinsight.org/tipitaka/sn/sn56/sn56.102-113.than.html" target="_blank" rel="noopener noreferrer">Read the rebirth discourses ↗</a><a class="source-link" href="#two-paths">Compare the teachings on Self and not-self →</a></article></div>
-    <p class="small muted">These are introductions to particular texts and interpretations; Hindu and Buddhist traditions contain many different views. The grove is imagined artwork, and the stories are presented as religious narratives.</p>
-  </section>
-
+  </div>
+  <header class="world-header">
+    <div class="world-heading"><a class="world-brand" href="/#connected-worlds">✦ ASTRALIS NOVA <span> / RETURN TO THE PLANETS</span></a><h1>Emerald Wisdom</h1><p>A living forest of ancient stories. <strong>Tap a creature to discover.</strong></p></div>
+    <div class="habitat-controls"><button id="namesToggle" aria-pressed="true">Names on</button><button id="windToggle">Wind: gentle</button><button id="motionToggle" aria-pressed="false">Pause life</button></div>
+  </header>
+  <div class="world-bottom">
+    <div class="world-guide"><span class="world-kicker">HINDU &amp; BUDDHIST TRADITIONS</span><p id="groveStatus" role="status">The forest is waking up…</p></div>
+    <nav class="world-navigation" aria-label="Explore the forest">
+      <div class="pan-controls"><button id="panLeft" aria-label="Explore forest to the left">←</button><button id="panRight" aria-label="Explore forest to the right">→</button></div>
+      <label class="creature-finder"><span class="sr-only">Find a creature</span><select id="creatureFinder"><option value="">Find a creature…</option></select></label>
+      <button id="openLibrary" class="library-launch">Teachings <span>17 ↗</span></button>
+    </nav>
+  </div>
+</main>
+<dialog id="creatureDialog" class="creature-dialog" aria-labelledby="creatureTitle">
+  <div class="dialog-top"><span class="world-kicker">STORIES OF THE LIVING WORLD</span><button data-close="creatureDialog" aria-label="Close creature story">×</button></div>
+  <div id="creatureContent" class="creature-content"></div>
+</dialog>
+<dialog id="libraryDialog" class="library-dialog" aria-labelledby="libraryTitle">
+  <div class="library-header"><div><span class="world-kicker">THE READING ROOM</span><h2 id="libraryTitle">Old questions. Living wisdom.</h2></div><button data-close="libraryDialog" aria-label="Return to the forest">Back to forest ×</button></div>
+  <nav class="library-nav" aria-label="Reading room"><a href="#explore">17 teachings</a><a href="#two-paths">Two traditions</a><a href="#research">Ancient sources</a><a href="#reading-route">First journey</a></nav>
+  <div class="library-scroller">
   <section class="shell opening section" aria-labelledby="openingTitle">
     <div><p class="eyebrow">CURIOSITY IS WELCOME HERE</p><h2 id="openingTitle">Follow a question.<br>See where it leads.</h2></div>
     <div class="opening-copy"><p>You do not have to settle your beliefs before opening a book. Start with a story, notice what makes sense, and examine what does not.</p><p>These introductions are our own short paraphrases. “A question for today” is a modern reflection, separate from the ancient text. The source links let you check the context and compare interpretations.</p></div>
@@ -162,7 +155,9 @@
   </div></section>
 
   <section class="shell section" id="reading-route" aria-labelledby="routeTitle"><p class="eyebrow">YOUR FIRST JOURNEY</p><h2 id="routeTitle">Three stops. No rush.</h2><div class="route-grid"><a href="#nachiketas"><span>01 / THE BIG QUESTION</span><h3>Meet Nachiketas.</h3><p>Start with death, meaning, and what is worth asking.</p><b aria-hidden="true">↗</b></a><a href="#salt"><span>02 / THE INNER QUESTION</span><h3>Look for the unseen.</h3><p>Read the salt teaching, then compare the Buddhist account of not-self.</p><b aria-hidden="true">↗</b></a><a href="#goodwill"><span>03 / THE LIVING QUESTION</span><h3>Widen your circle.</h3><p>Bring the inquiry back to kindness toward the life around you.</p><b aria-hidden="true">↗</b></a></div><p class="route-end">An open mind can travel far. Careful questions help it find its way.</p></section>
-</main>
-<footer class="shell footer"><div><a class="brand" href="/">✦ ASTRALIS NOVA</a><p>Emerald Wisdom · a world for thoughtful exploration.</p></div><div><a href="/#connected-worlds">Return to the planets ↗</a><a href="/scripture-nexus">Visit Scripture Nexus ↗</a><p class="small">Original summaries and imagined planetary artwork. Linked texts retain their publishers’ credits.</p></div></footer>
+
+  </div>
+</dialog>
+<noscript><p class="no-script">Enable JavaScript to meet the creatures. <a href="https://www.accesstoinsight.org/tipitaka/">Read Buddhist texts</a> · <a href="https://upanishads.org.in/">Explore the Upanishads</a>.</p></noscript>
 </body>
 </html>
