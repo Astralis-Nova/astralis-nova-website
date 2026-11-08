@@ -1,16 +1,21 @@
-// Use the same rasterized stellar clouds and dust lanes as the main site.
 let realGalaxyTexture = null;
-if (window.AstralisRealisticGalaxy) {
-  const galaxyCanvas = document.createElement('canvas');
-  if (window.AstralisRealisticGalaxy.draw(galaxyCanvas)) realGalaxyTexture = galaxyCanvas;
-}
-// Reuse the main page's complete spiral texture and its fixed-inclination projection.
-for (const canvas of document.querySelectorAll('.house-galaxy-canvas')) {
-  if (!realGalaxyTexture) { canvas.parentElement.parentElement.hidden = true; continue; }
-  canvas.width = canvas.height = 1024;
-  const context = canvas.getContext('2d');
-  if (context) context.drawImage(realGalaxyTexture,0,0,1024,1024);
-}
+// The current homepage's photographic sky also supplies the garden's galaxy layers.
+const homepageSky = new Image();
+homepageSky.addEventListener('load',()=>{
+  const sprite=document.createElement('canvas');sprite.width=sprite.height=512;
+  const ctx=sprite.getContext('2d');if(!ctx)return;
+  ctx.drawImage(homepageSky,homepageSky.naturalWidth*.70,homepageSky.naturalHeight*.61,homepageSky.naturalWidth*.23,homepageSky.naturalHeight*.37,0,0,512,512);
+  const pixels=ctx.getImageData(0,0,512,512);
+  for(let y=0;y<512;y++)for(let x=0;x<512;x++){
+    const k=(y*512+x)*4,r=Math.hypot((x-256)/256,(y-256)/256);
+    const edge=Math.max(0,Math.min(1,(1-r)/.25));
+    const light=Math.max(pixels.data[k],pixels.data[k+1],pixels.data[k+2]);
+    pixels.data[k+3]=255*edge*edge*Math.max(0,Math.min(1,(light-12)/60));
+  }
+  ctx.putImageData(pixels,0,0);realGalaxyTexture=sprite;galaxyTexture=sprite;
+  if(landscapeTexture.naturalWidth){paintLandscape();paintLandscapeView();}
+});
+homepageSky.src='assets/our-new-star/deep-universe.webp';
 const passages={home:{ref:'John 14:2–3',quote:'“In my Father’s house are many mansions … I go to prepare a place for you.”',text:'Jesus offers his disciples reassurance as they face separation. We imagine those many dwelling places as a welcome, held in the hope of being with him.'},tears:{ref:'John 11:33–36',quote:'“Jesus wept.”',text:'Before raising Lazarus, Jesus shares in the sorrow around him. This reflection holds grief and hope together. Love gives us room to mourn.'},hope:{ref:'Revelation 21:4–5',quote:'“And God shall wipe away all tears from their eyes … Behold, I make all things new.”',text:'Revelation describes a vision of renewed creation and the end of death and sorrow. The river and light of this imagined world give shape to that hope.'}};const buttons=document.querySelectorAll('[data-passage]');function showPassage(key){const p=passages[key];document.getElementById('reference').textContent=p.ref+' · King James Version';document.getElementById('quote').textContent=p.quote;document.getElementById('reflection').textContent=p.text;buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.passage===key)));}buttons.forEach(b=>b.addEventListener('click',()=>showPassage(b.dataset.passage)));showPassage('home');
 const lazarusScene = document.getElementById('lazarusScene');
 const replayLazarus = document.getElementById('replayLazarus');
@@ -349,13 +354,15 @@ function paintLivingTextures(ctx, time) {
   ctx.drawImage(scene || landscapeTexture,0,0,1672,941);
 
   if (galaxyTexture) {
-    ctx.save();
-    ctx.translate(1510,78);
-    ctx.scale(1,.59);
-    ctx.rotate(time * .08);
-    ctx.globalAlpha = .8;
-    ctx.drawImage(galaxyTexture,-105,-105,210,210);
-    ctx.restore();
+    for(const galaxy of [
+      {x:1490,y:86,size:350,tilt:-.4,depth:.76,period:68},
+      {x:1280,y:170,size:110,tilt:-.3,depth:.7,period:93},
+      {x:720,y:115,size:128,tilt:.25,depth:.82,period:105}
+    ]){
+      ctx.save();ctx.translate(galaxy.x,galaxy.y);ctx.rotate(galaxy.tilt);ctx.scale(1,galaxy.depth);
+      ctx.rotate(time*Math.PI*2/galaxy.period);ctx.globalAlpha=.94;ctx.globalCompositeOperation='screen';
+      ctx.drawImage(galaxyTexture,-galaxy.size/2,-galaxy.size/2,galaxy.size,galaxy.size);ctx.restore();
+    }
   }
 
 
@@ -401,4 +408,4 @@ function paintBethanyAtmosphere() {
 // ResizeObserver also catches layout changes without a window resize.
 if ('ResizeObserver' in window) new ResizeObserver(sizeLandscape).observe(landscapeCanvas);
 botanicalTexture.src = 'assets/garden-botanical-parts-v5.webp';
-landscapeTexture.src = 'assets/fathers-garden-clean-v5.webp';
+landscapeTexture.src = 'assets/fathers-garden-sky-v6.webp';

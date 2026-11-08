@@ -260,3 +260,11 @@ body.page-hidden .house-galaxy * { animation-play-state:paused!important; }
 
 /* All garden motion now comes from independently rendered objects and surfaces. */
 .living-landscape,.garden-breeze,.vista-rays { display:none; }
+
+/* Use the same photographic deep-space layer and drift as the current homepage. */
+.living-galaxies:before { content:""; position:absolute; inset:-4%; background:url('assets/our-new-star/deep-universe.webp') center 28%/cover no-repeat; filter:saturate(.62) contrast(1.08) brightness(.82); opacity:.65; transform-origin:64% 40%; animation:house-deep-sky-drift 130s ease-in-out infinite alternate; }
+.living-galaxies:after { content:""; position:absolute; inset:0; background:radial-gradient(ellipse at 60% 32%,transparent 24%,#01030966 100%); }
+body.page-hidden .living-galaxies:before { animation-play-state:paused!important; }
+@keyframes house-deep-sky-drift { from { transform:scale(1.025) translate3d(-.25%,.2%,0); } to { transform:scale(1.055) translate3d(.3%,-.3%,0); } }
+@media(max-width:700px) { .living-galaxies:before { background-image:url('assets/our-new-star/deep-universe-mobile.webp'); background-position:50% 24%; opacity:.62; } }
+@media(prefers-reduced-motion:reduce) { .living-galaxies:before { animation:none; } }
