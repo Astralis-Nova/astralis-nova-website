@@ -4,7 +4,7 @@
     const canvas=document.getElementById('groveLife'),ctx=canvas?.getContext('2d');
     if(!ctx)return null;
     const life=window.EmeraldAnimalLife;if(!life)return null;
-    const bodies=life.createRenderer();canvas.dataset.bodyRenderer=bodies.mode;canvas.dataset.rendererReason=bodies.reason||'';
+    canvas.dataset.bodyRenderer='whole-animal-poses';
     const scene=document.getElementById('groveScene'),viewport=document.getElementById('worldViewport'),hotspots=document.getElementById('creatureHotspots'),status=document.getElementById('groveStatus');
     let paused=matchMedia('(prefers-reduced-motion: reduce)').matches,ready=false,frame=null,last=0,time=0,wind=.65,width=1,height=1,seed=93617;
     const random=()=>{seed=seed*16807%2147483647;return(seed-1)/2147483646;};
@@ -48,22 +48,7 @@
       const rect=scene.getBoundingClientRect();width=Math.max(1,rect.width);height=Math.max(1,rect.height);const dpr=Math.min(devicePixelRatio||1,1.5);
       canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw();
     }
-    function pose(a){
-      const m=a.motion,action=m.action,old=a.poses.length===8;
-      if(a.tree)return action==='climb'?3:2;
-      if(action==='walk')return 0;
-      if(action==='turn'){
-        if(m.turn<.22||m.turn>.78)return 0;
-        if(old)return 6;
-        if(['bull','mouse','turtle'].includes(a.kind))return 3;
-        return 0;
-      }
-      if(old)return action==='graze'||action==='sniff'?4:action==='rest'||action==='groom'?5:6;
-      if(a.kind==='peacock')return action==='display'?2:action==='rest'?3:0;
-      if(a.kind==='serpent')return action==='look'?2:3;
-      if(a.kind==='hare')return action==='graze'?3:2;
-      return action==='look'&&['bull','mouse','turtle'].includes(a.kind)?3:2;
-    }
+    function pose(a){return life.frameAt(a.kind,a.motion,a.poses.length);}
     function update(dt){
       time+=dt;
       for(const a of actors){a.motion=a.mind.sample(time);a.x=a.motion.x;a.y=a.motion.y;a.dir=a.motion.dir;}
@@ -81,11 +66,13 @@
       const hop=a.kind==='hare'&&moving?Math.max(0,Math.sin(m.gait*Math.PI*2))*15*m.speed*height/750:moving?Math.sin(m.gait*Math.PI*4)*.85*m.speed*height/750:0;
       const hitW=Math.max(44,sw*.87),hitH=Math.max(44,sh*.91);
       a.button.style.width=hitW+'px';a.button.style.height=hitH+'px';a.button.style.transform=`translate(${x-hitW/2}px,${y-sh-hop}px)`;
-      a.button.dataset.motion=m.action;
+      a.button.dataset.motion=m.action;a.button.dataset.pose=String(index);
       const left=viewport.scrollLeft||0;if(x+sw/2<left-80||x-sw/2>left+viewport.clientWidth+80)return;
       if(!a.tree){const breadth=Math.max(10,target*.65),shadow=ctx.createRadialGradient(x,y,0,x,y,breadth);shadow.addColorStop(0,'rgba(17,29,7,.33)');shadow.addColorStop(1,'rgba(17,29,7,0)');ctx.save();ctx.translate(0,y*.83);ctx.scale(1,.17);ctx.fillStyle=shadow;ctx.beginPath();ctx.arc(x,y,breadth,0,Math.PI*2);ctx.fill();ctx.restore();}
-      const motion=life.prepareMotion(a.kind,m,index);
-      bodies.draw(part,motion,x,y,sw,sh,a.dir,hop);
+      // One opaque, complete pose. The same scale applies to both axes.
+      // There is no image mesh, UV displacement, sliced body, or pose crossfade.
+      ctx.save();ctx.translate(x,y-hop);ctx.scale(a.dir,1);
+      ctx.drawImage(part,-sw/2,-sh,sw,sh);ctx.restore();
     }
     function pond(){
       ctx.save();ctx.scale(width/1672,height/941);ctx.beginPath();ctx.moveTo(0,740);ctx.lineTo(220,770);ctx.lineTo(380,840);ctx.lineTo(440,941);ctx.lineTo(0,941);ctx.closePath();ctx.clip();
@@ -97,7 +84,7 @@
       for(const l of leaves){const x=((l.x+time*wind*.009)%1)*width,y=((l.y+time*.007)%1)*height;ctx.save();ctx.translate(x,y);ctx.rotate(l.phase+time*wind);ctx.fillStyle='rgba(229,217,123,.55)';ctx.beginPath();ctx.ellipse(0,0,l.size,l.size*.35,0,0,Math.PI*2);ctx.fill();ctx.restore();}
       for(let i=0;i<5;i++){const x=width*(.13+i*.18)+Math.sin(time*.35+i*2)*width*.03,y=height*(.48+i%3*.05)+Math.sin(time*.8+i)*13,flap=.15+.85*Math.abs(Math.sin(time*9+i));ctx.fillStyle=i%2?'#dfa975':'#d7e3a2';ctx.beginPath();ctx.ellipse(x-3*flap,y,4*flap,2.5,-.3,0,Math.PI*2);ctx.ellipse(x+3*flap,y,4*flap,2.5,.3,0,Math.PI*2);ctx.fill();}
     }
-    function draw(){canvas.dataset.lifeTime=time.toFixed(2);ctx.clearRect(0,0,width,height);if(!ready)return;pond();bodies.begin(width,height,Math.min(devicePixelRatio||1,1.5));for(const a of [...actors].sort((a,b)=>a.y-b.y))animal(a);bodies.finish(ctx,width,height);air();}
+    function draw(){canvas.dataset.lifeTime=time.toFixed(2);ctx.clearRect(0,0,width,height);if(!ready)return;pond();for(const a of [...actors].sort((a,b)=>a.y-b.y))animal(a);air();}
     function tick(now){frame=null;if(paused||document.hidden||!ready)return;if(!last||now-last>=42){const dt=last?Math.min((now-last)/1000,.12):0;last=now;update(dt);draw();}frame=requestAnimationFrame(tick);}
     function sync(){if(frame!==null)cancelAnimationFrame(frame);frame=null;last=0;canvas.dataset.groveState=!ready?'loading':paused?'paused':document.hidden?'offscreen':'running';if(ready&&!paused&&!document.hidden)frame=requestAnimationFrame(tick);}
     function focusActor(a,smooth=true){viewport.scrollTo({left:a.x*width-viewport.clientWidth*.5,behavior:smooth&&!matchMedia('(prefers-reduced-motion: reduce)').matches?'smooth':'instant'});}
