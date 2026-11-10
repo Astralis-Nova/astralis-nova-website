@@ -26,3 +26,40 @@ body.world-page{overflow-x:hidden;overflow-y:auto;background:#071a14}.habitat{po
 .venus-reading-room{border-block:1px solid var(--line);background:radial-gradient(ellipse at top,#4c4a2226,transparent 65%)}.venus-reading-room>.source-link{margin-bottom:25px}.venus-reading-room>.source-note{margin-top:25px;max-width:85ch}
 @media(min-width:701px) and (max-width:1050px){.emerald-sky{min-height:1040px}.sky-worlds{top:47%}.sky-venus{left:calc(50% - 145px);top:68%;width:290px;min-height:140px}.sky-venus strong{font-size:1.23rem}}
 @media(max-width:700px){.emerald-sky{min-height:1240px}.sky-teaching-points{grid-template-rows:220px 220px 170px}.sky-venus{grid-column:1/-1;grid-row:3;gap:19px;align-self:center;justify-self:center;max-width:340px}.sky-venus .sky-point-copy>span:last-child{max-width:none}.sky-venus strong{font-size:1.4rem}.sky-venus .sky-point-number{font-size:.5rem;letter-spacing:.12em}}
+
+/* Spherical surface rotation keeps light fixed while the world turns beneath it. */
+.emerald-sky .sky-body-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:auto;border-radius:50%;pointer-events:none}
+.sky-body-rendered{background:transparent;box-shadow:none}
+.sky-world-large.sky-body-rendered{box-shadow:0 0 2px 1px #b6e7e65c,0 0 25px #74bdc72c}
+.sky-world-small.sky-body-rendered{box-shadow:0 0 1px 1px #a9dbea66,0 0 17px #4fa0b42c}
+.sky-worlds-art{width:218px;height:128px;animation:emeraldWorldFloat 12s ease-in-out infinite}
+.sky-world-large{left:65px;top:0;width:108px;height:108px;transform:rotate(-17deg)}
+.sky-world-small{left:11px;top:64px;width:43px;height:43px;animation:emeraldMoonOrbit 19s ease-in-out infinite}
+.sky-world-far{right:1px;top:6px;width:21px;height:21px;animation:emeraldFarOrbit 27s ease-in-out infinite}
+.sky-world-ring{left:38px;top:34px;width:164px;height:40px;border-width:5px;border-color:#b9c8b178;border-top-color:#bdcbb52c;border-left-color:#bdcbb54a;box-shadow:0 0 0 2px #96aaa538,inset 0 0 0 2px #9bafaa4a;transform:rotate(-24deg);pointer-events:none}
+.sky-moon-art.sky-body-rendered{filter:drop-shadow(0 0 17px #b8d6e644);animation:emeraldLunarDrift 16s ease-in-out infinite}
+.sky-sun-art.sky-body-rendered{box-shadow:0 0 25px #fff0be8c,0 0 70px 17px #ffc66a4a,0 0 150px 50px #ffb47020}
+.sky-sun-art:after{inset:-18px;border:0;background:repeating-conic-gradient(from 0deg,#ffcd7525 0deg,transparent 9deg,#ffe59b30 13deg,transparent 20deg);mask-image:radial-gradient(circle,transparent 52%,#000 60%,transparent 72%);animation:emeraldCorona 35s linear infinite}
+.sky-space-art{perspective:240px;animation:emeraldWorldFloat 11s ease-in-out infinite}
+.sky-space-art i{animation:emeraldOrbitPlane 17s linear infinite}
+.sky-space-art i:nth-child(2){animation:emeraldOrbitPlaneTwo 23s linear infinite reverse}
+.sky-space-art i:nth-child(3){animation:emeraldOrbitPlaneThree 29s linear infinite}
+.sky-space-art i:after{content:'';position:absolute;width:5px;height:5px;background:#edfff2;left:13%;top:13%;border-radius:50%;box-shadow:0 0 9px 3px #b5e9df85}
+.sky-constellation circle{transform-box:fill-box;transform-origin:center;animation:emeraldStarBreathe 5s ease-in-out infinite alternate}
+.sky-constellation circle:nth-of-type(2n){animation-delay:-3s;animation-duration:7s}
+.sky-venus-art{animation:emeraldVenusGlow 8s ease-in-out infinite}
+.emerald-sky[data-motion=paused] *,.emerald-sky[data-motion=paused] *:before,.emerald-sky[data-motion=paused] *:after{animation-play-state:paused!important}
+@keyframes emeraldWorldFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-9px) rotate(2deg)}}
+@keyframes emeraldMoonOrbit{0%,100%{transform:translate(0,0) scale(.92)}50%{transform:translate(13px,-13px) scale(1.06)}}
+@keyframes emeraldFarOrbit{0%,100%{transform:translate(0,0)}50%{transform:translate(-9px,15px)}}
+@keyframes emeraldLunarDrift{0%,100%{transform:translate(-3px,1px) rotate(-4deg)}50%{transform:translate(3px,-5px) rotate(1deg)}}
+@keyframes emeraldCorona{to{transform:rotate(360deg)}}
+@keyframes emeraldOrbitPlane{from{transform:rotate(-32deg) rotateY(0deg)}to{transform:rotate(-32deg) rotateY(360deg)}}
+@keyframes emeraldOrbitPlaneTwo{from{transform:rotate(32deg) scale(.7,1.2) rotateX(0deg)}to{transform:rotate(32deg) scale(.7,1.2) rotateX(360deg)}}
+@keyframes emeraldOrbitPlaneThree{from{transform:scale(.35,1.3) rotateY(0deg)}to{transform:scale(.35,1.3) rotateY(360deg)}}
+@keyframes emeraldStarBreathe{from{opacity:.55;filter:drop-shadow(0 0 2px #d9efff)}to{opacity:1;filter:drop-shadow(0 0 6px #d9efff)}}
+@keyframes emeraldVenusGlow{0%,100%{filter:brightness(1);transform:translateY(0)}50%{filter:brightness(1.17);transform:translateY(-3px)}}
+@media(max-width:700px){.sky-worlds-art{animation-name:emeraldMobileWorldFloat}.sky-world-ring{border-width:4px}}
+@keyframes emeraldMobileWorldFloat{0%,100%{transform:scale(.78) translateY(0)}50%{transform:scale(.78) translateY(-9px)}}
+@media(prefers-reduced-motion:reduce){.emerald-sky *,.emerald-sky *:before,.emerald-sky *:after{animation:none!important;transition:none!important}}
+
