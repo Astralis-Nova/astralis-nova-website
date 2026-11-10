@@ -4,13 +4,13 @@ const anchor=document.querySelector('.lazarus-section');
 if(!anchor)return;
 const section=document.createElement('section');
 section.className='creation-vista';
-section.innerHTML='<p class="eyebrow">The wonder of creation</p><h2>A Living World</h2><p class="creation-status" style="margin:-.4em auto 1em;color:#d8e7ee;font:12px/1.4 system-ui;letter-spacing:.08em">LIVING WORLD · MOTION EDITION 3 <span class="creation-motion-state"></span></p><div class="creation-frame" role="img" aria-label="A heavenly garden with a rainbow, crystalline flowers, waterfalls, a whale and a star-filled sky"><img class="creation-image" src="assets/heavenly-garden.webp" alt="" decoding="async"><canvas class="creation-life" aria-hidden="true"></canvas></div>';
+section.innerHTML='<p class="eyebrow">The wonder of creation</p><h2>A Living World</h2><p class="creation-status" style="margin:-.4em auto 1em;color:#d8e7ee;font:12px/1.4 system-ui;letter-spacing:.08em">LIVING WORLD · MOTION EDITION 4 <span class="creation-motion-state"></span></p><div class="creation-frame" role="img" aria-label="A heavenly garden with a rainbow, crystalline flowers, waterfalls, a whale and a star-filled sky"><img class="creation-image" src="assets/heavenly-garden.webp" alt="" decoding="async"><canvas class="creation-life" aria-hidden="true"></canvas></div>';
 const style=document.createElement('style');
 style.textContent=`.creation-vista{max-width:1320px;margin:48px auto;padding:0 16px;text-align:center}.creation-vista h2{font-size:clamp(1.65rem,4vw,2.8rem);margin:.3em 0 .7em;color:#fff0c4}.creation-frame{position:relative;overflow:hidden;isolation:isolate;border-radius:20px;border:1px solid rgba(255,227,175,.36);box-shadow:0 20px 70px #030714b0,0 0 24px #f5c07522;aspect-ratio:1672/941;background:#101930}.creation-frame img,.creation-frame canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.creation-frame canvas{pointer-events:none}.creation-life{z-index:2}.creation-vista[hidden]{display:none}@media(max-width:600px){.creation-vista{margin:32px auto;padding:0 8px}.creation-frame{border-radius:12px}}`;
 document.head.append(style);section.hidden=true;anchor.before(section);
 const img=section.querySelector('img'),frame=section.querySelector('.creation-frame'),fx=section.querySelector('canvas'),ctx=fx.getContext('2d');
 const motion=document.getElementById('motionToggle'),reduced=matchMedia('(prefers-reduced-motion: reduce)');
-let started=false,visible=true,last=0,elapsed=0,raf=0,patches=[],whale=null,W=0,H=0;
+let started=false,visible=true,last=0,elapsed=0,raf=0,patches=[],whale=null,cleanArt=null,deerHead=null,W=0,H=0;
 const random=(a,b)=>a+Math.random()*(b-a),tau=Math.PI*2;
 // Only these small feathered photographic surfaces may move. The original art,
 // architecture, rainbow, paths, rocks, shoreline, deer and whale never warp.
@@ -28,6 +28,12 @@ const regions=[
  {x:.895,y:.501,rx:.085,ry:.017,kind:'sea',speed:1.1},
  {x:.679,y:.546,rx:.058,ry:.014,kind:'sea',speed:1.4},
  {x:.486,y:.639,rx:.048,ry:.019,kind:'sea',speed:.73},
+ {x:.925,y:.475,rx:.072,ry:.027,kind:'sea',speed:1.12},
+ {x:.810,y:.510,rx:.075,ry:.028,kind:'sea',speed:1.35},
+ {x:.711,y:.525,rx:.047,ry:.017,kind:'sea',speed:.97},
+ {x:.775,y:.377,rx:.067,ry:.036,kind:'cloud',speed:.35},
+ {x:.928,y:.388,rx:.068,ry:.032,kind:'cloud',speed:.25},
+ {x:.630,y:.310,rx:.050,ry:.028,kind:'cloud',speed:.29},
  // Branch tips and leaves only, not trunks or flowers in front of the path.
  {x:.288,y:.089,rx:.047,ry:.055,kind:'leaf',speed:.8},
  {x:.403,y:.048,rx:.051,ry:.037,kind:'leaf',speed:1.03},
@@ -40,6 +46,39 @@ const regions=[
  {x:.873,y:.085,rx:.057,ry:.045,kind:'galaxy',speed:.18},
  {x:.667,y:.185,rx:.039,ry:.036,kind:'galaxy',speed:.13}
 ];
+
+ // Reference coordinates follow the original artwork, not the viewport.
+ const RW=1648,RH=928;
+ function surface(w=RW,h=RH){const c=document.createElement('canvas');c.width=w;c.height=h;return c;}
+ function trace(g,pts){g.beginPath();pts.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.closePath();}
+ function eraseArea(g,pts,dx,dy,soft=2){
+   const mask=surface(),m=mask.getContext('2d');m.filter='blur('+soft+'px)';m.fillStyle='#fff';trace(m,pts);m.fill();
+   const c=surface(),a=c.getContext('2d');a.drawImage(img,dx,dy,RW,RH);
+   a.globalCompositeOperation='destination-in';a.drawImage(mask,0,0);g.drawImage(c,0,0);
+ }
+ function buildArtwork(){
+   cleanArt=surface();const g=cleanArt.getContext('2d');g.drawImage(img,0,0,RW,RH);
+   // Remove the three still doves using adjacent cloud/sky pixels before adding
+   // their moving counterparts. Soft masks keep the original sky continuous.
+   eraseArea(g,[[421,222],[439,215],[450,220],[450,235],[438,244],[421,240]],-23,7,3);
+   eraseArea(g,[[453,243],[472,244],[483,258],[480,275],[463,276],[452,264]],-23,-9,3);
+   eraseArea(g,[[579,248],[596,246],[611,254],[615,269],[605,283],[586,283],[576,268]],-33,9,4);
+   // Preserve the real deer's head and neck as a separate photographic layer.
+   const neck=[[369,473],[376,461],[377,451],[374,440],[372,435],[380,438],[387,444],[395,435],[401,439],[401,446],[397,454],[396,463],[390,469],[385,479],[379,483],[369,481]];
+   const spr=surface(64,64),d=spr.getContext('2d');d.translate(-356,-425);trace(d,neck);d.clip();d.drawImage(img,0,0,RW,RH);
+   deerHead=spr;
+   eraseArea(g,neck,-48,0,1.8);
+ }
+ function animateDeer(t){
+   if(!deerHead)return;
+   // Small, irregular grazing glances with the neck attached at the shoulder.
+   const x=W/RW,y=H/RH;
+   ctx.save();ctx.scale(x,y);ctx.translate(375,477);
+   const cycle=(t+1.4)%11,look=Math.sin(cycle*.72)*.055;
+   const grazing=cycle>4&&cycle<8?Math.sin((cycle-4)/4*Math.PI)*.27:0;
+   ctx.rotate(look+grazing);ctx.drawImage(deerHead,356-375,425-477);ctx.restore();
+ }
+
 function makePatch(r){
  const x=Math.round(r.x*W-r.rx*W),y=Math.round(r.y*H-r.ry*H);
  const w=Math.max(4,Math.round(r.rx*W*2)),h=Math.max(4,Math.round(r.ry*H*2));
@@ -79,7 +118,7 @@ function swimWhales(t){
  pc.save();pc.translate(w*.50,h*.42);
  pc.rotate(Math.sin(t*.62)*.019);
  pc.translate(-w*.50,-h*.42);
- pc.drawImage(img,-x+12*k*Math.sin(t*.43),-y+9*k*Math.sin(t*.62),W,H);
+ pc.drawImage(cleanArt||img,-x+12*k*Math.sin(t*.43),-y+9*k*Math.sin(t*.62),W,H);
  pc.restore();pc.globalCompositeOperation='destination-in';pc.drawImage(mask,0,0);pc.globalCompositeOperation='source-over';
  ctx.drawImage(c,x,y);
 }
@@ -91,25 +130,29 @@ function patch(p,t){
  const sample=(dx,dy,a,angle=0)=>{
    pc.save();pc.globalAlpha=a;
    pc.translate(w/2,h/2);pc.rotate(angle);pc.translate(-w/2,-h/2);
-   pc.drawImage(img,-x+dx,-y+dy,W,H);pc.restore();
+   pc.drawImage(cleanArt||img,-x+dx,-y+dy,W,H);pc.restore();
  };
  if(kind==='fall'){
    const q=(t*speed*.85)%1;
    sample(0,q*24*scale,Math.sin(q*Math.PI)*.88);
    const z=(q+.5)%1;sample(0,z*24*scale,Math.sin(z*Math.PI)*.65);
  }else if(kind==='sea'){
-   sample(Math.sin(t*speed*.95)*7.5*scale,Math.sin(t*speed*1.7)*3.5*scale,.65);
+   const q=(t*speed*.38)%1,z=(q+.5)%1;
+   sample(8*scale*Math.sin(q*tau),q*11*scale,Math.sin(q*Math.PI)*.93);
+   sample(8*scale*Math.sin(z*tau),z*11*scale,Math.sin(z*Math.PI)*.75);
  }else if(kind==='leaf'){
    const wind=Math.sin(t*speed*.85+p.x*14)+.33*Math.sin(t*1.9+p.y*17);
    sample(wind*6.0*scale,Math.sin(t*.8+p.y*12)*1.5*scale,.85,wind*.022);
+ }else if(kind==='cloud'){
+   sample(Math.sin(t*speed)*11*scale,Math.sin(t*speed*.6)*2*scale,.75);
  }else{
-   sample(0,0,.46,Math.sin(t*speed)*.045);
+   sample(0,0,.72,Math.sin(t*speed)*.085);
  }
  pc.globalCompositeOperation='destination-in';pc.globalAlpha=1;pc.drawImage(mask,0,0);
  pc.globalCompositeOperation='source-over';
  ctx.drawImage(c,x,y);
 }
-const stars=Array.from({length:28},()=>({x:random(.62,.99),y:random(.005,.28),p:random(0,tau),r:random(.35,1.25)}));
+const stars=Array.from({length:52},()=>({x:random(.62,.99),y:random(.005,.28),p:random(0,tau),r:random(.45,1.5)}));
 const motes=Array.from({length:24},()=>({x:random(.035,.50),y:random(.50,.96),p:random(0,tau),s:random(.28,.7),r:random(.6,1.6)}));
 const bubbles=Array.from({length:36},()=>({x:random(.74,.98),y:random(.70,.93),p:random(0,1),r:random(1.0,3.4),s:random(.065,.11)}));
 const fish=Array.from({length:12},(_,i)=>({x:random(.71,.98),y:random(.76,.91),p:random(0,tau),s:random(.014,.027),r:random(2.0,3.7)}));
@@ -119,10 +162,18 @@ function glow(x,y,r,a,color){
 function mist(x,y,rx,ry,a){
  ctx.save();ctx.translate(x,y);ctx.scale(rx,ry);const g=ctx.createRadialGradient(0,0,0,0,0,1);g.addColorStop(0,'rgba(227,249,255,'+a+')');g.addColorStop(1,'rgba(227,249,255,0)');ctx.fillStyle=g;ctx.fillRect(-1,-1,2,2);ctx.restore();
 }
-function bird(x,y,s,t){
- const flap=Math.sin(t*6),wing=3.8+3.5*flap;
- ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle='rgba(255,248,222,.90)';
- ctx.beginPath();ctx.moveTo(0,1);ctx.quadraticCurveTo(-5,-wing,-11,-2-wing*.65);ctx.quadraticCurveTo(-7,-1,-2,3);ctx.quadraticCurveTo(0,4,2,3);ctx.quadraticCurveTo(7,-1,11,-2-wing*.65);ctx.quadraticCurveTo(5,-wing,0,1);ctx.fill();ctx.restore();
+function bird(x,y,s,t,bank=0){
+ const flap=Math.sin(t*6.8),wing=5+6*flap;
+ ctx.save();ctx.translate(x,y);ctx.rotate(bank);ctx.scale(s,s);
+ const g=ctx.createLinearGradient(0,-11,0,7);g.addColorStop(0,'#fffdf3');g.addColorStop(.6,'#fff0ca');g.addColorStop(1,'#a6a6ab');ctx.fillStyle=g;
+ // Separate wing silhouettes articulate at the shoulder; a pointed tail trails.
+ for(const dir of [-1,1]){
+   ctx.save();ctx.scale(dir,1);ctx.beginPath();ctx.moveTo(0,1);ctx.quadraticCurveTo(4,-wing*.8,13,-wing);
+   ctx.quadraticCurveTo(11,-wing+4,8,2);ctx.lineTo(6,0);ctx.lineTo(4,4);ctx.quadraticCurveTo(2,3,0,1);ctx.fill();ctx.restore();
+ }
+ ctx.fillStyle='#fff6dd';ctx.beginPath();ctx.ellipse(0,1,2.5,4,0,0,tau);ctx.fill();
+ ctx.beginPath();ctx.moveTo(-1.7,3);ctx.lineTo(-3,8);ctx.lineTo(3,7);ctx.lineTo(1.6,3);ctx.fill();
+ ctx.restore();
 }
 // Visible water flow following the painted cascades. Thin, translucent droplets
 // follow gravity, with irregular spacing and soft tapered ends.
@@ -161,9 +212,10 @@ function oceanGlints(t){
  }
 }
 function draw(t){
- if(!ctx||!W||!H)return;ctx.clearRect(0,0,W,H);const k=W/1000;
+ if(!ctx||!W||!H)return;ctx.clearRect(0,0,W,H);if(cleanArt)ctx.drawImage(cleanArt,0,0,W,H);const k=W/1000;
  for(const p of patches)patch(p,t);
  swimWhales(t);
+ animateDeer(t);
  fallingWater(t);
  oceanGlints(t);
  // Soft rising spray at the actual bases of the falls. No synthetic stripes.
@@ -188,15 +240,25 @@ function draw(t){
    const a=(t*f.s+f.x)%1,x=(.70+.29*a)*W,y=(f.y+.004*Math.sin(t*1.4+f.p))*H;
    ctx.save();ctx.translate(x,y);ctx.scale(k,k);ctx.fillStyle='rgba(164,229,236,.48)';ctx.beginPath();ctx.ellipse(0,0,f.r,f.r*.38,0,0,tau);ctx.fill();ctx.beginPath();ctx.moveTo(-f.r*.6,0);ctx.lineTo(-f.r*1.7,-f.r*.5);ctx.lineTo(-f.r*1.7,f.r*.5);ctx.closePath();ctx.fill();ctx.restore();
  }
- for(let i=0;i<5;i++){const a=(t*.032+i*.18)%1;ctx.save();ctx.globalAlpha=Math.min(1,a*14,(1-a)*14);bird((.17+a*.47)*W,(.22+.050*Math.sin(a*6+i))*H,k*(.9+i*.12),t+i);ctx.restore();}
+ for(let i=0;i<6;i++){
+   const a=(t*(.022+i*.002)+i*.161)%1;
+   const x=.18+a*.46,y=.22+.055*Math.sin(a*6+i*.8)+.014*Math.sin(t*.7+i);
+   ctx.save();ctx.globalAlpha=Math.min(1,a*12,(1-a)*12);
+   bird(x*W,y*H,k*(.64+i*.10),t+i*.73,.17*Math.cos(a*6+i*.8));ctx.restore();
+ }
+ // Distant birds follow independent circling flight paths.
+ for(let i=0;i<3;i++){const a=t*.23+i*2.1;bird((.66+.055*Math.cos(a))*W,(.29+.017*Math.sin(a))*H,k*.47,t+i,.2*Math.cos(a));}
+ // Moonlight and underwater caustics breathe independently of the fixed horizon.
+ mist(.898*W,.273*H,.064*W,.09*H,.035+.025*Math.sin(t*.5));
+ for(let i=0;i<12;i++){const a=(t*.14+i*.083)%1;mist((.75+.24*((i*.618)%1))*W,(.58+a*.12)*H,.013*W,.021*H,.06*Math.sin(a*Math.PI));}
 }
-function active(){return started&&visible&&!document.hidden&&motion?.getAttribute('aria-pressed')!=='true';}
+function active(){return started&&visible&&!document.hidden&&!reduced.matches&&motion?.getAttribute('aria-pressed')!=='true';}
 function loop(now){raf=0;if(!active()){last=0;return;}if(last)elapsed+=Math.min((now-last)/1000,.05);last=now;draw(elapsed);raf=requestAnimationFrame(loop);}
-function sync(){const indicator=section.querySelector('.creation-motion-state');if(indicator)indicator.textContent=motion?.getAttribute('aria-pressed')==='true'?' · PAUSED':' · ACTIVE';if(active()&&!raf){last=0;raf=requestAnimationFrame(loop);}else if(!active()&&raf){cancelAnimationFrame(raf);raf=0;last=0;}}
+function sync(){const indicator=section.querySelector('.creation-motion-state');if(indicator)indicator.textContent=(reduced.matches||motion?.getAttribute('aria-pressed')==='true')?' · PAUSED':' · ACTIVE';if(active()&&!raf){last=0;raf=requestAnimationFrame(loop);}else if(!active()&&raf){cancelAnimationFrame(raf);raf=0;last=0;}}
 function ready(){
  if(started||!img.naturalWidth)return;started=true;section.hidden=false;
  frame.style.aspectRatio=img.naturalWidth+'/'+img.naturalHeight;
- resize();if(!reduced.matches)draw(0);
+ buildArtwork();resize();if(!reduced.matches)draw(0);
  if('ResizeObserver'in window)new ResizeObserver(()=>{resize();if(!reduced.matches)draw(elapsed);}).observe(frame);
  if('IntersectionObserver'in window)new IntersectionObserver(e=>{visible=e[0].isIntersecting;sync();},{rootMargin:'120px'}).observe(section);
  if(motion)new MutationObserver(sync).observe(motion,{attributes:true,attributeFilter:['aria-pressed']});
