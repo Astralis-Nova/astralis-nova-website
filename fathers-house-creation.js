@@ -4,13 +4,13 @@ const anchor=document.querySelector('.lazarus-section');
 if(!anchor)return;
 const section=document.createElement('section');
 section.className='creation-vista';
-section.innerHTML='<p class="eyebrow">The wonder of creation</p><h2>A Living World</h2><p class="creation-status" style="margin:-.4em auto 1em;color:#d8e7ee;font:12px/1.4 system-ui;letter-spacing:.08em">LIVING WORLD · MOTION EDITION 4 <span class="creation-motion-state"></span></p><div class="creation-frame" role="img" aria-label="A heavenly garden with a rainbow, crystalline flowers, waterfalls, a whale and a star-filled sky"><img class="creation-image" src="assets/heavenly-garden.webp" alt="" decoding="async"><canvas class="creation-life" aria-hidden="true"></canvas></div>';
+section.innerHTML='<p class="eyebrow">The wonder of creation</p><h2>A Living World</h2><p class="creation-status" style="margin:-.4em auto 1em;color:#d8e7ee;font:12px/1.4 system-ui;letter-spacing:.08em">LIVING WORLD · MOTION EDITION 5 <span class="creation-motion-state"></span></p><div class="creation-frame" role="img" aria-label="A heavenly garden with a rainbow, crystalline flowers, waterfalls, a whale and a star-filled sky"><img class="creation-image" src="assets/heavenly-garden.webp" alt="" decoding="async"><canvas class="creation-life" aria-hidden="true"></canvas></div>';
 const style=document.createElement('style');
 style.textContent=`.creation-vista{max-width:1320px;margin:48px auto;padding:0 16px;text-align:center}.creation-vista h2{font-size:clamp(1.65rem,4vw,2.8rem);margin:.3em 0 .7em;color:#fff0c4}.creation-frame{position:relative;overflow:hidden;isolation:isolate;border-radius:20px;border:1px solid rgba(255,227,175,.36);box-shadow:0 20px 70px #030714b0,0 0 24px #f5c07522;aspect-ratio:1672/941;background:#101930}.creation-frame img,.creation-frame canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.creation-frame canvas{pointer-events:none}.creation-life{z-index:2}.creation-vista[hidden]{display:none}@media(max-width:600px){.creation-vista{margin:32px auto;padding:0 8px}.creation-frame{border-radius:12px}}`;
 document.head.append(style);section.hidden=true;anchor.before(section);
 const img=section.querySelector('img'),frame=section.querySelector('.creation-frame'),fx=section.querySelector('canvas'),ctx=fx.getContext('2d');
 const motion=document.getElementById('motionToggle'),reduced=matchMedia('(prefers-reduced-motion: reduce)');
-let started=false,visible=true,last=0,elapsed=0,raf=0,patches=[],whale=null,cleanArt=null,deerHead=null,W=0,H=0;
+let started=false,visible=true,last=0,elapsed=0,raf=0,patches=[],whale=null,cleanArt=null,deerHead=null,deerParts=null,W=0,H=0;
 const random=(a,b)=>a+Math.random()*(b-a),tau=Math.PI*2;
 // Only these small feathered photographic surfaces may move. The original art,
 // architecture, rainbow, paths, rocks, shoreline, deer and whale never warp.
@@ -43,8 +43,19 @@ const regions=[
  {x:.450,y:.447,rx:.028,ry:.022,kind:'leaf',speed:1.26},
  {x:.198,y:.919,rx:.031,ry:.034,kind:'leaf',speed:.73},
  {x:.072,y:.804,rx:.046,ry:.039,kind:'leaf',speed:.91},
- {x:.873,y:.085,rx:.057,ry:.045,kind:'galaxy',speed:.18},
- {x:.667,y:.185,rx:.039,ry:.036,kind:'galaxy',speed:.13}
+ {x:.873,y:.085,rx:.083,ry:.067,kind:'galaxy',speed:.24},
+ {x:.667,y:.185,rx:.059,ry:.049,kind:'galaxy',speed:.21},
+ {x:.613,y:.713,rx:.042,ry:.032,kind:'surf',speed:1.05},
+ {x:.710,y:.842,rx:.032,ry:.041,kind:'surf',speed:1.3},
+ {x:.753,y:.890,rx:.043,ry:.038,kind:'surf',speed:1.16},
+ {x:.888,y:.548,rx:.105,ry:.020,kind:'surf',speed:.82},
+ {x:.980,y:.526,rx:.040,ry:.022,kind:'surf',speed:.96},
+ {x:.318,y:.061,rx:.059,ry:.041,kind:'branch',speed:.72},
+ {x:.462,y:.046,rx:.064,ry:.049,kind:'branch',speed:.68},
+ {x:.545,y:.029,rx:.068,ry:.025,kind:'branch',speed:.84},
+ {x:.379,y:.340,rx:.047,ry:.031,kind:'branch',speed:.78},
+ {x:.427,y:.365,rx:.040,ry:.028,kind:'branch',speed:1.05},
+ {x:.140,y:.167,rx:.020,ry:.065,kind:'branch',speed:.90}
 ];
 
  // Reference coordinates follow the original artwork, not the viewport.
@@ -63,22 +74,50 @@ const regions=[
    eraseArea(g,[[421,222],[439,215],[450,220],[450,235],[438,244],[421,240]],-23,7,3);
    eraseArea(g,[[453,243],[472,244],[483,258],[480,275],[463,276],[452,264]],-23,-9,3);
    eraseArea(g,[[579,248],[596,246],[611,254],[615,269],[605,283],[586,283],[576,268]],-33,9,4);
-   // Preserve the real deer's head and neck as a separate photographic layer.
-   const neck=[[369,473],[376,461],[377,451],[374,440],[372,435],[380,438],[387,444],[395,435],[401,439],[401,446],[397,454],[396,463],[390,469],[385,479],[379,483],[369,481]];
-   const spr=surface(64,64),d=spr.getContext('2d');d.translate(-356,-425);trace(d,neck);d.clip();d.drawImage(img,0,0,RW,RH);
-   deerHead=spr;
-   eraseArea(g,neck,-48,0,1.8);
+   // Extract the existing deer as articulated photographic pieces. The base
+   // artwork is repaired behind it so a second, stationary deer cannot remain.
+   const shapes={
+    trunk:[[325,476],[329,466],[341,460],[359,459],[371,464],[378,468],[380,479],[371,489],[349,493],[333,487]],
+    head:[[369,473],[376,461],[377,451],[374,440],[372,435],[380,438],[387,444],[395,435],[401,439],[401,446],[397,454],[396,463],[390,469],[385,479],[379,483],[369,481]],
+    rearFar:[[331,478],[339,478],[342,490],[337,501],[338,516],[333,520],[330,516],[332,500],[326,490]],
+    rearNear:[[340,482],[347,483],[345,496],[351,508],[349,520],[344,521],[344,509],[339,499]],
+    foreFar:[[367,478],[375,478],[376,491],[372,502],[375,517],[371,520],[367,516],[367,501],[370,491]],
+    foreNear:[[374,478],[383,478],[379,493],[380,505],[382,520],[377,522],[374,518],[374,504],[372,492]]
+   };
+   deerParts={};
+   for(const [name,pts] of Object.entries(shapes)){
+     const c=surface(92,100),d=c.getContext('2d');d.translate(-317,-426);trace(d,pts);d.clip();d.drawImage(img,0,0,RW,RH);deerParts[name]=c;
+   }
+   // Use nearby meadow pixels and a feathered contour, not a large rectangular
+   // patch. This retains the path, flowers, and tree in their original positions.
+   eraseArea(g,[[322,471],[328,458],[348,455],[366,455],[372,440],[368,431],[383,431],[389,437],[400,431],[407,438],[405,451],[400,465],[390,478],[385,493],[386,524],[368,525],[362,497],[354,499],[355,524],[325,524],[323,502],[322,485]],-44,2,3);
  }
  function animateDeer(t){
-   if(!deerHead)return;
-   // Small, irregular grazing glances with the neck attached at the shoulder.
-   const x=W/RW,y=H/RH;
-   ctx.save();ctx.scale(x,y);ctx.translate(375,477);
-   const cycle=(t+1.4)%11,look=Math.sin(cycle*.72)*.055;
-   const grazing=cycle>4&&cycle<8?Math.sin((cycle-4)/4*Math.PI)*.27:0;
-   ctx.rotate(look+grazing);ctx.drawImage(deerHead,356-375,425-477);ctx.restore();
+   if(!deerParts)return;
+   const cycle=t%24;
+   // Walk, stop to look or graze, then wander back. Smooth speed ramp at turns.
+   const path=cycle<9?cycle/9:cycle<12?1:cycle<21?1-(cycle-12)/9:0;
+   const eased=path*path*(3-2*path);
+   const moving=cycle<9||cycle>=12&&cycle<21;
+   const dir=cycle<11||cycle>=22?1:-1,walk=moving?Math.min(1,Math.sin(path*Math.PI)*3):0;
+   const px=360+68*eased,py=517-13*Math.sin(eased*Math.PI);
+   const stride=t*5.6,look=Math.sin(t*.65)*.07;
+   const graze=!moving?Math.sin(Math.max(0,Math.min(1,cycle<12?(cycle-9)/3:(cycle-21)/3))*Math.PI)*.48:0;
+   ctx.save();ctx.scale(W/RW,H/RH);
+   ctx.fillStyle='rgba(30,39,17,.24)';ctx.beginPath();ctx.ellipse(px,py+1,24,4,0,0,tau);ctx.fill();
+   ctx.translate(px,py);ctx.scale(dir,1);ctx.translate(-360,-517);
+   const part=(name,pivotX,pivotY,angle,dy=0)=>{
+     ctx.save();ctx.translate(pivotX,pivotY+dy);ctx.rotate(angle);ctx.drawImage(deerParts[name],317-pivotX,426-pivotY);ctx.restore();
+   };
+   const bob=walk*Math.abs(Math.sin(stride))*-1.5;
+   part('rearFar',334,484,-.21*Math.sin(stride)*walk,bob);
+   part('foreFar',372,484,.20*Math.sin(stride)*walk,bob);
+   part('trunk',360,482,.016*Math.sin(stride)*walk,bob);
+   part('rearNear',344,485,.23*Math.sin(stride)*walk,bob);
+   part('foreNear',377,484,-.24*Math.sin(stride)*walk,bob);
+   part('head',375,477,look+graze,bob);
+   ctx.restore();
  }
-
 function makePatch(r){
  const x=Math.round(r.x*W-r.rx*W),y=Math.round(r.y*H-r.ry*H);
  const w=Math.max(4,Math.round(r.rx*W*2)),h=Math.max(4,Math.round(r.ry*H*2));
@@ -140,13 +179,20 @@ function patch(p,t){
    const q=(t*speed*.38)%1,z=(q+.5)%1;
    sample(8*scale*Math.sin(q*tau),q*11*scale,Math.sin(q*Math.PI)*.93);
    sample(8*scale*Math.sin(z*tau),z*11*scale,Math.sin(z*Math.PI)*.75);
+ }else if(kind==='surf'){
+   const q=(t*speed*.6)%1,z=(q+.5)%1;
+   sample(8*scale*Math.sin(q*tau),q*15*scale,Math.sin(q*Math.PI)*.95);
+   sample(8*scale*Math.sin(z*tau),z*15*scale,Math.sin(z*Math.PI)*.85);
+ }else if(kind==='branch'){
+   const gust=Math.sin(t*speed+p.x*17)+.32*Math.sin(t*1.7+p.y*12);
+   sample(gust*9*scale,Math.sin(t*speed*.9)*3*scale,.92,gust*.046);
  }else if(kind==='leaf'){
    const wind=Math.sin(t*speed*.85+p.x*14)+.33*Math.sin(t*1.9+p.y*17);
    sample(wind*6.0*scale,Math.sin(t*.8+p.y*12)*1.5*scale,.85,wind*.022);
  }else if(kind==='cloud'){
    sample(Math.sin(t*speed)*11*scale,Math.sin(t*speed*.6)*2*scale,.75);
  }else{
-   sample(0,0,.72,Math.sin(t*speed)*.085);
+   sample(4*scale*Math.sin(t*speed),2*scale*Math.cos(t*speed),.88,Math.sin(t*speed)*.20);
  }
  pc.globalCompositeOperation='destination-in';pc.globalAlpha=1;pc.drawImage(mask,0,0);
  pc.globalCompositeOperation='source-over';
@@ -211,6 +257,37 @@ function oceanGlints(t){
    ctx.strokeStyle=g;ctx.lineWidth=Math.max(.6,k*.95);ctx.beginPath();ctx.moveTo(x-length,y);ctx.quadraticCurveTo(x,y-1.5*k,x+length,y);ctx.stroke();
  }
 }
+// Shore-break foam travels around the foreground rocks in uneven bursts.
+// The texture motion above supplies the actual photographed water; these
+// short-lived droplets make the impacts visible even on a small phone.
+const breakers=[[.614,.715,.026,.022],[.710,.845,.018,.031],[.752,.888,.023,.023],[.89,.545,.065,.010]];
+function shoreBreak(t){
+ const k=W/1000;
+ for(let n=0;n<breakers.length;n++){
+   const [x,y,rx,ry]=breakers[n],phase=(t*.64+n*.29)%1;
+   for(let i=0;i<32;i++){
+    const a=(phase+i*.031)%1,seed=((i*.618+n*.37)%1)-.5;
+    const px=(x+seed*rx*2+a*.006)*W,py=(y-a*ry*1.5+a*a*ry)*H;
+    const alpha=Math.sin(a*Math.PI)*(.25+.38*((i*.37)%1));
+    glow(px,py,(.5+(i%4)*.35)*k,alpha,'#e7fbff');
+   }
+   mist((x+.008*Math.sin(phase*tau))*W,y*H,rx*W*.7,ry*H*.8,.10+.12*Math.sin(phase*Math.PI));
+ }
+}
+function shootingStars(t){
+ // Irregular meteor events, exclusively in the open cosmic sky.
+ const events=[{period:13,offset:1.1,x:.91,y:.045,len:.105},{period:19,offset:6.3,x:.76,y:.055,len:.083},{period:27,offset:12,x:.98,y:.10,len:.09}];
+ for(const e of events){
+   const age=(t+e.offset)%e.period;
+   if(age>1.45)continue;
+   const q=age/1.45,x=(e.x-e.len*q)*W,y=(e.y+.045*q)*H;
+   const dx=.055*W,dy=-.024*H,a=Math.sin(q*Math.PI);
+   const g=ctx.createLinearGradient(x+dx,y+dy,x,y);
+   g.addColorStop(0,'rgba(185,213,255,0)');g.addColorStop(.65,'rgba(201,227,255,'+a*.35+')');g.addColorStop(1,'rgba(255,250,224,'+a+')');
+   ctx.save();ctx.strokeStyle=g;ctx.lineWidth=Math.max(.7,W/850);ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x+dx,y+dy);ctx.lineTo(x,y);ctx.stroke();ctx.restore();
+   glow(x,y,W/650,a,'#fff7df');
+ }
+}
 function draw(t){
  if(!ctx||!W||!H)return;ctx.clearRect(0,0,W,H);if(cleanArt)ctx.drawImage(cleanArt,0,0,W,H);const k=W/1000;
  for(const p of patches)patch(p,t);
@@ -218,6 +295,8 @@ function draw(t){
  animateDeer(t);
  fallingWater(t);
  oceanGlints(t);
+ shoreBreak(t);
+ shootingStars(t);
  // Soft rising spray at the actual bases of the falls. No synthetic stripes.
  for(const [x,y,rx,ry] of [[.50,.375,.029,.022],[.55,.393,.034,.024],[.57,.492,.024,.015],[.41,.608,.033,.017]]){
    const drift=Math.sin(t*.45+x*12)*.004;
