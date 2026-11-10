@@ -41,14 +41,18 @@
       button.hidden = false;
     });
   }
+  function scrollReading(card) {
+    const scroller = document.querySelector('.library-scroller');
+    requestAnimationFrame(() => scroller.scrollTo({top: scroller.scrollTop + card.getBoundingClientRect().top - scroller.getBoundingClientRect().top - 16, behavior: reduced.matches ? 'instant' : 'smooth'}));
+  }
   function reveal(id) {
     const card = document.getElementById(id);
     if (!card || !document.getElementById('libraryDialog').contains(card)) return;
     if (!document.getElementById('libraryDialog').open) openLibrary();
-    if (!validIds.has(id)) { requestAnimationFrame(() => card.scrollIntoView({block:'start'})); return; }
+    if (!validIds.has(id)) { scrollReading(card); return; }
     if (card.hidden) { selected = 'all'; search.value = ''; applyFilters(); }
     card.querySelector('details').open = true;
-    requestAnimationFrame(() => card.scrollIntoView({block:'start'}));
+    scrollReading(card);
   }
   filters.forEach(button => button.addEventListener('click', () => { selected = button.dataset.filter; applyFilters(); }));
   search.addEventListener('input', applyFilters);
@@ -100,13 +104,18 @@
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   let paused=reduced.matches;
   const motion=document.getElementById('motionToggle');
-  let grove;
+  let grove, groveVisible = false, readingOrigin = location.hash === '#livingGrove' ? 'livingGrove' : 'emeraldSky';
+  const skyMotion = document.getElementById('skyMotionToggle');
   function syncMotion(){
-    grove?.pause(paused||creatureDialog.open||library.open);
+    const blocked = paused || creatureDialog.open || library.open;
+    grove?.pause(blocked || !groveVisible);
+    window.EmeraldSky?.pause(blocked);
+    skyMotion.textContent = paused ? 'Resume sky' : 'Pause sky';
+    skyMotion.setAttribute('aria-pressed', String(paused));
     motion.textContent=paused?'Resume life':'Pause life';motion.setAttribute('aria-pressed',String(paused));
   }
   function closeDialog(dialog){if(dialog.open)dialog.close();}
-  function openLibrary(){closeDialog(creatureDialog);if(!library.open)library.showModal();syncMotion();}
+  function openLibrary(){closeDialog(creatureDialog);if(!library.open){readingOrigin=groveVisible?'livingGrove':'emeraldSky';const back=library.querySelector('[data-close=libraryDialog]');back.textContent=readingOrigin==='emeraldSky'?'Back to the sky ×':'Back to forest ×';back.setAttribute('aria-label',readingOrigin==='emeraldSky'?'Return to the sky':'Return to the forest');library.showModal();}syncMotion();}
   function showCreature(kind){
     const item=window.EmeraldCreatures.find(c=>c.id===kind);if(!item)return;
     closeDialog(library);
@@ -122,13 +131,16 @@
     if(!creatureDialog.open)creatureDialog.showModal();creatureDialog.scrollTop=0;syncMotion();
   }
   grove=window.EmeraldGrove?.create({onSelect:showCreature});
+  new IntersectionObserver(entries=>{groveVisible=entries[0].intersectionRatio>=.08;syncMotion();},{threshold:.08}).observe(document.getElementById('livingGrove'));
+  skyMotion.addEventListener('click',()=>{paused=!paused;syncMotion();});
+  document.querySelectorAll('[data-close-library]').forEach(link=>link.addEventListener('click',()=>closeDialog(library)));
   const finder=document.getElementById('creatureFinder');
   for(const c of window.EmeraldCreatures){const option=document.createElement('option');option.value=c.id;option.textContent=c.name;finder.append(option);}
   finder.addEventListener('change',()=>{const kind=finder.value;if(kind){grove?.focusKind(kind);showCreature(kind);}finder.value='';});
   document.getElementById('openLibrary').addEventListener('click',openLibrary);
   document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>closeDialog(document.getElementById(b.dataset.close))));
   for(const dialog of [creatureDialog,library])dialog.addEventListener('close',()=>{
-    if(dialog===library&&document.getElementById(location.hash.slice(1))&&library.contains(document.getElementById(location.hash.slice(1))))history.replaceState(null,'','#livingGrove');syncMotion();
+    if(dialog===library&&document.getElementById(location.hash.slice(1))&&library.contains(document.getElementById(location.hash.slice(1))))history.replaceState(null,'','#'+readingOrigin);syncMotion();
   });
   document.getElementById('panLeft').addEventListener('click',()=>grove?.pan(-1));
   document.getElementById('panRight').addEventListener('click',()=>grove?.pan(1));
@@ -139,3 +151,4 @@
   document.getElementById('windToggle').addEventListener('click',event=>{windIndex=(windIndex+1)%winds.length;grove?.setWind(winds[windIndex].value);event.currentTarget.textContent='Wind: '+winds[windIndex].name;});
   syncMotion();reveal(location.hash.slice(1));
 })();
+

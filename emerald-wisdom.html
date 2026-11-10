@@ -5,16 +5,18 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#061610">
   <title>Emerald Wisdom — Hindu & Buddhist Teachings | Astralis Nova</title>
-  <meta name="description" content="Explore a living forest of animals from Hindu and Buddhist stories. Tap monkeys, elephants, deer, and more to discover ancient stories, complete selected passages, and original sources.">
+  <meta name="description" content="Explore a living forest of animals from Hindu and Buddhist stories. Explore the sky, stars, and cosmic worlds, then tap forest creatures to discover ancient stories, complete selected passages, and original sources.">
   <link rel="canonical" href="https://astralis-nova-website.pages.dev/emerald-wisdom">
   <meta property="og:title" content="Emerald Wisdom — Old Questions. Living Wisdom.">
   <meta property="og:description" content="Explore Hindu and Buddhist traditions through stories, teachings, and the surviving documents behind them.">
   <meta property="og:image" content="https://astralis-nova-website.pages.dev/assets/emerald-wisdom/emerald-world-v1.webp">
   <link rel="stylesheet" href="/emerald-wisdom.css?v=20261109cosmos8">
+  <link rel="stylesheet" href="/emerald-sky.css?v=20261110sky1">
   <script src="/emerald-creatures.js?v=20261108world2" defer></script>
   <script src="/emerald-animal-life.js?v=20261108poses7" defer></script>
   <script src="/emerald-grove.js?v=20261108poses7" defer></script>
-  <script src="/emerald-wisdom.js?v=20261108world2" defer></script>
+  <script src="/emerald-sky.js?v=20261110sky1" defer></script>
+  <script src="/emerald-wisdom.js?v=20261110sky1" defer></script>
 
   <style>
     .ancient-intro{border-block:1px solid var(--line);background:radial-gradient(ellipse at top left,#34462740,transparent 70%)}
@@ -24,6 +26,22 @@
 </head>
 <body class="world-page">
 <a class="skip-link" href="#explore">Open the teachings</a>
+<section id="emeraldSky" class="emerald-sky" aria-labelledby="skyTitle" data-sky-mode="auto" style="--sky-night:.65;--sky-day:.35;--sky-dusk:.7">
+  <canvas id="emeraldSkyCanvas" aria-hidden="true"></canvas>
+  <div class="sky-daylight" aria-hidden="true"></div><div class="sky-dusk-glow" aria-hidden="true"></div>
+  <div class="sky-cloud sky-cloud-one" aria-hidden="true"></div><div class="sky-cloud sky-cloud-two" aria-hidden="true"></div>
+  <header class="sky-heading"><a class="world-brand" href="/#connected-worlds">✦ ASTRALIS NOVA <span> / EMERALD WISDOM</span></a><p class="eyebrow">ABOVE THE LIVING FOREST</p><h2 id="skyTitle">Look up.<br><em>Wonder further.</em></h2><p>A sky of ancient questions.<br>Touch a light. Open a teaching.</p></header>
+  <nav class="sky-teaching-points" aria-label="Explore teachings in the sky">
+    <a class="sky-point sky-space" href="#space-origin"><span class="sky-space-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="sky-point-copy"><span class="sky-point-number">01 / HINDU · TAITTIRIYA 2.1</span><strong>Space · ākāśa</strong><span>What unfolds from the Self?</span></span></a>
+    <a class="sky-point sky-cycle" href="#cosmic-day"><span class="sky-sun-art" aria-hidden="true"></span><span class="sky-moon-art" aria-hidden="true"></span><span class="sky-point-copy"><span class="sky-point-number">02 / HINDU · GITA 8.17–18</span><strong>A day beyond lifetimes</strong><span>Creation. Rest. Beginning again.</span></span></a>
+    <a class="sky-point sky-worlds" href="#many-worlds"><span class="sky-worlds-art" aria-hidden="true"><i class="sky-world-large"></i><i class="sky-world-small"></i><i class="sky-world-far"></i><i class="sky-world-ring"></i></span><span class="sky-point-copy"><span class="sky-point-number">03 / BUDDHIST · AN 3.80</span><strong>Worlds beyond our world</strong><span>How wide can your care reach?</span></span></a>
+    <a class="sky-point sky-vision" href="#cosmic-form"><svg class="sky-constellation" viewBox="0 0 240 140" fill="none" aria-hidden="true"><path d="M21 88 67 28 116 65 179 21 214 103 116 65 87 119 21 88" stroke="#d1d2ed" stroke-opacity=".42" stroke-width="1"/><g fill="#fff5cf"><circle cx="21" cy="88" r="2.5"/><circle cx="67" cy="28" r="3"/><circle cx="116" cy="65" r="4"/><circle cx="179" cy="21" r="2.5"/><circle cx="214" cy="103" r="3"/><circle cx="87" cy="119" r="2"/></g><path d="M116 53v24m-12-12h24" stroke="#fff5cf" stroke-width=".8"/></svg><span class="sky-point-copy"><span class="sky-point-number">04 / HINDU · GITA 11.13</span><strong>Arjuna’s cosmic vision</strong><span>The many gathered within one.</span></span></a>
+  </nav>
+  <div class="sky-horizon" aria-hidden="true"><svg viewBox="0 0 1600 160" preserveAspectRatio="none"><path d="M0 105 90 96 135 109 228 63 286 83 340 51 401 86 479 59 530 87 619 40 681 74 748 50 833 85 905 51 956 77 1013 37 1083 69 1153 42 1209 77 1276 56 1348 86 1420 47 1490 75 1546 63 1600 89V160H0Z" fill="#132c28"/><path d="M0 126 75 111 147 129 232 99 309 130 388 98 467 115 552 86 634 116 700 91 790 124 860 100 936 123 1039 95 1117 123 1213 99 1298 127 1374 96 1452 119 1523 102 1600 121V160H0Z" fill="#071a14"/></svg></div>
+  <footer class="sky-footer"><div class="sky-time"><span id="skyPhaseLabel" class="sky-phase-label">An evening of questions</span><div class="sky-time-buttons" role="group" aria-label="Choose the sky light"><button type="button" data-sky-mode="day" aria-pressed="false">Day</button><button type="button" data-sky-mode="dusk" aria-pressed="false">Dusk</button><button type="button" data-sky-mode="night" aria-pressed="false">Night</button><button type="button" data-sky-mode="auto" aria-pressed="true">Auto</button><button type="button" id="skyMotionToggle" aria-pressed="false">Pause sky</button></div></div><a class="sky-descend" href="#livingGrove"><span>THE FOREST IS BELOW</span>Descend to the living grove <b aria-hidden="true">↓</b></a></footer>
+  <p class="sky-context">A symbolic sky for Hindu &amp; Buddhist cosmologies. The illustrations are not an astronomical map. <a href="#space-cosmos">Explore the texts →</a></p>
+</section>
+
 <main id="livingGrove" class="habitat" aria-label="Emerald Wisdom living forest">
   <div id="worldViewport" class="world-viewport" tabindex="0" aria-label="Forest panorama. Swipe sideways, or use the creature finder to explore.">
     <div id="groveScene" class="world-scene">
@@ -33,7 +51,7 @@
     </div>
   </div>
   <header class="world-header">
-    <div class="world-heading"><a class="world-brand" href="/#connected-worlds">✦ ASTRALIS NOVA <span> / RETURN TO THE PLANETS</span></a><h1>Emerald Wisdom</h1><p>A living forest of ancient stories. <strong>Tap a creature to discover.</strong></p></div>
+    <div class="world-heading"><a class="world-brand" href="/#connected-worlds">✦ ASTRALIS NOVA <span> / RETURN TO THE PLANETS</span></a><h1>Emerald Wisdom</h1><p>A living forest of ancient stories. <strong>Tap a creature to discover.</strong></p><a class="forest-sky-link" href="#emeraldSky">↑ Explore the sky &amp; ancient cosmos</a></div>
     <div class="habitat-controls"><button id="namesToggle" aria-pressed="true">Names on</button><button id="windToggle">Wind: gentle</button><button id="motionToggle" aria-pressed="false">Pause life</button></div>
   </header>
   <div class="world-bottom">
@@ -51,7 +69,7 @@
 </dialog>
 <dialog id="libraryDialog" class="library-dialog" aria-labelledby="libraryTitle">
   <div class="library-header"><div><span class="world-kicker">THE READING ROOM</span><h2 id="libraryTitle">Old questions. Living wisdom.</h2></div><button data-close="libraryDialog" aria-label="Return to the forest">Back to forest ×</button></div>
-  <nav class="library-nav" aria-label="Reading room"><a href="#ancient-stories">Ancient stories &amp; full texts</a><a href="#god-universe">God &amp; universe</a><a href="#karma">Karma &amp; experience</a><a href="#space-cosmos">Space &amp; cosmic worlds</a><a href="#explore">39 teachings</a><a href="#two-paths">Two traditions</a><a href="#research">Ancient sources</a><a href="#reading-route">First journey</a></nav>
+  <nav class="library-nav" aria-label="Reading room"><a href="#emeraldSky" data-close-library>Return to the sky ↑</a><a href="#ancient-stories">Ancient stories &amp; full texts</a><a href="#god-universe">God &amp; universe</a><a href="#karma">Karma &amp; experience</a><a href="#space-cosmos">Space &amp; cosmic worlds</a><a href="#explore">39 teachings</a><a href="#two-paths">Two traditions</a><a href="#research">Ancient sources</a><a href="#reading-route">First journey</a></nav>
   <div class="library-scroller">
   <section class="shell opening section" aria-labelledby="openingTitle">
     <div><p class="eyebrow">CURIOSITY IS WELCOME HERE</p><h2 id="openingTitle">Follow a question.<br>See where it leads.</h2></div>
@@ -402,4 +420,5 @@
 <noscript><p class="no-script">Enable JavaScript to meet the creatures. <a href="https://www.accesstoinsight.org/tipitaka/">Read Buddhist texts</a> · <a href="https://upanishads.org.in/">Explore the Upanishads</a>.</p></noscript>
 </body>
 </html>
+
 
