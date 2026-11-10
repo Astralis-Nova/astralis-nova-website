@@ -11,7 +11,7 @@
   <meta property="og:description" content="Explore Hindu and Buddhist traditions through stories, teachings, and the surviving documents behind them.">
   <meta property="og:image" content="https://astralis-nova-website.pages.dev/assets/emerald-wisdom/emerald-world-v1.webp">
   <link rel="stylesheet" href="/emerald-wisdom.css?v=20261109cosmos8">
-  <link rel="stylesheet" href="/emerald-sky.css?v=20261110sky1">
+  <link rel="stylesheet" href="/emerald-sky.css?v=20261110venus2">
   <script src="/emerald-creatures.js?v=20261108world2" defer></script>
   <script src="/emerald-animal-life.js?v=20261108poses7" defer></script>
   <script src="/emerald-grove.js?v=20261108poses7" defer></script>
@@ -36,6 +36,7 @@
     <a class="sky-point sky-cycle" href="#cosmic-day"><span class="sky-sun-art" aria-hidden="true"></span><span class="sky-moon-art" aria-hidden="true"></span><span class="sky-point-copy"><span class="sky-point-number">02 / HINDU · GITA 8.17–18</span><strong>A day beyond lifetimes</strong><span>Creation. Rest. Beginning again.</span></span></a>
     <a class="sky-point sky-worlds" href="#many-worlds"><span class="sky-worlds-art" aria-hidden="true"><i class="sky-world-large"></i><i class="sky-world-small"></i><i class="sky-world-far"></i><i class="sky-world-ring"></i></span><span class="sky-point-copy"><span class="sky-point-number">03 / BUDDHIST · AN 3.80</span><strong>Worlds beyond our world</strong><span>How wide can your care reach?</span></span></a>
     <a class="sky-point sky-vision" href="#cosmic-form"><svg class="sky-constellation" viewBox="0 0 240 140" fill="none" aria-hidden="true"><path d="M21 88 67 28 116 65 179 21 214 103 116 65 87 119 21 88" stroke="#d1d2ed" stroke-opacity=".42" stroke-width="1"/><g fill="#fff5cf"><circle cx="21" cy="88" r="2.5"/><circle cx="67" cy="28" r="3"/><circle cx="116" cy="65" r="4"/><circle cx="179" cy="21" r="2.5"/><circle cx="214" cy="103" r="3"/><circle cx="87" cy="119" r="2"/></g><path d="M116 53v24m-12-12h24" stroke="#fff5cf" stroke-width=".8"/></svg><span class="sky-point-copy"><span class="sky-point-number">04 / HINDU · GITA 11.13</span><strong>Arjuna’s cosmic vision</strong><span>The many gathered within one.</span></span></a>
+    <a class="sky-point sky-venus" href="#venus-morning-star"><span class="sky-venus-art" aria-hidden="true"></span><span class="sky-point-copy"><span class="sky-point-number">05 / HINDU &amp; BUDDHIST TRADITIONS</span><strong>Venus · the Morning Star</strong><span>Shukra, the teacher. A story of awakening.</span></span></a>
   </nav>
   <div class="sky-horizon" aria-hidden="true"><svg viewBox="0 0 1600 160" preserveAspectRatio="none"><path d="M0 105 90 96 135 109 228 63 286 83 340 51 401 86 479 59 530 87 619 40 681 74 748 50 833 85 905 51 956 77 1013 37 1083 69 1153 42 1209 77 1276 56 1348 86 1420 47 1490 75 1546 63 1600 89V160H0Z" fill="#132c28"/><path d="M0 126 75 111 147 129 232 99 309 130 388 98 467 115 552 86 634 116 700 91 790 124 860 100 936 123 1039 95 1117 123 1213 99 1298 127 1374 96 1452 119 1523 102 1600 121V160H0Z" fill="#071a14"/></svg></div>
   <footer class="sky-footer"><div class="sky-time"><span id="skyPhaseLabel" class="sky-phase-label">An evening of questions</span><div class="sky-time-buttons" role="group" aria-label="Choose the sky light"><button type="button" data-sky-mode="day" aria-pressed="false">Day</button><button type="button" data-sky-mode="dusk" aria-pressed="false">Dusk</button><button type="button" data-sky-mode="night" aria-pressed="false">Night</button><button type="button" data-sky-mode="auto" aria-pressed="true">Auto</button><button type="button" id="skyMotionToggle" aria-pressed="false">Pause sky</button></div></div><a class="sky-descend" href="#livingGrove"><span>THE FOREST IS BELOW</span>Descend to the living grove <b aria-hidden="true">↓</b></a></footer>
@@ -59,7 +60,7 @@
     <nav class="world-navigation" aria-label="Explore the forest">
       <div class="pan-controls"><button id="panLeft" aria-label="Explore forest to the left">←</button><button id="panRight" aria-label="Explore forest to the right">→</button></div>
       <label class="creature-finder"><span class="sr-only">Find a creature</span><select id="creatureFinder"><option value="">Find a creature…</option></select></label>
-      <button id="openLibrary" class="library-launch"><svg class="library-book" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 5v15M3 4c3-1 6 0 9 2 3-2 6-3 9-2v14c-3-1-6 0-9 2-3-2-6-3-9-2Z"/></svg><span class="library-launch-copy"><strong>Teachings &amp; ancient texts</strong><small>39 teachings · stories · full ancient passages</small></span><span class="library-arrow" aria-hidden="true">↗</span></button>
+      <button id="openLibrary" class="library-launch"><svg class="library-book" viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 5v15M3 4c3-1 6 0 9 2 3-2 6-3 9-2v14c-3-1-6 0-9 2-3-2-6-3-9-2Z"/></svg><span class="library-launch-copy"><strong>Teachings &amp; ancient texts</strong><small>41 teachings · stories · full ancient passages</small></span><span class="library-arrow" aria-hidden="true">↗</span></button>
     </nav>
   </div>
 </main>
@@ -69,7 +70,7 @@
 </dialog>
 <dialog id="libraryDialog" class="library-dialog" aria-labelledby="libraryTitle">
   <div class="library-header"><div><span class="world-kicker">THE READING ROOM</span><h2 id="libraryTitle">Old questions. Living wisdom.</h2></div><button data-close="libraryDialog" aria-label="Return to the forest">Back to forest ×</button></div>
-  <nav class="library-nav" aria-label="Reading room"><a href="#emeraldSky" data-close-library>Return to the sky ↑</a><a href="#ancient-stories">Ancient stories &amp; full texts</a><a href="#god-universe">God &amp; universe</a><a href="#karma">Karma &amp; experience</a><a href="#space-cosmos">Space &amp; cosmic worlds</a><a href="#explore">39 teachings</a><a href="#two-paths">Two traditions</a><a href="#research">Ancient sources</a><a href="#reading-route">First journey</a></nav>
+  <nav class="library-nav" aria-label="Reading room"><a href="#emeraldSky" data-close-library>Return to the sky ↑</a><a href="#ancient-stories">Ancient stories &amp; full texts</a><a href="#god-universe">God &amp; universe</a><a href="#karma">Karma &amp; experience</a><a href="#space-cosmos">Space &amp; cosmic worlds</a><a href="#venus-morning-star">Venus · Morning Star</a><a href="#explore">41 teachings</a><a href="#two-paths">Two traditions</a><a href="#research">Ancient sources</a><a href="#reading-route">First journey</a></nav>
   <div class="library-scroller">
   <section class="shell opening section" aria-labelledby="openingTitle">
     <div><p class="eyebrow">CURIOSITY IS WELCOME HERE</p><h2 id="openingTitle">Follow a question.<br>See where it leads.</h2></div>
@@ -121,6 +122,17 @@
   </section>
 
 
+  <section class="shell section venus-reading-room" id="venus-morning-star" aria-labelledby="venusTitle">
+    <p class="eyebrow">VENUS · THE MORNING STAR</p><h2 id="venusTitle">One bright light.<br>Different stories.</h2>
+    <p class="section-intro">A brilliant point before sunrise can begin a much larger question. Venus is a planet reflecting sunlight. Because its orbit lies inside Earth’s, we see it near the Sun in our sky: sometimes before sunrise, sometimes after sunset. “Morning Star” and “Evening Star” are names for those appearances.</p>
+    <a class="source-link" href="https://science.nasa.gov/venus/venus-facts/" target="_blank" rel="noopener noreferrer">The observed planet · NASA’s Venus facts ↗</a>
+    <div class="beliefs-grid">
+      <article><span class="tradition">HINDU · SHUKRA</span><h3>Venus and the teacher.</h3><p>In Hindu planetary traditions, Venus is Shukra, one of the Navagraha. In epic stories, Shukra is a learned teacher of the asuras, rivals of the gods. Traditional astrology associates him with beauty, love, the arts, and enjoyment.</p><p>Meet the teacher who accepts a student from the opposing side, then uses his knowledge to restore that student to life.</p><a class="belief-start" href="#shukra-venus">40 / Open Shukra and Kacha’s story →</a></article>
+      <article><span class="tradition buddhist">BUDDHIST · THE ZEN AWAKENING STORY</span><h3>A light at the end of the night.</h3><p>In the well-known Zen account, Shakyamuni sees the morning star and awakens. Soto Zen identifies that star as Venus. It becomes an image of insight after a long night of meditation.</p><p>The morning-star scene belongs to a developed sacred narrative. Compare it with MN 36, an early discourse describing the night’s awakening without naming Venus.</p><a class="belief-start" href="#buddha-morning-star">41 / Open the Morning Star and awakening →</a></article>
+    </div>
+    <p class="source-note">The readings below identify their epic, astrological, Zen, and early-discourse sources. The sky illustration is symbolic; it does not show Venus’s current position or establish a date for the Buddha’s awakening.</p>
+  </section>
+
   <section class="ancient-intro" id="ancient-stories" aria-labelledby="ancientTitle"><div class="shell section">
     <p class="eyebrow">DEEPER INTO THE ANCIENT SOURCES</p><h2 id="ancientTitle">Old stories. Time to read them.</h2>
     <p class="section-intro">Meet students, a questioning woman, a fish that becomes a guide, and gods who discover the limits of their power. These eight additions draw from Vedic and Upanishadic texts. Five give extended retellings of selected episodes; three reproduce complete, clearly bounded passages in older public-domain English translations.</p>
@@ -148,10 +160,10 @@
     <div class="section-heading"><div><p class="eyebrow">THE STORY GROVE</p><h2 id="exploreTitle">Ancient voices. Human questions.</h2></div><button id="surpriseMe" class="button secondary" type="button" hidden>Find me a story ↗</button></div>
     <p class="section-intro">From a tiny seed to the beginning of the cosmos. Open a teaching, consider its question, then follow the source.</p>
     <div id="explorerTools" class="explorer-tools" hidden>
-      <label class="search-label" for="teachingSearch">Search stories, ideas, or text references<input id="teachingSearch" type="search" placeholder="Try Satyakama, ancient, full text, death, universe…" autocomplete="off"></label>
+      <label class="search-label" for="teachingSearch">Search stories, ideas, or text references<input id="teachingSearch" type="search" placeholder="Try Venus, Shukra, awakening, ancient, full text…" autocomplete="off"></label>
       <div class="filter-row" role="group" aria-label="Filter teachings"><button type="button" data-filter="all" aria-pressed="true">All teachings</button><button type="button" data-filter="hindu" aria-pressed="false">Hindu</button><button type="button" data-filter="buddhist" aria-pressed="false">Buddhist</button><button type="button" data-filter="saved" aria-pressed="false">Saved <span id="savedCount">0</span></button></div>
       <div class="question-row"><span>Follow a question:</span><button type="button" data-query="consciousness">Who am I?</button><button type="button" data-query="death">What follows death?</button><button type="button" data-query="nature">What about other life?</button><button type="button" data-query="universe">How did it begin?</button><button type="button" data-query="animals">What about animals?</button><button type="button" data-query="divine">God or universe?</button><button type="button" data-query="karma">How does karma work?</button><button type="button" data-query="cosmos">What lies beyond Earth?</button></div>
-      <p id="resultsStatus" class="small muted" role="status" aria-live="polite">39 teachings to explore.</p>
+      <p id="resultsStatus" class="small muted" role="status" aria-live="polite">41 teachings to explore.</p>
     </div>
     <div class="teachings-grid" id="teachingsGrid">
       <article class="teaching" id="nachiketas" data-tradition="hindu" data-keywords="death afterlife soul consciousness identity immortality katha nachiketa yama">
@@ -386,6 +398,40 @@
         </div></details><button class="save-button" type="button" data-save="vedic-generosity" aria-pressed="false" hidden>＋ Save for research</button>
       </article>
 
+      <article class="teaching long-reading" id="shukra-venus" data-tradition="hindu" data-keywords="venus morning evening star shukra sukra shukracharya usanas kavya navagraha asuras kacha devayani beauty art music nature ancient story teacher revival">
+        <div class="teaching-top"><span class="tradition">HINDU · PLANETARY TRADITION &amp; EPIC STORY</span><span class="number">40</span></div><h3>Shukra: Venus and the teacher of the asuras</h3><p class="teaching-hook">The bright planet has a name, a place in sacred tradition, and a story about learning across a divide.</p><p class="reference">Hindu Navagraha tradition · Mahabharata, Adi Parva, Section LXXVI · opening of the Kacha episode</p>
+        <details><summary>Meet Shukra and enter the story <span aria-hidden="true">+</span></summary><div class="reading">
+          <p class="source-note">An introduction to traditional associations, followed by our own retelling of the opening episode in Kisari Mohan Ganguli’s public-domain Mahabharata translation. This is not a verbatim translation or the entire Kacha narrative.</p>
+          <p><strong>Venus as Shukra.</strong> Hindu planetary traditions include Shukra among the Navagraha, the nine celestial powers. The figure is also known as a teacher of the asuras. In traditional astrology, Shukra is associated with beauty, love, the arts, comfort, and pleasure. These associations belong to a religious and astrological tradition.</p>
+          <p><strong>A student from the other side.</strong> In the Mahabharata’s account, the gods and asuras are in conflict. Shukra knows the Sanjivani, the knowledge of restoring the dead to life, and uses it to revive fallen asuras. Brihaspati, the gods’ teacher, does not possess that knowledge. The gods therefore ask his son Kacha to become Shukra’s pupil and learn it.</p>
+          <p>Kacha approaches openly, naming his father and asking to study. Shukra welcomes him. Although their loyalties lie on opposing sides, the teacher says that honoring the son also honors Brihaspati. Kacha enters the household as a student, serves his teacher, and wins the affection of Shukra’s daughter Devayani through attention, gifts, music, and companionship.</p>
+          <p>The asuras discover why Kacha has come. Fearing that the knowledge will reach their enemies, they kill him while he is tending the teacher’s cattle. The animals return without their keeper. As evening arrives, Devayani notices his absence and appeals to her father.</p>
+          <p>Shukra uses his reviving knowledge and calls Kacha back. The student returns and explains what happened. The account continues with further attempts against him and difficult choices about knowledge, loyalty, and obligation; follow the full source to read beyond this opening rescue.</p>
+          <div class="reflection"><strong>A question for today</strong><p>Can you recognize knowledge and humanity in someone whose loyalties differ from your own?</p></div>
+          <a class="source-link" href="https://srisomesvara.org/tour/deities/nine-planets/venus-shukra/" target="_blank" rel="noopener noreferrer">Sri Somesvara Temple · Shukra’s traditional associations ↗</a>
+          <a class="source-link" href="https://sacred-texts.com/hin/m01/m01077.htm" target="_blank" rel="noopener noreferrer">Read the epic source · Adi Parva, Section LXXVI, Ganguli translation ↗</a>
+          <p class="source-note">Spellings in the older translation include Sukra, Usanas, Kavya, and Vrihaspati. The planetary tradition and this selected epic scene are related contexts, not identical kinds of evidence. The epic’s reviving knowledge is part of its sacred narrative.</p>
+          <a class="belief-start" href="#buddha-morning-star">Compare the Buddhist Morning Star story →</a>
+        </div></details><button class="save-button" type="button" data-save="shukra-venus" aria-pressed="false" hidden>＋ Save for research</button>
+      </article>
+
+      <article class="teaching long-reading" id="buddha-morning-star" data-tradition="buddhist" data-keywords="venus morning star buddha buddhist awakening enlightenment bodhi tree zen soto shakya shakyamuni siddhartha denkoroku keizan jodo rohatsu dawn night consciousness suffering mn36">
+        <div class="teaching-top"><span class="tradition buddhist">BUDDHIST · ZEN STORY &amp; EARLY DISCOURSE</span><span class="number">41</span></div><h3>The Morning Star and the Buddha’s awakening</h3><p class="teaching-hook">A night of meditation. A light before sunrise. A story about seeing existence differently.</p><p class="reference">Zen tradition · Denkoroku, Case 1, as discussed by Issho Fujita · compare Majjhima Nikaya 36</p>
+        <details><summary>Enter the dawn story and compare its sources <span aria-hidden="true">+</span></summary><div class="reading">
+          <p class="source-note">Our own paraphrase of the Zen account and a separate early Buddhist discourse. The morning-star episode is presented as a traditional narrative, not as a verified astronomical observation.</p>
+          <p><strong>The Zen telling.</strong> After years of searching and demanding practice, Shakyamuni sits in meditation beneath the Bodhi tree. In the account explained by Soto Zen teacher Issho Fujita, dawn brings the sight of the morning star, identified as Venus, and the realization of awakening.</p>
+          <p>Fujita points to the first case of Keizan’s <em>Denkoroku</em>, often translated as <em>Transmission of the Light</em>. There, the Buddha’s realization is expressed together with the great earth and living beings. Fujita reads the scene as a profound change in the experience of connection: the world no longer feels separate and hostile.</p>
+          <p><strong>The earlier discourse.</strong> MN 36, the Maha-Saccaka Sutta, gives another account of the search. The Buddha recounts severe austerities, recognizing their limits, taking nourishment, and developing concentrated meditation. During the three watches of the night, he describes knowledge of past lives, the passing and reappearance of beings according to their actions, and the ending of the mental defilements that sustain suffering.</p>
+          <p>That discourse describes the destruction of ignorance and the arising of knowledge. It does not name Venus as the occasion of awakening. Reading it beside the Zen story lets us notice how different Buddhist texts frame the event, without treating every detail as one uniform account.</p>
+          <p><strong>A living tradition.</strong> Soto Zen commemorates Shakyamuni’s awakening at Jodo-e on December 8, associated with Rohatsu practice. This is the tradition’s commemorative observance; it is not an astronomically established date for the historical event.</p>
+          <div class="reflection"><strong>A question for today</strong><p>When you pause beneath the morning sky, what becomes easier to notice about your mind, your surroundings, and the life you share with others?</p></div>
+          <a class="source-link" href="https://www.sotozen.com/eng/library/sermon_archive/pdf/sermon_archive_03_12.pdf" target="_blank" rel="noopener noreferrer">Issho Fujita · Soto Zen teaching on Jodo-e and Denkoroku Case 1 · PDF ↗</a>
+          <a class="source-link" href="https://accesstoinsight.org/tipitaka/mn/mn.036.than.html" target="_blank" rel="noopener noreferrer">Compare the early discourse · MN 36, Thanissaro Bhikkhu translation ↗</a>
+          <a class="source-link" href="https://glasgowzengroup.com/301-the-buddhas-enlightenment/" target="_blank" rel="noopener noreferrer">John Fraser · a Zen reflection on the story’s development ↗</a>
+          <a class="belief-start" href="#shukra-venus">Compare Hindu Shukra and the epic teacher →</a>
+        </div></details><button class="save-button" type="button" data-save="buddha-morning-star" aria-pressed="false" hidden>＋ Save for research</button>
+      </article>
+
     </div>
     <div id="emptyResults" class="empty-results" hidden><h3>No teachings match yet.</h3><p>Try a broader word, another tradition, or save a story to begin a reading list.</p><button type="button" id="resetFilters" class="button secondary">Show all teachings</button></div>
     <p class="small muted" id="saveStatus" role="status" aria-live="polite"></p>
@@ -420,5 +466,6 @@
 <noscript><p class="no-script">Enable JavaScript to meet the creatures. <a href="https://www.accesstoinsight.org/tipitaka/">Read Buddhist texts</a> · <a href="https://upanishads.org.in/">Explore the Upanishads</a>.</p></noscript>
 </body>
 </html>
+
 
 

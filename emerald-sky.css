@@ -14,3 +14,15 @@ body.world-page{overflow-x:hidden;overflow-y:auto;background:#071a14}.habitat{po
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.sky-cloud{animation:none}.sky-point{transition:none}}
 .sky-context{min-height:48px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0 7px}
 @media(max-width:700px){.sky-context{min-height:58px}}
+
+
+/* Venus appears as a brilliant point of light, opening two distinct traditions. */
+@media(min-width:701px){.emerald-sky{min-height:900px}}
+.sky-venus{left:36%;top:62%;width:290px;min-height:143px;justify-content:center;gap:15px}
+.sky-venus-art{position:relative;display:block;flex:none;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle,#fff 0 20%,#fff9dc 45%,#ebdcaf 75%,#dce9de 100%);box-shadow:0 0 7px 3px #fff7dbe6,0 0 24px 9px #fff0b861,0 0 65px 26px #f9df8b22}
+.sky-venus-art:before,.sky-venus-art:after{content:'';position:absolute;left:50%;top:50%;pointer-events:none;background:linear-gradient(transparent,#fff5d3b0 46%,#fff 50%,#fff5d3b0 54%,transparent);transform:translate(-50%,-50%);border-radius:50%}
+.sky-venus-art:before{width:2px;height:70px}.sky-venus-art:after{width:70px;height:2px;background:linear-gradient(90deg,transparent,#fff5d390 46%,#fff 50%,#fff5d390 54%,transparent)}
+.sky-venus .sky-point-copy{gap:5px}.sky-venus .sky-point-number{color:#fae6ad}.sky-venus strong{color:#fff1cb}.sky-venus .sky-point-copy>span:last-child{color:#d6e0ca}.sky-venus:hover .sky-venus-art,.sky-venus:focus-visible .sky-venus-art{box-shadow:0 0 9px 4px #fff7db,0 0 30px 12px #fff0b87d,0 0 75px 28px #f9df8b33}
+.venus-reading-room{border-block:1px solid var(--line);background:radial-gradient(ellipse at top,#4c4a2226,transparent 65%)}.venus-reading-room>.source-link{margin-bottom:25px}.venus-reading-room>.source-note{margin-top:25px;max-width:85ch}
+@media(min-width:701px) and (max-width:1050px){.emerald-sky{min-height:1040px}.sky-worlds{top:47%}.sky-venus{left:calc(50% - 145px);top:68%;width:290px;min-height:140px}.sky-venus strong{font-size:1.23rem}}
+@media(max-width:700px){.emerald-sky{min-height:1240px}.sky-teaching-points{grid-template-rows:220px 220px 170px}.sky-venus{grid-column:1/-1;grid-row:3;gap:19px;align-self:center;justify-self:center;max-width:340px}.sky-venus .sky-point-copy>span:last-child{max-width:none}.sky-venus strong{font-size:1.4rem}.sky-venus .sky-point-number{font-size:.5rem;letter-spacing:.12em}}
