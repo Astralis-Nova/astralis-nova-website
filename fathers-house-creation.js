@@ -4,7 +4,7 @@ const anchor=document.querySelector('.lazarus-section');
 if(!anchor)return;
 const section=document.createElement('section');
 section.className='creation-vista';
-section.innerHTML='<p class="eyebrow">The wonder of creation</p><h2>A Living World</h2><p class="creation-status" style="margin:-.4em auto 1em;color:#d8e7ee;font:12px/1.4 system-ui;letter-spacing:.08em">LIVING WORLD · MOTION EDITION 5 <span class="creation-motion-state"></span></p><div class="creation-frame" role="img" aria-label="A heavenly garden with a rainbow, crystalline flowers, waterfalls, a whale and a star-filled sky"><img class="creation-image" src="assets/heavenly-garden.webp" alt="" decoding="async"><canvas class="creation-life" aria-hidden="true"></canvas></div>';
+section.innerHTML='<p class="eyebrow">The wonder of creation</p><h2>A Living World</h2><p class="creation-status" style="margin:-.4em auto 1em;color:#d8e7ee;font:12px/1.4 system-ui;letter-spacing:.08em">LIVING WORLD · MOTION EDITION 6 <span class="creation-motion-state"></span></p><div class="creation-frame" role="img" aria-label="A heavenly garden with a rainbow, crystalline flowers, waterfalls, a whale and a star-filled sky"><img class="creation-image" src="assets/heavenly-garden.webp" alt="" decoding="async"><canvas class="creation-life" aria-hidden="true"></canvas></div>';
 const style=document.createElement('style');
 style.textContent=`.creation-vista{max-width:1320px;margin:48px auto;padding:0 16px;text-align:center}.creation-vista h2{font-size:clamp(1.65rem,4vw,2.8rem);margin:.3em 0 .7em;color:#fff0c4}.creation-frame{position:relative;overflow:hidden;isolation:isolate;border-radius:20px;border:1px solid rgba(255,227,175,.36);box-shadow:0 20px 70px #030714b0,0 0 24px #f5c07522;aspect-ratio:1672/941;background:#101930}.creation-frame img,.creation-frame canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.creation-frame canvas{pointer-events:none}.creation-life{z-index:2}.creation-vista[hidden]{display:none}@media(max-width:600px){.creation-vista{margin:32px auto;padding:0 8px}.creation-frame{border-radius:12px}}`;
 document.head.append(style);section.hidden=true;anchor.before(section);
@@ -74,47 +74,86 @@ const regions=[
    eraseArea(g,[[421,222],[439,215],[450,220],[450,235],[438,244],[421,240]],-23,7,3);
    eraseArea(g,[[453,243],[472,244],[483,258],[480,275],[463,276],[452,264]],-23,-9,3);
    eraseArea(g,[[579,248],[596,246],[611,254],[615,269],[605,283],[586,283],[576,268]],-33,9,4);
-   // Extract the existing deer as articulated photographic pieces. The base
-   // artwork is repaired behind it so a second, stationary deer cannot remain.
+   // Remove the whole original deer, including ears, hooves and old shadow.
+   // Inpaint from surrounding boundary pixels, never clone from the deer itself.
+   const X=310,Y=422,BW=106,BH=110;
+   const patch=surface(BW,BH),p=patch.getContext('2d');p.drawImage(img,X,Y,BW,BH,0,0,BW,BH);
+   const data=p.getImageData(0,0,BW,BH),original=new Uint8ClampedArray(data.data);
+   const m=surface(BW,BH),mg=m.getContext('2d');mg.translate(-X,-Y);
+   const outline=[[320,471],[324,459],[337,455],[358,454],[368,457],[369,445],[368,430],[380,429],[389,437],[400,430],[407,436],[407,450],[400,464],[393,476],[385,487],[387,524],[375,527],[365,525],[360,498],[355,498],[356,524],[341,525],[331,525],[320,523],[318,502],[320,486]];
+   mg.fillStyle='#fff';trace(mg,outline);mg.fill();
+   const mask=mg.getImageData(0,0,BW,BH).data,inside=new Uint8Array(BW*BH);
+   for(let i=0;i<inside.length;i++)inside[i]=mask[i*4+3]>0?1:0;
+   // Initialize from clean boundary pixels on each row, then diffuse color
+   // inward. All source samples are outside the full original deer silhouette.
+   const pixels=new Float32Array(original);
+   for(let y=1;y<BH-1;y++)for(let x=1;x<BW-1;x++){
+     const i=y*BW+x;if(!inside[i])continue;
+     let l=x-1,q=x+1;while(l>0&&inside[y*BW+l])l--;while(q<BW-1&&inside[y*BW+q])q++;
+     const w=(x-l)/Math.max(1,q-l);
+     for(let c=0;c<3;c++)pixels[i*4+c]=original[(y*BW+l)*4+c]*(1-w)+original[(y*BW+q)*4+c]*w;
+   }
+   for(let iter=0;iter<90;iter++)for(let y=1;y<BH-1;y++)for(let x=1;x<BW-1;x++){
+     const i=y*BW+x;if(!inside[i])continue;
+     for(let c=0;c<3;c++)pixels[i*4+c]=(pixels[(i-1)*4+c]+pixels[(i+1)*4+c]+pixels[(i-BW)*4+c]+pixels[(i+BW)*4+c])*.25;
+   }
+   // Restore fine meadow texture with small deterministic luminance variation.
+   for(let i=0;i<inside.length;i++)if(inside[i]){
+     const x=i%BW,y=Math.floor(i/BW),grain=(Math.sin(x*21.37+y*13.71)*2.8+Math.sin(x*4.2+y*3.5)*2.3);
+     for(let c=0;c<3;c++)data.data[i*4+c]=pixels[i*4+c]+grain;
+   }
+   p.putImageData(data,0,0);g.drawImage(patch,X,Y);
+   // Retain the photographic torso and head, with an alpha matte that rejects
+   // the yellow-green meadow. Legs are clean articulated shapes, not grass crops.
    const shapes={
-    trunk:[[325,476],[329,466],[341,460],[359,459],[371,464],[378,468],[380,479],[371,489],[349,493],[333,487]],
-    head:[[369,473],[376,461],[377,451],[374,440],[372,435],[380,438],[387,444],[395,435],[401,439],[401,446],[397,454],[396,463],[390,469],[385,479],[379,483],[369,481]],
-    rearFar:[[331,478],[339,478],[342,490],[337,501],[338,516],[333,520],[330,516],[332,500],[326,490]],
-    rearNear:[[340,482],[347,483],[345,496],[351,508],[349,520],[344,521],[344,509],[339,499]],
-    foreFar:[[367,478],[375,478],[376,491],[372,502],[375,517],[371,520],[367,516],[367,501],[370,491]],
-    foreNear:[[374,478],[383,478],[379,493],[380,505],[382,520],[377,522],[374,518],[374,504],[372,492]]
+    trunk:[[328,475],[332,468],[341,463],[352,461],[361,461],[371,465],[377,470],[378,479],[371,486],[357,490],[344,490],[334,485]],
+    head:[[369,473],[375,462],[376,451],[374,441],[373,436],[380,438],[387,444],[395,436],[400,439],[400,445],[397,453],[395,463],[390,469],[384,478],[379,481],[370,480]]
    };
    deerParts={};
    for(const [name,pts] of Object.entries(shapes)){
-     const c=surface(92,100),d=c.getContext('2d');d.translate(-317,-426);trace(d,pts);d.clip();d.drawImage(img,0,0,RW,RH);deerParts[name]=c;
+     const c=surface(92,100),d=c.getContext('2d');d.translate(-317,-426);trace(d,pts);d.clip();d.drawImage(img,0,0,RW,RH);
+     const m=d.getImageData(0,0,c.width,c.height),v=m.data;
+     for(let i=0;i<v.length;i+=4){
+       if(!v[i+3])continue;
+       const red=v[i],green=v[i+1],blue=v[i+2],warm=red-green;
+       // Suppress yellow-green grass as well as purely green spill.
+       if(green>blue+17&&warm<12){v[i+3]=Math.round(v[i+3]*Math.max(0,Math.min(1,(warm+3)/15)));}
+       else if(green>red-5&&green>blue+12){v[i+1]=Math.min(green,red*.85);}
+     }
+     d.putImageData(m,0,0);deerParts[name]=c;
    }
-   // Use nearby meadow pixels and a feathered contour, not a large rectangular
-   // patch. This retains the path, flowers, and tree in their original positions.
-   eraseArea(g,[[322,471],[328,458],[348,455],[366,455],[372,440],[368,431],[383,431],[389,437],[400,431],[407,438],[405,451],[400,465],[390,478],[385,493],[386,524],[368,525],[362,497],[354,499],[355,524],[325,524],[323,502],[322,485]],-44,2,3);
  }
  function animateDeer(t){
    if(!deerParts)return;
    const cycle=t%24;
-   // Walk, stop to look or graze, then wander back. Smooth speed ramp at turns.
    const path=cycle<9?cycle/9:cycle<12?1:cycle<21?1-(cycle-12)/9:0;
-   const eased=path*path*(3-2*path);
-   const moving=cycle<9||cycle>=12&&cycle<21;
+   const eased=path*path*(3-2*path),moving=cycle<9||cycle>=12&&cycle<21;
    const dir=cycle<11||cycle>=22?1:-1,walk=moving?Math.min(1,Math.sin(path*Math.PI)*3):0;
    const px=360+68*eased,py=517-13*Math.sin(eased*Math.PI);
-   const stride=t*5.6,look=Math.sin(t*.65)*.07;
-   const graze=!moving?Math.sin(Math.max(0,Math.min(1,cycle<12?(cycle-9)/3:(cycle-21)/3))*Math.PI)*.48:0;
+   const stride=t*4.8,look=Math.sin(t*.65)*.07;
+   const graze=!moving?Math.sin(Math.max(0,Math.min(1,cycle<12?(cycle-9)/3:(cycle-21)/3))*Math.PI)*.45:0;
    ctx.save();ctx.scale(W/RW,H/RH);
-   ctx.fillStyle='rgba(30,39,17,.24)';ctx.beginPath();ctx.ellipse(px,py+1,24,4,0,0,tau);ctx.fill();
+   ctx.fillStyle='rgba(30,39,17,.23)';ctx.beginPath();ctx.ellipse(px,py+3,25,4.5,0,0,tau);ctx.fill();
    ctx.translate(px,py);ctx.scale(dir,1);ctx.translate(-360,-517);
+   const bob=walk*Math.abs(Math.sin(stride))*-1.3;
    const part=(name,pivotX,pivotY,angle,dy=0)=>{
      ctx.save();ctx.translate(pivotX,pivotY+dy);ctx.rotate(angle);ctx.drawImage(deerParts[name],317-pivotX,426-pivotY);ctx.restore();
    };
-   const bob=walk*Math.abs(Math.sin(stride))*-1.5;
-   part('rearFar',334,484,-.21*Math.sin(stride)*walk,bob);
-   part('foreFar',372,484,.20*Math.sin(stride)*walk,bob);
-   part('trunk',360,482,.016*Math.sin(stride)*walk,bob);
-   part('rearNear',344,485,.23*Math.sin(stride)*walk,bob);
-   part('foreNear',377,484,-.24*Math.sin(stride)*walk,bob);
+   // Each leg has a knee and a lower segment. Tapered tan/brown contours,
+   // shaded joints and small dark hooves contain no background pixels.
+   function leg(x,y,hind,phase,far){
+     const swing=Math.sin(stride+phase)*walk, lift=Math.max(0,Math.cos(stride+phase))*walk;
+     const kneeX=x+(hind?-3:2)+swing*5,kneeY=y+15+bob;
+     const footX=x+swing*9+(hind?-1:1),footY=517-lift*5;
+     const upper=ctx.createLinearGradient(x-3,y,x+4,y);upper.addColorStop(0,far?'#71502e':'#a66d35');upper.addColorStop(.5,far?'#ad8050':'#d4a05b');upper.addColorStop(1,far?'#6d4b2c':'#986334');
+     ctx.fillStyle=upper;ctx.beginPath();ctx.moveTo(x-3,y+bob-2);ctx.quadraticCurveTo(kneeX-3,kneeY-7,kneeX-1.7,kneeY);ctx.lineTo(kneeX+1.7,kneeY);ctx.quadraticCurveTo(x+4,y+5+bob,x+3,y+bob-2);ctx.closePath();ctx.fill();
+     const lower=ctx.createLinearGradient(kneeX,kneeY,footX,footY);lower.addColorStop(0,far?'#9a7042':'#c08c4e');lower.addColorStop(1,'#62472c');ctx.fillStyle=lower;
+     ctx.beginPath();ctx.moveTo(kneeX-1.6,kneeY-1);ctx.lineTo(footX-1.15,footY-1);ctx.lineTo(footX+1.3,footY-1);ctx.lineTo(kneeX+1.7,kneeY-1);ctx.closePath();ctx.fill();
+     ctx.fillStyle='#493a29';ctx.beginPath();ctx.ellipse(footX+.5,footY,2.1,1.5,0,0,tau);ctx.fill();
+   }
+   leg(335,482,true,0,true);leg(370,482,false,Math.PI,true);
+   part('trunk',360,482,.012*Math.sin(stride)*walk,bob);
+   leg(345,485,true,Math.PI,false);leg(377,482,false,0,false);
    part('head',375,477,look+graze,bob);
    ctx.restore();
  }
