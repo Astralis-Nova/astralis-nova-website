@@ -29,8 +29,11 @@
   photoPart('middleNear','641,891 692,896 807,963 980,928 1010,957 998,982 798,1020 675,954 642,949',673,923);
   photoPart('frontFar','129,983 180,976 258,1008 246,1058 181,1040 197,1143 209,1169 160,1238 90,1285 62,1262 106,1215 153,1145 118,1043',233,1020);
   photoPart('frontNear','413,1023 486,1011 514,1057 510,1111 471,1239 480,1355 438,1369 420,1314 416,1241 456,1096 405,1083',465,1050);
-  // The abdomen and head sit in front of the leg roots; rear spines remain photographic.
-  photoPart('torso','363,342 414,365 570,653 637,656 1056,395 1056,456 680,723 680,787 629,865 571,942 512,1014 471,1038 420,1082 398,1159 350,1204 270,1204 220,1140 220,1065 224,1002 259,948 294,890 333,826 363,775 437,725 511,671',412,940);
+  // Rear appendages also flex subtly, rather than staying pinned to the abdomen.
+  photoPart('rearFar','363,342 414,365 578,660 527,694 490,625',548,664);
+  photoPart('rearNear','625,654 1056,395 1056,456 680,730 637,711',649,685);
+  // The abdomen and head sit in front of the overlapping leg roots.
+  photoPart('torso','511,671 570,653 637,656 680,723 680,787 629,865 571,942 512,1014 471,1038 420,1082 398,1159 350,1204 270,1204 220,1140 220,1065 224,1002 259,948 294,890 333,826 363,775 437,725 511,671',412,940);
   photoPart('antennaPhoto','0,1103 155,1073 246,1051 286,1057 290,1084 155,1099 0,1134',266,1068);
   // The other feeler is partly out of the original photograph. Reconstruct its fine silhouette.
   const feeler=el('path',{fill:'none',stroke:'#a77a4e','stroke-width':'7','stroke-linecap':'round'});
@@ -40,6 +43,8 @@
   function pose(crouch=0,flight=0,land=0,walk=0){
     const w=Math.sin(clock*19)*walk, w2=Math.sin(clock*19+Math.PI)*walk;
     const f=flight, l=land;
+    angle('rearFar',4*Math.sin(clock*2.1)+8*crouch-10*f);
+    angle('rearNear',-3*Math.sin(clock*2.5)-7*crouch+9*f);
     angle('hindFar', 13*crouch-23*f+9*l+4*w);
     angle('hindNear',-12*crouch+25*f-8*l+4*w2);
     angle('middleFar',-7*crouch+12*f+5*w2);
