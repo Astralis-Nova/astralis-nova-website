@@ -20,7 +20,7 @@
   ].join('');
   const css = [
     '.challenger-flight-lane{position:absolute;z-index:9;left:-27%;top:3%;width:154%;height:105px;pointer-events:none;overflow:visible;isolation:isolate}',
-    '.challenger-ship{position:absolute;left:-38%;top:0;width:clamp(155px,17vw,225px);border:0;background:none;padding:8px;cursor:pointer;pointer-events:auto;filter:drop-shadow(0 8px 10px #0009) drop-shadow(0 0 7px #9ecfff66);transform-origin:center;animation:challenger-cross 33s ease-in-out infinite}',
+    '.challenger-ship{position:absolute;left:-38%;top:0;width:clamp(155px,17vw,225px);border:0;background:none;padding:8px;cursor:pointer;pointer-events:auto;filter:drop-shadow(0 8px 10px #0009) drop-shadow(0 0 7px #9ecfff66);transform-origin:center;animation:challenger-cross 33s ease-in-out -12s infinite}',
     '.challenger-shuttle-art{display:block;width:100%;height:auto}',
     '.challenger-ship:hover,.challenger-ship:focus-visible{filter:drop-shadow(0 0 13px #d9f3ff) drop-shadow(0 5px 9px #000b)}',
     '.challenger-ship:focus-visible{outline:2px solid #bdeeff;outline-offset:3px;border-radius:16px}',
@@ -40,7 +40,7 @@
     '.challenger-memorial ul{list-style:disc;padding:0 0 0 20px;margin:9px 0 12px;columns:2;column-gap:18px;font-size:.78rem}',
     '.challenger-memorial li{break-inside:avoid;margin-bottom:5px}',
     '.challenger-memorial a{color:#9fe0ff;font-size:.84rem}',
-    '.challenger-mini-flight{position:absolute;z-index:4;pointer-events:none;top:-13px;left:-15px;width:65px;filter:drop-shadow(0 0 4px #92ceff);animation:challenger-mini-pass 16s ease-in-out infinite}',
+    '.challenger-mini-flight{position:absolute;z-index:4;pointer-events:none;top:-13px;left:-15px;width:65px;filter:drop-shadow(0 0 4px #92ceff);animation:challenger-mini-pass 16s ease-in-out -6s infinite}',
     '.challenger-mini-flight .challenger-shuttle-art{display:block;width:100%;height:auto}',
     '@keyframes challenger-cross{0%{left:-38%;transform:translateY(17px) scale(.78) rotate(-8deg);opacity:0}7%{opacity:1}48%{transform:translateY(-13px) scale(1.03) rotate(-4deg);opacity:1}92%{opacity:1}100%{left:106%;transform:translateY(19px) scale(.75) rotate(-7deg);opacity:0}}',
     '@keyframes challenger-mini-pass{0%,100%{transform:translate(-26px,21px) scale(.62);opacity:0}18%{opacity:1}52%{transform:translate(51px,-23px) scale(1.1);opacity:1}84%{opacity:1}95%{transform:translate(106px,16px) scale(.65);opacity:0}}',
