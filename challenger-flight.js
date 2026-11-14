@@ -214,7 +214,7 @@
     details.appendChild(sources);
     const fig=document.createElement('figure');
     fig.className='challenger-3d-inspection';
-    fig.innerHTML='<div class="challenger-inspect-fallback">'+shuttleSVG+'</div><figcaption>Rotate with a finger or mouse · NASA orbiter model</figcaption>';
+    fig.innerHTML='<div class="challenger-inspect-fallback">'+shuttleSVG+'</div><figcaption>Rotate with a finger or mouse · NASA orbiter-only reference</figcaption>';
     const list=details.querySelector('ul');
     if(list)list.before(fig);
     const onToggle=()=>{if(details.open)attach3D(fig,true);};
@@ -225,16 +225,49 @@
     const mini=document.querySelector('.challenger-mini-flight');
     if(mini)attach3D(mini,false);
   }
+  const identityCSS = [
+    '.challenger-flight-lane{z-index:14;overflow:visible}',
+    '.challenger-flight-lane::before{content:"";position:absolute;right:7%;top:-15px;width:clamp(68px,11vw,105px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 29% 23%,#d6edff44,transparent 44%),url("/astralis-earth.png") center / cover no-repeat;opacity:.46;box-shadow:inset -20px -10px 28px #000d,0 0 22px #6eb0ff40;pointer-events:none}',
+    '.challenger-ship{width:clamp(210px,26vw,300px)!important;min-height:106px!important;overflow:visible;filter:drop-shadow(0 0 9px #4a9bcc99) drop-shadow(0 8px 12px #000b)}',
+    '.challenger-real3d{inset:-20% -7%;width:114%;height:140%;filter:brightness(1.25) contrast(1.11) drop-shadow(0 5px 11px #000a)}',
+    '.challenger-ship::after{content:"🇺🇸  CHALLENGER  ·  OV-099";display:block;position:absolute;z-index:12;left:1%;right:1%;bottom:-19px;padding:5px 3px;color:#fff;font:850 11px ui-sans-serif,system-ui,sans-serif;letter-spacing:.075em;text-align:center;white-space:nowrap;text-shadow:0 1px 4px #000,0 0 6px #000;background:linear-gradient(90deg,#05172ddf,#113556e9,#06172bdc);border:1px solid #9edbffb3;border-radius:5px;box-shadow:0 5px 12px #0009;pointer-events:none}',
+    '.challenger-mini-flight::after{display:none}',
+    '.challenger-signal{font-size:.84rem;line-height:1.6;letter-spacing:.07em}',
+    '.challenger-memorial{border-color:#93cfff9c;background:linear-gradient(145deg,#112b47ed,#07101deb)}',
+    '.challenger-memorial>summary{font-weight:800;color:#e4f4ff}',
+    '.challenger-3d-inspection::before{content:"";position:absolute;bottom:-44%;left:-22%;width:144%;height:83%;border-radius:50%;background:radial-gradient(ellipse at 50% 7%,#c3e7ff69 2%,#428cca72 6%,#103a6961 22%,transparent 63%);pointer-events:none}',
+    '.challenger-inspection-marker{position:absolute;z-index:5;top:10px;left:10px;right:10px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none}',
+    '.challenger-inspection-marker span{display:inline-block;border:1px solid #9fdbff66;background:#071a2ee8;color:#fff;border-radius:4px;padding:3px 7px;font-size:10px;font-weight:800;letter-spacing:.04em;text-shadow:0 1px 3px #000}',
+    '@media(max-width:680px){.challenger-ship{width:clamp(170px,49vw,220px)!important;min-height:85px!important}.challenger-ship::after{bottom:-14px;font-size:9px;padding:3px}.challenger-flight-lane::before{right:1%;width:65px}.challenger-memorial{margin-top:15px}}'
+  ].join('\n');
+  function addOrbiterIdentity(){
+    const ship=document.querySelector('.challenger-ship');
+    if(ship)ship.setAttribute('aria-label','Space Shuttle Challenger OV-099, orbiter only, in space. Open the crew memorial.');
+    const figure=document.querySelector('.challenger-3d-inspection');
+    if(figure&&!figure.querySelector('.challenger-inspection-marker')){
+      const marker=document.createElement('div');
+      marker.className='challenger-inspection-marker';
+      marker.innerHTML='<span>🇺🇸 CHALLENGER</span><span>OV-099</span><span>ORBITER ONLY</span>';
+      figure.prepend(marker);
+    }
+    const source=document.querySelector('.challenger-model-credit');
+    if(source&&!source.dataset.orbiterNote){
+      source.dataset.orbiterNote='true';
+      source.append(' The model depicts just the orbiter, with no external tank or solid rocket boosters. The Challenger identification is a memorial overlay, not an original NASA model texture.');
+    }
+  }
+
   function installReal3D(){
     if(document.getElementById('challengerReal3DStyles'))return;
     const style=document.createElement('style');
     style.id='challengerReal3DStyles';
-    style.textContent=realismCSS;
+    style.textContent=realismCSS+'\n'+identityCSS;
     document.head.appendChild(style);
     const ship=document.querySelector('.challenger-ship');
     if(ship)attach3D(ship,false);
     enhanceHomeMini();
     addMemorialModel();
+    addOrbiterIdentity();
   }
 
   function boot(){
