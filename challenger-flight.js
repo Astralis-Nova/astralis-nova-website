@@ -16,6 +16,15 @@
     '<circle cx="28" cy="61" r="6" fill="#26333f" stroke="#d4e5f1" stroke-width="2"/>',
     '<circle cx="23" cy="68" r="6" fill="#26333f" stroke="#d4e5f1" stroke-width="2"/>',
     '<circle cx="28" cy="75" r="6" fill="#26333f" stroke="#d4e5f1" stroke-width="2"/>',
+    '<path d="M296 64 306 67 309 68 306 69 296 72Z" fill="#141923"/>',
+    '<path d="M251 61 264 63 281 67 265 67Z" fill="#141c28"/>',
+    '<path d="M251 75 264 73 281 69 265 69Z" fill="#141c28"/>',
+    '<text x="132" y="48" text-anchor="middle" font-family="Arial,sans-serif" font-weight="900" font-size="12" fill="#1c334c">NASA</text>',
+    '<text x="158" y="89" text-anchor="middle" font-family="Arial,sans-serif" font-weight="bold" font-size="11" fill="#25384b">USA</text>',
+    '<rect x="178" y="83" width="27" height="14" fill="#f5f5f5"/>',
+    '<path d="M178 85h27m-27 3h27m-27 3h27m-27 3h27" stroke="#ba2031" stroke-width="1"/>',
+    '<rect x="178" y="83" width="11" height="7.5" fill="#193e79"/>',
+    '<text x="159" y="70" fill="#172333" font-size="7.5" font-family="Arial,sans-serif" font-weight="bold" text-anchor="middle">CHALLENGER</text>',
     '</svg>'
   ].join('');
   const css = [
@@ -98,8 +107,8 @@
 
   // NASA's historical orbiter GLB provides true 3D geometry and material shading.
   // This generic shuttle-family model is used as an interpretive tribute to OV-099.
-  const nasaOrbiterModel='https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Space%20Shuttle%20(A)/Space%20Shuttle%20(A).glb';
-  const viewerLibrary='https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js';
+  const nasaOrbiterModel='https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Space%20Shuttle%20(D)/Space%20Shuttle%20(D).glb';
+  const viewerLibrary='https://cdnjs.cloudflare.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js';
   let viewerLoading=null;
   const realismCSS=[
     '.challenger-ship{aspect-ratio:2.05 / 1;height:auto;transform-style:preserve-3d;perspective:650px;will-change:transform,left;contain:layout style}',
@@ -141,10 +150,10 @@
     const model=document.createElement('model-viewer');
     model.setAttribute('alt','NASA Space Shuttle orbiter rendered in 3D as a memorial to Challenger');
     model.setAttribute('environment-image','neutral');
-    model.setAttribute('exposure','1.1');
+    model.setAttribute('exposure','1.35');
     model.setAttribute('shadow-intensity','0');
-    model.setAttribute('camera-orbit',interactive?'42deg 65deg 115%':'36deg 66deg 120%');
-    model.setAttribute('field-of-view',interactive?'31deg':'34deg');
+    model.setAttribute('camera-orbit',interactive?'28deg 63deg 105%':'30deg 60deg 104%');
+    model.setAttribute('field-of-view',interactive?'27deg':'29deg');
     model.setAttribute('interaction-prompt','none');
     model.setAttribute('loading','eager');
     if(interactive){
@@ -201,7 +210,7 @@
     details.dataset.challengerInspect='ready';
     const sources=document.createElement('p');
     sources.className='challenger-model-credit';
-    sources.innerHTML='3D spacecraft: <a href="https://science.nasa.gov/3d-resources/space-shuttle-a/" target="_blank" rel="noopener noreferrer">NASA Space Shuttle model</a>. This is a shuttle-family reference model, not a scan of Challenger itself.';
+    sources.innerHTML='3D spacecraft: <a href="https://science.nasa.gov/3d-resources/space-shuttle-d/" target="_blank" rel="noopener noreferrer">NASA Space Shuttle model</a>. This is a shuttle-family reference model, not a scan of Challenger itself.';
     details.appendChild(sources);
     const fig=document.createElement('figure');
     fig.className='challenger-3d-inspection';
