@@ -92,15 +92,150 @@
     mini.setAttribute('aria-hidden','true');
     mini.innerHTML=shuttleSVG;
     planet.appendChild(mini);
+    enhanceHomeMini();
     return true;
   }
+
+  // NASA's historical orbiter GLB provides true 3D geometry and material shading.
+  // This generic shuttle-family model is used as an interpretive tribute to OV-099.
+  const nasaOrbiterModel='https://raw.githubusercontent.com/nasa/NASA-3D-Resources/master/3D%20Models/Space%20Shuttle%20(A)/Space%20Shuttle%20(A).glb';
+  const viewerLibrary='https://ajax.googleapis.com/ajax/libs/model-viewer/4.1.0/model-viewer.min.js';
+  let viewerLoading=null;
+  const realismCSS=[
+    '.challenger-ship{aspect-ratio:2.05 / 1;height:auto;transform-style:preserve-3d;perspective:650px;will-change:transform,left;contain:layout style}',
+    '.challenger-svg-fallback{display:block;width:100%;height:100%;transition:opacity .8s ease}',
+    '.challenger-svg-fallback .challenger-shuttle-art{height:100%;object-fit:contain}',
+    '.challenger-real3d{position:absolute;inset:-24% -9%;width:118%;height:148%;display:block;pointer-events:none!important;opacity:0;filter:brightness(1.1) contrast(1.05) drop-shadow(0 5px 9px #0005);transition:opacity .9s ease;background:transparent}',
+    '.challenger-3d-ready>.challenger-real3d{opacity:1}',
+    '.challenger-3d-ready>.challenger-svg-fallback{opacity:0}',
+    '.challenger-mini-flight{width:94px;max-width:none;height:72px}',
+    '.challenger-mini-flight .challenger-real3d{inset:-8% -8%;width:116%;height:116%}',
+    '.challenger-memorial .challenger-3d-inspection{height:260px;position:relative;margin:12px 0 10px;background:radial-gradient(ellipse at 50% 65%,#1b35529c,#050b1a 68%);border:1px solid #6b9eca77;border-radius:12px;overflow:hidden}',
+    '.challenger-3d-inspection model-viewer{display:block;width:100%;height:100%;background:transparent}',
+    '.challenger-3d-inspection figcaption{position:absolute;left:10px;bottom:7px;right:10px;color:#d0e9ff;font-size:.73rem;text-align:center;pointer-events:none;text-shadow:0 1px 6px #000}',
+    '.challenger-3d-inspection .challenger-inspect-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}',
+    '.challenger-3d-inspection .challenger-inspect-fallback svg{max-width:90%;height:auto;filter:drop-shadow(0 5px 9px #0008)}',
+    '.challenger-3d-inspection.challenger-3d-ready .challenger-inspect-fallback{display:none}',
+    '.challenger-3d-inspection model-viewer{opacity:0;transition:opacity .8s ease}',
+    '.challenger-3d-inspection.challenger-3d-ready model-viewer{opacity:1}',
+    '@media(max-width:680px){.challenger-ship{width:clamp(138px,40vw,175px)}.challenger-mini-flight{width:74px;height:58px}.challenger-memorial .challenger-3d-inspection{height:210px}}',
+    '@media(prefers-reduced-motion:reduce){.challenger-real3d{transition:none}.challenger-ship{will-change:auto}}'
+  ].join('\n');
+
+  function load3DRenderer(){
+    if(!('customElements' in window)||!('WebGLRenderingContext' in window))return Promise.reject(new Error('3D unavailable'));
+    if(customElements.get('model-viewer'))return Promise.resolve();
+    if(!viewerLoading){
+      viewerLoading=new Promise((resolve,reject)=>{
+        const tag=document.createElement('script');
+        tag.type='module';
+        tag.src=viewerLibrary;
+        tag.onload=()=>customElements.whenDefined('model-viewer').then(resolve,reject);
+        tag.onerror=()=>reject(new Error('3D library unavailable'));
+        document.head.appendChild(tag);
+      });
+    }
+    return viewerLoading;
+  }
+  function buildModelViewer(interactive){
+    const model=document.createElement('model-viewer');
+    model.setAttribute('alt','NASA Space Shuttle orbiter rendered in 3D as a memorial to Challenger');
+    model.setAttribute('environment-image','neutral');
+    model.setAttribute('exposure','1.1');
+    model.setAttribute('shadow-intensity','0');
+    model.setAttribute('camera-orbit',interactive?'42deg 65deg 115%':'36deg 66deg 120%');
+    model.setAttribute('field-of-view',interactive?'31deg':'34deg');
+    model.setAttribute('interaction-prompt','none');
+    model.setAttribute('loading','eager');
+    if(interactive){
+      model.setAttribute('camera-controls','');
+      model.setAttribute('touch-action','pan-y');
+      model.setAttribute('disable-zoom','');
+      model.setAttribute('auto-rotate-delay','1800');
+      model.setAttribute('rotation-per-second','6deg');
+    } else {
+      model.className='challenger-real3d';
+      model.setAttribute('rotation-per-second','8deg');
+    }
+    if(!document.documentElement.classList.contains('space-motion-paused') &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      model.setAttribute('auto-rotate','');
+    }
+    return model;
+  }
+  function attach3D(target,interactive){
+    if(!target||target.dataset.challenger3d)return;
+    target.dataset.challenger3d='pending';
+    load3DRenderer().then(()=>{
+      if(!target.isConnected)return;
+      const viewer=buildModelViewer(interactive);
+      if(!interactive){
+        const backup=document.createElement('span');
+        backup.className='challenger-svg-fallback';
+        while(target.firstChild)backup.appendChild(target.firstChild);
+        target.appendChild(backup);
+      }
+      target.appendChild(viewer);
+      viewer.addEventListener('load',()=>{target.classList.add('challenger-3d-ready')},{once:true});
+      viewer.addEventListener('error',()=>{target.classList.remove('challenger-3d-ready')},{once:true});
+      // Set source only after listeners exist. The browser caches the shared NASA GLB.
+      viewer.setAttribute('src',nasaOrbiterModel);
+      const sync=()=>{
+        if(document.documentElement.classList.contains('space-motion-paused') ||
+           window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+          viewer.removeAttribute('auto-rotate');
+        }else{
+          viewer.setAttribute('auto-rotate','');
+        }
+      };
+      const observer=new MutationObserver(sync);
+      observer.observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+      viewer.addEventListener('model-visibility',()=>{if(!target.isConnected)observer.disconnect()});
+    }).catch(()=>{
+      target.dataset.challenger3d='fallback';
+    });
+  }
+  function addMemorialModel(){
+    const details=document.getElementById('challengerMemorial');
+    if(!details||details.dataset.challengerInspect)return;
+    details.dataset.challengerInspect='ready';
+    const sources=document.createElement('p');
+    sources.className='challenger-model-credit';
+    sources.innerHTML='3D spacecraft: <a href="https://science.nasa.gov/3d-resources/space-shuttle-a/" target="_blank" rel="noopener noreferrer">NASA Space Shuttle model</a>. This is a shuttle-family reference model, not a scan of Challenger itself.';
+    details.appendChild(sources);
+    const fig=document.createElement('figure');
+    fig.className='challenger-3d-inspection';
+    fig.innerHTML='<div class="challenger-inspect-fallback">'+shuttleSVG+'</div><figcaption>Rotate with a finger or mouse · NASA orbiter model</figcaption>';
+    const list=details.querySelector('ul');
+    if(list)list.before(fig);
+    const onToggle=()=>{if(details.open)attach3D(fig,true);};
+    details.addEventListener('toggle',onToggle);
+    if(details.open)onToggle();
+  }
+  function enhanceHomeMini(){
+    const mini=document.querySelector('.challenger-mini-flight');
+    if(mini)attach3D(mini,false);
+  }
+  function installReal3D(){
+    if(document.getElementById('challengerReal3DStyles'))return;
+    const style=document.createElement('style');
+    style.id='challengerReal3DStyles';
+    style.textContent=realismCSS;
+    document.head.appendChild(style);
+    const ship=document.querySelector('.challenger-ship');
+    if(ship)attach3D(ship,false);
+    enhanceHomeMini();
+    addMemorialModel();
+  }
+
   function boot(){
     installStyles();
     installPlanetTribute();
+    installReal3D();
     if(installLandingFlyby())return;
     const worlds=document.getElementById('connected-worlds');
     if(!worlds)return;
-    const observer=new MutationObserver(()=>{if(installLandingFlyby())observer.disconnect();});
+    const observer=new MutationObserver(()=>{if(installLandingFlyby()){enhanceHomeMini();observer.disconnect();}});
     observer.observe(worlds,{childList:true,subtree:true});
     window.setTimeout(()=>observer.disconnect(),15000);
   }
