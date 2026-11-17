@@ -44,6 +44,22 @@
 .ant-caption{color:#aeb9ab!important;font-size:.85rem;line-height:1.6}
 @media(max-width:760px){.ant-story-grid{grid-template-columns:1fr}.ant-diagram-steps{grid-template-columns:1fr;gap:8px}.ant-diagram-step{min-height:0}.ant-diagram-arrow{transform:rotate(90deg);text-align:center;font-size:1.3rem}}
 
+
+/* Original ant footage and extended observations */
+.ant-video-layout{display:grid;grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr);gap:16px;align-items:start;margin:23px 0 29px}
+.ant-real-footage{max-width:530px;margin:0 auto;width:100%;min-width:0}
+.ant-real-footage video{display:block;width:100%;height:min(74vh,680px);min-height:390px;object-fit:contain;background:#020706}
+.ant-video-notes{height:100%}
+.ant-video-notes ol,.ant-steps,.ant-defense ul,.ant-growth ol{line-height:1.85;color:#d7ded3;padding-left:23px}
+.ant-video-notes li,.ant-steps li,.ant-defense li,.ant-growth li{margin-bottom:8px}
+.ant-defence h3,.ant-growth h3,.ant-benefits h3{color:#ecdfa8}
+.ant-benefits-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.ant-benefits-grid>div{min-width:0}
+.ant-benefits-grid h4{color:#c9eaa3;margin:14px 0 6px}
+.ant-story-card a{color:#b7e98d;text-underline-offset:3px}
+@media(max-width:820px){.ant-video-layout,.ant-benefits-grid{grid-template-columns:1fr}.ant-real-footage video{height:min(68vh,600px)}}
+@media(max-width:540px){.ant-real-footage video{min-height:360px;height:70vh}.ant-video-layout{margin:18px 0}}
+
 </style>
 </head>
 <body>
@@ -71,7 +87,30 @@
   <div class="field-quote">“Working near the wash, I noticed ants on the ocotillo. Tiny green leaves were falling. Down on the ground, ants picked them up and carried them away, all following the same path.”</div>
   <p><strong>What happened:</strong> This observation started with ants moving through an ocotillo (<em>Fouquieria splendens</em>). The observer saw leaf fall, ants on the plant, and ants on the ground carrying leaves away along a shared trail. The original phone recording documents the site, leaf litter, and activity. An individual ant has not yet been identified conclusively from a diagnostic close-up.</p>
 
-  <div class="ant-diagram" aria-label="Illustrated explanation of possible desert leafcutter ant agriculture">
+  
+<div class="ant-video-layout" id="ocotillo-field-video">
+  <figure class="media-card ant-real-footage">
+    <video id="ocotilloAntVideo" controls playsinline preload="metadata" src="/wild-media/ocotillo-harvest-2026-11-16.mp4?v=20261117a" aria-label="Thirty-five second edited original backyard footage of ants collecting leaves beneath an ocotillo in Cactus Forest, Arizona">
+      Your browser does not support HTML5 video.
+    </video>
+    <figcaption><h3>🎥 The actual encounter</h3><p>Five selected scenes from the original 70-second phone recording, shortened to 35 seconds with unobtrusive location and activity labels. Filmed beside the backyard wash on November 16, 2026.</p>
+    <div class="media-status">ORIGINAL PROPERTY FOOTAGE · EDITED FIELD CLIP · 35 SECONDS</div>
+    <button class="media-action" type="button" data-fullscreen="ocotilloAntVideo">⛶ View full screen</button></figcaption>
+  </figure>
+  <aside class="ant-story-card ant-video-notes">
+    <span class="ant-label">On-site observation</span>
+    <h3>What is happening in the video?</h3>
+    <ol>
+      <li><strong>Leaves on the move:</strong> Ants work around the ocotillo while small green leaves fall nearby.</li>
+      <li><strong>Pickup and transport:</strong> Workers lift leaf pieces and carry them over the soil.</li>
+      <li><strong>Same route:</strong> Many ants use a shared path, consistent with repeated trips between a food source and colony.</li>
+      <li><strong>Possible destination:</strong> If they are desert leafcutters, the loads are bound for a fungus garden in chambers below ground.</li>
+    </ol>
+    <p class="ant-caption">Observed directly: leaves falling, ants moving on the plant, and ant carriers using the same path. Inferred: the species, trail pheromones, and underground fungus garden have not yet been confirmed for this colony.</p>
+  </aside>
+</div>
+
+<div class="ant-diagram" aria-label="Illustrated explanation of possible desert leafcutter ant agriculture">
     <h3>🌿 A tiny agricultural supply chain</h3>
     <div class="ant-diagram-steps">
       <div class="ant-diagram-step"><span class="symbol" aria-hidden="true">🌵🍃</span><strong>Ocotillo leaves</strong><small>Freshly cut or fallen leaves can become plant material for a colony</small></div>
@@ -95,7 +134,22 @@
     </section>
   </div>
 
-  <h3>🍄 Why would an ant carry leaves?</h3>
+  
+<section class="ant-story-card" id="ocotillo-ant-jobs" style="margin:22px 0">
+  <span class="ant-label">Inside an ant colony · how the work is done</span>
+  <h3>🐜 What are the ants actually doing?</h3>
+  <p>In a true <em>Acromyrmex</em> leafcutter colony, the visible line is only the supply route for a much larger underground operation. Workers communicate with chemical trail signals and repeatedly travel between plant material and the nest.</p>
+  <ol class="ant-steps">
+    <li><strong>Find a source:</strong> Foragers locate suitable vegetation, including freshly cut pieces or leaves already on the ground.</li>
+    <li><strong>Gather and carry:</strong> Ants cut or pick up fragments and haul them along well-used trails. The same leaves can pass many workers.</li>
+    <li><strong>Process underground:</strong> Other workers reduce the plant pieces into a substrate for their cultivated fungus.</li>
+    <li><strong>Grow the crop:</strong> The fungus digests the plant matter. Ants tend the crop and help keep harmful contaminants away.</li>
+    <li><strong>Feed the colony:</strong> The fungal crop nourishes workers and developing young, while waste material is managed separately.</li>
+  </ol>
+  <p><strong>Why your trail matters:</strong> You saw repeated leaf-carrying along one route. That's exactly the sort of aboveground foraging expected from desert leafcutters; seeing the nest or a clear worker close-up would make the identification stronger.</p>
+</section>
+
+<h3>🍄 Why would an ant carry leaves?</h3>
   <p>Leafcutter ants use leaves as <strong>growing material for cultivated fungus</strong>, rather than simply eating the leaves. In studied leafcutter species, the associated fungus is commonly called <em>Leucoagaricus gongylophorus</em> (also described under <em>Leucocoprinus</em>). The fungus breaks down plant matter and produces food structures for the ants. Workers tend their gardens, remove waste, and defend the nest. This explanation applies <em>if</em> the observed ants are leafcutters; no underground garden was opened or observed here.</p>
 
   <h3>⚔️ Are they like army ants? Do ants fight?</h3>
@@ -106,15 +160,78 @@
     <tr><td>Use their jaws to defend their workers, nest, and resources</td><td>Use coordinated attacks to overpower prey and defend their colony</td></tr></tbody></table></div>
   <p>Yes, ants can fight with rival colonies or predators. But marching in a line does not automatically make an ant an army ant. Carrying ocotillo leaves favors a plant-collecting species over a raiding army-ant column.</p>
 
-  <h3>🌵 Ocotillo: the plant behind the encounter</h3>
+  
+<section class="ant-story-card ant-defense" id="ocotillo-ant-defense">
+  <span class="ant-label">Colony security</span>
+  <h3>⚔️ How leafcutter ants fight and defend</h3>
+  <ul>
+    <li><strong>Jaws first:</strong> Workers use their mandibles to bite and protect themselves, carrying routes, and the nest.</li>
+    <li><strong>Group response:</strong> When threatened, nearby workers can converge to defend the colony. Avoid placing hands in the trail or on the nest.</li>
+    <li><strong>Rival colonies:</strong> Arizona State University describes young desert leafcutter colonies raiding nearby competing colonies and stealing immature ants (brood). These contests can determine which new colony survives.</li>
+    <li><strong>Army ants are different:</strong> Desert army ants (<em>Neivamyrmex</em>) primarily hunt and raid other insects; leafcutters' main everyday mission is collecting plants for fungus.</li>
+    <li><strong>Natural enemies:</strong> Predatory ants and other creatures can attack foragers or vulnerable queens. Nest defense matters most during those encounters.</li>
+  </ul>
+  <p>We did <strong>not</strong> observe an ant battle in this backyard video. These are documented behaviors of comparable desert ants, not events claimed to have happened in this recording.</p>
+  <p class="ant-caption">Further reading: <a href="https://askabiologist.asu.edu/leafcutters-spring-action" target="_blank" rel="noopener noreferrer">Arizona State University, Leafcutter Ants Spring into Action</a>.</p>
+</section>
+
+<h3>🌵 Ocotillo: the plant behind the encounter</h3>
   <p>Ocotillo is a native desert shrub with thorny upright canes. It can quickly produce green leaves after sufficient moisture, then shed them to conserve water during drought. Its red flowers help feed migrating hummingbirds. Historically, people in the Southwest have used ocotillo flowers and seeds as food and its stems for fences and shelters. These traditional uses do not establish that medicinal preparations made from its leaves are safe or effective.</p>
   <p><strong>For people today:</strong> The most established benefit of leaving a healthy ocotillo in place is the habitat and floral nectar it provides. Fungal enzymes from leafcutter-ant gardens are being researched for breaking down plant waste, with possible industrial biotechnology and biofuel uses. Scientists also study defensive microbes associated with some leafcutter colonies for antimicrobial molecules. These are research avenues, <strong>not human treatments</strong>. Do not eat ant-garden fungus or experiment with ocotillo-leaf remedies.</p>
 
-  <h3>🌱 Our spring experiment: one cane, several new ocotillos</h3>
+  
+<section class="ant-story-card ant-benefits" id="ocotillo-benefits">
+  <span class="ant-label">Why this ecosystem matters</span>
+  <h3>🌱 Benefits to the desert, and possible benefits to people</h3>
+  <div class="ant-benefits-grid">
+    <div><h4>For the desert and your property</h4>
+      <p><strong>Ants:</strong> Their underground tunnels mix soil and their use of plant material contributes to nutrient cycling. Existing colonies are part of the natural food web. They cannot be counted on to control wash erosion.</p>
+      <p><strong>Ocotillo:</strong> Flowers provide nectar for hummingbirds and other pollinators; spiny canes provide structure and shelter. It is well adapted to dry, rocky soil.</p>
+    </div>
+    <div><h4>For humans</h4>
+      <p><strong>Traditional uses:</strong> Ocotillo flowers have been soaked to flavor drinks, and seeds have historically been ground into flour. This is ethnobotanical history, not general medical advice or a guarantee of food safety.</p>
+      <p><strong>Research potential:</strong> Fungi and microbes associated with leafcutter gardens interest scientists for plant-fiber digestion, biotechnology, and natural-product research. No proven home remedy or edible mushroom crop follows from this observation.</p>
+    </div>
+  </div>
+  <p class="ant-caption">Do not eat the ants' cultivated fungus, harvest from the nest, or use ocotillo-leaf preparations medicinally. Preservation and observation are the safest first benefits.</p>
+</section>
+
+<h3>🌱 Our spring experiment: one cane, several new ocotillos</h3>
   <p>Ocotillo can be propagated by seed or stem cuttings, and planted canes have historically been used as living fences. We plan a small, careful trial using <strong>one healthy six-foot cane divided into three two-foot sections</strong>. This particular size is an experiment, not a proven success formula. Mark each piece's lower end, let the cut ends dry briefly in shade, plant upright in free-draining soil, and avoid waterlogging. Warm spring to early-summer weather is a sensible trial period here. A cutting may leaf out before it has roots, and not all cuttings succeed; seed-grown plants more reliably develop the familiar multi-cane shape.</p>
   <p class="ant-caption">Leave most canes on the parent plant. Check Arizona's protected-native-plant rules before harvesting, relocating, or transporting any ocotillo, and never collect from public land without required authorization. Newly planted canes are not a quick solution to wash-bank erosion.</p>
 
-  <div class="fun-note"><h3>🔭 Next expedition, no shovels required</h3>
+  
+<section class="ant-story-card ant-growth" id="ocotillo-propagation-guide">
+  <span class="ant-label">Growing more ocotillo · Cactus Forest experiment</span>
+  <h3>🌵 How to regrow ocotillo</h3>
+  <div class="ant-benefits-grid">
+    <div>
+      <h4>Method A · Stem cuttings</h4>
+      <ol>
+        <li>Choose one mature, healthy cane; avoid repeatedly trimming the parent plant.</li>
+        <li>For our experiment, divide one approximately six-foot cane into three 24-inch sections. Mark which end was originally down.</li>
+        <li>Let the cut surfaces dry in shade for several days.</li>
+        <li>Set each section upright, lower end buried about 6 inches in a deep, fast-draining container or well-drained ground. Stake securely.</li>
+        <li>Water sparingly to avoid rot, protect from wind, and give the cuttings months to establish. Leaf growth alone doesn't prove rooting.</li>
+      </ol>
+      <p class="ant-caption">These short sections are a trial. Extension sources support larger stem cuttings, but survival of three 24-inch pieces is not guaranteed. New rooted canes may never develop the branching form of a seed-grown ocotillo.</p>
+    </div>
+    <div>
+      <h4>Method B · Fresh seeds</h4>
+      <ol>
+        <li>After spring flowering, watch for seed capsules releasing winged seeds.</li>
+        <li>Sow fresh seed promptly in a well-drained gritty seed mix; ocotillo seed viability declines with age.</li>
+        <li>Keep lightly moist for germination, never saturated; then gradually transition young plants to dryland watering.</li>
+        <li>Grow seedlings in bright light with protection from temperature extremes before moving them into full sun.</li>
+      </ol>
+      <h4>Leaves also regrow naturally</h4>
+      <p>An established ocotillo may drop leaves during drought and flush new leaves after rain several times in a year. Leaf loss does not mean the plant is dead.</p>
+    </div>
+  </div>
+  <p class="ant-caption">Arizona's protected native plant rules apply to ocotillo, including cutting and transporting plant material. Review the <a href="https://agriculture.az.gov/divisions/plants-produce-service-division/plants-produce-service-division-faq" target="_blank" rel="noopener noreferrer">Arizona Department of Agriculture guidance</a> before moving or harvesting protected material.</p>
+</section>
+
+<div class="fun-note"><h3>🔭 Next expedition, no shovels required</h3>
     <p>Follow the trail from a respectful distance. Look for two-way traffic, a nest entrance, workers with different-sized loads, and ants cutting directly from a living branch. Record the date, weather, plant condition, and a close-up with a scale reference. Avoid disturbing the entrance or the underground fungus garden.</p>
     <p><strong>Field commentary:</strong> “I went outside to work on the wash. Apparently, the ants had already started their own agricultural department.”</p>
   </div>
@@ -127,7 +244,11 @@
       <li><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4475879/" target="_blank" rel="noopener noreferrer">Biotechnology research on leafcutter gardens</a>: potential industrial uses.</li>
       <li><a href="https://extension.arizona.edu/publication/cactus-agave-yucca-and-ocotillo" target="_blank" rel="noopener noreferrer">University of Arizona Cooperative Extension</a>: ocotillo leafing and drought responses.</li>
       <li><a href="https://arboretum.arizona.edu/snyder-preserve-fouquieria-splendens" target="_blank" rel="noopener noreferrer">University of Arizona Campus Arboretum</a>: propagation and growth form.</li>
-      <li><a href="https://agriculture.az.gov/divisions/plants-produce-service-division/plants-produce-service-division-faq" target="_blank" rel="noopener noreferrer">Arizona Department of Agriculture</a>: native-plant protection and transport rules.</li>
+      
+<li><a href="https://askabiologist.asu.edu/leafcutters-spring-action" target="_blank" rel="noopener noreferrer">Arizona State University, Leafcutter Ants Spring into Action</a>: fungus gardens and rival-colony brood raids.</li>
+<li><a href="https://www.desertmuseum.org/books/nhsd_ants.php/nhsd_ants.php" target="_blank" rel="noopener noreferrer">Arizona-Sonora Desert Museum, Ants</a>: local leafcutters, army ants, and seasonal foraging.</li>
+<li><a href="https://extension.arizona.edu/sites/extension.arizona.edu/files/attachment/Ocotillo%20Plant%20Spotlight.pdf" target="_blank" rel="noopener noreferrer">University of Arizona Cooperative Extension, Ocotillo Plant Spotlight</a>: ecology and propagation by large cuttings or seed.</li>
+<li><a href="https://agriculture.az.gov/divisions/plants-produce-service-division/plants-produce-service-division-faq" target="_blank" rel="noopener noreferrer">Arizona Department of Agriculture</a>: native-plant protection and transport rules.</li>
     </ol>
   </details>
 </article>
