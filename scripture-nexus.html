@@ -31,10 +31,15 @@
 .nexus-hidden-world:focus-visible { outline:2px solid #ffe4ae;outline-offset:4px; }
 @media(max-width:620px) { .footer .shell { padding-right:48px; } }
 @media(prefers-reduced-motion:reduce) { .nexus-hidden-world span { transition:none; } }
+
+/* Beyond the Grave entry: kept independent of the guidance engine. */
+.resurrection-entry{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:20px;align-items:center;padding:26px;border:1px solid rgba(180,194,255,.46);border-radius:20px;background:linear-gradient(110deg,rgba(30,23,61,.91),rgba(5,27,44,.90));box-shadow:0 18px 55px rgba(0,0,0,.22)}
+.resurrection-entry h3{font-family:Georgia,serif;font-size:clamp(1.8rem,4vw,2.65rem);margin:8px 0}.resurrection-entry p{line-height:1.65;color:#d5e2f1;max-width:690px}.resurrection-entry .resurrection-link{display:inline-block;padding:11px 17px;background:linear-gradient(120deg,#347fb6,#8259bf);color:#fff;text-decoration:none;border-radius:999px;font-weight:850}.resurrection-entry .resurrection-orb{width:170px;aspect-ratio:1;border-radius:50%;margin:auto;display:grid;place-items:center;font-size:3rem;background:radial-gradient(circle,#fff3c2 2%,#96d2ff 12%,#324e89 22%,#100c36 36%,transparent 72%);box-shadow:0 0 35px #a1c9fb77}
+@media(max-width:700px){.resurrection-entry{grid-template-columns:1fr}.resurrection-entry .resurrection-orb{width:118px;grid-row:1/-1;grid-row:1}}
 </style>
 </head>
 <body>
-<header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>SCRIPTURE NEXUS</small></a><nav class="nav"><a href="#guidance">Life Guidance</a><a href="#discover">Discover</a><a href="#books">Books</a><a href="/">Home</a></nav></div></header>
+<header class="topbar"><div class="shell"><a class="brand" href="/">✦ ASTRALIS NOVA<small>SCRIPTURE NEXUS</small></a><nav class="nav"><a href="#guidance">Life Guidance</a><a href="#discover">Discover</a><a href="#life-restored">Life Restored</a><a href="#books">Books</a><a href="/">Home</a></nav></div></header>
 <main>
 <section class="hero shell">
 <div class="planet" aria-hidden="true"></div><div class="eyebrow">Ancient Wisdom • Modern Life</div><h1>Scripture Nexus</h1><p>Bring a real-life question. The Nexus connects it to Scripture, reads the passage in context, identifies the life lesson, and helps translate that wisdom into a practical response for today.</p>
@@ -61,6 +66,7 @@
 </div>
 </section>
 <section class="section shell" id="guidance"><div class="section-head"><div class="eyebrow">Life Guidance</div><h2>What are you dealing with?</h2><p>Choose a doorway or type the situation above.</p></div><div class="topic-grid" id="topicGrid"></div></section>
+<section class="section shell" id="life-restored"><div class="section-head"><div class="eyebrow">New Scripture Expedition</div><h2>Life restored: stories beyond the grave</h2></div><div class="resurrection-entry"><div><div class="eyebrow">Ten recorded occasions • Four days in Lazarus's tomb</div><h3>Beyond the Grave</h3><p>Explore the biblical accounts of people returning to life, open their original passages, and discover what is known, what remains unanswered, and how future resurrection prophecy differs.</p><a class="resurrection-link" href="/beyond-the-grave.html">Explore all ten accounts ✦</a></div><div class="resurrection-orb" aria-hidden="true">✦</div></div></section>
 <section class="section shell" id="discover"><div class="section-head"><div class="eyebrow">Discovery Signal</div><h2>Learn something unexpected</h2></div><div class="discovery"><div class="signal"><div class="eyebrow">Did You Know?</div><h3 id="factTitle"></h3><p id="factText"></p><div class="refs" id="factSource"></div><button class="action" id="randomFact">🎲 Another discovery</button></div><div class="card"><h3>🧠 Bible Challenge</h3><p id="quizQuestion"></p><div id="quizChoices"></div><div class="quiz-result" id="quizResult"></div><button class="action" id="newQuiz">New question</button></div></div></section>
 <section class="section shell" id="books"><div class="section-head"><div class="eyebrow">Bible Library</div><h2>66-book explorer</h2><p>Tap a book, choose a chapter, then tap any verse. Chapter text is loaded from the public-domain World English Bible when available.</p></div><h3>Hebrew-Aramaic Scriptures</h3><div class="books" id="hebrewBooks"></div><h3 style="margin-top:22px">Christian Greek Scriptures</h3><div class="books" id="greekBooks"></div><div class="book-info" id="bookInfo">Select a book to begin exploring.</div></section>
 </main>
