@@ -34,16 +34,34 @@ async function runSearch(q) {
   $("articleView").hidden=true;$("resultsView").hidden=false;$("results").replaceChildren();
   $("status").textContent="Searching…";
   try {
-    const res=await fetch("/api/acinfo/search?q="+encodeURIComponent(q));
-    const data=await res.json();
-    if(!res.ok)throw Error(data.error||"Search unavailable");
-    $("status").textContent=data.results.length+" results";
-    for(const item of data.results){
+    let items, titleOnly=false;
+    try {
+      const res=await fetch("/api/acinfo/search?q="+encodeURIComponent(q));
+      const data=await res.json();
+      if(!res.ok)throw Error(data.error||"Search unavailable");
+      items=data.results||[];
+    } catch(primaryError) {
+      // Optional single-file index: titles and direct archive links only.
+      // Avoid repeated network requests to the preservation host.
+      const res=await fetch("/acinfo/acpedia-index.json");
+      if(!res.ok)throw Error("Local search is not imported yet. Browse ACpedia categories above.");
+      const index=await res.json();
+      if(index.source!=="acpedia" || index.kind!=="title_only" || !Array.isArray(index.articles))
+        throw Error("ACpedia title index is unavailable.");
+      const terms=q.normalize("NFKC").toLocaleLowerCase().split(/\s+/).filter(Boolean).slice(0,8);
+      items=index.articles.filter(item=>terms.every(t=>item.title.toLocaleLowerCase().includes(t))).slice(0,30);
+      titleOnly=true;
+    }
+    $("status").textContent=items.length+" "+(titleOnly?"title matches (first 30, archive links)":"article results");
+    for(const item of items){
       const card=document.createElement("article");card.className="result";
       const heading=document.createElement("h2");const link=document.createElement("a");
-      link.href="?article="+encodeURIComponent(item.slug);link.textContent=item.title;heading.append(link);
-      const tag=document.createElement("div");tag.className="tag";tag.textContent=item.source;
-      const p=document.createElement("p");p.textContent=item.summary||item.excerpt||"";
+      link.href=titleOnly?item.url:"?article="+encodeURIComponent(item.slug);
+      if(titleOnly){link.target="_blank";link.rel="noopener noreferrer"}
+      link.textContent=item.title;heading.append(link);
+      const tag=document.createElement("div");tag.className="tag";tag.textContent=titleOnly?"ACpedia archive":item.source;
+      const p=document.createElement("p");
+      p.textContent=titleOnly?"Open the original preserved ACpedia article.":item.summary||item.excerpt||"";
       card.append(tag,heading,p);$("results").append(card);
     }
   } catch(e){$("status").textContent=e.message}
