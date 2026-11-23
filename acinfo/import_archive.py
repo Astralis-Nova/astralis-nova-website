@@ -11,6 +11,7 @@ verify redistribution rights, create Cloudflare resources, or upload R2 files.
 import argparse
 import bz2
 import gzip
+from urllib.parse import quote
 import hashlib
 import html
 from html.parser import HTMLParser
@@ -116,16 +117,16 @@ def write_import(args):
             continue
         summary = re.sub(r"\s+", " ", body)[:300]
         if args.format == "jsonl":
-            source_url = page.get("source_url") or args.source_url.rstrip("/") + "/" + title.replace(" ", "_")
+            source_url = page.get("source_url") or args.source_url.rstrip("/") + "/" + quote(title.replace(" ", "_"), safe="/")
         else:
             source_url = args.source_url.rstrip("/") + "/" + title.replace(" ", "_")
         manifest["articles"] += 1
         item_id = manifest["articles"]
         data = body.encode("utf-8")
         manifest["article_bytes"] += len(data)
-        body_key = f"articles/{slug}.txt" if args.storage == "r2" else None
+        body_key = f"articles/{slug}.txt.gz" if args.storage == "r2" else None
         if body_key:
-            (objects / f"{slug}.txt").write_bytes(data)
+            (objects / f"{slug}.txt.gz").write_bytes(gzip.compress(data, compresslevel=9, mtime=0))
         values = [item_id, slug, title, args.source, source_url, args.license,
                   args.attribution, summary, body if args.storage == "d1" else None, body_key]
         batch.append("INSERT INTO acinfo_articles (id,slug,title,source,source_url,license,attribution,summary,body_text,body_key) VALUES (" +
