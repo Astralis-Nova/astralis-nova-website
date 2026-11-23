@@ -140,13 +140,28 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <div class="guide-shell">
 <div class="guide-head">
 <div>
-<p class="eyebrow">Newest addition to AC Worlds</p>
+<p class="eyebrow">Featured AC world · News checked November 23, 2026</p>
 <h2 id="hollowtide-title">Hollowtide</h2>
-<p>Start in Holtburg and explore end-of-retail Dereth with new quests, dungeons, creatures and gear. Hollowtide is a free, fan-run ACE world with its own browser and desktop clients.</p>
-<div class="actions"><a href="#hollowtide-controls">Controls &amp; tutorials ↓</a></div>
+<p>Hollowtide is a free, fan-run Asheron’s Call server with end-of-retail Dereth, Darktide-style PvP, custom bosses and quests, seasonal events, and a built-in VTank-style Assistant. Start in Holtburg instantly in your browser, or play with the Windows, macOS or Linux desktop client.</p>
+<div class="actions"><a href="#hollowtide-updates">Latest server news ↓</a><a href="#hollowtide-controls">Controls &amp; tutorials ↓</a></div>
 </div>
 <a class="guide-link" href="https://hollowtide.org/" target="_blank" rel="noopener noreferrer">Play in your browser ↗</a>
 </div>
+<section class="source-console" id="hollowtide-updates" aria-labelledby="hollowtide-updates-title">
+<h3 id="hollowtide-updates-title">Latest verified Hollowtide server news</h3>
+<div class="steps">
+<article class="step"><h4>November 19 · Live character reporting</h4><p>TreeStats confirmed Hollowtide PK as the first server using its new direct character-data uploads. This improves tracking beyond reports from players running the Decal plugin. Character and population numbers are not counts of unique people.</p></article>
+<article class="step"><h4>November 13 · Cross-server global chat</h4><p>Hollowtide joined the Dereth Network shared chat, connecting its Global tab with participating worlds. More servers can join the network as they opt in.</p></article>
+<article class="step"><h4>November 7 · Assistant and loot improvements</h4><p>The developer’s public 0.1.97 devlog introduced a compact Assistant panel, a Legendary Chests loot profile, a visible Night Club dance buff and a password-recovery link. The current live client may have newer patches.</p></article>
+<article class="step"><h4>Through December 1 · Anniversary Night Club</h4><p>The revived Night Club event offers dancing, party experience bonuses and anniversary balloon rewards. Find an attendant in Cragstone, Zaikhal, Sanamar or Hebian-To.</p></article>
+</div>
+<p class="source-note">Sources checked November 23, 2026:
+<a href="https://treestats.net/news/now-available-new-character-and-population-ingest-methods" target="_blank" rel="noopener noreferrer">TreeStats November 19 update ↗</a> ·
+<a href="https://www.reddit.com/r/AsheronsCall/comments/1xvffwv/" target="_blank" rel="noopener noreferrer">Developer’s cross-server chat update ↗</a> ·
+<a href="https://lumpybutt33.itch.io/hollowtide/devlog/1761627/0197-a-simpler-assistant-a-legendary-chests-loot-profile-and-the-night-club-buff" target="_blank" rel="noopener noreferrer">Official client devlog ↗</a> ·
+<a href="https://lumpybutt33.itch.io/hollowtide/devlog/1746186/turbines-live-events-are-back-the-anniversary-and-the-night-club" target="_blank" rel="noopener noreferrer">Seasonal event details ↗</a>.
+For live status and new patches, see Hollowtide’s own website and release notes.</p>
+</section>
 <section class="hollowtide-gallery" aria-labelledby="hollowtide-gallery-title">
 <h3 id="hollowtide-gallery-title">Screenshots from Hollowtide</h3>
 <div class="steps">
@@ -246,7 +261,7 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 </section>
 
 <section class="dashboard shell" id="directory" aria-labelledby="worldsTitle">
-<div class="adventure-section-head"><p class="eyebrow">Find your home in Dereth</p><h2 id="worldsTitle">Choose your world</h2><p>Player worlds, with test-only servers excluded. A regular world may still be temporarily offline. Character counts can include bots and multiple accounts.</p><p>Only checked websites and wikis are shown. Unverified destinations are omitted; links can change after their check date.</p></div>
+<div class="adventure-section-head"><p class="eyebrow">Find your home in Dereth</p><h2 id="worldsTitle">Choose your world</h2><p>Hollowtide has its own complete spotlight above, so it is not repeated in this directory.</p><p>Player worlds, with test-only servers excluded. A regular world may still be temporarily offline. Character counts can include bots and multiple accounts.</p><p>Only checked websites and wikis are shown. Unverified destinations are omitted; links can change after their check date.</p></div>
 <details class="lore-fold" id="discord-guide"><summary>Find your world on Discord</summary><div class="explain"><article class="info"><h2>Find the community</h2><p>Each game world may have its own Discord server. Channels are the chat rooms inside that community.</p><p>Search <a href="https://discord.com/servers" target="_blank" rel="noopener noreferrer">Discord’s public server directory ↗</a> for the world’s name and “Asheron’s Call.” Not every community is listed. If you cannot find it, check the world’s website or ask a server admin or fellow player for its current public invite.</p></article><article class="info"><h2>Get an invite &amp; find channels</h2><p>Already a member? Use <strong>Create Invite</strong> beside a channel if your role permits it, then copy the invite. Ask an admin for a public, non-expiring invite where supported.</p><p>After joining, follow the welcome and rules instructions, then look for help, quests or announcements channels. You can only access channels your role permits; copying a channel address does not replace an invite.</p><p><a href="https://support.discord.com/hc/en-us/articles/208866998-Invites-101" target="_blank" rel="noopener noreferrer">Discord’s invite instructions ↗</a></p></article></div></details>
 <div class="toolbar">
 <div class="search-row"><label><span class="eyebrow">Search worlds</span><input id="search" type="search" placeholder="Server name, feature or address…" autocomplete="off"></label><label><span class="eyebrow">Emulator</span><select id="emulator"><option value="all">All emulators</option><option>ACE</option><option>GDLE</option><option>GDL</option></select></label><label><span class="eyebrow">Sort</span><select id="sort"><option value="population">Character activity</option><option value="status">Online status</option><option value="name">World name</option></select></label></div>
@@ -508,7 +523,9 @@ var render=function(){
 var load=function(){
  status.textContent='Scanning community portals…';document.getElementById('refresh').disabled=true;
  fetch('/api/ac-worlds?v=20261104hollowtideart',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
-  state.worlds=Array.isArray(data.worlds)?data.worlds:[];
+  // Hollowtide appears only in the dedicated, up-to-date spotlight above.
+  // Exclude every Hollowtide/PK alias from directory cards and counts.
+  state.worlds=Array.isArray(data.worlds)?data.worlds.filter(function(w){return !/^hollowtide(?:\b|$)/i.test(String(w.name||'').trim())}):[];
   document.getElementById('totalWorlds').textContent=state.worlds.length;
   document.getElementById('onlineWorlds').textContent=state.worlds.filter(function(w){return w.status==='Online'}).length;
   document.getElementById('pvpWorlds').textContent=state.worlds.filter(function(w){return w.ruleset==='PvP'||w.ruleset==='Hybrid'}).length;
