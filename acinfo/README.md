@@ -61,3 +61,29 @@ Keep a separate, untouched master archive locally, with checksum and metadata. A
 ### Known limits
 
 This is **search infrastructure, not the full wiki mirror**: no media converter, original revision history, MediaWiki templates, AI answer generation, sitemap, or complete source ingestion yet. Plain-text extraction removes some markup, and the full-text index duplicates article text for fast retrieval. Benchmark D1 storage and read/write quotas after a sample batch. An unverified .7z file is never safe to execute or publish blindly.
+
+
+## ACCPP v1.1 acquisition and integrity verification (Windows)
+
+Official release: https://www.reddit.com/r/AsheronsCall/comments/1xnbekp/
+Download: https://mega.nz/file/LhN2QSbL#K30svYXmhdUJK01WyBUvFvn1i5DhWwQVshZ990HNmqQ
+
+The release publisher reports:
+- Archive: `accppwiki-docker-mediawiki-1.46-offline-release-v1.1.7z` (4.1 GB)
+- SHA-256: `B075562C54C326A899AA27EB98E4BB73850E0103DC104E7803165A8205B6AD0F`
+- Approximately 17 GB free space during installation, 12 GB after
+- Docker Compose runtime exposing the wiki at `http://localhost:8080`
+
+**Never run an archive without a matching SHA-256.** Store it outside the website's Git repository. For example, on the Windows machine:
+
+```powershell
+New-Item -ItemType Directory -Force 'D:\AC\Archives' | Out-Null
+# Manually download the official file into D:\AC\Archives.
+.\acinfo\verify-preservation-archive.ps1 -ArchivePath 'D:\AC\Archives\accppwiki-docker-mediawiki-1.46-offline-release-v1.1.7z'
+```
+
+After verification, use 7-Zip to inspect/extract into a **separate** directory, not `D:\AC\Server` or MariaDB's data directories. Read the included README and Docker Compose configuration before starting anything. According to the publisher, the standard commands inside the extracted directory are `powershell -ExecutionPolicy Bypass -File .\load-images.ps1` followed by `docker compose up -d`. Ensure Docker services/ports/volumes don't conflict with the user's ACE setup.
+
+The first phase of export is extracting an authorized **content** dump from the working wiki. MediaWiki supports dump tools, but exact container names and maintenance script paths depend on the downloaded package; **do not guess commands before inspecting its included compose files**. The current importer accepts XML/JSONL, not the vendor's `.7z` directly.
+
+A full text-and-media mirror will need a separate media extraction process and per-image license checks. The original content can have mixed licensing; a general wiki content license does not automatically cover game screenshots, promotional artwork, or user-submitted images.
