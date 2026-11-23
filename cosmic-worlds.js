@@ -60,7 +60,7 @@
       id: "rainbow-promise",
       href: "/rainbow-promise.html",
       ariaLabel: "Open The Rainbow Promise reflection",
-      planetClass: "planet-guestbook",
+      planetClass: "planet-guestbook planet-rainbow-realistic",
       title: "Rainbow Promise",
       description: "Rain, Noah’s ark, the covenant, and hope carried across the sky after a storm.",
       badge: "Reflection World"
@@ -117,6 +117,8 @@
       ? '<picture><source type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" alt="" width="360" height="360" loading="lazy" decoding="async"></picture>'
       : world.id === "toon-planet"
       ? '<img src="/assets/toon-planet/toon-world-realistic-v2.webp" alt="" width="512" height="512" loading="lazy" decoding="async">'
+      : world.id === "rainbow-promise"
+      ? '<img src="/assets/rainbow-promise/realistic-planet-card.svg?v=20261123rainbowreal" alt="" width="128" height="128" loading="lazy" decoding="async">'
       : world.id === "scripture-nexus"
       ? scriptureVisual
       : world.id === "emerald-wisdom"
@@ -186,6 +188,13 @@
       .planet-biography{background:radial-gradient(circle at 35% 28%,#ffe4fa 0 5%,#e75ebd 17%,#7843c8 47%,#25205f 76%,#09091b 100%)}
       .planet-orbit{background:radial-gradient(circle at 37% 28%,#fff2c6 0 4%,#f1a85f 17%,#8c4d45 46%,#3b274a 75%,#0b0912 100%)}
       .planet-guestbook{background:radial-gradient(circle at 35% 30%,#e8f5ff 0 5%,#80bce7 17%,#3a6091 47%,#202747 75%,#090a16 100%)}
+      /* Natural Rainbow Promise planet: genuine globe texture and subtle atmospheric rainbow. */
+      .astralis-planet.planet-rainbow-realistic{flex:0 0 110px;width:110px;height:110px;border:0;border-radius:50%;background:none!important;box-shadow:none!important;overflow:visible;animation:astralisRainbowWorldFloat 13s ease-in-out infinite}
+      .planet-rainbow-realistic::before,.planet-rainbow-realistic::after{content:none!important;display:none!important}
+      .planet-rainbow-realistic img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 11px rgba(88,160,255,.22));pointer-events:none}
+      @keyframes astralisRainbowWorldFloat{0%,100%{translate:0 0}50%{translate:0 -3px}}
+      @media(max-width:440px){.astralis-planet.planet-rainbow-realistic{flex-basis:96px;width:96px;height:96px}}
+      @media(prefers-reduced-motion:reduce){.astralis-planet.planet-rainbow-realistic{animation:none!important}}
 
       .astralis-planet.planet-scripture{flex:0 0 112px;width:112px;height:104px;border-radius:0;background:none;box-shadow:none;overflow:visible;isolation:isolate;transform-style:preserve-3d}
       .scripture-planet-core{position:absolute;left:50%;top:50%;width:76px;height:76px;transform:translate(-50%,-50%);border-radius:50%;overflow:visible;z-index:5;background:radial-gradient(circle at 50% 50%,#123a63,#050a15 72%);box-shadow:inset -12px -10px 22px rgba(0,0,0,.55),0 0 13px rgba(88,223,255,.6),0 0 31px rgba(73,108,255,.34)}
