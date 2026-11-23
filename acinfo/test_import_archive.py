@@ -21,16 +21,12 @@ class TestArchiveImport(unittest.TestCase):
                 json.dumps({"title": "Shadow Shards", "body": "Duplicate"})+"\n"+
                 json.dumps({"title": "Atlan's Weapons", "body": "Atlan stones and weapons are found in Dereth."})+"\n",
                 encoding="utf-8")
-            class Args:
-                input = str(source)
-                format = "jsonl"
-                output = str(base / "build")
-                source = "retail"
-                source_url = "https://example.org/wiki/"
-                license = "test-only"
-                attribution = "fictional fixture"
-                storage = "r2"
-                batch_size = 1
+            from types import SimpleNamespace
+            Args = SimpleNamespace(
+                input=str(source), format="jsonl", output=str(base / "build"),
+                source="retail", source_url="https://example.org/wiki/",
+                license="test-only", attribution="fictional fixture",
+                storage="r2", batch_size=1)
             mod.write_import(Args)
             out = Path(Args.output)
             manifest = json.loads((out / "manifest.json").read_text())
