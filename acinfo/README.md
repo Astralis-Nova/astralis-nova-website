@@ -1,34 +1,63 @@
-# ACInfo search foundation (not yet a populated mirror)
+# ACInfo • Astralis Nova (preview branch)
 
-This is a non-destructive Cloudflare Pages prototype. It adds /acinfo.html and two read-only endpoints. **No wiki content has been imported.** Review source licensing and attribution, especially for images, before redistribution.
+This is a source-aware, searchable archive foundation for ACWorlds.
+**No ACPedia archive has been imported or published yet.**
+The live website is unchanged until review and merge.
 
-## Architecture
-- Dedicated D1 binding `ACINFO_DB` holds article metadata and a SQLite FTS5 index.
-- Optional R2 binding `ACINFO_ARCHIVE` holds individual UTF-8 text objects addressed by `body_key`. R2 supports storage-level compression; do not store one huge ZIP that requires decompression per request.
-- Metadata has `source`, `source_url`, `license`, and `attribution` for clear provenance. Keep retail, Hollowtide and Astralis separate.
-- Keep the untouched original compressed archive as a private, versioned preservation backup outside the public Git repository.
-- Images are deferred to a future stage pending source license verification and asset mapping.
+## What is implemented
 
-## Deployment (requires Cloudflare dashboard access)
-1. Create a **new** D1 database named `ACINFO_DB`, not the existing `DB` or `CHESS_DB`.
-2. Apply `acinfo/schema.sql` using Wrangler's D1 execute facility.
-3. Bind that database as `ACINFO_DB` to Pages production and preview environments.
-4. If using R2-backed article bodies, create an R2 bucket and bind it as `ACINFO_ARCHIVE` (do not commit its credentials).
-5. Extract the preservation archive locally. Audit reuse rights and normalize UTF-8 article text; generate one unique URL-safe slug per article. Import metadata with `body_key` or `body_text`, plus a matching FTS row.
-6. Verify search, pagination/data completeness, attribution, malformed queries, resource limits and licensing in a preview deployment before merging.
+- `/acinfo.html`: standalone search and article viewer, text safely rendered without HTML injection.
+- `/api/acinfo/search`: parameterized D1 full-text (FTS5) search with snippets.
+- `/api/acinfo/article`: loads one article, decompressing its .txt.gz object from R2 when needed.
+- `schema.sql`: **dedicated** ACINFO_DB with article attribution, source, title, and search index.
+- `import_archive.py`: streaming MediaWiki XML (.xml, .gz, .bz2) **or** normalized JSONL input, deterministic slugs, checked batches, and individually compressed gzip article objects.
+- `test_import_archive.py`: fixtures for XML extraction, duplicate handling, gzip decompression, and SQLite FTS5 retrieval.
 
-## Import contract
-For each article:
-- Insert into `acinfo_articles` fields `slug,title,source,source_url,license,attribution,summary,body_key` (or `body_text`).
-- Obtain its numeric `id`.
-- Insert `(rowid,title,body)` into `acinfo_fts` with the exact same `id`. `body` contains searchable plain text, including any relevant categories.
-- Slugs must match `[A-Za-z0-9][A-Za-z0-9-]{0,180}`.
-- Recommended ingestion is resumable in batches with checkpointing, deduplication and integrity checks.
-- Never import server-exclusive wiki material as original retail content.
+## Real archive format matters
 
-## Known limits
-- No AI answer generator in this prototype. Ordinary full-text search is cheaper and gives source-linked results first.
-- The FTS query currently requires **all** query terms. Add a safe fuzzy/ranked fallback after evaluating the corpus.
-- The article endpoint returns plain text (not raw third-party HTML) to avoid scripting injection.
-- Source archives can contain database dumps and images not directly supported by this importer; conversion tooling remains to be developed once the actual archive format is inspected.
-- We should not claim the full corpus is online until an import report confirms counts.
+The ACCPP v1.1 release is a **4.1 GB .7z Docker/MediaWiki server bundle**, not a ready-to-run MediaWiki XML export. The importer DOES NOT directly ingest the .7z, Docker images, MariaDB tables, or media files. It requires exporting page content to MediaWiki XML or JSONL first (after local installation and legal review). The media files and full revision histories also require a future, separate pipeline.
+
+Official project information:
+https://www.reddit.com/r/AsheronsCall/comments/1xnbekp/
+
+Do not upload the 4.1 GB release into GitHub or Cloudflare Pages.
+
+## Local importer test
+
+```sh
+python -m unittest discover -s acinfo -p 'test_*.py' -v
+```
+
+## Convert and import (after obtaining a suitable licensed XML export)
+
+```sh
+python acinfo/import_archive.py \
+  --input exported-pages.xml.gz --format mediawiki \
+  --output ./acinfo-import-001 --source retail \
+  --source-url https://asheron.info/wiki/index.php/ \
+  --license 'REPLACE_WITH_VERIFIED_LICENSE' \
+  --attribution 'REPLACE_WITH_VERIFIED_CREDITS'
+```
+
+- `batch-NNNNN.sql` files go to the new D1 ACINFO_DB only, one at a time.
+- `r2/articles/*.txt.gz` go to the ACINFO_ARCHIVE R2 bucket, retaining the `articles/` prefix.
+- `manifest.json` reports counts; compare it with the actual export article count before declaring completeness.
+- R2 upload and D1 migration require authenticated Cloudflare access and are intentionally **not** automated in this branch.
+- Import SQL batches use inserts; reimport to a fresh database or implement an explicit, tested upsert before reruns.
+
+## Cloudflare configuration
+
+1. Create new D1 database `ACINFO_DB`, leaving `DB` and `CHESS_DB` untouched.
+2. Execute `acinfo/schema.sql` in ACINFO_DB (not in the other databases).
+3. Bind the new database to Pages Functions as `ACINFO_DB`.
+4. Create R2 bucket and bind `ACINFO_ARCHIVE`; upload individual .txt.gz objects.
+5. Test search, articles, malformed queries, credits, content completeness and costs on a preview URL.
+6. Merge only after tests and archival attribution/license review.
+
+### Preservation and reuse
+
+Keep a separate, untouched master archive locally, with checksum and metadata. Attribute all original wiki contributors, preserve source URLs, follow applicable content/image licenses, and keep retail, Hollowtide, and Astralis data visibly distinct.
+
+### Known limits
+
+This is **search infrastructure, not the full wiki mirror**: no media converter, original revision history, MediaWiki templates, AI answer generation, sitemap, or complete source ingestion yet. Plain-text extraction removes some markup, and the full-text index duplicates article text for fast retrieval. Benchmark D1 storage and read/write quotas after a sample batch. An unverified .7z file is never safe to execute or publish blindly.
