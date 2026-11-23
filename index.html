@@ -724,6 +724,46 @@
   <link rel="stylesheet" href="astralis-celestial-drift.css?v=20261123realcomet">
   <link rel="stylesheet" href="/homepage-usability.css?v=20261017freeroam">
   <script src="/homepage-usability.js?v=20261017freeroam" defer></script>
+
+  <!-- Rainbow Promise visual override. Kept in the HTML shell to survive
+       older cached versions of the deferred planet directory script. -->
+  <style id="astralis-rainbow-planet-fix-v2">
+    .astralis-planet-link[data-world="rainbow-promise"] .astralis-planet,
+    .astralis-planet-link[href="/rainbow-promise.html"] .astralis-planet {
+      flex:0 0 108px!important;
+      width:108px!important;
+      height:108px!important;
+      border:0!important;
+      border-radius:50%!important;
+      box-shadow:none!important;
+      overflow:visible!important;
+      background:transparent url('/assets/rainbow-promise/realistic-planet-card.svg?v=20261123rainbowfix2') center/contain no-repeat!important;
+      animation:astralisRainbowPlanetBreathe 12s ease-in-out infinite!important;
+    }
+    .astralis-planet-link[data-world="rainbow-promise"] .astralis-planet::before,
+    .astralis-planet-link[data-world="rainbow-promise"] .astralis-planet::after,
+    .astralis-planet-link[href="/rainbow-promise.html"] .astralis-planet::before,
+    .astralis-planet-link[href="/rainbow-promise.html"] .astralis-planet::after{
+      content:none!important;
+      display:none!important;
+    }
+    .astralis-planet-link[data-world="rainbow-promise"] .astralis-planet > *,
+    .astralis-planet-link[href="/rainbow-promise.html"] .astralis-planet > * {
+      display:none!important;
+    }
+    @keyframes astralisRainbowPlanetBreathe {
+      0%,100% { translate:0 1px; filter:drop-shadow(0 0 6px rgba(80,151,233,.21)); }
+      50% { translate:0 -3px; filter:drop-shadow(0 0 12px rgba(91,180,255,.32)); }
+    }
+    @media(max-width:440px){
+      .astralis-planet-link[data-world="rainbow-promise"] .astralis-planet,
+      .astralis-planet-link[href="/rainbow-promise.html"] .astralis-planet {flex-basis:96px!important;width:96px!important;height:96px!important}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .astralis-planet-link[data-world="rainbow-promise"] .astralis-planet,
+      .astralis-planet-link[href="/rainbow-promise.html"] .astralis-planet {animation:none!important}
+    }
+  </style>
 </head>
 <body>
 
@@ -1957,5 +1997,38 @@
   <script src="/roadster-real-roaming.js?v=20261102roadster-complete3" defer></script>
   <script src="astralis-celestial-drift.js?v=20261103warmrim"></script>
   <script src="/challenger-flight.js?v=20261113orbiter3d2" defer></script>
+
+  <!-- Replace legacy rainbow-and-cloud contents even if a cached client script
+       recreates them after this document finishes loading. -->
+  <script id="astralis-rainbow-planet-guard-v2">
+  (() => {
+    const imgUrl = '/assets/rainbow-promise/realistic-planet-card.svg?v=20261123rainbowfix2';
+    const upgrade = () => {
+      const card = document.querySelector('[data-world="rainbow-promise"], .astralis-planet-link[href="/rainbow-promise.html"]');
+      const globe = card?.querySelector('.astralis-planet');
+      if (!globe) return false;
+      if (globe.dataset.rainbowPlanetVersion !== '2') {
+        globe.dataset.rainbowPlanetVersion = '2';
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = '';
+        img.width = 128;
+        img.height = 128;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        globe.replaceChildren(img);
+      }
+      return true;
+    };
+    const start = () => {
+      if (upgrade()) return;
+      const observer = new MutationObserver(() => {if (upgrade()) observer.disconnect()});
+      observer.observe(document.body, {childList:true,subtree:true});
+      setTimeout(() => observer.disconnect(), 30000);
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once:true});
+    else start();
+  })();
+  </script>
 </body>
 </html>
