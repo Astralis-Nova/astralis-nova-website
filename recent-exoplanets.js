@@ -59,6 +59,8 @@
     }
 
     links.forEach(link => {
+      // These cards own their responsive artwork; deferred decoration must not replace it.
+      if (link.classList.contains("cinematic-world")) return;
       const world = worlds[link.dataset.world];
       if (!world) return;
 

@@ -1,112 +1,72 @@
-/* Astralis Nova connected worlds: cinematic 4-planet art, 2026-11-23.
- * One small 2x2 AVIF sprite supplies all four worlds, preserving transparent
- * edges and keeping bandwidth low for phones. No markup or content is removed.
- */
-:root { --an-cinematic-worlds-art: url('/assets/astralis-worlds-quartet-20261123.avif'); }
-
-:is(
-  .astralis-planet-link[data-world="first-orbit"],
-  .astralis-planet-link[data-world="scripture-nexus"],
-  .astralis-planet-link[data-world="faith-stories"],
-  .astralis-planet-link[data-world="wild-encounters"],
-  a[href="/first-orbit.html"],
-  a[href="/scripture-nexus.html"],
-  a[href="/faith-stories.html"],
-  a[href*="wild-encounters"]
-) .astralis-planet {
-  flex: 0 0 118px !important;
-  width: 118px !important;
-  height: 118px !important;
-  min-width: 118px !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  overflow: visible !important;
-  box-shadow: none !important;
-  background-color: transparent !important;
-  background-image: var(--an-cinematic-worlds-art) !important;
-  background-repeat: no-repeat !important;
-  background-size: 200% 200% !important;
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,.32));
-  animation: an-cinematic-world-breathe 12s ease-in-out infinite !important;
-  transform: none;
+/* Individual transparent artwork, shared only by the four upgraded cards.
+   The renderers emit one lazy image each, with no legacy moons or ring layers. */
+#connected-worlds .cinematic-world {
+  --planet-light: 102, 140, 255;
+  background: radial-gradient(ellipse at 10% 50%, rgba(var(--planet-light), .13), transparent 65%), linear-gradient(135deg, #0a1629f5, #070d1bf5);
+}
+#connected-worlds [data-world="scripture-nexus"] { --planet-light: 255, 193, 107; }
+#connected-worlds [data-world="faith-stories"] { --planet-light: 190, 215, 255; }
+#connected-worlds [data-world="wild-encounters"] { --planet-light: 127, 197, 134; }
+#connected-worlds .cinematic-world .planet-cinematic {
+  position: relative;
+  display: block;
+  flex: 0 0 118px;
+  width: 118px;
+  height: 118px;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  overflow: visible;
   isolation: isolate;
+  transform: none;
+  animation: an-cinematic-world-float 12s ease-in-out infinite;
 }
-
-/* Hide the old CSS planets, decorative moons, and artificial ring overlays. */
-:is(
-  .astralis-planet-link[data-world="first-orbit"],
-  .astralis-planet-link[data-world="scripture-nexus"],
-  .astralis-planet-link[data-world="faith-stories"],
-  .astralis-planet-link[data-world="wild-encounters"],
-  a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],
-  a[href="/faith-stories.html"],a[href*="wild-encounters"]
-) .astralis-planet > * {display:none!important;}
-
-:is(
-  .astralis-planet-link[data-world="first-orbit"],
-  .astralis-planet-link[data-world="scripture-nexus"],
-  .astralis-planet-link[data-world="faith-stories"],
-  .astralis-planet-link[data-world="wild-encounters"],
-  a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],
-  a[href="/faith-stories.html"],a[href*="wild-encounters"]
-) .astralis-planet::before,
-:is(
-  .astralis-planet-link[data-world="first-orbit"],
-  .astralis-planet-link[data-world="scripture-nexus"],
-  .astralis-planet-link[data-world="faith-stories"],
-  .astralis-planet-link[data-world="wild-encounters"],
-  a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],
-  a[href="/faith-stories.html"],a[href*="wild-encounters"]
-) .astralis-planet::after {content:none!important;display:none!important;}
-
-:is(.astralis-planet-link[data-world="first-orbit"],a[href="/first-orbit.html"]) .astralis-planet {
-  background-position: 0% 0% !important;
-  filter:drop-shadow(0 0 15px rgba(92,120,255,.42)) !important;
-  animation-delay:-3s!important;
+#connected-worlds .planet-cinematic::before,
+#connected-worlds .planet-cinematic::after { content: none; }
+#connected-worlds .planet-cinematic > .cinematic-planet-art {
+  position: static;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  object-fit: contain;
+  box-shadow: none;
+  filter: drop-shadow(0 0 7px rgba(var(--planet-light), .22));
+  transition: transform .35s ease;
 }
-:is(.astralis-planet-link[data-world="scripture-nexus"],a[href="/scripture-nexus.html"]) .astralis-planet {
-  background-position: 100% 0% !important;
-  filter:drop-shadow(0 0 13px rgba(255,188,94,.27)) !important;
-  animation-delay:-8s!important;
+#connected-worlds [data-world="first-orbit"] .planet-cinematic { animation-delay: -3s; }
+#connected-worlds [data-world="scripture-nexus"] .planet-cinematic { animation-delay: -8s; }
+#connected-worlds [data-world="faith-stories"] .planet-cinematic { animation-delay: -5s; }
+#connected-worlds [data-world="wild-encounters"] .planet-cinematic { animation-delay: -11s; }
+#connected-worlds .cinematic-world:focus-visible {
+  outline: 2px solid rgb(var(--planet-light));
+  outline-offset: 3px;
 }
-:is(.astralis-planet-link[data-world="faith-stories"],a[href="/faith-stories.html"]) .astralis-planet {
-  background-position: 0% 100% !important;
-  filter:drop-shadow(0 0 15px rgba(196,220,255,.32)) !important;
-  animation-delay:-5s!important;
+#connected-worlds .cinematic-world:focus-visible .cinematic-planet-art { transform: scale(1.04); }
+@media (hover: hover) and (pointer: fine) {
+  #connected-worlds .cinematic-world:hover .cinematic-planet-art { transform: scale(1.04); }
 }
-:is(.astralis-planet-link[data-world="wild-encounters"],a[href*="wild-encounters"]) .astralis-planet {
-  background-position: 100% 100% !important;
-  filter:drop-shadow(0 0 13px rgba(103,193,123,.30)) !important;
-  animation-delay:-11s!important;
+@keyframes an-cinematic-world-float {
+  0%, 100% { translate: 0 1px; }
+  50% { translate: 0 -3px; }
 }
-
-/* Individual atmospheric lighting rather than identical generic backgrounds. */
-:is(.astralis-planet-link[data-world="first-orbit"],a[href="/first-orbit.html"]) {
-  background: radial-gradient(ellipse at 10% 50%,rgba(44,68,174,.16),transparent 60%),linear-gradient(135deg,rgba(8,18,42,.96),rgba(6,10,23,.95)) !important;
+@media (max-width: 640px) {
+  #connected-worlds .cinematic-world .planet-cinematic { flex-basis: 102px; width: 102px; height: 102px; }
 }
-:is(.astralis-planet-link[data-world="scripture-nexus"],a[href="/scripture-nexus.html"]) {
-  background: radial-gradient(ellipse at 10% 50%,rgba(219,169,81,.10),transparent 62%),linear-gradient(135deg,rgba(10,25,42,.96),rgba(9,12,26,.95)) !important;
+@media (max-width: 360px) {
+  #connected-worlds .cinematic-world { gap: 10px; padding: 12px; }
+  #connected-worlds .cinematic-world .planet-cinematic { flex-basis: 90px; width: 90px; height: 90px; }
 }
-:is(.astralis-planet-link[data-world="faith-stories"],a[href="/faith-stories.html"]) {
-  background: radial-gradient(ellipse at 11% 50%,rgba(138,165,224,.12),transparent 61%),linear-gradient(135deg,rgba(13,21,39,.96),rgba(8,13,27,.95)) !important;
-}
-:is(.astralis-planet-link[data-world="wild-encounters"],a[href*="wild-encounters"]) {
-  background: radial-gradient(ellipse at 9% 50%,rgba(101,165,100,.15),transparent 62%),linear-gradient(135deg,rgba(12,27,23,.96),rgba(7,17,21,.95)) !important;
-}
-@keyframes an-cinematic-world-breathe {
-  0%,100% {translate:0 1px}
-  50%{translate:0 -4px}
-}
-:is(.astralis-planet-link[data-world="first-orbit"],.astralis-planet-link[data-world="scripture-nexus"],.astralis-planet-link[data-world="faith-stories"],.astralis-planet-link[data-world="wild-encounters"],a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],a[href="/faith-stories.html"],a[href*="wild-encounters"]):hover .astralis-planet {
-  scale:1.07;
-}
-@media(max-width:640px){
-  :is(.astralis-planet-link[data-world="first-orbit"],.astralis-planet-link[data-world="scripture-nexus"],.astralis-planet-link[data-world="faith-stories"],.astralis-planet-link[data-world="wild-encounters"],a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],a[href="/faith-stories.html"],a[href*="wild-encounters"]) .astralis-planet {
-    flex-basis:102px!important;width:102px!important;height:102px!important;min-width:102px!important;
-  }
-}
-@media(prefers-reduced-motion:reduce){
-  :is(.astralis-planet-link[data-world="first-orbit"],.astralis-planet-link[data-world="scripture-nexus"],.astralis-planet-link[data-world="faith-stories"],.astralis-planet-link[data-world="wild-encounters"],a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],a[href="/faith-stories.html"],a[href*="wild-encounters"]) .astralis-planet {
-    animation:none!important;translate:0!important;scale:1!important;
+@media (prefers-reduced-motion: reduce) {
+  #connected-worlds .cinematic-world,
+  #connected-worlds .cinematic-world .planet-cinematic,
+  #connected-worlds .cinematic-world .cinematic-planet-art {
+    animation: none !important;
+    transition: none !important;
+    translate: none !important;
+    transform: none !important;
   }
 }

@@ -145,9 +145,9 @@
 
   const critical = [
     `/site-fixes.js?v=20261005audit`,
-    `/cosmic-worlds.js?v=20261123rainbowwebp3`,
+    `/cosmic-worlds.js?v=20261123individual1`,
     `/realistic-orbit.js?v=20260721b`,
-    `/astralis-celestial-drift.js?v=20261123realcomet`,
+    `/astralis-celestial-drift.js?v=20261123individual1`,
     `/astralis-ai-upgrades.js?v=20260722q`,
     `/astralis-stragglers.js?v=20260722q`,
     `/astralis-brand-orbit.js?v=20260722s`,
@@ -158,7 +158,7 @@
     `/realistic-galaxy-upgrade.js?v=20261007wide2`,
     `/astralis-nova-explorer.js?v=20260722e`,
     `/rickroll-planet.js?v=20260722a`,
-    `/recent-exoplanets.js?v=20260727r`,
+    `/recent-exoplanets.js?v=20261123individual1`,
     `/conquest-media.js?v=20260720a`,
     `/vulcan-salute.js?v=20260722l`,
     `/cosmic-chuckles.js?v=20260722a`,

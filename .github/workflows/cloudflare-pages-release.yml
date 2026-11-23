@@ -98,6 +98,7 @@ jobs:
           node --test tests/snoopy-patrol-rig.test.cjs
           node --check rickroll-planet.js
           node --check recent-exoplanets.js
+          node --test tests/home-planet-art.test.cjs
           node --check conquest-media.js
           node --check vulcan-salute.js
           node --check cosmic-chuckles.js

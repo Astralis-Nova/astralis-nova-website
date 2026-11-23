@@ -51,7 +51,8 @@
       id: "first-orbit",
       href: "/first-orbit.html",
       ariaLabel: "Enter the First Orbit archive planet",
-      planetClass: "planet-orbit ringed",
+      planetClass: "planet-cinematic",
+      cinematicArt: "first-orbit",
       title: "First Orbit",
       description: "Echoes, original MIDI relics, Sandy’s Angels, and a recovered 51-track jukebox.",
       badge: "Archive World"
@@ -69,7 +70,8 @@
       id: "scripture-nexus",
       href: "/scripture-nexus.html",
       ariaLabel: "Open Scripture Nexus Bible exploration world",
-      planetClass: "planet-scripture",
+      planetClass: "planet-cinematic",
+      cinematicArt: "scripture-nexus",
       title: "Scripture Nexus",
       description: "Ask Bible questions, explore life guidance, discover random learning signals, and browse all 66 books.",
       badge: "Bible Explorer"
@@ -88,30 +90,20 @@
       id: "faith-stories",
       href: "/faith-stories.html",
       ariaLabel: "Enter the Astralis Nova Faith Stories world",
-      planetClass: "planet-faith-stories",
+      planetClass: "planet-cinematic",
+      cinematicArt: "faith-stories",
       title: "Faith Stories",
       description: "Ancient accounts of courage, prayer, protection, hope, and the life lessons they still carry.",
       badge: "Faith Story World"
     },  ];
 
-  const scriptureVisual = `
-    <span class="scripture-orbit scripture-orbit-b"><span class="scripture-moon scripture-moon-b"></span></span>
-    <span class="scripture-planet-core">
-      <img src="/astralis-gas-giant.png" alt="" loading="lazy" decoding="async">
-      <span class="scripture-atmosphere"></span>
-    </span>
-    <span class="scripture-orbit scripture-orbit-a"><span class="scripture-moon scripture-moon-a"></span></span>`;
-
-  const faithStoriesVisual = `
-    <span class="faith-moon-halo"></span>
-    <img src="/assets/faith/faith-stories-moon.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
-    <span class="faith-moon-orbit"></span>`;
-
   function renderWorldCard(world) {
     const externalAttributes = world.external ? ' target="_blank" rel="noopener noreferrer"' : "";
     const tag = world.placeholder ? "div" : "a";
     const destination = world.placeholder ? "" : ` href="${world.href}"`;
-    const visual = world.id === "ac-worlds"
+    const visual = world.cinematicArt
+      ? `<img class="cinematic-planet-art" src="/assets/home-planets/${world.cinematicArt}-192.webp?v=20261123individual1" srcset="/assets/home-planets/${world.cinematicArt}-192.webp?v=20261123individual1 192w, /assets/home-planets/${world.cinematicArt}-384.webp?v=20261123individual1 384w" sizes="(max-width: 360px) 90px, (max-width: 640px) 102px, 118px" alt="" width="384" height="384" loading="lazy" decoding="async">`
+      : world.id === "ac-worlds"
       ? '<picture><source media="(prefers-reduced-motion: no-preference)" srcset="/assets/ac-portals/portal-space-motion.webp"><img src="/assets/ac-portals/portal-space-still.webp" alt="" width="320" height="180" loading="lazy" decoding="async"></picture>'
       : world.id === "reserved-world"
       ? '<picture><source type="image/webp" media="(prefers-reduced-motion: no-preference)" srcset="/assets/astralis-sphere/an-blue-motion.webp"><img src="/assets/astralis-sphere/an-blue-still.webp" alt="" width="360" height="360" loading="lazy" decoding="async"></picture>'
@@ -119,15 +111,11 @@
       ? '<img src="/assets/toon-planet/toon-world-realistic-v2.webp" alt="" width="512" height="512" loading="lazy" decoding="async">'
       : world.id === "rainbow-promise"
       ? '<img src="/assets/rainbow-promise/realistic-planet-card.webp?v=20261123rainbowwebp3" alt="" width="128" height="128" loading="lazy" decoding="async">'
-      : world.id === "scripture-nexus"
-      ? scriptureVisual
       : world.id === "emerald-wisdom"
       ? '<span class="emerald-planet-atmosphere"></span><span class="emerald-planet-surface"></span><span class="emerald-planet-ring"></span>'
-      : world.id === "faith-stories"
-      ? faithStoriesVisual
       : "";
     return `
-      <${tag} class="astralis-planet-link" data-world="${world.id}"${destination} aria-label="${world.ariaLabel}"${externalAttributes}>
+      <${tag} class="astralis-planet-link${world.cinematicArt ? ' cinematic-world' : ''}" data-world="${world.id}"${destination} aria-label="${world.ariaLabel}"${externalAttributes}>
         <span class="astralis-planet ${world.planetClass}" aria-hidden="true">${visual}</span>
         <span class="astralis-planet-copy">
           <strong>${world.title}</strong>
