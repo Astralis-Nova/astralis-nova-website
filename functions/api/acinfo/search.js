@@ -12,10 +12,10 @@ export async function onRequestGet({ request, env }) {
   const match = terms.map(term => '"' + term.replace(/"/g, '""') + '"*').join(" AND ");
   try {
     const sql = `SELECT a.slug, a.title, a.source, a.summary, a.source_url,
-       snippet(acinfo_fts, 1, '[', ']', '…', 22) AS excerpt
-       FROM acinfo_fts JOIN acinfo_articles a ON a.id = acinfo_fts.rowid
-       WHERE acinfo_fts MATCH ? ${source ? "AND a.source = ?" : ""}
-       ORDER BY bm25(acinfo_fts, 9.0, 1.0) LIMIT 30`;
+      snippet(acinfo_fts, 1, '[', ']', '…', 22) AS excerpt
+      FROM acinfo_fts JOIN acinfo_articles a ON a.id = acinfo_fts.rowid
+      WHERE acinfo_fts MATCH ? ${source ? "AND a.source = ?" : ""}
+      ORDER BY bm25(acinfo_fts, 9.0, 1.0) LIMIT 30`;
     const params = source ? [match, source] : [match];
     const result = await env.ACINFO_DB.prepare(sql).bind(...params).all();
     return json({ query: q, results: result.results || [] });
