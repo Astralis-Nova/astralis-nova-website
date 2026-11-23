@@ -90,3 +90,27 @@ python -m unittest discover -s acinfo -p 'test_*.py' -v
 This is a text-only search pipeline, **not a complete ACpedia mirror yet**. It does not bulk-download the archive; a **locally saved index.html** is needed for title-only search, and a permitted local set of article HTML files is needed for full-text import. It does not import images, templates, interactive maps, or full revision histories. HTML text extraction may include navigation fragments or miss details on unusual pages, so sampled manual review is required.
 
 Keep the existing Astralis Nova site and ACE server databases unchanged until source, licensing, and completeness checks pass.
+
+
+## Phase 2: read-only archive inventory
+
+Before extracting the verified ACCPP package, inspect its contents and create a reproducible report:
+
+```powershell
+# Run from the website repository folder on Windows.
+.\acinfo\inventory-archive.ps1 `
+  -ArchivePath 'D:\AC\Archives\accppwiki-docker-mediawiki-1.46-offline-release-v1.1.7z' `
+  -ReportDirectory 'D:\AC\Archives\ACInfo-Inventory'
+```
+
+Install the 7-Zip command line utility first or supply `-SevenZipPath` with its executable path. The script verifies the checksum, lists entries without extracting them, scans for dangerous paths, and records possible database dumps, media files, Compose files and README files. It produces `archive-summary.json` and `7zip-listing.txt` outside the Git repository.
+
+**Do not assume the ACCPP Docker bundle is a MediaWiki XML dump.** We need the inventory before deciding whether to export XML from MediaWiki or convert a local database dump. Do not execute the bundled container setup until its configuration and requested privileges have been reviewed.
+
+### Stop conditions
+
+- Checksum mismatch: stop; do not extract or run anything.
+- Suspicious archive paths: stop and manually inspect.
+- No convertible text source or export path: record the limitation; do not claim import completed.
+- Attribution/redistribution rights unclear: keep content private until resolved.
+- Missing Cloudflare bindings or quotas: only run local tests, not production deployment.
