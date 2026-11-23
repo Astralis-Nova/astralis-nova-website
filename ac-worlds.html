@@ -142,11 +142,16 @@ body:before{background:linear-gradient(180deg,#05091233,#05091266 650px,#050912c
 <div>
 <p class="eyebrow">Featured AC world · News checked November 23, 2026</p>
 <h2 id="hollowtide-title">Hollowtide</h2>
-<p>Hollowtide is a free, fan-run Asheron’s Call server with end-of-retail Dereth, Darktide-style PvP, custom bosses and quests, seasonal events, and a built-in VTank-style Assistant. Start in Holtburg instantly in your browser, or play with the Windows, macOS or Linux desktop client.</p>
+<p>Hollowtide is a free, fan-run Asheron’s Call server with end-of-retail Dereth, Darktide-style PvP, custom bosses and quests, seasonal events, and a built-in VTank-style Assistant. Start in Holtburg instantly in your browser, or use its desktop client. The server also lists Android and original retail-client support.</p>
 <div class="actions"><a href="#hollowtide-updates">Latest server news ↓</a><a href="#hollowtide-controls">Controls &amp; tutorials ↓</a></div>
 </div>
 <a class="guide-link" href="https://hollowtide.org/" target="_blank" rel="noopener noreferrer">Play in your browser ↗</a>
 </div>
+<section class="source-console" aria-labelledby="hollowtide-live-title">
+<h3 id="hollowtide-live-title">Hollowtide server signal</h3>
+<p id="hollowtideLiveStatus" aria-live="polite">Checking the community status feed…</p>
+<p class="source-note">Darktide-style PK rules · Weekly PK Night: Sundays at 7 PM Pacific · Classic-client address: <strong>hollowtide.org:9000</strong>. <a href="https://treestats.net/Hollowtide%20PK" target="_blank" rel="noopener noreferrer">TreeStats server profile ↗</a></p>
+</section>
 <section class="source-console" id="hollowtide-updates" aria-labelledby="hollowtide-updates-title">
 <h3 id="hollowtide-updates-title">Latest verified Hollowtide server news</h3>
 <div class="steps">
@@ -523,15 +528,23 @@ var render=function(){
 var load=function(){
  status.textContent='Scanning community portals…';document.getElementById('refresh').disabled=true;
  fetch('/api/ac-worlds?v=20261104hollowtideart',{headers:{accept:'application/json'}}).then(function(r){return r.json().then(function(data){if(!r.ok)throw new Error(data.error||'Directory unavailable');return data})}).then(function(data){
+  var allWorlds=Array.isArray(data.worlds)?data.worlds:[];
+  var hollowtide=allWorlds.find(function(w){return /^hollowtide(?:\b|$)/i.test(String(w.name||'').trim())});
+  var hollowtideSignal=document.getElementById('hollowtideLiveStatus');
+  if(hollowtideSignal){
+   hollowtideSignal.textContent=hollowtide
+    ?'Community feed: '+(hollowtide.status||'Unknown')+' · Connected characters: '+(Number.isFinite(hollowtide.characters)?hollowtide.characters.toLocaleString():'not reported')+' · Checked '+new Date(data.generatedAt).toLocaleString()+'. Counts can include multiple characters per person.'
+    :'Hollowtide status is not available from the current community feed. See its official server profile.';
+  }
   // Hollowtide appears only in the dedicated, up-to-date spotlight above.
   // Exclude every Hollowtide/PK alias from directory cards and counts.
-  state.worlds=Array.isArray(data.worlds)?data.worlds.filter(function(w){return !/^hollowtide(?:\b|$)/i.test(String(w.name||'').trim())}):[];
+  state.worlds=allWorlds.filter(function(w){return !/^hollowtide(?:\b|$)/i.test(String(w.name||'').trim())});
   document.getElementById('totalWorlds').textContent=state.worlds.length;
   document.getElementById('onlineWorlds').textContent=state.worlds.filter(function(w){return w.status==='Online'}).length;
   document.getElementById('pvpWorlds').textContent=state.worlds.filter(function(w){return w.ruleset==='PvP'||w.ruleset==='Hybrid'}).length;
   status.textContent='Community data refreshed '+new Date(data.generatedAt).toLocaleString()+'. Counts are connected characters, not unique people.';
   render();
- }).catch(function(error){status.textContent=error.message+'. Use the source links below while the signal reconnects.';grid.innerHTML='<div class="empty">The live directory signal is temporarily unavailable. No population figures have been guessed.</div>'}).finally(function(){document.getElementById('refresh').disabled=false});
+ }).catch(function(error){status.textContent=error.message+'. Use the source links below while the signal reconnects.';var live=document.getElementById('hollowtideLiveStatus');if(live)live.textContent='Community status feed unavailable; check Hollowtide’s TreeStats server profile for current information.';grid.innerHTML='<div class="empty">The live directory signal is temporarily unavailable. No population figures have been guessed.</div>'}).finally(function(){document.getElementById('refresh').disabled=false});
 };
 search.addEventListener('input',render);emulator.addEventListener('change',render);sort.addEventListener('change',render);
 document.querySelectorAll('.filter').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.filter').forEach(function(b){b.classList.remove('active')});button.classList.add('active');state.ruleset=button.dataset.ruleset;render()})});
