@@ -118,7 +118,7 @@
       : world.id === "toon-planet"
       ? '<img src="/assets/toon-planet/toon-world-realistic-v2.webp" alt="" width="512" height="512" loading="lazy" decoding="async">'
       : world.id === "rainbow-promise"
-      ? '<img src="/assets/rainbow-promise/realistic-planet-card.svg?v=20261123rainbowreal" alt="" width="128" height="128" loading="lazy" decoding="async">'
+      ? '<img src="/assets/rainbow-promise/realistic-planet-card.webp?v=20261123rainbowwebp3" alt="" width="128" height="128" loading="lazy" decoding="async">'
       : world.id === "scripture-nexus"
       ? scriptureVisual
       : world.id === "emerald-wisdom"
