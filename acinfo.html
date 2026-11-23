@@ -13,13 +13,20 @@ button{padding:13px 22px;font:inherit;font-weight:700;color:#081522;background:#
 .result{padding:18px 0;border-bottom:1px solid #284459}.result h2{margin:0 0 7px;font-size:1.15rem}
 .result p{color:#bfd0db;line-height:1.55}.tag{font-size:.73rem;color:#f7d58f;text-transform:uppercase}
 #article{white-space:pre-wrap;line-height:1.75;overflow-wrap:anywhere}#articleView[hidden],#resultsView[hidden]{display:none}
-.back{background:transparent;border:1px solid #56829d;color:#c5ecff}small{color:#abc1cf}
+.back{background:transparent;border:1px solid #56829d;color:#c5ecff}small{color:#abc1cf}.browse-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.browse-grid a{display:block;text-decoration:none;border:1px solid #38617a;border-radius:11px;padding:15px;background:#102739;color:#a9e8ff;font-weight:700}.browse-grid a:hover,.browse-grid a:focus-visible{border-color:#99e5ff;background:#163348}.license{line-height:1.65;color:#bad0df;font-size:.83rem}
 </style></head><body><main>
 <nav><a href="/ac-worlds.html">← ACWorlds</a> · <a href="/">Astralis Nova</a></nav>
 <h1>ACInfo</h1><p class="sub">ACpedia preservation archive search, prepared for Dereth explorers. While import is pending, <a href="https://www.bartleskeet.com/archives/acpedia/site/index.html" target="_blank" rel="noopener noreferrer">browse the ACpedia archive here</a>. Original wiki contributors and preservation source stay credited.</p>
+<section class="panel" aria-labelledby="browseTitle"><h2 id="browseTitle">Explore the preserved ACpedia archive</h2><p class="sub">These direct links already work while we prepare our local search index. They open the independent ACpedia preservation site.</p><div class="browse-grid">
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Dungeon.html" target="_blank" rel="noopener noreferrer">🗝️ Dungeons</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Quest.html" target="_blank" rel="noopener noreferrer">📜 Quests</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Creature.html" target="_blank" rel="noopener noreferrer">🐉 Creatures</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Armor.html" target="_blank" rel="noopener noreferrer">🛡️ Armor</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Spell_List.html" target="_blank" rel="noopener noreferrer">✨ Spells</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Map.html" target="_blank" rel="noopener noreferrer">🧭 Maps</a></div></section>
 <section id="resultsView"><div class="panel"><form id="searchForm"><input id="query" type="search" maxlength="120" placeholder="Search dungeons, quests, creatures…" aria-label="Search ACInfo" required><button>Search</button></form><p id="status" class="sub" role="status">The archive is being prepared. Search becomes available after the source data is imported.</p></div><div id="results"></div></section>
 <section id="articleView" hidden><button id="back" class="back">← Back to results</button><div class="panel"><div id="articleMeta" class="tag"></div><h2 id="articleTitle"></h2><div id="article"></div><p id="credits"></p></div></section>
-<footer><small>ACInfo is a community reference project using the ACpedia preservation archive only. Article availability, reuse rights, and attribution will be verified before import.</small></footer>
+<footer><p class="license">Community-contributed ACpedia text: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>, attributed to its original contributors. <a href="https://www.bartleskeet.com/archives/acpedia/site/m/Asheron-s_Call_Community_Wiki-Copyrights.html" target="_blank" rel="noopener noreferrer">ACpedia copyright notice</a>. Plain-text extraction is an adaptation; the original archived page is linked on every imported article. Game assets and images may have different rights.</p><small>Independent community reference project, not affiliated with the game publisher. Archive import is still pending.</small></footer>
 </main><script>
 const $ = id => document.getElementById(id);
 const escapeText = (target, value) => { target.textContent = value ?? ""; };
@@ -50,7 +57,7 @@ async function showArticle(slug){
     const a=data.article;$("articleTitle").textContent=a.title;$("articleMeta").textContent=a.source;
     $("article").textContent=a.body_text||a.summary||"No article text available.";
     $("credits").replaceChildren();
-    $("credits").append(document.createTextNode([a.attribution,a.license].filter(Boolean).join(" · ")+" "));
+    $("credits").append(document.createTextNode([a.attribution,a.license,"Adapted to plain text for ACInfo"].filter(Boolean).join(" · ")+" "));
     if(a.source_url&&/^https:\/\//.test(a.source_url)){
       const link=document.createElement("a");link.href=a.source_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Original source";$("credits").append(link);
     }
