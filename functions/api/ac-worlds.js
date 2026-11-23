@@ -84,15 +84,22 @@ export async function onRequestGet(){
     return json({error:"The community server directory is temporarily unavailable.",sources},503);
   }
 
-  // Hollowtide has a public launch page and is outside the TreeStats server list.
-  if(!servers.some(server=>key(server.name)==='hollowtide')){
-    servers=[...servers,{
+  // TreeStats lists "Hollowtide PK". Keep its monitored data, but merge
+  // that name and any older "Hollowtide" placeholder into one canonical world.
+  // The main page features this server separately rather than repeating a card.
+  const isHollowtideName=name=>/^hollowtide(?:\b|$)/i.test(cleanName(name));
+  const hollowtideSource=servers.find(server=>/^hollowtide\s+pk$/i.test(cleanName(server.name)))
+    ||servers.find(server=>isHollowtideName(server.name));
+  servers=[
+    ...servers.filter(server=>!isHollowtideName(server.name)),
+    {
+      ...(hollowtideSource||{}),
       name:'Hollowtide',
-      description:'End-of-retail Dereth with custom quests, world bosses and a PvP ladder. Play free in your browser or use the desktop client with built-in VTank-style tools.',
+      description:'End-of-retail Dereth with Darktide-style PvP, new bosses, custom quests and seasonal events. Play free in the browser or with the desktop client and built-in Assistant.',
       software:'ACE',
       type:'PvP'
-    }];
-  }
+    }
+  ];
 
   const countMap=new Map();
   for(const row of Array.isArray(counts)?counts:[]){
@@ -107,12 +114,16 @@ export async function onRequestGet(){
   const worlds=servers.filter(server=>!isTestWorld(server)).map(server=>{
     const name=cleanName(server.name);
     const description=cleanName(server.description);
-    const count=countMap.get(key(name))||{
+    // Use live TreeStats data from the official "Hollowtide PK" listing,
+    // rather than losing its population/status when we normalize the name.
+    const aliases=key(name)==='hollowtide'?['hollowtidepk','hollowtide']:[key(name)];
+    const count=aliases.map(alias=>countMap.get(alias)).filter(Boolean)
+      .sort((a,b)=>Date.parse(b.updatedAt||0)-Date.parse(a.updatedAt||0))[0]||{
       count:Number.isFinite(Number(server.players?.count))?Number(server.players.count):null,
       updatedAt:asDate(server.players?.updated_at),
       age:""
     };
-    const monitored=statusMap.get(key(name));
+    const monitored=aliases.map(alias=>statusMap.get(alias)).find(Boolean);
     const resources=worldResources(server);
     const hours=ageHours(count.updatedAt);
     let status=monitored?.status||"Unknown";
