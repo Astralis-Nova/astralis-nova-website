@@ -15,6 +15,7 @@ export async function onRequest(context) {
     response.headers.set('Referrer-Policy', 'no-referrer');
   }
   const isHomepage = pathname === "/" || pathname === "/index.html";
+  // The homepage uses unique versioned planet art CSS so mobile caches cannot keep the old icons.
   const isBiography = pathname === "/biography.html" || pathname === "/biography";
 
   // Toon Planet is being built again from the original moonlit scenery.
