@@ -1,40 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 260" role="img" aria-labelledby="title desc">
-  <title id="title">Astralis Nova Comet</title>
-  <desc id="desc">A detailed luminous comet with a transparent ion tail and sparkling fragments.</desc>
-  <defs>
-    <linearGradient id="tail" x1="0" x2="1">
-      <stop stop-color="#5c71ff" stop-opacity="0"/>
-      <stop offset=".28" stop-color="#707cff" stop-opacity=".14"/>
-      <stop offset=".65" stop-color="#55d9ff" stop-opacity=".56"/>
-      <stop offset="1" stop-color="#f2ffff" stop-opacity=".96"/>
-    </linearGradient>
-    <radialGradient id="nucleus" cx="36%" cy="30%" r="76%">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset=".18" stop-color="#c9f8ff"/>
-      <stop offset=".43" stop-color="#59c9ff"/>
-      <stop offset=".7" stop-color="#3157c8"/>
-      <stop offset="1" stop-color="#16164c"/>
-    </radialGradient>
-    <filter id="blur"><feGaussianBlur stdDeviation="13"/></filter>
-    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="9" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="rock" x="-30%" y="-30%" width="160%" height="160%">
-      <feTurbulence baseFrequency=".05" numOctaves="3" seed="14" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="8"/>
-    </filter>
-  </defs>
-
-  <path d="M12 134C174 31 359 51 544 124C356 88 178 179 12 134Z" fill="url(#tail)" opacity=".42" filter="url(#blur)"/>
-  <path d="M8 133C183 81 374 82 551 130C354 110 174 159 8 133Z" fill="url(#tail)" opacity=".88"/>
-  <path d="M68 155C227 111 385 112 554 137C370 133 216 169 68 155Z" fill="#b5f4ff" opacity=".18" filter="url(#blur)"/>
-
-  <circle cx="558" cy="132" r="58" fill="#6bd7ff" opacity=".32" filter="url(#blur)"/>
-  <circle cx="558" cy="132" r="42" fill="url(#nucleus)" filter="url(#glow)"/>
-  <path d="M532 116l20-27 17 20 28-9-8 28 18 19-29 5-15 28-18-24-29-5 17-20Z" fill="url(#nucleus)" opacity=".92" filter="url(#rock)"/>
-  <g fill="#dffcff" filter="url(#glow)">
-    <circle cx="472" cy="100" r="4"/><circle cx="431" cy="152" r="3"/><circle cx="390" cy="111" r="3.5"/>
-    <circle cx="340" cy="164" r="2.5"/><circle cx="286" cy="98" r="3"/><circle cx="224" cy="151" r="2.5"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 280" role="img" aria-labelledby="title desc">
+<title id="title">Astralis Nova realistic luminous comet</title>
+<desc id="desc">An icy bright nucleus gliding through deep space, with textured dust and glowing blue ion tails fading into transparency.</desc>
+<defs>
+ <linearGradient id="ion" x1="0" x2="1" y1="0" y2="0">
+  <stop stop-color="#173458" stop-opacity="0"/><stop offset=".14" stop-color="#2864a0" stop-opacity=".12"/><stop offset=".42" stop-color="#388cca" stop-opacity=".27"/><stop offset=".72" stop-color="#53c7f6" stop-opacity=".66"/><stop offset="1" stop-color="#d7f8ff" stop-opacity=".96"/>
+ </linearGradient>
+ <linearGradient id="dust" x1="0" x2="1" y1="0" y2="0">
+  <stop stop-color="#829cbb" stop-opacity="0"/><stop offset=".23" stop-color="#c0cdd9" stop-opacity=".09"/><stop offset=".57" stop-color="#a3bfdd" stop-opacity=".23"/><stop offset=".86" stop-color="#e4f4ff" stop-opacity=".45"/><stop offset="1" stop-color="#f1feff" stop-opacity=".7"/>
+ </linearGradient>
+ <radialGradient id="coma"><stop stop-color="#ffffff" stop-opacity=".9"/><stop offset=".15" stop-color="#c5f7ff" stop-opacity=".75"/><stop offset=".42" stop-color="#4db9f6" stop-opacity=".38"/><stop offset=".76" stop-color="#2455b4" stop-opacity=".11"/><stop offset="1" stop-color="#172859" stop-opacity="0"/></radialGradient>
+ <radialGradient id="ice" cx=".28" cy=".22" r=".85"><stop stop-color="#ffffff"/><stop offset=".23" stop-color="#ecfeff"/><stop offset=".50" stop-color="#a3e8ff"/><stop offset=".76" stop-color="#4a9ad3"/><stop offset=".93" stop-color="#23518e"/><stop offset="1" stop-color="#132b58"/></radialGradient>
+ <filter id="farMist" x="-20%" y="-140%" width="145%" height="380%"><feGaussianBlur stdDeviation="14"/></filter>
+ <filter id="nearMist" x="-15%" y="-100%" width="140%" height="300%"><feGaussianBlur stdDeviation="4.5"/></filter>
+ <filter id="frost" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".075" numOctaves="2" seed="8" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="4"/></filter>
+</defs>
+<!-- Swept-back dust fan, ion ribbons, and softly diffused particles. -->
+<path d="M19 81C140 95 249 62 359 81S563 117 685 145C533 102 397 30 276 47S72 75 19 81Z" fill="url(#dust)" opacity=".55" filter="url(#farMist)"/>
+<path d="M8 120C142 117 258 105 391 112S552 128 693 147C528 148 397 173 277 160S95 140 8 120Z" fill="url(#ion)" opacity=".85" filter="url(#farMist)"/>
+<path d="M44 164C186 149 298 177 415 160S591 152 697 145C589 167 454 216 323 196S110 172 44 164Z" fill="url(#dust)" opacity=".62" filter="url(#farMist)"/>
+<path d="M41 108C182 106 279 88 415 112S583 129 689 143C565 134 442 104 306 120S122 126 41 108Z" fill="url(#dust)" opacity=".53"/>
+<path d="M21 139C158 135 317 142 426 145S609 144 694 145C552 153 425 164 317 159S123 145 21 139Z" fill="url(#ion)" opacity=".91"/>
+<path d="M102 167C225 148 296 162 414 155S578 154 697 145C588 173 468 190 355 179S179 172 102 167Z" fill="url(#dust)" opacity=".57"/>
+<path d="M156 92C285 104 352 90 471 116S617 137 698 144" stroke="url(#ion)" stroke-width="5" opacity=".52" fill="none" filter="url(#nearMist)"/>
+<path d="M62 138C190 141 319 149 433 146S599 146 700 145" stroke="url(#ion)" stroke-width="5" opacity=".82" fill="none" filter="url(#nearMist)"/>
+<path d="M123 153C271 142 372 163 483 151S619 146 694 145" stroke="url(#dust)" stroke-width="2" opacity=".72" fill="none"/>
+<path d="M248 72C362 75 492 112 689 143" stroke="url(#dust)" stroke-width="1.5" opacity=".40" fill="none"/>
+<path d="M208 179C359 193 493 162 689 145" stroke="url(#ion)" stroke-width="2" opacity=".35" fill="none"/>
+<g fill="#dffaff"><circle cx="97" cy="80.4" r="0.65" opacity="0.20"/><circle cx="170" cy="100.7" r="0.85" opacity="0.28"/><circle cx="243" cy="110.4" r="1" opacity="0.35"/><circle cx="316" cy="122.0" r="1.25" opacity="0.42"/><circle cx="389" cy="147.7" r="1.55" opacity="0.50"/><circle cx="462" cy="98.8" r="0.65" opacity="0.57"/><circle cx="535" cy="118.3" r="0.85" opacity="0.65"/><circle cx="608" cy="127.7" r="1" opacity="0.20"/><circle cx="95" cy="144.9" r="1.25" opacity="0.28"/><circle cx="168" cy="99.4" r="1.55" opacity="0.35"/><circle cx="241" cy="117.3" r="0.65" opacity="0.42"/><circle cx="314" cy="128.9" r="0.85" opacity="0.50"/><circle cx="387" cy="140.1" r="1" opacity="0.57"/><circle cx="460" cy="86.6" r="1.25" opacity="0.65"/><circle cx="533" cy="118.0" r="1.55" opacity="0.20"/><circle cx="606" cy="135.1" r="0.65" opacity="0.28"/><circle cx="93" cy="140.6" r="0.85" opacity="0.35"/><circle cx="166" cy="84.3" r="1" opacity="0.42"/><circle cx="239" cy="114.5" r="1.25" opacity="0.50"/><circle cx="312" cy="138.5" r="1.55" opacity="0.57"/><circle cx="385" cy="147.1" r="0.65" opacity="0.65"/><circle cx="458" cy="81.4" r="0.85" opacity="0.20"/><circle cx="531" cy="102.9" r="1" opacity="0.28"/><circle cx="604" cy="133.2" r="1.25" opacity="0.35"/><circle cx="91" cy="148.6" r="1.55" opacity="0.42"/><circle cx="164" cy="82.0" r="0.65" opacity="0.50"/><circle cx="237" cy="101.1" r="0.85" opacity="0.57"/><circle cx="310" cy="129.8" r="1" opacity="0.65"/><circle cx="383" cy="154.9" r="1.25" opacity="0.20"/><circle cx="456" cy="88.7" r="1.55" opacity="0.28"/><circle cx="529" cy="99.7" r="0.65" opacity="0.35"/><circle cx="602" cy="119.5" r="0.85" opacity="0.42"/><circle cx="89" cy="153.0" r="1" opacity="0.50"/><circle cx="162" cy="89.8" r="1.25" opacity="0.57"/><circle cx="235" cy="96.5" r="1.55" opacity="0.65"/><circle cx="308" cy="118.2" r="0.65" opacity="0.20"/><circle cx="381" cy="145.3" r="0.85" opacity="0.28"/><circle cx="454" cy="94.0" r="1" opacity="0.35"/><circle cx="527" cy="107.0" r="1.25" opacity="0.42"/><circle cx="600" cy="113.9" r="1.55" opacity="0.50"/><circle cx="87" cy="142.4" r="0.65" opacity="0.57"/><circle cx="160" cy="91.8" r="0.85" opacity="0.65"/><circle cx="233" cy="107.6" r="1" opacity="0.20"/><circle cx="306" cy="115.3" r="1.25" opacity="0.28"/><circle cx="379" cy="131.0" r="1.55" opacity="0.35"/><circle cx="452" cy="84.0" r="0.65" opacity="0.42"/><circle cx="525" cy="109.9" r="0.85" opacity="0.50"/><circle cx="598" cy="124.9" r="1" opacity="0.57"/><circle cx="85" cy="130.2" r="1.25" opacity="0.65"/><circle cx="158" cy="81.0" r="1.55" opacity="0.20"/><circle cx="231" cy="107.5" r="0.65" opacity="0.28"/><circle cx="304" cy="125.1" r="0.85" opacity="0.35"/><circle cx="377" cy="134.0" r="1" opacity="0.42"/><circle cx="450" cy="71.4" r="1.25" opacity="0.50"/><circle cx="523" cy="99.9" r="1.55" opacity="0.57"/><circle cx="596" cy="125.7" r="0.65" opacity="0.65"/><circle cx="83" cy="135.2" r="0.85" opacity="0.20"/><circle cx="156" cy="71.0" r="1" opacity="0.28"/><circle cx="229" cy="96.6" r="1.25" opacity="0.35"/><circle cx="302" cy="127.5" r="1.55" opacity="0.42"/><circle cx="375" cy="142.2" r="0.65" opacity="0.50"/><circle cx="448" cy="75.6" r="0.85" opacity="0.57"/><circle cx="521" cy="89.1" r="1" opacity="0.65"/><circle cx="594" cy="115.5" r="1.25" opacity="0.20"/><circle cx="81" cy="145.6" r="1.55" opacity="0.28"/><circle cx="154" cy="76.5" r="0.65" opacity="0.35"/><circle cx="227" cy="89.0" r="0.85" opacity="0.42"/><circle cx="300" cy="112.6" r="1" opacity="0.50"/></g>
+<ellipse cx="684" cy="145" rx="92" ry="88" fill="url(#coma)" opacity=".82"/>
+<ellipse cx="685" cy="145" rx="64" ry="59" fill="#9beaff" opacity=".34" filter="url(#farMist)"/>
+<circle cx="688" cy="145" r="43" fill="url(#ice)" filter="url(#frost)"/>
+<path d="M667 116l15-11 7 16 17-9 14 17-8 17 13 8-13 17-20-3-13 17-17-16-16-1 6-17-12-14 16-11Z" fill="#e4f9ff" opacity=".18"/>
+<path d="M665 135l12-14 12 5 8 13-12 10-13-5Zm35 13 11-7 9 12-12 16-9-5Z" fill="#153d75" opacity=".28"/>
+<path d="M656 137q15-32 40-26" stroke="#fff" stroke-opacity=".62" stroke-width="3" fill="none" filter="url(#nearMist)"/>
+<circle cx="710" cy="131" r="8" fill="#fff" opacity=".85" filter="url(#nearMist)"/>
+<circle cx="691" cy="140" r="4.6" fill="#fff" opacity=".9"/>
+<g stroke="#e7fbff" stroke-width="1" opacity=".72">
+ <path d="M559 113v11m-5.5-5.5h11"/><path d="M445 154v8m-4-4h8"/><path d="M331 106v7m-3.5-3.5h7"/><path d="M612 177v9m-4.5-4.5h9"/>
+</g>
 </svg>
