@@ -140,17 +140,13 @@
     const style = document.createElement("style");
     style.id = "astralisWorldStyles";
     style.textContent = `
-      .astralis-bio-portal{min-height:88px}
-      .astralis-bio-comet{position:relative!important;flex:0 0 84px!important;width:84px!important;height:58px!important;font-size:0!important;filter:none!important;animation:astralisRealCometFloat 3.2s ease-in-out infinite!important}
+      .astralis-bio-portal{min-height:96px;gap:12px}
+      .astralis-bio-comet{position:relative!important;flex:0 0 108px!important;width:108px!important;height:68px!important;display:block!important;font-size:0!important;filter:none!important;animation:astralisRealCometFloat 5.4s ease-in-out infinite!important}
       .astralis-bio-comet::before{content:none!important}
-      .astralis-comet-tail{position:absolute;left:1px;top:23px;width:58px;height:14px;border-radius:100% 0 0 100%;background:linear-gradient(90deg,transparent 0%,rgba(74,145,255,.18) 18%,rgba(98,190,255,.62) 62%,rgba(226,249,255,.96) 100%);filter:blur(1.5px);transform:rotate(-10deg);box-shadow:0 0 16px rgba(66,176,255,.55)}
-      .astralis-comet-tail::after{content:"";position:absolute;left:13px;top:4px;width:48px;height:6px;border-radius:999px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.88));filter:blur(2px)}
-      .astralis-comet-head{position:absolute;right:5px;top:12px;width:37px;height:37px;border-radius:50%;background:radial-gradient(circle at 33% 30%,#fff 0 7%,#bdeeff 14%,#63c7ff 36%,#3154c8 67%,#17165e 100%);box-shadow:0 0 9px #dff8ff,0 0 23px rgba(76,186,255,.95),0 0 40px rgba(121,73,255,.48)}
-      .astralis-comet-head::before,.astralis-comet-head::after{content:"";position:absolute;border-radius:50%;background:rgba(25,48,115,.55)}
-      .astralis-comet-head::before{width:8px;height:8px;left:8px;top:17px}
-      .astralis-comet-head::after{width:5px;height:5px;right:8px;top:9px}
-      @keyframes astralisRealCometFloat{0%,100%{transform:translate(0,1px) rotate(-3deg)}50%{transform:translate(5px,-5px) rotate(2deg)}}
-
+      .astralis-comet-art{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 8px rgba(87,186,249,.45));transform:scale(1.14);transform-origin:center}
+      .astralis-comet-art:after{content:none}
+      @keyframes astralisRealCometFloat{0%,100%{transform:translate3d(0,1px,0) rotate(-3deg)}50%{transform:translate3d(6px,-6px,0) rotate(1deg)}}
+      @media(max-width:440px){.astralis-bio-portal{gap:8px;padding:12px 10px}.astralis-bio-comet{flex-basis:90px!important;width:90px!important;height:58px!important}.astralis-bio-copy strong{font-size:.84rem}}
       .astralis-worlds{position:relative;overflow:hidden;padding:26px;background:radial-gradient(circle at 50% 48%,rgba(34,109,220,.18),transparent 25rem),linear-gradient(180deg,rgba(7,17,31,.88),rgba(4,9,18,.92));border:1px solid rgba(93,146,214,.46);border-radius:18px;box-shadow:0 20px 65px rgba(0,0,0,.34)}
       .astralis-worlds::before{content:"✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦  ·  ✧  ·  ✦";position:absolute;top:17px;right:20px;color:rgba(143,203,255,.42);letter-spacing:.34em;font-size:.75rem}
       .astralis-worlds-head{max-width:760px;margin-bottom:22px}
@@ -243,8 +239,7 @@
     link.dataset.realComet = "true";
     link.innerHTML = `
       <span class="astralis-bio-comet" aria-hidden="true">
-        <span class="astralis-comet-tail"></span>
-        <span class="astralis-comet-head"></span>
+        <img class="astralis-comet-art" src="/astralis-comet-portal.svg?v=20261123realcomet" alt="" width="800" height="280" decoding="async" loading="lazy">
       </span>
       <span class="astralis-bio-copy">
         <strong>FOLLOW THE COMET</strong>
