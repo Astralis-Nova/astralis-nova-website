@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACInfo | Astralis Nova</title><meta name="description" content="Search the preserved knowledge of Dereth: quests, dungeons, creatures, gear, and maps.">
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#060d19;color:#ebf6ff}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#17324b,#060d19 65%);min-height:100vh}
+main{max-width:980px;margin:auto;padding:32px 18px 70px}a{color:#8fddff}
+h1{font-family:Georgia,serif;font-size:clamp(2.7rem,7vw,4.8rem);margin:24px 0 5px}
+.sub{color:#b9cfdf;line-height:1.6}.panel{border:1px solid #37617a;background:#0c1b2bdc;border-radius:18px;padding:20px;margin:20px 0}
+form{display:flex;gap:10px;flex-wrap:wrap}input{flex:1;min-width:220px;padding:14px;font:inherit;color:white;background:#071522;border:1px solid #56829d;border-radius:10px}
+button{padding:13px 22px;font:inherit;font-weight:700;color:#081522;background:#9adfff;border:0;border-radius:10px;cursor:pointer}
+.result{padding:18px 0;border-bottom:1px solid #284459}.result h2{margin:0 0 7px;font-size:1.15rem}
+.result p{color:#bfd0db;line-height:1.55}.tag{font-size:.73rem;color:#f7d58f;text-transform:uppercase}
+#article{white-space:pre-wrap;line-height:1.75;overflow-wrap:anywhere}#articleView[hidden],#resultsView[hidden]{display:none}
+.back{background:transparent;border:1px solid #56829d;color:#c5ecff}small{color:#abc1cf}
+</style></head><body><main>
+<nav><a href="/ac-worlds.html">← ACWorlds</a> · <a href="/">Astralis Nova</a></nav>
+<h1>ACInfo</h1><p class="sub">A searchable archive of Dereth. Original sources and contributors stay credited.</p>
+<section id="resultsView"><div class="panel"><form id="searchForm"><input id="query" type="search" maxlength="120" placeholder="Search dungeons, quests, creatures…" aria-label="Search ACInfo" required><button>Search</button></form><p id="status" class="sub" role="status">The archive is being prepared. Search becomes available after the source data is imported.</p></div><div id="results"></div></section>
+<section id="articleView" hidden><button id="back" class="back">← Back to results</button><div class="panel"><div id="articleMeta" class="tag"></div><h2 id="articleTitle"></h2><div id="article"></div><p id="credits"></p></div></section>
+<footer><small>ACInfo is a community reference project. Article availability and source licenses are verified during import.</small></footer>
+</main><script>
+const $ = id => document.getElementById(id);
+const escapeText = (target, value) => { target.textContent = value ?? ""; };
+async function runSearch(q) {
+  $("articleView").hidden=true;$("resultsView").hidden=false;$("results").replaceChildren();
+  $("status").textContent="Searching…";
+  try {
+    const res=await fetch("/api/acinfo/search?q="+encodeURIComponent(q));
+    const data=await res.json();
+    if(!res.ok)throw Error(data.error||"Search unavailable");
+    $("status").textContent=data.results.length+" results";
+    for(const item of data.results){
+      const card=document.createElement("article");card.className="result";
+      const heading=document.createElement("h2");const link=document.createElement("a");
+      link.href="?article="+encodeURIComponent(item.slug);link.textContent=item.title;heading.append(link);
+      const tag=document.createElement("div");tag.className="tag";tag.textContent=item.source;
+      const p=document.createElement("p");p.textContent=item.summary||item.excerpt||"";
+      card.append(tag,heading,p);$("results").append(card);
+    }
+  } catch(e){$("status").textContent=e.message}
+}
+async function showArticle(slug){
+  $("resultsView").hidden=true;$("articleView").hidden=false;
+  $("articleTitle").textContent="Loading article…";$("article").textContent="";
+  try{
+    const res=await fetch("/api/acinfo/article?slug="+encodeURIComponent(slug));const data=await res.json();
+    if(!res.ok)throw Error(data.error||"Article unavailable");
+    const a=data.article;$("articleTitle").textContent=a.title;$("articleMeta").textContent=a.source;
+    $("article").textContent=a.body_text||a.summary||"No article text available.";
+    $("credits").replaceChildren();
+    $("credits").append(document.createTextNode([a.attribution,a.license].filter(Boolean).join(" · ")+" "));
+    if(a.source_url&&/^https:\/\//.test(a.source_url)){
+      const link=document.createElement("a");link.href=a.source_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Original source";$("credits").append(link);
+    }
+  }catch(e){$("articleTitle").textContent="Article unavailable";$("article").textContent=e.message}
+}
+$("searchForm").addEventListener("submit",e=>{e.preventDefault();const q=$("query").value.trim();if(!q)return;history.pushState({}, "", "?q="+encodeURIComponent(q));runSearch(q)});
+$("back").addEventListener("click",()=>{history.pushState({},"","?q="+encodeURIComponent($("query").value));$("articleView").hidden=true;$("resultsView").hidden=false});
+window.addEventListener("popstate",()=>{const p=new URLSearchParams(location.search);p.has("article")?showArticle(p.get("article")):runSearch(p.get("q")||"")});
+const p=new URLSearchParams(location.search);if(p.has("article"))showArticle(p.get("article"));else if(p.has("q")){$("query").value=p.get("q");runSearch(p.get("q"))}
+</script></body></html>
