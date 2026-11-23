@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ACInfo | Astralis Nova</title><meta name="description" content="Search the preserved knowledge of Dereth: quests, dungeons, creatures, gear, and maps.">
+<title>ACInfo | Astralis Nova</title><meta name="description" content="ACInfo: search preview for the ACpedia preservation archive, including quests, dungeons, creatures, gear, and maps.">
 <style>
 :root{color-scheme:dark;font-family:system-ui,sans-serif;background:#060d19;color:#ebf6ff}*{box-sizing:border-box}
 body{margin:0;background:radial-gradient(ellipse at top,#17324b,#060d19 65%);min-height:100vh}
@@ -16,10 +16,10 @@ button{padding:13px 22px;font:inherit;font-weight:700;color:#081522;background:#
 .back{background:transparent;border:1px solid #56829d;color:#c5ecff}small{color:#abc1cf}
 </style></head><body><main>
 <nav><a href="/ac-worlds.html">← ACWorlds</a> · <a href="/">Astralis Nova</a></nav>
-<h1>ACInfo</h1><p class="sub">A searchable archive of Dereth. Original sources and contributors stay credited.</p>
+<h1>ACInfo</h1><p class="sub">ACpedia preservation archive search, prepared for Dereth explorers. While import is pending, <a href="https://www.bartleskeet.com/archives/acpedia/site/index.html" target="_blank" rel="noopener noreferrer">browse the ACpedia archive here</a>. Original wiki contributors and preservation source stay credited.</p>
 <section id="resultsView"><div class="panel"><form id="searchForm"><input id="query" type="search" maxlength="120" placeholder="Search dungeons, quests, creatures…" aria-label="Search ACInfo" required><button>Search</button></form><p id="status" class="sub" role="status">The archive is being prepared. Search becomes available after the source data is imported.</p></div><div id="results"></div></section>
 <section id="articleView" hidden><button id="back" class="back">← Back to results</button><div class="panel"><div id="articleMeta" class="tag"></div><h2 id="articleTitle"></h2><div id="article"></div><p id="credits"></p></div></section>
-<footer><small>ACInfo is a community reference project. Article availability and source licenses are verified during import.</small></footer>
+<footer><small>ACInfo is a community reference project using the ACpedia preservation archive only. Article availability, reuse rights, and attribution will be verified before import.</small></footer>
 </main><script>
 const $ = id => document.getElementById(id);
 const escapeText = (target, value) => { target.textContent = value ?? ""; };
