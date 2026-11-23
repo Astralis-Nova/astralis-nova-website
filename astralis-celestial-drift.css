@@ -135,6 +135,19 @@
   from{transform:translate3d(-25vw,0,0) rotate(-6deg)}
   to{transform:translate3d(120vw,-9vh,0) rotate(12deg)}
 }
+/* A luminous icy coma and fine dust/ion tails, seen behind the interactive content. */
+#astralis-celestial-drift .celestial.comet{
+  aspect-ratio:800/280;
+  object-fit:contain;
+  mix-blend-mode:screen;
+  filter:drop-shadow(0 0 15px rgba(71,179,246,.24)) saturate(1.16);
+}
+#astralis-celestial-drift .celestial.comet-blue{
+  filter:drop-shadow(0 0 20px rgba(78,159,244,.34)) saturate(1.08);
+}
+#astralis-celestial-drift .celestial.comet-distant{
+  filter:drop-shadow(0 0 7px rgba(105,169,255,.16)) saturate(.7) brightness(.82);
+}
 /* Tails trail the direction of travel; staggered passes begin within seconds. */
 #astralis-celestial-drift .comet{
   left:0;top:0;width:clamp(120px,21vw,300px);opacity:0;
