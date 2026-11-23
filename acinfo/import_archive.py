@@ -119,7 +119,7 @@ def write_import(args):
         if args.format == "jsonl":
             source_url = page.get("source_url") or args.source_url.rstrip("/") + "/" + quote(title.replace(" ", "_"), safe="/")
         else:
-            source_url = args.source_url.rstrip("/") + "/" + title.replace(" ", "_")
+            source_url = args.source_url.rstrip("/") + "/" + quote(title.replace(" ", "_"), safe="/")
         manifest["articles"] += 1
         item_id = manifest["articles"]
         data = body.encode("utf-8")
