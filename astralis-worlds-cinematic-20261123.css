@@ -1,0 +1,112 @@
+/* Astralis Nova connected worlds: cinematic 4-planet art, 2026-11-23.
+ * One small 2x2 AVIF sprite supplies all four worlds, preserving transparent
+ * edges and keeping bandwidth low for phones. No markup or content is removed.
+ */
+:root { --an-cinematic-worlds-art: url('/assets/astralis-worlds-quartet-20261123.avif'); }
+
+:is(
+  .astralis-planet-link[data-world="first-orbit"],
+  .astralis-planet-link[data-world="scripture-nexus"],
+  .astralis-planet-link[data-world="faith-stories"],
+  .astralis-planet-link[data-world="wild-encounters"],
+  a[href="/first-orbit.html"],
+  a[href="/scripture-nexus.html"],
+  a[href="/faith-stories.html"],
+  a[href="/wild-encounters.html"]
+) .astralis-planet {
+  flex: 0 0 118px !important;
+  width: 118px !important;
+  height: 118px !important;
+  min-width: 118px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+  background-image: var(--an-cinematic-worlds-art) !important;
+  background-repeat: no-repeat !important;
+  background-size: 200% 200% !important;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,.32));
+  animation: an-cinematic-world-breathe 12s ease-in-out infinite !important;
+  transform: none;
+  isolation: isolate;
+}
+
+/* Hide the old CSS planets, decorative moons, and artificial ring overlays. */
+:is(
+  .astralis-planet-link[data-world="first-orbit"],
+  .astralis-planet-link[data-world="scripture-nexus"],
+  .astralis-planet-link[data-world="faith-stories"],
+  .astralis-planet-link[data-world="wild-encounters"],
+  a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],
+  a[href="/faith-stories.html"],a[href="/wild-encounters.html"]
+) .astralis-planet > * {display:none!important;}
+
+:is(
+  .astralis-planet-link[data-world="first-orbit"],
+  .astralis-planet-link[data-world="scripture-nexus"],
+  .astralis-planet-link[data-world="faith-stories"],
+  .astralis-planet-link[data-world="wild-encounters"],
+  a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],
+  a[href="/faith-stories.html"],a[href="/wild-encounters.html"]
+) .astralis-planet::before,
+:is(
+  .astralis-planet-link[data-world="first-orbit"],
+  .astralis-planet-link[data-world="scripture-nexus"],
+  .astralis-planet-link[data-world="faith-stories"],
+  .astralis-planet-link[data-world="wild-encounters"],
+  a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],
+  a[href="/faith-stories.html"],a[href="/wild-encounters.html"]
+) .astralis-planet::after {content:none!important;display:none!important;}
+
+:is(.astralis-planet-link[data-world="first-orbit"],a[href="/first-orbit.html"]) .astralis-planet {
+  background-position: 0% 0% !important;
+  filter:drop-shadow(0 0 15px rgba(92,120,255,.42)) !important;
+  animation-delay:-3s!important;
+}
+:is(.astralis-planet-link[data-world="scripture-nexus"],a[href="/scripture-nexus.html"]) .astralis-planet {
+  background-position: 100% 0% !important;
+  filter:drop-shadow(0 0 13px rgba(255,188,94,.27)) !important;
+  animation-delay:-8s!important;
+}
+:is(.astralis-planet-link[data-world="faith-stories"],a[href="/faith-stories.html"]) .astralis-planet {
+  background-position: 0% 100% !important;
+  filter:drop-shadow(0 0 15px rgba(196,220,255,.32)) !important;
+  animation-delay:-5s!important;
+}
+:is(.astralis-planet-link[data-world="wild-encounters"],a[href="/wild-encounters.html"]) .astralis-planet {
+  background-position: 100% 100% !important;
+  filter:drop-shadow(0 0 13px rgba(103,193,123,.30)) !important;
+  animation-delay:-11s!important;
+}
+
+/* Individual atmospheric lighting rather than identical generic backgrounds. */
+:is(.astralis-planet-link[data-world="first-orbit"],a[href="/first-orbit.html"]) {
+  background: radial-gradient(ellipse at 10% 50%,rgba(44,68,174,.16),transparent 60%),linear-gradient(135deg,rgba(8,18,42,.96),rgba(6,10,23,.95)) !important;
+}
+:is(.astralis-planet-link[data-world="scripture-nexus"],a[href="/scripture-nexus.html"]) {
+  background: radial-gradient(ellipse at 10% 50%,rgba(219,169,81,.10),transparent 62%),linear-gradient(135deg,rgba(10,25,42,.96),rgba(9,12,26,.95)) !important;
+}
+:is(.astralis-planet-link[data-world="faith-stories"],a[href="/faith-stories.html"]) {
+  background: radial-gradient(ellipse at 11% 50%,rgba(138,165,224,.12),transparent 61%),linear-gradient(135deg,rgba(13,21,39,.96),rgba(8,13,27,.95)) !important;
+}
+:is(.astralis-planet-link[data-world="wild-encounters"],a[href="/wild-encounters.html"]) {
+  background: radial-gradient(ellipse at 9% 50%,rgba(101,165,100,.15),transparent 62%),linear-gradient(135deg,rgba(12,27,23,.96),rgba(7,17,21,.95)) !important;
+}
+@keyframes an-cinematic-world-breathe {
+  0%,100% {translate:0 1px}
+  50%{translate:0 -4px}
+}
+:is(.astralis-planet-link[data-world="first-orbit"],.astralis-planet-link[data-world="scripture-nexus"],.astralis-planet-link[data-world="faith-stories"],.astralis-planet-link[data-world="wild-encounters"],a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],a[href="/faith-stories.html"],a[href="/wild-encounters.html"]):hover .astralis-planet {
+  scale:1.07;
+}
+@media(max-width:640px){
+  :is(.astralis-planet-link[data-world="first-orbit"],.astralis-planet-link[data-world="scripture-nexus"],.astralis-planet-link[data-world="faith-stories"],.astralis-planet-link[data-world="wild-encounters"],a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],a[href="/faith-stories.html"],a[href="/wild-encounters.html"]) .astralis-planet {
+    flex-basis:102px!important;width:102px!important;height:102px!important;min-width:102px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  :is(.astralis-planet-link[data-world="first-orbit"],.astralis-planet-link[data-world="scripture-nexus"],.astralis-planet-link[data-world="faith-stories"],.astralis-planet-link[data-world="wild-encounters"],a[href="/first-orbit.html"],a[href="/scripture-nexus.html"],a[href="/faith-stories.html"],a[href="/wild-encounters.html"]) .astralis-planet {
+    animation:none!important;translate:0!important;scale:1!important;
+  }
+}
