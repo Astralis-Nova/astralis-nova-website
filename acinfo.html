@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACInfo | Astralis Nova</title><meta name="description" content="ACInfo: search preview for the ACpedia preservation archive, including quests, dungeons, creatures, gear, and maps.">
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#060d19;color:#ebf6ff}*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#17324b,#060d19 65%);min-height:100vh}
+main{max-width:980px;margin:auto;padding:32px 18px 70px}a{color:#8fddff}
+h1{font-family:Georgia,serif;font-size:clamp(2.7rem,7vw,4.8rem);margin:24px 0 5px}
+.sub{color:#b9cfdf;line-height:1.6}.panel{border:1px solid #37617a;background:#0c1b2bdc;border-radius:18px;padding:20px;margin:20px 0}
+form{display:flex;gap:10px;flex-wrap:wrap}input{flex:1;min-width:220px;padding:14px;font:inherit;color:white;background:#071522;border:1px solid #56829d;border-radius:10px}
+button{padding:13px 22px;font:inherit;font-weight:700;color:#081522;background:#9adfff;border:0;border-radius:10px;cursor:pointer}
+.result{padding:18px 0;border-bottom:1px solid #284459}.result h2{margin:0 0 7px;font-size:1.15rem}
+.result p{color:#bfd0db;line-height:1.55}.tag{font-size:.73rem;color:#f7d58f;text-transform:uppercase}
+#article{white-space:pre-wrap;line-height:1.75;overflow-wrap:anywhere}#articleView[hidden],#resultsView[hidden]{display:none}
+.back{background:transparent;border:1px solid #56829d;color:#c5ecff}small{color:#abc1cf}.browse-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}.browse-grid a{display:block;text-decoration:none;border:1px solid #38617a;border-radius:11px;padding:15px;background:#102739;color:#a9e8ff;font-weight:700}.browse-grid a:hover,.browse-grid a:focus-visible{border-color:#99e5ff;background:#163348}.license{line-height:1.65;color:#bad0df;font-size:.83rem}
+</style></head><body><main>
+<nav><a href="/ac-worlds.html">← ACWorlds</a> · <a href="/">Astralis Nova</a></nav>
+<h1>ACInfo</h1><p class="sub">ACpedia preservation archive search, prepared for Dereth explorers. While import is pending, <a href="https://www.bartleskeet.com/archives/acpedia/site/index.html" target="_blank" rel="noopener noreferrer">browse the ACpedia archive here</a>. Original wiki contributors and preservation source stay credited.</p>
+<section class="panel" aria-labelledby="browseTitle"><h2 id="browseTitle">Explore the preserved ACpedia archive</h2><p class="sub">These direct links already work while we prepare our local search index. They open the independent ACpedia preservation site.</p><div class="browse-grid">
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Dungeon.html" target="_blank" rel="noopener noreferrer">🗝️ Dungeons</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Quest.html" target="_blank" rel="noopener noreferrer">📜 Quests</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Creature.html" target="_blank" rel="noopener noreferrer">🐉 Creatures</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Armor.html" target="_blank" rel="noopener noreferrer">🛡️ Armor</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Spell_List.html" target="_blank" rel="noopener noreferrer">✨ Spells</a>
+<a href="https://www.bartleskeet.com/archives/acpedia/site/m/Category-Map.html" target="_blank" rel="noopener noreferrer">🧭 Maps</a></div></section>
+<section id="resultsView"><div class="panel"><form id="searchForm"><input id="query" type="search" maxlength="120" placeholder="Search dungeons, quests, creatures…" aria-label="Search ACInfo" required><button>Search</button></form><p id="status" class="sub" role="status">The archive is being prepared. Search becomes available after the source data is imported.</p></div><div id="results"></div></section>
+<section id="articleView" hidden><button id="back" class="back">← Back to results</button><div class="panel"><div id="articleMeta" class="tag"></div><h2 id="articleTitle"></h2><div id="article"></div><p id="credits"></p></div></section>
+<footer><p class="license">Community-contributed ACpedia text: <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 3.0</a>, attributed to its original contributors. <a href="https://www.bartleskeet.com/archives/acpedia/site/m/Asheron-s_Call_Community_Wiki-Copyrights.html" target="_blank" rel="noopener noreferrer">ACpedia copyright notice</a>. Plain-text extraction is an adaptation; the original archived page is linked on every imported article. Game assets and images may have different rights.</p><small>Independent community reference project, not affiliated with the game publisher. Archive import is still pending.</small></footer>
+</main><script>
+const $ = id => document.getElementById(id);
+const escapeText = (target, value) => { target.textContent = value ?? ""; };
+async function runSearch(q) {
+  $("articleView").hidden=true;$("resultsView").hidden=false;$("results").replaceChildren();
+  $("status").textContent="Searching…";
+  try {
+    let items, titleOnly=false;
+    try {
+      const res=await fetch("/api/acinfo/search?q="+encodeURIComponent(q));
+      const data=await res.json();
+      if(!res.ok)throw Error(data.error||"Search unavailable");
+      items=data.results||[];
+    } catch(primaryError) {
+      // Optional single-file index: titles and direct archive links only.
+      // Avoid repeated network requests to the preservation host.
+      const res=await fetch("/acinfo/acpedia-index.json");
+      if(!res.ok)throw Error("Local search is not imported yet. Browse ACpedia categories above.");
+      const index=await res.json();
+      if(index.source!=="acpedia" || index.kind!=="title_only" || !Array.isArray(index.articles))
+        throw Error("ACpedia title index is unavailable.");
+      const terms=q.normalize("NFKC").toLocaleLowerCase().split(/\s+/).filter(Boolean).slice(0,8);
+      items=index.articles.filter(item=>terms.every(t=>item.title.toLocaleLowerCase().includes(t))).slice(0,30);
+      titleOnly=true;
+    }
+    $("status").textContent=items.length+" "+(titleOnly?"title matches (first 30, archive links)":"article results");
+    for(const item of items){
+      const card=document.createElement("article");card.className="result";
+      const heading=document.createElement("h2");const link=document.createElement("a");
+      link.href=titleOnly?item.url:"?article="+encodeURIComponent(item.slug);
+      if(titleOnly){link.target="_blank";link.rel="noopener noreferrer"}
+      link.textContent=item.title;heading.append(link);
+      const tag=document.createElement("div");tag.className="tag";tag.textContent=titleOnly?"ACpedia archive":item.source;
+      const p=document.createElement("p");
+      p.textContent=titleOnly?"Open the original preserved ACpedia article.":item.summary||item.excerpt||"";
+      card.append(tag,heading,p);$("results").append(card);
+    }
+  } catch(e){$("status").textContent=e.message}
+}
+async function showArticle(slug){
+  $("resultsView").hidden=true;$("articleView").hidden=false;
+  $("articleTitle").textContent="Loading article…";$("article").textContent="";
+  try{
+    const res=await fetch("/api/acinfo/article?slug="+encodeURIComponent(slug));const data=await res.json();
+    if(!res.ok)throw Error(data.error||"Article unavailable");
+    const a=data.article;$("articleTitle").textContent=a.title;$("articleMeta").textContent=a.source;
+    $("article").textContent=a.body_text||a.summary||"No article text available.";
+    $("credits").replaceChildren();
+    $("credits").append(document.createTextNode([a.attribution,a.license,"Adapted to plain text for ACInfo"].filter(Boolean).join(" · ")+" "));
+    if(a.source_url&&/^https:\/\//.test(a.source_url)){
+      const link=document.createElement("a");link.href=a.source_url;link.target="_blank";link.rel="noopener noreferrer";link.textContent="Original source";$("credits").append(link);
+    }
+  }catch(e){$("articleTitle").textContent="Article unavailable";$("article").textContent=e.message}
+}
+$("searchForm").addEventListener("submit",e=>{e.preventDefault();const q=$("query").value.trim();if(!q)return;history.pushState({}, "", "?q="+encodeURIComponent(q));runSearch(q)});
+$("back").addEventListener("click",()=>{history.pushState({},"","?q="+encodeURIComponent($("query").value));$("articleView").hidden=true;$("resultsView").hidden=false});
+window.addEventListener("popstate",()=>{const p=new URLSearchParams(location.search);p.has("article")?showArticle(p.get("article")):runSearch(p.get("q")||"")});
+const p=new URLSearchParams(location.search);if(p.has("article"))showArticle(p.get("article"));else if(p.has("q")){$("query").value=p.get("q");runSearch(p.get("q"))}
+</script></body></html>
