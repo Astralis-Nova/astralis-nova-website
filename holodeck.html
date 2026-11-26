@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 013.1</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 014</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 const status=document.querySelector('#status');
@@ -13,7 +13,7 @@ function box(x,y,z,w,h,d,color){const m=new T.Mesh(new T.BoxGeometry(w,h,d),new 
 box(0,-.15,2,14,.3,15,0x233b50);box(0,4.1,2,14,.2,15,0x14263b);for(const x of [-6.5,6.5]){box(x,2,2,.3,4,15,0x253d52);for(let z=-4;z<9;z+=2)box(x*.97,.45,z,.1,.1,1.5,0x42caff)}
 box(0,0.6,1,4,1.2,.8,0x27465d);box(0,1.24,1,4.1,.08,.85,0x49b8d9);
 const stars=new Float32Array(2400*3);for(let i=0;i<stars.length;i+=3){const a=Math.random()*Math.PI*2,u=Math.random()*2-1,r=70+Math.random()*80;stars[i]=r*Math.sqrt(1-u*u)*Math.cos(a);stars[i+1]=r*u;stars[i+2]=r*Math.sqrt(1-u*u)*Math.sin(a)}const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(stars,3));const sky=new T.Points(geo,new T.PointsMaterial({color:0xd6eaff,size:.18}));scene.add(sky);
-const targets=[];const worlds=[['CHESS PORTAL','/chess/',0x52b9ff],['TOON PLANET','/toon-planet.html',0xca63f1],['RAINBOW PROMISE','/rainbow-promise.html',0x4bdb95],['MUSIC PLAYER','/player/',0xffbc55]];
+const targets=[];const worlds=[['CHESS PORTAL','/chess/',0x52b9ff],['TOON PLANET','/toon-planet.html',0xca63f1],['RAINBOW PROMISE','/rainbow-promise.html',0x4bdb95],['MUSIC PLAYER','/player/',0xffbc55],['ASTRALIS HOME','/',0x9bdfff]];
 function label(name){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(name,256,76,490);const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;const s=new T.Sprite(new T.SpriteMaterial({map:tex}));s.scale.set(2,.5,1);return s}
 // Version display is part of the loaded scene, not a remote version estimate.
 
@@ -61,9 +61,9 @@ const novaHit=new T.Mesh(new T.SphereGeometry(.64,16,12),new T.MeshBasicMaterial
 const nexus=new T.Group();scene.add(nexus);nexus.visible=false;
 const nexusTargets=[];
 // Compact Nexus: a collapsed destination selector with opt-in voice input.
-const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:['chess','planet','rainbow','music'][i]})),{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'}];
-const symbols={chess:'♜',planet:'◉',rainbow:'◠',music:'♫',update:'↻',exit:'↗'};
-let selected=-1,expanded=false,recognition=null;
+const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:['chess','planet','rainbow','music','home'][i]})),{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'}];
+const symbols={home:'⌂',chess:'♜',planet:'◉',rainbow:'◠',music:'♫',update:'↻',exit:'↗'};
+let selected=-1,expanded=false,recognition=null; let speedIndex=1; const speeds=[.95,1.8,2.7], speedNames=['Slow','Normal','Fast'];
 const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
 function tile(w,h,x,y,action=null){
  const c=document.createElement('canvas');c.width=768;c.height=128;
@@ -80,19 +80,20 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle=accent;g.font=(kind==='text'?'500 ':'600 ')+'48px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,w-44);g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 013.1','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 014','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const selector=tile(1.36,.22,0,-.04,{toggle:true});
 const go=tile(.46,.19,.45,-.30,{go:true});
 const voice=tile(.48,.19,-.44,-.30,{voice:true});
-const close=tile(.32,.19,0,-.30,{closeNexus:true});
+const close=tile(.24,.19,.87,.46,{closeNexus:true});
 const motion=tile(1.36,.17,0,-.54,{motion:true});paint(motion,'Movement: '+movementMode);
-paint(close,'×','#dfcaff');paint(voice,'Voice','#a7e4ff');paint(go,'Open','#a7e4ff');
+paint(close,'X','#dfcaff');paint(voice,'Voice','#a7e4ff');paint(go,'Open','#a7e4ff');
+const speedTile=tile(1.36,.17,0,-.74,{speed:true});paint(speedTile,'Walk speed: '+speedNames[speedIndex]);
 const rows=choices.map((choice,i)=>{const m=tile(1.36,.155,0,-.25-i*.17,{choice:i});paint(m,symbols[choice.icon]+'  '+choice.name,'#'+choice.color.toString(16).padStart(6,'0'),'row');return m;});
 function refreshNexus(){
  const choice=choices[selected];paint(selector,choice?symbols[choice.icon]+'  '+choice.name+'  ▾':'Choose destination  ▾');
  paint(go,choice?(choice.refresh?'Check':choice.exit?'Exit':'Open'):'Open',choice?'#b9f5dd':'#8b839d');
- rows.forEach(m=>m.visible=expanded);go.visible=voice.visible=close.visible=motion.visible=!expanded;
+ rows.forEach(m=>m.visible=expanded);go.visible=voice.visible=motion.visible=speedTile.visible=!expanded;close.visible=true;
 }
 function setNexusStatus(message){paint(updatePanel,message,'#b6dcfa','text');}
 function pick(i){selected=i;expanded=false;armed=null;armedUntil=0;confirmLabel.visible=false;refreshNexus();setNexusStatus('SELECTED • '+choices[i].name);}
@@ -106,7 +107,7 @@ function startVoice(){
  rec.onresult=e=>{
  if(recognition!==rec||!nexus.visible)return;
  let found=-1;
- const patterns=[/\bchess\b/,/\b(?:toon|tune)\b/,/\brainbow\b/,/\b(?:music|songs?)\b/];
+ const patterns=[/\bchess\b/,/\b(?:toon|tune)\b/,/\brainbow\b/,/\b(?:music|songs?)\b/,/\bhome\b/];
  for(let j=0;j<e.results.length&&found<0;j++){for(let k=0;k<e.results[j].length&&found<0;k++){const spoken=e.results[j][k].transcript.toLowerCase();found=patterns.findIndex(p=>p.test(spoken));}}
  if(found>=0)pick(found);else setNexusStatus('NO DESTINATION MATCH • RETRY');
  };
@@ -121,7 +122,7 @@ function showNexus(open){
  if(!open){stopVoice();return;}
  const view=renderer.xr.isPresenting?renderer.xr.getCamera():camera;
  const eye=new T.Vector3();view.getWorldPosition(eye);
- const forward=new T.Vector3();view.getWorldDirection(forward).normalize();
+ const forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion())).normalize();
  if(forward.lengthSq()<.01)forward.set(0,0,-1);
  nexus.position.copy(eye).addScaledVector(forward,2.8);
  // Face the viewer without copying headset roll. World vertical remains upright.
@@ -152,7 +153,7 @@ async function syncScene(manual=true){
  const next=data.objects.map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V013.1 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V014 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -167,6 +168,7 @@ function activate(){
  if(Number.isInteger(data.choice)){pick(data.choice);return;}
  if(data.closeNexus){showNexus(false);return;}
  if(data.voice){startVoice();return;}
+ if(data.speed){speedIndex=(speedIndex+1)%speeds.length;paint(speedTile,'Walk speed: '+speedNames[speedIndex]);return;}
  if(data.motion){const modes=['Roam','Follow','Station'];movementMode=modes[(modes.indexOf(movementMode)+1)%modes.length];paint(motion,'Movement: '+movementMode);setNexusStatus('NOVA • '+movementMode.toUpperCase());return;}
  if(!data.go)return;
  const choice=choices[selected];if(!choice){setNexusStatus('CHOOSE A DESTINATION FIRST');return;}
@@ -194,12 +196,12 @@ function walkBridge(time){
  if(!renderer.xr.isPresenting||nexus.visible||!dt)return;
  const inputs=Array.from(renderer.xr.getSession()?.inputSources||[]);
  const left=inputs.find(i=>i.handedness==='left'),right=inputs.find(i=>i.handedness==='right');
- const view=renderer.xr.getCamera();view.getWorldPosition(walkEye);view.getWorldDirection(walkDir);
+ const view=renderer.xr.getCamera();view.getWorldPosition(walkEye);walkDir.set(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));
  walkDir.y=0;if(walkDir.lengthSq()<.01)walkDir.set(0,0,-1);walkDir.normalize();
  walkRight.set(-walkDir.z,0,walkDir.x);
  let [x,y]=stick(left);const mag=Math.hypot(x,y);
  if(mag>.22){
- const speed=.95*Math.min(1,(mag-.22)/.78);
+ const speed=speeds[speedIndex]*Math.min(1,(mag-.22)/.78);
  walkDelta.copy(walkRight).multiplyScalar(x/mag).addScaledVector(walkDir,-y/mag).multiplyScalar(speed*dt);
  if(canWalk(walkEye.x+walkDelta.x,walkEye.z)){rig.position.x+=walkDelta.x;walkEye.x+=walkDelta.x;}
  if(canWalk(walkEye.x,walkEye.z+walkDelta.z)){rig.position.z+=walkDelta.z;walkEye.z+=walkDelta.z;}
@@ -228,21 +230,22 @@ function moveNova(time){
  }else{
  const view=renderer.xr.isPresenting?renderer.xr.getCamera():camera;
  const eye=view.getWorldPosition(new T.Vector3());
- const dir=view.getWorldDirection(new T.Vector3());dir.y=0;
+ const dir=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));dir.y=0;
  if(dir.lengthSq()<.01)dir.set(0,0,-1);dir.normalize();
  const right=new T.Vector3(-dir.z,0,dir.x);
- motionGoal.copy(eye).addScaledVector(dir,2.1).addScaledVector(right,1.2);
+ motionGoal.copy(eye).addScaledVector(dir,1.8).addScaledVector(right,.85);
  motionGoal.x=T.MathUtils.clamp(motionGoal.x,-5,5);motionGoal.z=T.MathUtils.clamp(motionGoal.z,-4,7.5);
- motionGoal.y=T.MathUtils.clamp(eye.y-1.65,0,1.0);
+ motionGoal.y=T.MathUtils.clamp(eye.y-1.65,-.6,1.0);
+ const relative= nova.position.clone().sub(eye); if(relative.dot(dir)<-.15 || relative.length()>4.5){nova.position.copy(motionGoal);}
  }
  // Keep the orb clear of the central console, taking a side route when crossing it.
  if(nova.position.z>1.8&&motionGoal.z<1.8&&Math.abs(nova.position.x)<2.9){motionGoal.set(nova.position.x>=0?3.2:-3.2,0,2.2);}
  else if(nova.position.z<.1&&motionGoal.z>.1&&Math.abs(nova.position.x)<2.9){motionGoal.set(nova.position.x>=0?3.2:-3.2,0,-.2);}
  if(Math.abs(motionGoal.x)<2.9&&motionGoal.z>.05&&motionGoal.z<2.0){motionGoal.x=motionGoal.x>=0?3.2:-3.2;}
  const delta=motionGoal.clone().sub(nova.position);const distance=delta.length();
- if(distance>.035)nova.position.addScaledVector(delta,Math.min(1,dt*(movementMode==='Follow'?.95:.65)/distance));
+ if(distance>.035)nova.position.addScaledVector(delta,Math.min(1,dt*(movementMode==='Follow'?3.8:.65)/distance));
 }
-renderer.setAnimationLoop(()=>{sky.rotation.y+=.00015;const time=performance.now()*.001;walkBridge(time);moveNova(time);orbUniforms.uTime.value=time;orb.position.y=1.65+.035*Math.sin(time*1.4);orb.scale.setScalar((nexus.visible?1.13:1)+.025*Math.sin(time*2));halo.position.copy(orb.position);halo.scale.setScalar(1+.055*Math.sin(time*2));if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
+renderer.setAnimationLoop(()=>{sky.rotation.y+=.00015;const time=performance.now()*.001;walkBridge(time);moveNova(time);orbUniforms.uTime.value=time;orb.position.y=1.65+.035*Math.sin(time*1.4);orb.scale.setScalar((nexus.visible?1.13:1)+.025*Math.sin(time*2));halo.position.copy(orb.position);const pulse=.5+.5*Math.sin(time*3.2);halo.scale.setScalar(1.03+.18*pulse);halo.material.opacity=.12+.28*pulse;if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
 if(renderer.xr.isPresenting){scene.updateMatrixWorld(true);for(const c of controllers){if(!c.userData.connected)continue;controllerRay(c);const hit=ray.intersectObjects(activeTargets())[0];if(hit){marker.position.copy(hit.point);marker.visible=true;if(hit.object.userData.url){for(const p of targets){if(p.material?.emissive&&p.userData.url===hit.object.userData.url)p.material.emissive.setHex(0x666666);}}}}}
 renderer.render(scene,camera)});status.textContent='Bridge online. Nexus voice is optional and browser-dependent.';syncScene(false);setInterval(()=>syncScene(false),20000);
 }catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}
