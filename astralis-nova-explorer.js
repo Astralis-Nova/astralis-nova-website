@@ -80,7 +80,8 @@
   ship.id = "astralisNovaExplorer";
   ship.className = "nova-explorer";
   ship.type = "button";
-  ship.setAttribute("aria-label", "Astralis Nova classic explorer starship");
+  ship.setAttribute("aria-label", "NXS Astralis Explorer Class — enter the Holodeck VR experience");
+  ship.title = "VR Experience · Click to board NXS Astralis";
   ship.innerHTML = '<img src="/astralis-nova-explorer-classic.svg?v=20260722b" alt="">';
 
   const trail = document.createElement("span");
@@ -112,14 +113,7 @@
   requestAnimationFrame(flightFrame);
 
   ship.addEventListener("click", () => {
-    const rect = ship.getBoundingClientRect();
-    const left = Math.min(window.innerWidth - signal.offsetWidth - 14, Math.max(14, rect.left));
-    const top = Math.min(window.innerHeight - signal.offsetHeight - 14, Math.max(14, rect.bottom + 10));
-    signal.style.left = `${left}px`;
-    signal.style.top = `${top}px`;
-    signal.classList.add("show");
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(() => signal.classList.remove("show"), 9000);
+    window.location.assign("/holodeck.html");
   });
 
   const scheduleWarp = () => {
