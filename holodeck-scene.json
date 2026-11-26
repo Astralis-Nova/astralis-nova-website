@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "revision": "007.1",
+  "nova": {
+    "position": [
+      3.7,
+      0,
+      2.7
+    ],
+    "scale": 1
+  },
+  "starColor": "#d6eaff",
+  "background": "#020510",
+  "objects": [
+    {
+      "type": "sphere",
+      "position": [
+        0,
+        2.8,
+        -6
+      ],
+      "size": 0.25,
+      "color": "#89dfff"
+    }
+  ]
+}
