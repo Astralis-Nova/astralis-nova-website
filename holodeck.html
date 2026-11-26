@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 005</b><p id="status">Initializing bridge…</p><small>Drag to look. Click a planet or point a VR controller and press trigger.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 006</b><p id="status">Initializing bridge…</p><small>Drag to look. Click a planet or point a VR controller and press trigger.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 const status=document.querySelector('#status');
@@ -18,28 +18,43 @@ function label(name){const c=document.createElement('canvas');c.width=512;c.heig
 // Version display is part of the loaded scene, not a remote version estimate.
 
 worlds.forEach(([name,url,color],i)=>{const p=new T.Mesh(new T.SphereGeometry(.68,32,24),new T.MeshStandardMaterial({color,roughness:.65}));p.position.set((i-1.5)*2.5,2,-3.8);p.userData={name,url};scene.add(p);targets.push(p);const l=label(name);l.position.copy(p.position);l.position.y-=1.05;scene.add(l);l.userData=p.userData;targets.push(l)});
-// Nova holographic presence: visual companion, no microphone or API connection.
+// Nova orb: animated visual presence; voice remains in ChatGPT.
 const nova=new T.Group();nova.position.set(3.7,0,2.7);scene.add(nova);
-const holo=new T.MeshStandardMaterial({color:0x78e9ff,emissive:0x1686bd,emissiveIntensity:.7,transparent:true,opacity:.82,roughness:.35});
-const dark=new T.MeshStandardMaterial({color:0x102a49,emissive:0x164477,emissiveIntensity:.4});
-function part(geometry,x,y,z,material=holo){const mesh=new T.Mesh(geometry,material);mesh.position.set(x,y,z);nova.add(mesh);return mesh}
-part(new T.CylinderGeometry(.55,.65,.12,48),0,.08,0,dark);
-const ring=part(new T.TorusGeometry(.52,.025,12,64),0,.16,0);ring.rotation.x=Math.PI/2;
-const body=part(new T.CapsuleGeometry(.23,.38,8,16),0,1.16,0,dark);
-part(new T.SphereGeometry(.225,32,24),0,1.73,0);
-part(new T.BoxGeometry(.32,.065,.055),0,1.75,.19,dark);
-for(const x of [-.095,.095])part(new T.SphereGeometry(.035,16,12),x,1.75,.225);
-for(const side of [-1,1]){const arm=part(new T.CapsuleGeometry(.075,.4,6,12),side*.32,1.12,0);arm.rotation.z=side*.17;part(new T.CapsuleGeometry(.095,.48,6,12),side*.13,.55,0,dark);}
-part(new T.BoxGeometry(.2,.04,.04),0,1.35,.23);
-const badge=label('NOVA • SCIENCE OFFICER');badge.scale.set(2.15,.54,1);badge.position.set(0,2.22,0);nova.add(badge);
-const note=label('VERSION 005');note.scale.set(1.7,.42,1);note.position.set(0,2.57,0);nova.add(note);
+const orbUniforms={uTime:{value:0}};
+const orbMaterial=new T.ShaderMaterial({uniforms:orbUniforms,vertexShader:`
+varying vec3 vPos;
+varying vec3 vNormal;
+varying vec3 vView;
+void main(){vPos=position;vNormal=normalize(normalMatrix*normal);vec4 mv=modelViewMatrix*vec4(position,1.0);vView=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}
+`,fragmentShader:`
+uniform float uTime;
+varying vec3 vPos;
+varying vec3 vNormal;
+varying vec3 vView;
+void main(){
+vec3 p=normalize(vPos);float t=uTime*.6;
+float a=sin(p.x*5.0+p.y*3.5+sin(p.z*4.0-t)*1.5+t);
+float b=sin(p.z*6.0-p.y*4.0+cos(p.x*4.0+t)*1.4-t*.8);
+float wave=smoothstep(-.6,.7,a*.65+b*.35);
+vec3 c=mix(vec3(.025,.28,.78),vec3(.66,.9,1.0),wave);
+float rim=pow(1.0-max(0.0,dot(normalize(vNormal),normalize(vView))),2.0);
+c=mix(c,vec3(.28,.7,1.0),rim*.65);
+gl_FragColor=vec4(c,1.0);
+#include <tonemapping_fragment>
+#include <colorspace_fragment>
+}
+`});
+const orb=new T.Mesh(new T.SphereGeometry(.47,48,32),orbMaterial);orb.position.y=1.65;nova.add(orb);
+const halo=new T.Mesh(new T.SphereGeometry(.53,32,24),new T.MeshBasicMaterial({color:0x63baff,transparent:true,opacity:.08,side:T.BackSide,depthWrite:false,blending:T.AdditiveBlending}));halo.position.copy(orb.position);nova.add(halo);
+const badge=label('ASTRALIS NOVA');badge.scale.set(2.15,.54,1);badge.position.set(0,.97,0);nova.add(badge);
+const note=label('VERSION 006');note.scale.set(1.7,.42,1);note.position.set(0,.58,0);nova.add(note);
 const controls=label('REFRESH HOLODECK');controls.position.set(-2.7,1.65,.2);scene.add(controls);controls.userData={refresh:true};targets.push(controls);
 const refreshHit=new T.Mesh(new T.BoxGeometry(2,.5,.12),new T.MeshBasicMaterial({visible:false}));refreshHit.position.copy(controls.position);refreshHit.userData=controls.userData;scene.add(refreshHit);targets.push(refreshHit);
 const novaHit=new T.Mesh(new T.BoxGeometry(1.4,2.8,.9),new T.MeshBasicMaterial({visible:false}));novaHit.position.set(0,1.4,0);novaHit.userData={nova:true,name:'NOVA'};nova.add(novaHit);targets.push(novaHit);
 const exit=label('EXIT VR');exit.position.set(-2.7,1.05,.2);scene.add(exit);exit.userData={exit:true,name:'EXIT VR'};targets.push(exit);
 const exitHit=new T.Mesh(new T.BoxGeometry(2,.5,.12),new T.MeshBasicMaterial({visible:false}));exitHit.position.copy(exit.position);exitHit.userData=exit.userData;scene.add(exitHit);targets.push(exitHit);
 controls.userData.name='REFRESH HOLODECK';
-const feedback=label('NOVA ONLINE');feedback.position.set(0,3.1,0);nova.add(feedback);feedback.visible=false;
+const feedback=label('NOVA ONLINE');feedback.position.set(0,2.4,0);nova.add(feedback);feedback.visible=false;
 let feedbackUntil=0;
 const ray=new T.Raycaster();const controllers=[];let armed=null,armedUntil=0;
 const marker=new T.Mesh(new T.SphereGeometry(.045,12,8),new T.MeshBasicMaterial({color:0xffe778}));marker.visible=false;scene.add(marker);
@@ -50,7 +65,7 @@ for(let i=0;i<2;i++){const c=renderer.xr.getController(i);rig.add(c);controllers
 let down=null,yaw=0,pitch=0;const canvas=renderer.domElement;canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>down=null);
 renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.z=5});renderer.xr.addEventListener('sessionend',()=>{rig.position.z=0;camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
-renderer.setAnimationLoop(()=>{sky.rotation.y+=.00015;const time=performance.now()*.001;ring.scale.setScalar(1+.06*Math.sin(time*2));nova.rotation.y=-.95+.12*Math.sin(time*.6);holo.emissiveIntensity=.7+.15*Math.sin(time*2);if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
+renderer.setAnimationLoop(()=>{sky.rotation.y+=.00015;const time=performance.now()*.001;orbUniforms.uTime.value=time;orb.position.y=1.65+.035*Math.sin(time*1.4);orb.scale.setScalar(1+.025*Math.sin(time*2));halo.position.copy(orb.position);halo.scale.setScalar(1+.055*Math.sin(time*2));if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
 if(renderer.xr.isPresenting){scene.updateMatrixWorld(true);for(const c of controllers){if(!c.userData.connected)continue;controllerRay(c);const hit=ray.intersectObjects(targets)[0];if(hit){marker.position.copy(hit.point);marker.visible=true;if(hit.object.userData.url){for(const p of targets){if(p.material?.emissive&&p.userData.url===hit.object.userData.url)p.material.emissive.setHex(0x666666);}}}}}
 renderer.render(scene,camera)});status.textContent='Bridge online. Nova visual station available; voice remains in ChatGPT.';
 }catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}
