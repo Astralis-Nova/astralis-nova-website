@@ -768,7 +768,7 @@
 </head>
 <body>
 
-  <button class="roaming-starship" id="roamingStarship" type="button" aria-label="Enter the Astralis Holodeck VR experience" title="VR experience — click the ship to enter">
+  <button class="roaming-starship" id="roamingStarship" type="button" aria-label="Astralis Nova vessel">
     <img src="astralis-nova-angel.png" alt="">
   </button>
   <div class="ship-signal" id="shipSignal" role="status">
@@ -806,7 +806,7 @@
   <section class="hero" id="home">
     <div class="hero-inner shell">
       <div class="hero-copy">
-        <p class="eyebrow" style="margin-bottom:12px"><a href="/holodeck.html" style="color:inherit;text-decoration:underline">✦ VR EXPERIENCE</a> · Click the Astralis ship to enter the Holodeck, or use this link.</p>
+        <p class="eyebrow" style="margin-bottom:12px"><a href="/holodeck.html" style="color:inherit;text-decoration:underline">✦ VR EXPERIENCE</a> · Enter the Holodeck using this link.</p>
         <p class="eyebrow">NEW RELEASE</p>
         <h1>OUR FIRST NIGHT</h1>
         <h2>Astralis Nova</h2>
@@ -1937,7 +1937,12 @@
 
     let hideTimer;
     ship.addEventListener("click", () => {
-      window.location.assign("/holodeck.html");
+      const rect = ship.getBoundingClientRect();
+      signal.style.left = `${Math.min(window.innerWidth - signal.offsetWidth - 14, Math.max(14, rect.left))}px`;
+      signal.style.top = `${Math.min(window.innerHeight - 90, rect.bottom + 10)}px`;
+      signal.classList.add("show");
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => signal.classList.remove("show"), 3200);
     });
 
     ship.addEventListener("animationiteration", () => {
