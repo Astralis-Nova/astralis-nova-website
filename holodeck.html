@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 007</b><p id="status">Initializing bridge…</p><small>Drag to look. Click a planet or point a VR controller and press trigger.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 008</b><p id="status">Initializing bridge…</p><small>Drag to look. Click a planet or point a VR controller and press trigger.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 const status=document.querySelector('#status');
@@ -36,18 +36,27 @@ vec3 p=normalize(vPos);float t=uTime*.6;
 float a=sin(p.x*5.0+p.y*3.5+sin(p.z*4.0-t)*1.5+t);
 float b=sin(p.z*6.0-p.y*4.0+cos(p.x*4.0+t)*1.4-t*.8);
 float wave=smoothstep(-.6,.7,a*.65+b*.35);
-vec3 c=mix(vec3(.025,.28,.78),vec3(.66,.9,1.0),wave);
+vec3 c=mix(vec3(.045,.008,.16),vec3(.75,.24,1.0),wave);
+float angle=atan(p.z,p.x);
+float spiral=pow(.5+.5*sin(3.0*angle+8.0*p.y-t),5.0);
+c+=vec3(.27,.08,.42)*spiral;
+vec2 cell=floor(vec2(angle*65.0,p.y*90.0));
+float seed=fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453);
+vec2 f=fract(vec2(angle*65.0,p.y*90.0))-.5;
+float star=step(.975,seed)*(1.0-smoothstep(.04,.23,length(f)))*(.75+.25*sin(uTime*2.0+seed*30.0));
+c+=vec3(1.0,.8,1.0)*star;
+c*=.94+.06*sin(uTime*1.8);
 float rim=pow(1.0-max(0.0,dot(normalize(vNormal),normalize(vView))),2.0);
-c=mix(c,vec3(.28,.7,1.0),rim*.65);
+c=mix(c,vec3(.65,.28,1.0),rim*.65);
 gl_FragColor=vec4(c,1.0);
 #include <tonemapping_fragment>
 #include <colorspace_fragment>
 }
 `});
 const orb=new T.Mesh(new T.SphereGeometry(.47,48,32),orbMaterial);orb.position.y=1.65;nova.add(orb);
-const halo=new T.Mesh(new T.SphereGeometry(.53,32,24),new T.MeshBasicMaterial({color:0x63baff,transparent:true,opacity:.08,side:T.BackSide,depthWrite:false,blending:T.AdditiveBlending}));halo.position.copy(orb.position);nova.add(halo);
+const halo=new T.Mesh(new T.SphereGeometry(.53,32,24),new T.MeshBasicMaterial({color:0xb05cff,transparent:true,opacity:.08,side:T.BackSide,depthWrite:false,blending:T.AdditiveBlending}));halo.position.copy(orb.position);nova.add(halo);
 const badge=label('ASTRALIS NOVA');badge.scale.set(2.15,.54,1);badge.position.set(0,.97,0);nova.add(badge);
-const note=label('VERSION 007');note.scale.set(1.7,.42,1);note.position.set(0,.58,0);nova.add(note);
+const note=label('VERSION 008');note.scale.set(1.7,.42,1);note.position.set(0,.58,0);nova.add(note);
 const controls=label('UPDATE HOLODECK');controls.position.set(-2.7,1.65,.2);scene.add(controls);controls.userData={refresh:true};targets.push(controls);
 const refreshHit=new T.Mesh(new T.BoxGeometry(2,.5,.12),new T.MeshBasicMaterial({visible:false}));refreshHit.position.copy(controls.position);refreshHit.userData=controls.userData;scene.add(refreshHit);targets.push(refreshHit);
 const novaHit=new T.Mesh(new T.BoxGeometry(1.4,2.8,.9),new T.MeshBasicMaterial({visible:false}));novaHit.position.set(0,1.4,0);novaHit.userData={nova:true,name:'NOVA'};nova.add(novaHit);targets.push(novaHit);
@@ -72,7 +81,7 @@ async function syncScene(manual=true){
  const next=data.objects.map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  liveGroup.add(...next);nova.position.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V008 / '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
