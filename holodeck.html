@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 004</b><p id="status">Initializing bridge…</p><small>Drag to look. Click a planet or point a VR controller and press trigger.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 005</b><p id="status">Initializing bridge…</p><small>Drag to look. Click a planet or point a VR controller and press trigger.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 const status=document.querySelector('#status');
@@ -16,8 +16,7 @@ const stars=new Float32Array(2400*3);for(let i=0;i<stars.length;i+=3){const a=Ma
 const targets=[];const worlds=[['CHESS PORTAL','/chess/',0x52b9ff],['TOON PLANET','/toon-planet.html',0xca63f1],['RAINBOW PROMISE','/rainbow-promise.html',0x4bdb95],['MUSIC PLAYER','/player/',0xffbc55]];
 function label(name){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(name,256,76);const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;const s=new T.Sprite(new T.SpriteMaterial({map:tex}));s.scale.set(2,.5,1);return s}
 // Version display is part of the loaded scene, not a remote version estimate.
-const versionPanel=label('HOLODECK VERSION 004');
-versionPanel.position.set(0,1.65,1.48);versionPanel.scale.set(2.6,.65,1);scene.add(versionPanel);
+
 worlds.forEach(([name,url,color],i)=>{const p=new T.Mesh(new T.SphereGeometry(.68,32,24),new T.MeshStandardMaterial({color,roughness:.65}));p.position.set((i-1.5)*2.5,2,-3.8);p.userData={name,url};scene.add(p);targets.push(p);const l=label(name);l.position.copy(p.position);l.position.y-=1.05;scene.add(l);l.userData=p.userData;targets.push(l)});
 // Nova holographic presence: visual companion, no microphone or API connection.
 const nova=new T.Group();nova.position.set(3.7,0,2.7);scene.add(nova);
@@ -33,7 +32,7 @@ for(const x of [-.095,.095])part(new T.SphereGeometry(.035,16,12),x,1.75,.225);
 for(const side of [-1,1]){const arm=part(new T.CapsuleGeometry(.075,.4,6,12),side*.32,1.12,0);arm.rotation.z=side*.17;part(new T.CapsuleGeometry(.095,.48,6,12),side*.13,.55,0,dark);}
 part(new T.BoxGeometry(.2,.04,.04),0,1.35,.23);
 const badge=label('NOVA • SCIENCE OFFICER');badge.scale.set(2.15,.54,1);badge.position.set(0,2.22,0);nova.add(badge);
-const note=label('VOICE VIA CHATGPT');note.scale.set(1.7,.42,1);note.position.set(0,2.57,0);nova.add(note);
+const note=label('VERSION 005');note.scale.set(1.7,.42,1);note.position.set(0,2.57,0);nova.add(note);
 const controls=label('REFRESH HOLODECK');controls.position.set(-2.7,1.65,.2);scene.add(controls);controls.userData={refresh:true};targets.push(controls);
 const refreshHit=new T.Mesh(new T.BoxGeometry(2,.5,.12),new T.MeshBasicMaterial({visible:false}));refreshHit.position.copy(controls.position);refreshHit.userData=controls.userData;scene.add(refreshHit);targets.push(refreshHit);
 const novaHit=new T.Mesh(new T.BoxGeometry(1.4,2.8,.9),new T.MeshBasicMaterial({visible:false}));novaHit.position.set(0,1.4,0);novaHit.userData={nova:true,name:'NOVA'};nova.add(novaHit);targets.push(novaHit);
