@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 009</b><p id="status">Initializing bridge…</p><small>Select Nova to open the Nexus. Select a destination twice in VR to travel.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 010</b><p id="status">Initializing bridge…</p><small>Select Nova to open the Nexus. Select a destination twice in VR to travel.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 const status=document.querySelector('#status');
@@ -14,7 +14,7 @@ box(0,-.15,2,14,.3,15,0x233b50);box(0,4.1,2,14,.2,15,0x14263b);for(const x of [-
 box(0,0.6,1,4,1.2,.8,0x27465d);box(0,1.24,1,4.1,.08,.85,0x49b8d9);
 const stars=new Float32Array(2400*3);for(let i=0;i<stars.length;i+=3){const a=Math.random()*Math.PI*2,u=Math.random()*2-1,r=70+Math.random()*80;stars[i]=r*Math.sqrt(1-u*u)*Math.cos(a);stars[i+1]=r*u;stars[i+2]=r*Math.sqrt(1-u*u)*Math.sin(a)}const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(stars,3));const sky=new T.Points(geo,new T.PointsMaterial({color:0xd6eaff,size:.18}));scene.add(sky);
 const targets=[];const worlds=[['CHESS PORTAL','/chess/',0x52b9ff],['TOON PLANET','/toon-planet.html',0xca63f1],['RAINBOW PROMISE','/rainbow-promise.html',0x4bdb95],['MUSIC PLAYER','/player/',0xffbc55]];
-function label(name){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(name,256,76);const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;const s=new T.Sprite(new T.SpriteMaterial({map:tex}));s.scale.set(2,.5,1);return s}
+function label(name){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(name,256,76,490);const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;const s=new T.Sprite(new T.SpriteMaterial({map:tex}));s.scale.set(2,.5,1);return s}
 // Version display is part of the loaded scene, not a remote version estimate.
 
 // Nova orb: animated visual presence; voice remains in ChatGPT.
@@ -55,18 +55,20 @@ gl_FragColor=vec4(c,1.0);
 const orb=new T.Mesh(new T.SphereGeometry(.47,48,32),orbMaterial);orb.position.y=1.65;nova.add(orb);
 const halo=new T.Mesh(new T.SphereGeometry(.53,32,24),new T.MeshBasicMaterial({color:0xb05cff,transparent:true,opacity:.08,side:T.BackSide,depthWrite:false,blending:T.AdditiveBlending}));halo.position.copy(orb.position);nova.add(halo);
 const badge=label('ASTRALIS NOVA');badge.scale.set(2.15,.54,1);badge.position.set(0,.97,0);nova.add(badge);
-const note=label('VERSION 009');note.scale.set(1.7,.42,1);note.position.set(0,.58,0);nova.add(note);
-const controls=label('UPDATE HOLODECK');controls.position.set(-2.7,1.65,.2);scene.add(controls);controls.userData={refresh:true};targets.push(controls);
-const refreshHit=new T.Mesh(new T.BoxGeometry(2,.5,.12),new T.MeshBasicMaterial({visible:false}));refreshHit.position.copy(controls.position);refreshHit.userData=controls.userData;scene.add(refreshHit);targets.push(refreshHit);
+const note=label('VERSION 010');note.scale.set(1.7,.42,1);note.position.set(0,.58,0);nova.add(note);
 const novaHit=new T.Mesh(new T.BoxGeometry(1.4,2.8,.9),new T.MeshBasicMaterial({visible:false}));novaHit.position.set(0,1.4,0);novaHit.userData={nova:true,name:'NOVA'};nova.add(novaHit);targets.push(novaHit);
 const nexus=new T.Group();scene.add(nexus);nexus.visible=false;
 const nexusTargets=[];
-const title=label('NOVA NEXUS • DESTINATIONS');title.position.set(0,1.18,0);title.scale.set(2.9,.48,1);nexus.add(title);
-worlds.forEach(([name,url,color],i)=>{
- const entry=label(name);entry.position.set(0,.67-i*.49,0);entry.scale.set(2.6,.42,1);entry.userData={name,url};nexus.add(entry);
- const hit=new T.Mesh(new T.BoxGeometry(2.6,.42,.08),new T.MeshBasicMaterial({visible:false}));hit.position.copy(entry.position);hit.userData=entry.userData;nexus.add(hit);nexusTargets.push(entry,hit);
-});
-const close=label('CLOSE NEXUS');close.position.set(0,-1.31,0);close.scale.set(2.6,.42,1);close.userData={closeNexus:true};nexus.add(close);nexusTargets.push(close);
+const title=label('NOVA NEXUS');title.position.set(0,1.05,0);title.scale.set(2.65,.42,1);nexus.add(title);
+const updatePanel=label('LIVE UPDATE READY');updatePanel.position.set(0,.62,0);updatePanel.scale.set(2.65,.34,1);nexus.add(updatePanel);
+function nexusButton(name,data,x,y){
+ const entry=label(name);entry.position.set(x,y,0);entry.scale.set(1.36,.34,1);entry.userData=data;nexus.add(entry);
+ const hit=new T.Mesh(new T.BoxGeometry(1.36,.34,.08),new T.MeshBasicMaterial({visible:false}));hit.position.copy(entry.position);hit.userData=data;nexus.add(hit);nexusTargets.push(hit);
+}
+worlds.forEach(([name,url,color],i)=>nexusButton(name,{name,url},(i%2===0?-.73:.73),.19-Math.floor(i/2)*.42));
+nexusButton('UPDATE HOLODECK',{refresh:true},-.73,-.65);
+nexusButton('EXIT VR',{exit:true},.73,-.65);
+nexusButton('CLOSE NEXUS',{closeNexus:true},0,-1.07);
 function showNexus(open){
  nexus.visible=open;armed=null;armedUntil=0;confirmLabel.visible=false;
  for(const target of nexusTargets){const i=targets.indexOf(target);if(i>=0)targets.splice(i,1);}
@@ -74,21 +76,18 @@ function showNexus(open){
   const view=renderer.xr.isPresenting?renderer.xr.getCamera():camera;
   const eye=new T.Vector3();view.getWorldPosition(eye);
   const forward=new T.Vector3();view.getWorldDirection(forward);
-  forward.y=0;if(forward.lengthSq()<.01)forward.set(0,0,-1);forward.normalize();
-  nexus.position.copy(eye).addScaledVector(forward,2.8);nexus.position.y=eye.y;
-  nexus.lookAt(eye.x,nexus.position.y,eye.z);
+  if(forward.lengthSq()<.01)forward.set(0,0,-1);forward.normalize();
+  nexus.position.copy(eye).addScaledVector(forward,2.8);
+  nexus.quaternion.copy(view.getWorldQuaternion(new T.Quaternion()));
   targets.unshift(...nexusTargets);
  }
 }
 
-const exit=label('EXIT VR');exit.position.set(-2.7,1.05,.2);scene.add(exit);exit.userData={exit:true,name:'EXIT VR'};targets.push(exit);
-const exitHit=new T.Mesh(new T.BoxGeometry(2,.5,.12),new T.MeshBasicMaterial({visible:false}));exitHit.position.copy(exit.position);exitHit.userData=exit.userData;scene.add(exitHit);targets.push(exitHit);
-controls.userData.name='UPDATE HOLODECK';
 const feedback=label('NOVA ONLINE');feedback.position.set(0,2.4,0);nova.add(feedback);feedback.visible=false;
 let feedbackUntil=0;
 const liveGroup=new T.Group();scene.add(liveGroup);
 let liveRevision=null, syncing=false;
-const updatePanel=label('LIVE UPDATE READY');updatePanel.position.set(-2.7,2.23,.2);scene.add(updatePanel);
+
 function setText(sprite,message){const c=sprite.material.map.image;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(message,256,76,490);sprite.material.map.needsUpdate=true;}
 async function syncScene(manual=true){
  if(syncing)return;syncing=true;if(manual)setText(updatePanel,'CHECKING FOR UPDATE');
@@ -102,21 +101,21 @@ async function syncScene(manual=true){
  const next=data.objects.map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  liveGroup.add(...next);nova.position.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V009 / '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V010 / '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
 const ray=new T.Raycaster();const controllers=[];let armed=null,armedUntil=0;
 const marker=new T.Mesh(new T.SphereGeometry(.045,12,8),new T.MeshBasicMaterial({color:0xffe778}));marker.visible=false;scene.add(marker);
 function controllerRay(c){const m=new T.Matrix4().extractRotation(c.matrixWorld);ray.ray.origin.setFromMatrixPosition(c.matrixWorld);ray.ray.direction.set(0,0,-1).applyMatrix4(m).normalize();ray.camera=renderer.xr.getCamera();}
-function activate(){const hit=ray.intersectObjects(targets)[0];if(hit){const data=hit.object.userData;if(data.nova){showNexus(!nexus.visible);return;}if(data.closeNexus){showNexus(false);return;}if(data.exit){if(renderer.xr.isPresenting)renderer.xr.getSession().end();return;}if(hit.object.userData.refresh){syncScene();return;}if(renderer.xr.isPresenting){if(armed!==data.url||performance.now()>armedUntil){armed=data.url;armedUntil=performance.now()+4500;confirmLabel.visible=true;confirmLabel.position.copy(hit.point);confirmLabel.position.y+=.65;return;}armed=null;confirmLabel.visible=false;const session=renderer.xr.getSession();session.end().then(()=>location.assign(data.url));}else location.assign(hit.object.userData.url)}}
+function activate(){const hit=ray.intersectObjects(nexus.visible?nexusTargets:targets)[0];if(hit){const data=hit.object.userData;if(data.nova){showNexus(!nexus.visible);return;}if(data.closeNexus){showNexus(false);return;}if(data.exit){showNexus(false);if(renderer.xr.isPresenting)renderer.xr.getSession().end();return;}if(hit.object.userData.refresh){syncScene();return;}if(renderer.xr.isPresenting){if(armed!==data.url||performance.now()>armedUntil){armed=data.url;armedUntil=performance.now()+4500;confirmLabel.visible=true;confirmLabel.position.copy(hit.point);confirmLabel.position.y+=.65;return;}armed=null;confirmLabel.visible=false;const session=renderer.xr.getSession();session.end().then(()=>location.assign(data.url));}else location.assign(hit.object.userData.url)}}
 const confirmLabel=label('TRIGGER AGAIN TO TRAVEL');confirmLabel.visible=false;scene.add(confirmLabel);
 for(let i=0;i<2;i++){const c=renderer.xr.getController(i);rig.add(c);controllers.push(c);c.userData.connected=false;c.addEventListener('connected',()=>c.userData.connected=true);c.addEventListener('disconnected',()=>c.userData.connected=false);const line=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3(0,0,-8)]),new T.LineBasicMaterial({color:0x65dfff}));c.add(line);c.addEventListener('select',()=>{scene.updateMatrixWorld(true);const m=new T.Matrix4().extractRotation(c.matrixWorld);ray.ray.origin.setFromMatrixPosition(c.matrixWorld);ray.ray.direction.set(0,0,-1).applyMatrix4(m).normalize();ray.camera=renderer.xr.getCamera();activate()})}
 let down=null,yaw=0,pitch=0;const canvas=renderer.domElement;canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>down=null);
-renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.z=5});renderer.xr.addEventListener('sessionend',()=>{rig.position.z=0;camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
+renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.z=5});renderer.xr.addEventListener('sessionend',()=>{showNexus(false);rig.position.z=0;camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 renderer.setAnimationLoop(()=>{sky.rotation.y+=.00015;const time=performance.now()*.001;orbUniforms.uTime.value=time;orb.position.y=1.65+.035*Math.sin(time*1.4);orb.scale.setScalar((nexus.visible?1.13:1)+.025*Math.sin(time*2));halo.position.copy(orb.position);halo.scale.setScalar(1+.055*Math.sin(time*2));if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
-if(renderer.xr.isPresenting){scene.updateMatrixWorld(true);for(const c of controllers){if(!c.userData.connected)continue;controllerRay(c);const hit=ray.intersectObjects(targets)[0];if(hit){marker.position.copy(hit.point);marker.visible=true;if(hit.object.userData.url){for(const p of targets){if(p.material?.emissive&&p.userData.url===hit.object.userData.url)p.material.emissive.setHex(0x666666);}}}}}
+if(renderer.xr.isPresenting){scene.updateMatrixWorld(true);for(const c of controllers){if(!c.userData.connected)continue;controllerRay(c);const hit=ray.intersectObjects(nexus.visible?nexusTargets:targets)[0];if(hit){marker.position.copy(hit.point);marker.visible=true;if(hit.object.userData.url){for(const p of targets){if(p.material?.emissive&&p.userData.url===hit.object.userData.url)p.material.emissive.setHex(0x666666);}}}}}
 renderer.render(scene,camera)});status.textContent='Bridge online. Live scene updates enabled; voice remains in ChatGPT.';syncScene(false);setInterval(()=>syncScene(false),20000);
 }catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}
 </script></body></html>
