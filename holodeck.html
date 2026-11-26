@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 006</b><p id="status">Initializing bridge…</p><small>Drag to look. Click a planet or point a VR controller and press trigger.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 007</b><p id="status">Initializing bridge…</p><small>Drag to look. Click a planet or point a VR controller and press trigger.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 const status=document.querySelector('#status');
@@ -47,19 +47,39 @@ gl_FragColor=vec4(c,1.0);
 const orb=new T.Mesh(new T.SphereGeometry(.47,48,32),orbMaterial);orb.position.y=1.65;nova.add(orb);
 const halo=new T.Mesh(new T.SphereGeometry(.53,32,24),new T.MeshBasicMaterial({color:0x63baff,transparent:true,opacity:.08,side:T.BackSide,depthWrite:false,blending:T.AdditiveBlending}));halo.position.copy(orb.position);nova.add(halo);
 const badge=label('ASTRALIS NOVA');badge.scale.set(2.15,.54,1);badge.position.set(0,.97,0);nova.add(badge);
-const note=label('VERSION 006');note.scale.set(1.7,.42,1);note.position.set(0,.58,0);nova.add(note);
-const controls=label('REFRESH HOLODECK');controls.position.set(-2.7,1.65,.2);scene.add(controls);controls.userData={refresh:true};targets.push(controls);
+const note=label('VERSION 007');note.scale.set(1.7,.42,1);note.position.set(0,.58,0);nova.add(note);
+const controls=label('UPDATE HOLODECK');controls.position.set(-2.7,1.65,.2);scene.add(controls);controls.userData={refresh:true};targets.push(controls);
 const refreshHit=new T.Mesh(new T.BoxGeometry(2,.5,.12),new T.MeshBasicMaterial({visible:false}));refreshHit.position.copy(controls.position);refreshHit.userData=controls.userData;scene.add(refreshHit);targets.push(refreshHit);
 const novaHit=new T.Mesh(new T.BoxGeometry(1.4,2.8,.9),new T.MeshBasicMaterial({visible:false}));novaHit.position.set(0,1.4,0);novaHit.userData={nova:true,name:'NOVA'};nova.add(novaHit);targets.push(novaHit);
 const exit=label('EXIT VR');exit.position.set(-2.7,1.05,.2);scene.add(exit);exit.userData={exit:true,name:'EXIT VR'};targets.push(exit);
 const exitHit=new T.Mesh(new T.BoxGeometry(2,.5,.12),new T.MeshBasicMaterial({visible:false}));exitHit.position.copy(exit.position);exitHit.userData=exit.userData;scene.add(exitHit);targets.push(exitHit);
-controls.userData.name='REFRESH HOLODECK';
+controls.userData.name='UPDATE HOLODECK';
 const feedback=label('NOVA ONLINE');feedback.position.set(0,2.4,0);nova.add(feedback);feedback.visible=false;
 let feedbackUntil=0;
+const liveGroup=new T.Group();scene.add(liveGroup);
+let liveRevision=null, syncing=false;
+const updatePanel=label('LIVE UPDATE READY');updatePanel.position.set(-2.7,2.23,.2);scene.add(updatePanel);
+function setText(sprite,message){const c=sprite.material.map.image;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(message,256,76,490);sprite.material.map.needsUpdate=true;}
+async function syncScene(manual=true){
+ if(syncing)return;syncing=true;if(manual)setText(updatePanel,'CHECKING FOR UPDATE');
+ try{
+ const response=await fetch('/holodeck-scene.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);
+ const data=await response.json();
+ const pos=v=>Array.isArray(v)&&v.length===3&&v.every(n=>typeof n==='number'&&Number.isFinite(n)&&Math.abs(n)<=100);
+ const color=v=>typeof v==='string'&&/^#[0-9a-f]{6}$/i.test(v);
+ if(data.schema!==1||typeof data.revision!=='string'||!/^\d{3}(\.\d{1,4})?$/.test(data.revision)||!pos(data.nova?.position)||!Number.isFinite(data.nova?.scale)||data.nova.scale<.2||data.nova.scale>3||!color(data.starColor)||!color(data.background)||!Array.isArray(data.objects)||data.objects.length>50||!data.objects.every(o=>['sphere','box'].includes(o.type)&&pos(o.position)&&Number.isFinite(o.size)&&o.size>=.05&&o.size<=10&&color(o.color)))throw Error('Invalid scene');
+ if(liveRevision===data.revision){if(manual)setText(updatePanel,'ALREADY UP TO DATE');return;}
+ const next=data.objects.map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
+ for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
+ liveGroup.add(...next);nova.position.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);scene.background.set(data.background);
+ liveRevision=data.revision;setText(note,'SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
+}
+
 const ray=new T.Raycaster();const controllers=[];let armed=null,armedUntil=0;
 const marker=new T.Mesh(new T.SphereGeometry(.045,12,8),new T.MeshBasicMaterial({color:0xffe778}));marker.visible=false;scene.add(marker);
 function controllerRay(c){const m=new T.Matrix4().extractRotation(c.matrixWorld);ray.ray.origin.setFromMatrixPosition(c.matrixWorld);ray.ray.direction.set(0,0,-1).applyMatrix4(m).normalize();ray.camera=renderer.xr.getCamera();}
-function activate(){const hit=ray.intersectObjects(targets)[0];if(hit){const data=hit.object.userData;if(data.nova){feedback.visible=true;feedbackUntil=performance.now()+3500;return;}if(data.exit){if(renderer.xr.isPresenting)renderer.xr.getSession().end();return;}if(hit.object.userData.refresh){if(renderer.xr.isPresenting){renderer.xr.getSession().end().then(()=>location.reload());}else location.reload();return;}if(renderer.xr.isPresenting){if(armed!==data.url||performance.now()>armedUntil){armed=data.url;armedUntil=performance.now()+4500;confirmLabel.visible=true;confirmLabel.position.copy(hit.point);confirmLabel.position.y+=.65;return;}armed=null;confirmLabel.visible=false;const session=renderer.xr.getSession();session.end().then(()=>location.assign(data.url));}else location.assign(hit.object.userData.url)}}
+function activate(){const hit=ray.intersectObjects(targets)[0];if(hit){const data=hit.object.userData;if(data.nova){feedback.visible=true;feedbackUntil=performance.now()+3500;return;}if(data.exit){if(renderer.xr.isPresenting)renderer.xr.getSession().end();return;}if(hit.object.userData.refresh){syncScene();return;}if(renderer.xr.isPresenting){if(armed!==data.url||performance.now()>armedUntil){armed=data.url;armedUntil=performance.now()+4500;confirmLabel.visible=true;confirmLabel.position.copy(hit.point);confirmLabel.position.y+=.65;return;}armed=null;confirmLabel.visible=false;const session=renderer.xr.getSession();session.end().then(()=>location.assign(data.url));}else location.assign(hit.object.userData.url)}}
 const confirmLabel=label('TRIGGER AGAIN TO TRAVEL');confirmLabel.visible=false;scene.add(confirmLabel);
 for(let i=0;i<2;i++){const c=renderer.xr.getController(i);rig.add(c);controllers.push(c);c.userData.connected=false;c.addEventListener('connected',()=>c.userData.connected=true);c.addEventListener('disconnected',()=>c.userData.connected=false);const line=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3(0,0,-8)]),new T.LineBasicMaterial({color:0x65dfff}));c.add(line);c.addEventListener('select',()=>{scene.updateMatrixWorld(true);const m=new T.Matrix4().extractRotation(c.matrixWorld);ray.ray.origin.setFromMatrixPosition(c.matrixWorld);ray.ray.direction.set(0,0,-1).applyMatrix4(m).normalize();ray.camera=renderer.xr.getCamera();activate()})}
 let down=null,yaw=0,pitch=0;const canvas=renderer.domElement;canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>down=null);
@@ -67,6 +87,6 @@ renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 renderer.setAnimationLoop(()=>{sky.rotation.y+=.00015;const time=performance.now()*.001;orbUniforms.uTime.value=time;orb.position.y=1.65+.035*Math.sin(time*1.4);orb.scale.setScalar(1+.025*Math.sin(time*2));halo.position.copy(orb.position);halo.scale.setScalar(1+.055*Math.sin(time*2));if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
 if(renderer.xr.isPresenting){scene.updateMatrixWorld(true);for(const c of controllers){if(!c.userData.connected)continue;controllerRay(c);const hit=ray.intersectObjects(targets)[0];if(hit){marker.position.copy(hit.point);marker.visible=true;if(hit.object.userData.url){for(const p of targets){if(p.material?.emissive&&p.userData.url===hit.object.userData.url)p.material.emissive.setHex(0x666666);}}}}}
-renderer.render(scene,camera)});status.textContent='Bridge online. Nova visual station available; voice remains in ChatGPT.';
+renderer.render(scene,camera)});status.textContent='Bridge online. Live scene updates enabled; voice remains in ChatGPT.';syncScene(false);setInterval(()=>syncScene(false),20000);
 }catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}
 </script></body></html>
