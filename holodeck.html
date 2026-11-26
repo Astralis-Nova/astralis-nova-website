@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 015.1</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 016.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 const status=document.querySelector('#status');
@@ -12,6 +12,7 @@ scene.add(new T.HemisphereLight(0xcbeaff,0x182133,2));const sun=new T.Directiona
 function box(x,y,z,w,h,d,color){const m=new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshStandardMaterial({color,metalness:.45,roughness:.5}));m.position.set(x,y,z);scene.add(m);return m}
 box(0,-.15,2,14,.3,15,0x233b50);box(0,4.1,2,14,.2,15,0x14263b);for(const x of [-6.5,6.5]){box(x,2,2,.3,4,15,0x253d52);for(let z=-4;z<9;z+=2)box(x*.97,.45,z,.1,.1,1.5,0x42caff)}
 box(0,0.6,1,4,1.2,.8,0x27465d);box(0,1.24,1,4.1,.08,.85,0x49b8d9);
+const bridgeObjects=scene.children.filter(o=>o.isMesh);
 const stars=new Float32Array(2400*3);for(let i=0;i<stars.length;i+=3){const a=Math.random()*Math.PI*2,u=Math.random()*2-1,r=70+Math.random()*80;stars[i]=r*Math.sqrt(1-u*u)*Math.cos(a);stars[i+1]=r*u;stars[i+2]=r*Math.sqrt(1-u*u)*Math.sin(a)}const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(stars,3));const sky=new T.Points(geo,new T.PointsMaterial({color:0xd6eaff,size:.18}));scene.add(sky);
 const targets=[];const worlds=[['CHESS PORTAL','/chess/',0x52b9ff],['TOON PLANET','/toon-planet.html',0xca63f1],['RAINBOW PROMISE','/rainbow-promise.html',0x4bdb95],['MUSIC PLAYER','/player/',0xffbc55],['ASTRALIS HOME','/',0x9bdfff]];
 function label(name){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(name,256,76,490);const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;const s=new T.Sprite(new T.SpriteMaterial({map:tex}));s.scale.set(2,.5,1);return s}
@@ -113,7 +114,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle=accent;g.font=(kind==='text'?'500 ':'600 ')+'48px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,w-44);g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 015.1','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 016.0','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const selector=tile(1.36,.22,0,-.04,{toggle:true});
 const go=tile(.46,.19,.45,-.30,{go:true});
@@ -149,7 +150,7 @@ function startVoice(){
  setNexusStatus('STARTING MICROPHONE');rec.start();
  }catch(e){recognition=null;setNexusStatus('VOICE UNAVAILABLE • USE MENU');}
 }
-function activeTargets(){return nexus.visible?nexusTargets.filter(m=>m.visible):targets;}
+function activeTargets(){return nexus.visible?nexusTargets.filter(m=>m.visible):onRainbow?[returnHit,returnSign]:targets;}
 function showNexus(open){
  nexus.visible=open;armed=null;armedUntil=0;confirmLabel.visible=false;expanded=false;
  if(!open){stopVoice();return;}
@@ -185,17 +186,27 @@ async function syncScene(manual=true){
  if(liveRevision===data.revision){if(manual)setText(updatePanel,'ALREADY UP TO DATE');return;}
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
- liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V015.1 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(onRainbow)bridgeBackground.set(data.background);else scene.background.set(data.background);
+ liveRevision=data.revision;setText(note,'V016.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
+let onRainbow=false;const rainbow=new T.Group();rainbow.visible=false;scene.add(rainbow);
+function landscapeMesh(geometry,color,x,y,z){const m=new T.Mesh(geometry,new T.MeshStandardMaterial({color,roughness:.85}));m.position.set(x,y,z);rainbow.add(m);return m;}
+landscapeMesh(new T.BoxGeometry(80,.3,80),0x68a969,0,-.15,0);
+for(let i=0;i<22;i++){const a=i*2.39996,r=12+(i%5)*5;landscapeMesh(new T.SphereGeometry(4+i%3,16,10),i%2?0x779c91:0x8cb976,Math.cos(a)*r,-2,Math.sin(a)*r);}
+for(let i=0;i<28;i++){const a=i*2.39996,r=6+(i%7)*3,x=Math.cos(a)*r,z=Math.sin(a)*r;landscapeMesh(new T.CylinderGeometry(.12,.2,2,8),0x80543a,x,1,z);landscapeMesh(new T.SphereGeometry(.9,12,8),i%3===0?0xeaa0c6:0x327e53,x,2.4,z);}
+[0xf35b65,0xff9f43,0xffdd66,0x75d77b,0x65b7ff,0x8c72db,0xce85ec].forEach((c,i)=>{const m=new T.Mesh(new T.TorusGeometry(9-i*.32,.15,8,64,Math.PI),new T.MeshBasicMaterial({color:c}));m.position.set(0,1,-17);rainbow.add(m);});
+const returnHit=landscapeMesh(new T.BoxGeometry(2,.15,1.5),0x7961cf,0,.08,3);returnHit.userData={returnBridge:true};const returnSign=label('BEAM BACK TO ASTRALIS');returnSign.position.set(0,1.5,3);returnSign.scale.set(3,.75,1);rainbow.add(returnSign);returnSign.userData={returnBridge:true};
+const bridgeBackground=new T.Color();const savedRig=new T.Vector3();let savedYaw=0;
+function switchRainbow(enter){if(enter===onRainbow)return;showNexus(false);if(enter){bridgeBackground.copy(scene.background);savedRig.copy(rig.position);savedYaw=rig.rotation.y;}onRainbow=enter;rainbow.visible=enter;for(const o of bridgeObjects)o.visible=!enter;galaxy.visible=sky.visible=nova.visible=liveGroup.visible=!enter;scene.background.set(enter?0x91c9ef:bridgeBackground);if(enter){rig.position.set(0,0,7);rig.rotation.set(0,0,0);}else{rig.position.copy(savedRig);rig.rotation.y=savedYaw;}if(!renderer.xr.isPresenting){camera.position.set(0,1.65,enter?0:5);camera.rotation.set(0,0,0);}status.textContent=enter?'Rainbow Promise VR prototype • select beam-back pad to return':'Bridge online.';}
 const ray=new T.Raycaster();const controllers=[];let armed=null,armedUntil=0;
 const marker=new T.Mesh(new T.SphereGeometry(.045,12,8),new T.MeshBasicMaterial({color:0xffe778}));marker.visible=false;scene.add(marker);
 function controllerRay(c){const m=new T.Matrix4().extractRotation(c.matrixWorld);ray.ray.origin.setFromMatrixPosition(c.matrixWorld);ray.ray.direction.set(0,0,-1).applyMatrix4(m).normalize();ray.camera=renderer.xr.getCamera();}
 function activate(){
  const hit=ray.intersectObjects(activeTargets())[0];if(!hit)return;
  const data=hit.object.userData;
+ if(data.returnBridge){switchRainbow(false);return;}
  if(data.nova){showNexus(true);return;}
  if(data.galaxy){showNexus(true);const i=choices.findIndex(c=>c.url===data.url);if(i>=0)pick(i);return;}
  if(data.toggle){expanded=!expanded;armed=null;armedUntil=0;refreshNexus();return;}
@@ -206,6 +217,7 @@ function activate(){
  if(data.motion){const modes=['Roam','Follow','Station'];movementMode=modes[(modes.indexOf(movementMode)+1)%modes.length];paint(motion,'Movement: '+movementMode);setNexusStatus('NOVA • '+movementMode.toUpperCase());return;}
  if(!data.go)return;
  const choice=choices[selected];if(!choice){setNexusStatus('CHOOSE A DESTINATION FIRST');return;}
+ if(choice.url==='/rainbow-promise.html'){switchRainbow(true);return;}
  if(choice.refresh){syncScene();return;}
  if(choice.exit){showNexus(false);if(renderer.xr.isPresenting)renderer.xr.getSession().end();return;}
  if(renderer.xr.isPresenting){
@@ -219,6 +231,7 @@ for(let i=0;i<2;i++){const c=renderer.xr.getController(i);rig.add(c);controllers
 let walkTime=0,turnReady=true;
 const walkEye=new T.Vector3(),walkDir=new T.Vector3(),walkRight=new T.Vector3(),walkDelta=new T.Vector3();
 function canWalk(x,z){
+ if(onRainbow)return Math.abs(x)<35&&Math.abs(z)<35;
  return x>=-5.95&&x<=5.95&&z>=-5.05&&z<=9.05&&!(Math.abs(x)<2.48&&z>.12&&z<1.88);
 }
 function stick(input){
@@ -252,9 +265,10 @@ function walkBridge(time){
  }
 }
 let down=null,yaw=0,pitch=0;const canvas=renderer.domElement;canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>down=null);
-renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true});renderer.xr.addEventListener('sessionend',()=>{showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
+renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true});renderer.xr.addEventListener('sessionend',()=>{if(onRainbow)switchRainbow(false);showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 function moveNova(time){
+ if(onRainbow)return;
  const dt=lastMotion?Math.min(.05,Math.max(0,time-lastMotion)):0;lastMotion=time;
  if(nexus.visible||!dt)return;
  if(movementMode==='Station'){motionGoal.copy(novaHome);}
