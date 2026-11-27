@@ -98,11 +98,15 @@ export function createDeepSpace(T,parent,modelLoader,onStatus=()=>{}) {
     rotor.rotation.y=time*.045;
     for(const {mesh,family,count} of batches) {
       for(let j=0;j<count;j++) {
-        const i=j+family*29,a=i*2.399963+time*(.009+family*.002),r=13.5+(i%8)*3.2;
-        pose.position.set(Math.cos(a)*r,2.5+Math.sin(i*7.1)*8,Math.sin(a)*r);
+        const i=j+family*29;
+        // Evenly sample latitude in each family; stagger the two sets in longitude.
+        const latitude=Math.asin(2*(j+.5)/count-1);
+        const angle=i*2.399963+time*(.009+family*.002);
+        const distance=48+(i%8)*4;
+        const horizontal=distance*Math.cos(latitude);
+        pose.position.set(horizontal*Math.cos(angle),distance*Math.sin(latitude),horizontal*Math.sin(angle));
         pose.rotation.set(i*.53+time*.055,i*.39+time*.07,i*.73-time*.035);
         pose.scale.setScalar(1.15+(i%6)*.48);
-        if(j===0){pose.position.set(family?-9.4:8.5,2.8+Math.sin(time*.12+family)*.4,-13.6);pose.scale.setScalar(family?3.6:3.15);}
         pose.updateMatrix();mesh.setMatrixAt(j,pose.matrix);
       }
       mesh.instanceMatrix.needsUpdate=true;mesh.visible=true;
