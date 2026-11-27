@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 025.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 026.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
-import {vrWorlds,worldForPath,requestedWorld} from '/astralis-vr-worlds.js?v=025.0';
-const directWorld=requestedWorld(location.search);
+import {vrWorlds,worldForPath,requestedWorld} from '/astralis-vr-worlds.js?v=026.0';
+const directWorld=null; // Starship is the single VR entrance.
 const status=document.querySelector('#status');
 try{
 const scene=new T.Scene();scene.background=new T.Color(0x020510);
@@ -170,7 +170,7 @@ const nexusTargets=[];
 // Compact Nexus: a collapsed destination selector with opt-in voice input.
 const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:['planet','rainbow','music','home'][i]})),{name:'LIGHTING • SANCTUARY',shipAction:'lights',color:0xd3bc85,icon:'light'},{name:'GALAXY • DRIFT',shipAction:'galaxy',color:0x9bdfff,icon:'planet'},{name:'SHIP AMBIENCE • OFF',shipAction:'audio',color:0xd3bc85,icon:'music'},{name:'OBSERVATION DECK',shipAction:'observe',color:0x9bdfff,icon:'planet'},{name:'DOCKING ALCOVE',shipAction:'dock',color:0xc2a5ff,icon:'home'},{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'},{name:'NEXT REGION',planetAction:'next',color:0x9bdfff,icon:'planet'},{name:'PREVIOUS REGION',planetAction:'prev',color:0x9bdfff,icon:'planet'},{name:'RETURN TO ASTRALIS',planetAction:'back',color:0xd3bc85,icon:'home'},{name:'NOVA GUIDE VOICE',planetAction:'voice',color:0xc2a5ff,icon:'music'}];
 const symbols={light:'☀',home:'⌂',chess:'♜',planet:'◉',rainbow:'◠',music:'♫',update:'↻',exit:'↗'};
-let selected=-1,expanded=false,recognition=null; let speedIndex=1; const speeds=[.95,1.8,2.7], speedNames=['Slow','Normal','Fast'];
+let selected=-1,expanded=false,recognition=null,textMode=false,commandText='',lastNovaMessage='Nexus ready'; let speedIndex=1; const speeds=[.95,1.8,2.7], speedNames=['Slow','Normal','Fast'];
 const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
 function tile(w,h,x,y,action=null){
  const c=document.createElement('canvas');c.width=768;c.height=128;
@@ -187,40 +187,63 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle=accent;g.font=(kind==='text'?'500 ':'600 ')+'48px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,w-44);g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 025.0','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 026.0','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const selector=tile(1.36,.22,0,-.04,{toggle:true});
-const go=tile(.46,.19,.45,-.30,{go:true});
-const voice=tile(.48,.19,-.44,-.30,{voice:true});
-const close=tile(.32,.19,0,-.30,{closeNexus:true});
+const go=tile(.34,.19,.51,-.30,{go:true});
+const voice=tile(.34,.19,-.51,-.30,{voice:true});
+const textTile=tile(.34,.19,-.15,-.30,{textOpen:true});paint(textTile,'Text','#a7e4ff');
+const close=tile(.28,.19,.18,-.30,{closeNexus:true});
 const motion=tile(1.36,.17,0,-.54,{motion:true});paint(motion,'Movement: '+movementMode);
 paint(close,'X','#dfcaff');paint(voice,'Voice','#a7e4ff');paint(go,'Open','#a7e4ff');
 const speedTile=tile(1.36,.17,0,-.74,{speed:true});paint(speedTile,'Walk speed: '+speedNames[speedIndex]);
 let menuPage=0;const pageSize=5;const prevMenu=tile(.62,.16,-.36,-1.13,{menuPage:-1});const nextMenu=tile(.62,.16,.36,-1.13,{menuPage:1});paint(prevMenu,'‹ PREV');paint(nextMenu,'NEXT ›');const rows=choices.map((choice,i)=>{const m=tile(1.36,.155,0,-.25-(i%pageSize)*.17,{choice:i});paint(m,symbols[choice.icon]+'  '+choice.name,'#'+choice.color.toString(16).padStart(6,'0'),'row');return m;});
+const textPanel=[];
+function keyboardTile(w,h,x,y,action,label){const m=tile(w,h,x,y,action);paint(m,label,'#d4c7ff');m.visible=false;textPanel.push(m);return m;}
+const commandLine=keyboardTile(1.46,.16,0,-.04,null,'TYPE A COMMAND');
+['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'].forEach((row,i)=>{[...row].forEach((key,j)=>keyboardTile(.128,.15,(j-(row.length-1)/2)*.145,-.25-i*.17,{key},key));});
+keyboardTile(.24,.17,-.57,-.80,{key:'BACKSPACE'},'⌫');
+keyboardTile(.55,.17,-.12,-.80,{key:' '},'SPACE');
+keyboardTile(.32,.17,.36,-.80,{key:'SEND'},'SEND');
+keyboardTile(.22,.17,.66,-.80,{key:'CANCEL'},'X');
+function updateCommand(){paint(commandLine,commandText||'TYPE A COMMAND','#e1f4ff','row');}
+function toggleText(open){textMode=open;expanded=false;if(open){stopVoice();commandText='';updateCommand();setNexusStatus('TEXT • TYPE AND SEND');}refreshNexus();}
+function keyCommand(key){if(key==='CANCEL'){toggleText(false);return;}if(key==='SEND'){const cmd=commandText.trim();if(!cmd)return;toggleText(false);runCommand(cmd);return;}if(key==='BACKSPACE')commandText=commandText.slice(0,-1);else if(commandText.length<72)commandText+=key;updateCommand();}
 function refreshNexus(){
  const choice=choices[selected];paint(selector,choice?symbols[choice.icon]+'  '+choice.name+'  ▾':'Choose destination  ▾');
  paint(go,choice?(choice.refresh?'Check':choice.exit?'Exit':'Open'):'Open',choice?'#b9f5dd':'#8b839d');
- rows.forEach((m,i)=>m.visible=expanded&&Math.floor(i/pageSize)===menuPage);prevMenu.visible=expanded&&menuPage>0;nextMenu.visible=expanded&&menuPage<Math.ceil(choices.length/pageSize)-1;go.visible=voice.visible=motion.visible=speedTile.visible=!expanded;close.visible=!expanded;
+ rows.forEach((m,i)=>m.visible=expanded&&Math.floor(i/pageSize)===menuPage);prevMenu.visible=expanded&&menuPage>0;nextMenu.visible=expanded&&menuPage<Math.ceil(choices.length/pageSize)-1;go.visible=voice.visible=motion.visible=speedTile.visible=!expanded;close.visible=!expanded;textTile.visible=!expanded;selector.visible=!textMode;textPanel.forEach(m=>m.visible=textMode);if(textMode){for(const m of [go,voice,textTile,close,motion,speedTile,prevMenu,nextMenu,...rows])m.visible=false;}
 }
 function setNexusStatus(message){paint(updatePanel,message,'#b6dcfa','text');}
 function pick(i){selected=i;expanded=false;armed=null;armedUntil=0;confirmLabel.visible=false;refreshNexus();setNexusStatus('SELECTED • '+choices[i].name);}
 function stopVoice(){if(recognition){const active=recognition;recognition=null;try{active.abort()}catch(e){}}}
 let guideVoice=true,guideSpeaking=false;
-function speakNova(message){status.textContent=message;if(nexus.visible)setNexusStatus(message);if(!guideVoice||!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(message);u.lang='en-US';u.rate=.94;const voices=speechSynthesis.getVoices();const v=voices.find(v=>v.lang==='en-US'&&/female|zira|samantha|jenny/i.test(v.name));if(v)u.voice=v;u.onstart=()=>guideSpeaking=true;u.onend=u.onerror=()=>guideSpeaking=false;speechSynthesis.speak(u);}catch(e){guideSpeaking=false;}}
+function speakNova(message){lastNovaMessage=message;status.textContent=message;if(nexus.visible)setNexusStatus(message);if(!guideVoice||!window.speechSynthesis||!window.SpeechSynthesisUtterance)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(message);u.lang='en-US';u.rate=.94;const voices=speechSynthesis.getVoices();const v=voices.find(v=>v.lang==='en-US'&&/female|zira|samantha|jenny/i.test(v.name));if(v)u.voice=v;u.onstart=()=>guideSpeaking=true;u.onend=u.onerror=()=>guideSpeaking=false;speechSynthesis.speak(u);}catch(e){guideSpeaking=false;}}
 const guideDescriptions=['We are in orbit above Cactus Forest. Select next region to descend to the desert.','Welcome to Cactus Forest Moonlight. Explore the desert and its living scenery.','We have reached the desert burrows. Discover the wildlife beneath the surface.','Welcome to the hidden ocean and the animated underwater village.'];
 function guideAction(action){if(action==='voice'){guideVoice=!guideVoice;if(!guideVoice){window.speechSynthesis?.cancel();guideSpeaking=false;setNexusStatus('GUIDE VOICE OFF');}else speakNova('Nova guide voice enabled.');return;}if(action==='back'){if(onToon)switchToon(false);else if(onRainbow)switchRainbow(false);else showNexus(false);speakNova('Welcome aboard the Astralis.');return;}if(!onToon){speakNova('Region travel is available on Toon Planet.');return;}showNexus(false);setToonLevel((toonLevel+(action==='next'?1:3))%4);speakNova(guideDescriptions[toonLevel]);}
+function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').trim();
+if(/return|beam.*back|back to (the )?(ship|astralis)/.test(q)){guideAction('back');return;}
+if(/^(next|descend)|next region|next level/.test(q)){guideAction('next');return;}
+if(/^(previous|prev)|previous region|previous level/.test(q)){guideAction('prev');return;}
+if(/^(help|commands)$/.test(q)){speakNova('Try Toon Planet, Rainbow Promise, ocean, desert, orbit, burrows, next region, return to ship, or where am I.');return;}
+if(/where am i|about|tell me|what is|describe/.test(q)){speakNova(onToon?guideDescriptions[toonLevel]:onRainbow?'Rainbow Promise recalls the flood and the promise of renewal.':'You are aboard the Astralis exploration starship.');return;}
+if(/ocean|underwater|burrow|underground|desert|surface|orbit/.test(q)){const region=/ocean|underwater/.test(q)?3:/burrow|underground/.test(q)?2:/desert|surface/.test(q)?1:0;travelWorld('toon',region);speakNova(guideDescriptions[region]);return;}
+if(/toon|tune/.test(q)){travelWorld('toon');return;}
+if(/rainbow/.test(q)){travelWorld('rainbow');return;}
+if(/lights|lighting/.test(q)){if(onToon||onRainbow){speakNova('Ship lighting is available aboard the Astralis.');return;}handleShipAction('lights');return;}
+if(/voice off|mute/.test(q)){guideVoice=false;window.speechSynthesis?.cancel();guideSpeaking=false;setNexusStatus('GUIDE VOICE OFF');return;}
+if(/voice on|unmute/.test(q)){guideVoice=true;speakNova('Nova guide voice enabled.');return;}
+speakNova('I do not have that command yet. Type help for available commands.');
+}
 function startVoice(){
  if(recognition){stopVoice();setNexusStatus('VOICE STOPPED');return;}
- if(!SpeechAPI){speakNova('Speech recognition is unavailable on this browser. Use my Nexus menu.');return;}window.speechSynthesis?.cancel();guideSpeaking=false;
+ if(!SpeechAPI){toggleText(true);setNexusStatus('VOICE UNAVAILABLE • TYPE COMMAND');return;}window.speechSynthesis?.cancel();guideSpeaking=false;
  try{
  const rec=new SpeechAPI();recognition=rec;rec.lang='en-US';rec.continuous=false;rec.interimResults=false;rec.maxAlternatives=3;
  rec.onstart=()=>{if(recognition===rec)setNexusStatus('LISTENING • SAY DESTINATION');};
  rec.onresult=e=>{
  if(recognition!==rec||!nexus.visible)return;
- let found=-1;
- const patterns=[/\b(?:toon|tune)\b/,/\brainbow\b/,/\b(?:music|songs?)\b/,/\bhome\b/];
- for(let j=0;j<e.results.length&&found<0;j++){for(let k=0;k<e.results[j].length&&found<0;k++){const spoken=e.results[j][k].transcript.toLowerCase();found=patterns.findIndex(p=>p.test(spoken));}}
- const spoken=Array.from(e.results).map(r=>r[0].transcript).join(' ').toLowerCase();recognition=null;try{rec.stop()}catch(err){}if(/return|beam back|back to (the )?(ship|astralis)/.test(spoken)){guideAction('back');return;}if(/next region|next level|descend/.test(spoken)){guideAction('next');return;}if(/previous region|previous level/.test(spoken)){guideAction('prev');return;}if(/lighting|lights/.test(spoken)){handleShipAction('lights');return;}if(found>=0){pick(found);speakNova('Selected '+choices[found].name+'. Select Open to travel.');}else speakNova('Command not recognized. Please use my Nexus menu.');
+ const spoken=Array.from(e.results).map(r=>r[0].transcript).join(' ');recognition=null;try{rec.stop()}catch(err){}runCommand(spoken);
  };
  rec.onerror=e=>{if(recognition===rec){setNexusStatus(e.error==='not-allowed'?'MIC NOT ALLOWED • USE MENU':'VOICE UNAVAILABLE • USE MENU');recognition=null;}};
  rec.onend=()=>{if(recognition===rec){recognition=null;}};
@@ -303,7 +326,7 @@ function pageAction(action){
 
 function activeTargets(){return pageGroup.visible?pageControls:nexus.visible?nexusTargets.filter(m=>m.visible):(onToon||onRainbow)?targets.filter(m=>m.userData.nova):targets;}
 function showNexus(open){
- nexus.visible=open;armed=null;armedUntil=0;confirmLabel.visible=false;expanded=false;
+ nexus.visible=open;armed=null;armedUntil=0;confirmLabel.visible=false;expanded=false;textMode=false;
  if(!open){stopVoice();return;}
  const view=renderer.xr.isPresenting?renderer.xr.getCamera():camera;
  const eye=new T.Vector3();view.getWorldPosition(eye);
@@ -317,7 +340,7 @@ function showNexus(open){
  const right=new T.Vector3().crossVectors(up,normal).normalize();
  const vertical=new T.Vector3().crossVectors(normal,right).normalize();
  nexus.quaternion.setFromRotationMatrix(new T.Matrix4().makeBasis(right,vertical,normal));
- refreshNexus();nexus.updateMatrixWorld(true);
+ refreshNexus();setNexusStatus(lastNovaMessage);nexus.updateMatrixWorld(true);
 }
 refreshNexus();
 const feedback=label('NOVA ONLINE');feedback.position.set(0,2.4,0);nova.add(feedback);feedback.visible=false;
@@ -338,7 +361,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(onRainbow||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V025.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V026.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -414,12 +437,14 @@ function activate(){
  if(Number.isInteger(data.choice)){pick(data.choice);return;}
  if(data.closeNexus){showNexus(false);return;}
  if(data.voice){startVoice();return;}
+ if(data.textOpen){toggleText(true);return;}
+ if(typeof data.key==='string'){keyCommand(data.key);return;}
  if(data.speed){speedIndex=(speedIndex+1)%speeds.length;paint(speedTile,'Walk speed: '+speedNames[speedIndex]);return;}
  if(data.motion){const modes=['Roam','Follow','Station'];movementMode=modes[(modes.indexOf(movementMode)+1)%modes.length];paint(motion,'Movement: '+movementMode);setNexusStatus('NOVA • '+movementMode.toUpperCase());return;}
  if(!data.go)return;
  const choice=choices[selected];if(!choice){setNexusStatus('CHOOSE A DESTINATION FIRST');return;}
  const world=worldForPath(choice.url);if(world){travelWorld(world.id);return;}
- if(choice.url && renderer.xr.isPresenting){openPage(choice.url);return;}
+ if(choice.url && renderer.xr.isPresenting){speakNova('This destination does not have an immersive world yet.');return;}
  if(choice.planetAction){guideAction(choice.planetAction);return;}
  if(choice.shipAction){handleShipAction(choice.shipAction);return;}
  if(choice.refresh){syncScene();return;}
@@ -447,7 +472,7 @@ function walkBridge(time){
  const dt=walkTime?Math.min(.05,Math.max(0,time-walkTime)):0;walkTime=time;
  if(!renderer.xr.isPresenting||nexus.visible||pageGroup.visible||!dt)return;
  const inputs=Array.from(renderer.xr.getSession()?.inputSources||[]);
- const left=inputs.find(i=>i.handedness==='left'),right=inputs.find(i=>i.handedness==='right');const pressed=!!(right?.gamepad?.buttons?.[5]?.pressed||left?.gamepad?.buttons?.[5]?.pressed);if(pressed&&!returnPressed&&onToon){returnPressed=true;switchToon(false);return;}returnPressed=pressed;
+ const left=inputs.find(i=>i.handedness==='left'),right=inputs.find(i=>i.handedness==='right');const pressed=!!(right?.gamepad?.buttons?.[5]?.pressed||left?.gamepad?.buttons?.[5]?.pressed);if(pressed&&!returnPressed){returnPressed=true;showNexus(true);return;}returnPressed=pressed;
  const view=renderer.xr.getCamera();view.getWorldPosition(walkEye);walkDir.set(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));
  walkDir.y=0;if(walkDir.lengthSq()<.01)walkDir.set(0,0,-1);walkDir.normalize();
  walkRight.set(-walkDir.z,0,walkDir.x);
@@ -469,6 +494,7 @@ function walkBridge(time){
  rig.position.add(offset.sub(rotated));rig.rotation.y+=angle;
  }
 }
+window.addEventListener('keydown',e=>{if(!nexus.visible||!textMode||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='Enter'){e.preventDefault();keyCommand('SEND');}else if(e.key==='Escape'){e.preventDefault();keyCommand('CANCEL');}else if(e.key==='Backspace'){e.preventDefault();keyCommand('BACKSPACE');}else if(/^[a-zA-Z ]$/.test(e.key)){e.preventDefault();keyCommand(e.key.toUpperCase());}});
 let down=null,yaw=0,pitch=0;const canvas=renderer.domElement;canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>down=null);
 renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true;if(directWorld)travelWorld(directWorld.world.id,directWorld.region);});renderer.xr.addEventListener('sessionend',()=>{if(shipAudio){shipAudio.close().catch(()=>{});shipAudio=null;shipHum=null;}closePage();if(onToon)switchToon(false);if(onRainbow)switchRainbow(false);showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
