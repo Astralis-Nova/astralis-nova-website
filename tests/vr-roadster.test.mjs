@@ -11,15 +11,15 @@ test('dock Roadster uses the original red homepage artwork and keeps its aspect'
 });
 test('the floating Roadster remains outside the hull and clear of the walking space',()=>{
   const xs=[],ys=[],zs=[];
-  for(let time=0;time<=200;time+=.25){
+  for(let time=0;time<=250;time+=.25){
     const p=roadsterPose(time);assert.ok(Object.values(p).every(Number.isFinite));
-    assert.ok(p.x-p.width/2>7.3,'outside the maximum deck width');
+    assert.ok(Math.hypot(p.x,p.z-2)-p.width/2>12,'entire car clears the hull');
     assert.ok(p.y-p.height/2>.8,'above the lower observation hull');
-    assert.ok(p.z>2&&p.z<8,'alongside the docking area');
+
     xs.push(p.x);ys.push(p.y);zs.push(p.z);
   }
-  assert.ok(Math.max(...xs)-Math.min(...xs)>1);
+  assert.ok(Math.max(...xs)>20 && Math.min(...xs)<-20);
   assert.ok(Math.max(...ys)-Math.min(...ys)>.5);
-  assert.ok(Math.max(...zs)-Math.min(...zs)>4);
+  assert.ok(Math.max(...zs)>23 && Math.min(...zs)<-19);
   assert.deepEqual(roadsterPose(NaN),roadsterPose(0));
 });
