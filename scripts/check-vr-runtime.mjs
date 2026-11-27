@@ -91,6 +91,12 @@ const startingEye=vm.runInContext('currentView().getWorldPosition(new T.Vector3(
 assert.ok(startingEye.distanceTo(new Three.Vector3(0,testHead.position.y,5))<1e-10,'first XR frame captures physical head height and centers the spawn');
 const bridge=vm.runInContext('rig.position.toArray()',context);
 assert.equal(vm.runInContext('musicTracks.length',context),29);
+assert.ok(vm.runInContext("airlockDoors.length===2 && !shipWalkable(0,9.62) && !shipWalkable(0,13.2) && !shipWalkable(6,18) && !shipWalkable(0,23)",context));
+assert.ok(vm.runInContext("(()=>{for(const d of airlockDoors){for(let i=0;i<20;i++)updateAirlockDoor(d,0,d.z,.05,1+i*.05);if(d.open<.99||!shipWalkable(0,d.z))return false;for(let i=0;i<20;i++)updateAirlockDoor(d,4,18,.05,4+i*.05);if(d.open>.01||shipWalkable(0,d.z))return false;}return shipWalkable(0,11)&&shipWalkable(0,18)&&!shipWalkable(2,11)})()",context));
+vm.runInContext('goToShipDeck(true)',context);
+assert.ok(vm.runInContext('Math.abs(currentView().getWorldPosition(new T.Vector3()).z-17.6)<.001',context));
+vm.runInContext("rig.position.fromArray("+JSON.stringify(bridge)+")",context);
+vm.runInContext('nova.position.copy(novaHome)',context);
 assert.ok(vm.runInContext('musicGlass.material.transparent && musicGlass.material.opacity < .15 && !musicGlass.material.depthWrite',context));
 assert.ok(vm.runInContext("signalPortals.every(p=>p.portal.startsWith('https://')) && radioBanks.some(b=>b.kind==='portals')",context));
 assert.equal(vm.runInContext('activeTargets().includes(musicHit)',context),true);
