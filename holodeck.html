@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 033.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 033.1</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=033.0';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=033.0';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=033.0';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=033.0';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=033.0';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=033.0';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=033.1';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=033.1';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=033.1';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=033.1';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=033.1';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=033.1';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -148,6 +148,15 @@ function surfaceMap(id){
   return surfaceMaps.get(id);
 }
 const bodies=[];
+const planetLabels=new Map();
+let hoveredPlanet=null;
+function setPlanetHover(object){
+  const next=planetLabels.has(object)?object:null;
+  if(next===hoveredPlanet)return;
+  if(hoveredPlanet)planetLabels.get(hoveredPlanet).visible=false;
+  hoveredPlanet=next;
+  if(next)planetLabels.get(next).visible=true;
+}
 function addPlanet({name,surface,phase,distance,height,radius,tilt,spin,destination,rings,tint=0xffffff,rate=.010}){
   const orbit=new T.Group();galaxy.add(orbit);
   const axis=new T.Group();axis.rotation.z=tilt;orbit.add(axis);
@@ -161,8 +170,9 @@ function addPlanet({name,surface,phase,distance,height,radius,tilt,spin,destinat
     }
   }
   if(destination){
-    const caption=label(name);caption.position.y=-radius-1.1;caption.scale.set(6.2,1.25,1);orbit.add(caption);
-    globe.userData=caption.userData=destination;targets.push(globe,caption);
+    const caption=label(name);caption.position.y=radius+1.1;caption.scale.set(6.2,1.55,1);caption.visible=false;orbit.add(caption);
+    planetLabels.set(globe,caption);
+    globe.userData=destination;targets.push(globe);
   }
   bodies.push({orbit,globe,phase,distance,height,rate,spin});
 }
@@ -225,7 +235,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle='#ffffff';g.font=(kind==='text'?'650 ':'750 ')+(m.userData.key?.length===1?100:76)+'px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,Math.max(72,w-24));g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 033.0','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 033.1','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.21);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -449,7 +459,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V033.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V033.1 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -630,7 +640,9 @@ function walkBridge(time){
  }
 }
 window.addEventListener('keydown',e=>{if(!nexus.visible||!textMode||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='Enter'){e.preventDefault();keyCommand('SEND');}else if(e.key==='Escape'){e.preventDefault();keyCommand('CANCEL');}else if(e.key==='Backspace'){e.preventDefault();keyCommand('BACKSPACE');}else if(/^[a-zA-Z ]$/.test(e.key)){e.preventDefault();keyCommand(e.key.toUpperCase());}});
-let down=null,yaw=0,pitch=0;const canvas=renderer.domElement;canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>down=null);
+let down=null,yaw=0,pitch=0,mouseAim=null;const canvas=renderer.domElement;
+function rememberMouse(e){mouseAim=e.pointerType==='touch'?null:new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2);}
+canvas.addEventListener('pointerleave',()=>{mouseAim=null;setPlanetHover(null);});canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{rememberMouse(e);if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>{down=null;mouseAim=null;setPlanetHover(null);});
 renderer.xr.addEventListener('sessionstart',()=>{viewerPose.reset();pendingXRSpawn=[0,0,5];camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true;closePage();if(onToon)switchToon(false);if(nativeWorld)switchNativeWorld(null);rig.position.set(0,0,5);rig.rotation.set(0,0,0);});renderer.xr.addEventListener('sessionend',()=>{pendingXRSpawn=null;viewerPose.reset();if(shipAudio){shipAudio.close().catch(()=>{});shipAudio=null;shipHum=null;}closePage();if(onToon)switchToon(false);if(nativeWorld)switchNativeWorld(null);showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 function moveNova(time){
@@ -660,7 +672,10 @@ function moveNova(time){
  if(distance>.035)nova.position.addScaledVector(delta,Math.min(1,dt*(movementMode==='Follow'?3.8:.65)/distance));
 }
 renderer.setAnimationLoop((timestamp,xrFrame)=>{const tracked=viewerPose.capture(xrFrame);if(tracked&&pendingXRSpawn){viewerPose.placeAt(pendingXRSpawn);pendingXRSpawn=null;}const time=performance.now()*.001;walkBridge(time);moveNova(time);if(orbPrompt.visible)orientPrompt();if(!onToon&&!nativeWorld){if(galaxyLast&&!galaxyPaused)galaxyClock+=Math.min(.05,time-galaxyLast);galaxyLast=time;driftGalaxy(galaxyClock);animateSanctuary(time);}else galaxyLast=0;if(onToon){tickToonSource(time);animateToon(time);}if(nativeWorld)nativeWorld.update(time);orbUniforms.uTime.value=time;orb.position.y=1.65+.035*Math.sin(time*1.4);orb.scale.setScalar((nexus.visible?1.13:1)+.025*Math.sin(time*2));halo.position.copy(orb.position);const pulse=.5+.5*Math.sin(time*(guideSpeaking?9:3.2));halo.scale.setScalar(1.03+.18*pulse);halo.material.opacity=.12+.28*pulse;if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
-if(renderer.xr.isPresenting){scene.updateMatrixWorld(true);for(const c of controllers){if(!c.userData.connected)continue;controllerRay(c);const hit=ray.intersectObjects(activeTargets())[0];if(hit){marker.position.copy(hit.point);marker.visible=true;if(hit.object.userData.url){for(const p of targets){if(p.material?.emissive&&p.userData.url===hit.object.userData.url)p.material.emissive.setHex(0x666666);}}}}}
+let hoverHit=null;
+ if(renderer.xr.isPresenting){scene.updateMatrixWorld(true);for(const c of controllers){if(!c.userData.connected)continue;controllerRay(c);const hit=ray.intersectObjects(activeTargets())[0];if(hit){marker.position.copy(hit.point);marker.visible=true;if(planetLabels.has(hit.object)&&(!hoverHit||hit.distance<hoverHit.distance))hoverHit=hit;if(hit.object.userData.url){for(const p of targets){if(p.material?.emissive&&p.userData.url===hit.object.userData.url)p.material.emissive.setHex(0x666666);}}}}}
+ else if(mouseAim&&!down){scene.updateMatrixWorld(true);ray.setFromCamera(mouseAim,camera);const hit=ray.intersectObjects(activeTargets())[0];if(hit&&planetLabels.has(hit.object))hoverHit=hit;}
+ setPlanetHover(hoverHit?.object??null);
 renderer.render(scene,camera)});if(pendingDestination){const i=choices.findIndex(c=>c.url===pendingDestination.world.path);if(i>=0)pick(i);}
 status.textContent=pendingDestination?'Bridge online. '+pendingDestination.world.name+' is selected inside Nova.':'Sanctuary Bridge online. Select Nova to explore '+Object.keys(vrWorlds).length+' worlds and '+Object.values(vrWorlds).reduce((n,w)=>n+w.regions.length,0)+' regions.';syncScene(false);setInterval(()=>syncScene(false),20000);
 }catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}

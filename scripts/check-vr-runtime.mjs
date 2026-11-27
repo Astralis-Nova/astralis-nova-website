@@ -90,14 +90,18 @@ activeRenderer.loop();
 const startingEye=vm.runInContext('currentView().getWorldPosition(new T.Vector3())',context);
 assert.ok(startingEye.distanceTo(new Three.Vector3(0,testHead.position.y,5))<1e-10,'first XR frame captures physical head height and centers the spawn');
 const bridge=vm.runInContext('rig.position.toArray()',context);
-// Ray-select both the globe and its caption after orbital and axial motion.
+// Planet names appear only on pointer focus; only the globe is selectable.
 for(const world of Object.values(registry.vrWorlds)){
-  for(const part of ['isMesh','isSprite']){
+  for(const part of ['isMesh']){
     const id=vm.runInContext(`(()=>{
       const body=bodies.find(b=>b.globe.userData.worldId===${JSON.stringify(world.id)});
       const initial=body.globe.rotation.y;positionPlanets(18);scene.updateMatrixWorld(true);
       if(body.orbit.parent!==galaxy||body.orbit.position.length()<20||body.globe.rotation.y===initial)throw Error('Stationary or misplaced planet');
       const target=activeTargets().find(m=>m.userData.worldId===${JSON.stringify(world.id)}&&m[${JSON.stringify(part)}]);
+      const caption=planetLabels.get(target);
+      if(!caption||caption.visible||activeTargets().includes(caption))throw Error('Planet label must start hidden and not be a click target');
+      setPlanetHover(target);if(!caption.visible)throw Error('Planet hover failed');
+      setPlanetHover(null);if(caption.visible)throw Error('Planet label remained visible');
       ray.camera=currentView();const point=target.getWorldPosition(new T.Vector3());
       ray.ray.origin.copy(point).multiplyScalar(.75);
       ray.ray.direction.copy(point).sub(ray.ray.origin).normalize();
