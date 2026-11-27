@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.25</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.26</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.25';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.25';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.25';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.25';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.25';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.25';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.26';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.26';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.26';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.26';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.26';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.26';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -277,14 +277,21 @@ shipBox(0,3.15,11.4,3.48,.06,3.2,shieldMat);
 const exteriorDeck=shipBox(0,-.15,17.8,12,.3,9.7,metal);
 shipBox(0,-.25,17.8,12.35,.32,9.95,navy);
 const deckEdgeMat=new T.MeshBasicMaterial({color:0x65dbff});
+const exteriorBenchLayouts=[];
 for(const side of [-1,1]){
  shipBox(side*5.94,.58,17.8,.12,1.16,9.7,navy);
  shipBox(side*5.94,1.18,17.8,.13,.07,9.7,deckEdgeMat);
  shipBox(side*5.96,2.05,17.8,.04,1.7,9.7,shieldMat);
  shipBox(side*5.96,2.9,17.8,.035,.035,9.7,deckEdgeMat);
  shipBox(side*3.8,.025,17.9,.07,.035,8.5,glowGold);
- shipBox(side*3.75,.33,18.4,1.85,.52,.7,navy);
- shipBox(side*3.75,.64,18.4,1.85,.12,.7,ivory);
+ const g=new T.Group();g.position.set(side*3.75,0,18.4);sanctuary.add(g);
+ const id='D'+(exteriorBenchLayouts.length+1);
+ function seatPart(geo,mat,y){const mesh=new T.Mesh(geo,mat);mesh.position.y=y;g.add(mesh);return mesh;}
+ seatPart(new T.BoxGeometry(1.85,.52,.7),navy,.33);
+ seatPart(new T.BoxGeometry(1.85,.12,.7),ivory,.64);
+ const hit=seatPart(new T.BoxGeometry(1.89,.72,.74),new T.MeshBasicMaterial({visible:false}),.36);
+ hit.userData={benchIndex:2+exteriorBenchLayouts.length};
+ exteriorBenchLayouts.push({id,g,hit,exterior:true,name:side<0?'PORT EXTERIOR BENCH':'STARBOARD EXTERIOR BENCH'});
  // Close the front edge of the deck on either side of the passage.
  shipBox(side*3.83,.58,13.02,4.25,1.16,.12,navy);
  shipBox(side*3.83,1.18,13.02,4.25,.07,.13,deckEdgeMat);
@@ -377,6 +384,7 @@ for(const side of [-1,1]){const g=new T.Group();g.position.set(side*2.6,0,7.1);s
 function benchPart(geo,mat,y,z=0){const m=new T.Mesh(geo,mat);m.position.set(0,y,z);g.add(m);return m;}
 benchPart(new T.BoxGeometry(1.8,.13,.66),ivory,.45);benchPart(new T.BoxGeometry(1.8,.38,.55),navy,.21);benchPart(new T.BoxGeometry(1.8,.035,.05),glowGold,.46,.34);
 const hit=benchPart(new T.BoxGeometry(1.84,.55,.72),new T.MeshBasicMaterial({visible:false}),.27);hit.userData={benchIndex:benchLayouts.length};benchLayouts.push({id,g,hit,name:side<0?'PORT OBSERVATION BENCH':'STARBOARD OBSERVATION BENCH'});}
+benchLayouts.push(...exteriorBenchLayouts);
 shipRing(1.45,1.05,.024,glowBlue,7.1,.016);
 for(const side of [-1,1]){ellipseArc(6.2,7.25,1.0,side<0?-1.35:.45,side<0?-.45:1.35,ivory,.045);}
 const exteriorHull=new T.Group();sanctuary.add(exteriorHull);
@@ -557,7 +565,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.25','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.26','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -1133,7 +1141,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.25 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.26 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -1257,7 +1265,7 @@ layoutTile(.52,.17,.57,-.98,'save','SAVE');
 function layoutPose(st){return {x:st.g.position.x,y:st.g.position.y,z:st.g.position.z,yaw:st.g.rotation.y};}
 function applyLayoutPose(st,p){st.g.position.set(p.x,p.y,p.z);st.g.rotation.y=p.yaw;st.g.updateMatrixWorld(true);}
 function validLayoutPose(p){return p&&[p.x,p.y,p.z,p.yaw].every(Number.isFinite)&&Math.abs(p.x)<=5.4&&p.z>=-4.3&&p.z<=7.3&&p.y>=-.15&&p.y<=.75&&Math.abs(p.yaw)<=Math.PI*2;}
-function allowedLayoutPose(st,p){if(benchLayouts.includes(st)){if(!p||![p.x,p.y,p.z,p.yaw].every(Number.isFinite)||Math.abs(p.yaw)>Math.PI*2||p.y!==0)return false;const ex=.9*Math.abs(Math.cos(p.yaw))+.35*Math.abs(Math.sin(p.yaw)),ez=.9*Math.abs(Math.sin(p.yaw))+.35*Math.abs(Math.cos(p.yaw));const oldZone=Math.abs(p.x)+ex<=5.75&&p.z-ez>=4.8&&p.z+ez<=8.65&&Math.abs(p.x)-ex>=1.05;const expandedZone=st.id==='B2'&&Math.abs(p.x)+ex<=6.1&&p.z-ez>=2.3&&p.z+ez<=8.65&&Math.abs(p.x)-ex>=1.05&&[-1,1].every(a=>[-1,1].every(b=>{const x=p.x+a*.9*Math.cos(p.yaw)+b*.35*Math.sin(p.yaw),z=p.z-a*.9*Math.sin(p.yaw)+b*.35*Math.cos(p.yaw);return (x/6.8)**2+((z-2)/7.85)**2<=1;}));return (oldZone||expandedZone)&&Math.hypot(p.x-musicAssembly.position.x,p.z-musicAssembly.position.z)>=2.6&&scienceStations.every(other=>Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.65)&&benchLayouts.every(other=>other===st||Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.9);}if(!validLayoutPose(p))return false;if(st===musicHoloLayout)return Math.abs(p.x)<=.25&&Math.abs(p.z)<=.25&&p.y>=0&&p.y<=.75;if(st===musicLayout)return Math.abs(p.x)<=4.0&&p.z>=-3.25&&p.z<=6.7&&p.y===0&&scienceStations.every(other=>Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=2.05);return Math.hypot(p.x-musicAssembly.position.x,p.z-musicAssembly.position.z)>=2.05&&scienceStations.every(other=>other===st||Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.35);}
+function allowedLayoutPose(st,p){if(benchLayouts.includes(st)){if(!p||![p.x,p.y,p.z,p.yaw].every(Number.isFinite)||Math.abs(p.yaw)>Math.PI*2||p.y!==0)return false;const ex=(st.exterior?.945:.9)*Math.abs(Math.cos(p.yaw))+.37*Math.abs(Math.sin(p.yaw)),ez=(st.exterior?.945:.9)*Math.abs(Math.sin(p.yaw))+.37*Math.abs(Math.cos(p.yaw));if(st.exterior)return Math.abs(p.x)+ex<=5.45&&p.z-ez>=14.0&&p.z+ez<=22.0&&Math.abs(p.x)-ex>=1.05&&benchLayouts.every(other=>other===st||!other.exterior||Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.95);const oldZone=Math.abs(p.x)+ex<=5.75&&p.z-ez>=4.8&&p.z+ez<=8.65&&Math.abs(p.x)-ex>=1.05;const expandedZone=st.id==='B2'&&Math.abs(p.x)+ex<=6.1&&p.z-ez>=2.3&&p.z+ez<=8.65&&Math.abs(p.x)-ex>=1.05&&[-1,1].every(a=>[-1,1].every(b=>{const x=p.x+a*.9*Math.cos(p.yaw)+b*.35*Math.sin(p.yaw),z=p.z-a*.9*Math.sin(p.yaw)+b*.35*Math.cos(p.yaw);return (x/6.8)**2+((z-2)/7.85)**2<=1;}));return (oldZone||expandedZone)&&Math.hypot(p.x-musicAssembly.position.x,p.z-musicAssembly.position.z)>=2.6&&scienceStations.every(other=>Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.65)&&benchLayouts.every(other=>other===st||Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.9);}if(!validLayoutPose(p))return false;if(st===musicHoloLayout)return Math.abs(p.x)<=.25&&Math.abs(p.z)<=.25&&p.y>=0&&p.y<=.75;if(st===musicLayout)return Math.abs(p.x)<=4.0&&p.z>=-3.25&&p.z<=6.7&&p.y===0&&scienceStations.every(other=>Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=2.05);return Math.hypot(p.x-musicAssembly.position.x,p.z-musicAssembly.position.z)>=2.05&&scienceStations.every(other=>other===st||Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.35);}
 function getLocalLayout(){try{const a=JSON.parse(localStorage.getItem(layoutKey)||'{}');return a&&typeof a==='object'&&!Array.isArray(a)?a:{};}catch{return {};}}
 function restoreLocalLayout(){const a=getLocalLayout();const proposed=scienceStations.map(st=>({st,p:validLayoutPose(a[st.id])?a[st.id]:layoutPose(st)}));const m=validLayoutPose(a.M1)&&Math.abs(a.M1.x)<=4&&a.M1.z>=-3.25&&a.M1.z<=6.7&&a.M1.y===0?a.M1:layoutPose(musicLayout);const safe=proposed.every(({p},i)=>Math.hypot(p.x-m.x,p.z-m.z)>=2.05&&proposed.every(({p:q},j)=>i===j||Math.hypot(p.x-q.x,p.z-q.z)>=1.35));if(safe){applyLayoutPose(musicLayout,m);for(const {st,p} of proposed)applyLayoutPose(st,p);}else for(const st of scienceStations){if(allowedLayoutPose(st,a[st.id]))applyLayoutPose(st,a[st.id]);}if(allowedLayoutPose(musicHoloLayout,a.M1H))applyLayoutPose(musicHoloLayout,a.M1H);for(const st of benchLayouts){if(allowedLayoutPose(st,a[st.id]))applyLayoutPose(st,a[st.id]);}}
 restoreLocalLayout();
@@ -1270,15 +1278,15 @@ function openLayoutStation(st){if(!layoutEnabled||!st)return;closeLayoutStation(
 const layoutReportPanel=new T.Group();layoutReportPanel.visible=false;scene.add(layoutReportPanel);
 const layoutReportTargets=[];
 function reportTile(w,h,x,y,action,caption){const m=tile(w,h,x,y);layoutReportPanel.add(m);m.material.depthTest=false;m.renderOrder=96;m.userData=action?{layoutReportAction:action}:{};paint(m,caption,'#80dcff','text');if(action)layoutReportTargets.push(m);return m;}
-reportTile(2.15,.20,0,1.03,null,'BRIDGE LAYOUT • ALL OBJECTS');
-const reportRows=layoutObjects.map((st,i)=>reportTile(2.15,.14,0,.81-i*.16,null,st.id));
-const reportNotice=reportTile(2.15,.15,0,-.84,null,'X / Y / Z IN METERS • YAW IN DEGREES');
-reportTile(.66,.18,-.73,-1.05,'read','READ NEXT');
-reportTile(.66,.18,0,-1.05,'save','SAVE ALL');
-reportTile(.66,.18,.73,-1.05,'close','CLOSE');
+reportTile(2.15,.20,0,1.23,null,'BRIDGE LAYOUT • ALL OBJECTS');
+const reportRows=layoutObjects.map((st,i)=>reportTile(2.15,.14,0,1.01-i*.16,null,st.id));
+const reportNotice=reportTile(2.15,.15,0,-.94,null,'X / Y / Z IN METERS • YAW IN DEGREES');
+reportTile(.66,.18,-.73,-1.16,'read','READ NEXT');
+reportTile(.66,.18,0,-1.16,'save','SAVE ALL');
+reportTile(.66,.18,.73,-1.16,'close','CLOSE');
 let layoutReportIndex=0;
 function layoutReportLines(){return layoutObjects.map(st=>st.id+'  '+layoutCoords(st));}
-function openLayoutReport(){if(activeWorld()){speakNova('Return to the bridge for its layout report.');return;}closeLayoutStation(false);showNexus(false);const view=currentView(),eye=view.getWorldPosition(new T.Vector3()),forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion())).normalize();layoutReportPanel.position.copy(eye).addScaledVector(forward,2.4);layoutReportPanel.lookAt(eye);layoutReportPanel.visible=true;layoutReportIndex=0;layoutReportLines().forEach((line,i)=>paint(reportRows[i],line,'#80dcff','text'));paint(reportNotice,'X / Y / Z IN METERS • YAW IN DEGREES','#80dcff','text');layoutReportPanel.updateMatrixWorld(true);}
+function openLayoutReport(){if(activeWorld()){speakNova('Return to the bridge for its layout report.');return;}closeLayoutStation(false);showNexus(false);const view=currentView(),eye=view.getWorldPosition(new T.Vector3()),forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion())).normalize();layoutReportPanel.position.copy(eye).addScaledVector(forward,2.9);layoutReportPanel.lookAt(eye);layoutReportPanel.visible=true;layoutReportIndex=0;layoutReportLines().forEach((line,i)=>paint(reportRows[i],line,'#80dcff','text'));paint(reportNotice,'X / Y / Z IN METERS • YAW IN DEGREES','#80dcff','text');layoutReportPanel.updateMatrixWorld(true);}
 function layoutReportAction(action){if(action==='close'){layoutReportPanel.visible=false;return;}if(action==='read'){const i=layoutReportIndex++%layoutObjects.length;const line=layoutReportLines()[i];paint(reportNotice,line,'#f5dc93','text');status.textContent=line;speakNova(line);return;}if(action==='save'){try{localStorage.setItem(layoutKey,JSON.stringify(Object.fromEntries(layoutObjects.map(st=>[st.id,layoutPose(st)]))));paint(reportNotice,'ALL POSITIONS SAVED ON THIS HEADSET','#8dffca','text');}catch{paint(reportNotice,'STORAGE UNAVAILABLE • SESSION ONLY','#ff9aaf','text');}status.textContent=layoutReportLines().join(' | ');}}
 function layoutAction(action){if(action==='report'){openLayoutReport();return;}if(!layoutStation)return;const st=layoutStation;if(action==='component'&&(st===musicLayout||st===musicHoloLayout)){const next=st===musicLayout?musicHoloLayout:musicLayout;closeLayoutStation(true);openLayoutStation(next);return;}if(action==='cancel'){closeLayoutStation(true);return;}if(action==='step'){layoutStep=layoutStep===.25?.05:layoutStep===.05?.5:.25;layoutAngle=layoutStep===.05?5:layoutStep===.5?45:15;paintLayout();return;}if(action==='read'){const report=st.id+' '+layoutCoords(st);status.textContent=report;paintLayout('COORDINATES RECORDED • '+st.id);speakNova(report);return;}if(action==='save'){const report=st.id+' '+layoutCoords(st);let saved=false;try{const a=getLocalLayout();a[st.id]=layoutPose(st);localStorage.setItem(layoutKey,JSON.stringify(a));saved=true;}catch{}closeLayoutStation(false);status.textContent=report;speakNova((saved?'Saved on this headset. ':'Applied for this session only. ')+report+'; tell ChatGPT these coordinates to publish the layout.');return;}if(action==='reset'){applyLayoutPose(st,layoutDefaults.get(st.id));paintLayout('FACTORY POSITION • SAVE TO KEEP');return;}const p=layoutPose(st),axis=action.slice(0,-1).toLowerCase(),sign=action.endsWith('+')?1:-1;if(!['x','y','z','yaw'].includes(axis))return;if(axis==='yaw'){p.yaw+=sign*T.MathUtils.degToRad(layoutAngle);p.yaw=Math.atan2(Math.sin(p.yaw),Math.cos(p.yaw));}else p[axis]=Math.round((p[axis]+sign*layoutStep)*100)/100;if(!allowedLayoutPose(st,p)){paintLayout('LIMIT • KEEP AISLES AND MUSIC CLEAR');return;}applyLayoutPose(st,p);paintLayout();}
 function controllerRay(c){const m=new T.Matrix4().extractRotation(c.matrixWorld);ray.ray.origin.setFromMatrixPosition(c.matrixWorld);ray.ray.direction.set(0,0,-1).applyMatrix4(m).normalize();ray.camera=currentView();}
@@ -1292,7 +1300,7 @@ function travelWorld(id,region=0){
  else{if(onToon)switchToon(false);switchNativeWorld(id,region);}
 }
 function standFromChair(announce=true){if(!seatedState)return;const previous=seatedState;seatedState=null;rig.position.copy(previous.position);rig.rotation.copy(previous.rotation);rig.updateMatrixWorld(true);refreshHeight();if(announce)speakNova('Standing. Normal movement restored.');}
-function sitAtChair(st,benchLocalX=0){if(!st||activeWorld())return;if(layoutEnabled){openLayoutStation(st);return;}if(seatedState?.station===st){standFromChair();return;}standFromChair(false);const height=seatHeightOffsets.get(st.id)||0;const isBench=benchLayouts.includes(st),seat=st.chair||st.g;const view=currentView(),eye=view.getWorldPosition(new T.Vector3()),chairPoint=seat.localToWorld(new T.Vector3(isBench?T.MathUtils.clamp(benchLocalX,-.55,.55):0,(isBench?1.18:1.25)+height,0));if(Math.hypot(eye.x-chairPoint.x,eye.z-chairPoint.z)>3.5){speakNova('Approach the seat to sit.');return;}const forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));// Keep the current viewing direction on an open bench; face the console on operator chairs.
+function sitAtChair(st,benchLocalX=0){if(!st||activeWorld())return;if(layoutEnabled){openLayoutStation(st);return;}if(seatedState?.station===st){standFromChair();return;}standFromChair(false);const height=seatHeightOffsets.get(st.id)||0;const isBench=benchLayouts.includes(st),seat=st.chair||st.g;const view=currentView(),eye=view.getWorldPosition(new T.Vector3()),chairPoint=seat.localToWorld(new T.Vector3(isBench?T.MathUtils.clamp(benchLocalX,-.55,.55):0,(isBench?(st.exterior?1.37:1.18):1.25)+height,0));if(Math.hypot(eye.x-chairPoint.x,eye.z-chairPoint.z)>3.5){speakNova('Approach the seat to sit.');return;}const forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));// Keep the current viewing direction on an open bench; face the console on operator chairs.
 const desired=isBench?forward:new T.Vector3(0,0,-1).applyQuaternion(seat.getWorldQuaternion(new T.Quaternion()));const angle=Math.atan2(-desired.x,-desired.z)-Math.atan2(-forward.x,-forward.z);seatedState={station:st,position:rig.position.clone(),rotation:rig.rotation.clone(),height};seatStickDirection=0;seatStickNext=0;rig.rotation.y+=angle;rig.updateMatrixWorld(true);const movedEye=currentView().getWorldPosition(new T.Vector3());rig.position.add(chairPoint.sub(movedEye));rig.updateMatrixWorld(true);refreshHeight();speakNova('Seated at '+st.id+'. Push the right stick up or down to adjust seat height. Move the left stick to stand.');}
 function activate(){
  const hit=ray.intersectObjects(activeTargets())[0];if(!hit)return;
