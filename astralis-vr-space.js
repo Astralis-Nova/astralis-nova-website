@@ -1,23 +1,20 @@
+import { observedStars } from './assets/deep-space/observed-stars-037.js';
 // NASA VTAD Bennu/Eros meshes, with an artistic, accelerated galaxy visualization.
 // Sources and the distinction between observations and animation: assets/deep-space/NASA-SOURCES.md.
 export function seededRandom(seed) {
   return ()=>{seed=(Math.imul(1664525,seed)+1013904223)>>>0;return seed/4294967296;};
 }
 
-export function starCatalogue(count,seed=29471) {
-  const random=seededRandom(seed),positions=[],colors=[],sizes=[],brightness=[];
-  for(let i=0;i<count;i++) {
-    const angle=random()*Math.PI*2;
-    // A dense galactic band among a sparser, almost spherical field.
-    const latitude=i%4===0?(random()+random()+random()-1.5)*.16:random()*2-1;
-    const radius=180+random()*90,plane=Math.sqrt(1-latitude*latitude);
-    const x=radius*plane*Math.cos(angle),y=radius*latitude,z=radius*plane*Math.sin(angle);
-    positions.push(x,y*.88-z*.48,y*.48+z*.88);
-    const spectral=random(),color=spectral<.14?[.75,.83,1]:spectral>.78?[1,.83,.65]:[.97,.97,1];
-    colors.push(...color);sizes.push(.85+Math.pow(random(),7)*3.5);
-    brightness.push(.22+Math.pow(random(),2)*.78);
-  }
-  return {positions,colors,sizes,brightness};
+export function starCatalogue(count=observedStars.length){
+ const positions=[],colors=[],sizes=[],brightness=[];
+ for(const [ra,dec,mag,bv] of observedStars.slice(0,count)){
+   const lon=ra*Math.PI/180,lat=dec*Math.PI/180,plane=Math.cos(lat);
+   positions.push(-235*plane*Math.sin(lon),235*Math.sin(lat),-235*plane*Math.cos(lon));
+   colors.push(...(bv<.15?[.76,.85,1]:bv>.9?[1,.81,.65]:[1,.97,.91]));
+   const intensity=Math.max(0,Math.min(1,(6.5-mag)/7));
+   sizes.push(1+5*intensity**1.6);brightness.push(.18+.82*intensity);
+ }
+ return {positions,colors,sizes,brightness};
 }
 
 function points(T,data) {
