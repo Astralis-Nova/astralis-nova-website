@@ -92,6 +92,7 @@ assert.ok(startingEye.distanceTo(new Three.Vector3(0,testHead.position.y,5))<1e-
 const bridge=vm.runInContext('rig.position.toArray()',context);
 assert.equal(vm.runInContext('musicTracks.length',context),29);
 assert.equal(vm.runInContext('scienceStations.length',context),6);
+assert.ok(vm.runInContext("scienceStations.every(s=>{const p=s.g.position,f=new T.Vector3(0,0,1).applyAxisAngle(new T.Vector3(0,1,0),s.g.rotation.y);return f.x*(-p.x)+f.z*(2-p.z)>0&&shipWalkable(p.x+f.x*1.25,p.z+f.z*1.25)&&Math.abs(p.x)<=5.05&&p.z>=-3.95})",context),'science console operator edges must face into the bridge with walkable approach clearance');
 assert.ok(vm.runInContext("(()=>{const s=scienceStations[0];updateScienceStations(1,s.g.position);return s.awake&&activeTargets().includes(s.hit)})()",context));
 vm.runInContext('openScience()',context);
 assert.ok(vm.runInContext("sciencePanel.visible&&sciencePhase==='scanning'&&activeTargets().every(m=>m.userData.scienceAction)",context));
