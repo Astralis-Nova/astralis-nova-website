@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.21</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.22</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.21';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.21';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.21';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.21';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.21';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.21';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.22';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.22';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.22';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.22';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.22';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.22';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -362,7 +362,11 @@ function animateSanctuary(t){
 // Aft docking alcove, elegant benches, observation rails, and exterior hull details.
 const dock=new T.Group();sanctuary.add(dock);dock.position.set(0,0,7.1);
 function dockPart(geo,mat,x,y,z){const m=new T.Mesh(geo,mat);m.position.set(x,y,z);dock.add(m);return m;}
-for(const side of [-1,1]){dockPart(new T.BoxGeometry(1.8,.13,.66),ivory,side*2.6,.45,0);dockPart(new T.BoxGeometry(1.8,.38,.55),navy,side*2.6,.21,0);dockPart(new T.BoxGeometry(1.8,.035,.05),glowGold,side*2.6,.46,.34);}
+const benchLayouts=[];
+for(const side of [-1,1]){const g=new T.Group();g.position.set(side*2.6,0,7.1);sanctuary.add(g);const id='B'+(benchLayouts.length+1);
+function benchPart(geo,mat,y,z=0){const m=new T.Mesh(geo,mat);m.position.set(0,y,z);g.add(m);return m;}
+benchPart(new T.BoxGeometry(1.8,.13,.66),ivory,.45);benchPart(new T.BoxGeometry(1.8,.38,.55),navy,.21);benchPart(new T.BoxGeometry(1.8,.035,.05),glowGold,.46,.34);
+const hit=benchPart(new T.BoxGeometry(1.84,.55,.72),new T.MeshBasicMaterial({visible:false}),.27);hit.userData={benchIndex:benchLayouts.length};benchLayouts.push({id,g,hit,name:side<0?'PORT OBSERVATION BENCH':'STARBOARD OBSERVATION BENCH'});}
 shipRing(1.45,1.05,.024,glowBlue,7.1,.016);
 for(const side of [-1,1]){ellipseArc(6.2,7.25,1.0,side<0?-1.35:.45,side<0?-.45:1.35,ivory,.045);}
 const exteriorHull=new T.Group();sanctuary.add(exteriorHull);
@@ -543,7 +547,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.21','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.22','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -1054,7 +1058,7 @@ function pageAction(action){
   sciencePanel.position.copy(eye).addScaledVector(forward,renderer.xr.isPresenting?2.2:Math.max(2.6,2.4*innerHeight/innerWidth));sciencePanel.position.y+=.18;sciencePanel.lookAt(eye);sciencePanel.visible=true;scanScience();sciencePanel.updateMatrixWorld(true);
  }
  
- function activeTargets(){return layoutReportPanel.visible?layoutReportTargets:layoutPanel.visible?layoutTargets.filter(m=>m.visible):sciencePanel.visible?scienceTargets:musicPanel.visible?musicTargets.filter(m=>m.visible):pageGroup.visible?pageControls:orbPrompt.visible?promptButtons:nexus.visible?nexusTargets.filter(m=>m.visible):(onToon||nativeWorld)?[novaHit,...(nativeWorld?.exhibits||[])]:targets;}
+ function activeTargets(){return layoutReportPanel.visible?layoutReportTargets:layoutPanel.visible?layoutTargets.filter(m=>m.visible):sciencePanel.visible?scienceTargets:musicPanel.visible?musicTargets.filter(m=>m.visible):pageGroup.visible?pageControls:orbPrompt.visible?promptButtons:nexus.visible?nexusTargets.filter(m=>m.visible):(onToon||nativeWorld)?[novaHit,...(nativeWorld?.exhibits||[])]:layoutEnabled?[...targets,...benchLayouts.map(st=>st.hit)]:targets;}
 const orbPrompt=new T.Group();scene.add(orbPrompt);orbPrompt.visible=false;
 const promptButtons=[];
 function promptTile(w,h,x,y,action,caption){
@@ -1119,7 +1123,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.21 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.22 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -1218,13 +1222,13 @@ const focusWash=new T.Mesh(new T.PlaneGeometry(1,1),new T.MeshBasicMaterial({col
 function setMenuFocus(target){const p=target?.geometry?.parameters;if(!p?.width||!p?.height||!(layoutReportTargets.includes(target)||layoutTargets.includes(target)||musicTargets.includes(target)||scienceTargets.includes(target)||nexusTargets.includes(target)||promptButtons.includes(target)||pageControls.includes(target))){focusOutline.visible=false;return;}target.add(focusOutline);focusOutline.position.set(0,0,.015);focusOutline.scale.set(p.width*1.03,p.height*1.10,1);focusOutline.visible=true;}
 let diagnosticsEnabled=false,diagnosticPinned=null,diagnosticLast='';
 const diagnosticBadge=label('DIAGNOSTICS');diagnosticBadge.material.depthTest=false;diagnosticBadge.material.depthWrite=false;diagnosticBadge.renderOrder=92;diagnosticBadge.scale.set(1.75,.49,1);diagnosticBadge.visible=false;diagnosticBadge.raycast=()=>{};scene.add(diagnosticBadge);
-function diagnosticInfo(object){const d=object?.userData;if(!d||d.airlockDoor)return null;if(d.musicConsole){if(!layoutEnabled)return null;const p=musicAssembly.getWorldPosition(new T.Vector3());return {id:'M1',name:'SOUND CONSOLE',position:p,anchor:musicAssembly.localToWorld(new T.Vector3(0,1.2,0)),yaw:Math.round(T.MathUtils.radToDeg(musicAssembly.rotation.y)),awake:null};}if(layoutEnabled&&!Number.isInteger(d.scienceStation))return null;if(Number.isInteger(d.scienceStation)){const st=scienceStations[d.scienceStation];if(!st)return null;return {id:st.id,name:st.name,position:st.g.getWorldPosition(new T.Vector3()),anchor:object.getWorldPosition(new T.Vector3()),yaw:Math.round(T.MathUtils.radToDeg(st.g.rotation.y)),awake:st.awake};}const id=d.musicConsole?'M1':d.airlockDoor?'A'+(d.airlockDoor<12?'1':'2'):d.nova?'N1':null;if(!id)return null;const p=object.getWorldPosition(new T.Vector3());return {id,name:d.musicConsole?'SOUND CONSOLE':d.airlockDoor?'AIRLOCK DOOR':'NOVA ORB',position:p,anchor:p,yaw:null,awake:null};}
+function diagnosticInfo(object){const d=object?.userData;if(!d||d.airlockDoor)return null;if(Number.isInteger(d.benchIndex)){if(!layoutEnabled)return null;const st=benchLayouts[d.benchIndex];if(!st)return null;const p=st.g.getWorldPosition(new T.Vector3());return {id:st.id,name:st.name,position:p,anchor:object.getWorldPosition(new T.Vector3()),yaw:Math.round(T.MathUtils.radToDeg(st.g.rotation.y)),awake:null};}if(d.musicConsole){if(!layoutEnabled)return null;const p=musicAssembly.getWorldPosition(new T.Vector3());return {id:'M1',name:'SOUND CONSOLE',position:p,anchor:musicAssembly.localToWorld(new T.Vector3(0,1.2,0)),yaw:Math.round(T.MathUtils.radToDeg(musicAssembly.rotation.y)),awake:null};}if(layoutEnabled&&!Number.isInteger(d.scienceStation))return null;if(Number.isInteger(d.scienceStation)){const st=scienceStations[d.scienceStation];if(!st)return null;return {id:st.id,name:st.name,position:st.g.getWorldPosition(new T.Vector3()),anchor:object.getWorldPosition(new T.Vector3()),yaw:Math.round(T.MathUtils.radToDeg(st.g.rotation.y)),awake:st.awake};}const id=d.musicConsole?'M1':d.airlockDoor?'A'+(d.airlockDoor<12?'1':'2'):d.nova?'N1':null;if(!id)return null;const p=object.getWorldPosition(new T.Vector3());return {id,name:d.musicConsole?'SOUND CONSOLE':d.airlockDoor?'AIRLOCK DOOR':'NOVA ORB',position:p,anchor:p,yaw:null,awake:null};}
 function diagnosticCaption(info){const {id,name,position:p,yaw,awake}=info;return [id+' • '+name,'X '+p.x.toFixed(1)+'  Y '+p.y.toFixed(1)+'  Z '+p.z.toFixed(1),(yaw===null?'':('YAW '+yaw+'°  '))+(awake===null?'':awake?'ONLINE':'STANDBY')];}
 function updateDiagnosticBadge(object){const modal=nexus.visible||orbPrompt.visible||sciencePanel.visible||musicPanel.visible||pageGroup.visible||layoutPanel.visible||layoutReportPanel.visible;if((!diagnosticsEnabled&&!layoutEnabled)||modal){diagnosticBadge.visible=false;return;}if(object?.userData?.airlockDoor||(object?.userData?.musicConsole&&!layoutEnabled)){diagnosticBadge.visible=false;return;}const info=diagnosticInfo(object)||diagnosticInfo(diagnosticPinned);if(!info){diagnosticBadge.visible=false;return;}const lines=diagnosticCaption(info),key=lines.join('|');if(key!==diagnosticLast){diagnosticLast=key;const c=diagnosticBadge.material.map.image,g=c.getContext('2d');c.width=768;c.height=216;g.fillStyle='#07182a';g.fillRect(0,0,c.width,c.height);g.strokeStyle='#70faff';g.lineWidth=5;g.strokeRect(5,5,c.width-10,c.height-10);g.textAlign='center';g.textBaseline='middle';g.fillStyle='#e8ffff';g.font='bold 49px system-ui';g.fillText(lines[0],384,54,730);g.font='36px system-ui';g.fillText(lines[1],384,116,730);g.fillStyle='#9beaff';g.fillText(lines[2]||(layoutEnabled?'SELECT TO EDIT':'DIAGNOSTIC MODE'),384,170,730);diagnosticBadge.material.map.needsUpdate=true;}diagnosticBadge.position.copy(info.anchor);diagnosticBadge.position.y+=.8;diagnosticBadge.visible=true;}
 function toggleDiagnostics(value=!diagnosticsEnabled){diagnosticsEnabled=!!value;diagnosticPinned=null;diagnosticBadge.visible=false;refreshShipPanel('diagnostics','DIAGNOSTIC MODE • '+(diagnosticsEnabled?'ON':'OFF'));showNexus(false);speakNova(diagnosticsEnabled?'Diagnostic mode on. Point at a console to reveal its ID. Pull the trigger to pin it.':'Diagnostic mode off. Normal controls restored.');}
 // Local-only bridge layout editor. No network writes or automatic publication.
 const layoutKey='astralis.bridge.layout.v1';
-const layoutObjects=[...scienceStations,musicLayout,musicHoloLayout];
+const layoutObjects=[...scienceStations,musicLayout,musicHoloLayout,...benchLayouts];
 const layoutDefaults=new Map(layoutObjects.map(st=>[st.id,{x:st.g.position.x,y:st.g.position.y,z:st.g.position.z,yaw:st.g.rotation.y}]));
 const layoutPanel=new T.Group();layoutPanel.visible=false;scene.add(layoutPanel);
 const layoutTargets=[];let layoutEnabled=false,layoutStation=null,layoutBefore=null,layoutStep=.25,layoutAngle=15;
@@ -1243,25 +1247,25 @@ layoutTile(.52,.17,.57,-.98,'save','SAVE');
 function layoutPose(st){return {x:st.g.position.x,y:st.g.position.y,z:st.g.position.z,yaw:st.g.rotation.y};}
 function applyLayoutPose(st,p){st.g.position.set(p.x,p.y,p.z);st.g.rotation.y=p.yaw;st.g.updateMatrixWorld(true);}
 function validLayoutPose(p){return p&&[p.x,p.y,p.z,p.yaw].every(Number.isFinite)&&Math.abs(p.x)<=5.4&&p.z>=-4.3&&p.z<=7.3&&p.y>=-.15&&p.y<=.75&&Math.abs(p.yaw)<=Math.PI*2;}
-function allowedLayoutPose(st,p){if(!validLayoutPose(p))return false;if(st===musicHoloLayout)return Math.abs(p.x)<=.25&&Math.abs(p.z)<=.25&&p.y>=0&&p.y<=.75;if(st===musicLayout)return Math.abs(p.x)<=4.0&&p.z>=-3.25&&p.z<=6.7&&p.y===0&&scienceStations.every(other=>Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=2.05);return Math.hypot(p.x-musicAssembly.position.x,p.z-musicAssembly.position.z)>=2.05&&scienceStations.every(other=>other===st||Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.35);}
+function allowedLayoutPose(st,p){if(benchLayouts.includes(st)){if(!p||![p.x,p.y,p.z,p.yaw].every(Number.isFinite)||Math.abs(p.yaw)>Math.PI*2||p.y!==0)return false;const ex=.9*Math.abs(Math.cos(p.yaw))+.35*Math.abs(Math.sin(p.yaw)),ez=.9*Math.abs(Math.sin(p.yaw))+.35*Math.abs(Math.cos(p.yaw));return Math.abs(p.x)+ex<=5.75&&p.z-ez>=4.8&&p.z+ez<=8.65&&Math.abs(p.x)-ex>=1.05&&Math.hypot(p.x-musicAssembly.position.x,p.z-musicAssembly.position.z)>=2.6&&scienceStations.every(other=>Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.65)&&benchLayouts.every(other=>other===st||Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.9);}if(!validLayoutPose(p))return false;if(st===musicHoloLayout)return Math.abs(p.x)<=.25&&Math.abs(p.z)<=.25&&p.y>=0&&p.y<=.75;if(st===musicLayout)return Math.abs(p.x)<=4.0&&p.z>=-3.25&&p.z<=6.7&&p.y===0&&scienceStations.every(other=>Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=2.05);return Math.hypot(p.x-musicAssembly.position.x,p.z-musicAssembly.position.z)>=2.05&&scienceStations.every(other=>other===st||Math.hypot(p.x-other.g.position.x,p.z-other.g.position.z)>=1.35);}
 function getLocalLayout(){try{const a=JSON.parse(localStorage.getItem(layoutKey)||'{}');return a&&typeof a==='object'&&!Array.isArray(a)?a:{};}catch{return {};}}
-function restoreLocalLayout(){const a=getLocalLayout();const proposed=scienceStations.map(st=>({st,p:validLayoutPose(a[st.id])?a[st.id]:layoutPose(st)}));const m=validLayoutPose(a.M1)&&Math.abs(a.M1.x)<=4&&a.M1.z>=-3.25&&a.M1.z<=6.7&&a.M1.y===0?a.M1:layoutPose(musicLayout);const safe=proposed.every(({p},i)=>Math.hypot(p.x-m.x,p.z-m.z)>=2.05&&proposed.every(({p:q},j)=>i===j||Math.hypot(p.x-q.x,p.z-q.z)>=1.35));if(safe){applyLayoutPose(musicLayout,m);for(const {st,p} of proposed)applyLayoutPose(st,p);}else for(const st of scienceStations){if(allowedLayoutPose(st,a[st.id]))applyLayoutPose(st,a[st.id]);}if(allowedLayoutPose(musicHoloLayout,a.M1H))applyLayoutPose(musicHoloLayout,a.M1H);}
+function restoreLocalLayout(){const a=getLocalLayout();const proposed=scienceStations.map(st=>({st,p:validLayoutPose(a[st.id])?a[st.id]:layoutPose(st)}));const m=validLayoutPose(a.M1)&&Math.abs(a.M1.x)<=4&&a.M1.z>=-3.25&&a.M1.z<=6.7&&a.M1.y===0?a.M1:layoutPose(musicLayout);const safe=proposed.every(({p},i)=>Math.hypot(p.x-m.x,p.z-m.z)>=2.05&&proposed.every(({p:q},j)=>i===j||Math.hypot(p.x-q.x,p.z-q.z)>=1.35));if(safe){applyLayoutPose(musicLayout,m);for(const {st,p} of proposed)applyLayoutPose(st,p);}else for(const st of scienceStations){if(allowedLayoutPose(st,a[st.id]))applyLayoutPose(st,a[st.id]);}if(allowedLayoutPose(musicHoloLayout,a.M1H))applyLayoutPose(musicHoloLayout,a.M1H);for(const st of benchLayouts){if(allowedLayoutPose(st,a[st.id]))applyLayoutPose(st,a[st.id]);}}
 restoreLocalLayout();
 function layoutCoords(st){const p=layoutPose(st);return 'X '+p.x.toFixed(2)+'  Y '+p.y.toFixed(2)+'  Z '+p.z.toFixed(2)+'  YAW '+Math.round(T.MathUtils.radToDeg(p.yaw))+'°';}
 function paintLayout(note='X SIDE • Y HEIGHT • Z DEPTH'){if(!layoutStation)return;layoutComponentTile.visible=layoutStation===musicLayout||layoutStation===musicHoloLayout;paint(layoutComponentTile,layoutStation===musicHoloLayout?'EDIT BASE':'EDIT HOLOGRAM','#70cfff');paint(layoutTitle,'EDIT '+layoutStation.id,'#80dcff');paint(layoutReadout,layoutCoords(layoutStation),'#80dcff','text');paint(layoutNotice,note,'#80dcff','text');paint(layoutStepTile,'STEP '+layoutStep+' M / '+layoutAngle+'°','#70cfff');}
 function closeLayoutStation(undo=false){if(layoutStation&&undo&&layoutBefore)applyLayoutPose(layoutStation,layoutBefore);layoutPanel.visible=false;layoutStation=null;layoutBefore=null;}
-function toggleLayoutEditor(value=!layoutEnabled){if(value)standFromChair(false);if(value&&activeWorld()){speakNova('Return to the bridge to edit its layout.');return;}closeLayoutStation(true);layoutEnabled=!!value;diagnosticPinned=null;showNexus(false);speakNova(layoutEnabled?'Layout editor enabled. Point at a science console or the music console and pull the trigger. Adjust its coordinates, then save.':'Layout editor closed. Normal controls restored.');}
+function toggleLayoutEditor(value=!layoutEnabled){if(value)standFromChair(false);if(value&&activeWorld()){speakNova('Return to the bridge to edit its layout.');return;}closeLayoutStation(true);layoutEnabled=!!value;diagnosticPinned=null;showNexus(false);speakNova(layoutEnabled?'Layout editor enabled. Point at a science console, music console, or observation bench and pull the trigger. Adjust its coordinates, then save.':'Layout editor closed. Normal controls restored.');}
 function openLayoutStation(st){if(!layoutEnabled||!st)return;closeLayoutStation(true);layoutStation=st;layoutBefore=layoutPose(st);const view=currentView(),eye=view.getWorldPosition(new T.Vector3()),forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion())).normalize();const right=new T.Vector3(1,0,0).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));layoutPanel.position.copy(eye).addScaledVector(forward,2.25).addScaledVector(right,.85);layoutPanel.position.y-=.12;layoutPanel.lookAt(eye);layoutPanel.visible=true;paintLayout();layoutPanel.updateMatrixWorld(true);}
 // Show all six positions together; no speech synthesis or live connection required.
 const layoutReportPanel=new T.Group();layoutReportPanel.visible=false;scene.add(layoutReportPanel);
 const layoutReportTargets=[];
 function reportTile(w,h,x,y,action,caption){const m=tile(w,h,x,y);layoutReportPanel.add(m);m.material.depthTest=false;m.renderOrder=96;m.userData=action?{layoutReportAction:action}:{};paint(m,caption,'#80dcff','text');if(action)layoutReportTargets.push(m);return m;}
-reportTile(2.15,.20,0,.85,null,'BRIDGE LAYOUT • ALL OBJECTS');
-const reportRows=layoutObjects.map((st,i)=>reportTile(2.15,.15,0,.62-i*.17,null,st.id));
-const reportNotice=reportTile(2.15,.15,0,-.74,null,'X / Y / Z IN METERS • YAW IN DEGREES');
-reportTile(.66,.18,-.73,-.96,'read','READ NEXT');
-reportTile(.66,.18,0,-.96,'save','SAVE ALL');
-reportTile(.66,.18,.73,-.96,'close','CLOSE');
+reportTile(2.15,.20,0,1.03,null,'BRIDGE LAYOUT • ALL OBJECTS');
+const reportRows=layoutObjects.map((st,i)=>reportTile(2.15,.14,0,.81-i*.16,null,st.id));
+const reportNotice=reportTile(2.15,.15,0,-.84,null,'X / Y / Z IN METERS • YAW IN DEGREES');
+reportTile(.66,.18,-.73,-1.05,'read','READ NEXT');
+reportTile(.66,.18,0,-1.05,'save','SAVE ALL');
+reportTile(.66,.18,.73,-1.05,'close','CLOSE');
 let layoutReportIndex=0;
 function layoutReportLines(){return layoutObjects.map(st=>st.id+'  '+layoutCoords(st));}
 function openLayoutReport(){if(activeWorld()){speakNova('Return to the bridge for its layout report.');return;}closeLayoutStation(false);showNexus(false);const view=currentView(),eye=view.getWorldPosition(new T.Vector3()),forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion())).normalize();layoutReportPanel.position.copy(eye).addScaledVector(forward,2.4);layoutReportPanel.lookAt(eye);layoutReportPanel.visible=true;layoutReportIndex=0;layoutReportLines().forEach((line,i)=>paint(reportRows[i],line,'#80dcff','text'));paint(reportNotice,'X / Y / Z IN METERS • YAW IN DEGREES','#80dcff','text');layoutReportPanel.updateMatrixWorld(true);}
@@ -1284,6 +1288,7 @@ function activate(){
  const data=hit.object.userData;
  if(data.layoutReportAction){layoutReportAction(data.layoutReportAction);return;}
  if(data.layoutAction){layoutAction(data.layoutAction);return;}
+ if(Number.isInteger(data.benchIndex)){if(layoutEnabled&&!activeWorld())openLayoutStation(benchLayouts[data.benchIndex]);return;}
  if(Number.isInteger(data.seatIndex)){sitAtChair(scienceStations[data.seatIndex]);return;}
  // Airlocks always remain operational, even during inspection or layout editing.
  if(data.airlockDoor){useAirlock(data.airlockDoor);return;}
