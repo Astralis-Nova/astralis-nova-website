@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 034.2</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 034.3</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=034.2';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=034.2';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=034.2';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=034.2';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=034.2';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=034.2';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=034.3';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=034.3';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=034.3';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=034.3';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=034.3';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=034.3';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -56,7 +56,53 @@ shipMesh(new T.CylinderGeometry(1.48,1.48,.09,64),gold,-3.1,1,1);
 const musicRim=shipRing(1.35,1.35,1.07,new T.MeshBasicMaterial({color:0x83ccff}),1,.014);musicRim.position.x=-3.1;
 const holo=new T.Group();holo.position.set(-3.1,1.43,1);sanctuary.add(holo);
 const hm=new T.MeshBasicMaterial({color:0x83ccff,wireframe:true,transparent:true,opacity:.55});
-holo.add(new T.Mesh(new T.IcosahedronGeometry(.36,1),hm));
+const musicCore=new T.Group();holo.add(musicCore);
+const coreGeometry=new T.IcosahedronGeometry(.36,1);
+musicCore.add(new T.Mesh(coreGeometry,hm));
+// One independently colored inset per triangle; a single batched mesh, no per-face lights.
+const facetGeometry=coreGeometry.index?coreGeometry.toNonIndexed():coreGeometry.clone();
+const facetPositions=facetGeometry.attributes.position;
+const facetCount=facetPositions.count/3;
+const facetColors=new Float32Array(facetPositions.count*3);
+const facetLevels=new Float32Array(facetCount);
+const facetHues=new Uint8Array(facetCount);
+const facetPalette=[0x52eaff,0x9a74ff,0xffd06d,0x468aff,0xf7f7ff,0xf768c8].map(c=>new T.Color(c));
+for(let f=0;f<facetCount;f++){
+ const i=f*3;
+ const x=(facetPositions.getX(i)+facetPositions.getX(i+1)+facetPositions.getX(i+2))/3;
+ const y=(facetPositions.getY(i)+facetPositions.getY(i+1)+facetPositions.getY(i+2))/3;
+ const z=(facetPositions.getZ(i)+facetPositions.getZ(i+1)+facetPositions.getZ(i+2))/3;
+ for(let j=0;j<3;j++){const k=i+j;facetPositions.setXYZ(k,(x+(facetPositions.getX(k)-x)*.86)*1.012,(y+(facetPositions.getY(k)-y)*.86)*1.012,(z+(facetPositions.getZ(k)-z)*.86)*1.012);}
+}
+facetPositions.needsUpdate=true;facetGeometry.computeBoundingSphere();
+const facetAttribute=new T.BufferAttribute(facetColors,3);facetAttribute.setUsage(T.DynamicDrawUsage);facetGeometry.setAttribute('color',facetAttribute);
+const facetMesh=new T.Mesh(facetGeometry,new T.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:.85,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false}));
+musicCore.add(facetMesh);
+let facetBaseline=0,lastFacetBeat=-10,previousFacetSignal=0;
+function flashMusicFacets(strength){
+ const probability=.08+Math.min(1,Math.max(0,strength))*.37;
+ const anchor=Math.floor(Math.random()*facetCount);
+ for(let i=0;i<facetCount;i++)if(i===anchor||Math.random()<probability){
+   facetHues[i]=Math.floor(Math.random()*facetPalette.length);
+   facetLevels[i]=.42+Math.random()*.58;
+ }
+}
+function animateMusicFacets(t,dt,signal){
+ const level=Math.min(1,Math.max(0,signal));
+ facetBaseline+=(level-facetBaseline)*Math.min(1,dt*2.1);
+ const rising=level>previousFacetSignal+.014;
+ const beat=level>.10&&rising&&level>facetBaseline+.04&&t-lastFacetBeat>.23;
+ const sustained=level>.17&&t-lastFacetBeat>.85;
+ if(beat||sustained){flashMusicFacets(level);lastFacetBeat=t;}
+ previousFacetSignal=level;
+ const decay=Math.exp(-dt*(level>0?2.8:5.5));
+ for(let i=0;i<facetCount;i++){
+   facetLevels[i]*=decay;
+   const c=facetPalette[facetHues[i]],brightness=facetLevels[i]*(.45+.55*level);
+   for(let j=0;j<3;j++){const k=(i*3+j)*3;facetColors[k]=c.r*brightness;facetColors[k+1]=c.g*brightness;facetColors[k+2]=c.b*brightness;}
+ }
+ facetAttribute.needsUpdate=true;
+}
 const musicRings=[];for(let i=0;i<3;i++){const ring=new T.Mesh(new T.TorusGeometry(.5+i*.13,.009,6,64),new T.MeshBasicMaterial({color:i===1?0xffdaa0:0xb68cff,transparent:true,opacity:.85}));ring.rotation.set(.5+i*.65,.8*i,.35*i);holo.add(ring);musicRings.push(ring);}
 const musicGlow=new T.PointLight(0x79cfff,0,4,2);musicGlow.position.copy(holo.position);sanctuary.add(musicGlow);
 // Side stations, instrument panels and wall consoles kept outside walking lane.
@@ -76,6 +122,19 @@ const lightingModes=[{name:'Sanctuary',violet:0xb68cff,gold:0xffdaa0,blue:0x8cd5
 let lightingIndex=0,galaxyPaused=false,galaxyClock=0,galaxyLast=0;
 function applyShipLighting(){const m=lightingModes[lightingIndex];glowViolet.color.setHex(m.violet);glowGold.color.setHex(m.gold);glowBlue.color.setHex(m.blue);bridgeLight.intensity=m.power;bridgeWarm.intensity=m.warm;}
 let holoEnergy=0,holoTurn=0,holoLast=0;
+const musicRingPhases=[0,0,0];
+function animateMusicRings(dt,t,energy){
+ const rates=[.42,-.58,.31];
+ musicRings.forEach((ring,i)=>{
+   musicRingPhases[i]+=dt*rates[i]*(1+energy*3.2);
+   const p=musicRingPhases[i];
+   if(i===0)ring.rotation.set(.5+p,.18,.15);
+   else if(i===1)ring.rotation.set(1.15,.8+p,.35);
+   else ring.rotation.set(1.8+Math.sin(p)*.65,1.6+p*.65,.7+p*.45);
+   ring.material.opacity=.72+energy*.28;
+   ring.material.color.setHSL(i===1?.12:i===2?.53:.74,.85,.64+energy*.30);
+ });
+}
 function animateSanctuary(t){
  const dt=holoLast?Math.min(.05,Math.max(0,t-holoLast)):0;holoLast=t;
  const signal=musicEnergy(t);holoEnergy+=(signal-holoEnergy)*Math.min(1,dt*10);
@@ -83,7 +142,8 @@ function animateSanctuary(t){
  holo.position.y=1.43+.05*Math.sin(t*.9)+holoEnergy*.10*Math.sin(t*5);
  holo.scale.setScalar(1+holoEnergy*.18);hm.opacity=.55+holoEnergy*.42;
  hm.color.setHSL(.55+holoEnergy*.13,.85,.68+holoEnergy*.22);
- musicRings.forEach((ring,i)=>{ring.rotation.x=.5+i*.65+Math.sin(t*(.35+i*.13))*holoEnergy*.65;ring.rotation.z=.35*i+holoEnergy*Math.sin(t*2+i)*.40;ring.material.opacity=.72+holoEnergy*.28;ring.material.color.setHSL(i===1?.12:.74,.75,.64+holoEnergy*.30);});
+ animateMusicRings(dt,t,holoEnergy);
+ animateMusicFacets(t,dt,signal);
  musicRim.material.color.setHSL(.55,.85,.64+holoEnergy*.33);
  musicGlow.position.copy(holo.position);musicGlow.intensity=holoEnergy*3.5;
  bridgeLight.intensity=lightingModes[lightingIndex].power*(1+.06*Math.sin(t*.45));
@@ -250,7 +310,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle='#ffffff';g.font=(kind==='text'?'650 ':'750 ')+(m.userData.key?.length===1?100:76)+'px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,Math.max(72,w-24));g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 034.2','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 034.3','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.21);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -661,7 +721,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V034.2 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V034.3 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 

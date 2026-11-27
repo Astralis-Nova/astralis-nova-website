@@ -101,6 +101,9 @@ assert.equal(vm.runInContext('musicItems.length',context),2);
 vm.runInContext("musicAction('bankNext')",context);
 assert.ok(vm.runInContext("musicItems[0].name.includes('107.9') && !!musicItems[1].portal",context));
 assert.ok(vm.runInContext("radioBanks.some(b=>b.name==='OLDIES') && radioBanks.some(b=>b.name==='80s HITS') && musicEnergy(1)===0",context));
+assert.ok(vm.runInContext("facetCount>20 && facetGeometry.attributes.color.count===facetCount*3 && facetMesh.material.vertexColors",context));
+assert.ok(vm.runInContext("(()=>{const before=musicRingPhases.slice();animateMusicRings(.05,1,.7);return musicRingPhases[0]>before[0]&&musicRingPhases[1]<before[1]&&musicRingPhases[2]>before[2]})()",context));
+assert.ok(vm.runInContext("(()=>{animateMusicFacets(1,.05,.9);const peak=Math.max(...facetLevels);const lit=facetColors.some(v=>v>0);for(let i=0;i<40;i++)animateMusicFacets(1.1+i*.05,.05,0);return peak>0&&lit&&Math.max(...facetLevels)<peak*.01})()",context));
 vm.runInContext("musicAction('close')",context);
 assert.equal(vm.runInContext('musicPanel.visible',context),false);
 // Planet names appear only on pointer focus; only the globe is selectable.
