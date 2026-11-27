@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 021.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 022.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 const status=document.querySelector('#status');
@@ -76,20 +76,9 @@ for(const side of [-1,1]){const nacelle=new T.Mesh(new T.CapsuleGeometry(.62,4.5
 const stars=new Float32Array(2400*3);for(let i=0;i<stars.length;i+=3){const a=Math.random()*Math.PI*2,u=Math.random()*2-1,r=70+Math.random()*80;stars[i]=r*Math.sqrt(1-u*u)*Math.cos(a);stars[i+1]=r*u;stars[i+2]=r*Math.sqrt(1-u*u)*Math.sin(a)}const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(stars,3));const sky=new T.Points(geo,new T.PointsMaterial({color:0xd6eaff,size:.18}));scene.add(sky);
 const targets=[];const worlds=[['TOON PLANET','/toon-planet.html',0xca63f1],['RAINBOW PROMISE','/rainbow-promise.html',0x4bdb95],['MUSIC PLAYER','/player/',0xffbc55],['ASTRALIS HOME','/',0x9bdfff]];
 function label(name){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(name,256,76,490);const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;const s=new T.Sprite(new T.SpriteMaterial({map:tex}));s.scale.set(2,.5,1);return s}
-// Physical control panels: select with the controller or desktop pointer.
-const shipPanels=[];
-function stationControl(name,action,x,y,z){const p=label(name);p.position.set(x,y,z);p.scale.set(1.55,.38,1);p.userData={shipAction:action};sanctuary.add(p);targets.push(p);shipPanels.push({p,action,name});return p;}
-stationControl('LIGHTING • SANCTUARY','lights',-4.85,1.45,-1.2);
-stationControl('GALAXY • DRIFT','galaxy',4.85,1.45,-1.2);
-stationControl('SHIP AMBIENCE','audio',-4.85,1.45,3.5);
-stationControl('NOVA • NEXUS','nexus',4.85,1.45,3.5);
-stationControl('OBSERVATION','observe',0,1.45,-4.8);
-stationControl('DOCKING ALCOVE','dock',0,2.15,8.9);
-stationControl('NAVIGATION','nexus',0,1.95,1);
-function refreshShipPanel(action,name){const panel=shipPanels.find(p=>p.action===action);if(panel)setText(panel.p,name);}
-function handleShipAction(action){if(action==='nexus'){showNexus(true);return;}if(action==='lights'){lightingIndex=(lightingIndex+1)%lightingModes.length;applyShipLighting();refreshShipPanel('lights','LIGHTING • '+lightingModes[lightingIndex].name.toUpperCase());return;}if(action==='galaxy'){galaxyPaused=!galaxyPaused;refreshShipPanel('galaxy',galaxyPaused?'GALAXY • PAUSED':'GALAXY • DRIFT');return;}if(action==='audio'){toggleShipHum();return;}if(action==='observe'||action==='dock'){const view=renderer.xr.isPresenting?renderer.xr.getCamera():camera;const eye=view.getWorldPosition(new T.Vector3());const dest=action==='observe'?new T.Vector3(0,0,-3.7):new T.Vector3(0,0,6.5);rig.position.x+=dest.x-eye.x;rig.position.z+=dest.z-eye.z;}}
-
-
+// All ship controls live in Nova's Nexus; no floating labels on the bridge.
+function refreshShipPanel(action,name){const c=choices.find(c=>c.shipAction===action);if(c){c.name=name;const i=choices.indexOf(c);if(rows[i])paint(rows[i],symbols[c.icon]+'  '+c.name,'#'+c.color.toString(16).padStart(6,'0'),'row');refreshNexus();}}
+function handleShipAction(action){if(action==='lights'){lightingIndex=(lightingIndex+1)%lightingModes.length;applyShipLighting();const name='LIGHTING • '+lightingModes[lightingIndex].name.toUpperCase();refreshShipPanel('lights',name);setNexusStatus(name);return;}if(action==='galaxy'){galaxyPaused=!galaxyPaused;const name=galaxyPaused?'GALAXY • PAUSED':'GALAXY • DRIFT';refreshShipPanel('galaxy',name);setNexusStatus(name);return;}if(action==='audio'){toggleShipHum();return;}if(action==='observe'||action==='dock'){const view=renderer.xr.isPresenting?renderer.xr.getCamera():camera;const eye=view.getWorldPosition(new T.Vector3());const dest=action==='observe'?new T.Vector3(0,0,-3.7):new T.Vector3(0,0,6.5);showNexus(false);rig.position.x+=dest.x-eye.x;rig.position.z+=dest.z-eye.z;}}
 // Nova orb: animated visual presence; voice remains in ChatGPT.
 const nova=new T.Group();nova.position.set(3.7,0,2.7);scene.add(nova);
 const novaHome=nova.position.clone();let movementMode='Roam',lastMotion=0;const roamPoints=[[3.7,2.7],[4.1,5.8],[-3.7,5.8],[-4.1,2.7],[-4.1,-2],[4.1,-2]];let roamIndex=0;const motionGoal=new T.Vector3();
@@ -174,8 +163,8 @@ function driftGalaxy(t){
 const nexus=new T.Group();scene.add(nexus);nexus.visible=false;
 const nexusTargets=[];
 // Compact Nexus: a collapsed destination selector with opt-in voice input.
-const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:['planet','rainbow','music','home'][i]})),{name:'SHIP AMBIENCE',ambience:true,color:0xd3bc85,icon:'music'},{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'}];
-const symbols={home:'⌂',chess:'♜',planet:'◉',rainbow:'◠',music:'♫',update:'↻',exit:'↗'};
+const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:['planet','rainbow','music','home'][i]})),{name:'LIGHTING • SANCTUARY',shipAction:'lights',color:0xd3bc85,icon:'light'},{name:'GALAXY • DRIFT',shipAction:'galaxy',color:0x9bdfff,icon:'planet'},{name:'SHIP AMBIENCE • OFF',shipAction:'audio',color:0xd3bc85,icon:'music'},{name:'OBSERVATION DECK',shipAction:'observe',color:0x9bdfff,icon:'planet'},{name:'DOCKING ALCOVE',shipAction:'dock',color:0xc2a5ff,icon:'home'},{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'}];
+const symbols={light:'☀',home:'⌂',chess:'♜',planet:'◉',rainbow:'◠',music:'♫',update:'↻',exit:'↗'};
 let selected=-1,expanded=false,recognition=null; let speedIndex=1; const speeds=[.95,1.8,2.7], speedNames=['Slow','Normal','Fast'];
 const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
 function tile(w,h,x,y,action=null){
@@ -193,7 +182,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle=accent;g.font=(kind==='text'?'500 ':'600 ')+'48px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,w-44);g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 021.0','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 022.0','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const selector=tile(1.36,.22,0,-.04,{toggle:true});
 const go=tile(.46,.19,.45,-.30,{go:true});
@@ -202,11 +191,11 @@ const close=tile(.32,.19,0,-.30,{closeNexus:true});
 const motion=tile(1.36,.17,0,-.54,{motion:true});paint(motion,'Movement: '+movementMode);
 paint(close,'X','#dfcaff');paint(voice,'Voice','#a7e4ff');paint(go,'Open','#a7e4ff');
 const speedTile=tile(1.36,.17,0,-.74,{speed:true});paint(speedTile,'Walk speed: '+speedNames[speedIndex]);
-const rows=choices.map((choice,i)=>{const m=tile(1.36,.155,0,-.25-i*.17,{choice:i});paint(m,symbols[choice.icon]+'  '+choice.name,'#'+choice.color.toString(16).padStart(6,'0'),'row');return m;});
+let menuPage=0;const pageSize=5;const prevMenu=tile(.62,.16,-.36,-1.13,{menuPage:-1});const nextMenu=tile(.62,.16,.36,-1.13,{menuPage:1});paint(prevMenu,'‹ PREV');paint(nextMenu,'NEXT ›');const rows=choices.map((choice,i)=>{const m=tile(1.36,.155,0,-.25-(i%pageSize)*.17,{choice:i});paint(m,symbols[choice.icon]+'  '+choice.name,'#'+choice.color.toString(16).padStart(6,'0'),'row');return m;});
 function refreshNexus(){
  const choice=choices[selected];paint(selector,choice?symbols[choice.icon]+'  '+choice.name+'  ▾':'Choose destination  ▾');
  paint(go,choice?(choice.refresh?'Check':choice.exit?'Exit':'Open'):'Open',choice?'#b9f5dd':'#8b839d');
- rows.forEach(m=>m.visible=expanded);go.visible=voice.visible=motion.visible=speedTile.visible=!expanded;close.visible=!expanded;
+ rows.forEach((m,i)=>m.visible=expanded&&Math.floor(i/pageSize)===menuPage);prevMenu.visible=expanded&&menuPage>0;nextMenu.visible=expanded&&menuPage<Math.ceil(choices.length/pageSize)-1;go.visible=voice.visible=motion.visible=speedTile.visible=!expanded;close.visible=!expanded;
 }
 function setNexusStatus(message){paint(updatePanel,message,'#b6dcfa','text');}
 function pick(i){selected=i;expanded=false;armed=null;armedUntil=0;confirmLabel.visible=false;refreshNexus();setNexusStatus('SELECTED • '+choices[i].name);}
@@ -340,7 +329,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(onRainbow||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V021.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V022.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -397,7 +386,8 @@ function activate(){
  if(Number.isInteger(data.toonLevel)){setToonLevel(data.toonLevel);return;}
  if(data.nova){showNexus(true);return;}
  if(data.galaxy){showNexus(true);const i=choices.findIndex(c=>c.url===data.url);if(i>=0)pick(i);return;}
- if(data.toggle){expanded=!expanded;armed=null;armedUntil=0;refreshNexus();return;}
+ if(data.menuPage){menuPage=T.MathUtils.clamp(menuPage+data.menuPage,0,Math.ceil(choices.length/pageSize)-1);refreshNexus();return;}
+ if(data.toggle){if(!expanded)menuPage=selected<0?0:Math.floor(selected/pageSize);expanded=!expanded;armed=null;armedUntil=0;refreshNexus();return;}
  if(Number.isInteger(data.choice)){pick(data.choice);return;}
  if(data.closeNexus){showNexus(false);return;}
  if(data.voice){startVoice();return;}
@@ -408,7 +398,7 @@ function activate(){
  if(choice.url==='/rainbow-promise.html'){switchRainbow(true);return;}
  if(choice.url==='/toon-planet.html'){switchToon(true);return;}
  if(choice.url && renderer.xr.isPresenting){openPage(choice.url);return;}
- if(choice.ambience){toggleShipHum();return;}
+ if(choice.shipAction){handleShipAction(choice.shipAction);return;}
  if(choice.refresh){syncScene();return;}
  if(choice.exit){showNexus(false);if(renderer.xr.isPresenting)renderer.xr.getSession().end();return;}
  if(renderer.xr.isPresenting){
@@ -423,7 +413,7 @@ let walkTime=0,turnReady=true;
 const walkEye=new T.Vector3(),walkDir=new T.Vector3(),walkRight=new T.Vector3(),walkDelta=new T.Vector3();
 function canWalk(x,z){
  if(onRainbow||onToon)return Math.abs(x)<30&&Math.abs(z)<35;
- return !(Math.abs(Math.abs(x)-2.6)<1.1&&Math.abs(z-7.1)<.55) && (x/6.5)**2+((z-2)/7.5)**2<1 && !(Math.hypot(x,z-1)<1.85) && !(Math.abs(x)>5.05&&((Math.abs(z+1.2)<1.05)||(Math.abs(z-3.5)<1.05))) && !(Math.abs(z+4.5)<.85&&Math.abs(Math.abs(x)-2.45)<1.05);
+ return x>=-5.95&&x<=5.95&&z>=-5.05&&z<=9.05&&Math.hypot(x,z-1)>1.65;
 }
 function stick(input){
  const a=input?.gamepad?.axes;if(!a||a.length<2)return [0,0];
@@ -441,8 +431,8 @@ function walkBridge(time){
  if(mag>.22){
  const speed=speeds[speedIndex]*Math.min(1,(mag-.22)/.78);
  walkDelta.copy(walkRight).multiplyScalar(x/mag).addScaledVector(walkDir,-y/mag).multiplyScalar(speed*dt);
- if(canWalk(walkEye.x+walkDelta.x,walkEye.z)){rig.position.x+=walkDelta.x;walkEye.x+=walkDelta.x;}
- if(canWalk(walkEye.x,walkEye.z+walkDelta.z)){rig.position.z+=walkDelta.z;walkEye.z+=walkDelta.z;}
+ if(canWalk(walkEye.x+walkDelta.x,walkEye.z)||(!canWalk(walkEye.x,walkEye.z)&&Math.abs(walkEye.x+walkDelta.x)<Math.abs(walkEye.x))){rig.position.x+=walkDelta.x;walkEye.x+=walkDelta.x;}
+ if(canWalk(walkEye.x,walkEye.z+walkDelta.z)||(!canWalk(walkEye.x,walkEye.z)&&Math.abs(walkEye.z+walkDelta.z-2)<Math.abs(walkEye.z-2))){rig.position.z+=walkDelta.z;walkEye.z+=walkDelta.z;}
  }
  const [rx]=stick(right);
  if(Math.abs(rx)<.35)turnReady=true;
