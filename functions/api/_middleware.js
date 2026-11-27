@@ -1,4 +1,4 @@
-import { Chess } from 'chess.js';
+import { Chess } from '../../chess/vendor/chess.js';
 
 const HEADERS={
   'Content-Type':'application/json; charset=utf-8',
