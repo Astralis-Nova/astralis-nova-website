@@ -1,6 +1,6 @@
 // The normal pages remain the source of artwork, stories and character identity.
 // Only worlds with a scene adapter belong here; a web-page capture is not a world.
-export const HOLODECK_VERSION = '028.0';
+export const HOLODECK_VERSION = '029.0';
 
 function world(data) {
   return Object.freeze({...data, regions:Object.freeze(data.regions.map(region => Object.freeze(region)))});
@@ -14,8 +14,10 @@ export const vrWorlds = Object.freeze({
     {id:'ocean', name:'Hidden Ocean', art:'/assets/toon-planet/bikini-bottom-ocean.webp', layers:['.ocean-water'], color:0x073d57, description:'Welcome to the hidden ocean. The original animated village remains here, with swimming fish and bubbles around you.'}
   ]}),
   rainbow: world({id:'rainbow', name:'Rainbow Promise', path:'/rainbow-promise.html', engine:'spatial', color:0x4bdb95, aliases:['rainbow','ark','noah'], regions:[
-    {id:'flood', name:'Aboard the Ark', art:'/assets/rainbow-promise/ancient-flood-landscape-clean.webp', color:0x7899b2, spawn:[0,0,9], bounds:[-3.65,3.65,-12.2,12.2], obstacles:[[-2.7,2.7,-7.4,1.4]], description:'Welcome to Rainbow Promise, aboard a wooden ark surrounded by moving water. The original raven and dove flight artwork flies through this scene. The deck stays steady for comfort; Nova can take you to the covenant shore.'},
-    {id:'shore', name:'The Covenant Shore', art:'/assets/rainbow-promise/ancient-flood-landscape-clean.webp', color:0x8bbbd3, spawn:[0,0,7], bounds:[-16,16,-11,16], description:'The storm gives way to a rainbow and a quiet shore. This world recalls the promise in Genesis 9, as told on the original Rainbow Promise page. Select Original page inside Nova to read the complete reflection.'}
+    {id:'flood', name:'After the Flood', art:'/assets/rainbow-promise/ancient-flood-landscape-clean.webp', color:0x7d8589, spawn:[0,0,10], bounds:[-17,17,2,18], description:'This is the Rainbow Promise scene from the webpage: the enclosed timber ark, receding slate-blue water, bare mountain shores, driftwood and clearing storm light. The original landscape and ark artwork are preserved in image relief alongside spatial scenery.'},
+    {id:'shore', name:'The Covenant Shore', art:'/assets/rainbow-promise/ancient-flood-landscape-clean.webp', color:0x8a9397, spawn:[-4,0,8], bounds:[-17,17,2,18], description:'Walk the bare rocky shore from the original flood landscape. The ark floats nearby, with the same raven and dove artwork and a rainbow of renewal. This remains an artistic interpretation of the account in Genesis. Ask for the next region to board the ark.'},
+    {id:'ark', name:'Aboard the Ark', art:'/assets/rainbow-promise/ancient-flood-landscape-clean.webp', color:0x7d8589, spawn:[0,0,11.5], bounds:[-3.85,3.85,-12.2,12.2], obstacles:[[-3.45,3.45,-11.6,10.9]], description:'You are aboard the enclosed timber ark, with continuous roofing, dark ventilation openings, wooden framing and a pitch-darkened hull based on the original webpage. The deck stays still for comfort while water moves around it. Ask for the next region to see the full ark from shore.'}
+
   ]}),
   fathers: world({id:'fathers', name:"Father's House", path:'/fathers-house.html', engine:'spatial', color:0xffdfae, aliases:["father's house",'fathers house','father house','lazarus','bethany'], regions:[
     {id:'garden', name:'Garden of Welcome', art:'/fathers-house-realistic.jpg', color:0x6c728e, spawn:[-4,0,9], bounds:[-17,17,-14,16], obstacles:[[1,5,-20,5.1],[1,5,8.9,20]], description:"Welcome to the Father's House. Follow the garden beside the flowing river, flowers and waterfalls, inspired by the original radiant city artwork. This is an artistic reflection about welcome and hope, rather than a claim about what heaven looks like."},

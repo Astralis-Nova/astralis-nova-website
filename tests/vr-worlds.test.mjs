@@ -34,9 +34,9 @@ test('every world has its original page, source artwork and a valid region',()=>
 });
 
 test('ark cabin and railings constrain walking; garden bridge connects the river banks',()=>{
-  const ark=vrWorlds.rainbow.regions[0],garden=vrWorlds.fathers.regions[0];
+  const ark=vrWorlds.rainbow.regions.find(r=>r.id==='ark'),garden=vrWorlds.fathers.regions[0];
   assert.equal(canWalkRegion(ark,0,-3),false);
-  assert.equal(canWalkRegion(ark,3.2,-3),true);
+  assert.equal(canWalkRegion(ark,3.65,-3),true);
   assert.equal(canWalkRegion(ark,4,9),false);
   assert.equal(canWalkRegion(garden,3,0),false);
   for(let x=-4;x<=8;x+=.25)assert.ok(canWalkRegion(garden,x,7));

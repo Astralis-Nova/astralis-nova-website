@@ -1,6 +1,6 @@
 # Astralis: desktop, mobile and immersive views
 
-Research and implementation: November 26, 2026, America/Phoenix. Holodeck 028.0.
+Research and implementation: November 26, 2026, America/Phoenix. Holodeck 029.0.
 
 ## Decision
 
@@ -47,12 +47,12 @@ work is required for photorealistic characters and environments.
   recommends minimizing overdraw, expensive lighting and unnecessary animation
   updates. Actual Quest profiling is required to establish frame rate.
 
-## Content mapping in 028.0
+## Content mapping in 029.0
 
 | Original page | Holodeck regions | Reused identity/content |
 | --- | --- | --- |
 | Toon Planet | Orbit, Cactus Forest Moonlight, Desert Burrows, Hidden Ocean | Original backgrounds and canvas animation scripts; surrounding geometry from 027.0 |
-| Rainbow Promise | Aboard the Ark, The Covenant Shore | Original landscape and raven/dove flight atlases; wooden ark, water and covenant setting |
+| Rainbow Promise | After the Flood, The Covenant Shore, Aboard the Ark | Original mountain landscape and timber ark artwork, raven/dove atlases; enclosed ark geometry, dark rippled water, bare banks and driftwood |
 | Father's House | Garden of Welcome, Lazarus at Bethany | Original radiant garden and both Lazarus artworks; river, bridge, waterfall and stone setting |
 | Wild Encounters | The Ocotillo Harvest, Jimmitty's Garden | Original field-log subjects, original Jimmitty cutout, illustrative ocotillo and enlarged leaf-carrying ant trail |
 
@@ -78,7 +78,7 @@ that uses their own content.
   geometry, materials, textures and instance buffers when leaving.
 - `holodeck.html` owns the existing session, Nova, controls and travel. Destination
   choices come from the registry. Region travel uses the selected world's region
-  count. The ship-only forward-axis behavior from 027.0 is preserved.
+  count. Negative thumbstick Y moves forward in every scene. The incorrect bridge-only inversion from 027.0 is removed.
 - `astralis-vr-source.js` runs only in an explicitly requested, same-origin
   Holodeck source iframe. It is inert during normal desktop/mobile visits.
   Holodeck drives the original Toon scripts' animation callbacks and region
@@ -116,3 +116,44 @@ garden bridge and Jimmitty, then return to the ship without exiting VR. Test Too
 wildlife animation in immersive mode and check for increasing memory usage after
 repeated travel. Voice recognition remains browser-dependent; microphone policy
 repair alone cannot guarantee it works on Quest.
+
+## 029.0 fidelity pass
+
+The desktop/main webpage is the visual reference. Its scene identity, composition,
+source artwork, characters and media take precedence over generic environment
+presets. Rainbow Promise's generic green shore and flower garden were removed;
+its source scene depicts bare, eroded shores and receding water. The full ark is
+visible from the initial overlook, and a separate region retains a stable deck.
+Continuous roofing, ventilation gaps, structural timbers and a dark lower hull
+follow the source ark. Original ark side artwork supplies shallow relief detail
+on the outside view; this part is still image-based rather than a fully authored
+surface reconstruction. The deck view uses the actual hull/cabin geometry.
+
+The original mountain image is carried on estimated depth bands, preserving its
+projection from the initial overlook and allowing limited positional parallax.
+The depth is hand-authored, not measured or inferred by an AI model. It cannot
+supply unseen surfaces. Water combines geometric waves, finer normal detail,
+directional reflected light and an artistic distorted reflection using the
+original ark image. These are previews requiring comparison in the headset.
+
+[Three.js displacement mapping](https://threejs.org/docs/pages/MeshStandardMaterial.html)
+explains the distinction between surface lighting detail and displaced geometry.
+[glTF](https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html)
+provides the separate mesh, material and texture data needed for full object
+reconstruction. This release combines original projected art with manually rebuilt
+objects. It does not claim an automatic, complete conversion of each flat image.
+
+Toon Planet retains its original image and canvas layers. Ribbed cactus trunks,
+curved arms and rounded tips now share three instanced draw batches, replacing
+hundreds of separate cactus parts. The underwater foreground has moving light
+patterns and bending kelp; burrow surfaces gain soil strata and grain. Regional
+fog adds distance cues and is cleared when returning to the ship. The original
+village and wildlife are still partly on image/canvas surfaces; fuller native
+reconstruction remains work for a subsequent fidelity pass.
+
+Space now uses the unchanged NASA VTAD Bennu and Eros GLB assets, including their
+surface textures, rather than the old procedural rocks. Source details and limits
+are in [NASA-SOURCES.md](../assets/deep-space/NASA-SOURCES.md). A separate volumetric
+spiral turns against a fixed, varied star field. Celestial motion remains an
+artistic visualization. Physical controller direction, rendering quality and Quest
+frame rate still require the user's headset test.

@@ -113,7 +113,7 @@
   requestAnimationFrame(flightFrame);
 
   ship.addEventListener("click", () => {
-    window.location.assign("/holodeck.html?v=028.0");
+    window.location.assign("/holodeck.html?v=029.0");
   });
 
   const scheduleWarp = () => {

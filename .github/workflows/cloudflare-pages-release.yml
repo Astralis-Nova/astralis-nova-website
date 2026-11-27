@@ -153,7 +153,10 @@ jobs:
           node --check astralis-vr-worlds.js
           node --check astralis-vr-scenes.js
           node --check astralis-vr-source.js
-          node --test tests/vr-worlds.test.mjs
+          node --check astralis-vr-controls.js
+          node --check astralis-vr-space.js
+          node --check astralis-vr-toon.js
+          node --test tests/vr-worlds.test.mjs tests/vr-controls.test.mjs tests/vr-space.test.mjs
           python - <<'PY'
           import pathlib, re
           html = pathlib.Path('holodeck.html').read_text()

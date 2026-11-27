@@ -1,4 +1,4 @@
-import {regionFor,canWalkRegion} from './astralis-vr-worlds.js?v=028.0';
+import {regionFor,canWalkRegion} from './astralis-vr-worlds.js?v=029.0';
 
 // Scene adapters own content and GPU resources. Holodeck owns the XR session,
 // camera, locomotion and Nova, so travel never replaces the document/session.
@@ -41,6 +41,27 @@ export function createSpatialWorld(T,world,loader=new T.TextureLoader()) {
     picture.visible=false;picture.userData.sourceAsset=url;
     mat.map=texture(url,()=>{mat.needsUpdate=true;picture.visible=true;});
     return picture;
+  }
+  function projectedScenery(parent,url) {
+    // Hand-authored depth bands preserve the original image's projection from
+    // the initial overlook. This is limited image relief, not recovered hidden geometry.
+    const geometry=new T.PlaneGeometry(138,92,96,64),p=geometry.attributes.position,uv=geometry.attributes.uv;
+    for(let i=0;i<p.count;i++) {
+      const u=uv.getX(i),v=uv.getY(i),distance=75+70*Math.min(1,Math.max(0,(v-.4)/.35));
+      p.setXYZ(i,(u-.5)*138*distance/100,1.65+(v-.5)*92*distance/100,8-distance);
+    }
+    geometry.computeVertexNormals();
+    const mat=new T.ShaderMaterial({transparent:true,depthWrite:false,side:T.DoubleSide,uniforms:{art:{value:null}},
+      vertexShader:'varying vec2 vUV;void main(){vUV=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+      fragmentShader:`uniform sampler2D art;varying vec2 vUV;
+        void main(){vec4 c=texture2D(art,vUV);float edge=smoothstep(0.,.035,vUV.x)*(1.-smoothstep(.965,1.,vUV.x));
+        gl_FragColor=vec4(c.rgb,c.a*edge*smoothstep(.40,.485,vUV.y));
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+        }`
+    });
+    const landscape=mesh(parent,geometry,mat);landscape.visible=false;landscape.userData.sourceAsset=url;
+    mat.uniforms.art.value=texture(url,()=>landscape.visible=true);return landscape;
   }
   function sky(parent,top,horizon) {
     const dome=mesh(parent,new T.SphereGeometry(140,24,16),new T.ShaderMaterial({
@@ -94,17 +115,26 @@ export function createSpatialWorld(T,world,loader=new T.TextureLoader()) {
       for(let i=k;i<170;i+=3)flowers.setColorAt(i,new T.Color(color));
     });
   }
-  function water(parent,width,depth,x,y,z,color=0x16465a) {
-    const geo=new T.PlaneGeometry(width,depth,48,48);geo.rotateX(-Math.PI/2);
-    const mat=new T.ShaderMaterial({uniforms:{time:{value:0},base:{value:new T.Color(color)}},
+  function water(parent,width,depth,x,y,z,color=0x16465a,reflection=null) {
+    const geo=new T.PlaneGeometry(width,depth,width>100?112:48,depth>100?112:48);geo.rotateX(-Math.PI/2);
+    const mat=new T.ShaderMaterial({uniforms:{time:{value:0},base:{value:new T.Color(color)},
+      hasArk:{value:!!reflection},arkImage:{value:reflection?texture('/assets/rainbow-promise/timber-ark.webp'):null},
+      arkCenter:{value:new T.Vector2(reflection?.x||0,reflection?.z||0)},arkWidth:{value:reflection?.width||26}},
       vertexShader:`uniform float time;varying vec3 vWorld;varying vec3 vSurfaceNormal;
-      void main(){vec3 p=position;float a=p.x*.65+p.z*.24+time*.8,b=p.z*.91-p.x*.31-time*.62;
-      p.y+=.08*sin(a)+.045*sin(b);vSurfaceNormal=normalize(vec3(-.052*cos(a)+.014*cos(b),1.,-.019*cos(a)-.041*cos(b)));
+      void main(){vec3 p=position;float a=p.x*.38+p.z*.19+time*.7,b=p.z*.58-p.x*.27-time*.54;
+      p.y+=.13*sin(a)+.065*sin(b);vSurfaceNormal=normalize(vec3(-.049*cos(a)+.018*cos(b),1.,-.025*cos(a)-.038*cos(b)));
       vWorld=(modelMatrix*vec4(p,1.)).xyz;gl_Position=projectionMatrix*viewMatrix*vec4(vWorld,1.);}`,
-      fragmentShader:`uniform vec3 base;varying vec3 vWorld;varying vec3 vSurfaceNormal;
+      fragmentShader:`uniform vec3 base;uniform float time;uniform bool hasArk;uniform sampler2D arkImage;
+      uniform vec2 arkCenter;uniform float arkWidth;varying vec3 vWorld;varying vec3 vSurfaceNormal;
       void main(){vec3 view=normalize(cameraPosition-vWorld),n=normalize(vSurfaceNormal);
-      float fresnel=pow(1.-max(0.,dot(n,view)),3.);vec3 halfLight=normalize(view+normalize(vec3(-.5,.8,-.3)));
-      float glint=pow(max(0.,dot(n,halfLight)),100.);vec3 color=mix(base,vec3(.48,.65,.72),fresnel*.7)+glint*vec3(.9,.77,.53);
+      float fine=sin(vWorld.x*6.3+vWorld.z*3.1+time*1.7)*cos(vWorld.z*8.7-time*1.2);
+      n=normalize(n+vec3(fine*.075,0.,sin(vWorld.z*7.2-vWorld.x*4.1+time)*.07));
+      float fresnel=pow(1.-max(0.,dot(n,view)),3.);vec3 light=normalize(vec3(.72,.42,-.35)),halfLight=normalize(view+light);
+      float glint=pow(max(0.,dot(n,halfLight)),85.);vec3 color=mix(base,vec3(.35,.43,.48),fresnel*.76)+glint*vec3(.75,.55,.3);
+      if(hasArk){vec2 reflected=vec2((vWorld.x-arkCenter.x)/arkWidth+.5+(fine*.008),(vWorld.z-arkCenter.y)/15.);
+        if(reflected.x>0.&&reflected.x<1.&&reflected.y>0.&&reflected.y<1.){
+          vec4 ship=texture2D(arkImage,reflected);color=mix(color,ship.rgb*.45,ship.a*.36*(1.-reflected.y));}}
+      float distanceToEye=length(vWorld.xz-cameraPosition.xz);color=mix(color,vec3(.35,.41,.45),smoothstep(65.,160.,distanceToEye)*.55);
       gl_FragColor=vec4(color,1.);
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
@@ -151,14 +181,34 @@ export function createSpatialWorld(T,world,loader=new T.TextureLoader()) {
     tex.wrapS=tex.wrapT=T.RepeatWrapping;tex.repeat.set(3,8);textures.add(tex);
     return material(0xffffff,{map:tex,bumpMap:tex,bumpScale:.025});
   }
-  function ark(parent) {
-    const timber=wood(),dark=material(0x4b3020);
+  function ark(parent,relief=true) {
+    const timber=wood(),dark=material(0x31291f),pitch=material(0x302b25);
     const shape=new T.Shape();shape.moveTo(-4.3,0);shape.lineTo(4.3,0);shape.lineTo(3.2,-2.4);
     shape.quadraticCurveTo(0,-4,-3.2,-2.4);shape.closePath();
     mesh(parent,new T.ExtrudeGeometry(shape,{depth:26,bevelEnabled:true,bevelThickness:.6,bevelSize:.35,bevelSegments:2,steps:1}),timber,0,0,-13);
     box(parent,8.3,.18,26.5,timber,0,-.09,0);
-    box(parent,5.2,2.65,8.4,timber,0,1.3,-3);
-    const roof=box(parent,5.7,.25,9,timber,0,2.8,-3);roof.rotation.z=.025;
+    box(parent,6.4,2.8,21.6,timber,0,1.4,-.5);
+    box(parent,6.45,.3,21.8,dark,0,2.95,-.5);
+    // A continuous pitched roof, dark ventilation slot and side door match the source ark.
+    for(const side of [-1,1]){
+      const roof=box(parent,3.65,.18,23,timber,side*1.72,3.62,-.5);roof.rotation.z=-side*.22;
+      box(parent,.10,1.7,1.55,dark,side*3.28,.95,-1.8);
+      for(const yy of [.35,1.22,2.42])box(parent,.09,.09,21.5,dark,side*3.3,yy,-.5);
+    }
+    instances(parent,new T.BoxGeometry(.14,3.1,.16),timber,28,(p,i)=>p.position.set(i<14?-3.26:3.26,1.52,-10.3+i%14*1.5));
+    instances(parent,new T.BoxGeometry(.07,.38,.11),timber,26,(p,i)=>p.position.set(i<13?-3.25:3.25,2.98,-9.8+i%13*1.55));
+    box(parent,.25,.22,22.8,timber,0,4.03,-.5);
+    for(const zz of [-11.3,10.3])box(parent,6.4,2.8,.14,timber,0,1.4,zz);
+    // The exact desktop ark artwork is carried on shallow side relief, backed
+    // by the hull/cabin geometry. It preserves the distinctive plank and pitch detail.
+    if(relief)for(const side of [-1,1]){
+      const geo=new T.PlaneGeometry(27,9,54,16),pos=geo.attributes.position;
+      for(let i=0;i<pos.count;i++)pos.setZ(i,.18*Math.cos(pos.getX(i)/27*Math.PI));
+      const mat=new T.MeshBasicMaterial({map:texture('/assets/rainbow-promise/timber-ark.webp'),transparent:true,alphaTest:.12,side:T.DoubleSide});
+      const detail=mesh(parent,geo,mat,side*4.36,.75,0);detail.rotation.y=side*Math.PI/2;
+      detail.userData.sourceAsset='/assets/rainbow-promise/timber-ark.webp';
+    }
+    box(parent,6.5,.16,22,pitch,0,-2.45,-.5);
     for(const side of [-1,1]) {
       box(parent,.12,.12,25.5,timber,side*4,1.05,0);
       box(parent,.12,.12,25.5,timber,side*4,.52,0);
@@ -170,14 +220,29 @@ export function createSpatialWorld(T,world,loader=new T.TextureLoader()) {
     });
   }
   function buildRainbow(parent,index) {
-    sky(parent,index===0?0x263f58:0x5286ac,0xc1d4d7);mountains(parent,0x637b7c);
-    photo(parent,world.regions[index].art,112,62,0,21,-92);
+    sky(parent,0x33414c,0xaaa69b);projectedScenery(parent,world.regions[index].art);
     rainbow(parent);birds(parent);
-    if(index===0) {water(parent,240,240,0,-3.55,0);ark(parent);}
-    else {
-      ground(parent,0x7b9a6a);trees(parent);flowers(parent);
-      water(parent,150,100,0,-.27,-67,0x285d6b);
-      const distant=new T.Group();distant.position.set(27,-.6,-43);distant.scale.setScalar(.65);distant.rotation.y=-.4;parent.add(distant);ark(distant);
+    if(index===2){water(parent,260,260,0,-2.7,0,0x17303e);ark(parent,false);return;}
+    // Barren, eroded banks are intentional: the desktop world is receding floodwater.
+    const bank=new T.PlaneGeometry(100,38,64,24);bank.rotateX(-Math.PI/2);
+    const p=bank.attributes.position,colors=[];
+    for(let i=0;i<p.count;i++){
+      const x=p.getX(i),z=p.getZ(i);p.setY(i,-.04+Math.max(0,(Math.abs(x)-5)/25)*(.22+.2*Math.sin(x*1.7+z*.8)));
+      const c=.65+.16*Math.sin(x*2.4+z*3.7);colors.push(c,c*.92,c*.82);
+    }
+    bank.setAttribute('color',new T.Float32BufferAttribute(colors,3));bank.computeVertexNormals();
+    mesh(parent,bank,material(0x9a9183,{vertexColors:true}),0,0,20);
+    const ship=new T.Group();parent.add(ship);ship.position.set(index===0?1:13,2.4,index===0?-26:-34);ship.rotation.y=-Math.PI/2+.08;
+    ark(ship);
+    water(parent,260,260,0,-.32,0,0x193440,{x:ship.position.x,z:ship.position.z,width:27});
+    motions.push({parent,tick:t=>{ship.position.y=2.4+Math.sin(t*.55)*.06;ship.rotation.z=Math.sin(t*.41)*.004;}});
+    instances(parent,new T.IcosahedronGeometry(1,1),material(0x807e77,{flatShading:true}),48,(p,i)=>{
+      const side=i%2?1:-1;p.position.set(side*(6+i%9*2),-.06+(i%3)*.15,1+i%8*1.9);
+      p.scale.set(.55+i%4*.36,.25+i%3*.27,.55+i%3*.33);p.rotation.set(i*.17,i*.9,0);
+    });
+    const driftwood=material(0x51483d);
+    for(let i=0;i<6;i++){
+      const log=mesh(parent,new T.CylinderGeometry(.12,.18,2.7,7),driftwood,(i%2?1:-1)*(8+i),.1,3+i*1.6);log.rotation.z=Math.PI/2;log.rotation.y=i*.7;
     }
   }
   function buildFathers(parent,index) {
