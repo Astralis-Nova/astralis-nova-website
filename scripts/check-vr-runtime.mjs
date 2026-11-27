@@ -91,6 +91,14 @@ const startingEye=vm.runInContext('currentView().getWorldPosition(new T.Vector3(
 assert.ok(startingEye.distanceTo(new Three.Vector3(0,testHead.position.y,5))<1e-10,'first XR frame captures physical head height and centers the spawn');
 const bridge=vm.runInContext('rig.position.toArray()',context);
 assert.equal(vm.runInContext('musicTracks.length',context),29);
+assert.equal(vm.runInContext('scienceStations.length',context),6);
+assert.ok(vm.runInContext("(()=>{const s=scienceStations[0];updateScienceStations(1,s.g.position);return s.awake&&activeTargets().includes(s.hit)})()",context));
+vm.runInContext('openScience()',context);
+assert.ok(vm.runInContext("sciencePanel.visible&&sciencePhase==='scanning'&&activeTargets().every(m=>m.userData.scienceAction)",context));
+vm.runInContext('updateScience(scienceStart+4)',context);
+assert.equal(vm.runInContext('sciencePhase',context),'decoded');
+vm.runInContext("scienceAction('close')",context);
+assert.equal(vm.runInContext('sciencePanel.visible',context),false);
 assert.ok(vm.runInContext("airlockDoors.length===2 && !shipWalkable(0,9.62) && !shipWalkable(0,13.2) && !shipWalkable(6,18) && !shipWalkable(0,23)",context));
 assert.ok(vm.runInContext("airlockDoors.every(d=>d.panels.every(p=>p.leaf.material.transparent && p.leaf.material.opacity<.2 && !p.leaf.material.depthWrite) && d.aura.material.transparent)",context));
 assert.ok(vm.runInContext("(()=>{for(const d of airlockDoors){for(let i=0;i<20;i++)updateAirlockDoor(d,0,d.z,.05,1+i*.05);if(d.open<.99||!shipWalkable(0,d.z))return false;for(let i=0;i<20;i++)updateAirlockDoor(d,4,18,.05,4+i*.05);if(d.open>.01||shipWalkable(0,d.z))return false;}return shipWalkable(0,11)&&shipWalkable(0,18)&&!shipWalkable(2,11)})()",context));
