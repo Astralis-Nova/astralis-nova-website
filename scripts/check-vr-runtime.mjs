@@ -84,20 +84,30 @@ const html=fs.readFileSync(new URL('holodeck.html',root),'utf8');
 const source=html.match(/<script type="module">([\s\S]*?)<\/script>/)[1].replace(/^import .*;\n/gm,'').replace('try{\nlet onToon','let onToon').replace("}catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}",'');
 vm.runInContext(source,context);await vm.runInContext('deepSpace.ready',context);await Promise.resolve();
 assert.ok(!status.textContent.startsWith('Bridge unavailable'),status.textContent);
-assert.equal(vm.runInContext('choices.filter(c=>worldForPath(c.url)).length',context),4);
+assert.equal(vm.runInContext('choices.filter(c=>worldForPath(c.url)).length',context),Object.keys(registry.vrWorlds).length);
 activeRenderer.xr.isPresenting=true;activeRenderer.xr.dispatchEvent({type:'sessionstart'});
 activeRenderer.loop();
 const startingEye=vm.runInContext('currentView().getWorldPosition(new T.Vector3())',context);
 assert.ok(startingEye.distanceTo(new Three.Vector3(0,testHead.position.y,5))<1e-10,'first XR frame captures physical head height and centers the spawn');
 const bridge=vm.runInContext('rig.position.toArray()',context);
 const reports=[];
-for(const id of ['rainbow','fathers','wild','toon','rainbow','wild','fathers']){
+for(const id of [...Object.keys(registry.vrWorlds),'rainbow','wild','fathers']){
   vm.runInContext(`travelWorld('${id}')`,context);await Promise.resolve();
   assert.equal(sessionEnded,0);
   const count=registry.vrWorlds[id].regions.length;
   for(let i=0;i<count;i++){
     vm.runInContext(`if(onToon)setToonLevel(${i});else setNativeRegion(${i})`,context);
     clock+=100;activeRenderer.loop();
+    vm.runInContext('openOrbPrompt()',context);
+    assert.equal(vm.runInContext('orbPrompt.visible && orbPrompt.position.y > orb.getWorldPosition(new T.Vector3()).y',context),true);
+    assert.equal(vm.runInContext("activeTargets().some(m=>m.userData.promptAction==='voice')",context),true);
+    vm.runInContext('showNexus(true);toggleText(true)',context);
+    const keys=vm.runInContext("activeTargets().filter(m=>/^[A-Z]$/.test(m.userData.key||''))",context);
+    assert.equal(keys.length,26);
+    for(const key of keys)assert.ok(key.material.map.image.width/key.material.map.image.height<1.25);
+    vm.runInContext("keyCommand('A');keyCommand('B');keyCommand('BACKSPACE')",context);
+    assert.equal(vm.runInContext('commandText',context),'A');
+    vm.runInContext('showNexus(false)',context);
     const native=vm.runInContext('nativeWorld',context);
     if(native){
       const region=native.region;

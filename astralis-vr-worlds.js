@@ -1,12 +1,107 @@
 // The normal pages remain the source of artwork, stories and character identity.
 // Only worlds with a scene adapter belong here; a web-page capture is not a world.
-export const HOLODECK_VERSION = '031.0';
+export const HOLODECK_VERSION = '032.0';
 
 function world(data) {
   return Object.freeze({...data, regions:Object.freeze(data.regions.map(region => Object.freeze(region)))});
 }
 
 export const vrWorlds = Object.freeze({
+  emerald: world({
+  "id": "emerald",
+  "name": "Emerald Wisdom",
+  "path": "/emerald-wisdom.html",
+  "engine": "spatial",
+  "color": 3168061,
+  "aliases": [
+    "emerald wisdom",
+    "emerald",
+    "living grove"
+  ],
+  "regions": [
+    {
+      "id": "grove",
+      "name": "Living Grove",
+      "art": "/assets/emerald-wisdom/grove-v1.webp",
+      "color": 3168061,
+      "spawn": [
+        0,
+        0,
+        6
+      ],
+      "bounds": [
+        -7,
+        7,
+        -5,
+        9
+      ],
+      "description": "Walk through the forest to meet the deer and elephant. Select a reading stand to hear its teaching through Nova."
+    }
+  ]
+}),
+  first: world({
+  "id": "first",
+  "name": "First Orbit",
+  "path": "/first-orbit.html",
+  "engine": "spatial",
+  "color": 1517382,
+  "aliases": [
+    "first orbit",
+    "first orbit archive"
+  ],
+  "regions": [
+    {
+      "id": "archive",
+      "name": "Echoes From the First Orbit",
+      "art": "/assets/home-planets/first-orbit-384.webp",
+      "color": 1517382,
+      "spawn": [
+        0,
+        0,
+        6
+      ],
+      "bounds": [
+        -7,
+        7,
+        -5,
+        9
+      ],
+      "description": "Explore the orbital archive. The exhibits recall the recovered MIDI collection and Sandy’s Angels."
+    }
+  ]
+}),
+  scripture: world({
+  "id": "scripture",
+  "name": "Scripture Nexus",
+  "path": "/scripture-nexus.html",
+  "engine": "spatial",
+  "color": 5325911,
+  "aliases": [
+    "scripture nexus",
+    "scripture",
+    "reading hall"
+  ],
+  "regions": [
+    {
+      "id": "hall",
+      "name": "Scripture Reading Hall",
+      "art": "/scripture-nexus-bg.webp",
+      "color": 5325911,
+      "spawn": [
+        0,
+        0,
+        6
+      ],
+      "bounds": [
+        -7,
+        7,
+        -5,
+        9
+      ],
+      "description": "Welcome to the reading hall. Select a lectern for a passage from the Scripture Nexus."
+    }
+  ]
+}),
   toon: world({id:'toon', name:'Toon Planet', path:'/toon-planet.html', engine:'toon', color:0xca63f1, aliases:['toon','tune'], regions:[
     {id:'space', name:'Orbit', art:'/assets/our-new-star/deep-universe.webp', layers:[], color:0x061329, description:'We are in orbit above Cactus Forest. Ask for the next region to descend to the desert.'},
     {id:'surface', name:'Cactus Forest Moonlight', art:'/cover-3.jpg', layers:['.surface-brush-motion','.surface-desert-chase'], color:0x182334, description:'Welcome to Cactus Forest Moonlight. The original surface wildlife and wind animation share this landscape with the surrounding saguaros and mountains.'},

@@ -1,9 +1,9 @@
-import {regionFor,canWalkRegion} from './astralis-vr-worlds.js?v=031.0';
+import {regionFor,canWalkRegion} from './astralis-vr-worlds.js?v=032.0';
 
 // Scene adapters own content and GPU resources. Holodeck owns the XR session,
 // camera, locomotion and Nova, so travel never replaces the document/session.
 export function createSpatialWorld(T,world,loader=new T.TextureLoader()) {
-  if(!['rainbow','fathers','wild'].includes(world.id)) throw new Error('No spatial adapter for '+world.id);
+  if(!['rainbow','fathers','wild','emerald','first','scripture'].includes(world.id)) throw new Error('No spatial adapter for '+world.id);
   const group=new T.Group(),regions=[],motions=[],textures=new Set(),assets=new Map();
   group.name=world.name;let current=0,disposed=false;
   const pose=new T.Object3D();
@@ -323,14 +323,73 @@ export function createSpatialWorld(T,world,loader=new T.TextureLoader()) {
       }});
     }
   }
+  const exhibits=[];
+  function readingStand(parent,x,z,title,reading) {
+    box(parent,.12,1.12,.12,material(0x715e42),x,.56,z);
+    const canvas=document.createElement('canvas');canvas.width=640;canvas.height=144;
+    const g=canvas.getContext('2d');g.fillStyle='#102631';g.fillRect(0,0,640,144);
+    g.fillStyle='#fff5d7';g.textAlign='center';g.textBaseline='middle';
+    g.font='bold 54px system-ui';g.fillText(title,320,72,600);
+    const map=new T.CanvasTexture(canvas);map.colorSpace=T.SRGBColorSpace;textures.add(map);
+    const sign=mesh(parent,new T.BoxGeometry(2.1,.48,.07),new T.MeshBasicMaterial({map}),x,1.35,z);
+    sign.userData.reading=reading;exhibits.push(sign);
+  }
+  function buildGrove(parent) {
+    sky(parent,0x669491,0xffe6ad);ground(parent,0x557b48);trees(parent);flowers(parent);
+    projectedScenery(parent,world.regions[0].art);
+    for(const [animal,x,height] of [['deer',-2.8,1.4],['elephant',2.8,2.5]]){
+      const mat=new T.SpriteMaterial({transparent:true,alphaTest:.04});
+      const sprite=new T.Sprite(mat);sprite.visible=false;parent.add(sprite);
+      mat.map=texture('/assets/emerald-wisdom/'+animal+'-poses-v2.webp',tex=>{
+        tex.repeat.set(.25,.5);tex.offset.set(0,.5);sprite.scale.set(height*tex.image.width/(2*tex.image.height),height,1);
+        mat.needsUpdate=true;sprite.visible=true;
+      });
+      sprite.position.set(x,height/2,-2.5);
+    }
+    readingStand(parent,-2.8,0,'The Banyan Deer','In the Buddhist Banyan Deer story, the deer king offers his life for a doe from another herd.');
+    readingStand(parent,2.8,0,'Equal Vision','Bhagavad Gita 5.18 names the elephant in a teaching on seeing beyond outward differences.');
+  }
+  function buildArchive(parent) {
+    sky(parent,0x060a21,0x34335f);
+    box(parent,18,.3,18,material(0x344663),0,-.17,2);
+    const globe=mesh(parent,new T.SphereGeometry(3,36,24),material(0x7271ad),0,4,-9);
+    const ring=mesh(parent,new T.RingGeometry(3.6,4.6,64),new T.MeshBasicMaterial({color:0xb9bee4,side:T.DoubleSide}),0,4,-9);
+    ring.rotation.set(1.15,.1,-.3);
+    photo(parent,world.regions[0].art,3,3,-5,3,-4);
+    motions.push({parent,tick:t=>{globe.rotation.y=t*.03;}});
+    // A bank of piano keys recalls the recovered MIDI collection.
+    const ivory=material(0xe8dfbf),ebony=material(0x212534);
+    for(let i=0;i<14;i++){
+      box(parent,.30,.13,1.1,ivory,(i-6.5)*.32,.78,-3);
+      if(![2,6].includes(i%7))box(parent,.16,.12,.62,ebony,(i-6)*.32,.9,-3.2);
+    }
+    box(parent,4.8,.72,1.3,material(0x594838),0,.36,-3);
+    readingStand(parent,-2.5,0,'Original MIDI Relics','First Orbit preserves a recovered 51-track MIDI jukebox and links back to the original web archive.');
+    readingStand(parent,2.5,0,'Sandy’s Angels','Sandy’s Angels is one of the restored First Orbit memories. Its original MIDI file is angelswatching.mid.');
+  }
+  function buildReadingHall(parent) {
+    sky(parent,0x191734,0xa78d83);ground(parent,0x5c5260,.03);
+    projectedScenery(parent,world.regions[0].art);
+    const stone=material(0xb8a088),gold=material(0xd2ad61);
+    for(const x of [-8,8])for(const z of [-6,0,6]){
+      mesh(parent,new T.CylinderGeometry(.40,.52,4.8,16),stone,x,2.4,z);
+      box(parent,1.25,.3,1.25,gold,x,4.8,z);
+    }
+    readingStand(parent,-3,0,'Life Restored','John 11 tells of Jesus calling Lazarus from the tomb at Bethany. Ask Nova for Bethany to visit that scene.');
+    readingStand(parent,0,-2,'Life Guidance','Psalm 23 uses the image of a shepherd leading beside still waters and accompanying the traveler through a dark valley.');
+    readingStand(parent,3,0,'Book Explorer','The Scripture Nexus organizes its reading library into 39 Old Testament books and 27 New Testament books.');
+  }
   world.regions.forEach((region,index)=>{
     const child=new T.Group();child.name=region.name;child.visible=index===0;group.add(child);regions.push(child);
     if(world.id==='rainbow')buildRainbow(child,index);
     else if(world.id==='fathers')buildFathers(child,index);
-    else buildWild(child,index);
+    else if(world.id==='wild')buildWild(child,index);
+    else if(world.id==='emerald')buildGrove(child);
+    else if(world.id==='first')buildArchive(child);
+    else buildReadingHall(child);
   });
   return {
-    group,world,
+    group,world,exhibits,
     get regionIndex(){return current;},
     get region(){return regionFor(world,current);},
     setRegion(index=0){const next=regionFor(world,index);current=world.regions.indexOf(next);regions.forEach((r,i)=>r.visible=i===current);return next;},
