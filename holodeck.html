@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.29</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.30</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.29';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.29';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.29';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.29';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.29';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.29';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.30';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.30';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.30';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.30';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.30';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.30';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -569,7 +569,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.29','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.30','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -1145,7 +1145,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.29 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.30 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -1385,6 +1385,17 @@ function walkDesktop(dt){
  if(canWalk(eye.x,eye.z+dz))rig.position.z+=dz;
 }
 function stick(input){return readStick(input?.gamepad);}
+function snapTurn(rx,eye){
+ if(Math.abs(rx)<.35)turnReady=true;
+ if(Math.abs(rx)>.7&&turnReady){
+ turnReady=false;
+ const angle=-Math.sign(rx)*Math.PI/6;
+ const offset=eye.clone().sub(rig.position);
+ offset.y=0;
+ const rotated=offset.clone().applyAxisAngle(new T.Vector3(0,1,0),angle);
+ rig.position.add(offset.sub(rotated));rig.rotation.y+=angle;
+ }
+}
 function walkBridge(time){
  const dt=walkTime?Math.min(.05,Math.max(0,time-walkTime)):0;walkTime=time;
  if(!dt)return;
@@ -1395,7 +1406,10 @@ function walkBridge(time){
   return;
  }
  if(nexus.visible||orbPrompt.visible||pageGroup.visible||musicPanel.visible)return;
- if(seatedState){if(renderer.xr.isPresenting){const inputs=Array.from(renderer.xr.getSession()?.inputSources||[]);const left=inputs.find(i=>i.handedness==='left');const pressed=inputs.some(i=>i.gamepad?.buttons?.[5]?.pressed);if(pressed&&!returnPressed){returnPressed=true;showNexus(true);return;}returnPressed=pressed;const [sx,sy]=stick(left);if(Math.hypot(sx,sy)>.55){standFromChair();return;}const [rx,ry]=stick(inputs.find(i=>i.handedness==='right'));const direction=seatedHeightInput(rx,ry);if(!direction){seatStickDirection=0;seatStickNext=0;}else if(direction!==seatStickDirection||time>=seatStickNext){const changed=direction!==seatStickDirection;adjustHeight(direction);seatStickDirection=direction;seatStickNext=time+(changed?.40:.18);}}else if(desktopKeys.size)standFromChair();return;}
+ if(seatedState){if(renderer.xr.isPresenting){const inputs=Array.from(renderer.xr.getSession()?.inputSources||[]);const left=inputs.find(i=>i.handedness==='left');const pressed=inputs.some(i=>i.gamepad?.buttons?.[5]?.pressed);if(pressed&&!returnPressed){returnPressed=true;showNexus(true);return;}returnPressed=pressed;const [sx,sy]=stick(left);if(Math.hypot(sx,sy)>.55){standFromChair();return;}const [rx,ry]=stick(inputs.find(i=>i.handedness==='right'));const direction=seatedHeightInput(rx,ry);
+ if(!direction && Math.abs(rx)>=Math.abs(ry))snapTurn(rx,currentView().getWorldPosition(walkEye));
+ else if(Math.abs(rx)<.35)turnReady=true;
+ if(!direction){seatStickDirection=0;seatStickNext=0;}else if(direction!==seatStickDirection||time>=seatStickNext){const changed=direction!==seatStickDirection;adjustHeight(direction);seatStickDirection=direction;seatStickNext=time+(changed?.40:.18);}}else if(desktopKeys.size)standFromChair();return;}
  if(!renderer.xr.isPresenting){walkDesktop(dt);return;}
  const inputs=Array.from(renderer.xr.getSession()?.inputSources||[]);
  const left=inputs.find(i=>i.handedness==='left'),right=inputs.find(i=>i.handedness==='right');const pressed=!!(right?.gamepad?.buttons?.[5]?.pressed||left?.gamepad?.buttons?.[5]?.pressed);if(pressed&&!returnPressed){returnPressed=true;showNexus(true);return;}returnPressed=pressed;
@@ -1410,15 +1424,7 @@ function walkBridge(time){
  if(canWalk(walkEye.x,walkEye.z+walkDelta.z)||(!canWalk(walkEye.x,walkEye.z)&&Math.abs(walkEye.z+walkDelta.z-2)<Math.abs(walkEye.z-2))){rig.position.z+=walkDelta.z;walkEye.z+=walkDelta.z;}
  }
  const [rx]=stick(right);
- if(Math.abs(rx)<.35)turnReady=true;
- if(Math.abs(rx)>.7&&turnReady){
- turnReady=false;
- const angle=-Math.sign(rx)*Math.PI/6;
- const offset=walkEye.clone().sub(rig.position);
- offset.y=0;
- const rotated=offset.clone().applyAxisAngle(new T.Vector3(0,1,0),angle);
- rig.position.add(offset.sub(rotated));rig.rotation.y+=angle;
- }
+ snapTurn(rx,walkEye);
 }
 window.addEventListener('keydown',e=>{if(!nexus.visible||!textMode||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='Enter'){e.preventDefault();keyCommand('SEND');}else if(e.key==='Escape'){e.preventDefault();keyCommand('CANCEL');}else if(e.key==='Backspace'){e.preventDefault();keyCommand('BACKSPACE');}else if(/^[a-zA-Z ]$/.test(e.key)){e.preventDefault();keyCommand(e.key.toUpperCase());}});
 let down=null,yaw=0,pitch=0,mouseAim=null;const canvas=renderer.domElement;
