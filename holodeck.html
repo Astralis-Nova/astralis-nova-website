@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 034.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 034.1</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=034.0';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=034.0';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=034.0';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=034.0';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=034.0';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=034.0';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=034.1';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=034.1';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=034.1';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=034.1';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=034.1';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=034.1';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -237,7 +237,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle='#ffffff';g.font=(kind==='text'?'650 ':'750 ')+(m.userData.key?.length===1?100:76)+'px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,Math.max(72,w-24));g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 034.0','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 034.1','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.21);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -295,8 +295,8 @@ function guideAction(action){
  if(onToon){setToonLevel(next);speakNova(guideDescriptions[next]);}else setNativeRegion(next);
 }
 function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').replace(/[.,!?]/g,' ').replace(/\s+/g,' ').trim();
- if(/^(music|music player|sound console|radio)$/.test(q)){openMusic();if(q==='radio')selectBank(1);return;}
- if(q.startsWith('radio ')){openMusic();searchRadio({name:q.slice(6)},'SEARCH • '+q.slice(6));return;}
+ if(/^(music|music player|sound console|radio)$/.test(q)){openMusic();if(q==='radio')selectBank(2);return;}
+ if(q.startsWith('radio ')){openMusic();const term=q.slice(6);const bank=radioBanks.findIndex(b=>b.name.toLowerCase().includes(term));if(bank>=0)selectBank(bank);else searchRadio({name:term},'SEARCH • '+term);return;}
  if(/return|beam.*back|back to (the )?(ship|astralis)/.test(q)){guideAction('back');return;}
  if(/^(next|descend)|next region|next level/.test(q)){guideAction('next');return;}
  if(/^(previous|prev)|previous region|previous level/.test(q)){guideAction('prev');return;}
@@ -420,13 +420,47 @@ function pageAction(action){
  {name:'NEWS / TALK',params:{tag:'news'}},
  {name:'AMBIENT / SPACE',params:{tag:'ambient'}},
  {name:'PUBLIC RADIO',params:{tag:'public radio'}},
+ {name:'INTERNATIONAL NEWS',params:{tag:'international news'}},
+ {name:'NOAA / WEATHER RADIO',params:{tag:'weather'}},
+ {name:'AMATEUR / HAM RADIO',params:{tag:'amateur radio'}},
+ {name:'SHORTWAVE BROADCASTS',params:{tag:'shortwave'}},
+ {name:'AVIATION / ATC',params:{tag:'air traffic control'}},
+ {name:'SPACE / SCIENCE RADIO',params:{tag:'science'}},
+ {name:'PUBLIC SIGNAL PORTALS',kind:'portals'},
  {name:'MY IMPORTED STREAMS',kind:'imported'}
+ ];
+ // Provider-operated pages are explicitly marked; they are not raw audio URLs.
+ const signalPortals=[
+ {name:'NOAA weather • live stream directory',portal:'https://www.weatherradio.org/'},
+ {name:'NOAA • Arizona weather radio information',portal:'https://www.weather.gov/psr/nwr'},
+ {name:'NASA • live missions and ISS',portal:'https://www.nasa.gov/live/'},
+ {name:'NASA • Artemis mission sound archive',portal:'https://www.nasa.gov/artemisaudio/'},
+ {name:'NASA • podcasts and audio',portal:'https://www.nasa.gov/podcasts-and-audio/'},
+ {name:'WebSDR • tune public radio receivers',portal:'https://websdr.org/'},
+ {name:'KiwiSDR • public receiver directory',portal:'https://kiwisdr.com/public/'},
+ {name:'Shortwave • public receiver guide',portal:'https://hqshortwaveradio.com/listen-online/'},
+ {name:'LiveATC • public aviation audio',portal:'https://www.liveatc.net/'}
  ];
  const musicPanel=new T.Group();musicPanel.visible=false;scene.add(musicPanel);
  const musicTargets=[];
+ // Lightweight clear glass: no transmission pass or costly refraction in XR.
+ const musicGlass=new T.Mesh(new T.PlaneGeometry(1.85,2.27),new T.MeshBasicMaterial({color:0x36679a,transparent:true,opacity:.085,depthWrite:false,depthTest:false,side:T.DoubleSide}));
+ musicGlass.position.set(0,-.39,-.025);musicGlass.renderOrder=43;musicPanel.add(musicGlass);
+ const glassEdge=new T.LineSegments(new T.EdgesGeometry(new T.PlaneGeometry(1.85,2.27)),new T.LineBasicMaterial({color:0x8de8ff,transparent:true,opacity:.48,depthWrite:false,depthTest:false}));
+ glassEdge.position.copy(musicGlass.position);glassEdge.renderOrder=44;musicPanel.add(glassEdge);
+ function paintMusic(m,txt,accent='#8de8ff'){
+   const c=m.material.map.image,g=c.getContext('2d'),w=c.width,h=c.height;
+   g.clearRect(0,0,w,h);g.save();g.beginPath();g.roundRect(5,7,w-10,h-14,18);
+   const grad=g.createLinearGradient(0,0,w,h);
+   grad.addColorStop(0,'rgba(11,26,45,0.30)');grad.addColorStop(1,'rgba(5,14,30,0.12)');
+   g.fillStyle=grad;g.fill();g.strokeStyle=accent;g.lineWidth=3;g.globalAlpha=.65;g.stroke();g.globalAlpha=1;
+   g.fillStyle='#f4fbff';g.textAlign='center';g.textBaseline='middle';g.font='700 65px system-ui, sans-serif';
+   g.shadowColor='rgba(0,0,0,.95)';g.shadowBlur=7;g.shadowOffsetY=2;
+   g.fillText(txt,w/2,h/2,Math.max(72,w-24));g.restore();m.material.map.needsUpdate=true;
+ }
  function musicTile(w,h,x,y,action,caption){
    const m=tile(w,h,x,y);musicPanel.add(m);m.userData=action?{musicAction:action}:{};
-   m.material.depthTest=false;m.renderOrder=45;paint(m,caption,'#8de8ff','row');if(action)musicTargets.push(m);return m;
+   m.material.depthTest=false;m.renderOrder=45;paintMusic(m,caption);if(action)musicTargets.push(m);return m;
  }
  const musicTitle=musicTile(1.65,.16,0,.64,null,'ASTRALIS • SOUND CONSOLE');
  const bankTile=musicTile(1.18,.16,0,.43,null,'ASTRALIS SONGS');
@@ -442,33 +476,34 @@ function pageAction(action){
  const volumeTile=musicTile(.38,.16,-.21,-1.24,null,'65%');
  musicTile(.39,.16,.21,-1.24,'volUp','VOL +');musicTile(.39,.16,.63,-1.24,'close','CLOSE');
  const messageTile=musicTile(1.65,.14,0,-1.43,null,'MUSIC READY • SELECT A SONG');
- let musicBank=0,musicItems=musicTracks,musicPage=0,musicIndex=0,musicVolume=.65,musicAudio=null,playingItem=null,playingList=null,playingIndex=0,musicSerial=0,radioOffset=0,radioParams=null,bankName='ASTRALIS SONGS',musicMessage='MUSIC READY • SELECT A SONG';
+ let musicBank=0,musicItems=musicTracks,musicPage=0,musicIndex=0,musicVolume=.65,musicAudio=null,playingItem=null,playingList=null,playingIndex=0,musicSerial=0,radioOffset=0,radioParams=null,radioHasMore=false,bankName='ASTRALIS SONGS',musicMessage='MUSIC READY • SELECT A SONG';
  function secureStation(s){try{const u=new URL(s.url_resolved||s.stream||s.url);return u.protocol==='https:'&&s.name?{name:String(s.name).slice(0,150),url:u.href}:null;}catch{return null;}}
  function refreshMusic(){
-   paint(bankTile,bankName,'#8de8ff','row');
-   musicRows.forEach((m,i)=>{const item=musicItems[musicPage*5+i];m.visible=!!item;if(item)paint(m,(musicPage*5+i===musicIndex?'› ':'')+item.name,'#8de8ff','row');});
-   paint(listPage,(musicPage+1)+' / '+Math.max(1,Math.ceil(musicItems.length/5)));
-   paint(nowTile,playingItem?'NOW • '+playingItem.name:'SELECT A TRACK OR STATION','#b9a6ff','row');
-   paint(playTile,musicAudio&&!musicAudio.paused?'PAUSE':'PLAY');
-   paint(volumeTile,Math.round(musicVolume*100)+'%');paint(messageTile,musicMessage,'#8de8ff','row');
+   paintMusic(bankTile,bankName,'#8de8ff');
+   musicRows.forEach((m,i)=>{const item=musicItems[musicPage*5+i];m.visible=!!item;if(item)paintMusic(m,(musicPage*5+i===musicIndex?'› ':'')+(item.portal?'↗ ':'')+item.name,'#8de8ff');});
+   paintMusic(listPage,(musicPage+1)+' / '+Math.max(1,Math.ceil(musicItems.length/5)));
+   paintMusic(nowTile,playingItem?'NOW • '+playingItem.name:'SELECT A TRACK OR STATION','#b9a6ff');
+   paintMusic(playTile,musicAudio&&!musicAudio.paused?'PAUSE':'PLAY');
+   paintMusic(volumeTile,Math.round(musicVolume*100)+'%');paintMusic(messageTile,musicMessage,'#8de8ff');
  }
  function musicNotice(message){musicMessage=message;refreshMusic();}
  function setMusicItems(items,name){musicItems=items;bankName=name;musicPage=0;musicIndex=0;refreshMusic();}
  function selectBank(i){
-   musicSerial++;musicBank=(i+radioBanks.length)%radioBanks.length;const bank=radioBanks[musicBank];radioOffset=0;radioParams=null;
+   musicSerial++;musicBank=(i+radioBanks.length)%radioBanks.length;const bank=radioBanks[musicBank];radioOffset=0;radioParams=null;radioHasMore=false;
    if(bank.kind==='music'){setMusicItems(musicTracks,bank.name);musicNotice('SELECT A SONG');}
    else if(bank.kind==='local'){setMusicItems(localStations,bank.name);musicNotice('LOCAL ONLINE BROADCASTS');}
+   else if(bank.kind==='portals'){setMusicItems(signalPortals,bank.name);musicNotice('↗ OPENS PROVIDER • NOT AN IN-VR STREAM');}
    else if(bank.kind==='imported'){let rows=[];try{rows=JSON.parse(window.localStorage.getItem('nova.radioPlaylists.v1')||'[]');}catch{}setMusicItems(Array.isArray(rows)?rows.map(secureStation).filter(Boolean):[],bank.name);musicNotice(musicItems.length?'IMPORTED STREAMS':'IMPORT STREAMS ON THE ORIGINAL PLAYER');}
    else searchRadio(bank.params,bank.name);
  }
  async function searchRadio(params,name,offset=0){
-   const serial=++musicSerial;radioParams=params;radioOffset=offset;setMusicItems([],name);musicNotice('SCANNING INTERNET RADIO…');
+   const serial=++musicSerial;radioParams=params;radioOffset=offset;radioHasMore=false;setMusicItems([],name);musicNotice('SCANNING INTERNET RADIO…');
    for(const server of radioServers){try{
      const query=new URLSearchParams({hidebroken:'true',is_https:'true',order:'clickcount',reverse:'true',limit:'100',offset:String(offset),...params});
      const response=await fetch(server+'/json/stations/search?'+query);if(!response.ok)continue;
      const rows=await response.json();if(serial!==musicSerial)return;
      const found=Array.isArray(rows)?rows.map(secureStation).filter(Boolean):[];
-     if(found.length){setMusicItems(found,name);musicNotice(found.length+' STREAMS • SELECT TO TUNE');return;}
+     if(found.length){radioHasMore=rows.length===100;setMusicItems(found,name);musicNotice(found.length+' STREAMS • SELECT TO TUNE');return;}
    }catch{}}
    if(serial===musicSerial)musicNotice('NO STREAMS FOUND • TRY ANOTHER BANK');
  }
@@ -482,7 +517,16 @@ function pageAction(action){
    }return musicAudio;
  }
  function startMusic(item,list,index){
-   if(!item)return;const audio=getMusicAudio();playingItem=item;playingList=list;playingIndex=index;audio.src=item.url;musicNotice('CONNECTING…');
+   if(!item)return;
+   if(item.portal){
+     // Preserve the VR session; leave an explicit browser link if popups are blocked.
+     const hud=document.querySelector('#hud');
+     if(hud){let link=document.querySelector('#signal-provider-link');if(!link){link=document.createElement('a');link.id='signal-provider-link';link.target='_blank';link.rel='noopener noreferrer';hud.append(link);}link.href=item.portal;link.textContent='Open '+item.name;}
+     if(renderer.xr.isPresenting){musicNotice('EXIT VR TO OPEN PROVIDER LINK IN HUD');return;}
+     try{window.open(item.portal,'_blank','noopener,noreferrer');}catch{}
+     musicNotice('PROVIDER LINK READY • SEE HUD');return;
+   }
+   const audio=getMusicAudio();playingItem=item;playingList=list;playingIndex=index;audio.src=item.url;musicNotice('CONNECTING…');
    audio.play().catch(()=>musicNotice('PLAYBACK BLOCKED OR SIGNAL UNAVAILABLE'));
  }
  function stepMusic(delta){const list=playingList||musicItems;if(!list.length)return;const index=((playingList?playingIndex:musicIndex)+delta+list.length)%list.length;if(list===musicItems){musicIndex=index;musicPage=Math.floor(index/5);}startMusic(list[index],list,index);}
@@ -492,7 +536,7 @@ function pageAction(action){
    if(action==='pagePrev'||action==='pageNext'){
      const delta=action==='pagePrev'?-1:1,next=musicPage+delta,max=Math.max(0,Math.ceil(musicItems.length/5)-1);
      if(next<0&&radioParams&&radioOffset>0){searchRadio(radioParams,bankName,Math.max(0,radioOffset-100));return;}
-     if(next>max&&radioParams&&musicItems.length===100){searchRadio(radioParams,bankName,radioOffset+100);return;}
+     if(next>max&&radioParams&&radioHasMore){searchRadio(radioParams,bankName,radioOffset+100);return;}
      musicPage=Math.max(0,Math.min(max,next));refreshMusic();return;
    }
    if(action.startsWith('row')){const index=musicPage*5+Number(action.slice(3));if(musicItems[index]){musicIndex=index;startMusic(musicItems[index],musicItems,index);}return;}
@@ -570,7 +614,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V034.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V034.1 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 

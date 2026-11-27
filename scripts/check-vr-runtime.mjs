@@ -91,6 +91,8 @@ const startingEye=vm.runInContext('currentView().getWorldPosition(new T.Vector3(
 assert.ok(startingEye.distanceTo(new Three.Vector3(0,testHead.position.y,5))<1e-10,'first XR frame captures physical head height and centers the spawn');
 const bridge=vm.runInContext('rig.position.toArray()',context);
 assert.equal(vm.runInContext('musicTracks.length',context),29);
+assert.ok(vm.runInContext('musicGlass.material.transparent && musicGlass.material.opacity < .15 && !musicGlass.material.depthWrite',context));
+assert.ok(vm.runInContext("signalPortals.every(p=>p.portal.startsWith('https://')) && radioBanks.some(b=>b.kind==='portals')",context));
 assert.equal(vm.runInContext('activeTargets().includes(musicHit)',context),true);
 vm.runInContext('openMusic()',context);
 assert.equal(vm.runInContext('musicPanel.visible && activeTargets().every(m=>m.userData.musicAction)',context),true);
