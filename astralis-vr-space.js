@@ -50,9 +50,9 @@ export function createStarField(T,count=6800,seed=29471) {
 export function galaxyCatalogue(count,seed=29112) {
   const random=seededRandom(seed),positions=[],colors=[],sizes=[],brightness=[];
   for(let i=0;i<count;i++) {
-    const bulge=i<count*.22,r=bulge?Math.pow(random(),1.8)*9:4+Math.pow(random(),.67)*43;
+    const bulge=i<count*.15,r=bulge?Math.pow(random(),1.4)*11:8+Math.pow(random(),.62)*55;
     const arm=i%2*Math.PI,scatter=(random()+random()-1)*(.23+r*.002);
-    const angle=bulge?random()*Math.PI*2:arm+Math.log(r+1)*1.75+scatter;
+    const angle=bulge?random()*Math.PI*2:arm+Math.log((r+10)/18)*2.5+scatter+.08*Math.sin(r*.18+arm);
     const thickness=(random()+random()+random()-1.5)*(bulge?6:1.6);
     positions.push(Math.cos(angle)*r,thickness,Math.sin(angle)*r);
     const warmth=bulge||r<11;
@@ -95,7 +95,7 @@ export function createDeepSpace(T,parent,modelLoader,onStatus=()=>{}) {
   })));
   function update(time) {
     // Deliberately accelerated for exploration; not the physical rotation rate of a galaxy.
-    rotor.rotation.y=time*.045;
+    rotor.rotation.y=time*.017;
     for(const {mesh,family,count} of batches) {
       for(let j=0;j<count;j++) {
         const i=j+family*29;

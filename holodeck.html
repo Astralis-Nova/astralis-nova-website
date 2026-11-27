@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.31</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.32</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.31';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.31';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.31';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.31';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.31';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.31';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.32';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.32';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.32';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.32';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.32';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.32';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -506,7 +506,7 @@ function setPlanetHover(object){
 function addPlanet({name,surface,phase,distance,height,radius,tilt,spin,destination,rings,tint=0xffffff,rate=.010,verticalDrift=1.4}){
   const orbit=new T.Group();galaxy.add(orbit);
   const axis=new T.Group();axis.rotation.z=tilt;orbit.add(axis);
-  const mat=new T.MeshStandardMaterial({map:surfaceMap(surface),color:tint,roughness:.93,metalness:0});
+  const mat=new T.MeshStandardMaterial({map:surfaceMap(({scripture:'scripture-032',rainbow:'rainbow-032',fathers:'fathers-032'})[surface]||(destination?.worldId==='first'?'cobalt-032':surface)),color:tint,roughness:.93,metalness:0});
   const globe=new T.Mesh(globeShape,mat);globe.name=name;globe.scale.setScalar(radius);axis.add(globe);
   if(destination?.worldId==='scripture'){
     const gold=new T.Mesh(new T.TorusGeometry(radius*1.32,radius*.022,8,96),new T.MeshBasicMaterial({color:0xffcf76}));
@@ -523,9 +523,12 @@ function addPlanet({name,surface,phase,distance,height,radius,tilt,spin,destinat
   }
   if(rings){
     const dust=new T.Group();dust.rotation.x=Math.PI/2-.12;axis.add(dust);
-    for(const [inner,outer,opacity] of [[1.18,1.36,.35],[1.37,1.56,.65],[1.60,1.67,.42],[1.68,1.82,.23]]){
+    const silver=surface==='silver-032';
+    dust.rotation.z=silver?.5:0;
+    const bands=silver?[[1.24,1.39,.40],[1.40,1.65,.68],[1.72,1.88,.50],[1.91,2.06,.28]]:[[1.18,1.30,.32],[1.31,1.46,.58],[1.49,1.54,.36],[1.57,1.64,.19]];
+    for(const [inner,outer,opacity] of bands){
       dust.add(new T.Mesh(new T.RingGeometry(radius*inner,radius*outer,96),
-        new T.MeshBasicMaterial({color:0xc9bcac,transparent:true,opacity,side:T.DoubleSide,depthWrite:false})));
+        new T.MeshBasicMaterial({color:silver?0xb7aa96:0xc5e8ff,transparent:true,opacity,side:T.DoubleSide,depthWrite:false})));
     }
   }
   if(destination){
@@ -546,7 +549,7 @@ destinations.forEach((world,i)=>{
 const distantPlanets=[
   ['Amethyst World','toon',0xb992d6],['Music Player','faith',0xa5dbff,'/player/'],
   ['Astralis Home','scripture',0xffffff,'/'],['Gas Giant','first',0xffd4ab],
-  ['Mars','wild',0xefab91],['Ringed World','first',0xc2af8f],['Lunar World','faith',0xccc7c1],
+  ['Mars','wild',0xefab91],['Ringed World','silver-032',0xffffff],['Lunar World','faith',0xccc7c1],
   ['Diamond World','faith',0xa1dfe5],['Volcanic World','wild',0xdb715f],['Ice World','ice',0xc0e2ff]
 ];
 distantPlanets.forEach(([name,surface,tint,url],i)=>addPlanet({name,surface,tint,
@@ -570,7 +573,20 @@ const deepSpace=createDeepSpace(T,galaxy,new GLTFLoader(),state=>{
 const dockRoadster=createDockRoadster(T,galaxy,loader);
 const comets=[];
 loader.load('/astralis-comet-portal.svg?v=20261123realcomet',tex=>{tex.colorSpace=T.SRGBColorSpace;for(let i=0;i<3;i++){const m=new T.Sprite(new T.SpriteMaterial({map:tex,color:[0xffffff,0x9ed9ff,0xc2c9ed][i],transparent:true,depthWrite:false}));m.scale.set(9-i*2,4.5-i,1);galaxy.add(m);comets.push(m);}});
+const meteorGeometry=new T.BufferGeometry();
+meteorGeometry.setAttribute('position',new T.Float32BufferAttribute([0,0,0, -3.5,1.15,0, -7,2.3,0],3));
+meteorGeometry.setAttribute('color',new T.Float32BufferAttribute([1,1,1,.42,.67,.85,.04,.07,.12],3));
+const meteor=new T.Line(meteorGeometry,new T.LineBasicMaterial({vertexColors:true,transparent:true,depthWrite:false}));
+galaxy.add(meteor);
 function driftGalaxy(t){
+ const pass=Math.floor(t/11),age=t%11;
+ meteor.visible=age<1.35;
+ if(meteor.visible){
+   const side=pass%2?1:-1;
+   meteor.scale.x=side;
+   meteor.position.set(side*(-25+age*31),18+(pass%3)*5-age*10,54+(pass%4)*4);
+   meteor.material.opacity=Math.min(1,age*8,(1.35-age)*5);
+ }
  positionPlanets(t);
  deepSpace.update(t);dockRoadster.update(t);
  comets.forEach((m,i)=>{const p=((t/(75+i*21)+i/3)%1);const angle=i*2.1;const x=(p-.5)*100;m.position.set(x*Math.cos(angle)-32*Math.sin(angle),8+i*6+Math.sin(p*Math.PI)*4,x*Math.sin(angle)+32*Math.cos(angle));m.material.opacity=Math.min(1,p*10,(1-p)*10);m.material.rotation=i===1?Math.PI+.15:-.15;});
@@ -598,7 +614,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.31','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.32','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -1174,7 +1190,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.31 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.32 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
