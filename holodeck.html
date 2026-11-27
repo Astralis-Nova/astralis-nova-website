@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.9</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.10</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.9';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.9';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.9';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.9';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.9';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.9';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.10';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.10';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.10';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.10';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.10';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.10';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -503,8 +503,9 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  const grad=g.createLinearGradient(0,0,w,h);grad.addColorStop(0,'#18213b');grad.addColorStop(1,'#101526');g.fillStyle=grad;g.fill();g.strokeStyle=accent;g.lineWidth=3;g.stroke();}
  g.fillStyle='#ffffff';g.font=(kind==='text'?'650 ':'750 ')+(m.userData.key?.length===1?100:76)+'px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,Math.max(72,w-24));g.restore();m.material.map.needsUpdate=true;
 }
-const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.9','#b6dcfa','text');
+const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
+const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.10','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -568,10 +569,12 @@ function guideAction(action){
  const next=(current+(action==='next'?1:world.regions.length-1))%world.regions.length;
  if(onToon){setToonLevel(next);speakNova(guideDescriptions[next]);}else setNativeRegion(next);
 }
-function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').replace(/[.,!?]/g,' ').replace(/\s+/g,' ').trim();
+function isExitCommand(q){return /^(?:please\s+)?(?:exit|quit|leave|end|close|stop)(?:\s+(?:the\s+)?(?:v\s*r|virtual reality|holo\s*deck|hollow\s*deck|hello\s*deck|holly\s*deck|holo\s*tech|hollow\s*tech|holodeck session|vr session))?(?:\s+please)?$/.test(q)||/^(?:go|return) (?:back )?to (?:the )?browser$/.test(q);}
+function exitImmersive(){const session=renderer.xr.getSession();showNexus(false);if(session)session.end().catch(()=>{showNexus(true);setNexusStatus('EXIT FAILED • TRY EXIT VR AGAIN');});else status.textContent='Already in browser view.';}
+function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
  if(/^(diagnostic mode|diagnostics|diagnostics on|diagnostic mode on|inspect mode|inspect console)$/.test(q)){toggleDiagnostics(true);return;}
  if(/^(diagnostics off|diagnostic mode off|exit diagnostics|stop diagnostics)$/.test(q)){toggleDiagnostics(false);return;}
- if(/^(exit vr|exit holodeck|leave holodeck)$/.test(q)){showNexus(false);if(renderer.xr.isPresenting)renderer.xr.getSession()?.end();return;}
+ if(isExitCommand(q)){exitImmersive();return;}
  if(/^(raise height|raise my height|raise view|stand taller|height up)$/.test(q)){adjustHeight(1);return;}
  if(/^(lower height|lower my height|lower view|height down)$/.test(q)){adjustHeight(-1);return;}
  if(/^(reset height|reset my height|reset view height)$/.test(q)){adjustHeight(0);return;}
@@ -594,7 +597,8 @@ function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').rep
  if(/garden/.test(q)&&nativeWorld?.world.id==='fathers'){setNativeRegion(0);return;}
  if(/ocean|underwater|burrow|underground|desert|surface|orbit/.test(q)){const region=/ocean|underwater/.test(q)?3:/burrow|underground/.test(q)?2:/desert|surface/.test(q)?1:0;travelWorld('toon',region);return;}
  if(/lights|lighting/.test(q)){if(activeWorld()){speakNova('Ship lighting is available aboard the Astralis.');return;}handleShipAction('lights');return;}
- speakNova('I do not have that command yet. Type help for available commands.');
+ speakNova('I do not have that command yet. Try Exit VR or select the Exit VR button.');
+ if(nexus.visible)setNexusStatus('HEARD: '+q.slice(0,55));
 }
 let localVoiceModel=null;
 function getLocalVoiceModel(){
@@ -1020,7 +1024,8 @@ promptTile(1.43,.19,0,.25,null,'Ask Nova');
 promptTile(.44,.22,-.49,0,'voice','Voice');
 promptTile(.44,.22,0,0,'text','Text');
 promptTile(.44,.22,.49,0,'menu','Nexus');
-promptTile(.45,.17,0,-.23,'close','Close');
+promptTile(.45,.17,-.28,-.23,'close','Close');
+promptTile(.58,.17,.28,-.23,'exit','Exit VR');
 function orientPrompt(){
  const eye=currentView().getWorldPosition(new T.Vector3());
  orb.getWorldPosition(orbPrompt.position);
@@ -1070,7 +1075,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.9 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.10 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -1200,7 +1205,7 @@ function activate(){
  if(data.reading){showNexus(true);speakNova(data.reading);return;}
  if(data.nova){openOrbPrompt();return;}
  if(data.promptAction){
-  const action=data.promptAction;showNexus(action!=='close');
+  const action=data.promptAction;if(action==='exit'){exitImmersive();return;}showNexus(action!=='close');
   if(action==='text')toggleText(true);
   if(action==='voice')startVoice();
   return;
@@ -1210,6 +1215,7 @@ function activate(){
  if(data.menuPage){menuPage=T.MathUtils.clamp(menuPage+data.menuPage,0,Math.ceil(choices.length/pageSize)-1);refreshNexus();return;}
  if(data.toggle){if(!expanded)menuPage=selected<0?0:Math.floor(selected/pageSize);expanded=!expanded;armed=null;armedUntil=0;refreshNexus();return;}
  if(Number.isInteger(data.choice)){pick(data.choice);return;}
+ if(data.exitVR){exitImmersive();return;}
  if(data.closeNexus){showNexus(false);return;}
  if(data.voice){startVoice();return;}
  if(data.textOpen){toggleText(true);return;}
@@ -1225,7 +1231,7 @@ function activate(){
  if(choice.planetAction){guideAction(choice.planetAction);return;}
  if(choice.shipAction){handleShipAction(choice.shipAction);return;}
  if(choice.refresh){syncScene();return;}
- if(choice.exit){showNexus(false);if(renderer.xr.isPresenting)renderer.xr.getSession().end();return;}
+ if(choice.exit){exitImmersive();return;}
  if(renderer.xr.isPresenting){
  if(armed!==choice.url||performance.now()>armedUntil){armed=choice.url;armedUntil=performance.now()+7000;setNexusStatus('PRESS OPEN AGAIN TO TRAVEL');return;}
  const url=choice.url;showNexus(false);renderer.xr.getSession().end().then(()=>location.assign(url));
