@@ -1,6 +1,6 @@
 // The normal pages remain the source of artwork, stories and character identity.
 // Only worlds with a scene adapter belong here; a web-page capture is not a world.
-export const HOLODECK_VERSION = '030.0';
+export const HOLODECK_VERSION = '031.0';
 
 function world(data) {
   return Object.freeze({...data, regions:Object.freeze(data.regions.map(region => Object.freeze(region)))});

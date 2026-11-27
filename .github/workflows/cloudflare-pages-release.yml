@@ -29,6 +29,9 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Install pinned renderer regression dependency
+        run: npm ci --ignore-scripts
+
       - name: Validate site resources and audio regressions
         run: |
           python scripts/check-site-resources.py
@@ -157,7 +160,8 @@ jobs:
           node --check astralis-vr-space.js
           node --check astralis-vr-toon.js
           node --check astralis-vr-roadster.js
-          node --test tests/vr-worlds.test.mjs tests/vr-controls.test.mjs tests/vr-space.test.mjs tests/vr-roadster.test.mjs
+          node --test tests/vr-worlds.test.mjs tests/vr-controls.test.mjs tests/vr-space.test.mjs tests/vr-roadster.test.mjs tests/vr-pose.test.mjs
+          node scripts/check-vr-runtime.mjs
           python - <<'PY'
           import pathlib, re
           html = pathlib.Path('holodeck.html').read_text()
@@ -166,6 +170,9 @@ jobs:
           pathlib.Path('/tmp/astralis-holodeck.mjs').write_text(scripts[0])
           PY
           node --check /tmp/astralis-holodeck.mjs
+
+      - name: Remove test dependencies before static upload
+        run: rm -rf node_modules
 
       - name: Inspect Cloudflare Pages production target
         env:

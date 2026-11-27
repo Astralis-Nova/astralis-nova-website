@@ -156,7 +156,7 @@
 
   const deferred = [
     `/realistic-galaxy-upgrade.js?v=20261007wide2`,
-    `/astralis-nova-explorer.js?v=20261126holodeck030`,
+    `/astralis-nova-explorer.js?v=20261126holodeck031`,
     `/rickroll-planet.js?v=20260722a`,
     `/recent-exoplanets.js?v=20261123individual1`,
     `/conquest-media.js?v=20260720a`,

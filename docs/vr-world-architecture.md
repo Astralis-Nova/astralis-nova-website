@@ -1,6 +1,6 @@
 # Astralis: desktop, mobile and immersive views
 
-Research and implementation: November 26, 2026, America/Phoenix. Holodeck 030.0.
+Research and implementation: November 26, 2026, America/Phoenix. Holodeck 031.0.
 
 ## Decision
 
@@ -180,3 +180,33 @@ reveal unseen surfaces. Original interactive media controls need richer VR
 counterparts. Quest GPU/shader appearance, frame rate, comfort and microphone
 recognition still require physical headset checks. Reliable conversational voice
 still needs the secure backend described in the original mission passdown.
+
+## 031.0 XR pose correction found during re-verification
+
+The first direction simulation used the normal camera attached to the rig. A
+closer review of Three.js r170 exposed a different XR behavior: its ArrayCamera
+is detached, and world-position/quaternion getters can recompute that object's
+matrix without the player's rig. Thus a correct thumbstick sign alone did not
+verify motion after snap turns, room-scale movement or world travel.
+
+The renderer now captures the canonical center-eye transform from
+`XRFrame.getViewerPose(referenceSpace)` once inside the XR animation callback.
+A separate view camera explicitly composes that tracking matrix with the current
+rig matrix. Walking, Nova placement/following, reading views, dock/observation
+travel and sprite raycasting use this same world pose. The renderer-owned XR
+camera is read for projection only; its tracking matrices are never changed by
+these helpers. World spawning compensates horizontal room-scale offsets while
+preserving the user's actual seated or standing eye height.
+
+`tests/vr-pose.test.mjs` uses the pinned, real Three.js 0.170 classes and a detached
+ArrayCamera. It checks twelve rig headings, pose ownership, missing tracking,
+room-scale spawn offsets and desktop behavior. `scripts/check-vr-runtime.mjs`
+now commits the CPU integration audit to the repository: it parses the actual
+NASA geometry, uses a separate XR camera and center-eye tracking frame, exercises
+all native regions and travel, and checks forward/backward movement, snap-turn
+eye stability and Nova's menu position. Texture pixels, shaders and actual Quest
+performance are still outside this CPU audit.
+
+The new development dependency matches the already pinned CDN renderer version.
+CI installs it only for regression checks and removes `node_modules` before the
+static deployment upload.

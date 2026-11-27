@@ -14,3 +14,40 @@ export function walkDisplacement(x,y,forwardX,forwardZ,speed,seconds) {
   const fx=forwardX/heading,fz=forwardZ/heading;
   return [(-fz*x-fx*y)/magnitude*distance,(fx*x-fz*y)/magnitude*distance];
 }
+
+export function createViewerPose(T,renderer,rig,camera) {
+  const trackedHead=new T.Matrix4().makeTranslation(0,1.65,0);
+  const worldCamera=new T.PerspectiveCamera();worldCamera.matrixAutoUpdate=false;
+  return {
+    capture(frame){
+      const reference=renderer.xr.getReferenceSpace?.();
+      if(!frame||!reference)return false;
+      const pose=frame.getViewerPose(reference);
+      if(!pose?.transform?.matrix)return false;
+      trackedHead.fromArray(pose.transform.matrix);return true;
+    },
+    getView(){
+      if(!renderer.xr.isPresenting)return camera;
+      // ArrayCamera is detached from the rig. Calling getWorldPosition or
+      // getWorldQuaternion on it recomputes its matrix without the rig parent.
+      // Compose the canonical center-eye tracking pose with the rig explicitly.
+      rig.updateWorldMatrix(true,false);
+      worldCamera.matrix.multiplyMatrices(rig.matrixWorld,trackedHead);
+      worldCamera.matrix.decompose(worldCamera.position,worldCamera.quaternion,worldCamera.scale);
+      worldCamera.matrixWorld.copy(worldCamera.matrix);
+      worldCamera.matrixWorldInverse.copy(worldCamera.matrixWorld).invert();
+      const xrCamera=renderer.xr.getCamera();
+      worldCamera.projectionMatrix.copy(xrCamera.projectionMatrix);
+      worldCamera.projectionMatrixInverse.copy(worldCamera.projectionMatrix).invert();
+      return worldCamera;
+    },
+    placeAt(spawn){
+      rig.rotation.set(0,0,0);rig.position.fromArray(spawn);
+      if(renderer.xr.isPresenting){
+        const eye=this.getView().getWorldPosition(new T.Vector3());
+        rig.position.x+=spawn[0]-eye.x;rig.position.z+=spawn[2]-eye.z;
+      }
+    },
+    reset(){trackedHead.makeTranslation(0,1.65,0);}
+  };
+}
