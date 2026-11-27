@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 035.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 035.1</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=035.0';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=035.0';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=035.0';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=035.0';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=035.0';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=035.0';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=035.1';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=035.1';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=035.1';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=035.1';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=035.1';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=035.1';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -112,38 +112,55 @@ consoleAt(-2.45,-4.5,0);consoleAt(2.45,-4.5,0);
 // Aft airlock: two independently sliding doors, a protected passage and panoramic deck.
 const airlockDoors=[];
 const shieldMat=new T.MeshBasicMaterial({color:0x79dfff,transparent:true,opacity:.055,depthWrite:false,side:T.DoubleSide});
-const airlockLightMat=new T.MeshBasicMaterial({color:0xffcb82});
+const airlockLightMat=new T.MeshBasicMaterial({color:0x77dfff});
+const airlockFrameMat=new T.MeshStandardMaterial({color:0x263f55,metalness:.72,roughness:.24});
+const airlockGlassMat=new T.MeshBasicMaterial({color:0x8bdcff,transparent:true,opacity:.13,depthWrite:false,side:T.DoubleSide});
+const airlockEdgeMat=new T.MeshBasicMaterial({color:0xa3edff,transparent:true,opacity:.84,depthWrite:false});
+const airlockAuraMat=new T.MeshBasicMaterial({color:0x46bfff,transparent:true,opacity:.12,depthWrite:false,side:T.DoubleSide,blending:T.AdditiveBlending,toneMapped:false});
 function makeAirlockDoor(z){
  const group=new T.Group();group.position.z=z;sanctuary.add(group);
  function part(w,h,d,x,y,zz,mat){const m=new T.Mesh(new T.BoxGeometry(w,h,d),mat);m.position.set(x,y,zz);group.add(m);return m;}
  for(const side of [-1,1]){
-  part(.65,3.35,.65,side*1.45,1.675,0,navy);
-  part(.08,3.18,.69,side*1.16,1.60,0,gold);
-  part(.035,2.9,.71,side*1.10,1.5,0,glowBlue);
+  part(.65,3.35,.65,side*1.45,1.675,0,airlockFrameMat);
+  part(.08,3.18,.69,side*1.16,1.60,0,airlockEdgeMat);
+  part(.035,2.9,.71,side*1.10,1.5,0,airlockLightMat);
  }
  part(3.55,.34,.65,0,3.23,0,metal);
  const lamp=part(1.7,.065,.67,0,3.04,0,airlockLightMat.clone());
+ const aura=part(2.26,3.05,.025,0,1.53,0,airlockAuraMat.clone());
+ // A gentle local blue wash, rather than a full-screen bloom pass.
+ const doorGlow=new T.PointLight(0x58caff,.6,4,2);doorGlow.position.set(0,2.7,-.46);group.add(doorGlow);
  const panels=[];
  for(const side of [-1,1]){
   const panel=new T.Group();panel.position.x=side*.56;group.add(panel);
-  const leaf=new T.Mesh(new T.BoxGeometry(1.11,2.98,.16),metal);leaf.position.y=1.50;panel.add(leaf);
-  const stripe=new T.Mesh(new T.BoxGeometry(.035,2.85,.18),glowViolet);stripe.position.set(-side*.50,1.50,0);panel.add(stripe);
-  panels.push({side,panel});
+  // Thin single-surface glass avoids multiple transparent box faces darkening space.
+  const leaf=new T.Mesh(new T.PlaneGeometry(1.11,2.98),airlockGlassMat.clone());leaf.position.y=1.50;panel.add(leaf);
+  const edge=airlockEdgeMat.clone();
+  function trim(w,h,x,y){const m=new T.Mesh(new T.BoxGeometry(w,h,.06),edge);m.position.set(x,y,0);panel.add(m);}
+  trim(.035,2.98,-.54,1.5);trim(.035,2.98,.54,1.5);trim(1.11,.035,0,.025);trim(1.11,.035,0,2.975);
+  // Small etched diagonal accents, leaving most of the viewing area clear.
+  const etch=new T.LineSegments(new T.BufferGeometry().setFromPoints([
+   new T.Vector3(-.45,.27,-.012),new T.Vector3(-.20,.52,-.012),
+   new T.Vector3(-.45,.38,-.012),new T.Vector3(-.27,.56,-.012),
+   new T.Vector3(.20,2.48,-.012),new T.Vector3(.45,2.73,-.012),
+   new T.Vector3(.27,2.44,-.012),new T.Vector3(.45,2.62,-.012)
+  ]),new T.LineBasicMaterial({color:0xa9e9ff,transparent:true,opacity:.4,depthWrite:false}));panel.add(etch);
+  panels.push({side,panel,leaf,edge});
  }
  const hit=new T.Mesh(new T.BoxGeometry(2.12,2.95,.18),new T.MeshBasicMaterial({visible:false}));hit.position.y=1.5;hit.userData={airlockDoor:z};group.add(hit);
- const door={z,group,panels,lamp,hit,open:0,hold:0};airlockDoors.push(door);return door;
+ const door={z,group,panels,lamp,aura,doorGlow,hit,open:0,hold:0};airlockDoors.push(door);return door;
 }
 const innerAirlock=makeAirlockDoor(9.62),outerAirlock=makeAirlockDoor(13.2);
 tube([new T.Vector3(-1.5,.1,9.45),new T.Vector3(-1.5,2.5,9.45),new T.Vector3(-1,3.35,9.45),new T.Vector3(0,3.75,9.45),new T.Vector3(1,3.35,9.45),new T.Vector3(1.5,2.5,9.45),new T.Vector3(1.5,.1,9.45)],gold,.13);
 shipBox(0,-.07,11.45,3.65,.14,5.25,metal);
-shipBox(0,.027,9.42,2.2,.04,.36,glowGold);
+shipBox(0,.027,9.42,2.2,.04,.36,airlockLightMat);
 for(const side of [-1,1]){
  shipBox(side*1.78,1.52,11.41,.12,3.05,3.15,shieldMat);
  shipBox(side*1.68,.55,11.4,.13,1.10,3.2,navy);
  shipBox(side*1.63,.055,11.4,.045,.035,3.25,glowBlue);
  shipBox(side*1.74,3.06,11.4,.12,.13,3.25,metal);
 }
-for(const z of [10.5,11.8,12.75]){shipBox(0,3.07,z,3.55,.12,.10,metal);shipBox(0,2.99,z,3.4,.035,.045,glowGold);}
+for(const z of [10.5,11.8,12.75]){shipBox(0,3.07,z,3.55,.12,.10,metal);shipBox(0,2.99,z,3.4,.035,.045,airlockLightMat);}
 shipBox(0,3.15,11.4,3.48,.06,3.2,shieldMat);
 const exteriorDeck=shipBox(0,-.15,17.8,12,.3,9.7,metal);
 shipBox(0,-.25,17.8,12.35,.32,9.95,navy);
@@ -180,8 +197,16 @@ function updateAirlockDoor(door,x,z,dt,t){
  const desired=near||t<door.hold?1:0;
  if(desired===1&&!door.requested)playAirlockChime();door.requested=desired===1;
  door.open=T.MathUtils.clamp(door.open+Math.sign(desired-door.open)*Math.min(Math.abs(desired-door.open),dt*1.7),0,1);
- for(const {side,panel} of door.panels)panel.position.x=side*(.56+door.open*1.12);
- door.lamp.material.color.setHex(door.open>.85?0x66f2c9:0xffcb82);
+ const activity=desired===1?(.65+.35*Math.sin(t*3)*Math.sin(t*3)):.15;
+ for(const {side,panel,leaf,edge} of door.panels){
+  panel.position.x=side*(.56+door.open*1.12);
+  leaf.material.opacity=.11+activity*.055;
+  edge.opacity=.64+activity*.36;
+  edge.color.setHSL(.52,.86,.61+activity*.29);
+ }
+ door.aura.material.opacity=(.045+activity*.09)*(1-door.open*.80);
+ door.doorGlow.intensity=.45+activity*1.4;
+ door.lamp.material.color.setHex(door.open>.85?0xb5faff:0x65ccff);
 }
 function updateAirlock(t){
  const dt=airlockLast?Math.min(.08,Math.max(0,t-airlockLast)):0;airlockLast=t;
@@ -412,7 +437,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle='#ffffff';g.font=(kind==='text'?'650 ':'750 ')+(m.userData.key?.length===1?100:76)+'px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,Math.max(72,w-24));g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 035.0','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 035.1','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.21);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -825,7 +850,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V035.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V035.1 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
