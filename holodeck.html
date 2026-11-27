@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.15</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.16</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.15';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.15';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.15';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.15';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.15';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.15';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.16';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.16';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.16';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.16';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.16';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.16';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -536,7 +536,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.15','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.16','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -1111,7 +1111,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.15 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.16 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -1210,9 +1210,9 @@ const focusWash=new T.Mesh(new T.PlaneGeometry(1,1),new T.MeshBasicMaterial({col
 function setMenuFocus(target){const p=target?.geometry?.parameters;if(!p?.width||!p?.height||!(layoutReportTargets.includes(target)||layoutTargets.includes(target)||musicTargets.includes(target)||scienceTargets.includes(target)||nexusTargets.includes(target)||promptButtons.includes(target)||pageControls.includes(target))){focusOutline.visible=false;return;}target.add(focusOutline);focusOutline.position.set(0,0,.015);focusOutline.scale.set(p.width*1.03,p.height*1.10,1);focusOutline.visible=true;}
 let diagnosticsEnabled=false,diagnosticPinned=null,diagnosticLast='';
 const diagnosticBadge=label('DIAGNOSTICS');diagnosticBadge.material.depthTest=false;diagnosticBadge.material.depthWrite=false;diagnosticBadge.renderOrder=92;diagnosticBadge.scale.set(1.75,.49,1);diagnosticBadge.visible=false;diagnosticBadge.raycast=()=>{};scene.add(diagnosticBadge);
-function diagnosticInfo(object){const d=object?.userData;if(!d)return null;if(Number.isInteger(d.scienceStation)){const st=scienceStations[d.scienceStation];if(!st)return null;return {id:st.id,name:st.name,position:st.g.getWorldPosition(new T.Vector3()),anchor:object.getWorldPosition(new T.Vector3()),yaw:Math.round(T.MathUtils.radToDeg(st.g.rotation.y)),awake:st.awake};}const id=d.musicConsole?'M1':d.airlockDoor?'A'+(d.airlockDoor<12?'1':'2'):d.nova?'N1':null;if(!id)return null;const p=object.getWorldPosition(new T.Vector3());return {id,name:d.musicConsole?'SOUND CONSOLE':d.airlockDoor?'AIRLOCK DOOR':'NOVA ORB',position:p,anchor:p,yaw:null,awake:null};}
+function diagnosticInfo(object){const d=object?.userData;if(!d||d.airlockDoor)return null;if(layoutEnabled&&!Number.isInteger(d.scienceStation))return null;if(Number.isInteger(d.scienceStation)){const st=scienceStations[d.scienceStation];if(!st)return null;return {id:st.id,name:st.name,position:st.g.getWorldPosition(new T.Vector3()),anchor:object.getWorldPosition(new T.Vector3()),yaw:Math.round(T.MathUtils.radToDeg(st.g.rotation.y)),awake:st.awake};}const id=d.musicConsole?'M1':d.airlockDoor?'A'+(d.airlockDoor<12?'1':'2'):d.nova?'N1':null;if(!id)return null;const p=object.getWorldPosition(new T.Vector3());return {id,name:d.musicConsole?'SOUND CONSOLE':d.airlockDoor?'AIRLOCK DOOR':'NOVA ORB',position:p,anchor:p,yaw:null,awake:null};}
 function diagnosticCaption(info){const {id,name,position:p,yaw,awake}=info;return [id+' • '+name,'X '+p.x.toFixed(1)+'  Y '+p.y.toFixed(1)+'  Z '+p.z.toFixed(1),(yaw===null?'':('YAW '+yaw+'°  '))+(awake===null?'':awake?'ONLINE':'STANDBY')];}
-function updateDiagnosticBadge(object){const modal=nexus.visible||orbPrompt.visible||sciencePanel.visible||musicPanel.visible||pageGroup.visible||layoutPanel.visible||layoutReportPanel.visible;if((!diagnosticsEnabled&&!layoutEnabled)||modal){diagnosticBadge.visible=false;return;}const info=diagnosticInfo(object)||diagnosticInfo(diagnosticPinned);if(!info){diagnosticBadge.visible=false;return;}const lines=diagnosticCaption(info),key=lines.join('|');if(key!==diagnosticLast){diagnosticLast=key;const c=diagnosticBadge.material.map.image,g=c.getContext('2d');c.width=768;c.height=216;g.fillStyle='#07182a';g.fillRect(0,0,c.width,c.height);g.strokeStyle='#70faff';g.lineWidth=5;g.strokeRect(5,5,c.width-10,c.height-10);g.textAlign='center';g.textBaseline='middle';g.fillStyle='#e8ffff';g.font='bold 49px system-ui';g.fillText(lines[0],384,54,730);g.font='36px system-ui';g.fillText(lines[1],384,116,730);g.fillStyle='#9beaff';g.fillText(lines[2]||'TRIGGER TO PIN',384,170,730);diagnosticBadge.material.map.needsUpdate=true;}diagnosticBadge.position.copy(info.anchor);diagnosticBadge.position.y+=.8;diagnosticBadge.visible=true;}
+function updateDiagnosticBadge(object){const modal=nexus.visible||orbPrompt.visible||sciencePanel.visible||musicPanel.visible||pageGroup.visible||layoutPanel.visible||layoutReportPanel.visible;if((!diagnosticsEnabled&&!layoutEnabled)||modal){diagnosticBadge.visible=false;return;}if(object?.userData?.airlockDoor){diagnosticBadge.visible=false;return;}const info=diagnosticInfo(object)||diagnosticInfo(diagnosticPinned);if(!info){diagnosticBadge.visible=false;return;}const lines=diagnosticCaption(info),key=lines.join('|');if(key!==diagnosticLast){diagnosticLast=key;const c=diagnosticBadge.material.map.image,g=c.getContext('2d');c.width=768;c.height=216;g.fillStyle='#07182a';g.fillRect(0,0,c.width,c.height);g.strokeStyle='#70faff';g.lineWidth=5;g.strokeRect(5,5,c.width-10,c.height-10);g.textAlign='center';g.textBaseline='middle';g.fillStyle='#e8ffff';g.font='bold 49px system-ui';g.fillText(lines[0],384,54,730);g.font='36px system-ui';g.fillText(lines[1],384,116,730);g.fillStyle='#9beaff';g.fillText(lines[2]||(layoutEnabled?'SELECT TO EDIT':'DIAGNOSTIC MODE'),384,170,730);diagnosticBadge.material.map.needsUpdate=true;}diagnosticBadge.position.copy(info.anchor);diagnosticBadge.position.y+=.8;diagnosticBadge.visible=true;}
 function toggleDiagnostics(value=!diagnosticsEnabled){diagnosticsEnabled=!!value;diagnosticPinned=null;diagnosticBadge.visible=false;refreshShipPanel('diagnostics','DIAGNOSTIC MODE • '+(diagnosticsEnabled?'ON':'OFF'));showNexus(false);speakNova(diagnosticsEnabled?'Diagnostic mode on. Point at a console to reveal its ID. Pull the trigger to pin it.':'Diagnostic mode off. Normal controls restored.');}
 // Local-only bridge layout editor. No network writes or automatic publication.
 const layoutKey='astralis.bridge.layout.v1';
@@ -1271,11 +1271,12 @@ function activate(){
  const data=hit.object.userData;
  if(data.layoutReportAction){layoutReportAction(data.layoutReportAction);return;}
  if(data.layoutAction){layoutAction(data.layoutAction);return;}
+ // Airlocks always remain operational, even during inspection or layout editing.
+ if(data.airlockDoor){useAirlock(data.airlockDoor);return;}
  if(layoutEnabled&&!activeWorld()&&Number.isInteger(data.scienceStation)){openLayoutStation(scienceStations[data.scienceStation]);return;}
  if(diagnosticsEnabled&&!nexus.visible&&!orbPrompt.visible&&!sciencePanel.visible&&!musicPanel.visible&&!pageGroup.visible&&!data.nova&&diagnosticInfo(hit.object)){diagnosticPinned=diagnosticPinned===hit.object?null:hit.object;updateDiagnosticBadge(hit.object);const info=diagnosticInfo(hit.object);status.textContent=diagnosticCaption(info).join(' | ');return;}
  if(Number.isInteger(data.scienceStation)){openScience(scienceStations[data.scienceStation]);return;}
  if(data.scienceAction){scienceAction(data.scienceAction);return;}
- if(data.airlockDoor){useAirlock(data.airlockDoor);return;}
  if(data.musicConsole){openMusic();return;}
  if(data.musicAction){musicAction(data.musicAction);return;}
  if(data.shipAction){handleShipAction(data.shipAction);return;}
