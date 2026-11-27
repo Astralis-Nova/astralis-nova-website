@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 019.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 020.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 const status=document.querySelector('#status');
@@ -9,10 +9,58 @@ const camera=new T.PerspectiveCamera(65,innerWidth/innerHeight,.1,300);camera.po
 const rig=new T.Group();rig.add(camera);scene.add(rig);
 const renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.xr.enabled=true;document.body.append(renderer.domElement,VRButton.createButton(renderer));
 scene.add(new T.HemisphereLight(0xcbeaff,0x182133,2));const sun=new T.DirectionalLight(0xffe4bc,3);sun.position.set(-5,8,6);scene.add(sun);
-function box(x,y,z,w,h,d,color){const m=new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshStandardMaterial({color,metalness:.45,roughness:.5}));m.position.set(x,y,z);scene.add(m);return m}
-box(0,-.15,2,14,.3,15,0x233b50);box(0,4.1,2,14,.2,15,0x14263b);for(const x of [-6.5,6.5]){box(x,.35,2,.3,.7,15,0x253d52);box(x,3.78,2,.3,.45,15,0x253d52);for(let z=-4.5;z<9;z+=4.5)box(x,2,z,.3,3.3,.22,0x253d52);for(let z=-4;z<9;z+=2)box(x*.97,.45,z,.1,.1,1.5,0x42caff)}
-box(0,0.6,1,4,1.2,.8,0x27465d);box(0,1.24,1,4.1,.08,.85,0x49b8d9);
-const bridgeObjects=scene.children.filter(o=>o.isMesh);
+// Sanctuary Bridge: elliptical architecture, open observation glazing, and sacred-tech accents.
+const sanctuary=new T.Group();scene.add(sanctuary);
+const bridgeObjects=[sanctuary];
+const metal=new T.MeshStandardMaterial({color:0x42536c,metalness:.65,roughness:.32});
+const ivory=new T.MeshStandardMaterial({color:0xa5adbd,metalness:.45,roughness:.38});
+const navy=new T.MeshStandardMaterial({color:0x16243c,metalness:.35,roughness:.55});
+const gold=new T.MeshStandardMaterial({color:0xb9a16d,metalness:.7,roughness:.35});
+const glowGold=new T.MeshBasicMaterial({color:0xffdaa0});
+const glowViolet=new T.MeshBasicMaterial({color:0xb68cff});
+const glowBlue=new T.MeshBasicMaterial({color:0x8cd5ff});
+function shipMesh(geo,mat,x=0,y=0,z=0){const m=new T.Mesh(geo,mat);m.position.set(x,y,z);sanctuary.add(m);return m;}
+function shipBox(x,y,z,w,h,d,mat){return shipMesh(new T.BoxGeometry(w,h,d),mat,x,y,z);}
+function deckDisc(rx,rz,y,mat,z=2){const m=shipMesh(new T.CylinderGeometry(1,1,.14,96),mat,0,y,z);m.scale.set(rx,1,rz);return m;}
+function shipRing(rx,rz,y,mat,z=2,thick=.025){const m=shipMesh(new T.TorusGeometry(1,thick,8,96),mat,0,y,z);m.rotation.x=-Math.PI/2;m.scale.set(rx,rz,1);return m;}
+function tube(points,mat,r=.08){return shipMesh(new T.TubeGeometry(new T.CatmullRomCurve3(points),Math.max(20,points.length*4),r,6,false),mat);}
+function ellipseArc(rx,rz,y,start,end,mat,r){const p=[];for(let i=0;i<=24;i++){const a=start+(end-start)*i/24;p.push(new T.Vector3(rx*Math.sin(a),y,2-rz*Math.cos(a)));}return tube(p,mat,r);}
+deckDisc(7.3,8.4,-.1,navy);deckDisc(7.05,8.15,-.075,metal);
+shipRing(6.85,7.95,.015,glowGold,2,.006);
+shipRing(5.9,6.9,.017,glowViolet,2,.004);
+shipRing(2.85,3.1,.019,glowGold,1,.009);
+shipRing(2.55,2.75,.02,glowBlue,1,.005);
+// Continuous low hull and crown ring, with clear panoramic openings between them.
+for(let i=0;i<24;i++){const a=i*Math.PI/12,x=7*Math.sin(a),z=2-8.05*Math.cos(a);const yaw=Math.atan2(8.05*Math.sin(a),7*Math.cos(a));const w=1.85;const low=shipBox(x,.4,z,w,.8,.30,navy);low.rotation.y=yaw;const trim=shipBox(x,.84,z,w,.045,.31,glowGold);trim.rotation.y=yaw;const high=shipBox(x,4.05,z,w,.38,.34,metal);high.rotation.y=yaw;
+if(i%3===0){const rib=shipBox(x,2.43,z,.24,3.0,.34,ivory);rib.rotation.y=yaw;const line=shipBox(x,2.43,z,.06,2.8,.35,glowViolet);line.rotation.y=yaw;}}
+ellipseArc(7,8.05,4.25,0,Math.PI*2,gold,.09);
+// Cathedral vault: curved transverse ribs and a softly luminous central spine.
+for(const z of [-3.6,-.8,2,4.8,7.5]){const width=6.8*Math.sqrt(Math.max(.15,1-((z-2)/8.1)**2));const pts=[];for(let j=0;j<=24;j++){const t=Math.PI*j/24;pts.push(new T.Vector3(width*Math.cos(t),3.95+1.65*Math.sin(t),z));}tube(pts,ivory,.17);tube(pts.map(p=>new T.Vector3(p.x,p.y-.15,p.z)),glowGold,.035);}
+tube([new T.Vector3(0,4.7,-5.9),new T.Vector3(0,5.55,-2.7),new T.Vector3(0,5.68,2),new T.Vector3(0,5.55,6),new T.Vector3(0,4.7,9.7)],metal,.24);
+tube([new T.Vector3(0,4.45,-5.9),new T.Vector3(0,5.3,-2.7),new T.Vector3(0,5.43,2),new T.Vector3(0,5.3,6),new T.Vector3(0,4.45,9.7)],glowViolet,.045);
+// Central command pedestal and animated holographic celestial instrument.
+shipMesh(new T.CylinderGeometry(1.36,1.65,.35,48),navy,0,.175,1);
+shipMesh(new T.CylinderGeometry(1.2,1.4,.62,48),metal,0,.65,1);
+shipMesh(new T.CylinderGeometry(1.48,1.48,.09,64),gold,0,1,1);
+shipRing(1.35,1.35,1.07,glowBlue,1,.014);
+const holo=new T.Group();holo.position.set(0,1.43,1);sanctuary.add(holo);
+const hm=new T.MeshBasicMaterial({color:0x83ccff,wireframe:true,transparent:true,opacity:.55});
+holo.add(new T.Mesh(new T.IcosahedronGeometry(.36,1),hm));
+for(let i=0;i<3;i++){const ring=new T.Mesh(new T.TorusGeometry(.5+i*.13,.009,6,64),i===1?glowGold:glowViolet);ring.rotation.set(.5+i*.65,.8*i,.35*i);holo.add(ring);}
+// Side stations, instrument panels and wall consoles kept outside walking lane.
+function consoleAt(x,z,yaw){const g=new T.Group();g.position.set(x,0,z);g.rotation.y=yaw;sanctuary.add(g);function part(geo,mat,x,y,z){const m=new T.Mesh(geo,mat);m.position.set(x,y,z);g.add(m);return m;}part(new T.BoxGeometry(1.5,.85,.65),navy,0,.43,0);const top=part(new T.BoxGeometry(1.7,.12,.9),ivory,0,.93,0);top.rotation.x=-.18;const screen=part(new T.BoxGeometry(1.45,.025,.63),new T.MeshBasicMaterial({color:0x254b69}),0,1.005,-.015);screen.rotation.x=-.18;for(let j=0;j<5;j++)part(new T.BoxGeometry(.18,.025,.06),j%2?glowViolet:glowBlue,-.56+j*.28,1.04,.15);part(new T.BoxGeometry(1.35,.045,.04),glowGold,0,.35,.35);}
+for(const side of [-1,1]){consoleAt(side*5.75,-1.2,side*Math.PI/2);consoleAt(side*5.75,3.5,side*Math.PI/2);}
+consoleAt(-2.45,-4.5,0);consoleAt(2.45,-4.5,0);
+// Rear sanctuary passage: sculpted door surround and illuminated threshold.
+shipBox(0,1.8,9.75,3.1,3.55,.35,navy);shipBox(0,1.6,9.53,2.2,3.1,.13,metal);
+tube([new T.Vector3(-1.5,.1,9.45),new T.Vector3(-1.5,2.5,9.45),new T.Vector3(-1,3.35,9.45),new T.Vector3(0,3.75,9.45),new T.Vector3(1,3.35,9.45),new T.Vector3(1.5,2.5,9.45),new T.Vector3(1.5,.1,9.45)],gold,.13);
+shipBox(0,1.6,9.43,.045,3,.05,glowViolet);shipBox(0,.1,9.25,2.6,.045,.55,glowGold);
+// Nova's station is a floor halo, deliberately not an obstacle.
+shipRing(.85,.85,.025,glowViolet,2.7,.025).position.x=3.7;
+shipRing(.67,.67,.026,glowGold,2.7,.014).position.x=3.7;
+const bridgeLight=new T.PointLight(0x9a8aff,12,12,2);bridgeLight.position.set(0,4,2);sanctuary.add(bridgeLight);
+const bridgeWarm=new T.PointLight(0xffd3a0,8,10,2);bridgeWarm.position.set(0,3.5,-3);sanctuary.add(bridgeWarm);
+function animateSanctuary(t){holo.rotation.y=t*.19;holo.position.y=1.43+.05*Math.sin(t*.9);bridgeLight.intensity=12+1.2*Math.sin(t*.45);}
 const stars=new Float32Array(2400*3);for(let i=0;i<stars.length;i+=3){const a=Math.random()*Math.PI*2,u=Math.random()*2-1,r=70+Math.random()*80;stars[i]=r*Math.sqrt(1-u*u)*Math.cos(a);stars[i+1]=r*u;stars[i+2]=r*Math.sqrt(1-u*u)*Math.sin(a)}const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(stars,3));const sky=new T.Points(geo,new T.PointsMaterial({color:0xd6eaff,size:.18}));scene.add(sky);
 const targets=[];const worlds=[['TOON PLANET','/toon-planet.html',0xca63f1],['RAINBOW PROMISE','/rainbow-promise.html',0x4bdb95],['MUSIC PLAYER','/player/',0xffbc55],['ASTRALIS HOME','/',0x9bdfff]];
 function label(name){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(name,256,76,490);const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;const s=new T.Sprite(new T.SpriteMaterial({map:tex}));s.scale.set(2,.5,1);return s}
@@ -102,7 +150,7 @@ function driftGalaxy(t){
 const nexus=new T.Group();scene.add(nexus);nexus.visible=false;
 const nexusTargets=[];
 // Compact Nexus: a collapsed destination selector with opt-in voice input.
-const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:['planet','rainbow','music','home'][i]})),{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'}];
+const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:['planet','rainbow','music','home'][i]})),{name:'SHIP AMBIENCE',ambience:true,color:0xd3bc85,icon:'music'},{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'}];
 const symbols={home:'⌂',chess:'♜',planet:'◉',rainbow:'◠',music:'♫',update:'↻',exit:'↗'};
 let selected=-1,expanded=false,recognition=null; let speedIndex=1; const speeds=[.95,1.8,2.7], speedNames=['Slow','Normal','Fast'];
 const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -121,7 +169,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle=accent;g.font=(kind==='text'?'500 ':'600 ')+'48px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,w-44);g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 019.0','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 020.0','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const selector=tile(1.36,.22,0,-.04,{toggle:true});
 const go=tile(.46,.19,.45,-.30,{go:true});
@@ -268,7 +316,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(onRainbow||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V019.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V020.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -293,7 +341,7 @@ if(level===2){for(let i=0;i<14;i++){const a=i*Math.PI/7;toonMesh(g,new T.SphereG
 if(level===3){for(let i=0;i<25;i++){const a=i*2.39996,r=8+i%5*4;const fish=toonMesh(g,new T.SphereGeometry(.4,12,8),[0xffbc56,0x59d7e8,0xf58cb9][i%3],Math.cos(a)*r,1+i%5*.6,Math.sin(a)*r);fish.scale.set(1.8,.65,.65);fish.userData.swim=true;fish.userData.phase=a;fish.userData.radius=r;}}
 }
 function setToonLevel(i){toonLevel=i;toonZones.forEach((g,j)=>g.visible=j===i);scene.background.set(zoneColors[i]);rig.position.set(0,0,5);rig.rotation.set(0,0,0);status.textContent='Toon Planet original artwork VR preview • '+['Orbit','Desert','Burrows','Ocean'][i];}
-function switchToon(enter){if(enter===onToon)return;showNexus(false);if(enter){bridgeBackground.copy(scene.background);savedRig.copy(rig.position);savedYaw=rig.rotation.y;}onToon=enter;toon.visible=enter;for(const o of bridgeObjects)o.visible=!enter;galaxy.visible=sky.visible=nova.visible=liveGroup.visible=!enter;if(enter)setToonLevel(0);else{scene.background.copy(bridgeBackground);rig.position.copy(savedRig);rig.rotation.y=savedYaw;status.textContent='Bridge online.';}if(!renderer.xr.isPresenting){camera.position.set(0,1.65,enter?0:5);camera.rotation.set(0,0,0);}}
+function switchToon(enter){if(enter===onToon)return;if(shipHum)shipHum.gain.gain.value=enter?0:.035;showNexus(false);if(enter){bridgeBackground.copy(scene.background);savedRig.copy(rig.position);savedYaw=rig.rotation.y;}onToon=enter;toon.visible=enter;for(const o of bridgeObjects)o.visible=!enter;galaxy.visible=sky.visible=nova.visible=liveGroup.visible=!enter;if(enter)setToonLevel(0);else{scene.background.copy(bridgeBackground);rig.position.copy(savedRig);rig.rotation.y=savedYaw;status.textContent='Bridge online.';}if(!renderer.xr.isPresenting){camera.position.set(0,1.65,enter?0:5);camera.rotation.set(0,0,0);}}
 // Original artwork layers, shared with the existing web pages. These are not 360-degree photographs.
 function originalArt(group,url,w,h,x,y,z,angle=0){const mat=new T.MeshBasicMaterial({color:0xffffff,side:T.DoubleSide,transparent:true});const mesh=new T.Mesh(new T.PlaneGeometry(w,h),mat);mesh.position.set(x,y,z);mesh.rotation.y=angle;mesh.visible=false;group.add(mesh);loader.load(url,tex=>{tex.colorSpace=T.SRGBColorSpace;mat.map=tex;mat.needsUpdate=true;mesh.visible=true;},undefined,()=>console.warn('Original art unavailable',url));return mesh;}
 const originalLayers=[
@@ -309,10 +357,12 @@ function originalPageSign(group,url){const sign=label('ORIGINAL PAGE');sign.posi
 const rainbowOriginal=originalPageSign(rainbow,'/rainbow-promise.html');
 for(const g of toonZones)toonTargets.push(originalPageSign(g,'/toon-planet.html'));
 const bridgeBackground=new T.Color();const savedRig=new T.Vector3();let savedYaw=0;
-function switchRainbow(enter){if(enter===onRainbow)return;showNexus(false);if(enter){bridgeBackground.copy(scene.background);savedRig.copy(rig.position);savedYaw=rig.rotation.y;}onRainbow=enter;rainbow.visible=enter;for(const o of bridgeObjects)o.visible=!enter;galaxy.visible=sky.visible=nova.visible=liveGroup.visible=!enter;scene.background.set(enter?0x91c9ef:bridgeBackground);if(enter){rig.position.set(0,0,7);rig.rotation.set(0,0,0);}else{rig.position.copy(savedRig);rig.rotation.y=savedYaw;}if(!renderer.xr.isPresenting){camera.position.set(0,1.65,enter?0:5);camera.rotation.set(0,0,0);}status.textContent=enter?'Rainbow Promise original artwork VR preview • select beam-back pad to return':'Bridge online.';}
+function switchRainbow(enter){if(enter===onRainbow)return;if(shipHum)shipHum.gain.gain.value=enter?0:.035;showNexus(false);if(enter){bridgeBackground.copy(scene.background);savedRig.copy(rig.position);savedYaw=rig.rotation.y;}onRainbow=enter;rainbow.visible=enter;for(const o of bridgeObjects)o.visible=!enter;galaxy.visible=sky.visible=nova.visible=liveGroup.visible=!enter;scene.background.set(enter?0x91c9ef:bridgeBackground);if(enter){rig.position.set(0,0,7);rig.rotation.set(0,0,0);}else{rig.position.copy(savedRig);rig.rotation.y=savedYaw;}if(!renderer.xr.isPresenting){camera.position.set(0,1.65,enter?0:5);camera.rotation.set(0,0,0);}status.textContent=enter?'Rainbow Promise original artwork VR preview • select beam-back pad to return':'Bridge online.';}
 const ray=new T.Raycaster();const controllers=[];let armed=null,armedUntil=0;
 const marker=new T.Mesh(new T.SphereGeometry(.045,12,8),new T.MeshBasicMaterial({color:0xffe778}));marker.visible=false;scene.add(marker);
 function controllerRay(c){const m=new T.Matrix4().extractRotation(c.matrixWorld);ray.ray.origin.setFromMatrixPosition(c.matrixWorld);ray.ray.direction.set(0,0,-1).applyMatrix4(m).normalize();ray.camera=renderer.xr.getCamera();}
+let shipAudio=null,shipHum=null;
+async function toggleShipHum(){try{if(shipAudio){const ctx=shipAudio;shipAudio=null;shipHum=null;await ctx.close();setNexusStatus('SHIP AMBIENCE OFF');return;}const AC=window.AudioContext||window.webkitAudioContext;if(!AC){setNexusStatus('AUDIO UNAVAILABLE');return;}const ctx=new AC();shipAudio=ctx;await ctx.resume();if(shipAudio!==ctx)return;const gain=ctx.createGain();gain.gain.value=.035;gain.connect(ctx.destination);const tones=[55,82.4,110].map((hz,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=hz;g.gain.value=1/(i+1);o.connect(g).connect(gain);o.start();return o;});shipHum={gain,tones};setNexusStatus('SHIP AMBIENCE ON');}catch(e){setNexusStatus('AUDIO UNAVAILABLE');}}
 function activate(){
  const hit=ray.intersectObjects(activeTargets())[0];if(!hit)return;
  const data=hit.object.userData;
@@ -333,6 +383,7 @@ function activate(){
  if(choice.url==='/rainbow-promise.html'){switchRainbow(true);return;}
  if(choice.url==='/toon-planet.html'){switchToon(true);return;}
  if(choice.url && renderer.xr.isPresenting){openPage(choice.url);return;}
+ if(choice.ambience){toggleShipHum();return;}
  if(choice.refresh){syncScene();return;}
  if(choice.exit){showNexus(false);if(renderer.xr.isPresenting)renderer.xr.getSession().end();return;}
  if(renderer.xr.isPresenting){
@@ -347,7 +398,7 @@ let walkTime=0,turnReady=true;
 const walkEye=new T.Vector3(),walkDir=new T.Vector3(),walkRight=new T.Vector3(),walkDelta=new T.Vector3();
 function canWalk(x,z){
  if(onRainbow||onToon)return Math.abs(x)<30&&Math.abs(z)<35;
- return x>=-5.95&&x<=5.95&&z>=-5.05&&z<=9.05&&!(Math.abs(x)<2.48&&z>.12&&z<1.88);
+ return (x/6.5)**2+((z-2)/7.5)**2<1 && !(Math.hypot(x,z-1)<1.85) && !(Math.abs(x)>5.05&&((Math.abs(z+1.2)<1.05)||(Math.abs(z-3.5)<1.05))) && !(Math.abs(z+4.5)<.85&&Math.abs(Math.abs(x)-2.45)<1.05);
 }
 function stick(input){
  const a=input?.gamepad?.axes;if(!a||a.length<2)return [0,0];
@@ -380,7 +431,7 @@ function walkBridge(time){
  }
 }
 let down=null,yaw=0,pitch=0;const canvas=renderer.domElement;canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>down=null);
-renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true});renderer.xr.addEventListener('sessionend',()=>{closePage();if(onToon)switchToon(false);if(onRainbow)switchRainbow(false);showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
+renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true});renderer.xr.addEventListener('sessionend',()=>{if(shipAudio){shipAudio.close().catch(()=>{});shipAudio=null;shipHum=null;}closePage();if(onToon)switchToon(false);if(onRainbow)switchRainbow(false);showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 function moveNova(time){
  if(onRainbow||onToon)return;
@@ -408,8 +459,8 @@ function moveNova(time){
  const delta=motionGoal.clone().sub(nova.position);const distance=delta.length();
  if(distance>.035)nova.position.addScaledVector(delta,Math.min(1,dt*(movementMode==='Follow'?3.8:.65)/distance));
 }
-renderer.setAnimationLoop(()=>{sky.rotation.y+=.00015;const time=performance.now()*.001;walkBridge(time);moveNova(time);if(!onToon&&!onRainbow)driftGalaxy(time);if(onToon&&toonLevel===3)for(const m of toonZones[3].children){if(m.userData.swim){const a=m.userData.phase+time*.15;m.position.x=Math.cos(a)*m.userData.radius;m.position.z=Math.sin(a)*m.userData.radius;m.rotation.y=-a;}}orbUniforms.uTime.value=time;orb.position.y=1.65+.035*Math.sin(time*1.4);orb.scale.setScalar((nexus.visible?1.13:1)+.025*Math.sin(time*2));halo.position.copy(orb.position);const pulse=.5+.5*Math.sin(time*3.2);halo.scale.setScalar(1.03+.18*pulse);halo.material.opacity=.12+.28*pulse;if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
+renderer.setAnimationLoop(()=>{sky.rotation.y+=.00015;const time=performance.now()*.001;walkBridge(time);moveNova(time);if(!onToon&&!onRainbow){driftGalaxy(time);animateSanctuary(time);}if(onToon&&toonLevel===3)for(const m of toonZones[3].children){if(m.userData.swim){const a=m.userData.phase+time*.15;m.position.x=Math.cos(a)*m.userData.radius;m.position.z=Math.sin(a)*m.userData.radius;m.rotation.y=-a;}}orbUniforms.uTime.value=time;orb.position.y=1.65+.035*Math.sin(time*1.4);orb.scale.setScalar((nexus.visible?1.13:1)+.025*Math.sin(time*2));halo.position.copy(orb.position);const pulse=.5+.5*Math.sin(time*3.2);halo.scale.setScalar(1.03+.18*pulse);halo.material.opacity=.12+.28*pulse;if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
 if(renderer.xr.isPresenting){scene.updateMatrixWorld(true);for(const c of controllers){if(!c.userData.connected)continue;controllerRay(c);const hit=ray.intersectObjects(activeTargets())[0];if(hit){marker.position.copy(hit.point);marker.visible=true;if(hit.object.userData.url){for(const p of targets){if(p.material?.emissive&&p.userData.url===hit.object.userData.url)p.material.emissive.setHex(0x666666);}}}}}
-renderer.render(scene,camera)});status.textContent='Bridge online. Nexus voice is optional and browser-dependent.';syncScene(false);setInterval(()=>syncScene(false),20000);
+renderer.render(scene,camera)});status.textContent='Sanctuary Bridge online. Select Nova for navigation or optional ship ambience.';syncScene(false);setInterval(()=>syncScene(false),20000);
 }catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}
 </script></body></html>
