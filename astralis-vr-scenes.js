@@ -1,9 +1,9 @@
-import {regionFor,canWalkRegion} from './astralis-vr-worlds.js?v=032.0';
+import {regionFor,canWalkRegion} from './astralis-vr-worlds.js?v=032.2';
 
 // Scene adapters own content and GPU resources. Holodeck owns the XR session,
 // camera, locomotion and Nova, so travel never replaces the document/session.
 export function createSpatialWorld(T,world,loader=new T.TextureLoader()) {
-  if(!['rainbow','fathers','wild','emerald','first','scripture'].includes(world.id)) throw new Error('No spatial adapter for '+world.id);
+  if(!['rainbow','fathers','wild','emerald','first','scripture','faith'].includes(world.id)) throw new Error('No spatial adapter for '+world.id);
   const group=new T.Group(),regions=[],motions=[],textures=new Set(),assets=new Map();
   group.name=world.name;let current=0,disposed=false;
   const pose=new T.Object3D();
@@ -379,6 +379,32 @@ export function createSpatialWorld(T,world,loader=new T.TextureLoader()) {
     readingStand(parent,0,-2,'Life Guidance','Psalm 23 uses the image of a shepherd leading beside still waters and accompanying the traveler through a dark valley.');
     readingStand(parent,3,0,'Book Explorer','The Scripture Nexus organizes its reading library into 39 Old Testament books and 27 New Testament books.');
   }
+  function buildFaithArchive(parent) {
+    sky(parent,0x090e26,0x504764);
+    ground(parent,0x777384,.08);
+    mountains(parent,0x56546b);
+    const moon=photo(parent,world.regions[0].art,12,12,0,11,-30);
+    moon.material.transparent=true;
+    const stories=[
+      ['Daniel and the Lions’ Den','daniel-lions-den','lion-den-faith','Daniel 6 follows Daniel as he continues to pray despite a royal decree and faces the lions’ den.'],
+      ['Samson: Strength Given','samson-strength','samson-strength','Judges 13–16 follows Samson’s calling, his choices, their consequences, and his final prayer.'],
+      ['Choice in the Garden','adam-eve-eden','adam-and-eve','Genesis 1–3 tells of Adam and Eve in the garden and explores choice, responsibility, and care after failure.'],
+      ['The Ransom and the Promise','jesus-ransom-promise','jesus-ransom-promise','Matthew 20 and Luke 23 connect Jesus’ words about giving his life with the promise he makes to a man crucified beside him.'],
+      ['Baby Moses','baby-moses-nile','baby-moses','Exodus 1–2 tells how a mother, a sister, and Pharaoh’s daughter help preserve a child’s life among the reeds.']
+    ];
+    stories.forEach(([title,art,path,reading],index)=>{
+      const angle=(index-2)*.52;
+      const station=new T.Group();
+      station.position.set(6*Math.sin(angle),0,2-6*Math.cos(angle));
+      station.rotation.y=-angle;
+      parent.add(station);
+      box(station,2.72,.15,.65,material(0x686379),0,.08,0);
+      box(station,2.70,1.65,.14,material(0x928767),0,2.6,-.10);
+      const panel=photo(station,'/assets/faith/'+art+'-hero.webp',2.6,1.55,0,2.6,0);
+      panel.userData.storyPath='/'+path;exhibits.push(panel);
+      readingStand(station,0,.32,title,reading);
+    });
+  }
   world.regions.forEach((region,index)=>{
     const child=new T.Group();child.name=region.name;child.visible=index===0;group.add(child);regions.push(child);
     if(world.id==='rainbow')buildRainbow(child,index);
@@ -386,6 +412,7 @@ export function createSpatialWorld(T,world,loader=new T.TextureLoader()) {
     else if(world.id==='wild')buildWild(child,index);
     else if(world.id==='emerald')buildGrove(child);
     else if(world.id==='first')buildArchive(child);
+    else if(world.id==='faith')buildFaithArchive(child);
     else buildReadingHall(child);
   });
   return {

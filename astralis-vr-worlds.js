@@ -1,6 +1,6 @@
 // The normal pages remain the source of artwork, stories and character identity.
 // Only worlds with a scene adapter belong here; a web-page capture is not a world.
-export const HOLODECK_VERSION = '032.0';
+export const HOLODECK_VERSION = '032.2';
 
 function world(data) {
   return Object.freeze({...data, regions:Object.freeze(data.regions.map(region => Object.freeze(region)))});
@@ -117,6 +117,10 @@ export const vrWorlds = Object.freeze({
   fathers: world({id:'fathers', name:"Father's House", path:'/fathers-house.html', engine:'spatial', color:0xffdfae, aliases:["father's house",'fathers house','father house','lazarus','bethany'], regions:[
     {id:'garden', name:'Garden of Welcome', art:'/fathers-house-realistic.jpg', color:0x6c728e, spawn:[-4,0,9], bounds:[-17,17,-14,16], obstacles:[[1,5,-20,5.1],[1,5,8.9,20]], description:"Welcome to the Father's House. Follow the garden beside the flowing river, flowers and waterfalls, inspired by the original radiant city artwork. This is an artistic reflection about welcome and hope, rather than a claim about what heaven looks like."},
     {id:'bethany', name:'Lazarus at Bethany', art:'/assets/lazarus-bethany-v2.webp', color:0xa99f8c, spawn:[0,0,8], bounds:[-11,11,-3,14], description:'We are at the Bethany reflection from the original page. John 11 describes Jesus calling Lazarus from the tomb. The original artwork is set within this stone setting. Ask Nova for the next region to return to the garden.'}
+  ]}),
+  faith: world({id:'faith',name:'Faith Stories',path:'/faith-stories.html',engine:'spatial',color:0xb9bbd2,aliases:['faith stories','faith stories planet','faith'],regions:[
+    {id:'archive',name:'Faith Stories Moon',art:'/assets/faith/faith-stories-moon.webp',color:0x292941,spawn:[0,0,5],bounds:[-9,9,-8,8],
+     description:'Welcome to the Faith Stories moon. Walk around the five story stations. Select an illustration to read the original story, or its title to hear an introduction. Select my orb for voice or text.'}
   ]}),
   wild: world({id:'wild', name:'Wild Encounters', path:'/wild-encounters.html', engine:'spatial', color:0xd8b776, aliases:['wild encounters','wildlife','jimmitty','jimmity','ocotillo','ant trail'], regions:[
     {id:'wash', name:'The Ocotillo Harvest', color:0x8e9b9e, spawn:[0,0,8], bounds:[-16,16,-14,16], description:'Welcome to the Wild Encounters field log in Cactus Forest. Ocotillo and a leaf-carrying ant trail bring the original observation into a desert wash. The ants are an illustration: their species and any underground fungus garden remain unconfirmed.'},
