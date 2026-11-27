@@ -1,7 +1,9 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 024.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 025.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
+import {vrWorlds,worldForPath,requestedWorld} from '/astralis-vr-worlds.js?v=025.0';
+const directWorld=requestedWorld(location.search);
 const status=document.querySelector('#status');
 try{
 const scene=new T.Scene();scene.background=new T.Color(0x020510);
@@ -185,7 +187,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle=accent;g.font=(kind==='text'?'500 ':'600 ')+'48px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,w-44);g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 024.0','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 025.0','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const selector=tile(1.36,.22,0,-.04,{toggle:true});
 const go=tile(.46,.19,.45,-.30,{go:true});
@@ -336,7 +338,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(onRainbow||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V024.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V025.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -349,15 +351,29 @@ for(let i=0;i<28;i++){const a=i*2.39996,r=6+(i%7)*3,x=Math.cos(a)*r,z=Math.sin(a
 const returnHit=landscapeMesh(new T.BoxGeometry(2,.15,1.5),0x7961cf,0,.08,3);returnHit.userData={returnBridge:true};const returnSign=label('BEAM BACK TO ASTRALIS');returnSign.position.set(0,1.5,3);returnSign.scale.set(3,.75,1);rainbow.add(returnSign);returnSign.userData={returnBridge:true};
 const toon=new T.Group();toon.visible=false;scene.add(toon);
 const toonTargets=[],toonZones=[];let toonLevel=0,toonFrame=null,toonFrameReady=false,toonLayers=[],toonLast=0,toonLoadSerial=0;
-const toonRegions=['space','surface','underground','ocean'];
-const toonNames=['ORBIT','CACTUS FOREST MOONLIGHT','DESERT BURROWS','HIDDEN OCEAN'];
-const zoneColors=[0x061329,0x182334,0x30241e,0x073d57];
+const toonRegions=vrWorlds.toon.regions.map(r=>r.id);
+const toonNames=vrWorlds.toon.regions.map(r=>r.name.toUpperCase());
+const zoneColors=vrWorlds.toon.regions.map(r=>r.color);
 function originalArt(group,url,w,h,x,y,z,angle=0){const mat=new T.MeshBasicMaterial({color:0xffffff,side:T.DoubleSide,transparent:true});const mesh=new T.Mesh(new T.PlaneGeometry(w,h),mat);mesh.position.set(x,y,z);mesh.rotation.y=angle;mesh.visible=false;group.add(mesh);loader.load(url,tex=>{tex.colorSpace=T.SRGBColorSpace;mat.map=tex;mat.needsUpdate=true;mesh.visible=true;},undefined,()=>console.warn('Original art unavailable',url));return mesh;}
-const toonArt=['/assets/our-new-star/deep-universe.webp','/cover-3.jpg','/assets/toon-planet/cactus-forest-burrow-empty.webp','/assets/toon-planet/bikini-bottom-ocean.webp'];
+const toonArt=vrWorlds.toon.regions.map(r=>r.art);
 function curvedArt(g,url){const geo=new T.CylinderGeometry(17,17,19,64,1,true,Math.PI-1.22,2.44);const uv=geo.attributes.uv;for(let j=0;j<uv.count;j++)uv.setX(j,1-uv.getX(j));const mat=new T.MeshBasicMaterial({side:T.DoubleSide,color:0x667080});const m=new T.Mesh(geo,mat);m.position.set(0,7,0);g.add(m);loader.load(url,tex=>{tex.colorSpace=T.SRGBColorSpace;mat.map=tex;mat.color.set(0xffffff);mat.needsUpdate=true;});return m;}
 const toonBackdrops=[];
 for(let i=0;i<4;i++){const g=new T.Group();toon.add(g);toonZones.push(g);g.visible=false;toonBackdrops.push(curvedArt(g,toonArt[i]));const floor=new T.Mesh(new T.CircleGeometry(32,64),new T.MeshStandardMaterial({color:[0x142438,0x796044,0x5c4434,0x225467][i],roughness:1}));floor.rotation.x=-Math.PI/2;floor.position.y=-.03;g.add(floor);}
 // One small navigation bar below the scene. All four original regions retain their own scripts in a same-origin iframe.
+// Native spatial foreground, independent of the original artwork and live canvas layers.
+function spatialMesh(group,geo,mat,x,y,z){const m=new T.Mesh(geo,mat);m.position.set(x,y,z);group.add(m);return m;}
+const desertSand=new T.MeshStandardMaterial({color:0x665442,roughness:1});
+const cactusMat=new T.MeshStandardMaterial({color:0x405e46,roughness:.93});
+const cactusRib=new T.MeshStandardMaterial({color:0x527358,roughness:.96});
+const rockMat=new T.MeshStandardMaterial({color:0x716350,roughness:1,flatShading:true});
+function saguaro(x,z,h){const g=new T.Group();g.position.set(x,0,z);toonZones[1].add(g);spatialMesh(g,new T.CapsuleGeometry(h*.085,h*.82,4,12),cactusMat,0,h*.49,0);for(let i=0;i<8;i++){const a=i*Math.PI/4;spatialMesh(g,new T.CapsuleGeometry(h*.012,h*.78,2,5),cactusRib,Math.cos(a)*h*.079,h*.49,Math.sin(a)*h*.079);}for(const side of [-1,1]){const armY=h*(side<0?.45:.58);const pts=[new T.Vector3(side*h*.05,armY,0),new T.Vector3(side*h*.22,armY,0),new T.Vector3(side*h*.29,armY+h*.15,0),new T.Vector3(side*h*.29,armY+h*.28,0)];spatialMesh(g,new T.TubeGeometry(new T.CatmullRomCurve3(pts),16,h*.055,8,false),cactusMat,0,0,0);spatialMesh(g,new T.SphereGeometry(h*.055,8,6),cactusMat,side*h*.29,armY+h*.28,0);}}
+for(let i=0;i<10;i++){const side=i%2?1:-1;const z=7-(i>>1)*3.1;saguaro(side*(4.4+(i%3)*1.05),z,2.5+(i%4)*.5);}
+for(let i=0;i<22;i++){const a=i*2.39996,r=4+i%6*1.7;const m=spatialMesh(toonZones[1],new T.DodecahedronGeometry(.15+(i%4)*.1),rockMat,Math.cos(a)*r,.05,Math.sin(a)*r);m.scale.set(1.5,.6,1);m.rotation.y=i;}
+const burrowMat=new T.MeshStandardMaterial({color:0x5b4333,roughness:1,side:T.DoubleSide,flatShading:true});
+for(const side of [-1,1])for(let i=0;i<5;i++){const m=spatialMesh(toonZones[2],new T.IcosahedronGeometry(1.8,1),burrowMat,side*(5.5+(i%2)*.7),1.6,7-i*3.4);m.scale.set(1.1,1.6,1.1);}
+const coralMat=new T.MeshStandardMaterial({color:0x9e6277,roughness:.86});
+const kelpMat=new T.MeshStandardMaterial({color:0x376c59,roughness:.9});
+for(let i=0;i<12;i++){const side=i%2?1:-1,x=side*(4.8+i%3),z=8-(i>>1)*2.6;for(let j=0;j<3;j++){const pts=[new T.Vector3(x+j*.17,0,z),new T.Vector3(x+j*.25,.7,z+.15),new T.Vector3(x+j*.1,1.45+(i%3)*.28,z-.2)];spatialMesh(toonZones[3],new T.TubeGeometry(new T.CatmullRomCurve3(pts),10,.065,6,false),i%3?kelpMat:coralMat,0,0,0);}}
 const toonNav=new T.Group();scene.add(toonNav);toonNav.visible=false;
 function toonButton(name,x,action){const p=label(name);p.position.set(x,-.76,-2.3);p.scale.set(.69,.19,1);p.material.depthTest=false;p.renderOrder=30;p.userData={toonAction:action};toonNav.add(p);toonTargets.push(p);return p;}
 toonButton('PREVIOUS',-.82,'prev');toonButton('NEXT',0,'next');toonButton('RETURN',.82,'back');
@@ -365,12 +381,12 @@ const toonTitle=label(toonNames[0]);toonTitle.position.set(0,-.49,-2.3);toonTitl
 function anchorToonNav(){const eye=renderer.xr.isPresenting?renderer.xr.getCamera():camera;eye.getWorldPosition(toonNav.position);const d=new T.Vector3(0,0,-1).applyQuaternion(eye.getWorldQuaternion(new T.Quaternion()));toonNav.rotation.y=Math.atan2(-d.x,-d.z);}
 function removeToonLayers(){for(const l of toonLayers){l.mesh.removeFromParent();l.mesh.geometry.dispose();l.mesh.material.dispose();l.tex.dispose();}toonLayers=[];}
 function closeToonSource(){++toonLoadSerial;removeToonLayers();toonFrame?.remove();toonFrame=null;toonFrameReady=false;}
-function attachToonSource(){if(!toonFrameReady||!toonFrame)return;try{const doc=toonFrame.contentDocument;const selectors=[[],['.surface-brush-motion','.surface-desert-chase'],['.burrow-wildlife'],['.ocean-water']][toonLevel];removeToonLayers();for(const sel of selectors){const source=doc.querySelector(sel);if(!source)continue;const tex=new T.CanvasTexture(source);tex.colorSpace=T.SRGBColorSpace;tex.minFilter=T.LinearFilter;tex.generateMipmaps=false;const mesh=new T.Mesh(toonBackdrops[toonLevel].geometry.clone(),new T.MeshBasicMaterial({map:tex,side:T.DoubleSide,transparent:toonLevel!==3,depthWrite:false}));mesh.position.copy(toonBackdrops[toonLevel].position);mesh.scale.set(.998,.998,.998);mesh.renderOrder=4+toonLayers.length;mesh.visible=false;toonZones[toonLevel].add(mesh);toonLayers.push({source,tex,mesh});}}catch(e){console.warn('Toon live source',e);}}
+function attachToonSource(){if(!toonFrameReady||!toonFrame)return;try{const doc=toonFrame.contentDocument;const selectors=vrWorlds.toon.regions[toonLevel].layers;removeToonLayers();for(const sel of selectors){const source=doc.querySelector(sel);if(!source)continue;const tex=new T.CanvasTexture(source);tex.colorSpace=T.SRGBColorSpace;tex.minFilter=T.LinearFilter;tex.generateMipmaps=false;const mesh=new T.Mesh(toonBackdrops[toonLevel].geometry.clone(),new T.MeshBasicMaterial({map:tex,side:T.DoubleSide,transparent:toonLevel!==3,depthWrite:false}));mesh.position.copy(toonBackdrops[toonLevel].position);mesh.scale.set(.998,.998,.998);mesh.renderOrder=4+toonLayers.length;mesh.visible=false;toonZones[toonLevel].add(mesh);toonLayers.push({source,tex,mesh});}}catch(e){console.warn('Toon live source',e);}}
 function showToonRegion(){if(!toonFrameReady||!toonFrame)return;const doc=toonFrame.contentDocument,region=doc.getElementById(toonRegions[toonLevel]);if(region){toonFrame.contentWindow.scrollTo({top:region.offsetTop,behavior:'instant'});attachToonSource();}}
-function startToonSource(){closeToonSource();const serial=toonLoadSerial;const frame=document.createElement('iframe');toonFrame=frame;frame.title='Original Toon Planet animation source';frame.tabIndex=-1;frame.style.cssText='position:fixed;top:0;left:0;width:1000px;height:720px;border:0;pointer-events:none;z-index:-1';frame.onload=()=>{if(serial!==toonLoadSerial)return;toonFrameReady=true;showToonRegion();};frame.src='/toon-planet.html';document.body.prepend(frame);}
+function startToonSource(){closeToonSource();const serial=toonLoadSerial;const frame=document.createElement('iframe');toonFrame=frame;frame.title='Original Toon Planet animation source';frame.tabIndex=-1;frame.style.cssText='position:fixed;top:0;left:0;width:1000px;height:720px;border:0;pointer-events:none;z-index:-1';frame.onload=()=>{if(serial!==toonLoadSerial)return;toonFrameReady=true;showToonRegion();};frame.src=vrWorlds.toon.path;document.body.prepend(frame);}
 function tickToonSource(t){if(t-toonLast<.067)return;toonLast=t;for(const l of toonLayers){const ready=l.source.width>1&&l.source.height>1&&!l.source.hidden;l.mesh.visible=ready;if(ready)l.tex.needsUpdate=true;}}
 function setToonLevel(i){toonLevel=i;toonZones.forEach((g,j)=>g.visible=j===i);scene.background.set(zoneColors[i]);rig.position.set(0,0,5);rig.rotation.set(0,0,0);scene.updateMatrixWorld(true);anchorToonNav();setText(toonTitle,toonNames[i]);showToonRegion();status.textContent='Toon Planet • '+toonNames[i];}
-function switchToon(enter){if(enter===onToon)return;if(shipHum)shipHum.gain.gain.value=enter?0:.035;showNexus(false);if(enter){bridgeBackground.copy(scene.background);savedRig.copy(rig.position);savedYaw=rig.rotation.y;}onToon=enter;toon.visible=enter;toonNav.visible=false;for(const o of bridgeObjects)o.visible=!enter;galaxy.visible=sky.visible=liveGroup.visible=!enter;nova.visible=true;if(enter){setToonLevel(0);startToonSource();speakNova(guideDescriptions[0]);}else{closeToonSource();scene.background.copy(bridgeBackground);rig.position.copy(savedRig);rig.rotation.y=savedYaw;status.textContent='Bridge online.';}if(!renderer.xr.isPresenting){camera.position.set(0,1.65,enter?0:5);camera.rotation.set(0,0,0);}}
+function switchToon(enter,region=0){if(enter===onToon)return;if(shipHum)shipHum.gain.gain.value=enter?0:.035;showNexus(false);if(enter){bridgeBackground.copy(scene.background);savedRig.copy(rig.position);savedYaw=rig.rotation.y;}onToon=enter;toon.visible=enter;toonNav.visible=false;for(const o of bridgeObjects)o.visible=!enter;galaxy.visible=sky.visible=liveGroup.visible=!enter;nova.visible=true;if(enter){setToonLevel(region);startToonSource();speakNova(guideDescriptions[region]);}else{closeToonSource();scene.background.copy(bridgeBackground);rig.position.copy(savedRig);rig.rotation.y=savedYaw;status.textContent='Bridge online.';}if(!renderer.xr.isPresenting){camera.position.set(0,1.65,enter?0:5);camera.rotation.set(0,0,0);}}
 originalArt(rainbow,'/assets/rainbow-promise/ancient-flood-landscape-clean.webp',34,22,0,9,-16);
 originalArt(rainbow,'/assets/rainbow-promise/timber-ark.webp',7,4.5,5,2.3,-8);
 function originalPageSign(group,url){const sign=label('ORIGINAL PAGE');sign.position.set(3.5,1.5,1);sign.scale.set(2.4,.6,1);sign.userData={originalPage:url};group.add(sign);return sign;}
@@ -382,6 +398,7 @@ const marker=new T.Mesh(new T.SphereGeometry(.045,12,8),new T.MeshBasicMaterial(
 function controllerRay(c){const m=new T.Matrix4().extractRotation(c.matrixWorld);ray.ray.origin.setFromMatrixPosition(c.matrixWorld);ray.ray.direction.set(0,0,-1).applyMatrix4(m).normalize();ray.camera=renderer.xr.getCamera();}
 let shipAudio=null,shipHum=null;
 async function toggleShipHum(){try{if(shipAudio){const ctx=shipAudio;shipAudio=null;shipHum=null;await ctx.close();refreshShipPanel('audio','SHIP AMBIENCE • OFF');setNexusStatus('SHIP AMBIENCE OFF');return;}const AC=window.AudioContext||window.webkitAudioContext;if(!AC){setNexusStatus('AUDIO UNAVAILABLE');return;}const ctx=new AC();shipAudio=ctx;await ctx.resume();if(shipAudio!==ctx)return;const gain=ctx.createGain();gain.gain.value=.035;gain.connect(ctx.destination);const tones=[55,82.4,110].map((hz,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=hz;g.gain.value=1/(i+1);o.connect(g).connect(gain);o.start();return o;});shipHum={gain,tones};refreshShipPanel('audio','SHIP AMBIENCE • ON');setNexusStatus('SHIP AMBIENCE ON');}catch(e){setNexusStatus('AUDIO UNAVAILABLE');}}
+function travelWorld(id,region=0){closePage();if(id==='toon'){if(onRainbow)switchRainbow(false);if(onToon){showNexus(false);setToonLevel(region);}else switchToon(true,region);}else if(id==='rainbow'){if(onToon)switchToon(false);if(!onRainbow)switchRainbow(true);else showNexus(false);}}
 function activate(){
  const hit=ray.intersectObjects(activeTargets())[0];if(!hit)return;
  const data=hit.object.userData;
@@ -401,8 +418,7 @@ function activate(){
  if(data.motion){const modes=['Roam','Follow','Station'];movementMode=modes[(modes.indexOf(movementMode)+1)%modes.length];paint(motion,'Movement: '+movementMode);setNexusStatus('NOVA • '+movementMode.toUpperCase());return;}
  if(!data.go)return;
  const choice=choices[selected];if(!choice){setNexusStatus('CHOOSE A DESTINATION FIRST');return;}
- if(choice.url==='/rainbow-promise.html'){if(onToon)switchToon(false);switchRainbow(true);return;}
- if(choice.url==='/toon-planet.html'){if(onRainbow)switchRainbow(false);switchToon(true);return;}
+ const world=worldForPath(choice.url);if(world){travelWorld(world.id);return;}
  if(choice.url && renderer.xr.isPresenting){openPage(choice.url);return;}
  if(choice.planetAction){guideAction(choice.planetAction);return;}
  if(choice.shipAction){handleShipAction(choice.shipAction);return;}
@@ -419,7 +435,8 @@ for(let i=0;i<2;i++){const c=renderer.xr.getController(i);rig.add(c);controllers
 let walkTime=0,turnReady=true,returnPressed=false;
 const walkEye=new T.Vector3(),walkDir=new T.Vector3(),walkRight=new T.Vector3(),walkDelta=new T.Vector3();
 function canWalk(x,z){
- if(onRainbow||onToon)return Math.abs(x)<30&&Math.abs(z)<35;
+ if(onToon)return Math.abs(x)<12&&z>-10&&z<12;
+ if(onRainbow)return Math.abs(x)<30&&Math.abs(z)<35;
  return x>=-5.95&&x<=5.95&&z>=-5.05&&z<=9.05&&Math.hypot(x+3.1,z-1)>1.65;
 }
 function stick(input){
@@ -453,7 +470,7 @@ function walkBridge(time){
  }
 }
 let down=null,yaw=0,pitch=0;const canvas=renderer.domElement;canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>down=null);
-renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true});renderer.xr.addEventListener('sessionend',()=>{if(shipAudio){shipAudio.close().catch(()=>{});shipAudio=null;shipHum=null;}closePage();if(onToon)switchToon(false);if(onRainbow)switchRainbow(false);showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
+renderer.xr.addEventListener('sessionstart',()=>{camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true;if(directWorld)travelWorld(directWorld.world.id,directWorld.region);});renderer.xr.addEventListener('sessionend',()=>{if(shipAudio){shipAudio.close().catch(()=>{});shipAudio=null;shipHum=null;}closePage();if(onToon)switchToon(false);if(onRainbow)switchRainbow(false);showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 function moveNova(time){
  const dt=lastMotion?Math.min(.05,Math.max(0,time-lastMotion)):0;lastMotion=time;
@@ -483,6 +500,6 @@ function moveNova(time){
 }
 renderer.setAnimationLoop(()=>{sky.rotation.y+=.00015;const time=performance.now()*.001;walkBridge(time);moveNova(time);if(!onToon&&!onRainbow){if(galaxyLast&&!galaxyPaused)galaxyClock+=Math.min(.05,time-galaxyLast);galaxyLast=time;driftGalaxy(galaxyClock);animateSanctuary(time);}else galaxyLast=0;if(onToon){tickToonSource(time);}orbUniforms.uTime.value=time;orb.position.y=1.65+.035*Math.sin(time*1.4);orb.scale.setScalar((nexus.visible?1.13:1)+.025*Math.sin(time*2));halo.position.copy(orb.position);const pulse=.5+.5*Math.sin(time*(guideSpeaking?9:3.2));halo.scale.setScalar(1.03+.18*pulse);halo.material.opacity=.12+.28*pulse;if(time*1000>feedbackUntil)feedback.visible=false;if(performance.now()>armedUntil)confirmLabel.visible=false;marker.visible=false;for(const p of targets){if(p.material?.emissive&&p.userData.url)p.material.emissive.setHex(0);}
 if(renderer.xr.isPresenting){scene.updateMatrixWorld(true);for(const c of controllers){if(!c.userData.connected)continue;controllerRay(c);const hit=ray.intersectObjects(activeTargets())[0];if(hit){marker.position.copy(hit.point);marker.visible=true;if(hit.object.userData.url){for(const p of targets){if(p.material?.emissive&&p.userData.url===hit.object.userData.url)p.material.emissive.setHex(0x666666);}}}}}
-renderer.render(scene,camera)});status.textContent='Sanctuary Bridge online. Select Nova for navigation or optional ship ambience.';syncScene(false);setInterval(()=>syncScene(false),20000);
+renderer.render(scene,camera)});status.textContent=directWorld?'Enter VR to visit '+directWorld.world.name+' directly.':'Sanctuary Bridge online. Select Nova for navigation or optional ship ambience.';syncScene(false);setInterval(()=>syncScene(false),20000);
 }catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}
 </script></body></html>
