@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.26</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.27</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.26';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.26';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.26';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.26';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.26';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.26';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.27';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.27';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.27';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.27';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.27';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.27';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -284,7 +284,9 @@ for(const side of [-1,1]){
  shipBox(side*5.96,2.05,17.8,.04,1.7,9.7,shieldMat);
  shipBox(side*5.96,2.9,17.8,.035,.035,9.7,deckEdgeMat);
  shipBox(side*3.8,.025,17.9,.07,.035,8.5,glowGold);
- const g=new T.Group();g.position.set(side*3.75,0,18.4);sanctuary.add(g);
+ const g=new T.Group();g.position.set(side*4.35,0,19.35);
+ g.rotation.y=-side*T.MathUtils.degToRad(157.5);
+ sanctuary.add(g);
  const id='D'+(exteriorBenchLayouts.length+1);
  function seatPart(geo,mat,y){const mesh=new T.Mesh(geo,mat);mesh.position.y=y;g.add(mesh);return mesh;}
  seatPart(new T.BoxGeometry(1.85,.52,.7),navy,.33);
@@ -486,7 +488,7 @@ function setPlanetHover(object){
   hoveredPlanet=next;
   if(next)planetLabels.get(next).visible=true;
 }
-function addPlanet({name,surface,phase,distance,height,radius,tilt,spin,destination,rings,tint=0xffffff,rate=.010}){
+function addPlanet({name,surface,phase,distance,height,radius,tilt,spin,destination,rings,tint=0xffffff,rate=.010,verticalDrift=1.4}){
   const orbit=new T.Group();galaxy.add(orbit);
   const axis=new T.Group();axis.rotation.z=tilt;orbit.add(axis);
   const mat=new T.MeshStandardMaterial({map:surfaceMap(surface),color:tint,roughness:.93,metalness:0});
@@ -503,14 +505,14 @@ function addPlanet({name,surface,phase,distance,height,radius,tilt,spin,destinat
     planetLabels.set(globe,caption);
     globe.userData=destination;targets.push(globe);
   }
-  bodies.push({orbit,globe,phase,distance,height,rate,spin});
+  bodies.push({orbit,globe,phase,distance,height,rate,spin,verticalDrift});
 }
 const destinations=Object.values(vrWorlds);
 destinations.forEach((world,i)=>{
   const radius=world.id==='first'?3.2:2.0+(i%3)*.36;
   addPlanet({name:world.name,surface:world.id,destination:{worldId:world.id},
-    phase:(i+.32)*Math.PI*2/destinations.length,distance:32+(i%3)*6,height:3.8+(i%3)*1.35,
-    radius,tilt:(i%2?1:-1)*(.16+.044*i),spin:.065+.009*(i%4),rings:world.id==='first',rate:.009});
+    phase:(i+.32)*Math.PI*2/destinations.length,distance:32+(i%3)*6,height:world.id==='first'?28:[-14,5,18][i%3],
+    verticalDrift:world.id==='first'?15:2.5,radius,tilt:(i%2?1:-1)*(.16+.044*i),spin:.065+.009*(i%4),rings:world.id==='first',rate:.009});
 });
 // More distant bodies keep their established places in the wider star field.
 const distantPlanets=[
@@ -521,11 +523,11 @@ const distantPlanets=[
 ];
 distantPlanets.forEach(([name,surface,tint,url],i)=>addPlanet({name,surface,tint,
   destination:url?{galaxy:true,url,name}:null,phase:(i+.67)*2.399963,distance:66+(i%4)*8,
-  height:5+(i%4)*5,radius:2.3+i%3,tilt:.17+i*.04,spin:.028+i*.002,rate:.004,rings:name==='Ringed World'}));
+  height:name==='Lunar World'?-38:[-22,9,35,-8][i%4],radius:2.3+i%3,tilt:.17+i*.04,spin:.028+i*.002,rate:.004,rings:name==='Ringed World'}));
 function positionPlanets(time){
   for(const body of bodies){
     const angle=body.phase+time*body.rate;
-    body.orbit.position.set(Math.sin(angle)*body.distance,body.height+Math.sin(angle)*1.4,-Math.cos(angle)*body.distance);
+    body.orbit.position.set(Math.sin(angle)*body.distance,body.height+Math.sin(angle)*body.verticalDrift,-Math.cos(angle)*body.distance);
     body.globe.rotation.y=body.phase+time*body.spin;
   }
 }
@@ -565,7 +567,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.26','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.27','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -1141,7 +1143,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.26 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.27 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -1301,7 +1303,7 @@ function travelWorld(id,region=0){
 }
 function standFromChair(announce=true){if(!seatedState)return;const previous=seatedState;seatedState=null;rig.position.copy(previous.position);rig.rotation.copy(previous.rotation);rig.updateMatrixWorld(true);refreshHeight();if(announce)speakNova('Standing. Normal movement restored.');}
 function sitAtChair(st,benchLocalX=0){if(!st||activeWorld())return;if(layoutEnabled){openLayoutStation(st);return;}if(seatedState?.station===st){standFromChair();return;}standFromChair(false);const height=seatHeightOffsets.get(st.id)||0;const isBench=benchLayouts.includes(st),seat=st.chair||st.g;const view=currentView(),eye=view.getWorldPosition(new T.Vector3()),chairPoint=seat.localToWorld(new T.Vector3(isBench?T.MathUtils.clamp(benchLocalX,-.55,.55):0,(isBench?(st.exterior?1.37:1.18):1.25)+height,0));if(Math.hypot(eye.x-chairPoint.x,eye.z-chairPoint.z)>3.5){speakNova('Approach the seat to sit.');return;}const forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));// Keep the current viewing direction on an open bench; face the console on operator chairs.
-const desired=isBench?forward:new T.Vector3(0,0,-1).applyQuaternion(seat.getWorldQuaternion(new T.Quaternion()));const angle=Math.atan2(-desired.x,-desired.z)-Math.atan2(-forward.x,-forward.z);seatedState={station:st,position:rig.position.clone(),rotation:rig.rotation.clone(),height};seatStickDirection=0;seatStickNext=0;rig.rotation.y+=angle;rig.updateMatrixWorld(true);const movedEye=currentView().getWorldPosition(new T.Vector3());rig.position.add(chairPoint.sub(movedEye));rig.updateMatrixWorld(true);refreshHeight();speakNova('Seated at '+st.id+'. Push the right stick up or down to adjust seat height. Move the left stick to stand.');}
+const desired=isBench&&!st.exterior?forward:new T.Vector3(0,0,-1).applyQuaternion(seat.getWorldQuaternion(new T.Quaternion()));const angle=Math.atan2(-desired.x,-desired.z)-Math.atan2(-forward.x,-forward.z);seatedState={station:st,position:rig.position.clone(),rotation:rig.rotation.clone(),height};seatStickDirection=0;seatStickNext=0;rig.rotation.y+=angle;rig.updateMatrixWorld(true);const movedEye=currentView().getWorldPosition(new T.Vector3());rig.position.add(chairPoint.sub(movedEye));rig.updateMatrixWorld(true);refreshHeight();speakNova('Seated at '+st.id+'. Push the right stick up or down to adjust seat height. Move the left stick to stand.');}
 function activate(){
  const hit=ray.intersectObjects(activeTargets())[0];if(!hit)return;
  const data=hit.object.userData;
