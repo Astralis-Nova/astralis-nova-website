@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.19</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.20</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.19';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.19';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.19';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.19';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.19';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.19';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=036.1.20';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=036.1.20';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=036.1.20';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=036.1.20';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=036.1.20';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=036.1.20';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -20,7 +20,9 @@ const renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math
 const viewerPose=createViewerPose(T,renderer,rig,camera);
 function currentView(){return viewerPose.getView();}
 // Apply height to the whole tracking rig, not individual eyes or controllers.
-let eyeHeightOffset=0;
+let eyeHeightOffset=0,seatedState=null;
+const seatHeightOffsets=new Map();
+function nextSeatHeight(previous,direction){return direction===0?0:Math.max(-.15,Math.min(.40,Math.round((previous+direction*.05)*100)/100));}
 function placeWithHeight(spawn){viewerPose.placeAt(spawn);rig.position.y+=eyeHeightOffset;}
 function calibrateStandingHeight(){const eye=currentView().getWorldPosition(new T.Vector3());const rawHeight=eye.y-rig.position.y;eyeHeightOffset=Math.max(0,Math.min(1.5,1.65-rawHeight));rig.position.y+=eyeHeightOffset;}
 scene.add(new T.HemisphereLight(0xcbeaff,0x182133,2));const sun=new T.DirectionalLight(0xffe4bc,3);sun.position.set(-5,8,6);scene.add(sun);
@@ -539,7 +541,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.19','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.20','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -564,8 +566,8 @@ const heightDown=tile(.34,.17,-.51,-.94,{heightChange:-1});paint(heightDown,'LOW
 const heightReadout=tile(.64,.17,0,-.94,{heightChange:0});
 const heightUp=tile(.34,.17,.51,-.94,{heightChange:1});paint(heightUp,'RAISE','#a7e4ff');
 const heightTiles=[heightDown,heightReadout,heightUp];
-function refreshHeight(){paint(heightReadout,'HEIGHT '+(eyeHeightOffset>=0?'+':'')+Math.round(eyeHeightOffset*100)+' CM / RESET','#a7e4ff');}
-function adjustHeight(direction){const previous=eyeHeightOffset;eyeHeightOffset=direction===0?0:Math.max(-.3,Math.min(1.5,Math.round((previous+direction*.10)*100)/100));const delta=eyeHeightOffset-previous;rig.position.y+=delta;if(activeWorld())savedRig.y+=delta;if(nexus.visible){nexus.position.y+=delta;nexus.updateMatrixWorld(true);}refreshHeight();setNexusStatus('VIEW HEIGHT '+(eyeHeightOffset>=0?'+':'')+Math.round(eyeHeightOffset*100)+' CM');}
+function refreshHeight(){const offset=seatedState?seatedState.height:eyeHeightOffset;paint(heightReadout,(seatedState?'SEAT ':'HEIGHT ')+(offset>=0?'+':'')+Math.round(offset*100)+' CM / RESET','#a7e4ff');}
+function adjustHeight(direction){if(seatedState){const previous=seatedState.height;const next=nextSeatHeight(previous,direction);seatedState.height=next;seatHeightOffsets.set(seatedState.station.id,next);const delta=next-previous;rig.position.y+=delta;rig.updateMatrixWorld(true);if(nexus.visible){nexus.position.y+=delta;nexus.updateMatrixWorld(true);}refreshHeight();setNexusStatus('SEAT HEIGHT '+(next>=0?'+':'')+Math.round(next*100)+' CM');return;}const previous=eyeHeightOffset;eyeHeightOffset=direction===0?0:Math.max(-.3,Math.min(1.5,Math.round((previous+direction*.10)*100)/100));const delta=eyeHeightOffset-previous;rig.position.y+=delta;if(activeWorld())savedRig.y+=delta;if(nexus.visible){nexus.position.y+=delta;nexus.updateMatrixWorld(true);}refreshHeight();setNexusStatus('VIEW HEIGHT '+(eyeHeightOffset>=0?'+':'')+Math.round(eyeHeightOffset*100)+' CM');}
 refreshHeight();
 let menuPage=0;const pageSize=5;const prevMenu=tile(.62,.16,-.36,-1.13,{menuPage:-1});const nextMenu=tile(.62,.16,.36,-1.13,{menuPage:1});paint(prevMenu,'‹ PREV');paint(nextMenu,'NEXT ›');const rows=choices.map((choice,i)=>{const m=tile(1.36,.155,0,-.25-(i%pageSize)*.17,{choice:i});paint(m,symbols[choice.icon]+'  '+choice.name,'#'+choice.color.toString(16).padStart(6,'0'),'row');return m;});
 const textPanel=[];
@@ -613,9 +615,9 @@ function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').rep
  if(/^(diagnostic mode|diagnostics|diagnostics on|diagnostic mode on|inspect mode|inspect console)$/.test(q)){toggleDiagnostics(true);return;}
  if(/^(diagnostics off|diagnostic mode off|exit diagnostics|stop diagnostics)$/.test(q)){toggleDiagnostics(false);return;}
  if(isExitCommand(q)){exitImmersive();return;}
- if(/^(raise height|raise my height|raise view|stand taller|height up)$/.test(q)){adjustHeight(1);return;}
- if(/^(lower height|lower my height|lower view|height down)$/.test(q)){adjustHeight(-1);return;}
- if(/^(reset height|reset my height|reset view height)$/.test(q)){adjustHeight(0);return;}
+ if(/^(raise height|raise my height|raise view|stand taller|height up|raise seat|seat up|raise chair)$/.test(q)){adjustHeight(1);return;}
+ if(/^(lower height|lower my height|lower view|height down|lower seat|seat down|lower chair)$/.test(q)){adjustHeight(-1);return;}
+ if(/^(reset height|reset my height|reset view height|reset seat|reset chair)$/.test(q)){adjustHeight(0);return;}
  if(/^(unknown signal|science console|scan signal|scan planet)$/.test(q)){openScience();return;}
  if(/^(music|music player|sound console|radio)$/.test(q)){openMusic();if(q==='radio')selectBank(radioBanks.findIndex(b=>b.name==='WORLDWIDE'));return;}
  if(q.startsWith('radio ')){openMusic();const term=q.slice(6);if(/^(107[ .]9|kmle|favorites)$/.test(term)){selectBank(radioBanks.findIndex(b=>b.kind==='favorites'));return;}const bank=radioBanks.findIndex(b=>b.name.toLowerCase().includes(term));if(bank>=0)selectBank(bank);else searchRadio({name:term},'SEARCH • '+term);return;}
@@ -1115,7 +1117,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.19 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.20 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -1273,9 +1275,8 @@ function travelWorld(id,region=0){
  if(id==='toon'){if(nativeWorld)switchNativeWorld(null);if(onToon){showNexus(false);setToonLevel(region);speakNova(guideDescriptions[toonLevel]);}else switchToon(true,region);}
  else{if(onToon)switchToon(false);switchNativeWorld(id,region);}
 }
-let seatedState=null;
-function standFromChair(announce=true){if(!seatedState)return;const previous=seatedState;seatedState=null;rig.position.copy(previous.position);rig.rotation.copy(previous.rotation);rig.updateMatrixWorld(true);if(announce)speakNova('Standing. Normal movement restored.');}
-function sitAtChair(st){if(!st||activeWorld())return;if(layoutEnabled){openLayoutStation(st);return;}if(seatedState?.station===st){standFromChair();return;}standFromChair(false);const view=currentView(),eye=view.getWorldPosition(new T.Vector3()),chairPoint=st.chair.localToWorld(new T.Vector3(0,1.25,0));if(Math.hypot(eye.x-chairPoint.x,eye.z-chairPoint.z)>3.5){speakNova('Approach the chair to sit.');return;}const forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));const desired=new T.Vector3(0,0,-1).applyQuaternion(st.chair.getWorldQuaternion(new T.Quaternion()));const angle=Math.atan2(-desired.x,-desired.z)-Math.atan2(-forward.x,-forward.z);seatedState={station:st,position:rig.position.clone(),rotation:rig.rotation.clone()};rig.rotation.y+=angle;rig.updateMatrixWorld(true);const movedEye=currentView().getWorldPosition(new T.Vector3());rig.position.add(chairPoint.sub(movedEye));rig.updateMatrixWorld(true);speakNova('Seated at '+st.id+'. Move the left stick to stand.');}
+function standFromChair(announce=true){if(!seatedState)return;const previous=seatedState;seatedState=null;rig.position.copy(previous.position);rig.rotation.copy(previous.rotation);rig.updateMatrixWorld(true);refreshHeight();if(announce)speakNova('Standing. Normal movement restored.');}
+function sitAtChair(st){if(!st||activeWorld())return;if(layoutEnabled){openLayoutStation(st);return;}if(seatedState?.station===st){standFromChair();return;}standFromChair(false);const height=seatHeightOffsets.get(st.id)||0;const view=currentView(),eye=view.getWorldPosition(new T.Vector3()),chairPoint=st.chair.localToWorld(new T.Vector3(0,1.25+height,0));if(Math.hypot(eye.x-chairPoint.x,eye.z-chairPoint.z)>3.5){speakNova('Approach the chair to sit.');return;}const forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));const desired=new T.Vector3(0,0,-1).applyQuaternion(st.chair.getWorldQuaternion(new T.Quaternion()));const angle=Math.atan2(-desired.x,-desired.z)-Math.atan2(-forward.x,-forward.z);seatedState={station:st,position:rig.position.clone(),rotation:rig.rotation.clone(),height};rig.rotation.y+=angle;rig.updateMatrixWorld(true);const movedEye=currentView().getWorldPosition(new T.Vector3());rig.position.add(chairPoint.sub(movedEye));rig.updateMatrixWorld(true);refreshHeight();speakNova('Seated at '+st.id+'. Use Nexus Raise or Lower to adjust your seat height. Move the left stick to stand.');}
 function activate(){
  const hit=ray.intersectObjects(activeTargets())[0];if(!hit)return;
  const data=hit.object.userData;
@@ -1364,7 +1365,7 @@ function walkBridge(time){
   return;
  }
  if(nexus.visible||orbPrompt.visible||pageGroup.visible||musicPanel.visible)return;
- if(seatedState){if(renderer.xr.isPresenting){const left=Array.from(renderer.xr.getSession()?.inputSources||[]).find(i=>i.handedness==='left');const [sx,sy]=stick(left);if(Math.hypot(sx,sy)>.55)standFromChair();}else if(desktopKeys.size)standFromChair();if(seatedState)return;return;}
+ if(seatedState){if(renderer.xr.isPresenting){const inputs=Array.from(renderer.xr.getSession()?.inputSources||[]);const left=inputs.find(i=>i.handedness==='left');const pressed=inputs.some(i=>i.gamepad?.buttons?.[5]?.pressed);if(pressed&&!returnPressed){returnPressed=true;showNexus(true);return;}returnPressed=pressed;const [sx,sy]=stick(left);if(Math.hypot(sx,sy)>.55)standFromChair();}else if(desktopKeys.size)standFromChair();if(seatedState)return;return;}
  if(!renderer.xr.isPresenting){walkDesktop(dt);return;}
  const inputs=Array.from(renderer.xr.getSession()?.inputSources||[]);
  const left=inputs.find(i=>i.handedness==='left'),right=inputs.find(i=>i.handedness==='right');const pressed=!!(right?.gamepad?.buttons?.[5]?.pressed||left?.gamepad?.buttons?.[5]?.pressed);if(pressed&&!returnPressed){returnPressed=true;showNexus(true);return;}returnPressed=pressed;
