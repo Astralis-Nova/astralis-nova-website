@@ -148,6 +148,21 @@ jobs:
           node --check chess/trid-visible-glyphs.js
           node --test chess/combat-core.test.mjs chess/combat-ui.test.mjs chess/trideck-engine.test.mjs
 
+      - name: Validate Holodeck worlds and original animation sources
+        run: |
+          node --check astralis-vr-worlds.js
+          node --check astralis-vr-scenes.js
+          node --check astralis-vr-source.js
+          node --test tests/vr-worlds.test.mjs
+          python - <<'PY'
+          import pathlib, re
+          html = pathlib.Path('holodeck.html').read_text()
+          scripts = re.findall(r'<script type="module">(.*?)</script>', html, re.S)
+          assert len(scripts) == 1, 'Expected the Holodeck module'
+          pathlib.Path('/tmp/astralis-holodeck.mjs').write_text(scripts[0])
+          PY
+          node --check /tmp/astralis-holodeck.mjs
+
       - name: Inspect Cloudflare Pages production target
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

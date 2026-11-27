@@ -6,10 +6,19 @@ export async function onRequest(context) {
 
   const url = new URL(context.request.url);
   const pathname = url.pathname;
-  if (!pathname.startsWith('/memories/')) {
+  const isHolodeck = /^\/holodeck(?:\.html)?\/?$/.test(pathname);
+  const isVRSource = url.searchParams.get('holodeck-source') === '1';
+  if (isHolodeck) {
+    const immersive = new Response(response.body, response);
+    immersive.headers.set('Cache-Control', 'no-store, max-age=0');
+    // Voice remains opt-in. Only the same-origin Holodeck may request its mic.
+    immersive.headers.set('Permissions-Policy', 'camera=(), microphone=(self), geolocation=(), xr-spatial-tracking=(self)');
+    return immersive;
+  }
+  if (!pathname.startsWith('/memories/') && !isVRSource) {
     response = new HTMLRewriter().on('head', { element(e) { e.append('<link rel="stylesheet" href="/scene-motion.css?v=1">', {html:true}); } })
       .on('body', { element(e) { e.append('<script src="/scene-motion.js?v=20261017toondirectory" defer></script>', {html:true}); } }).transform(response);
-  } else {
+  } else if (pathname.startsWith('/memories/')) {
     response = new Response(response.body, response);
     response.headers.set('Cache-Control', 'private, no-store');
     response.headers.set('Referrer-Policy', 'no-referrer');
@@ -58,7 +67,7 @@ export async function onRequest(context) {
       })
       .on("body", {
         element(element) {
-          element.append('<script src="/astralis-performance-loader.js?v=20261126holodeck" defer></script><script src="/astralis-motion-restore.js?v=20261017privacy" defer></script>', { html: true });
+          element.append('<script src="/astralis-performance-loader.js?v=20261126holodeck028" defer></script><script src="/astralis-motion-restore.js?v=20261017privacy" defer></script>', { html: true });
         },
       });
   }
