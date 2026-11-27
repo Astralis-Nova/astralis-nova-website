@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 034.1</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 034.2</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=034.1';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=034.1';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=034.1';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=034.1';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=034.1';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=034.1';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=034.2';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=034.2';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=034.2';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=034.2';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=034.2';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=034.2';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -53,11 +53,12 @@ tube([new T.Vector3(0,4.45,-5.9),new T.Vector3(0,5.3,-2.7),new T.Vector3(0,5.43,
 shipMesh(new T.CylinderGeometry(1.36,1.65,.35,48),navy,-3.1,.175,1);
 shipMesh(new T.CylinderGeometry(1.2,1.4,.62,48),metal,-3.1,.65,1);
 shipMesh(new T.CylinderGeometry(1.48,1.48,.09,64),gold,-3.1,1,1);
-shipRing(1.35,1.35,1.07,glowBlue,1,.014).position.x=-3.1;
+const musicRim=shipRing(1.35,1.35,1.07,new T.MeshBasicMaterial({color:0x83ccff}),1,.014);musicRim.position.x=-3.1;
 const holo=new T.Group();holo.position.set(-3.1,1.43,1);sanctuary.add(holo);
 const hm=new T.MeshBasicMaterial({color:0x83ccff,wireframe:true,transparent:true,opacity:.55});
 holo.add(new T.Mesh(new T.IcosahedronGeometry(.36,1),hm));
-for(let i=0;i<3;i++){const ring=new T.Mesh(new T.TorusGeometry(.5+i*.13,.009,6,64),i===1?glowGold:glowViolet);ring.rotation.set(.5+i*.65,.8*i,.35*i);holo.add(ring);}
+const musicRings=[];for(let i=0;i<3;i++){const ring=new T.Mesh(new T.TorusGeometry(.5+i*.13,.009,6,64),new T.MeshBasicMaterial({color:i===1?0xffdaa0:0xb68cff,transparent:true,opacity:.85}));ring.rotation.set(.5+i*.65,.8*i,.35*i);holo.add(ring);musicRings.push(ring);}
+const musicGlow=new T.PointLight(0x79cfff,0,4,2);musicGlow.position.copy(holo.position);sanctuary.add(musicGlow);
 // Side stations, instrument panels and wall consoles kept outside walking lane.
 function consoleAt(x,z,yaw){const g=new T.Group();g.position.set(x,0,z);g.rotation.y=yaw;sanctuary.add(g);function part(geo,mat,x,y,z){const m=new T.Mesh(geo,mat);m.position.set(x,y,z);g.add(m);return m;}part(new T.BoxGeometry(1.5,.85,.65),navy,0,.43,0);const top=part(new T.BoxGeometry(1.7,.12,.9),ivory,0,.93,0);top.rotation.x=-.18;const screen=part(new T.BoxGeometry(1.45,.025,.63),new T.MeshBasicMaterial({color:0x254b69}),0,1.005,-.015);screen.rotation.x=-.18;for(let j=0;j<5;j++)part(new T.BoxGeometry(.18,.025,.06),j%2?glowViolet:glowBlue,-.56+j*.28,1.04,.15);part(new T.BoxGeometry(1.35,.045,.04),glowGold,0,.35,.35);}
 for(const side of [-1,1]){consoleAt(side*5.75,-1.2,side*Math.PI/2);consoleAt(side*5.75,3.5,side*Math.PI/2);}
@@ -74,7 +75,19 @@ const bridgeWarm=new T.PointLight(0xffd3a0,8,10,2);bridgeWarm.position.set(0,3.5
 const lightingModes=[{name:'Sanctuary',violet:0xb68cff,gold:0xffdaa0,blue:0x8cd5ff,power:12,warm:8},{name:'Observation',violet:0x385177,gold:0x987d58,blue:0x497c9d,power:3,warm:2},{name:'Dawn',violet:0xe5a1be,gold:0xffc178,blue:0xc9eaff,power:16,warm:13}];
 let lightingIndex=0,galaxyPaused=false,galaxyClock=0,galaxyLast=0;
 function applyShipLighting(){const m=lightingModes[lightingIndex];glowViolet.color.setHex(m.violet);glowGold.color.setHex(m.gold);glowBlue.color.setHex(m.blue);bridgeLight.intensity=m.power;bridgeWarm.intensity=m.warm;}
-function animateSanctuary(t){holo.rotation.y=t*.19;holo.position.y=1.43+.05*Math.sin(t*.9);bridgeLight.intensity=lightingModes[lightingIndex].power*(1+.06*Math.sin(t*.45));}
+let holoEnergy=0,holoTurn=0,holoLast=0;
+function animateSanctuary(t){
+ const dt=holoLast?Math.min(.05,Math.max(0,t-holoLast)):0;holoLast=t;
+ const signal=musicEnergy(t);holoEnergy+=(signal-holoEnergy)*Math.min(1,dt*10);
+ holoTurn+=dt*(.19+holoEnergy*1.4);holo.rotation.y=holoTurn;
+ holo.position.y=1.43+.05*Math.sin(t*.9)+holoEnergy*.10*Math.sin(t*5);
+ holo.scale.setScalar(1+holoEnergy*.18);hm.opacity=.55+holoEnergy*.42;
+ hm.color.setHSL(.55+holoEnergy*.13,.85,.68+holoEnergy*.22);
+ musicRings.forEach((ring,i)=>{ring.rotation.x=.5+i*.65+Math.sin(t*(.35+i*.13))*holoEnergy*.65;ring.rotation.z=.35*i+holoEnergy*Math.sin(t*2+i)*.40;ring.material.opacity=.72+holoEnergy*.28;ring.material.color.setHSL(i===1?.12:.74,.75,.64+holoEnergy*.30);});
+ musicRim.material.color.setHSL(.55,.85,.64+holoEnergy*.33);
+ musicGlow.position.copy(holo.position);musicGlow.intensity=holoEnergy*3.5;
+ bridgeLight.intensity=lightingModes[lightingIndex].power*(1+.06*Math.sin(t*.45));
+}
 // Aft docking alcove, elegant benches, observation rails, and exterior hull details.
 const dock=new T.Group();sanctuary.add(dock);dock.position.set(0,0,7.1);
 function dockPart(geo,mat,x,y,z){const m=new T.Mesh(geo,mat);m.position.set(x,y,z);dock.add(m);return m;}
@@ -237,7 +250,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle='#ffffff';g.font=(kind==='text'?'650 ':'750 ')+(m.userData.key?.length===1?100:76)+'px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,Math.max(72,w-24));g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 034.1','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 034.2','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.21);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -295,8 +308,8 @@ function guideAction(action){
  if(onToon){setToonLevel(next);speakNova(guideDescriptions[next]);}else setNativeRegion(next);
 }
 function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').replace(/[.,!?]/g,' ').replace(/\s+/g,' ').trim();
- if(/^(music|music player|sound console|radio)$/.test(q)){openMusic();if(q==='radio')selectBank(2);return;}
- if(q.startsWith('radio ')){openMusic();const term=q.slice(6);const bank=radioBanks.findIndex(b=>b.name.toLowerCase().includes(term));if(bank>=0)selectBank(bank);else searchRadio({name:term},'SEARCH • '+term);return;}
+ if(/^(music|music player|sound console|radio)$/.test(q)){openMusic();if(q==='radio')selectBank(radioBanks.findIndex(b=>b.name==='WORLDWIDE'));return;}
+ if(q.startsWith('radio ')){openMusic();const term=q.slice(6);if(/^(107[ .]9|kmle|favorites)$/.test(term)){selectBank(radioBanks.findIndex(b=>b.kind==='favorites'));return;}const bank=radioBanks.findIndex(b=>b.name.toLowerCase().includes(term));if(bank>=0)selectBank(bank);else searchRadio({name:term},'SEARCH • '+term);return;}
  if(/return|beam.*back|back to (the )?(ship|astralis)/.test(q)){guideAction('back');return;}
  if(/^(next|descend)|next region|next level/.test(q)){guideAction('next');return;}
  if(/^(previous|prev)|previous region|previous level/.test(q)){guideAction('prev');return;}
@@ -406,14 +419,23 @@ function pageAction(action){
  // Astralis Sound Console: native XR controls, no iframe or session exit.
  const musicTracks=[{"name":"Back When She Was Little Growing Up","url":"/Audio/mp3/Back%20When%20She%20Was%20Little%20Growing%20Up.mp3"},{"name":"Born Right Here","url":"/Audio/mp3/Born%20Right%20Here.mp3"},{"name":"Cactus Forest","url":"/Audio/mp3/Cactus%20Forest.mp3"},{"name":"Darktide","url":"/Audio/mp3/Darktide.mp3"},{"name":"Darktide — Alternate Mix","url":"/Audio/mp3/Darktide%20Alternate%20mix.mp3"},{"name":"Darktide — Remix","url":"/Audio/mp3/Darktide%20Remix.mp3"},{"name":"Heart of Gold Rocklin","url":"/Audio/mp3/Heart%20of%20Gold%20Rocklin.mp3"},{"name":"Just a Little Time","url":"/Audio/mp3/Just%20a%20Little%20Time.mp3"},{"name":"Let This Day Be Kind","url":"/Audio/mp3/Let%20This%20Day%20Be%20Kind.mp3"},{"name":"Logged Back In","url":"/Audio/mp3/Logged%20Back%20In.mp3"},{"name":"Military Brats","url":"/Audio/mp3/Military%20Brats.mp3"},{"name":"My Dad's Last Day on This Earth","url":"/Audio/mp3/My%20Dads%20Last%20Day%20on%20This%20Earth.mp3"},{"name":"My Girl Alexis","url":"/Audio/mp3/My%20Girl%20Alexis.mp3"},{"name":"My Whole World","url":"/Audio/mp3/My%20Whole%20World.mp3"},{"name":"One Outcome (Peace)","url":"/Audio/mp3/One%20Outcome%20(Peace)%20(1).mp3"},{"name":"Our First Night","url":"/Audio/mp3/Our%20First%20Night.mp3"},{"name":"Run With The Light","url":"/Audio/mp3/RUN%20WITH%20THE%20LIGHT.mp3"},{"name":"Searching Through the Light","url":"/Audio/mp3/Searching%20Through%20the%20Light.mp3"},{"name":"Starlight in My Boots — Remix","url":"/Audio/mp3/Starlight%20in%20My%20Boots%20remix.mp3"},{"name":"Starlight in My Boots — Original","url":"/Audio/mp3/original%20Starlight%20in%20my%20Boots.mp3"},{"name":"That Look","url":"/Audio/mp3/That%20Look.mp3"},{"name":"Till We Meet Again","url":"/Audio/mp3/Till%20We%20Meet%20Again.mp3"},{"name":"Till We Meet Again — Remix","url":"/Audio/mp3/Till%20We%20Meet%20Again%20Remix.mp3"},{"name":"Under the NightSky","url":"/Audio/mp3/Under%20the%20NightSky.mp3"},{"name":"When The Lights Were Golden","url":"/Audio/mp3/WHEN%20THE%20LIGHTS%20WERE%20GOLDEN.mp3"},{"name":"We Are the Universe — Original","url":"/Audio/mp3/We%20Are%20the%20Universe%20Original.mp3"},{"name":"We Are the Universe — Remix","url":"/Audio/mp3/We%20Are%20the%20Universe%20Remix.mp3"},{"name":"We Let It Pass Us By","url":"/Audio/mp3/We%20Let%20It%20Pass%20Us%20By.mp3"},{"name":"Darktide Megamix","url":"/Audio/Darktide-Megamix.mp3"}];
  const localStations=[{"name":"KBACH Classical 89.5 - Phoenix, AZ","url":"https://kbaq.streamguys1.com/kbaq_mp3_128"},{"name":"KJZZ 91.5 - Phoenix, AZ","url":"https://kjzz.streamguys1.com/kjzz_mp3_128"}];
+ const favoriteStations=[
+ {name:'107.9 KMLE Country • LIVE',url:'https://live.amperwave.net/direct/audacy-kmlefmaac-imc'},
+ {name:'107.9 KMLE • official Audacy player',portal:'https://www.audacy.com/kmle1079'}
+ ];
  const radioServers=['https://de1.api.radio-browser.info','https://de2.api.radio-browser.info','https://nl1.api.radio-browser.info'];
  const radioBanks=[
  {name:'ASTRALIS SONGS',kind:'music'},
  {name:'PHOENIX • LOCAL',kind:'local'},
+ {name:'CAPTAIN’S FAVORITES',kind:'favorites'},
  {name:'WORLDWIDE',params:{}},
  {name:'USA • ALL',params:{countrycode:'US'}},
  {name:'ARIZONA',params:{state:'Arizona',countrycode:'US'}},
  {name:'COUNTRY',params:{tag:'country'}},
+ {name:'ARIZONA COUNTRY',params:{tag:'country',state:'Arizona',countrycode:'US'}},
+ {name:'CLASSIC COUNTRY',params:{tag:'classic country'}},
+ {name:'OLDIES',params:{tag:'oldies'}},
+ {name:'80s HITS',params:{tag:'80s'}},
  {name:'ROCK',params:{tag:'rock'}},
  {name:'CLASSICAL',params:{tag:'classical'}},
  {name:'JAZZ',params:{tag:'jazz'}},
@@ -492,6 +514,7 @@ function pageAction(action){
    musicSerial++;musicBank=(i+radioBanks.length)%radioBanks.length;const bank=radioBanks[musicBank];radioOffset=0;radioParams=null;radioHasMore=false;
    if(bank.kind==='music'){setMusicItems(musicTracks,bank.name);musicNotice('SELECT A SONG');}
    else if(bank.kind==='local'){setMusicItems(localStations,bank.name);musicNotice('LOCAL ONLINE BROADCASTS');}
+   else if(bank.kind==='favorites'){setMusicItems(favoriteStations,bank.name);musicNotice('KMLE LIVE • OFFICIAL PLAYER BACKUP');}
    else if(bank.kind==='portals'){setMusicItems(signalPortals,bank.name);musicNotice('↗ OPENS PROVIDER • NOT AN IN-VR STREAM');}
    else if(bank.kind==='imported'){let rows=[];try{rows=JSON.parse(window.localStorage.getItem('nova.radioPlaylists.v1')||'[]');}catch{}setMusicItems(Array.isArray(rows)?rows.map(secureStation).filter(Boolean):[],bank.name);musicNotice(musicItems.length?'IMPORTED STREAMS':'IMPORT STREAMS ON THE ORIGINAL PLAYER');}
    else searchRadio(bank.params,bank.name);
@@ -507,14 +530,38 @@ function pageAction(action){
    }catch{}}
    if(serial===musicSerial)musicNotice('NO STREAMS FOUND • TRY ANOTHER BANK');
  }
- function getMusicAudio(){
-   if(!musicAudio){musicAudio=document.createElement('audio');musicAudio.preload='none';musicAudio.volume=musicVolume;
-     musicAudio.addEventListener('playing',()=>musicNotice('SIGNAL PLAYING'));
-     musicAudio.addEventListener('pause',()=>refreshMusic());
-     musicAudio.addEventListener('waiting',()=>musicNotice('BUFFERING SIGNAL…'));
-     musicAudio.addEventListener('error',()=>musicNotice('STREAM UNAVAILABLE • TRY ANOTHER'));
-     musicAudio.addEventListener('ended',()=>{if(playingList===musicTracks)stepMusic(1);else musicNotice('SIGNAL ENDED');});
-   }return musicAudio;
+ let songAudio=null,radioAudio=null,musicContext=null,musicAnalyser=null,musicBins=null;
+ function musicEnergy(t){
+   if(!musicAudio||musicAudio.paused||musicAudio.ended||musicAudio.readyState<3||musicAudio.muted||musicAudio.volume===0)return 0;
+   if(musicAudio===songAudio&&musicAnalyser&&musicContext?.state==='running'){
+     musicAnalyser.getByteFrequencyData(musicBins);
+     let bass=0,full=0;const count=Math.min(8,musicBins.length);
+     for(let i=0;i<musicBins.length;i++){full+=musicBins[i];if(i<count)bass+=musicBins[i];}
+     return Math.min(1,(bass/count*.75+full/musicBins.length*.25)/190);
+   }
+   // Radio stays on its own direct media element: CORS restrictions must never mute the stream.
+   // Where spectrum data is unavailable this is decorative signal activity, not beat detection.
+   return .24+.22*(.5+.5*Math.sin(t*5.1))+.12*(.5+.5*Math.sin(t*2.3));
+ }
+ function getMusicAudio(local){
+   let audio=local?songAudio:radioAudio;
+   if(!audio){
+     audio=document.createElement('audio');audio.preload='none';audio.volume=musicVolume;
+     audio.addEventListener('playing',()=>{if(musicAudio===audio)musicNotice(local&&musicAnalyser?'PLAYING • LIVE SPECTRUM':'PLAYING • ANIMATED SIGNAL');});
+     audio.addEventListener('pause',()=>{if(musicAudio===audio)refreshMusic();});
+     audio.addEventListener('waiting',()=>{if(musicAudio===audio)musicNotice('BUFFERING SIGNAL…');});
+     audio.addEventListener('error',()=>{if(musicAudio===audio)musicNotice(playingItem?.name.includes('KMLE')?'KMLE UNAVAILABLE • SELECT OFFICIAL PLAYER':'STREAM UNAVAILABLE • TRY ANOTHER');});
+     audio.addEventListener('ended',()=>{if(musicAudio===audio){if(playingList===musicTracks)stepMusic(1);else musicNotice('SIGNAL ENDED');}});
+     if(local)songAudio=audio;else radioAudio=audio;
+   }
+   if(musicAudio&&musicAudio!==audio)musicAudio.pause();
+   musicAudio=audio;audio.volume=musicVolume;
+   if(local&&!musicContext){
+     try{const AC=window.AudioContext||window.webkitAudioContext;if(AC){musicContext=new AC();musicAnalyser=musicContext.createAnalyser();musicAnalyser.fftSize=512;musicAnalyser.smoothingTimeConstant=.72;musicBins=new Uint8Array(musicAnalyser.frequencyBinCount);musicContext.createMediaElementSource(audio).connect(musicAnalyser);musicAnalyser.connect(musicContext.destination);}}
+     catch(e){console.warn('Music spectrum unavailable',e);musicAnalyser=null;}
+   }
+   if(local&&musicContext?.state==='suspended')musicContext.resume().catch(()=>{});
+   return audio;
  }
  function startMusic(item,list,index){
    if(!item)return;
@@ -526,7 +573,7 @@ function pageAction(action){
      try{window.open(item.portal,'_blank','noopener,noreferrer');}catch{}
      musicNotice('PROVIDER LINK READY • SEE HUD');return;
    }
-   const audio=getMusicAudio();playingItem=item;playingList=list;playingIndex=index;audio.src=item.url;musicNotice('CONNECTING…');
+   const audio=getMusicAudio(item.url.startsWith('/Audio/'));playingItem=item;playingList=list;playingIndex=index;audio.src=item.url;musicNotice('CONNECTING…');
    audio.play().catch(()=>musicNotice('PLAYBACK BLOCKED OR SIGNAL UNAVAILABLE'));
  }
  function stepMusic(delta){const list=playingList||musicItems;if(!list.length)return;const index=((playingList?playingIndex:musicIndex)+delta+list.length)%list.length;if(list===musicItems){musicIndex=index;musicPage=Math.floor(index/5);}startMusic(list[index],list,index);}
@@ -542,7 +589,7 @@ function pageAction(action){
    if(action.startsWith('row')){const index=musicPage*5+Number(action.slice(3));if(musicItems[index]){musicIndex=index;startMusic(musicItems[index],musicItems,index);}return;}
    if(action==='prev'||action==='next'){stepMusic(action==='prev'?-1:1);return;}
    if(action==='volDown'||action==='volUp'){musicVolume=Math.max(0,Math.min(1,musicVolume+(action==='volUp'?.1:-.1)));if(musicAudio)musicAudio.volume=musicVolume;refreshMusic();return;}
-   if(action==='play'){if(musicAudio&&playingItem){if(musicAudio.paused)musicAudio.play().catch(()=>musicNotice('PRESS PLAY AGAIN OR TRY ANOTHER SIGNAL'));else musicAudio.pause();}else startMusic(musicItems[musicIndex],musicItems,musicIndex);}
+   if(action==='play'){if(musicAudio&&playingItem){if(musicAudio.paused){if(musicAudio===songAudio&&musicContext?.state==='suspended')musicContext.resume().catch(()=>{});musicAudio.play().catch(()=>musicNotice('PRESS PLAY AGAIN OR TRY ANOTHER SIGNAL'));}else musicAudio.pause();}else startMusic(musicItems[musicIndex],musicItems,musicIndex);}
  }
  function openMusic(){
    closePage();showNexus(false);const view=currentView(),eye=view.getWorldPosition(new T.Vector3());
@@ -614,7 +661,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V034.1 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V034.2 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 

@@ -98,6 +98,9 @@ vm.runInContext('openMusic()',context);
 assert.equal(vm.runInContext('musicPanel.visible && activeTargets().every(m=>m.userData.musicAction)',context),true);
 vm.runInContext("musicAction('bankNext')",context);
 assert.equal(vm.runInContext('musicItems.length',context),2);
+vm.runInContext("musicAction('bankNext')",context);
+assert.ok(vm.runInContext("musicItems[0].name.includes('107.9') && !!musicItems[1].portal",context));
+assert.ok(vm.runInContext("radioBanks.some(b=>b.name==='OLDIES') && radioBanks.some(b=>b.name==='80s HITS') && musicEnergy(1)===0",context));
 vm.runInContext("musicAction('close')",context);
 assert.equal(vm.runInContext('musicPanel.visible',context),false);
 // Planet names appear only on pointer focus; only the globe is selectable.
