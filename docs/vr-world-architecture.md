@@ -1,6 +1,6 @@
 # Astralis: desktop, mobile and immersive views
 
-Research and implementation: November 26, 2026, America/Phoenix. Holodeck 029.0.
+Research and implementation: November 26, 2026, America/Phoenix. Holodeck 030.0.
 
 ## Decision
 
@@ -157,3 +157,26 @@ are in [NASA-SOURCES.md](../assets/deep-space/NASA-SOURCES.md). A separate volum
 spiral turns against a fixed, varied star field. Celestial motion remains an
 artistic visualization. Physical controller direction, rendering quality and Quest
 frame rate still require the user's headset test.
+
+## 030.0 dock Roadster and audit
+
+The original red Roadster and Starman image from the homepage now floats outside
+its starboard docking windows. It uses the exact `assets/starman-roadster.webp`
+asset and its original aspect ratio, on a transparent sprite placed in scene
+coordinates. The path stays beyond the maximum hull width and follows a gentle
+three-axis drift. Nova's Docking Alcove action takes the viewer alongside it;
+look starboard. It adds no floating navigation button or sign. The sprite is
+original artwork, not a full 3D Tesla model; modeling its unseen sides is still
+future work.
+
+The post-change audit checks one-session travel and return, controller directions
+at twelve headings, all registered native regions, NASA model/texture embedding,
+scene asset URLs, source-clock cleanup, dock clearance and the versioned entrance.
+Desktop/mobile pages retain their normal presentation.
+
+Remaining fidelity work: more original scene objects, buildings and characters
+need full native geometry; the projected art has limited parallax and cannot
+reveal unseen surfaces. Original interactive media controls need richer VR
+counterparts. Quest GPU/shader appearance, frame rate, comfort and microphone
+recognition still require physical headset checks. Reliable conversational voice
+still needs the secure backend described in the original mission passdown.

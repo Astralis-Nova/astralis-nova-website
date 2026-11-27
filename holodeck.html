@@ -1,13 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 029.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 030.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=029.0';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=029.0';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=029.0';
-import {readStick,walkDisplacement} from '/astralis-vr-controls.js?v=029.0';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=029.0';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=030.0';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=030.0';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=030.0';
+import {readStick,walkDisplacement} from '/astralis-vr-controls.js?v=030.0';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=030.0';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=030.0';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -159,11 +160,12 @@ celestial.forEach(([name,url,art],i)=>{
 const deepSpace=createDeepSpace(T,galaxy,new GLTFLoader(),state=>{
  if(!activeWorld())status.textContent=state.error?'One NASA asteroid model could not load. Reload to try again.':state.loaded===state.total?'Astralis online. NASA Bennu and Eros asteroid models loaded. Select Nova to travel.':'Loading NASA asteroid models…';
 });
+const dockRoadster=createDockRoadster(T,galaxy,loader);
 const comets=[];
 loader.load('/astralis-comet-portal.svg?v=20261123realcomet',tex=>{tex.colorSpace=T.SRGBColorSpace;for(let i=0;i<3;i++){const m=new T.Sprite(new T.SpriteMaterial({map:tex,color:[0xffffff,0x9ed9ff,0xc2c9ed][i],transparent:true,depthWrite:false}));m.scale.set(9-i*2,4.5-i,1);galaxy.add(m);comets.push(m);}});
 function driftGalaxy(t){
  bodies.forEach((b,i)=>{const a=b.phase+t*(.012+(i%3)*.004);b.g.position.set(Math.sin(a)*b.orbit,b.height+Math.sin(a*1.7)*1.8,-Math.cos(a)*b.orbit);b.sprite.material.rotation=t*.015*(i%2?1:-1);});
- deepSpace.update(t);
+ deepSpace.update(t);dockRoadster.update(t);
  comets.forEach((m,i)=>{const p=((t/(75+i*21)+i/3)%1);const angle=i*2.1;const x=(p-.5)*100;m.position.set(x*Math.cos(angle)-32*Math.sin(angle),8+i*6+Math.sin(p*Math.PI)*4,x*Math.sin(angle)+32*Math.cos(angle));m.material.opacity=Math.min(1,p*10,(1-p)*10);m.material.rotation=i===1?Math.PI+.15:-.15;});
 }
 const nexus=new T.Group();scene.add(nexus);nexus.visible=false;
@@ -188,7 +190,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle=accent;g.font=(kind==='text'?'500 ':'600 ')+'48px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,w-44);g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 029.0','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 030.0','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.65,.55,0,-1.14);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -388,7 +390,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V029.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V030.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 

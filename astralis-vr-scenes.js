@@ -1,4 +1,4 @@
-import {regionFor,canWalkRegion} from './astralis-vr-worlds.js?v=029.0';
+import {regionFor,canWalkRegion} from './astralis-vr-worlds.js?v=030.0';
 
 // Scene adapters own content and GPU resources. Holodeck owns the XR session,
 // camera, locomotion and Nova, so travel never replaces the document/session.
