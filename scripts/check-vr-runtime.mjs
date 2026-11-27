@@ -90,6 +90,14 @@ activeRenderer.loop();
 const startingEye=vm.runInContext('currentView().getWorldPosition(new T.Vector3())',context);
 assert.ok(startingEye.distanceTo(new Three.Vector3(0,testHead.position.y,5))<1e-10,'first XR frame captures physical head height and centers the spawn');
 const bridge=vm.runInContext('rig.position.toArray()',context);
+assert.equal(vm.runInContext('musicTracks.length',context),29);
+assert.equal(vm.runInContext('activeTargets().includes(musicHit)',context),true);
+vm.runInContext('openMusic()',context);
+assert.equal(vm.runInContext('musicPanel.visible && activeTargets().every(m=>m.userData.musicAction)',context),true);
+vm.runInContext("musicAction('bankNext')",context);
+assert.equal(vm.runInContext('musicItems.length',context),2);
+vm.runInContext("musicAction('close')",context);
+assert.equal(vm.runInContext('musicPanel.visible',context),false);
 // Planet names appear only on pointer focus; only the globe is selectable.
 for(const world of Object.values(registry.vrWorlds)){
   for(const part of ['isMesh']){

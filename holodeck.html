@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 033.1</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 034.0</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=033.1';
-import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=033.1';
-import {createSpatialWorld} from '/astralis-vr-scenes.js?v=033.1';
-import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=033.1';
-import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=033.1';
-import {createDockRoadster} from '/astralis-vr-roadster.js?v=033.1';
+import {createStarField,createDeepSpace} from '/astralis-vr-space.js?v=034.0';
+import {vrWorlds,worldForPath,requestedWorld,regionFor} from '/astralis-vr-worlds.js?v=034.0';
+import {createSpatialWorld} from '/astralis-vr-scenes.js?v=034.0';
+import {readStick,walkDisplacement,createViewerPose} from '/astralis-vr-controls.js?v=034.0';
+import {buildSaguaros,toonSurfaceDetail} from '/astralis-vr-toon.js?v=034.0';
+import {createDockRoadster} from '/astralis-vr-roadster.js?v=034.0';
 let pendingDestination=requestedWorld(location.search); // Always board the starship first.
 const status=document.querySelector('#status');
 try{
@@ -85,11 +85,13 @@ const exteriorHull=new T.Group();sanctuary.add(exteriorHull);
 for(const side of [-1,1]){const nacelle=new T.Mesh(new T.CapsuleGeometry(.62,4.5,6,16),metal);nacelle.rotation.x=Math.PI/2;nacelle.position.set(side*8,-.7,3.2);exteriorHull.add(nacelle);const engine=new T.Mesh(new T.CylinderGeometry(.43,.43,.13,24),glowBlue);engine.rotation.x=Math.PI/2;engine.position.set(side*8,-.7,6.0);exteriorHull.add(engine);}
 
 const sky=createStarField(T);scene.add(sky);
-const targets=[];const worlds=[...Object.values(vrWorlds).map(w=>[w.name.toUpperCase(),w.path,w.color]),['MUSIC PLAYER','/player/',0xffbc55],['ASTRALIS HOME','/',0x9bdfff]];
+const targets=[];
+const musicHit=new T.Mesh(new T.SphereGeometry(.82,20,12),new T.MeshBasicMaterial({visible:false}));musicHit.userData={musicConsole:true};holo.add(musicHit);targets.push(musicHit);
+const worlds=[...Object.values(vrWorlds).map(w=>[w.name.toUpperCase(),w.path,w.color]),['MUSIC PLAYER','/player/',0xffbc55],['ASTRALIS HOME','/',0x9bdfff]];
 function label(name){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#08172b';g.fillRect(0,0,512,128);g.strokeStyle='#56c8ff';g.strokeRect(3,3,506,122);g.fillStyle='#e0f7ff';g.textAlign='center';g.font='bold 32px sans-serif';g.fillText(name,256,76,490);const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;const s=new T.Sprite(new T.SpriteMaterial({map:tex}));s.scale.set(2,.5,1);return s}
 // All ship controls live in Nova's Nexus; no floating labels on the bridge.
 function refreshShipPanel(action,name){const c=choices.find(c=>c.shipAction===action);if(c){c.name=name;const i=choices.indexOf(c);if(rows[i])paint(rows[i],symbols[c.icon]+'  '+c.name,'#'+c.color.toString(16).padStart(6,'0'),'row');refreshNexus();}}
-function handleShipAction(action){if(activeWorld()){speakNova('Return to the Astralis to use ship controls.');return;}if(action==='lights'){lightingIndex=(lightingIndex+1)%lightingModes.length;applyShipLighting();const name='LIGHTING • '+lightingModes[lightingIndex].name.toUpperCase();refreshShipPanel('lights',name);setNexusStatus(name);return;}if(action==='galaxy'){galaxyPaused=!galaxyPaused;const name=galaxyPaused?'GALAXY • PAUSED':'GALAXY • ROTATING';refreshShipPanel('galaxy',name);setNexusStatus(name);return;}if(action==='audio'){toggleShipHum();return;}if(action==='observe'||action==='dock'){const view=currentView();const eye=view.getWorldPosition(new T.Vector3());const dest=action==='observe'?new T.Vector3(0,0,-3.7):new T.Vector3(0,0,6.5);showNexus(false);rig.position.x+=dest.x-eye.x;rig.position.z+=dest.z-eye.z;}}
+function handleShipAction(action){if(action==='music'){openMusic();return;}if(activeWorld()){speakNova('Return to the Astralis to use ship controls.');return;}if(action==='lights'){lightingIndex=(lightingIndex+1)%lightingModes.length;applyShipLighting();const name='LIGHTING • '+lightingModes[lightingIndex].name.toUpperCase();refreshShipPanel('lights',name);setNexusStatus(name);return;}if(action==='galaxy'){galaxyPaused=!galaxyPaused;const name=galaxyPaused?'GALAXY • PAUSED':'GALAXY • ROTATING';refreshShipPanel('galaxy',name);setNexusStatus(name);return;}if(action==='audio'){toggleShipHum();return;}if(action==='observe'||action==='dock'){const view=currentView();const eye=view.getWorldPosition(new T.Vector3());const dest=action==='observe'?new T.Vector3(0,0,-3.7):new T.Vector3(0,0,6.5);showNexus(false);rig.position.x+=dest.x-eye.x;rig.position.z+=dest.z-eye.z;}}
 // Nova orb: animated visual presence; voice remains in ChatGPT.
 const nova=new T.Group();nova.position.set(3.7,0,2.7);scene.add(nova);
 const novaHome=nova.position.clone();let movementMode='Roam',lastMotion=0;const roamPoints=[[3.7,2.7],[4.1,5.8],[-3.7,5.8],[-4.1,2.7],[-4.1,-2],[4.1,-2]];let roamIndex=0;const motionGoal=new T.Vector3();
@@ -216,7 +218,7 @@ function driftGalaxy(t){
 const nexus=new T.Group();scene.add(nexus);nexus.visible=false;
 const nexusTargets=[];
 // Compact Nexus: a collapsed destination selector with opt-in voice input.
-const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:worldForPath(url)?(worldForPath(url).id==='rainbow'?'rainbow':'planet'):url==='/player/'?'music':'home'})),{name:'NEXT REGION',planetAction:'next',color:0x9bdfff,icon:'planet'},{name:'PREVIOUS REGION',planetAction:'prev',color:0x9bdfff,icon:'planet'},{name:'RETURN TO ASTRALIS',planetAction:'back',color:0xd3bc85,icon:'home'},{name:'LIGHTING • SANCTUARY',shipAction:'lights',color:0xd3bc85,icon:'light'},{name:'GALAXY • ROTATING',shipAction:'galaxy',color:0x9bdfff,icon:'planet'},{name:'SHIP AMBIENCE • OFF',shipAction:'audio',color:0xd3bc85,icon:'music'},{name:'OBSERVATION DECK',shipAction:'observe',color:0x9bdfff,icon:'planet'},{name:'DOCKING ALCOVE',shipAction:'dock',color:0xc2a5ff,icon:'home'},{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'},{name:'NOVA GUIDE VOICE',planetAction:'voice',color:0xc2a5ff,icon:'music'},{name:'DESCRIBE THIS WORLD',planetAction:'describe',color:0xc2a5ff,icon:'planet'},{name:'ORIGINAL PAGE • READING VIEW',planetAction:'original',color:0x9bdfff,icon:'home'}];
+const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:worldForPath(url)?(worldForPath(url).id==='rainbow'?'rainbow':'planet'):url==='/player/'?'music':'home'})),{name:'NEXT REGION',planetAction:'next',color:0x9bdfff,icon:'planet'},{name:'PREVIOUS REGION',planetAction:'prev',color:0x9bdfff,icon:'planet'},{name:'RETURN TO ASTRALIS',planetAction:'back',color:0xd3bc85,icon:'home'},{name:'LIGHTING • SANCTUARY',shipAction:'lights',color:0xd3bc85,icon:'light'},{name:'GALAXY • ROTATING',shipAction:'galaxy',color:0x9bdfff,icon:'planet'},{name:'ASTRALIS SOUND CONSOLE',shipAction:'music',color:0xc2a5ff,icon:'music'},{name:'SHIP AMBIENCE • OFF',shipAction:'audio',color:0xd3bc85,icon:'music'},{name:'OBSERVATION DECK',shipAction:'observe',color:0x9bdfff,icon:'planet'},{name:'DOCKING ALCOVE',shipAction:'dock',color:0xc2a5ff,icon:'home'},{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'},{name:'NOVA GUIDE VOICE',planetAction:'voice',color:0xc2a5ff,icon:'music'},{name:'DESCRIBE THIS WORLD',planetAction:'describe',color:0xc2a5ff,icon:'planet'},{name:'ORIGINAL PAGE • READING VIEW',planetAction:'original',color:0x9bdfff,icon:'home'}];
 const symbols={light:'☀',home:'⌂',chess:'♜',planet:'◉',rainbow:'◠',music:'♫',update:'↻',exit:'↗'};
 let selected=-1,expanded=false,recognition=null,textMode=false,commandText='',lastNovaMessage='Nexus ready'; let speedIndex=1; const speeds=[.95,1.8,2.7], speedNames=['Slow','Normal','Fast'];
 const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -235,7 +237,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
  g.fillStyle='#ffffff';g.font=(kind==='text'?'650 ':'750 ')+(m.userData.key?.length===1?100:76)+'px system-ui, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(txt,w/2,h/2,Math.max(72,w-24));g.restore();m.material.map.needsUpdate=true;
 }
 const title=tile(1.45,.15,0,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 033.1','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 034.0','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.21);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -293,6 +295,8 @@ function guideAction(action){
  if(onToon){setToonLevel(next);speakNova(guideDescriptions[next]);}else setNativeRegion(next);
 }
 function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').replace(/[.,!?]/g,' ').replace(/\s+/g,' ').trim();
+ if(/^(music|music player|sound console|radio)$/.test(q)){openMusic();if(q==='radio')selectBank(1);return;}
+ if(q.startsWith('radio ')){openMusic();searchRadio({name:q.slice(6)},'SEARCH • '+q.slice(6));return;}
  if(/return|beam.*back|back to (the )?(ship|astralis)/.test(q)){guideAction('back');return;}
  if(/^(next|descend)|next region|next level/.test(q)){guideAction('next');return;}
  if(/^(previous|prev)|previous region|previous level/.test(q)){guideAction('prev');return;}
@@ -398,7 +402,113 @@ function pageAction(action){
  clearTimeout(pageTimer);renderPage();
 }
 
-function activeTargets(){return pageGroup.visible?pageControls:orbPrompt.visible?promptButtons:nexus.visible?nexusTargets.filter(m=>m.visible):(onToon||nativeWorld)?[novaHit,...(nativeWorld?.exhibits||[])]:targets;}
+
+ // Astralis Sound Console: native XR controls, no iframe or session exit.
+ const musicTracks=[{"name":"Back When She Was Little Growing Up","url":"/Audio/mp3/Back%20When%20She%20Was%20Little%20Growing%20Up.mp3"},{"name":"Born Right Here","url":"/Audio/mp3/Born%20Right%20Here.mp3"},{"name":"Cactus Forest","url":"/Audio/mp3/Cactus%20Forest.mp3"},{"name":"Darktide","url":"/Audio/mp3/Darktide.mp3"},{"name":"Darktide — Alternate Mix","url":"/Audio/mp3/Darktide%20Alternate%20mix.mp3"},{"name":"Darktide — Remix","url":"/Audio/mp3/Darktide%20Remix.mp3"},{"name":"Heart of Gold Rocklin","url":"/Audio/mp3/Heart%20of%20Gold%20Rocklin.mp3"},{"name":"Just a Little Time","url":"/Audio/mp3/Just%20a%20Little%20Time.mp3"},{"name":"Let This Day Be Kind","url":"/Audio/mp3/Let%20This%20Day%20Be%20Kind.mp3"},{"name":"Logged Back In","url":"/Audio/mp3/Logged%20Back%20In.mp3"},{"name":"Military Brats","url":"/Audio/mp3/Military%20Brats.mp3"},{"name":"My Dad's Last Day on This Earth","url":"/Audio/mp3/My%20Dads%20Last%20Day%20on%20This%20Earth.mp3"},{"name":"My Girl Alexis","url":"/Audio/mp3/My%20Girl%20Alexis.mp3"},{"name":"My Whole World","url":"/Audio/mp3/My%20Whole%20World.mp3"},{"name":"One Outcome (Peace)","url":"/Audio/mp3/One%20Outcome%20(Peace)%20(1).mp3"},{"name":"Our First Night","url":"/Audio/mp3/Our%20First%20Night.mp3"},{"name":"Run With The Light","url":"/Audio/mp3/RUN%20WITH%20THE%20LIGHT.mp3"},{"name":"Searching Through the Light","url":"/Audio/mp3/Searching%20Through%20the%20Light.mp3"},{"name":"Starlight in My Boots — Remix","url":"/Audio/mp3/Starlight%20in%20My%20Boots%20remix.mp3"},{"name":"Starlight in My Boots — Original","url":"/Audio/mp3/original%20Starlight%20in%20my%20Boots.mp3"},{"name":"That Look","url":"/Audio/mp3/That%20Look.mp3"},{"name":"Till We Meet Again","url":"/Audio/mp3/Till%20We%20Meet%20Again.mp3"},{"name":"Till We Meet Again — Remix","url":"/Audio/mp3/Till%20We%20Meet%20Again%20Remix.mp3"},{"name":"Under the NightSky","url":"/Audio/mp3/Under%20the%20NightSky.mp3"},{"name":"When The Lights Were Golden","url":"/Audio/mp3/WHEN%20THE%20LIGHTS%20WERE%20GOLDEN.mp3"},{"name":"We Are the Universe — Original","url":"/Audio/mp3/We%20Are%20the%20Universe%20Original.mp3"},{"name":"We Are the Universe — Remix","url":"/Audio/mp3/We%20Are%20the%20Universe%20Remix.mp3"},{"name":"We Let It Pass Us By","url":"/Audio/mp3/We%20Let%20It%20Pass%20Us%20By.mp3"},{"name":"Darktide Megamix","url":"/Audio/Darktide-Megamix.mp3"}];
+ const localStations=[{"name":"KBACH Classical 89.5 - Phoenix, AZ","url":"https://kbaq.streamguys1.com/kbaq_mp3_128"},{"name":"KJZZ 91.5 - Phoenix, AZ","url":"https://kjzz.streamguys1.com/kjzz_mp3_128"}];
+ const radioServers=['https://de1.api.radio-browser.info','https://de2.api.radio-browser.info','https://nl1.api.radio-browser.info'];
+ const radioBanks=[
+ {name:'ASTRALIS SONGS',kind:'music'},
+ {name:'PHOENIX • LOCAL',kind:'local'},
+ {name:'WORLDWIDE',params:{}},
+ {name:'USA • ALL',params:{countrycode:'US'}},
+ {name:'ARIZONA',params:{state:'Arizona',countrycode:'US'}},
+ {name:'COUNTRY',params:{tag:'country'}},
+ {name:'ROCK',params:{tag:'rock'}},
+ {name:'CLASSICAL',params:{tag:'classical'}},
+ {name:'JAZZ',params:{tag:'jazz'}},
+ {name:'NEWS / TALK',params:{tag:'news'}},
+ {name:'AMBIENT / SPACE',params:{tag:'ambient'}},
+ {name:'PUBLIC RADIO',params:{tag:'public radio'}},
+ {name:'MY IMPORTED STREAMS',kind:'imported'}
+ ];
+ const musicPanel=new T.Group();musicPanel.visible=false;scene.add(musicPanel);
+ const musicTargets=[];
+ function musicTile(w,h,x,y,action,caption){
+   const m=tile(w,h,x,y);musicPanel.add(m);m.userData=action?{musicAction:action}:{};
+   m.material.depthTest=false;m.renderOrder=45;paint(m,caption,'#8de8ff','row');if(action)musicTargets.push(m);return m;
+ }
+ const musicTitle=musicTile(1.65,.16,0,.64,null,'ASTRALIS • SOUND CONSOLE');
+ const bankTile=musicTile(1.18,.16,0,.43,null,'ASTRALIS SONGS');
+ musicTile(.20,.16,-.73,.43,'bankPrev','‹');musicTile(.20,.16,.73,.43,'bankNext','›');
+ const musicRows=Array.from({length:5},(_,i)=>musicTile(1.65,.15,0,.24-i*.17,'row'+i,''));
+ musicTile(.38,.16,-.62,-.64,'pagePrev','‹ LIST');musicTile(.38,.16,.62,-.64,'pageNext','LIST ›');
+ const listPage=musicTile(.78,.14,0,-.64,null,'1 / 6');
+ const nowTile=musicTile(1.65,.15,0,-.84,null,'SELECT A TRACK OR STATION');
+ musicTile(.36,.17,-.63,-1.04,'prev','‹ PREV');
+ const playTile=musicTile(.78,.17,0,-1.04,'play','PLAY');
+ musicTile(.36,.17,.63,-1.04,'next','NEXT ›');
+ musicTile(.39,.16,-.63,-1.24,'volDown','VOL −');
+ const volumeTile=musicTile(.38,.16,-.21,-1.24,null,'65%');
+ musicTile(.39,.16,.21,-1.24,'volUp','VOL +');musicTile(.39,.16,.63,-1.24,'close','CLOSE');
+ const messageTile=musicTile(1.65,.14,0,-1.43,null,'MUSIC READY • SELECT A SONG');
+ let musicBank=0,musicItems=musicTracks,musicPage=0,musicIndex=0,musicVolume=.65,musicAudio=null,playingItem=null,playingList=null,playingIndex=0,musicSerial=0,radioOffset=0,radioParams=null,bankName='ASTRALIS SONGS',musicMessage='MUSIC READY • SELECT A SONG';
+ function secureStation(s){try{const u=new URL(s.url_resolved||s.stream||s.url);return u.protocol==='https:'&&s.name?{name:String(s.name).slice(0,150),url:u.href}:null;}catch{return null;}}
+ function refreshMusic(){
+   paint(bankTile,bankName,'#8de8ff','row');
+   musicRows.forEach((m,i)=>{const item=musicItems[musicPage*5+i];m.visible=!!item;if(item)paint(m,(musicPage*5+i===musicIndex?'› ':'')+item.name,'#8de8ff','row');});
+   paint(listPage,(musicPage+1)+' / '+Math.max(1,Math.ceil(musicItems.length/5)));
+   paint(nowTile,playingItem?'NOW • '+playingItem.name:'SELECT A TRACK OR STATION','#b9a6ff','row');
+   paint(playTile,musicAudio&&!musicAudio.paused?'PAUSE':'PLAY');
+   paint(volumeTile,Math.round(musicVolume*100)+'%');paint(messageTile,musicMessage,'#8de8ff','row');
+ }
+ function musicNotice(message){musicMessage=message;refreshMusic();}
+ function setMusicItems(items,name){musicItems=items;bankName=name;musicPage=0;musicIndex=0;refreshMusic();}
+ function selectBank(i){
+   musicSerial++;musicBank=(i+radioBanks.length)%radioBanks.length;const bank=radioBanks[musicBank];radioOffset=0;radioParams=null;
+   if(bank.kind==='music'){setMusicItems(musicTracks,bank.name);musicNotice('SELECT A SONG');}
+   else if(bank.kind==='local'){setMusicItems(localStations,bank.name);musicNotice('LOCAL ONLINE BROADCASTS');}
+   else if(bank.kind==='imported'){let rows=[];try{rows=JSON.parse(window.localStorage.getItem('nova.radioPlaylists.v1')||'[]');}catch{}setMusicItems(Array.isArray(rows)?rows.map(secureStation).filter(Boolean):[],bank.name);musicNotice(musicItems.length?'IMPORTED STREAMS':'IMPORT STREAMS ON THE ORIGINAL PLAYER');}
+   else searchRadio(bank.params,bank.name);
+ }
+ async function searchRadio(params,name,offset=0){
+   const serial=++musicSerial;radioParams=params;radioOffset=offset;setMusicItems([],name);musicNotice('SCANNING INTERNET RADIO…');
+   for(const server of radioServers){try{
+     const query=new URLSearchParams({hidebroken:'true',is_https:'true',order:'clickcount',reverse:'true',limit:'100',offset:String(offset),...params});
+     const response=await fetch(server+'/json/stations/search?'+query);if(!response.ok)continue;
+     const rows=await response.json();if(serial!==musicSerial)return;
+     const found=Array.isArray(rows)?rows.map(secureStation).filter(Boolean):[];
+     if(found.length){setMusicItems(found,name);musicNotice(found.length+' STREAMS • SELECT TO TUNE');return;}
+   }catch{}}
+   if(serial===musicSerial)musicNotice('NO STREAMS FOUND • TRY ANOTHER BANK');
+ }
+ function getMusicAudio(){
+   if(!musicAudio){musicAudio=document.createElement('audio');musicAudio.preload='none';musicAudio.volume=musicVolume;
+     musicAudio.addEventListener('playing',()=>musicNotice('SIGNAL PLAYING'));
+     musicAudio.addEventListener('pause',()=>refreshMusic());
+     musicAudio.addEventListener('waiting',()=>musicNotice('BUFFERING SIGNAL…'));
+     musicAudio.addEventListener('error',()=>musicNotice('STREAM UNAVAILABLE • TRY ANOTHER'));
+     musicAudio.addEventListener('ended',()=>{if(playingList===musicTracks)stepMusic(1);else musicNotice('SIGNAL ENDED');});
+   }return musicAudio;
+ }
+ function startMusic(item,list,index){
+   if(!item)return;const audio=getMusicAudio();playingItem=item;playingList=list;playingIndex=index;audio.src=item.url;musicNotice('CONNECTING…');
+   audio.play().catch(()=>musicNotice('PLAYBACK BLOCKED OR SIGNAL UNAVAILABLE'));
+ }
+ function stepMusic(delta){const list=playingList||musicItems;if(!list.length)return;const index=((playingList?playingIndex:musicIndex)+delta+list.length)%list.length;if(list===musicItems){musicIndex=index;musicPage=Math.floor(index/5);}startMusic(list[index],list,index);}
+ function musicAction(action){
+   if(action==='close'){musicPanel.visible=false;return;}
+   if(action==='bankPrev'||action==='bankNext'){selectBank(musicBank+(action==='bankPrev'?-1:1));return;}
+   if(action==='pagePrev'||action==='pageNext'){
+     const delta=action==='pagePrev'?-1:1,next=musicPage+delta,max=Math.max(0,Math.ceil(musicItems.length/5)-1);
+     if(next<0&&radioParams&&radioOffset>0){searchRadio(radioParams,bankName,Math.max(0,radioOffset-100));return;}
+     if(next>max&&radioParams&&musicItems.length===100){searchRadio(radioParams,bankName,radioOffset+100);return;}
+     musicPage=Math.max(0,Math.min(max,next));refreshMusic();return;
+   }
+   if(action.startsWith('row')){const index=musicPage*5+Number(action.slice(3));if(musicItems[index]){musicIndex=index;startMusic(musicItems[index],musicItems,index);}return;}
+   if(action==='prev'||action==='next'){stepMusic(action==='prev'?-1:1);return;}
+   if(action==='volDown'||action==='volUp'){musicVolume=Math.max(0,Math.min(1,musicVolume+(action==='volUp'?.1:-.1)));if(musicAudio)musicAudio.volume=musicVolume;refreshMusic();return;}
+   if(action==='play'){if(musicAudio&&playingItem){if(musicAudio.paused)musicAudio.play().catch(()=>musicNotice('PRESS PLAY AGAIN OR TRY ANOTHER SIGNAL'));else musicAudio.pause();}else startMusic(musicItems[musicIndex],musicItems,musicIndex);}
+ }
+ function openMusic(){
+   closePage();showNexus(false);const view=currentView(),eye=view.getWorldPosition(new T.Vector3());
+   const forward=new T.Vector3(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion())).normalize();
+   musicPanel.position.copy(eye).addScaledVector(forward,renderer.xr.isPresenting?2.8:Math.max(2.8,2.5*innerHeight/innerWidth));musicPanel.position.y+=.38;
+   musicPanel.lookAt(eye);musicPanel.visible=true;refreshMusic();musicPanel.updateMatrixWorld(true);
+ }
+ refreshMusic();
+
+function activeTargets(){return musicPanel.visible?musicTargets.filter(m=>m.visible):pageGroup.visible?pageControls:orbPrompt.visible?promptButtons:nexus.visible?nexusTargets.filter(m=>m.visible):(onToon||nativeWorld)?[novaHit,...(nativeWorld?.exhibits||[])]:targets;}
 const orbPrompt=new T.Group();scene.add(orbPrompt);orbPrompt.visible=false;
 const promptButtons=[];
 function promptTile(w,h,x,y,action,caption){
@@ -423,6 +533,7 @@ function openOrbPrompt(){
  showNexus(false);orbPrompt.visible=true;orientPrompt();orbPrompt.updateMatrixWorld(true);
 }
 function showNexus(open){
+ if(open)musicPanel.visible=false;
  orbPrompt.visible=false;
  nexus.visible=open;armed=null;armedUntil=0;confirmLabel.visible=false;expanded=false;textMode=false;
  if(!open){stopVoice();return;}
@@ -459,7 +570,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V033.1 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V034.0 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -564,6 +675,8 @@ function travelWorld(id,region=0){
 function activate(){
  const hit=ray.intersectObjects(activeTargets())[0];if(!hit)return;
  const data=hit.object.userData;
+ if(data.musicConsole){openMusic();return;}
+ if(data.musicAction){musicAction(data.musicAction);return;}
  if(data.shipAction){handleShipAction(data.shipAction);return;}
  if(data.pageAction){pageAction(data.pageAction);return;}
  if(data.originalPage){openPage(data.originalPage);return;}
@@ -579,7 +692,7 @@ function activate(){
   return;
  }
  if(data.worldId){travelWorld(data.worldId);return;}
- if(data.galaxy){const destination=worldForPath(data.url);if(destination){travelWorld(destination.id);return;}showNexus(true);const i=choices.findIndex(c=>c.url===data.url);if(i>=0)pick(i);return;}
+ if(data.galaxy){if(data.url==='/player/'){openMusic();return;}const destination=worldForPath(data.url);if(destination){travelWorld(destination.id);return;}showNexus(true);const i=choices.findIndex(c=>c.url===data.url);if(i>=0)pick(i);return;}
  if(data.menuPage){menuPage=T.MathUtils.clamp(menuPage+data.menuPage,0,Math.ceil(choices.length/pageSize)-1);refreshNexus();return;}
  if(data.toggle){if(!expanded)menuPage=selected<0?0:Math.floor(selected/pageSize);expanded=!expanded;armed=null;armedUntil=0;refreshNexus();return;}
  if(Number.isInteger(data.choice)){pick(data.choice);return;}
@@ -591,6 +704,7 @@ function activate(){
  if(data.motion){const modes=['Roam','Follow','Station'];movementMode=modes[(modes.indexOf(movementMode)+1)%modes.length];paint(motion,'Movement: '+movementMode);setNexusStatus('NOVA • '+movementMode.toUpperCase());return;}
  if(!data.go)return;
  const choice=choices[selected];if(!choice){setNexusStatus('CHOOSE A DESTINATION FIRST');return;}
+ if(choice.url==='/player/'){openMusic();return;}
  const world=worldForPath(choice.url);if(world){const region=pendingDestination?.world.id===world.id?pendingDestination.region:0;pendingDestination=null;travelWorld(world.id,region);return;}
  if(choice.url && renderer.xr.isPresenting){speakNova('This destination does not have an immersive world yet.');return;}
  if(choice.planetAction){guideAction(choice.planetAction);return;}
@@ -615,7 +729,7 @@ function canWalk(x,z){
 function stick(input){return readStick(input?.gamepad);}
 function walkBridge(time){
  const dt=walkTime?Math.min(.05,Math.max(0,time-walkTime)):0;walkTime=time;
- if(!renderer.xr.isPresenting||nexus.visible||orbPrompt.visible||pageGroup.visible||!dt)return;
+ if(!renderer.xr.isPresenting||nexus.visible||orbPrompt.visible||pageGroup.visible||musicPanel.visible||!dt)return;
  const inputs=Array.from(renderer.xr.getSession()?.inputSources||[]);
  const left=inputs.find(i=>i.handedness==='left'),right=inputs.find(i=>i.handedness==='right');const pressed=!!(right?.gamepad?.buttons?.[5]?.pressed||left?.gamepad?.buttons?.[5]?.pressed);if(pressed&&!returnPressed){returnPressed=true;showNexus(true);return;}returnPressed=pressed;
  const view=currentView();view.getWorldPosition(walkEye);walkDir.set(0,0,-1).applyQuaternion(view.getWorldQuaternion(new T.Quaternion()));
@@ -643,11 +757,11 @@ window.addEventListener('keydown',e=>{if(!nexus.visible||!textMode||e.ctrlKey||e
 let down=null,yaw=0,pitch=0,mouseAim=null;const canvas=renderer.domElement;
 function rememberMouse(e){mouseAim=e.pointerType==='touch'?null:new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2);}
 canvas.addEventListener('pointerleave',()=>{mouseAim=null;setPlanetHover(null);});canvas.style.touchAction='none';canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,pitch};canvas.setPointerCapture(e.pointerId)});canvas.addEventListener('pointermove',e=>{rememberMouse(e);if(!down||renderer.xr.isPresenting)return;yaw=down.yaw-(e.clientX-down.x)*.004;pitch=T.MathUtils.clamp(down.pitch-(e.clientY-down.y)*.004,-1.2,1.2);camera.rotation.set(pitch,yaw,0,'YXZ')});canvas.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)<8){ray.setFromCamera(new T.Vector2(e.clientX/innerWidth*2-1,1-e.clientY/innerHeight*2),camera);activate()}down=null});canvas.addEventListener('pointercancel',()=>{down=null;mouseAim=null;setPlanetHover(null);});
-renderer.xr.addEventListener('sessionstart',()=>{viewerPose.reset();pendingXRSpawn=[0,0,5];camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true;closePage();if(onToon)switchToon(false);if(nativeWorld)switchNativeWorld(null);rig.position.set(0,0,5);rig.rotation.set(0,0,0);});renderer.xr.addEventListener('sessionend',()=>{pendingXRSpawn=null;viewerPose.reset();if(shipAudio){shipAudio.close().catch(()=>{});shipAudio=null;shipHum=null;}closePage();if(onToon)switchToon(false);if(nativeWorld)switchNativeWorld(null);showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
+renderer.xr.addEventListener('sessionstart',()=>{musicPanel.visible=false;viewerPose.reset();pendingXRSpawn=[0,0,5];camera.rotation.set(0,0,0);rig.position.set(0,0,5);rig.rotation.set(0,0,0);walkTime=0;turnReady=true;closePage();if(onToon)switchToon(false);if(nativeWorld)switchNativeWorld(null);rig.position.set(0,0,5);rig.rotation.set(0,0,0);});renderer.xr.addEventListener('sessionend',()=>{musicPanel.visible=false;pendingXRSpawn=null;viewerPose.reset();if(shipAudio){shipAudio.close().catch(()=>{});shipAudio=null;shipHum=null;}closePage();if(onToon)switchToon(false);if(nativeWorld)switchNativeWorld(null);showNexus(false);rig.position.set(0,0,0);rig.rotation.set(0,0,0);camera.position.set(0,1.65,5);camera.rotation.set(pitch,yaw,0,'YXZ')});
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
 function moveNova(time){
  const dt=lastMotion?Math.min(.05,Math.max(0,time-lastMotion)):0;lastMotion=time;
- if(nexus.visible||orbPrompt.visible||!dt)return;
+ if(nexus.visible||orbPrompt.visible||musicPanel.visible||!dt)return;
  if(nativeWorld||onToon){const v=currentView();const eye=v.getWorldPosition(new T.Vector3()),d=new T.Vector3(0,0,-1).applyQuaternion(v.getWorldQuaternion(new T.Quaternion()));d.y=0;if(d.lengthSq()<.01)d.set(0,0,-1);d.normalize();const goal=eye.clone().addScaledVector(d,2.2).addScaledVector(new T.Vector3(-d.z,0,d.x),guideSideOffset());goal.y=eye.y-1.65;const delta=goal.sub(nova.position);const dist=delta.length();if(dist>5)nova.position.add(delta);else if(dist>.05)nova.position.addScaledVector(delta,Math.min(1,dt*3.8/dist));return;}
  if(movementMode==='Station'){motionGoal.copy(novaHome);}
  else if(movementMode==='Roam'){
