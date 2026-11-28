@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.42</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. From the exterior deck select Engage EVA. In EVA use WASD and Q/E for altitude on desktop; in VR use left stick and right stick up/down. Return via Nexus. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button> · <button id="evaShortcut" type="button">Engage EVA</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.43</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. From the exterior deck select Engage EVA. In EVA use WASD and Q/E for altitude on desktop; in VR use left stick and right stick up/down. Return via Nexus. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button> · <button id="evaShortcut" type="button">Engage EVA</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
@@ -697,7 +697,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.42','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.43','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -1220,11 +1220,23 @@ function pageAction(action){
  [[37.95,89.26],[263.05,86.59],[251.49,82.04],[236.01,77.79],[244.38,75.76],[222.68,74.16],[230.18,71.83],[236.01,77.79]],
  [[2.29,59.15],[10.13,56.54],[14.18,60.72],[21.45,60.24],[28.60,63.67]],
  [[152.09,11.97],[151.83,16.76],[154.99,19.84],[168.56,20.52],[177.26,14.57],[168.53,15.43],[152.09,11.97],[177.26,14.57]],
- [[81.57,28.61],[67.17,15.87],[68.98,16.51],[65.73,17.54],[64.95,15.63],[84.41,21.14]],
+ [[81.57,28.61],[68.98,16.51],[67.17,15.87],[65.73,17.54],[64.95,15.63],[84.41,21.14]],
  [[241.36,-19.81],[240.08,-22.62],[247.35,-26.43],[252.54,-34.29],[253.08,-38.05],[258.04,-43.24],[264.33,-42.99],[265.62,-39.03],[263.40,-37.10]],
  [[310.36,45.28],[305.56,40.26],[292.68,27.96],[305.56,40.26],[299.08,35.08],[305.56,40.26],[311.55,33.97]]
  ];
+ // Named stars corresponding to the schematic path vertices, in path order.
+ const finderNames=[
+ ['Betelgeuse','Bellatrix','Mintaka','Alnilam','Alnitak','Saiph','Rigel','Mintaka','Alnitak','Betelgeuse'],
+ ['Alkaid','Mizar','Alioth','Megrez','Phecda','Merak','Dubhe','Megrez'],
+ ['Polaris','Yildun','Epsilon UMi','Zeta UMi','Eta UMi','Kochab','Pherkad','Zeta UMi'],
+ ['Caph','Schedar','Navi','Ruchbah','Segin'],
+ ['Regulus','Eta Leonis','Algieba','Zosma','Denebola','Chertan','Regulus','Denebola'],
+ ['Elnath','Aldebaran','Theta Tauri','Delta Tauri','Gamma Tauri','Zeta Tauri'],
+ ['Dschubba','Pi Scorpii','Antares','Epsilon Sco','Mu Scorpii','Eta Scorpii','Sargas','Kappa Sco','Iota Sco'],
+ ['Deneb','Sadr','Albireo','Sadr','Gienah','Sadr','Delta Cygni']
+ ];
  const starVec=([ra,dec])=>{const a=T.MathUtils.degToRad(ra),b=T.MathUtils.degToRad(dec);return new T.Vector3(-Math.cos(b)*Math.sin(a),Math.sin(b),-Math.cos(b)*Math.cos(a));};
+ const finderHitTargets=[];
  const finderMaterial=new T.MeshBasicMaterial({color:0x64dfff,transparent:true,opacity:.9,depthWrite:false,depthTest:false});
  const finderLines=starPaths.map((coords,i)=>{
    const group=new T.Group(),verts=coords.map(p=>starVec(p).multiplyScalar(233));
@@ -1232,13 +1244,35 @@ function pageAction(action){
    for(let j=1;j<verts.length;j++){const delta=verts[j].clone().sub(verts[j-1]);if(delta.length()<.01)continue;const m=new T.Mesh(new T.CylinderGeometry(.22,.22,delta.length(),6),finderMaterial);m.position.copy(verts[j-1]).lerp(verts[j],.5);m.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),delta.normalize());m.renderOrder=30;group.add(m);}
    const dots=new T.Points(new T.BufferGeometry().setFromPoints(verts),new T.PointsMaterial({size:8,sizeAttenuation:false,color:0xffe3aa,depthTest:false,depthWrite:false}));dots.renderOrder=31;group.add(dots);
    const caption=label(starNames[i].toUpperCase());caption.position.copy(center.clone().multiplyScalar(230));caption.position.y+=7;caption.scale.set(24,6,1);caption.material.depthTest=false;caption.material.depthWrite=false;caption.renderOrder=32;group.add(caption);
+   // Independent invisible target remains selectable even while the trace is hidden.
+   const hit=new T.Mesh(new T.SphereGeometry(11,12,8),new T.MeshBasicMaterial({visible:false}));hit.position.copy(center.clone().multiplyScalar(233));hit.userData={finderToggle:i};sky.add(hit);finderHitTargets.push(hit);
    group.userData.center=center;sky.add(group);group.visible=false;return group;
  });
- let finderSelection=0,finderActive=-1,currentRole='Deep Space Signals',planetIndex=0,nextTelemetry=0;
+ let finderSelection=0,finderActive=-1,finderLastSelected=-1,currentRole='Deep Space Signals',planetIndex=0,nextTelemetry=0;
  const finderHUD=tile(1.75,.16,0,0);scene.add(finderHUD);finderHUD.material.depthTest=false;finderHUD.renderOrder=75;finderHUD.visible=false;
  let finderLastText='';
  function finderDirection(i){const view=currentView(),q=view.getWorldQuaternion(new T.Quaternion()).invert(),p=finderLines[i].userData.center.clone().applyQuaternion(q);const yaw=Math.atan2(p.x,-p.z)*180/Math.PI,pitch=Math.asin(T.MathUtils.clamp(p.y,-1,1))*180/Math.PI;const a=Math.round(Math.abs(yaw)/5)*5,b=Math.round(Math.abs(pitch)/5)*5;return (a<10?'STRAIGHT':(yaw>0?'RIGHT ':'LEFT ')+a+'°')+' / '+(b<10?'LEVEL':(pitch>0?'UP ':'DOWN ')+b+'°');}
- function drawFinder(){const c=scienceRadar.material.map.image,g=c.getContext('2d'),w=c.width,h=c.height;g.clearRect(0,0,w,h);g.fillStyle='#07192b';g.fillRect(0,0,w,h);const center=finderLines[finderSelection].userData.center;const right=new T.Vector3().crossVectors(center,new T.Vector3(0,1,0)).normalize(),up=new T.Vector3().crossVectors(right,center).normalize();const pts=starPaths[finderSelection].map(p=>{const v=starVec(p);return [v.dot(right),v.dot(up)];});const k=Math.max(.01,...pts.map(p=>Math.max(Math.abs(p[0]),Math.abs(p[1]))));g.strokeStyle='#67dbff';g.lineWidth=2;g.beginPath();pts.forEach(([x,y],i)=>{const px=w/2+x/k*h*.39,py=h/2-y/k*h*.39;i?g.lineTo(px,py):g.moveTo(px,py)});g.stroke();g.fillStyle='#fff0ba';pts.forEach(([x,y])=>{g.beginPath();g.arc(w/2+x/k*h*.39,h/2-y/k*h*.39,3,0,Math.PI*2);g.fill()});scienceRadar.material.map.needsUpdate=true;}
+ function drawFinder(){
+ const c=scienceRadar.material.map.image;c.width=1152;c.height=500;const g=c.getContext('2d'),w=c.width,h=c.height;
+ g.fillStyle='#07192b';g.fillRect(0,0,w,h);
+ const center=finderLines[finderSelection].userData.center;
+ const right=new T.Vector3().crossVectors(center,new T.Vector3(0,1,0)).normalize(),up=new T.Vector3().crossVectors(right,center).normalize();
+ const pts=starPaths[finderSelection].map(p=>{const v=starVec(p);return [v.dot(right),v.dot(up)];});
+ const k=Math.max(.01,...pts.map(p=>Math.max(Math.abs(p[0]),Math.abs(p[1]))));
+ const xy=pts.map(([x,y])=>[w/2+x/k*h*.35,h/2-y/k*h*.35]);
+ g.strokeStyle='#67dbff';g.lineWidth=4;g.beginPath();xy.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y));g.stroke();
+ g.font='600 24px system-ui';g.textBaseline='middle';const boxes=[],seen=new Set();
+ xy.forEach(([x,y],i)=>{
+ const name=finderNames[finderSelection][i];if(seen.has(name))return;seen.add(name);
+ g.fillStyle='#fff0ba';g.beginPath();g.arc(x,y,7,0,Math.PI*2);g.fill();
+ const tw=g.measureText(name).width;const offsets=[[15,-18],[-tw-15,-18],[15,18],[-tw-15,18],[15,-45],[-tw-15,45],[35,0],[-tw-35,0],[15,45],[-tw-15,-45]];
+ let box;for(const [dx,dy] of offsets){const q=[x+dx,y+dy-15,tw+8,30];if(q[0]<5||q[1]<5||q[0]+q[2]>w-5||q[1]+q[3]>h-5)continue;if(!boxes.some(b=>q[0]<b[0]+b[2]&&q[0]+q[2]>b[0]&&q[1]<b[1]+b[3]&&q[1]+q[3]>b[1])){box=q;break;}}
+ if(!box)box=[Math.min(w-tw-10,x+15),Math.max(15,Math.min(h-32,y-15)),tw+8,30];boxes.push(box);
+ g.strokeStyle='#78a4b9';g.lineWidth=1.5;g.beginPath();g.moveTo(x,y);g.lineTo(box[0]+box[2]/2,box[1]+15);g.stroke();
+ g.fillStyle='#07192be8';g.fillRect(...box);g.fillStyle='#e5f6ff';g.fillText(name,box[0]+4,box[1]+15);
+ });
+ scienceRadar.material.map.needsUpdate=true;
+ }
  function updateFinder(){const enabled=finderActive>=0&&!activeWorld();finderHUD.visible=enabled&&!sciencePanel.visible&&!nexus.visible&&!musicPanel.visible&&!pageGroup.visible;if(enabled){const view=currentView(),q=view.getWorldQuaternion(new T.Quaternion());finderHUD.position.copy(view.getWorldPosition(new T.Vector3())).add(new T.Vector3(0,-.72,-2.1).applyQuaternion(q));finderHUD.quaternion.copy(q);const txt=starNames[finderActive]+' • '+finderDirection(finderActive);if(txt!==finderLastText){paintMusic(finderHUD,txt);finderLastText=txt;}}if(sciencePanel.visible&&currentRole==='Stellar Cartography'){const txt=finderDirection(finderSelection);if(scienceData.userData.lastDir!==txt){paintMusic(scienceData,txt);scienceData.userData.lastDir=txt;}}}
  function refreshFinder(){scienceRadar.visible=true;drawFinder();scienceMessage(starNames[finderSelection].toUpperCase());paintMusic(scienceDetail,'PATTERN '+(finderSelection+1)+' / '+starNames.length+' • '+starNames[finderSelection]);paintMusic(scienceLeft,'NEXT PATTERN');paintMusic(scienceRight,finderActive===finderSelection?'HIDE TRACE':'TRACE SKY');scienceData.userData.lastDir='';}
  const planetDescriptions={scripture:'Ice shelves and deep blue ocean',rainbow:'Island chains and a tropical ocean',fathers:'Forested coastline and warm shallows',first:'Cloud belts and icy rings',faith:'Cratered lunar terrain',wild:'Canyons and winding waterways',emerald:'Green terrain and highlands',toon:'The world of Cactus Forest Moonlight'};
@@ -1277,7 +1311,7 @@ function pageAction(action){
  }
  let engineeringShield=false;
  function guideStars(index){
-   finderActive=finderActive===index?-1:index;finderLines.forEach((line,i)=>line.visible=i===finderActive);
+   finderLastSelected=index;finderActive=finderActive===index?-1:index;finderLines.forEach((line,i)=>line.visible=i===finderActive);
    if(finderActive>=0){closeScience();speakNova(starNames[index]+' highlighted. Follow the direction indicator.');}else{refreshFinder();speakNova('Constellation trace hidden.');}
  }
  function scienceAction(action){
@@ -1299,7 +1333,7 @@ function pageAction(action){
   sciencePanel.position.copy(eye).addScaledVector(forward,renderer.xr.isPresenting?2.2:Math.max(2.6,2.4*innerHeight/innerWidth));sciencePanel.position.y+=.18;sciencePanel.lookAt(eye);sciencePanel.visible=true;setupRole();sciencePanel.updateMatrixWorld(true);
  }
  
- function activeTargets(){return layoutReportPanel.visible?layoutReportTargets:layoutPanel.visible?layoutTargets.filter(m=>m.visible):sciencePanel.visible?scienceTargets:musicPanel.visible?musicTargets.filter(m=>m.visible):pageGroup.visible?pageControls:orbPrompt.visible?promptButtons:nexus.visible?nexusTargets.filter(m=>m.visible):(onToon||nativeWorld)?[novaHit,...(nativeWorld?.exhibits||[])]:[...targets,...benchLayouts.map(st=>st.hit)];}
+ function activeTargets(){return layoutReportPanel.visible?layoutReportTargets:layoutPanel.visible?layoutTargets.filter(m=>m.visible):sciencePanel.visible?scienceTargets:musicPanel.visible?musicTargets.filter(m=>m.visible):pageGroup.visible?pageControls:orbPrompt.visible?promptButtons:nexus.visible?nexusTargets.filter(m=>m.visible):(onToon||nativeWorld)?[novaHit,...(nativeWorld?.exhibits||[])]:[...targets,...benchLayouts.map(st=>st.hit),...finderHitTargets];}
 const orbPrompt=new T.Group();scene.add(orbPrompt);orbPrompt.visible=false;
 const promptButtons=[];
 function promptTile(w,h,x,y,action,caption){
@@ -1364,7 +1398,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.42 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.43 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -1539,6 +1573,7 @@ const desired=isBench&&!st.exterior?forward:new T.Vector3(0,0,-1).applyQuaternio
 function activate(){
  const hit=ray.intersectObjects(activeTargets())[0];if(!hit)return;
  const data=hit.object.userData;
+ if(Number.isInteger(data.finderToggle)){const i=data.finderToggle;finderSelection=i;finderLastSelected=i;finderActive=finderActive===i?-1:i;finderLines.forEach((line,j)=>line.visible=j===finderActive);speakNova(starNames[i]+(finderActive===i?' trace on.':' trace off.'));return;}
  if(data.layoutReportAction){layoutReportAction(data.layoutReportAction);return;}
  if(data.layoutAction){layoutAction(data.layoutAction);return;}
  if(Number.isInteger(data.benchIndex)){const st=benchLayouts[data.benchIndex];if(!activeWorld()&&st){if(layoutEnabled)openLayoutStation(st);else sitAtChair(st,st.g.worldToLocal(hit.point.clone()).x);}return;}
