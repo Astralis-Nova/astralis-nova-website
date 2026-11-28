@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.45</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. From the exterior deck select Engage EVA. In EVA use WASD and Q/E for altitude on desktop; in VR use left stick and right stick up/down. Return via Nexus. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button> · <button id="evaShortcut" type="button">Engage EVA</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.46</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. From the exterior deck select Engage EVA. In EVA use WASD and Q/E for altitude on desktop; in VR use left stick and right stick up/down. Return via Nexus. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button> · <button id="evaShortcut" type="button">Engage EVA</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
@@ -697,7 +697,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.45','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.46','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -1135,6 +1135,15 @@ function pageAction(action){
  const scienceAura=new T.Mesh(new T.SphereGeometry(.465,24,16),new T.MeshBasicMaterial({color:0x83e8ff,transparent:true,opacity:.075,depthWrite:false,depthTest:false,side:T.BackSide}));scienceAura.renderOrder=53;planetHologram.add(scienceAura);
  const scienceBeam=new T.Mesh(new T.CylinderGeometry(.44,.12,.52,24,1,true),new T.MeshBasicMaterial({color:0x79dfff,transparent:true,opacity:.07,depthWrite:false,depthTest:false,side:T.DoubleSide}));scienceBeam.position.y=-.34;scienceBeam.renderOrder=50;planetHologram.add(scienceBeam);
  const finderPrevButton=scienceTile(.24,.16,-.84,.51,'finderPrev','←');finderPrevButton.visible=false;const finderNextButton=scienceTile(.24,.16,.84,.51,'finderNext','→');finderNextButton.visible=false;finderPrevButton.renderOrder=finderNextButton.renderOrder=56;
+ const academyButton=scienceTile(.61,.17,.64,-1.21,'academy','ASTRONOMY');academyButton.visible=false;
+ const academyLessons=[
+ ['CONSTELLATIONS','Patterns in the sky','88 official regions • two Dipper asterisms','Stars in a pattern may be far apart in space.','Constellations are regions of the sky. Their familiar patterns are projections of stars at different distances. Cultures have imagined different figures in the same sky.'],
+ ['STELLAR NURSERIES','Gas cloud → protostar → star','Gravity compresses gas and dust','Fusion begins when the core becomes hot enough.','Stars form when gravity collapses dense gas and dust. When the core becomes hot and dense enough, hydrogen fusion can begin.'],
+ ['STELLAR EVOLUTION','Mass determines a star’s fate','Sun-like stars → white dwarfs','Massive stars can end in supernovae.','A star’s initial mass strongly influences its evolution. Sun-like stars eventually leave white dwarfs. Some massive stars explode as supernovae, leaving neutron stars or black holes.'],
+ ['BLACK HOLES','Gravity and the event horizon','Light cannot escape from inside the horizon','Accreting matter can glow brightly.','A black hole has an event horizon, a boundary beyond which light cannot escape to distant observers. Hot matter outside can produce bright radiation.'],
+ ['GALAXIES','Vast systems of stars, gas and dark matter','Spiral • elliptical • irregular','Our solar system is in the Milky Way.','Galaxies contain stars, gas, dust and typically dark matter. The Milky Way is a barred spiral galaxy containing our solar system.'],
+ ['EXOPLANETS','Worlds orbiting other stars','Transit and radial velocity methods','A habitable zone does not guarantee life.','Astronomers find many exoplanets by detecting dimming as a planet crosses its star, or by measuring the star’s motion. A habitable zone may permit liquid water under suitable conditions.']
+ ];let academyIndex=0;
  const scienceRadar=scienceTile(1.84,.8,0,.015,'finderStar','ACQUIRING');scienceRadar.userData.scienceAction='finderStar';let finderStarHits=[];
  const scienceVideoScreen=new T.Mesh(new T.PlaneGeometry(1.85,.84),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.87,depthTest:false,depthWrite:false}));scienceVideoScreen.position.set(0,.03,.05);scienceVideoScreen.renderOrder=54;scienceVideoScreen.visible=false;sciencePanel.add(scienceVideoScreen);
  let scienceIndex=-1,scienceStart=0,sciencePhase='idle',scienceVideo=null,scienceTexture=null,scienceLastStatus='',scienceRadarLast=-1,scienceVideoTimer=null,scienceLockTime=0,sciencePreview=false;
@@ -1301,7 +1310,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
    }[currentRole];
    for(const [tile,caption] of [[scienceSubtitle,config[0]],[scienceLeft,config[1]],[scienceRight,config[2]],[scienceDetail,config[3]],[scienceCredit,config[4]],[scienceData,'']])paintMusic(tile,caption);
    scienceMessage(currentRole.toUpperCase());
-   const isFinder=currentRole==='Stellar Cartography';finderPrevButton.visible=finderNextButton.visible=isFinder;scienceLeft.visible=!isFinder;scienceSubtitle.scale.x=isFinder?.70:1;if(isFinder)refreshFinder();
+   const isFinder=currentRole==='Stellar Cartography';academyButton.visible=isFinder;paintMusic(academyButton,'ASTRONOMY');finderPrevButton.visible=finderNextButton.visible=isFinder;scienceLeft.visible=!isFinder;scienceSubtitle.scale.x=isFinder?.70:1;if(isFinder)refreshFinder();
    if(signal)scanScience();
    if(currentRole==='Planetary Science')inspectPlanet();
    if(currentRole==='Engineering'){engineeringShield=false;nextTelemetry=0;}
@@ -1323,7 +1332,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  paintMusic(scienceCredit,record?record[1]:'Distance / classification not yet cataloged');
  speakNova(selected.name+'. '+(record?record[0]+'. '+record[1].replace('•','.'):'Catalog position available. Distance not yet cataloged.'));
  }
+ function showAcademy(){
+ currentRole='Astronomy Academy';finderPrevButton.visible=finderNextButton.visible=false;scienceLeft.visible=true;scienceSubtitle.scale.x=1;planetHologram.visible=false;scienceRadar.visible=true;academyButton.visible=true;paintMusic(academyButton,'BACK TO MAP');paintMusic(scienceLeft,'NEXT LESSON');paintMusic(scienceRight,'NARRATE');paint(scienceHeader,'SC1 • ASTRONOMY ACADEMY','#53caff','text');
+ const lesson=academyLessons[academyIndex];scienceMessage(lesson[0]);paintMusic(scienceSubtitle,'REAL ASTRONOMY • LESSON '+(academyIndex+1)+' / '+academyLessons.length);paintMusic(scienceDetail,lesson[2]);paintMusic(scienceCredit,'EDUCATIONAL SCHEMATIC • NOT TO SCALE');paintMusic(scienceData,lesson[3]);
+ const c=scienceRadar.material.map.image;c.width=1152;c.height=500;const g=c.getContext('2d');g.fillStyle='#07192b';g.fillRect(0,0,c.width,c.height);g.fillStyle='#9ce5ff';g.textAlign='center';g.font='bold 48px system-ui';g.fillText(lesson[1],576,100,1050);g.fillStyle='#e7f5ff';g.font='36px system-ui';let line='',y=195;for(const word of lesson[4].split(' ')){const next=line?line+' '+word:word;if(g.measureText(next).width>1000&&line){g.fillText(line,576,y);y+=48;line=word;}else line=next;}if(line)g.fillText(line,576,y);scienceRadar.material.map.needsUpdate=true;
+ }
  function scienceAction(action){
+   if(action==='academy'){if(currentRole==='Astronomy Academy'){currentRole='Stellar Cartography';paint(scienceHeader,'SC1 • STELLAR CARTOGRAPHY','#53caff','text');setupRole();}else showAcademy();return;}
+   if(currentRole==='Astronomy Academy'&&action!=='close'){if(action==='scan'){academyIndex=(academyIndex+1)%academyLessons.length;showAcademy();}else if(action==='video')speakNova(academyLessons[academyIndex][4]);return;}
    if(action==='finderPrev'||action==='finderNext'){finderSelection=(finderSelection+starNames.length+(action==='finderPrev'?-1:1))%starNames.length;refreshFinder();return;}
    if(action==='close'){closeScience();return;}
    const second=action==='video';
@@ -1408,7 +1424,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.45 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.46 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
