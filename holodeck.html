@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.47</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. From the exterior deck select Engage EVA. In EVA use WASD and Q/E for altitude on desktop; in VR use left stick and right stick up/down. Return via Nexus. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button> · <button id="evaShortcut" type="button">Engage EVA</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.48</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. From the exterior deck select Engage EVA. In EVA use WASD and Q/E for altitude on desktop; in VR use left stick and right stick up/down. Return via Nexus. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button> · <button id="evaShortcut" type="button">Engage EVA</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
@@ -697,7 +697,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.47','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.48','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -763,7 +763,7 @@ function guideAction(action){
 }
 function isExitCommand(q){return /^(?:please\s+)?(?:exit|quit|leave|end|close|stop)(?:\s+(?:the\s+)?(?:v\s*r|virtual reality|holo\s*deck|hollow\s*deck|hello\s*deck|holly\s*deck|holo\s*tech|hollow\s*tech|holodeck session|vr session))?(?:\s+please)?$/.test(q)||/^(?:go|return) (?:back )?to (?:the )?browser$/.test(q);}
 function exitImmersive(){standFromChair(false);layoutReportPanel.visible=false;closeLayoutStation(true);const session=renderer.xr.getSession();showNexus(false);if(session)session.end().catch(()=>{showNexus(true);setNexusStatus('EXIT FAILED • TRY EXIT VR AGAIN');});else status.textContent='Already in browser view.';}
-function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+function runCommand(raw){const q=raw.toLowerCase().replace(/['’]/g,'').replace(/^nova[ ,:]*/,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
  if(/^(stand|stand up|leave seat|get up)$/.test(q)){showNexus(false);standFromChair();return;}
  if(/^(all coordinates|read all coordinates|layout report|bridge layout report)$/.test(q)){openLayoutReport();return;}
  if(/^(layout editor|edit mode|layout mode|edit consoles|move console|debug layout)$/.test(q)){toggleLayoutEditor(true);return;}
@@ -1425,7 +1425,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.47 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.48 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
@@ -1761,5 +1761,16 @@ let hoverHit=null,menuHit=null;
  setPlanetHover(hoverHit?.object??null);setMenuFocus(menuHit?.object??null);updateDiagnosticBadge(menuHit?.object??null);
 renderer.render(scene,camera)});if(pendingDestination){const i=choices.findIndex(c=>c.url===pendingDestination.world.path);if(i>=0)pick(i);}
 status.textContent=pendingDestination?'Bridge online. '+pendingDestination.world.name+' is selected inside Nova.':'Sanctuary Bridge online. Select Nova to explore '+Object.keys(vrWorlds).length+' worlds and '+Object.values(vrWorlds).reduce((n,w)=>n+w.regions.length,0)+' regions.';syncScene(false);setInterval(()=>syncScene(false),20000);
-}catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}
+}catch(e){
+ status.textContent=/WebGL/i.test(e.message)
+  ? 'The bridge needs WebGL 2 graphics. Open it in Meta Quest Browser for immersive VR, or continue on the website.'
+  : 'Bridge unavailable: '+e.message;
+ if(pendingDestination){
+  const link=document.createElement('a');
+  link.href=pendingDestination.world.path;
+  link.textContent='Open '+pendingDestination.world.name+' on the website';
+  status.append(document.createElement('br'),link);
+ }
+ console.error(e);
+}
 </script></body></html>

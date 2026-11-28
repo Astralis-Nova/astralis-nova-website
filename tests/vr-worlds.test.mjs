@@ -20,7 +20,8 @@ test('world registry resolves Cloudflare clean URLs and keeps external paths out
 
 test('every world has its original page, source artwork and a valid region',()=>{
   for(const world of Object.values(vrWorlds)){
-    assert.ok(fs.existsSync(new URL('.'+world.path,root)),world.path);
+    const page=fs.readFileSync(new URL('.'+world.path,root),'utf8');
+    assert.ok(page.includes('href="/holodeck.html?world='+world.id+'"'),world.name+' needs a matching VR entry');
     for(const region of world.regions)if(region.art)assert.ok(fs.existsSync(new URL('.'+region.art,root)),region.art);
     assert.equal(regionFor(world,-1),world.regions[0]);
     assert.equal(regionFor(world,NaN),world.regions[0]);

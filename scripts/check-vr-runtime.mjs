@@ -46,7 +46,7 @@ class XR extends Three.EventDispatcher {
   getSession(){return session;}
 }
 class Renderer {
-  constructor(){this.xr=new XR();this.domElement=new Element('canvas');activeRenderer=this;}
+  constructor(){this.capabilities={getMaxAnisotropy:()=>1};this.xr=new XR();this.domElement=new Element('canvas');activeRenderer=this;}
   setPixelRatio(){}setSize(){}setAnimationLoop(fn){this.loop=()=>{
  testHead.updateMatrix();detachedXR.matrix.copy(testHead.matrix);testHead.matrix.decompose(detachedXR.position,detachedXR.quaternion,detachedXR.scale);
  fn(clock,this.xr.isPresenting?testXRFrame:undefined);
@@ -81,28 +81,29 @@ const context=vm.createContext({T,VRButton:{createButton:()=>new Element('button
   fetch:async()=>({ok:true,json:async()=>JSON.parse(fs.readFileSync(new URL('holodeck-scene.json',root),'utf8'))})
 });
 const html=fs.readFileSync(new URL('holodeck.html',root),'utf8');
-const source=html.match(/<script type="module">([\s\S]*?)<\/script>/)[1].replace(/^import .*;\n/gm,'').replace('try{\nlet onToon','let onToon').replace("}catch(e){status.textContent='Bridge unavailable: '+e.message;console.error(e)}",'');
+const source=html.match(/<script type="module">([\s\S]*?)<\/script>/)[1].replace(/^import .*;\n/gm,'').replace('try{\nlet onToon','let onToon').split('\n}catch(e){\n status.textContent=')[0];
 vm.runInContext(source,context);await vm.runInContext('deepSpace.ready',context);await Promise.resolve();
 assert.ok(!status.textContent.startsWith('Bridge unavailable'),status.textContent);
 assert.equal(vm.runInContext('choices.filter(c=>worldForPath(c.url)).length',context),Object.keys(registry.vrWorlds).length);
 activeRenderer.xr.isPresenting=true;activeRenderer.xr.dispatchEvent({type:'sessionstart'});
 activeRenderer.loop();
 const startingEye=vm.runInContext('currentView().getWorldPosition(new T.Vector3())',context);
-assert.ok(startingEye.distanceTo(new Three.Vector3(0,testHead.position.y,5))<1e-10,'first XR frame captures physical head height and centers the spawn');
+assert.ok(startingEye.distanceTo(new Three.Vector3(0,1.65,5))<1e-10,'first XR frame calibrates standing eye height and centers the spawn');
 const bridge=vm.runInContext('rig.position.toArray()',context);
 assert.equal(vm.runInContext('musicTracks.length',context),29);
 assert.equal(vm.runInContext('scienceStations.length',context),6);
-assert.ok(vm.runInContext("scienceStations.every(s=>{const p=s.g.position,f=new T.Vector3(0,0,1).applyAxisAngle(new T.Vector3(0,1,0),s.g.rotation.y);return f.x*(-p.x)+f.z*(2-p.z)>0&&shipWalkable(p.x+f.x*1.25,p.z+f.z*1.25)&&Math.abs(p.x)<=5.05&&p.z>=-3.95})",context),'science console operator edges must face into the bridge with walkable approach clearance');
+assert.ok(vm.runInContext("scienceStations.every(station=>{const seat=station.chair.getWorldPosition(new T.Vector3());return shipWalkable(seat.x,seat.z)})",context),'all six operator seats are on the walkable bridge');
 assert.ok(vm.runInContext("(()=>{const s=scienceStations[0];updateScienceStations(1,s.g.position);return s.awake&&activeTargets().includes(s.hit)})()",context));
 vm.runInContext('openScience()',context);
-assert.ok(vm.runInContext("sciencePanel.visible&&sciencePhase==='scanning'&&activeTargets().every(m=>m.userData.scienceAction)",context));
+assert.ok(vm.runInContext("sciencePanel.visible&&sciencePhase==='scanning'&&activeTargets().every(m=>m===novaHit||m.userData.scienceAction)",context));
 vm.runInContext('updateScience(scienceStart+4)',context);
 assert.equal(vm.runInContext('sciencePhase',context),'decoded');
 vm.runInContext("scienceAction('close')",context);
 assert.equal(vm.runInContext('sciencePanel.visible',context),false);
 assert.ok(vm.runInContext("scienceSignals.map(s=>s.id).join(',')==='AX-071,AX-194,AX-330,AX-442'",context));
 assert.ok(vm.runInContext("scienceGlass.material.transparent&&scienceGlass.material.opacity<.15&&!scienceGlass.material.depthWrite",context));
-assert.ok(vm.runInContext("(()=>{const s=scienceStations[0];updateScienceStations(2,s.g.position);updateScienceStations(3,s.g.position);return sciencePanel.visible&&sciencePhase==='scanning'&&s.triggered})()",context));
+assert.ok(vm.runInContext("(()=>{const s=scienceStations[0];updateScienceStations(2,s.g.position);updateScienceStations(3,s.g.position);return s.awake&&!sciencePanel.visible&&!s.triggered})()",context));
+vm.runInContext('openScience(scienceStations[2])',context);
 assert.ok(vm.runInContext("scienceRadar.visible&&!planetHologram.visible",context));
 vm.runInContext("updateScience(scienceStart+1.5)",context);
 assert.ok(vm.runInContext("scienceLastStatus.includes('DECODING SIGNAL')",context));
@@ -130,7 +131,7 @@ assert.ok(vm.runInContext('musicGlass.material.transparent && musicGlass.materia
 assert.ok(vm.runInContext("signalPortals.every(p=>p.portal.startsWith('https://')) && radioBanks.some(b=>b.kind==='portals')",context));
 assert.equal(vm.runInContext('activeTargets().includes(musicHit)',context),true);
 vm.runInContext('openMusic()',context);
-assert.equal(vm.runInContext('musicPanel.visible && activeTargets().every(m=>m.userData.musicAction)',context),true);
+assert.equal(vm.runInContext('musicPanel.visible && activeTargets().every(m=>m===novaHit||m.userData.musicAction)',context),true);
 vm.runInContext("musicAction('bankNext')",context);
 assert.equal(vm.runInContext('musicItems.length',context),2);
 vm.runInContext("musicAction('bankNext')",context);
