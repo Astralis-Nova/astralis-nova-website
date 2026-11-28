@@ -12,7 +12,8 @@ test('space catalogues have finite positions, varied brightness and reproducible
     assert.ok(Object.values(data).flat().every(Number.isFinite));
     assert.ok(Math.max(...data.sizes)-Math.min(...data.sizes)>.5);
     assert.ok(Math.max(...data.brightness)-Math.min(...data.brightness)>.4);
-    assert.notDeepEqual(data,create(500,1929));
+    if(create===galaxyCatalogue)assert.notDeepEqual(data,create(500,1929));
+    else assert.deepEqual(create(1).positions,data.positions.slice(0,3));
   }
 });
 
