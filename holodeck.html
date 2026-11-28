@@ -1134,7 +1134,7 @@ function pageAction(action){
  const scanRing=new T.Mesh(new T.TorusGeometry(.53,.008,6,80),new T.MeshBasicMaterial({color:0x6be4ff,transparent:true,opacity:.9,depthTest:false,depthWrite:false}));scanRing.renderOrder=53;planetHologram.add(scanRing);
  const scienceAura=new T.Mesh(new T.SphereGeometry(.465,24,16),new T.MeshBasicMaterial({color:0x83e8ff,transparent:true,opacity:.075,depthWrite:false,depthTest:false,side:T.BackSide}));scienceAura.renderOrder=53;planetHologram.add(scienceAura);
  const scienceBeam=new T.Mesh(new T.CylinderGeometry(.44,.12,.52,24,1,true),new T.MeshBasicMaterial({color:0x79dfff,transparent:true,opacity:.07,depthWrite:false,depthTest:false,side:T.DoubleSide}));scienceBeam.position.y=-.34;scienceBeam.renderOrder=50;planetHologram.add(scienceBeam);
- const finderPrevButton=scienceTile(.65,.12,-.62,.36,'finderPrev','PREVIOUS');finderPrevButton.visible=false;
+ const finderPrevButton=scienceTile(.24,.16,-.84,.51,'finderPrev','←');finderPrevButton.visible=false;const finderNextButton=scienceTile(.24,.16,.84,.51,'finderNext','→');finderNextButton.visible=false;finderPrevButton.renderOrder=finderNextButton.renderOrder=56;
  const scienceRadar=scienceTile(1.84,.8,0,.015,null,'ACQUIRING');
  const scienceVideoScreen=new T.Mesh(new T.PlaneGeometry(1.85,.84),new T.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.87,depthTest:false,depthWrite:false}));scienceVideoScreen.position.set(0,.03,.05);scienceVideoScreen.renderOrder=54;scienceVideoScreen.visible=false;sciencePanel.add(scienceVideoScreen);
  let scienceIndex=-1,scienceStart=0,sciencePhase='idle',scienceVideo=null,scienceTexture=null,scienceLastStatus='',scienceRadarLast=-1,scienceVideoTimer=null,scienceLockTime=0,sciencePreview=false;
@@ -1272,7 +1272,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  scienceRadar.material.map.needsUpdate=true;
  }
  function updateFinder(){const enabled=finderActive>=0&&!activeWorld();finderHUD.visible=enabled&&!sciencePanel.visible&&!nexus.visible&&!musicPanel.visible&&!pageGroup.visible;if(enabled){const view=currentView(),q=view.getWorldQuaternion(new T.Quaternion());finderHUD.position.copy(view.getWorldPosition(new T.Vector3())).add(new T.Vector3(0,-.72,-2.1).applyQuaternion(q));finderHUD.quaternion.copy(q);const txt=starNames[finderActive]+' • '+finderDirection(finderActive);if(txt!==finderLastText){paintMusic(finderHUD,txt);finderLastText=txt;}}if(sciencePanel.visible&&currentRole==='Stellar Cartography'){const txt=finderDirection(finderSelection);if(scienceData.userData.lastDir!==txt){paintMusic(scienceData,txt);scienceData.userData.lastDir=txt;}}}
- function refreshFinder(){scienceRadar.visible=true;drawFinder();scienceMessage(starNames[finderSelection].toUpperCase());paintMusic(scienceDetail,'PATTERN '+(finderSelection+1)+' / '+starNames.length+' • '+starNames[finderSelection]);paintMusic(scienceLeft,'NEXT PATTERN');paintMusic(scienceRight,finderActive===finderSelection?'HIDE TRACE':'TRACE SKY');scienceData.userData.lastDir='';}
+ function refreshFinder(){scienceRadar.visible=true;drawFinder();scienceMessage(starNames[finderSelection].toUpperCase());paintMusic(scienceDetail,'PATTERN '+(finderSelection+1)+' / '+starNames.length+' • '+starNames[finderSelection]);paintMusic(scienceRight,finderActive===finderSelection?'HIDE TRACE':'TRACE SKY');scienceData.userData.lastDir='';}
  const planetDescriptions={scripture:'Ice shelves and deep blue ocean',rainbow:'Island chains and a tropical ocean',fathers:'Forested coastline and warm shallows',first:'Cloud belts and icy rings',faith:'Cratered lunar terrain',wild:'Canyons and winding waterways',emerald:'Green terrain and highlands',toon:'The world of Cactus Forest Moonlight'};
  const inspectable=bodies.filter(body=>body.globe.userData.worldId);
  function showGlobe(map){
@@ -1301,7 +1301,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
    }[currentRole];
    for(const [tile,caption] of [[scienceSubtitle,config[0]],[scienceLeft,config[1]],[scienceRight,config[2]],[scienceDetail,config[3]],[scienceCredit,config[4]],[scienceData,'']])paintMusic(tile,caption);
    scienceMessage(currentRole.toUpperCase());
-   finderPrevButton.visible=currentRole==='Stellar Cartography';if(currentRole==='Stellar Cartography')refreshFinder();
+   const isFinder=currentRole==='Stellar Cartography';finderPrevButton.visible=finderNextButton.visible=isFinder;scienceLeft.visible=!isFinder;scienceSubtitle.scale.x=isFinder?.70:1;if(isFinder)refreshFinder();
    if(signal)scanScience();
    if(currentRole==='Planetary Science')inspectPlanet();
    if(currentRole==='Engineering'){engineeringShield=false;nextTelemetry=0;}
@@ -1313,7 +1313,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
    if(finderActive>=0){closeScience();speakNova(starNames[index]+' highlighted. Follow the direction indicator.');}else{refreshFinder();speakNova('Constellation trace hidden.');}
  }
  function scienceAction(action){
-   if(action==='finderPrev'){finderSelection=(finderSelection+starNames.length-1)%starNames.length;refreshFinder();return;}
+   if(action==='finderPrev'||action==='finderNext'){finderSelection=(finderSelection+starNames.length+(action==='finderPrev'?-1:1))%starNames.length;refreshFinder();return;}
    if(action==='close'){closeScience();return;}
    const second=action==='video';
    if(currentRole==='Stellar Cartography'){if(second)guideStars(finderSelection);else{finderSelection=(finderSelection+1)%starNames.length;refreshFinder();}return;}
