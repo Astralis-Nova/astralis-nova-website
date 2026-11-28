@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.40</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. From the exterior deck select Engage EVA. In EVA use WASD and Q/E for altitude on desktop; in VR use left stick and right stick up/down. Return via Nexus. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button> · <button id="evaShortcut" type="button">Engage EVA</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Astralis Holodeck</title><style>body{margin:0;background:#030814;color:#e2f4ff;font:16px system-ui}#hud{position:absolute;z-index:2;top:12px;left:12px;background:#071425dd;padding:14px;border:1px solid #487da5;border-radius:12px;max-width:340px}a{color:#92ddff}button{padding:8px}canvas{display:block}small{display:block}</style></head><body><div id="hud"><b>✦ ASTRALIS HOLODECK / 036.1.41</b><p id="status">Initializing bridge…</p><small>Left stick: walk. Right stick: turn 30°. Aim at a planet to see its name; select the globe to travel. Select the rotating hologram for music and radio. Approach a science console and select UNKNOWN SIGNAL. Approach the aft airlock to walk outside; tap a door on mobile. From the exterior deck select Engage EVA. In EVA use WASD and Q/E for altitude on desktop; in VR use left stick and right stick up/down. Return via Nexus. Select Nova for the Nexus. Movement pauses while the menu is open.</small><p><a href="/">Return home</a> · <a href="/player/">Music</a> · <button id="deckShortcut" type="button">Exterior deck</button> · <button id="evaShortcut" type="button">Engage EVA</button></p></div><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script><script type="module">
 import * as T from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/webxr/VRButton.js';
 import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
@@ -410,6 +410,33 @@ for(const side of [-1,1]){ellipseArc(6.2,7.25,1.0,side<0?-1.35:.45,side<0?-.45:1
 const exteriorHull=new T.Group();sanctuary.add(exteriorHull);
 for(const side of [-1,1]){const nacelle=new T.Mesh(new T.CapsuleGeometry(.62,4.5,6,16),metal);nacelle.rotation.x=Math.PI/2;nacelle.position.set(side*8,-.7,3.2);exteriorHull.add(nacelle);const engine=new T.Mesh(new T.CylinderGeometry(.43,.43,.13,24),glowBlue);engine.rotation.x=Math.PI/2;engine.position.set(side*8,-.7,6.0);exteriorHull.add(engine);}
 
+// Visible main impulse engines and slow local parallax, without moving the VR camera.
+const impulseJets=[];
+for(const side of [-1,1]){
+ const x=side*6.9,y=.45,z=21.1;
+ const pod=shipMesh(new T.CylinderGeometry(.55,.72,2.4,32),metal,x,y,z-1.2);pod.rotation.x=Math.PI/2;
+ shipMesh(new T.TorusGeometry(.59,.095,16,48),deckEdgeMat,x,y,z);
+ const core=shipMesh(new T.CircleGeometry(.48,40),new T.MeshBasicMaterial({color:0xc7f5ff,side:T.DoubleSide,toneMapped:false}),x,y,z+.03);
+ const jet=new T.Group();jet.position.set(x,y,z+.1);sanctuary.add(jet);
+ for(let i=0;i<3;i++){const m=new T.Mesh(new T.ConeGeometry(.50-i*.12,1,32,1,true),new T.MeshBasicMaterial({color:[0x207cff,0x63cfff,0xc9f7ff][i],transparent:true,opacity:.16+i*.09,depthWrite:false,side:T.DoubleSide,blending:T.AdditiveBlending,toneMapped:false}));m.rotation.x=Math.PI/2;m.position.z=(3-i*.65)/2;m.scale.y=3-i*.65;jet.add(m);}
+ impulseJets.push({jet,core});
+}
+const cruiseField=new T.Group();scene.add(cruiseField);bridgeObjects.push(cruiseField);
+const cruiseCount=180,cruisePos=new Float32Array(cruiseCount*6),cruiseSeeds=[];
+let seed=18473;const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+for(let i=0;i<cruiseCount;i++){const a=rand()*Math.PI*2,r=13+rand()*38;cruiseSeeds.push([Math.cos(a)*r,Math.sin(a)*r,rand()*160,.65+rand()*.65]);}
+const cruiseGeo=new T.BufferGeometry();cruiseGeo.setAttribute('position',new T.BufferAttribute(cruisePos,3));
+const cruiseLines=new T.LineSegments(cruiseGeo,new T.LineBasicMaterial({color:0xb0d9ff,transparent:true,opacity:.23,depthWrite:false}));cruiseLines.frustumCulled=false;cruiseField.add(cruiseLines);
+let cruiseMode=1;const cruiseRates=[0,3.5,9],cruiseNames=['Station keeping','Impulse cruise','Full impulse'];let cruiseDistance=0,cruiseLast=0;
+function cycleCruise(){cruiseMode=(cruiseMode+1)%cruiseRates.length;refreshShipPanel('cruise','SHIP DRIVE • '+cruiseNames[cruiseMode].toUpperCase());speakNova(cruiseNames[cruiseMode]);}
+function updateCruise(t){
+ const dt=cruiseLast?Math.min(.05,Math.max(0,t-cruiseLast)):0;cruiseLast=t;
+ const rate=galaxyPaused?0:cruiseRates[cruiseMode];cruiseDistance+=rate*dt;
+ for(let i=0;i<cruiseCount;i++){const [x,y,z,k]=cruiseSeeds[i],p=((z+cruiseDistance*k)%160)-80,o=i*6;cruisePos.set([x,y,p,x,y,p-(.10+rate*.095)],o);}
+ cruiseGeo.attributes.position.needsUpdate=true;cruiseLines.material.opacity=rate===0?.08:.24;
+ for(const {jet,core} of impulseJets){jet.scale.z=rate===0?.12:1+rate*.19+.07*Math.sin(t*5);jet.visible=rate>0;core.material.color.setHex(rate?0xc7f5ff:0x31526b);}
+ if(shipHum&&!activeWorld()){shipHum.tones.forEach((o,i)=>o.frequency.setTargetAtTime([55,82.4,110][i]*(1+rate*.035),shipAudio.currentTime,.35));}
+}
 const sky=createStarField(T);scene.add(sky);
 const targets=[];for(const door of airlockDoors)targets.push(door.hit);for(const [index,st] of scienceStations.entries()){targets.push(st.hit);const seatHit=new T.Mesh(new T.BoxGeometry(.64,.64,.49),new T.MeshBasicMaterial({visible:false}));seatHit.position.set(0,.75,.035);seatHit.userData={seatIndex:index};st.chair.add(seatHit);targets.push(seatHit);}
 const musicHit=new T.Mesh(new T.SphereGeometry(.82,20,12),new T.MeshBasicMaterial({visible:false}));musicHit.userData={musicConsole:true};holo.add(musicHit);targets.push(musicHit);
@@ -470,7 +497,7 @@ function useAirlock(z){
 document.querySelector('#deckShortcut')?.addEventListener('click',()=>{enableAirlockSound();if(activeWorld()){guideAction('back');}const eye=currentView().getWorldPosition(new T.Vector3());goToShipDeck(eye.z<11.4);});
 // Ship controls are also available in Nova's Nexus.
 function refreshShipPanel(action,name){const c=choices.find(c=>c.shipAction===action);if(c){c.name=name;const i=choices.indexOf(c);if(rows[i])paint(rows[i],symbols[c.icon]+'  '+c.name,'#'+c.color.toString(16).padStart(6,'0'),'row');refreshNexus();}}
-function handleShipAction(action){if(action==='eva'){startEVA();return;}if(action==='evaSpeed'){cycleEVA();return;}if(action==='layout'){toggleLayoutEditor();return;}if(action==='diagnostics'){toggleDiagnostics();return;}if(action==='science'){openScience();return;}if(action==='music'){openMusic();return;}if(action==='exterior'||action==='bridge'){goToShipDeck(action==='exterior');return;}if(activeWorld()){speakNova('Return to the Astralis to use ship controls.');return;}if(action==='lights'){lightingIndex=(lightingIndex+1)%lightingModes.length;applyShipLighting();const name='LIGHTING • '+lightingModes[lightingIndex].name.toUpperCase();refreshShipPanel('lights',name);setNexusStatus(name);return;}if(action==='galaxy'){galaxyPaused=!galaxyPaused;const name=galaxyPaused?'GALAXY • PAUSED':'GALAXY • ROTATING';refreshShipPanel('galaxy',name);setNexusStatus(name);return;}if(action==='audio'){toggleShipHum();return;}if(action==='observe'||action==='dock'){const view=currentView();const eye=view.getWorldPosition(new T.Vector3());const dest=action==='observe'?new T.Vector3(0,0,-3.7):new T.Vector3(0,0,6.5);showNexus(false);rig.position.x+=dest.x-eye.x;rig.position.z+=dest.z-eye.z;}}
+function handleShipAction(action){if(action==='cruise'){if(!activeWorld())cycleCruise();return;}if(action==='eva'){startEVA();return;}if(action==='evaSpeed'){cycleEVA();return;}if(action==='layout'){toggleLayoutEditor();return;}if(action==='diagnostics'){toggleDiagnostics();return;}if(action==='science'){openScience();return;}if(action==='music'){openMusic();return;}if(action==='exterior'||action==='bridge'){goToShipDeck(action==='exterior');return;}if(activeWorld()){speakNova('Return to the Astralis to use ship controls.');return;}if(action==='lights'){lightingIndex=(lightingIndex+1)%lightingModes.length;applyShipLighting();const name='LIGHTING • '+lightingModes[lightingIndex].name.toUpperCase();refreshShipPanel('lights',name);setNexusStatus(name);return;}if(action==='galaxy'){galaxyPaused=!galaxyPaused;const name=galaxyPaused?'GALAXY • PAUSED':'GALAXY • ROTATING';refreshShipPanel('galaxy',name);setNexusStatus(name);return;}if(action==='audio'){toggleShipHum();return;}if(action==='observe'||action==='dock'){const view=currentView();const eye=view.getWorldPosition(new T.Vector3());const dest=action==='observe'?new T.Vector3(0,0,-3.7):new T.Vector3(0,0,6.5);showNexus(false);rig.position.x+=dest.x-eye.x;rig.position.z+=dest.z-eye.z;}}
 // Nova orb: animated visual presence; voice remains in ChatGPT.
 const nova=new T.Group();nova.position.set(3.7,0,2.7);scene.add(nova);
 const novaHome=nova.position.clone();let movementMode='Roam',lastMotion=0;const roamPoints=[[3.7,2.7],[4.1,5.8],[-3.7,5.8],[-4.1,2.7],[-4.1,-2],[4.1,-2]];let roamIndex=0;const motionGoal=new T.Vector3();
@@ -631,6 +658,7 @@ meteorGeometry.setAttribute('color',new T.Float32BufferAttribute([1,1,1,.42,.67,
 const meteor=new T.Line(meteorGeometry,new T.LineBasicMaterial({vertexColors:true,transparent:true,depthWrite:false}));
 galaxy.add(meteor);
 function driftGalaxy(t){
+ updateCruise(t);
  // Relative motion along a gentle, bounded cruise path in ship coordinates.
  galaxy.position.set(5*(1-Math.cos(t*.035)),0,8*Math.sin(t*.035));
  currentView().getWorldPosition(sky.position);
@@ -649,7 +677,7 @@ function driftGalaxy(t){
 const nexus=new T.Group();scene.add(nexus);nexus.visible=false;
 const nexusTargets=[];
 // Compact Nexus: a collapsed destination selector with opt-in voice input.
-const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:worldForPath(url)?(worldForPath(url).id==='rainbow'?'rainbow':'planet'):url==='/player/'?'music':'home'})),{name:'NEXT REGION',planetAction:'next',color:0x9bdfff,icon:'planet'},{name:'PREVIOUS REGION',planetAction:'prev',color:0x9bdfff,icon:'planet'},{name:'RETURN TO ASTRALIS',planetAction:'back',color:0xd3bc85,icon:'home'},{name:'LIGHTING • SANCTUARY',shipAction:'lights',color:0xd3bc85,icon:'light'},{name:'GALAXY • ROTATING',shipAction:'galaxy',color:0x9bdfff,icon:'planet'},{name:'UNKNOWN SIGNAL SCANNER',shipAction:'science',color:0x80eaff,icon:'planet'},{name:'ASTRALIS SOUND CONSOLE',shipAction:'music',color:0xc2a5ff,icon:'music'},{name:'SHIP AMBIENCE • OFF',shipAction:'audio',color:0xd3bc85,icon:'music'},{name:'OBSERVATION DECK',shipAction:'observe',color:0x9bdfff,icon:'planet'},{name:'DOCKING ALCOVE',shipAction:'dock',color:0xc2a5ff,icon:'home'},{name:'EXTERIOR OBSERVATION DECK',shipAction:'exterior',color:0x8de8ff,icon:'planet'},{name:'ENGAGE EVA FLIGHT',shipAction:'eva',color:0x8de8ff,icon:'planet'},{name:'EVA FLIGHT SPEED',shipAction:'evaSpeed',color:0x8de8ff,icon:'update'},{name:'RETURN TO BRIDGE',shipAction:'bridge',color:0xd3bc85,icon:'home'},{name:'LAYOUT EDITOR',shipAction:'layout',color:0x80eaff,icon:'update'},{name:'DIAGNOSTIC MODE • OFF',shipAction:'diagnostics',color:0x80eaff,icon:'light'},{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'},{name:'NOVA GUIDE VOICE',planetAction:'voice',color:0xc2a5ff,icon:'music'},{name:'DESCRIBE THIS WORLD',planetAction:'describe',color:0xc2a5ff,icon:'planet'},{name:'ORIGINAL PAGE • READING VIEW',planetAction:'original',color:0x9bdfff,icon:'home'}];
+const choices=[...worlds.map(([name,url,color],i)=>({name,url,color,icon:worldForPath(url)?(worldForPath(url).id==='rainbow'?'rainbow':'planet'):url==='/player/'?'music':'home'})),{name:'NEXT REGION',planetAction:'next',color:0x9bdfff,icon:'planet'},{name:'PREVIOUS REGION',planetAction:'prev',color:0x9bdfff,icon:'planet'},{name:'RETURN TO ASTRALIS',planetAction:'back',color:0xd3bc85,icon:'home'},{name:'LIGHTING • SANCTUARY',shipAction:'lights',color:0xd3bc85,icon:'light'},{name:'SHIP DRIVE • IMPULSE CRUISE',shipAction:'cruise',color:0x8de8ff,icon:'update'},{name:'GALAXY • ROTATING',shipAction:'galaxy',color:0x9bdfff,icon:'planet'},{name:'UNKNOWN SIGNAL SCANNER',shipAction:'science',color:0x80eaff,icon:'planet'},{name:'ASTRALIS SOUND CONSOLE',shipAction:'music',color:0xc2a5ff,icon:'music'},{name:'SHIP AMBIENCE • OFF',shipAction:'audio',color:0xd3bc85,icon:'music'},{name:'OBSERVATION DECK',shipAction:'observe',color:0x9bdfff,icon:'planet'},{name:'DOCKING ALCOVE',shipAction:'dock',color:0xc2a5ff,icon:'home'},{name:'EXTERIOR OBSERVATION DECK',shipAction:'exterior',color:0x8de8ff,icon:'planet'},{name:'ENGAGE EVA FLIGHT',shipAction:'eva',color:0x8de8ff,icon:'planet'},{name:'EVA FLIGHT SPEED',shipAction:'evaSpeed',color:0x8de8ff,icon:'update'},{name:'RETURN TO BRIDGE',shipAction:'bridge',color:0xd3bc85,icon:'home'},{name:'LAYOUT EDITOR',shipAction:'layout',color:0x80eaff,icon:'update'},{name:'DIAGNOSTIC MODE • OFF',shipAction:'diagnostics',color:0x80eaff,icon:'light'},{name:'UPDATE HOLODECK',refresh:true,color:0x66e4e4,icon:'update'},{name:'EXIT VR',exit:true,color:0xffaabb,icon:'exit'},{name:'NOVA GUIDE VOICE',planetAction:'voice',color:0xc2a5ff,icon:'music'},{name:'DESCRIBE THIS WORLD',planetAction:'describe',color:0xc2a5ff,icon:'planet'},{name:'ORIGINAL PAGE • READING VIEW',planetAction:'original',color:0x9bdfff,icon:'home'}];
 const symbols={light:'☀',home:'⌂',chess:'♜',planet:'◉',rainbow:'◠',music:'♫',update:'↻',exit:'↗'};
 let selected=-1,expanded=false,recognition=null,textMode=false,commandText='',lastNovaMessage='Nexus ready'; let speedIndex=1; const speeds=[.95,1.8,2.7], speedNames=['Slow','Normal','Fast'];
 const SpeechAPI=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -669,7 +697,7 @@ function paint(m,txt,accent='#c2a5ff',kind='pill'){
 }
 const title=tile(1.02,.15,-.23,.46);paint(title,'ASTRALIS NOVA • NEXUS','#dfcaff','text');
 const exitTile=tile(.46,.15,.53,.46,{exitVR:true});paint(exitTile,'EXIT VR','#ff9aaf');
-const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.40','#b6dcfa','text');
+const note=tile(1.45,.12,0,.30);paint(note,'VERSION 036.1.41','#b6dcfa','text');
 const updatePanel=tile(1.45,.13,0,.14);paint(updatePanel,'NEXUS READY','#b6dcfa','text');
 const transcript=tile(1.80,.66,0,-1.45);transcript.material.map.image.width=1024;transcript.material.map.image.height=360;
 function paintTranscript(message){
@@ -749,6 +777,7 @@ function runCommand(raw){const q=raw.toLowerCase().replace(/^nova[ ,:]*/,'').rep
  if(/^(unknown signal|science console|scan signal|scan planet)$/.test(q)){openScience();return;}
  if(/^(music|music player|sound console|radio)$/.test(q)){openMusic();if(q==='radio')selectBank(radioBanks.findIndex(b=>b.name==='WORLDWIDE'));return;}
  if(q.startsWith('radio ')){openMusic();const term=q.slice(6);if(/^(107[ .]9|kmle|favorites)$/.test(term)){selectBank(radioBanks.findIndex(b=>b.kind==='favorites'));return;}const bank=radioBanks.findIndex(b=>b.name.toLowerCase().includes(term));if(bank>=0)selectBank(bank);else searchRadio({name:term},'SEARCH • '+term);return;}
+ if(/^(ship drive|impulse|change ship speed)$/.test(q)){if(!activeWorld())cycleCruise();return;}
  if(/^(eva|engage eva|spacewalk|fly into space)$/.test(q)){startEVA();return;}
  if(/^(eva speed|flight speed)$/.test(q)){cycleEVA();return;}
  if(/^(exterior|exterior deck|exterior observation deck|airlock|go outside)$/.test(q)){goToShipDeck(true);return;}
@@ -1322,7 +1351,7 @@ async function syncScene(manual=true){
  const next=data.objects.filter(o=>!(o.type==='sphere'&&o.color.toLowerCase()==='#89dfff')).map(o=>{const m=new T.Mesh(o.type==='sphere'?new T.SphereGeometry(o.size,24,16):new T.BoxGeometry(o.size,o.size,o.size),new T.MeshStandardMaterial({color:o.color,emissive:o.color,emissiveIntensity:.25}));m.position.fromArray(o.position);return m;});
  for(const child of [...liveGroup.children]){liveGroup.remove(child);child.geometry.dispose();child.material.dispose();}
  if(next.length)liveGroup.add(...next);novaHome.fromArray(data.nova.position);nova.scale.setScalar(data.nova.scale);sky.material.color.set(data.starColor);if(nativeWorld||onToon)bridgeBackground.set(data.background);else scene.background.set(data.background);
- liveRevision=data.revision;setText(note,'V036.1.40 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
+ liveRevision=data.revision;setText(note,'V036.1.41 • SCENE '+liveRevision);setText(updatePanel,'LIVE UPDATE APPLIED');
  }catch(e){if(manual||!liveRevision)setText(updatePanel,'UPDATE FAILED - RETRY');console.warn('Scene update',e);}finally{syncing=false;}
 }
 
